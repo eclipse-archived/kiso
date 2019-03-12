@@ -1,0 +1,21 @@
+/** 
+ * @{
+ * @mainpage   BCDS shared Utils 
+ * @copyright  Bosch Connected Devices & Solutions GmbH
+ * @brief      BCDS shared Utils API Documentation
+ * @section    BCDS_UTILS_LICENCE License
+ *
+ * @note       Distribution only to people who need to know this information in
+ *             order to do their job.(Need-to-know principle).
+ *             Distribution to persons outside the company, only if these persons
+ *             signed a non-disclosure agreement.
+ *             Electronic transmission, e.g. via electronic mail, must be made in
+ *             encrypted form.
+ * @warning     Confidential
+ *
+ * @section Introduction
+ *
+ * This is the BCDS shared Utils Interface
+ *
+ * @}
+ */

@@ -1,0 +1,3 @@
+  - PackageName: "RefContexts"
+    GitReference: 17e9f83ce0f
+    Location: $BCDS_SHARED_PATH

@@ -1,0 +1,1 @@
+In this protected folder, the files which are used in common between the components must be placed.

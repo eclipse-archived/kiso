@@ -1,0 +1,52 @@
+/****************************************************************************/
+/**
+ *  Copyright (C) Robert Bosch. All Rights Reserved. Confidential.
+ *
+ *  Distribution only to people who need to know this information in
+ *  order to do their job.(Need-to-know principle).
+ *  Distribution to persons outside the company, only if these persons
+ *  signed a non-disclosure agreement.
+ *  Electronic transmission, e.g. via electronic mail, must be made in
+ *  encrypted form.
+ *
+ *  @file
+ *
+ *
+ *  Mockup implementation for the message-buffer module.
+ *
+ * ****************************************************************************/
+
+/* header definition ******************************************************** */
+#ifndef CDDK_MESSAGE_BUFFER_TH_HH_
+#define CDDK_MESSAGE_BUFFER_TH_HH_
+
+/* include system header files */
+#include <gtest.h>
+
+#include "FreeRTOS_th.hh"
+
+/* ban the real queue.h header */
+#define MESSAGE_BUFFER_H
+
+/* mock-ups for the provided interfaces */
+typedef void * MessageBufferHandle_t;
+
+/* mock-ups for the provided interfaces */
+FAKE_VALUE_FUNC(MessageBufferHandle_t, xMessageBufferCreate, size_t);
+FAKE_VALUE_FUNC(MessageBufferHandle_t, xMessageBufferCreateStatic, size_t, uint8_t *, StaticMessageBuffer_t *);
+FAKE_VALUE_FUNC(size_t, xMessageBufferSend, MessageBufferHandle_t , const void *, size_t , TickType_t);
+FAKE_VALUE_FUNC(size_t, xMessageBufferSendFromISR, MessageBufferHandle_t , const void *, size_t , BaseType_t *);
+FAKE_VALUE_FUNC(size_t, xMessageBufferReceive, MessageBufferHandle_t , void *, size_t, TickType_t);
+FAKE_VALUE_FUNC(size_t, xMessageBufferReceiveFromISR, MessageBufferHandle_t , void *, size_t, BaseType_t *) ;
+FAKE_VOID_FUNC(vMessageBufferDelete, MessageBufferHandle_t);
+FAKE_VALUE_FUNC(BaseType_t, xMessageBufferIsFull, MessageBufferHandle_t);
+FAKE_VALUE_FUNC(BaseType_t, xMessageBufferIsEmpty, MessageBufferHandle_t);
+FAKE_VALUE_FUNC(BaseType_t, xMessageBufferReset, MessageBufferHandle_t);
+FAKE_VALUE_FUNC(size_t, xMessageBufferSpacesAvailable, MessageBufferHandle_t);
+FAKE_VALUE_FUNC(BaseType_t, xMessageBufferSendCompletedFromISR, MessageBufferHandle_t, BaseType_t *);
+FAKE_VALUE_FUNC(BaseType_t, xMessageBufferReceiveCompletedFromISR, MessageBufferHandle_t, BaseType_t *);
+
+
+#endif /* CDDK_MESSAGE_BUFFER_TH_HH_ */
+
+/** ************************************************************************* */

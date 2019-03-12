@@ -1,0 +1,60 @@
+/** 
+ * @{
+ * @mainpage   Developer's Guide
+ *
+ * @copyright  Robert Bosch GmbH
+ *
+ * @brief      CDDK Essentials Package
+ *
+ * @section    CDDK_Essentials_LICENCE License
+ *
+ * Copyright  Robert Bosch GmbH<BR>
+ * All Rights Reserved. Confidential.
+ *
+ * Distribution only to people who need to know this information in
+ * order to do their job.(Need-to-know principle).<BR>
+ * Distribution to persons outside the company, only if these persons
+ * signed a non-disclosure agreement.<BR>
+ * Electronic transmission, e.g. via electronic mail, must be made in
+ * encrypted form.
+ * <br/>
+ * @tableofcontents
+ * <br/>
+ *
+ * @section INTRO Introduction
+ *
+ * Essentials package contains the most basic software components for the developement of an embedded  application, it 
+ * came to serve the needs for agility in software and hardware developement, where changing the underlying hardware 
+ * does not necessarily mean scrapping all the already developed software. 
+ * The package has been developed with ARM Cortex M microcontrollers in mind and gained a respectable level of maturity
+ * over the years of developement.
+ * 
+ * Essentials API provides a common software platform to build applications on different hardware platforms. If an 
+ * application needs to migrate from a hardware A to hardware B it needs to have the BSP/MCU for the B hardware without
+ * the need to port the entire application.
+ * 
+ * The most important component of Essentials is HAL (Hardware Abstraction Layer) which consists of two subcomponents: 
+ * BSP (Board Support Package) and MCU (Micro Controller Unit).
+ * 
+ * The BSP is a collection of APIs for peripherals that could populate a hardware board such as LEDs, Buttons, Sensors,
+ * communication interfaces, etc. The creation and implemetation of a BSP component follows a guideline detailed in 
+ * the wiki page.
+ * 
+ * The MCU subcomponent contains common APIs for internal MCU ressources such as UART, SPI, I2C, CRC, RNG, etc, 
+ * and their implementation for the supported microcontrollers, where until now the following MCU families have been 
+ * supported: STmicro STM32L4 (ARM Cortex M4), STmicro STM32F7(ARM Cortex M7), Silicon Labs EFM32, Texas Instruments 
+ * CC26xx.
+ * 
+ * Besides MCU and BSP, Essentials also contains:
+ * - Basics module provides compiler abstractions,
+ * - Retcode module provides a common basis for for error reporting and handling,
+ * - HAL_Delay module provides active waiting functions hooking is possible in an OS environment,
+ * - HAL_Signal module provides safe signaling mechanism in no OS environment, hooking is possible in an OS environment,
+ * - HAL_Mutex module provides an abstraction for Os mutex,
+ * - HAL_CriticalSection provides exclusion of code execution.
+ * 
+ * The complete documentation on How to create your BSP and MCU abstractions can be found <A HREF="https://bcds02.de.bosch.com/confluence/pages/viewpage.action?pageId=242653974">
+ * <B>here</B></A>.
+ * 
+ * @}
+ */
