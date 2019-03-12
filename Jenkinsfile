@@ -2,7 +2,8 @@ pipeline
 {
     agent // Define the agent to use
     {
-        docker
+        label 'RT-Z0KHU'
+	docker
         {
             image 'rb-dtr.de.bosch.com/fsc6lr/cddk-toolchain:v0.0.1'
         }
@@ -15,7 +16,7 @@ pipeline
     }
     triggers // Define how many times the job will be triggered
     {
-        pollSCM('*/5 * * * *') //  If new changes exist, the Pipeline will be re-triggered automatically. Check will be done every 6 minutes
+        pollSCM('H/5 * * * *') //  If new changes exist, the Pipeline will be re-triggered automatically. Check will be done every 6 minutes
     }
 
     stages
