@@ -7,7 +7,7 @@ pipeline
             label 'RT-Z0KHU'
             image 'rb-dtr.de.bosch.com/fsc6lr/cddk-toolchain:v0.0.1'
             registryUrl 'https://rb-dtr.de.bosch.com'
-            registryCredentialsId 'rb-dtr'
+            registryCredentialsId 'docker-registry'
         }
     }
     options
