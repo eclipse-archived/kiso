@@ -4,7 +4,10 @@ pipeline
     {
         docker
         {
-            image 'rb-dtr.de.bosch.com/fsc6lr/cddk-toolchain:v0.0.1'
+             label 'RT-Z0KHU'
+    	     //registryUrl 'https://rb-dtr.de.bosch.com/login'
+	     //registryCredentialsId ''
+	     image 'rb-dtr.de.bosch.com/fsc6lr/cddk-toolchain:v0.0.1'
         }
     }
     options
