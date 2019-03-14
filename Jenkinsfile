@@ -5,7 +5,7 @@ pipeline
         docker
         {
             label 'RT-Z0KHU'
-            image 'rb-dtr.de.bosch.com/fsc6lr/cddk-toolchain:v0.0.1'
+            image 'rb-dtr.de.bosch.com/software-campus/cddk-toolchain:v0.1.1'
             registryUrl 'https://rb-dtr.de.bosch.com'
             registryCredentialsId 'docker-registry'
         }
