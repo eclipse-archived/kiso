@@ -1,0 +1,89 @@
+from Configuration import *
+from CChannel.CCUart import *
+from CChannel.Message import *
+from CChannel.TlvTypes import *
+from UdpTest.TestCases_Udp.UdpDataValidation import UdpDataValidation
+
+import unittest
+import logging
+import time
+
+class TestCase_SocketReceive(unittest.TestCase):
+
+    testCaseId = 1
+    Ip = ""
+    Port = 6600 #UDP port on the server
+
+    def __init__(self, testSection, testSuite):
+        super(TestCase_SocketReceive, self).__init__()
+        self.testSection = testSection
+        self.testSuite = testSuite
+        self.logger = logging.getLogger(__name__)
+
+    def setUp(self):
+        print("=======================================")
+        print("setUp: TC_1.8.1-TestCase_SocketReceive ")
+        print("=======================================")
+
+        self.TP1 = self.testSection.getTestParticipantProxy("TP1_COSP")
+
+        self.logger.debug("[TC] TP1 " + str(self.TP1.getName()))
+        self.udpTests = UdpDataValidation()
+        
+        #Open the UDP communication
+        self.udpTests.open(self.Ip, self.Port)
+
+        message = Message(msgType=COMMAND, msgToken=self.testSection.getMsgToken(),
+                          type=TestCaseSetup,
+                          testSection=self.testSection.getSectionId(),
+                          testSuite=self.testSuite.getSuiteId(),
+                          testCase=self.testCaseId)
+
+        ack = self.TP1.sendAndWaitForAck(message, TIMEOUT)
+        self.assertEqual(NO_ERROR, ack.getErrorCode(), "we don't expect any error code")
+
+    def runTest(self):
+        print("=====================================")
+        print("Run: TC_1.8.1-TestCase_SocketReceive ")
+        print("=====================================")
+        messageTP1 = Message(msgType=COMMAND, msgToken=self.testSection.getMsgToken(),
+                          type=TestCaseRun,
+                          testSection=self.testSection.getSectionId(),
+                          testSuite=self.testSuite.getSuiteId(),
+                          testCase=self.testCaseId)
+
+        self.logger.debug("[TC] sending command to TP1" + str(messageTP1.serialize()))
+
+        ack = self.TP1.sendAndWaitForAck(messageTP1, 60)
+        self.assertEqual(NO_ERROR, ack.getErrorCode(), "we don't expect any error code")
+
+        #Send UDP data to DUT for 100 times
+        self.udpTests.sendUdpData("COSP_RX",100)
+
+        result = self.testSection.waitForReports([self.TP1], 12000)
+
+        report1 = self.TP1.getLastReport()
+
+        self.assertEqual(True, result, "the waitForReports has timed out...\n"
+                         + "\ntime duration 1:   "  + str(report1))
+
+        self.assertNotEqual(None, report1, "report shouldn't be empty")
+        self.assertEqual(NO_ERROR, report1.getErrorCode(), "OK, this is the end of the test case")
+
+    def tearDown(self):
+        print("==========================================")
+        print("TearDown: TC_1.8.1-TestCase_SocketReceive ")
+        print("==========================================")
+                
+        #Close the UDP communication
+        self.udpTests.close()
+        message = Message(msgType=COMMAND, msgToken=self.testSection.getMsgToken(),
+                          type=TestCaseTeardown,
+                          testSection=self.testSection.getSectionId(),
+                          testSuite=self.testSuite.getSuiteId(),
+                          testCase=self.testCaseId)
+
+        ack = self.TP1.sendAndWaitForAck(message, TIMEOUT)
+        
+        self.assertEqual(NO_ERROR, ack.getErrorCode(), "we don't expect any error code")
+
