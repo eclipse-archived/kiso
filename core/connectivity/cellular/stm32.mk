@@ -16,7 +16,7 @@ BCDS_INCLUDES = \
 	-I$(BCDS_CONFIG_PATH)/Cellular \
 	-I$(BCDS_CONFIG_PATH)/Utils \
 	-I$(BCDS_UTILS_PATH)/include \
-	-I$(BCDS_REFCONTEXTS_PATH)/stm32/config/HAL \
+	-I$(BCDS_CONFIG_PATH)/HAL \
 	-I$(BCDS_ESSENTIALS_PATH)/include \
 	-I$(BCDS_ESSENTIALS_PATH)/include/mcu \
 	-I$(BCDS_FREERTOS_PATH)/Source/include \

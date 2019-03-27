@@ -5,7 +5,7 @@ pipeline
         docker
         {
             label 'RT-Z0KHU'
-            image 'rb-dtr.de.bosch.com/software-campus/cddk-toolchain:v0.1.1'
+            image 'rb-dtr.de.bosch.com/software-campus/cddk-toolchain:v0.2.0'
             registryUrl 'https://rb-dtr.de.bosch.com'
             registryCredentialsId 'docker-registry'
         }
@@ -30,6 +30,8 @@ pipeline
                 script // Run static analysis
                 {
                     echo "Build the application"
+                    sh 'meson debug --cross-file boards/SensGate/meson_config_stm32l4_gcc8.ini'
+                    sh 'cd debug && ninja'
                 }
             }
         }
