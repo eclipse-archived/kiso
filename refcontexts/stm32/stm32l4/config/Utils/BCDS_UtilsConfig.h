@@ -74,7 +74,7 @@
 
 #ifndef BCDS_FEATURE_SLEEPCONTROL
 /** @brief Enable (1) or disable (0) the SleepControl feature. */
-#define BCDS_FEATURE_SLEEPCONTROL       1
+#define BCDS_FEATURE_SLEEPCONTROL       0
 #endif
 
 #ifndef BCDS_FEATURE_TASKMONITOR
