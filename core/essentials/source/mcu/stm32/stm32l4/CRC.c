@@ -23,6 +23,7 @@
 
 #include "stm32l4xx.h"
 #include "stm32l4xx_hal_crc.h"
+#include "stm32l4xx_hal_rcc.h"
 
 #undef BCDS_MODULE_ID
 #define BCDS_MODULE_ID BCDS_ESSENTIALS_MODULE_ID_CRC
