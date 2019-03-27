@@ -143,6 +143,12 @@
 #define BCDS_FEATURE_BSP_RTOS_IN_USE                                            1
 #endif /* ifndef BCDS_FEATURE_BSP_RTOS_IN_USE */
 
+#ifndef BCDS_FEATURE_BSP_UMTS_LISAU2
+#define BCDS_FEATURE_BSP_UMTS_LISAU2                                            1
+#endif /* ifndef BCDS_FEATURE_BSP_UMTS_LISAU2 */
+
+
+
 #define BCDS_FEATURE_HAL_TICK_HANDLER                                           1
 
 #endif /*BCDS_HAL_CONFIG_H_*/

@@ -25,7 +25,6 @@
 
 #include "CellularModule.h"
 #include "BCDS_Assert.h"
-#include "BSP_BoardType.h"
 #include "BCDS_CellularConfig.h"
 #include "BCDS_BSP_UMTS_LisaU2.h"
 #include "CellularBsp.h"
