@@ -7,6 +7,8 @@ project('SensGateApp', 'c')
 device_type = 'stm32'
 mcu_family = 'stm32l4'
 os_to_use = 'freertos'
+# Add platform type: carbon/hydrogen and update all other scripts with it
+cellular_vendor = 'ublox'
 
 # Add platform type: carbon/hydrogen and update all other scripts with it
 cellular_vendor = 'ublox'

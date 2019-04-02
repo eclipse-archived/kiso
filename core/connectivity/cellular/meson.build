@@ -34,9 +34,9 @@ specific_files = r.stdout().strip().split()
 
 # Build lib
 cellular_lib = static_library('Cellular', 
-  common_files + specific_files, 
+  common_files + specific_files,
   include_directories : [config_dirs, module_dirs], 
   install : true)
 
-cellular_lib_dep = declare_dependency(include_directories : [config_dirs, module_dirs], 
+cellular_lib_dep = declare_dependency(include_directories : [config_dirs, module_dirs],
   link_with : cellular_lib)
