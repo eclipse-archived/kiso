@@ -12,10 +12,6 @@
  */
 /*----------------------------------------------------------------------------*/
 
-#include "BCDS_Stm32CubeInfo.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_STM32CUBE_MODULE_ID_HAL_DMA
-
 #include "BCDS_stm32l4xx_hal_dma.h"
 
 void BCDS_HAL_DMA_IRQHandler(DMA_HandleTypeDef *hdma, uint32_t channel)

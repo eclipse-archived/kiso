@@ -1,25 +1,19 @@
-#Example
+#Example Application built
 
 # Define project name
-project('SensGateApp', 'c')
+project('SensGate', 'c')
 
-# Define macros to use cross-builds
-device_type = 'stm32'
-mcu_family = 'stm32l4'
-os_to_use = 'freertos'
+# Get board
+subdir('boards/SensGate')
 
-# Add platform type: carbon/hydrogen and update all other scripts with it
-cellular_vendor = 'ublox'
+# Get 3rd party libraries
+subdir('thirdparty/freertos')
+subdir('thirdparty/stm32cubel4')
 
-# Define paths to the configuration files
-config_dir = join_paths('refcontexts', device_type, mcu_family, 'config') # Relative path from core
-config_dirs = include_directories([
-	config_dir,
-	join_paths(config_dir, 'Essentials'),
-	join_paths(config_dir, 'Utils'),
-	join_paths(config_dir, 'Cellular')])
-
-# Build library
+# Get kiso libraries
 subdir('core/essentials')
 subdir('core/utils')
-subdir('core/connectivity/cellular')
+#subdir('core/connectivity/cellular')
+
+# Get application & configuration
+subdir('examples/SensGate/application1')

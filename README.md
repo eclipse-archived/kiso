@@ -7,4 +7,4 @@
 # Meson build Sensgate:
 * meson debug --cross-file boards/SensGate/meson_config_stm32l4_gcc8.ini
 * cd debug
-* ninja
+* ninja hex

@@ -1,3 +1,4 @@
+### Build the Cellular library ###
 
 # Get headers
 include_dirs = [
@@ -27,16 +28,18 @@ path = './source/common'
 r = run_command('python', '-c', 'from os import listdir; print(" ".join(["@0@/" + f for f in listdir("@0@") if ".c" in f]))'.format(path))
 common_files = r.stdout().strip().split()
 
-# Get specific MCU source files
+# Get source files for the specific vendor chip used
 path = join_paths('./source', cellular_vendor)
 r = run_command('python', '-c', 'from os import listdir; print(" ".join(["@0@/" + f for f in listdir("@0@") if ".c" in f]))'.format(path))
 specific_files = r.stdout().strip().split()
 
-# Build lib
-cellular_lib = static_library('Cellular', 
-  common_files + specific_files, 
-  include_directories : [config_dirs, module_dirs], 
-  install : true)
+# Build library
+cellular_lib = static_library('Cellular',
+	common_files + specific_files,
+	include_directories : [config_dirs, module_dirs],
+	install : true)
 
-cellular_lib_dep = declare_dependency(include_directories : [config_dirs, module_dirs], 
-  link_with : cellular_lib)
+# Build library dependency object
+cellular_lib_dep = declare_dependency(
+	include_directories : [config_dirs, module_dirs],
+	link_with : cellular_lib)
