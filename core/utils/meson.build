@@ -6,7 +6,7 @@ include_dirs = [
 	'../essentials/include/mcu',
 	'../essentials/include/bsp']
 
-### Add here includes / dependencies to the vendor libs (to extend!)
+### Section: Add here includes / dependencies to the vendor libs (to extend!)
 third_party_dirs = []
 
 if 'freertos' == os_to_use
@@ -25,8 +25,10 @@ third_party_dirs += [
 	join_paths(stn32cubedriver_path, 'CMSIS/Device/ST', mcu_family.to_upper() + 'xx/Include'),
 	join_paths(stn32cubedriver_path, mcu_family.to_upper() + 'xx_HAL_Driver/Inc')]
 endif
-
 ### End of section
+
+# Build include object
+module_dirs = include_directories(include_dirs + third_party_dirs)
 
 # Get common source files
 path = './source'
@@ -41,8 +43,9 @@ specific_files = r.stdout().strip().split()
 # Build lib
 utils_lib = static_library('Utils', 
   common_files + specific_files, 
-  include_directories : include_directories(config_dirs + include_dirs + third_party_dirs), 
+  include_directories : [config_dirs, module_dirs], 
   install : true)
 
-utils_lib_dep = declare_dependency(include_directories : include_directories(config_dirs + include_dirs + third_party_dirs), 
+# Build dependency object
+utils_lib_dep = declare_dependency(include_directories : [config_dirs, module_dirs], 
   link_with : utils_lib)
