@@ -10,9 +10,6 @@ os_to_use = 'freertos'
 # Add platform type: carbon/hydrogen and update all other scripts with it
 cellular_vendor = 'ublox'
 
-# Add platform type: carbon/hydrogen and update all other scripts with it
-cellular_vendor = 'ublox'
-
 # Define paths to the configuration files
 config_dir = join_paths('refcontexts', device_type, mcu_family, 'config') # Relative path from core
 config_dirs = include_directories([
