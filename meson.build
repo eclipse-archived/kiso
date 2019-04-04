@@ -3,7 +3,7 @@
 # Define project name
 project('SensGate', 'c')
 
-# Get board
+# Get board & configuration
 subdir('boards/SensGate')
 
 # Get 3rd party libraries
@@ -15,5 +15,5 @@ subdir('core/essentials')
 subdir('core/utils')
 #subdir('core/connectivity/cellular')
 
-# Get application & configuration
+# Get application
 subdir('examples/SensGate/application1')
