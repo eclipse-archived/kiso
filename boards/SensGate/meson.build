@@ -4,7 +4,7 @@
 device_type = 'stm32'
 mcu_family = 'stm32l4'
 os_to_use = 'freertos'
-kiso_type = 'carbon'
+kiso_type = 'Carbon'
 compiler_type = 'GCC'
 
 cellular_vendor = 'ublox'
