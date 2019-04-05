@@ -64,7 +64,7 @@
  * @brief       Type definition for the sensor interrupt callback
  *
  * @details     The application should pass a function pointer of the same signature (**void function(int32_t, uint32_t)**)
- *              to BSP_Accel_ADXL362_Int1Enable() and BSP_Accel_ADXL362_Int2Enable() in order to handle interrupts
+ *              to BSP_ADXL372_Int1Enable() and BSP_ADXL372_Int2Enable() in order to handle interrupts
  *              coming from INT1 or INT2 lines.
  */
 typedef void (*BSP_ADXL372_InterruptCallback_T)(int32_t deviceId, uint32_t interruptEdge);

@@ -1,3 +1,4 @@
+### Build the Utils library ###
 
 # Get headers
 include_dirs = [
@@ -36,16 +37,17 @@ r = run_command('python', '-c', 'from os import listdir; print(" ".join(["@0@/" 
 common_files = r.stdout().strip().split()
 
 # Get specific MCU source files
-path = join_paths('./source/Carbon')
+path = join_paths('./source', kiso_type)
 r = run_command('python', '-c', 'from os import listdir; print(" ".join(["@0@/" + f for f in listdir("@0@") if ".c" in f]))'.format(path))
 specific_files = r.stdout().strip().split()
 
-# Build lib
+# Build library
 utils_lib = static_library('Utils', 
-  common_files + specific_files, 
-  include_directories : [config_dirs, module_dirs], 
-  install : true)
+	common_files + specific_files, 
+	include_directories : [config_dirs, module_dirs], 
+	install : true)
 
-# Build dependency object
-utils_lib_dep = declare_dependency(include_directories : [config_dirs, module_dirs], 
-  link_with : utils_lib)
+# Build library dependency object
+utils_lib_dep = declare_dependency(
+	include_directories : [config_dirs, module_dirs], 
+	link_with : utils_lib)
