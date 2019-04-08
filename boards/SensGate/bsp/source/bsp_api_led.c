@@ -74,7 +74,7 @@ Retcode_T BSP_LED_Connect(void)
 Retcode_T BSP_LED_Enable(uint32_t id)
 {
     BCDS_UNUSED(id);
-    Retcode_T retcode;
+    Retcode_T retcode = RETCODE_OK;
     if (!(bspState & (uint8_t) BSP_STATE_TO_ENABLED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
@@ -98,7 +98,7 @@ Retcode_T BSP_LED_Enable(uint32_t id)
 Retcode_T BSP_LED_Disable(uint32_t id)
 {
     BCDS_UNUSED(id);
-    Retcode_T retcode;
+    Retcode_T retcode = RETCODE_OK;
     if (!(bspState & (uint8_t) BSP_STATE_TO_DISABLED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
@@ -150,7 +150,7 @@ Retcode_T BSP_LED_Disconnect(void)
 Retcode_T BSP_LED_Switch(uint32_t id, uint32_t command)
 {
     Retcode_T retcode = RETCODE_OK;
-    if ((uint8_t) BSP_STATE_ENABLED == bspState)
+    if ((uint8_t) BSP_STATE_ENABLED != bspState)
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -192,10 +192,10 @@ static Retcode_T LED_Off(uint32_t id)
             HAL_GPIO_WritePin(GPIOD, PIN_LED_ALL, GPIO_PIN_RESET);
             break;
         case SENSGATE_LED_RED_ID:
-            HAL_GPIO_WritePin(GPIOD, PIND_LED_B, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(GPIOD, PIND_LED_R, GPIO_PIN_RESET);
             break;
         case SENSGATE_LED_GREEN_ID:
-            HAL_GPIO_WritePin(GPIOD, PIND_LED_B, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(GPIOD, PIND_LED_G, GPIO_PIN_RESET);
             break;
         case SENSGATE_LED_BLUE_ID:
             HAL_GPIO_WritePin(GPIOD, PIND_LED_B, GPIO_PIN_RESET);
@@ -222,10 +222,10 @@ static Retcode_T LED_On(uint32_t id)
             HAL_GPIO_WritePin(GPIOD, PIN_LED_ALL, GPIO_PIN_SET);
             break;
         case SENSGATE_LED_RED_ID:
-            HAL_GPIO_WritePin(GPIOD, PIND_LED_B, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(GPIOD, PIND_LED_R, GPIO_PIN_SET);
             break;
         case SENSGATE_LED_GREEN_ID:
-            HAL_GPIO_WritePin(GPIOD, PIND_LED_B, GPIO_PIN_SET);
+            HAL_GPIO_WritePin(GPIOD, PIND_LED_G, GPIO_PIN_SET);
             break;
         case SENSGATE_LED_BLUE_ID:
             HAL_GPIO_WritePin(GPIOD, PIND_LED_B, GPIO_PIN_SET);
@@ -252,10 +252,10 @@ static Retcode_T LED_Toggle(uint32_t id)
             HAL_GPIO_TogglePin(GPIOD, PIN_LED_ALL);
             break;
         case SENSGATE_LED_RED_ID:
-            HAL_GPIO_TogglePin(GPIOD, PIND_LED_B);
+            HAL_GPIO_TogglePin(GPIOD, PIND_LED_R);
             break;
         case SENSGATE_LED_GREEN_ID:
-            HAL_GPIO_TogglePin(GPIOD, PIND_LED_B);
+            HAL_GPIO_TogglePin(GPIOD, PIND_LED_G);
             break;
         case SENSGATE_LED_BLUE_ID:
             HAL_GPIO_TogglePin(GPIOD, PIND_LED_B);

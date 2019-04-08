@@ -121,7 +121,7 @@ void LPTIM1_IRQHandler(void)
     if (BITBAND_LPTIM1_ISR_CMPM_BIT)
     {
         /* Clear Compare match flag */
-        BITBAND_LPTIM1_ICR_CMPM_BIT = 0;
+        BITBAND_LPTIM1_ICR_CMPM_BIT = 1;
         overflow++;
     }
 }

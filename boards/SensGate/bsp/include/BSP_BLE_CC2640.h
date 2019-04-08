@@ -81,10 +81,10 @@ Retcode_T BSP_BLE_CC2640_Disconnect(void);
 /**
  * @brief       Enables the control over the peripheral.
  *
- * @details     This function will execute the required sequence to enable the GPS controller and allows it to receive,
+ * @details     This function will execute the required sequence to enable the BLE controller and allows it to receive,
  *              execute commands, and transmit data.
  *
- * @pre         BSP_GPS_CC2640_Connect() successfully executed.
+ * @pre         BSP_BLE_CC2640_Connect() successfully executed.
  *
  * @return      RETCODE_OK in the case of success or an error code otherwise.
  */
@@ -93,7 +93,7 @@ Retcode_T BSP_BLE_CC2640_Enable(void);
 /**
  * @brief       Disables the control over the peripheral.
  *
- * @details     This function once called will disable control over the GPS controller and if possible power it off.
+ * @details     This function once called will disable control over the BLE controller and if possible power it off.
  *
  * @return      RETCODE_OK in the case of success or an error code otherwise.
  */

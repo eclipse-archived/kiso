@@ -14,17 +14,25 @@
 
 #include "BCDS_BSP_Board.h"
 
+#include "BCDS_HAL_Delay.h"
 #include "BSP_Sensgate.h"
 #include "protected/board.h"
 #include "protected/time.h"
 #include "protected/gpio.h"
+#include "protected/usbd_core.h"
+#include "protected/usbd_desc.h"
+#include "protected/usbd_cdc.h"
+#include "protected/usbd_cdc_if.h"
+#include <string.h>
 #include "core_cm4.h"
+#include "stdio.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
 #undef BCDS_MODULE_ID
 #define BCDS_MODULE_ID MODULE_BSP_API_BOARD
 
+#define BSP_DELAY_USB_START     3000
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
 Retcode_T Board_InterruptsInit(void);
@@ -43,7 +51,12 @@ Retcode_T Board_SysTickInit(void);
 
 Retcode_T Board_GPIOInit(void);
 
+Retcode_T Board_USBInit(void);
+
 void SysTick_Handler(void);
+
+void Error_Handler(void);
+
 
 /*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/
 
@@ -52,6 +65,10 @@ static bool initDone = false; /**< board initialization status */
 static BSP_Systick_Callback_T preTickHandler = NULL; /**< function to be executed prior to incrementing the SYSTICK */
 
 static BSP_Systick_Callback_T postTickHandler = NULL; /**< function to be executed after incrementing the SYSTICK */
+
+USBD_HandleTypeDef usbDeviceHandle;
+
+extern USBD_DescriptorsTypeDef usbDeviceDescriptor;
 
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
 
@@ -105,6 +122,11 @@ Retcode_T BSP_Board_Initialize(uint32_t param1, void* param2)
     if (RETCODE_OK == retcode)
     {
         retcode = Time_StartTime(0);
+    }
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Board_USBInit();
+        (void)HAL_Delay_WaitMs(BSP_DELAY_USB_START);
     }
     if (RETCODE_OK == retcode)
     {
@@ -197,6 +219,8 @@ Retcode_T Board_CacheInit(void)
 Retcode_T Board_PowerInit(void)
 {
     Retcode_T retcode = RETCODE_OK;
+    __HAL_RCC_SYSCFG_CLK_ENABLE()
+                ;
     __HAL_RCC_PWR_CLK_ENABLE()
                 ;
     if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
@@ -218,15 +242,17 @@ Retcode_T Board_OscillatorsInit(void)
     Retcode_T retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_BOARD_OSCILLATORS_INIT_FAILED);
 
     RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
+    HAL_PWR_EnableBkUpAccess();
+    __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
 
     RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE | RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_HSI
             | RCC_OSCILLATORTYPE_MSI;
     RCC_OscInitStruct.LSEState = RCC_LSE_ON;
     RCC_OscInitStruct.LSIState = RCC_LSI_OFF;
     RCC_OscInitStruct.MSIState = RCC_MSI_ON;
-    RCC_OscInitStruct.MSIState = RCC_HSI_ON;
+    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
     RCC_OscInitStruct.MSICalibrationValue = RCC_MSICALIBRATION_DEFAULT;
-    RCC_OscInitStruct.MSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
     RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6; /* 4MHz */
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
     RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_MSI;
@@ -287,15 +313,15 @@ Retcode_T Board_PeripheralsClockInit(void)
     PeriphClkInit.Uart4ClockSelection = RCC_UART4CLKSOURCE_PCLK1;
     PeriphClkInit.I2c3ClockSelection = RCC_I2C3CLKSOURCE_PCLK1;
     PeriphClkInit.AdcClockSelection = RCC_ADCCLKSOURCE_PLLSAI1;
-    PeriphClkInit.UsbClockSelection = RCC_ADCCLKSOURCE_PLLSAI1;
+    PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_PLLSAI1;
     PeriphClkInit.Lptim1ClockSelection = RCC_LPTIM1CLKSOURCE_HSI;
     PeriphClkInit.PLLSAI1.PLLSAI1Source = RCC_PLLSOURCE_MSI;
     PeriphClkInit.PLLSAI1.PLLSAI1M = 1;
-    PeriphClkInit.PLLSAI1.PLLSAI1N = 16;
+    PeriphClkInit.PLLSAI1.PLLSAI1N = 24;
     PeriphClkInit.PLLSAI1.PLLSAI1P = RCC_PLLP_DIV7;
     PeriphClkInit.PLLSAI1.PLLSAI1Q = RCC_PLLQ_DIV2;
     PeriphClkInit.PLLSAI1.PLLSAI1R = RCC_PLLR_DIV2;
-    PeriphClkInit.PLLSAI1.PLLSAI1ClockOut = RCC_PLLSAI1_ADC1CLK;
+    PeriphClkInit.PLLSAI1.PLLSAI1ClockOut = RCC_PLLSAI1_48M2CLK;
     if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
     {
         retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_BOARD_PERIPHERALS_CLOCK_INIT_FAILED);
@@ -309,9 +335,43 @@ Retcode_T Board_PeripheralsClockInit(void)
  */
 Retcode_T Board_SysTickInit(void)
 {
-    HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
     HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+    HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
+    HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);
+
     return RETCODE_OK;
+}
+
+Retcode_T Board_USBInit(void)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    if (USBD_Init(&usbDeviceHandle, &usbDeviceDescriptor, DEVICE_FS) != USBD_OK)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_USBD_INIT_FAILED);
+    }
+    if (RETCODE_OK == retcode)
+    {
+        if (USBD_RegisterClass(&usbDeviceHandle, &USBD_CDC) != USBD_OK)
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_USBD_CLASS_REGISTER_FAILED);
+        }
+    }
+    if (RETCODE_OK == retcode)
+    {
+        if (USBD_CDC_RegisterInterface(&usbDeviceHandle, &USBD_Interface_fops_FS) != USBD_OK)
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_USBD_INTERFACE_REGISTER_FAILED);
+        }
+    }
+    if (RETCODE_OK == retcode)
+    {
+        if (USBD_Start(&usbDeviceHandle) != USBD_OK)
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_USBD_START_FAILED);
+        }
+    }
+    return retcode;
 }
 
 /**
@@ -326,7 +386,7 @@ Retcode_T Board_GPIOInit(void)
     GPIO_OpenClockGate(GPIO_PORT_A, PINA_EN_POW_SENS | PINA_EN_POW_GPS | PINA_VUSBM | PINA_EN_POW_GSM);
     BSP_GPIOInitStruct.Pin = PINA_EN_POW_SENS | PINA_EN_POW_GPS | PINA_EN_POW_GSM;
     BSP_GPIOInitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    BSP_GPIOInitStruct.Pull = GPIO_PULLDOWN;
+    BSP_GPIOInitStruct.Pull = GPIO_NOPULL;
     BSP_GPIOInitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(GPIOA, &BSP_GPIOInitStruct);
 
@@ -334,13 +394,13 @@ Retcode_T Board_GPIOInit(void)
     BSP_GPIOInitStruct.Mode = GPIO_MODE_ANALOG;
     BSP_GPIOInitStruct.Pull = GPIO_NOPULL;
     BSP_GPIOInitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(GPIOC, &BSP_GPIOInitStruct);
+    HAL_GPIO_Init(GPIOA, &BSP_GPIOInitStruct);
     GPIO_CloseClockGate(GPIO_PORT_A, PINA_EN_POW_SENS | PINA_EN_POW_GPS | PINA_VUSBM | PINA_EN_POW_GSM);
 
     GPIO_OpenClockGate(GPIO_PORT_B, PINB_EN_POW_BLE | PINB_EN_POW_MEM);
     BSP_GPIOInitStruct.Pin = PINB_EN_POW_BLE | PINB_EN_POW_MEM;
     BSP_GPIOInitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    BSP_GPIOInitStruct.Pull = GPIO_PULLDOWN;
+    BSP_GPIOInitStruct.Pull = GPIO_NOPULL;
     BSP_GPIOInitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(GPIOB, &BSP_GPIOInitStruct);
     GPIO_CloseClockGate(GPIO_PORT_B, PINB_EN_POW_BLE | PINB_EN_POW_MEM);
@@ -348,7 +408,7 @@ Retcode_T Board_GPIOInit(void)
     GPIO_OpenClockGate(GPIO_PORT_C, PINC_VBATM | PINC_EN_POW_5V_B | PINC_EN_POW_5V_A);
     BSP_GPIOInitStruct.Pin = PINC_EN_POW_5V_B | PINC_EN_POW_5V_A;
     BSP_GPIOInitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    BSP_GPIOInitStruct.Pull = GPIO_PULLDOWN;
+    BSP_GPIOInitStruct.Pull = GPIO_NOPULL;
     BSP_GPIOInitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(GPIOC, &BSP_GPIOInitStruct);
 
@@ -370,11 +430,16 @@ Retcode_T Board_GPIOInit(void)
     GPIO_OpenClockGate(GPIO_PORT_E, PINE_EN_POW_CAN | PINE_EN_VBATM);
     BSP_GPIOInitStruct.Pin = PINE_EN_POW_CAN | PINE_EN_VBATM;
     BSP_GPIOInitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    BSP_GPIOInitStruct.Pull = GPIO_PULLDOWN;
+    BSP_GPIOInitStruct.Pull = GPIO_NOPULL;
     BSP_GPIOInitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(GPIOE, &BSP_GPIOInitStruct);
     GPIO_CloseClockGate(GPIO_PORT_E, PINE_EN_POW_CAN | PINE_EN_VBATM);
     return RETCODE_OK;
+}
+
+void Error_Handler(void)
+{
+    for(;;);
 }
 
 /**
