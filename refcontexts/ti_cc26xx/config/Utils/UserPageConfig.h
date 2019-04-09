@@ -1,25 +1,17 @@
-/***************************************************************************************/
-/**
- *  Copyright (C) Robert Bosch. All Rights Reserved. Confidential.
- *
- *  Distribution only to people who need to know this information in
- *  order to do their job.(Need-to-know principle).
- *  Distribution to persons outside the company, only if these persons
- *  signed a non-disclosure agreement.
- *  Electronic transmission, e.g. via electronic mail, must be made in
- *  encrypted form.
- *
- *  @file
- *
- *  Configuration header for the UserPageAccess module.
- *  @note: 1) Size of the structure should be defined based on its element's size
- *         2) Application specific Union is necessary and this file is an example
- *  		  which is generic to the module and can be used as a reference(Very Important).
- *
- *  	   3) Each structure member's size and its offset has to provide as macro
- *  		  in this file (Very Important).see the below implementation
- *
- * *************************************************************************************/
+/********************************************************************************
+* Copyright (c) 2010-2019 Robert Bosch GmbH
+*
+* This program and the accompanying materials are made available under the
+* terms of the Eclipse Public License 2.0 which is available at
+* http://www.eclipse.org/legal/epl-2.0.
+*
+* SPDX-License-Identifier: EPL-2.0
+*
+* Contributors:
+*    Robert Bosch GmbH - initial contribution
+*
+********************************************************************************/
+
 
 /* header definition ******************************************************** */
 #ifndef BCDS_USERPAGE_CONFIG_H_

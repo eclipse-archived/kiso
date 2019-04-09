@@ -1,6 +1,3 @@
-/*----------------------------------------------------------------------------*/
-/* Modified by Bosch Connected Devices and Solutions GmbH.                    */
-/*----------------------------------------------------------------------------*/
 /**
   ******************************************************************************
   * @file    system_stm32l4xx.c
@@ -98,6 +95,12 @@
   ******************************************************************************
   */
 
+/******************************************************************************
+*
+* Modified by Robert Bosch GmbH.
+*
+******************************************************************************/
+
 #undef BCDS_MODULE_ID
 #define BCDS_MODULE_ID BCDS_ESSENTIALS_BSP_MODULE_ID_SYSTEM_STM32
 
@@ -147,7 +150,6 @@
 
 /************************* Miscellaneous Configuration ************************/
 /*!< Uncomment the following line if you need to relocate your vector Table in
-     Internal SRAM. */
 /* #define VECT_TAB_SRAM */
 #ifndef VECT_TAB_OFFSET
 #define VECT_TAB_OFFSET  0x00 /*!< Vector Table base offset field.

@@ -1,40 +1,17 @@
-/******************************************************************************/
-/**
- *  Copyright (C) Robert Bosch. All Rights Reserved. Confidential.
- *
- *  Distribution only to people who need to know this information in
- *  order to do their job.(Need-to-know principle).
- *  Distribution to persons outside the company, only if these persons
- *  signed a non-disclosure agreement.
- *  Electronic transmission, e.g. via electronic mail, must be made in
- *  encrypted form.
- *
- *  @file
- *
- *  The fault handler module can aid software developers to analyze exceptions
- *  thrown by the MCU.
- *
- *  The module defines a exception's handler function for each CMSIS defined
- *  fault handlers.
- *
- *  In case of exceptions, the hard fault exception handler will be called
- *  which will save the context into C variables which can be checked in the
- *  debugger after the exception event as the event handler blocks the
- *  application.
- *
- *  @note The SCB structure from CMSIS can be monitored in the debugger to get
- *        additional information about the hard fault failure.
- *        For example, SCB->CFSR can tell what kind of exception occurred.
- *
- *  @note The module is only active in debug builds!
- *
- *  Release builds must be built with the NDEBUG symbol defined in the
- *  makefile.
- *
- *  @note The library is specifically designed for ARM based MCUs implementing
- *  the ARM Embedded ABI.
- *
- * ****************************************************************************/
+/********************************************************************************
+* Copyright (c) 2010-2019 Robert Bosch GmbH
+*
+* This program and the accompanying materials are made available under the
+* terms of the Eclipse Public License 2.0 which is available at
+* http://www.eclipse.org/legal/epl-2.0.
+*
+* SPDX-License-Identifier: EPL-2.0
+*
+* Contributors:
+*    Robert Bosch GmbH - initial contribution
+*
+********************************************************************************/
+
 
 
 /* module includes ********************************************************** */

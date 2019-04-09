@@ -1,16 +1,16 @@
-/*----------------------------------------------------------------------------*/
-/*
- * Copyright (C) Bosch Connected Devices and Solutions GmbH.
- * All Rights Reserved. Confidential.
- *
- * Distribution only to people who need to know this information in
- * order to do their job.(Need-to-know principle).
- * Distribution to persons outside the company, only if these persons
- * signed a non-disclosure agreement.
- * Electronic transmission, e.g. via electronic mail, must be made in
- * encrypted form.
- */
-/*----------------------------------------------------------------------------*/
+/********************************************************************************
+* Copyright (c) 2010-2019 Robert Bosch GmbH
+*
+* This program and the accompanying materials are made available under the
+* terms of the Eclipse Public License 2.0 which is available at
+* http://www.eclipse.org/legal/epl-2.0.
+*
+* SPDX-License-Identifier: EPL-2.0
+*
+* Contributors:
+*    Robert Bosch GmbH - initial contribution
+*
+********************************************************************************/
 
 /* header definition ******************************************************** */
 #ifndef BCDS_GSMCONFIG_H_

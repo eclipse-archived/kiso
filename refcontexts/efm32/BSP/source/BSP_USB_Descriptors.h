@@ -32,11 +32,15 @@
  * arising from your use of this Software.
  *
  *****************************************************************************/
-  /**************************************************************************//**
- * Modified by Bosch Connected Devices and Solutions GmbH. Modifications are
+ 
+/*****************************************************************************
+ * Modified by Robert Bosch GmbH. 
+ *
+ * Modifications are
  *		-	Bosch specific vendor ID and Product ID
  *		-	Project specific string descriptor
  *****************************************************************************/
+
 #ifndef BCDS_DESCRIPTORS_H_
 #define BCDS_DESCRIPTORS_H_
 
