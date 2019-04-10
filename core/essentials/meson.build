@@ -45,4 +45,5 @@ essentials_lib = static_library('Essential',
 # Build library dependency object
 essentials_lib_dep = declare_dependency(
 	include_directories : [config_dirs, module_dirs],
-	link_with : essentials_lib)
+	link_with : essentials_lib,
+	link_whole: essentials_lib)

@@ -31,4 +31,5 @@ freertos_lib = static_library('FreeRTOS',
 # Build dependency object
 freertos_lib_dep = declare_dependency(
 	include_directories : [config_dirs, module_dirs], 
-	link_with : freertos_lib)
+	link_with : freertos_lib,
+	link_whole: freertos_lib)

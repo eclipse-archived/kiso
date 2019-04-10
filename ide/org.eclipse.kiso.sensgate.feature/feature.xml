@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.eclipse.kiso.cgw.feature"
+      label="CGW IDE Feature"
+      version="0.1.0.qualifier"
+      provider-name="Bosch GmbH">
+
+   <description>
+      Contains CGW IDE plugins
+   </description>
+
+   <copyright url="">
+      (c) Robert Bosch GmbH 2019
+   </copyright>
+
+   <license url="">
+      EPLv2
+   </license>
+
+   <plugin
+         id="org.eclipse.kiso.cgw.workbench"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.eclipse.kiso.cgw.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

@@ -50,4 +50,5 @@ utils_lib = static_library('Utils',
 # Build library dependency object
 utils_lib_dep = declare_dependency(
 	include_directories : [config_dirs, module_dirs], 
-	link_with : utils_lib)
+	link_with : utils_lib,
+	link_whole: utils_lib)

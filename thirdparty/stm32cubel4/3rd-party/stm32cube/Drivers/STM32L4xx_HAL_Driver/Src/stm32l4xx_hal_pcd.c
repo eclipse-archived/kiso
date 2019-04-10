@@ -588,7 +588,7 @@ void HAL_PCD_IRQHandler(PCD_HandleTypeDef *hpcd)
       USB_ActivateSetup(hpcd->Instance);
       hpcd->Instance->GUSBCFG &= ~USB_OTG_GUSBCFG_TRDT;
       
-      hpcd->Init.speed            = USB_OTG_SPEED_FULL;
+      hpcd->Init.speed            = USB_OTG_SPEED_HIGH_IN_FULL;
       hpcd->Init.ep0_mps          = USB_OTG_FS_MAX_PACKET_SIZE ; 
       
         /* The USBTRD is configured according to the tables below, depending on AHB frequency 

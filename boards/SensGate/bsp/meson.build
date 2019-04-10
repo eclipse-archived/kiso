@@ -36,4 +36,5 @@ bsp_lib = static_library('BSP',
 # Build library dependency object
 bsp_lib_dep = declare_dependency(
 	include_directories : [config_dirs, module_dirs],
-	link_with : bsp_lib)
+	link_with : bsp_lib,
+	link_whole: bsp_lib)

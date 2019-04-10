@@ -85,4 +85,5 @@ stm32cubel4_lib = static_library('stm32cubel4',
 # Build dependency object
 stm32cubel4_lib_dep = declare_dependency(
 	include_directories : [config_dirs, module_dirs], 
-	link_with : stm32cubel4_lib)
+	link_with : stm32cubel4_lib,
+	link_whole: stm32cubel4_lib)

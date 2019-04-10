@@ -10,12 +10,12 @@ compiler_type = 'GCC'
 cellular_vendor = 'ublox'
 
 # Build macro types: (influence the meson build)
-add_project_arguments([
+add_global_arguments([
 	'-DBCDS_PACKAGE_ID=0',
 	'-Dstm32',
 	'-Dstm32l4',
 	'-DSTM32L486xx',
-	'-DSTM32L486QG'], language : 'c')
+	'-DSTM32L486VG'], language : 'c')
 
 add_project_arguments([
 	'-DAPPLICATION_ENTRY_ADDRESS=0x08000000',
@@ -24,7 +24,7 @@ add_project_arguments([
 add_project_link_arguments([
 	'-DAPPLICATION_ENTRY_ADDRESS=0x08000000',
 	'-DAPPLICATION_SECTION_SIZE=0x80000',
-	'-Wl,-T@0@/Application_STM32L4xx_FLASH.ld'.format(meson.current_source_dir())], language : 'c')
+	'-T@0@/Application_STM32L4xx_FLASH.ld'.format(meson.current_source_dir())], language : 'c')
 
 # Get configurations for Kiso modules:
 config_dirs = include_directories([

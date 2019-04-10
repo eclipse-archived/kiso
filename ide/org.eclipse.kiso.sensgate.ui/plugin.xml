@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            category="org.eclipse.mita.program.ui"
+            class="org.eclipse.kiso.cgw.ui.NewMitaProjectWizard"
+            id="org.eclipse.kiso.cgw.ui.NewMitaProjectWizard"
+            name="New Eclipse Mita Project"
+            project="true">
+      </wizard>
+   </extension>
+
+</plugin>
