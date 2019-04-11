@@ -19,10 +19,6 @@
 #include "protected/board.h"
 #include "protected/time.h"
 #include "protected/gpio.h"
-#include "protected/usbd_core.h"
-#include "protected/usbd_desc.h"
-#include "protected/usbd_cdc.h"
-#include "protected/usbd_cdc_if.h"
 #include <string.h>
 #include "core_cm4.h"
 #include "stdio.h"
@@ -32,26 +28,23 @@
 #undef BCDS_MODULE_ID
 #define BCDS_MODULE_ID MODULE_BSP_API_BOARD
 
-#define BSP_DELAY_USB_START     3000
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
-Retcode_T Board_InterruptsInit(void);
+static Retcode_T Board_InterruptsInit(void);
 
-Retcode_T Board_AMBAClockInit(void);
+static Retcode_T Board_AMBAClockInit(void);
 
-Retcode_T Board_CacheInit(void);
+static Retcode_T Board_CacheInit(void);
 
-Retcode_T Board_PowerInit(void);
+static Retcode_T Board_PowerInit(void);
 
-Retcode_T Board_OscillatorsInit(void);
+static Retcode_T Board_OscillatorsInit(void);
 
-Retcode_T Board_PeripheralsClockInit(void);
+static Retcode_T Board_PeripheralsClockInit(void);
 
-Retcode_T Board_SysTickInit(void);
+static Retcode_T Board_SysTickInit(void);
 
-Retcode_T Board_GPIOInit(void);
-
-Retcode_T Board_USBInit(void);
+static Retcode_T Board_GPIOInit(void);
 
 void SysTick_Handler(void);
 
@@ -65,10 +58,6 @@ static bool initDone = false; /**< board initialization status */
 static BSP_Systick_Callback_T preTickHandler = NULL; /**< function to be executed prior to incrementing the SYSTICK */
 
 static BSP_Systick_Callback_T postTickHandler = NULL; /**< function to be executed after incrementing the SYSTICK */
-
-USBD_HandleTypeDef usbDeviceHandle;
-
-extern USBD_DescriptorsTypeDef usbDeviceDescriptor;
 
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
 
@@ -122,11 +111,6 @@ Retcode_T BSP_Board_Initialize(uint32_t param1, void* param2)
     if (RETCODE_OK == retcode)
     {
         retcode = Time_StartTime(0);
-    }
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Board_USBInit();
-        (void)HAL_Delay_WaitMs(BSP_DELAY_USB_START);
     }
     if (RETCODE_OK == retcode)
     {
@@ -219,10 +203,8 @@ Retcode_T Board_CacheInit(void)
 Retcode_T Board_PowerInit(void)
 {
     Retcode_T retcode = RETCODE_OK;
-    __HAL_RCC_SYSCFG_CLK_ENABLE()
-                ;
-    __HAL_RCC_PWR_CLK_ENABLE()
-                ;
+    __HAL_RCC_SYSCFG_CLK_ENABLE();
+    __HAL_RCC_PWR_CLK_ENABLE();
     if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
     {
         retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_BOARD_PWR_VOLTAGE_SCALING_FAILED);
@@ -340,38 +322,6 @@ Retcode_T Board_SysTickInit(void)
     HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq() / 1000);
 
     return RETCODE_OK;
-}
-
-Retcode_T Board_USBInit(void)
-{
-    Retcode_T retcode = RETCODE_OK;
-
-    if (USBD_Init(&usbDeviceHandle, &usbDeviceDescriptor, DEVICE_FS) != USBD_OK)
-    {
-        retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_USBD_INIT_FAILED);
-    }
-    if (RETCODE_OK == retcode)
-    {
-        if (USBD_RegisterClass(&usbDeviceHandle, &USBD_CDC) != USBD_OK)
-        {
-            retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_USBD_CLASS_REGISTER_FAILED);
-        }
-    }
-    if (RETCODE_OK == retcode)
-    {
-        if (USBD_CDC_RegisterInterface(&usbDeviceHandle, &USBD_Interface_fops_FS) != USBD_OK)
-        {
-            retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_USBD_INTERFACE_REGISTER_FAILED);
-        }
-    }
-    if (RETCODE_OK == retcode)
-    {
-        if (USBD_Start(&usbDeviceHandle) != USBD_OK)
-        {
-            retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_USBD_START_FAILED);
-        }
-    }
-    return retcode;
 }
 
 /**

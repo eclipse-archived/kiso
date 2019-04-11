@@ -20,20 +20,9 @@
 #include <time.h>
 #include <sys/time.h>
 #include <sys/times.h>
-#include "protected/usbd_cdc_if.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 /*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
 /*---------------------- LOCAL FUNCTIONS IMPLEMENTATION -------------------------------------------------------------*/
-
-int _write(int file, char *ptr, int len)
-{
-    BCDS_UNUSED(file);
-    if ((CDC_Transmit_FS((uint8_t*) ptr, (uint16_t) len)) != USBD_OK)
-    {
-        len = 0;
-    }
-    return len;
-}
