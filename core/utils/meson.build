@@ -18,13 +18,18 @@ third_party_dirs += [
 endif
 
 if 'stm32' == device_type
-stn32cube_path = '../../thirdparty/stm32cubel4'
-stn32cubedriver_path = '../../thirdparty/stm32cubel4/3rd-party/stm32cube/Drivers'
+stm32cube_path = '../../thirdparty/stm32cubel4'
+stm32cubedriver_path = '../../thirdparty/stm32cubel4/3rd-party/stm32cube/Drivers'
 third_party_dirs += [
-	join_paths(stn32cube_path, 'include'),
-	join_paths(stn32cubedriver_path, 'CMSIS/Include'),
-	join_paths(stn32cubedriver_path, 'CMSIS/Device/ST', mcu_family.to_upper() + 'xx/Include'),
-	join_paths(stn32cubedriver_path, mcu_family.to_upper() + 'xx_HAL_Driver/Inc')]
+	join_paths(stm32cube_path, 'include'),
+	join_paths(stm32cubedriver_path, 'CMSIS/Include'),
+	join_paths(stm32cubedriver_path, 'CMSIS/Device/ST', mcu_family.to_upper() + 'xx/Include'),
+	join_paths(stm32cubedriver_path, mcu_family.to_upper() + 'xx_HAL_Driver/Inc')]
+endif
+
+if 'segger' == gdb_type
+third_party_dirs += [
+	'../../thirdparty/SeggerRTT/3rd-party/SEGGER_RTT/RTT']
 endif
 ### End of section
 
@@ -36,10 +41,25 @@ path = './source'
 r = run_command('python', '-c', 'from os import listdir; print(" ".join(["@0@/" + f for f in listdir("@0@") if ".c" in f]))'.format(path))
 common_files = r.stdout().strip().split()
 
-# Get specific MCU source files
+# Get logging modules
+path = './source/Logging'
+r = run_command('python', '-c', 'from os import listdir; print(" ".join(["@0@/" + f for f in listdir("@0@") if ".c" in f]))'.format(path))
+common_files += r.stdout().strip().split()
+
+# Get specific type source files
 path = join_paths('./source', kiso_type)
 r = run_command('python', '-c', 'from os import listdir; print(" ".join(["@0@/" + f for f in listdir("@0@") if ".c" in f]))'.format(path))
 specific_files = r.stdout().strip().split()
+
+# Get specific type logging modules
+path = join_paths('./source/Logging', kiso_type)
+r = run_command('python', '-c', 'from os import listdir; print(" ".join(["@0@/" + f for f in listdir("@0@") if ".c" in f]))'.format(path))
+specific_files += r.stdout().strip().split()
+
+# Get specific HW logging modules
+path = join_paths('./source/Logging', kiso_type, device_type)
+r = run_command('python', '-c', 'from os import listdir; print(" ".join(["@0@/" + f for f in listdir("@0@") if ".c" in f]))'.format(path))
+specific_files += r.stdout().strip().split()
 
 # Build library
 utils_lib = static_library('Utils', 

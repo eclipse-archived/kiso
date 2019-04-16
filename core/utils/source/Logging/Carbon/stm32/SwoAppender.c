@@ -34,14 +34,14 @@
 #include <stdarg.h>
 
 /*lint -e101 -e451 */
-#include "stm32l4xx.h"
-#include "core_cm4.h"
+#include "SEGGER_RTT.h"
 /*lint +e101 +e451 */
 #include "BCDS_Retcode.h"
 
 static Retcode_T SwoAppenderInit(void *init)
 {
     BCDS_UNUSED(init);
+    SEGGER_RTT_Init();
     return RETCODE_OK;
 }
 
@@ -59,12 +59,7 @@ static Retcode_T SwoAppenderWrite(const char *message, uint32_t length)
     }
     else
     {
-        for (uint32_t i = 0; i < length; i++)
-        {
-            /* returns the character transmitted.
-             * Since it is of no benefit, making it void. */
-            (void) ITM_SendChar(message[i]);
-        }
+    	SEGGER_RTT_Write(0, message, length);
     }
 
     return rc;
