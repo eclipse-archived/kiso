@@ -1,23 +1,24 @@
+BCDS_ESSENTIALS_PATH = $(BCDS_PACKAGE_SHARED_HOME)/../essentials
+BCDS_FREERTOS_PATH = $(BCDS_PACKAGE_SHARED_HOME)/../../thirdparty/freertos/
+
 # Include paths of BCDS shared and 3rd party shared packages
 BCDS_GTEST_INCLUDES = \
 	$(BCDS_INCLUDES) \
-	-I$(BCDS_PACKAGE_HOME)/test/unit/include \
-	-Isource \
-	-I$(THIRD_PARTY_SHARED_PATH)/FreeRTOS/test/unit/include \
-	-I$(BCDS_UTILS_PATH)/test/unit/include \
-	-I$(BCDS_ESSENTIALS_PATH)/test/unit/include \
-	-I$(BCDS_ESSENTIALS_PATH)/test/unit/include/mcu \
-	-I$(BCDS_PACKAGE_HOME)/source/Carbon  \
-	-I$(BCDS_PACKAGE_HOME)/test/unit/include \
-	-I$(BCDS_PACKAGE_HOME)/include \
+	-I./test/unit/include \
+	-I./include \
+	-I./source \
+	-I./source/Carbon \
 	-I$(BCDS_CONFIG_PATH)/ \
 	-I$(BCDS_CONFIG_PATH)/Utils \
+	-I$(BCDS_ESSENTIALS_PATH)/include \
+	-I$(BCDS_ESSENTIALS_PATH)/test/unit/include \
+	-I$(BCDS_ESSENTIALS_PATH)/test/unit/include/mcu \
+	-I$(BCDS_FREERTOS_PATH)/test/unit/include \
 	-I$(BCDS_FREERTOS_PATH)/3rd-party/FreeRTOS/source/portable/ARM_CM3 \
 	-I$(BCDS_FREERTOS_PATH)/3rd-party/FreeRTOS/source/portable/GCC/ARM_CM3 \
-	-I$(BCDS_FREERTOS_PATH)/3rd-party/FreeRTOS/source/include \
-	-I$(BCDS_FREERTOS_PATH)/test/unit/include \
-	-I$(BCDS_ESSENTIALS_PATH)/include \
-	-I$(BCDS_ESSENTIALS_PATH)/test/unit/include
+	-I$(BCDS_FREERTOS_PATH)/3rd-party/FreeRTOS/source/include
+	
+	
 
 # Unit test files to be run
 BCDS_GTEST_TEST_FILES = \

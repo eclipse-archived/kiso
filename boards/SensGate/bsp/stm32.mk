@@ -8,17 +8,15 @@ BCDS_STM32CUBE_PATH ?= $(THIRD_PARTY_SHARED_PATH)/STM32Cubel4
 BCDS_MACROS_DEBUG += \
         -D $(BCDS_STM32_DEVICE_PACKAGE_TYPE) \
         -D USE_HAL_DRIVER=1 \
-        -D APPLICATION_ENTRY_ADDRESS=$(APPLICATION_ENTRY_ADDRESS) 
+
 BCDS_MACROS_RELEASE += \
         -D $(BCDS_STM32_DEVICE_PACKAGE_TYPE) \
         -D USE_HAL_DRIVER=1 \
-        -D APPLICATION_ENTRY_ADDRESS=$(APPLICATION_ENTRY_ADDRESS)
-
 # Define the path for include directories.
 BCDS_INCLUDES = \
-       -I$(BCDS_PACKAGE_HOME)/include \
-       -I$(BCDS_PACKAGE_HOME)/source/protected \
-       -I$(BCDS_PACKAGE_HOME)/source \
+       -I./include \
+       -I./source/protected \
+       -I./source \
        -I$(BCDS_ESSENTIALS_PATH)/include \
        -I$(BCDS_ESSENTIALS_PATH)/include/bsp \
        -I$(BCDS_ESSENTIALS_PATH)/include/mcu \

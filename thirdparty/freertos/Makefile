@@ -1,6 +1,5 @@
 BCDS_PACKAGE_NAME = FreeRTOS
 BCDS_PACKAGE_ID = 103
-BCDS_PACKAGE_HOME = $(CURDIR)
 
 # We include the common makefile.
 # Mind that the variable BCDS_COMMON_MAKEFILE must be passed

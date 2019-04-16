@@ -1,12 +1,15 @@
+BCDS_UTILS_PATH = $(BCDS_PACKAGE_SHARED_HOME)/../utils
+BCDS_STM32CUBE_PATH = $(BCDS_PACKAGE_SHARED_HOME)/../../thirdparty/stm32cubel4
+
 #Includes required to run unit tests
 BCDS_GTEST_INCLUDES = \
 	$(BCDS_INCLUDES) \
 	-I$(BCDS_STM32CUBE_PATH)/test/unit/include \
-	-I$(BCDS_PACKAGE_HOME)/include/mcu/stm32 \
-	-I$(BCDS_PACKAGE_HOME)/source/stm32/$(BCDS_MCU_FAMILY) \
-	-I$(BCDS_PACKAGE_HOME)/test/unit/include \
-	-I$(BCDS_PACKAGE_HOME)/test/unit/include/mcu \
-	-I$(BCDS_PACKAGE_HOME)/test/unit/include/bsp \
+	-I./include/mcu/stm32 \
+	-I./source/stm32/$(BCDS_MCU_FAMILY) \
+	-I./test/unit/include \
+	-I./test/unit/include/mcu \
+	-I./test/unit/include/bsp \
 	-I$(BCDS_UTILS_PATH)/test/unit/include
 
 #Unit test files to be run

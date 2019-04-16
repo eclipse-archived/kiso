@@ -12,12 +12,12 @@ BCDS_UTILS_PATH ?= $(BCDS_SHARED_PATH)/Utils
 
 # Define the path for include directories.
 BCDS_INCLUDES = \
-	-I$(BCDS_PACKAGE_HOME)/include \
-	-I$(BCDS_PACKAGE_HOME)/include/mcu \
-	-I$(BCDS_PACKAGE_HOME)/include/mcu/stm32 \
-	-I$(BCDS_PACKAGE_HOME)/include/bsp \
-	-I$(BCDS_PACKAGE_HOME)/source \
-	-I$(BCDS_PACKAGE_HOME)/source/mcu/stm32/$(BCDS_MCU_FAMILY) \
+	-I./include \
+	-I./include/mcu \
+	-I./include/mcu/stm32 \
+	-I./include/bsp \
+	-I./source \
+	-I./source/mcu/stm32/$(BCDS_MCU_FAMILY) \
 	-I$(BCDS_CONFIG_PATH) \
 	-I$(BCDS_CONFIG_PATH)/Essentials \
 	-I$(BCDS_CONFIG_PATH)/Utils \

@@ -1,0 +1,7 @@
+Speed 12000
+r
+h
+loadbin C:/CDDK_Example/application/Application/debug/App_SenseGate_cont_debug.bin 0x08000000
+verifybin C:/CDDK_Example/application/Application/debug/App_SenseGate_cont_debug.bin 0x08000000
+r
+qc

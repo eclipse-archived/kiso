@@ -64,8 +64,6 @@ void appInitSystem(void * CmdProcessorHandle, uint32_t param2)
     BCDS_UNUSED(param2);
     Retcode_T returnVal = RETCODE_OK;
 
-    returnVal = LedInitialize();
-
     if (RETCODE_OK == returnVal)
     {
         CmdProcessor_Enqueue((CmdProcessor_T*)AppCmdProcessor,blink_led,(void *)AppCmdProcessor,0);
@@ -79,27 +77,6 @@ void appInitSystem(void * CmdProcessorHandle, uint32_t param2)
         printf("Successful Initialize of BLINKY LED APPLICATION \n ");
     }
 }
-/* Routine to Initialize the LED */
-static Retcode_T LedInitialize(void)
-{
-    Retcode_T returnVal = RETCODE_OK;
-    returnVal = BSP_LED_Connect();
-    if (RETCODE_OK == returnVal)
-    {
-        returnVal = BSP_LED_Enable((uint32_t) SENSGATE_LED_ALL);
-    }
-    if (RETCODE_OK == returnVal)
-    {
-        printf("LED Initialization succeed without error %u \n", (unsigned int) returnVal);
-    }
-    else
-    {
-        printf(" Error occurred in LED Initialization routine %u \n", (unsigned int) returnVal);
-    }
-    return returnVal;
-}
-
-
 
 void blink_led(void* param1, uint32_t param2)
 {

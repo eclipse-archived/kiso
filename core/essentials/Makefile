@@ -1,7 +1,6 @@
 BCDS_PACKAGE_NAME = Essentials
 BCDS_PACKAGE_ID = 35
-
-export BCDS_PACKAGE_HOME = $(CURDIR)
+export BCDS_PACKAGE_SHARED_HOME := $(CURDIR)
 
 # We include the common makefile. 
 # Mind that the variable BCDS_COMMON_MAKEFILE must be passed 

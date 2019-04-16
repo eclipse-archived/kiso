@@ -1,7 +1,6 @@
 BCDS_PACKAGE_NAME = BSP
 BCDS_PACKAGE_ID = 175
-
-BCDS_PACKAGE_HOME = $(CURDIR)
+export BCDS_PACKAGE_SHARED_HOME := $(CURDIR)
 
 # We include the common makefile. 
 # Mind that the variable BCDS_COMMON_MAKEFILE must be passed 
@@ -18,6 +17,6 @@ include $(BCDS_TARGET_PLATFORM).mk
 # makefile which has been included above.
 # the gtest common makefile defines the build rules
 # gtest_build, gtest (executes the tests), gtest_clean
-#include $(BCDS_COMMON_GTEST_MAKEFILE)
+include $(BCDS_COMMON_GTEST_MAKEFILE)
 
 include test/unit/gtest_$(BCDS_TARGET_PLATFORM).mk

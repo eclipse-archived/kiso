@@ -40,8 +40,8 @@ FAKE_VOID_FUNC(__HAL_RCC_CRC_CLK_ENABLE);
 FAKE_VOID_FUNC(__HAL_RCC_CRC_CLK_DISABLE);
 
 /* setup compile time configuration defines */
-#undef BCDS_FEATURE_CRC
-#define BCDS_FEATURE_CRC 1
+#undef BCDS_FEATURE_MCU_CRC
+#define BCDS_FEATURE_MCU_CRC 1
 
 /* Include unit under test */
 #include "CRC.c"

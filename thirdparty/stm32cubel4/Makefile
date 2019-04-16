@@ -1,6 +1,5 @@
 BCDS_PACKAGE_NAME = stm32cubel4
 BCDS_PACKAGE_ID = 104
-BCDS_PACKAGE_HOME = $(CURDIR)
 
 # We include the common makefile.
 # Mind that the variable BCDS_COMMON_MAKEFILE must be passed

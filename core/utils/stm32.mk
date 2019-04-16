@@ -3,12 +3,20 @@ BCDS_ESSENTIALS_PATH ?= $(BCDS_SHARED_PATH)/Essentials
 BCDS_UTILS_PATH ?= $(BCDS_SHARED_PATH)/Utils
 
 #Root paths to 3rd party shared packages on which this package depends
-BCDS_FREERTOS_PATH ?= $(THIRD_PARTY_SHARED_PATH)/FreeRTOS
-BCDS_STM32CUBE_PATH ?= $(THIRD_PARTY_SHARED_PATH)/STM32Cube
+BCDS_FREERTOS_PATH ?= $(THIRD_PARTY_SHARED_PATH)/freertos
+
+#Root paths to library packages on which this package depends
+ifeq ($(BCDS_MCU_FAMILY),stm32l4)
+	BCDS_STM32CUBE_PATH ?= $(THIRD_PARTY_SHARED_PATH)/stm32cubel4
+endif
+
+ifeq ($(BCDS_MCU_FAMILY),stm32f7)
+	BCDS_STM32CUBE_PATH ?= $(THIRD_PARTY_SHARED_PATH)/stm32cubef7
+endif
 	
 # Define the path for the include directories.
 BCDS_INCLUDES = \
-    -I$(BCDS_PACKAGE_HOME)/include \
+    -I./include \
     -I$(BCDS_ESSENTIALS_PATH)/include \
     -I$(BCDS_UTILS_PATH)/include \
     -I$(BCDS_CONFIG_PATH) \
