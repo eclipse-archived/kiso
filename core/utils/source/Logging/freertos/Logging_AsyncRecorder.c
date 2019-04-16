@@ -26,44 +26,49 @@
  *
  */
 
+/* Include utils to have access to the defined module and error IDs */
 #include "BCDS_Utils.h"
 #undef BCDS_MODULE_ID
 #define BCDS_MODULE_ID  BCDS_UTILS_MODULE_ID_LOGGING_RECORD_ASYNCHRONOUS
 
+/* Include the Logging header, which include the configuration that enable and define macros for this module */
 #include "BCDS_Logging.h"
 
-#if BCDS_FEATURE_LOGGING
+/* Enable/Disable macro for the feature */
+#if BCDS_FEATURE_LOGGING && BCDS_ASYNC_RECORDER
 
-#include "LogConfig.h"
-
+/* Include needed headers */
 #include <stdio.h>
 #include <stdarg.h>
 #include "BCDS_Basics.h"
 #include "BCDS_Retcode.h"
 #include "BCDS_Assert.h"
+#include "BCDS_Queue.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "portmacro.h"
-#include "BCDS_Queue.h"
 
-#define LOG_SYS_CLOCK_DELAY     (10)
-#define LOG_APPENDER_TIMEOUT    (1000)
-
+/* Message structure definition via macros*/
 #define LOG_LINE_FMT            "%.10u %s %3u %.*s\t[%s:%d]\t"
 #define LOG_LINE_ENDING         "\r\n"
 
 const char *LOG_LEVEL_STR[LOG_LEVEL_COUNT] =
 {   "", "F", "E", "W", "I", "D"};
 
-static Queue_T LogQueue;
-static uint8_t LogQueueBuffer[LOG_QUEUE_BUFFER_SIZE];
-static TaskHandle_t LogTaskHandle = NULL;
+static Queue_T LogQueue; /**< Guarded queue used to forward the messages to the task that will send them */
+static uint8_t LogQueueBuffer[LOG_QUEUE_BUFFER_SIZE]; /**< Buffer that will gather a suit of messages */
+static TaskHandle_t LogTaskHandle = NULL; /**< FreeRTOS task handle */
 
+/**
+ * @brief
+ * 		The task will be triggered via the guarded-queue and will run between 2 application run cycles.
+ */
 static void AsyncRecorder_Task(void *param)
 {
     char *msg;
     uint32_t len;
     LogRecorder_T *recorder = (LogRecorder_T *) param;
+
     if ((NULL == recorder) || (NULL == recorder->Wakeup) || (NULL == recorder->Appender.Write))
     {
         Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_ERROR,RETCODE_NULL_POINTER));
@@ -85,6 +90,10 @@ static void AsyncRecorder_Task(void *param)
     }
 }
 
+/**
+ * @brief
+ * 		Initialize the recorder (queue, task, semaphore creations)
+ */
 static Retcode_T AsyncRecorder_Init(void *self)
 {
     LogRecorder_T *recorder = (LogRecorder_T *) self;
@@ -117,6 +126,10 @@ static Retcode_T AsyncRecorder_Init(void *self)
     return RETCODE_OK;
 }
 
+/**
+ * @brief
+ * 		Deinitialize the recorder (queue, task, semaphore destruction)
+ */
 static Retcode_T AsyncRecorder_Deinit(void *self)
 {
     LogRecorder_T *recorder = (LogRecorder_T *) self;
@@ -133,36 +146,50 @@ static Retcode_T AsyncRecorder_Deinit(void *self)
     return retcode;
 }
 
+/**
+ * @brief
+ * 		Function that will be called when a log API is called (LOG_XXX(...))
+ */
 static Retcode_T AsyncRecorder_Write(void *self, LogLevel_T level, uint8_t package, uint8_t module, const char *file, uint32_t line, const char *fmt, va_list args)
 {
     char buffer[LOG_BUFFER_SIZE];
-
+    int32_t size = 0;
     BCDS_UNUSED(module);
     BCDS_UNUSED(self);
 
+    /* Check NULL pointers to avoid overflows or wrong addressing */
     if ( (NULL == file) || (NULL == fmt))
     {
         return(RETCODE(RETCODE_SEVERITY_ERROR,RETCODE_NULL_POINTER));
     }
 
+    /* Add first into the buffer different information relative to what is logged such as tick, file name, line, log level, ... */
     int32_t size = snprintf(buffer, sizeof(buffer), LOG_LINE_FMT,
             (uint32_t) xTaskGetTickCount(), LOG_LEVEL_STR[level], (uint32_t) package,
             configMAX_TASK_NAME_LEN, pcTaskGetTaskName(NULL), file, (uint32_t) line); /*lint -esym(515 516,snprintf) */
 
+    /* Parse and add the message sent via the log function */
     if (size > 0 && (uint32_t) size < sizeof(buffer))
     {
         size += vsnprintf(buffer + size, sizeof(buffer) - size, fmt, args);
     }
 
+    /* Delete data to make an end of line fit */
     if ((uint32_t) size > sizeof(buffer) - sizeof(LOG_LINE_ENDING))
     {
         size = sizeof(buffer) - sizeof(LOG_LINE_ENDING);
     }
 
+    /* Add the end of line */
     size += snprintf(buffer + size, sizeof(buffer) - size, LOG_LINE_ENDING);
+
+    /* Put into the queue the generated log message */
     return Queue_Put(&LogQueue, buffer, size, NULL, 0);
 }
 
+/**
+ * @brief Create singleton
+ */
 static const LogRecorder_T LogRecordAsyncCompact =
 {
     .Init = AsyncRecorder_Init,
@@ -172,7 +199,6 @@ static const LogRecorder_T LogRecordAsyncCompact =
     .Appender =
     {   .Init = NULL, .Write = NULL}
 };
-
 const LogRecorder_T* Logging_AsyncRecorder = &LogRecordAsyncCompact;
 
-#endif /* if BCDS_FEATURE_LOGGING */
+#endif /* if BCDS_FEATURE_LOGGING && BCDS_ASYNC_RECORDER */

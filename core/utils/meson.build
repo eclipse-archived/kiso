@@ -52,12 +52,7 @@ r = run_command('python', '-c', 'from os import listdir; print(" ".join(["@0@/" 
 specific_files = r.stdout().strip().split()
 
 # Get specific type logging modules
-path = join_paths('./source/Logging', kiso_type)
-r = run_command('python', '-c', 'from os import listdir; print(" ".join(["@0@/" + f for f in listdir("@0@") if ".c" in f]))'.format(path))
-specific_files += r.stdout().strip().split()
-
-# Get specific HW logging modules
-path = join_paths('./source/Logging', kiso_type, device_type)
+path = join_paths('./source/Logging', os_to_use)
 r = run_command('python', '-c', 'from os import listdir; print(" ".join(["@0@/" + f for f in listdir("@0@") if ".c" in f]))'.format(path))
 specific_files += r.stdout().strip().split()
 
