@@ -226,7 +226,7 @@ typedef Retcode_T (*LogRecordDeinit_T)(void *self);
 /**
  * @brief A function pointer type to log recorder writer.
  */
-typedef Retcode_T (*LogRecordWrite_T)(LogLevel_T level, uint8_t package, uint8_t module, const char *file, uint32_t line, const char *fmt, va_list args);
+typedef Retcode_T (*LogRecordWrite_T)(void *self, LogLevel_T level, uint8_t package, uint8_t module, const char *file, uint32_t line, const char *fmt, va_list args);
 
 /**
  * @brief A function pointer type to log appender initializer.

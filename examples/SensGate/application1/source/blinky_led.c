@@ -41,8 +41,7 @@
 #include "FreeRTOS.h"
 #include "timers.h"
 #include "BCDS_Logging.h"
-
-static Retcode_T LedInitialize(void);
+#include "SEGGER_RTT.h"
 
 void blink_led(void* param1, uint32_t param2);
 
@@ -59,7 +58,7 @@ void appInitSystem(void * CmdProcessorHandle, uint32_t param2)
 	Retcode_T returnVal = RETCODE_OK;
 
 	// Initialize logging module
-	returnVal = Logging_Init(Logging_AsyncRecorder, Logging_SwoAppender);
+	returnVal = Logging_Init(Logging_SyncRecorder, Logging_SwoAppender);
     if (RETCODE_OK == returnVal)
     {
     	LOG_DEBUG(" Logging was started successfully");
@@ -90,6 +89,7 @@ void appInitSystem(void * CmdProcessorHandle, uint32_t param2)
 
 void blink_led(void* param1, uint32_t param2)
 {
+    (void)param1;
     (void)param2;
 	BSP_LED_Switch(SENSGATE_LED_BLUE_ID, SENSGATE_LED_COMMAND_TOGGLE);
 	LOG_DEBUG("Led switch");

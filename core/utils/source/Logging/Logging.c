@@ -68,7 +68,7 @@ Retcode_T Logging_Init(const LogRecorder_T *recorder, const LogAppender_T *appen
 Retcode_T Logging_Log(LogLevel_T level, uint8_t package, uint8_t module, const char *file,
         uint32_t line, const char *fmt, ...)
 {
-    if (NULL == Logging_Recorder.Wakeup)
+    if (NULL == Logging_Recorder.Write)
     {
         return RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_UNINITIALIZED);
     }
@@ -82,7 +82,7 @@ Retcode_T Logging_Log(LogLevel_T level, uint8_t package, uint8_t module, const c
 
     va_list args;
     va_start(args, fmt); /*lint !e530 !e10 !e40 */
-    Retcode_T retcode = Logging_Recorder.Write(level, package, module, file, line, fmt, args);
+    Retcode_T retcode = Logging_Recorder.Write(&Logging_Recorder, level, package, module, file, line, fmt, args);
     va_end(args);
 
     return retcode;
