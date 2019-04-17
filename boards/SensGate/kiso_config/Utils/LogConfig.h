@@ -22,15 +22,18 @@
 #ifndef LOG_CONFIG_H
 #define LOG_CONFIG_H
 
+/* Enable logging macros */
+#define BCDS_LOGGING 1
+
 /* Configuration for the Asyncronous Recorder */
 #define LOG_BUFFER_SIZE             (UINT16_C(256))
 #define LOG_QUEUE_BUFFER_SIZE       (UINT16_C(2048))
 #define LOG_TASK_STACK_SIZE         (UINT16_C(128))
 #define LOG_TASK_PRIORITY           (UINT8_C(4))
-#define LOG_FILTER_ITEM_COUNT       (UINT8_C(8))
+#define LOG_FILTER_ITEM_COUNT       (UINT8_C(1))
 
 /* Default log level for package and module */
-#define LOG_LEVEL_PACKAGE_DEFAULT   (LOG_LEVEL_INFO)
-#define LOG_LEVEL_MODULE_DEFAULT    (LOG_LEVEL_INFO)
+#define LOG_LEVEL_PACKAGE_DEFAULT   (LOG_LEVEL_DEBUG)
+#define LOG_LEVEL_MODULE_DEFAULT    (LOG_LEVEL_DEBUG)
 
 #endif /* LOG_CONFIG_H */

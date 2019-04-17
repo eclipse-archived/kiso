@@ -6,6 +6,7 @@ mcu_family = 'stm32l4'
 os_to_use = 'freertos'
 kiso_type = 'Carbon'
 compiler_type = 'GCC'
+gdb_type = 'segger'
 
 cellular_vendor = 'ublox'
 
@@ -31,7 +32,8 @@ config_dirs = include_directories([
 	'kiso_config',
 	'kiso_config/Essentials',
 	'kiso_config/Utils',
-	'kiso_config/Cellular'])
+	'kiso_config/Cellular',
+	'kiso_config/SeggerRTT'])
 
 
 # Build the BSP:

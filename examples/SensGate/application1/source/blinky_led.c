@@ -40,8 +40,8 @@
 #include "BCDS_Assert.h"
 #include "FreeRTOS.h"
 #include "timers.h"
-
-static Retcode_T LedInitialize(void);
+#include "BCDS_Logging.h"
+#include "SEGGER_RTT.h"
 
 void blink_led(void* param1, uint32_t param2);
 
@@ -55,14 +55,23 @@ CmdProcessor_T *AppCmdProcessor;
 void appInitSystem(void * CmdProcessorHandle, uint32_t param2)
 {
 	(void)param2;
+	Retcode_T returnVal = RETCODE_OK;
+
+	// Initialize logging module
+	returnVal = Logging_Init(Logging_SyncRecorder, Logging_SwoAppender);
+    if (RETCODE_OK == returnVal)
+    {
+    	LOG_DEBUG(" Logging was started successfully");
+    }
+
+	// Initialize the blinking led
     if (CmdProcessorHandle == NULL)
     {
         printf("Command processor handle is null \n\r");
         assert(false);
     }
     AppCmdProcessor = (CmdProcessor_T *) CmdProcessorHandle;
-    BCDS_UNUSED(param2);
-    Retcode_T returnVal = RETCODE_OK;
+
 
     if (RETCODE_OK == returnVal)
     {
@@ -80,8 +89,10 @@ void appInitSystem(void * CmdProcessorHandle, uint32_t param2)
 
 void blink_led(void* param1, uint32_t param2)
 {
+    (void)param1;
     (void)param2;
 	BSP_LED_Switch(SENSGATE_LED_BLUE_ID, SENSGATE_LED_COMMAND_TOGGLE);
+	LOG_DEBUG("Led switch");
     vTaskDelay(500);
     CmdProcessor_Enqueue((CmdProcessor_T*)param1,blink_led,param1,0);
 }

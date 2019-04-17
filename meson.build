@@ -9,6 +9,7 @@ subdir('boards/SensGate')
 # Get 3rd party libraries
 subdir('thirdparty/freertos')
 subdir('thirdparty/stm32cubel4')
+subdir('thirdparty/SeggerRTT')
 
 # Get kiso libraries
 subdir('core/essentials')
