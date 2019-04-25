@@ -17,7 +17,7 @@
 ## Build Sensgate (via meson):
 **Build**:
 ```bash
-meson debug --cross-file boards/SensGate/meson_config_stm32l4_gcc8.ini -Db_pch=false -Db_staticpic=false
+meson debug --cross-file boards/SensGate/meson_config_stm32l4_gcc8.ini
 cd debug
 ninja hex
 ```

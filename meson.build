@@ -1,7 +1,7 @@
 #Example Application built
 
 # Define project name
-project('SensGate', 'c')
+project('SensGate', 'c', default_options: meson.get_cross_property('project_config'))
 
 # Get board & configuration
 subdir('boards/SensGate')
