@@ -19,16 +19,18 @@
  *
  */
 
+/* Include utils to have access to the defined module and error IDs */
 #include "BCDS_Utils.h"
 #undef BCDS_MODULE_ID
 #define BCDS_MODULE_ID  BCDS_UTILS_MODULE_ID_LOGGING_RECORD_SYNCHRONOUS
 
+/* Include the Logging header, which include the configuration that enable and define macros for this module */
 #include "BCDS_Logging.h"
 
-#if BCDS_FEATURE_LOGGING
+/* Enable/Disable macro for the feature */
+#if BCDS_FEATURE_LOGGING && BCDS_SYNC_RECORDER
 
-#include "LogConfig.h"
-
+/* Include needed headers */
 #include <stdio.h>
 #include <stdarg.h>
 #include "FreeRTOS.h"
@@ -37,6 +39,7 @@
 #include "BCDS_Retcode.h"
 #include "BCDS_Assert.h"
 
+/* Message structure definition via macros*/
 #define LOG_LINE_FMT            "%.10u %s %3u %.*s\t[%s:%d]\t"
 #define LOG_LINE_ENDING         "\r\n"
 
@@ -44,6 +47,10 @@ const char *LOG_LEVEL_STRING[LOG_LEVEL_COUNT] =
 {   "", "F", "E", "W", "I", "D"};
 
 
+/**
+ * @brief
+ * 		Initialize the recorder (check if the object provided is valid)
+ */
 static Retcode_T SyncRecorder_Init(void *self)
 {
     LogRecorder_T *recorder = (LogRecorder_T *) self;
@@ -54,16 +61,24 @@ static Retcode_T SyncRecorder_Init(void *self)
     return RETCODE_OK;
 }
 
+/**
+ * @brief
+ * 		Deinitialize the recorder (check if the object provided is valid)
+ */
 static Retcode_T SyncRecorder_Deinit(void *self)
 {
     LogRecorder_T *recorder = (LogRecorder_T *) self;
-    if ((NULL == recorder) || (NULL == recorder->Wakeup))
+    if (NULL == recorder)
     {
         return(RETCODE(RETCODE_SEVERITY_ERROR,RETCODE_NULL_POINTER));
     }
     return RETCODE_OK;
 }
 
+/**
+ * @brief
+ * 		Function that will be called when a log API is called (LOG_XXX(...))
+ */
 static Retcode_T SyncRecorder_Write(void *self, LogLevel_T level, uint8_t package, uint8_t module, const char *file, uint32_t line, const char *fmt, va_list args)
 {
     char buffer[LOG_BUFFER_SIZE] = {0};
@@ -100,6 +115,9 @@ static Retcode_T SyncRecorder_Write(void *self, LogLevel_T level, uint8_t packag
     return recorder->Appender.Write(buffer, size);
 }
 
+/**
+ * @brief Create singleton
+ */
 static const LogRecorder_T LogRecordSyncCompact =
 {
     .Init = SyncRecorder_Init,
@@ -109,7 +127,6 @@ static const LogRecorder_T LogRecordSyncCompact =
     .Appender =
     {   .Init = NULL, .Write = NULL}
 };
-
 const LogRecorder_T* Logging_SyncRecorder = &LogRecordSyncCompact;
 
-#endif /* if BCDS_FEATURE_LOGGING */
+#endif /* if BCDS_FEATURE_LOGGING && BCDS_SYNC_RECORDER*/

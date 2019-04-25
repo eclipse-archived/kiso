@@ -8,7 +8,7 @@ BUILDS := debug release
 # path in a variable called BCDS_ABC_PATH (note the upper case of the libary name
 # The compilations results in a .a lib in the following location and naming convension
 # $(BCDS_$(2)_PATH)/libAbc_$(BCDS_TARGET_PLATFORM)_$(build).a
-LIBS := Utils Essentials BSP STM32CubeL4 FreeRTOS
+LIBS := Utils Essentials BSP STM32CubeL4 FreeRTOS SeggerRTT
 
 #1 is the build 2 is the lib
 define add_lib =

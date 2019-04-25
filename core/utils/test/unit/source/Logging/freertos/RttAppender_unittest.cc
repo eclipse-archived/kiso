@@ -22,29 +22,22 @@ extern "C"
 /* setup compile time configuration defines */
 #include "BCDS_Utils.h"
 #undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_LOGGING_APPENDER_SWO
+#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_LOGGING_APPENDER_RTT
 
 #if BCDS_FEATURE_LOGGING
 
 /* include faked interfaces */
 #include "BCDS_Retcode_th.hh"
-/* The core_cm4.h is not properly masked. Banning the redundant definition guard. */
-#define __CORE_CM4_H_DEPENDANT
-#include "core_cm4_th.hh"
-#include "stm32l4xx_th.hh"
-
-/* The core_cm4.h is not properly mocked. Defining the necessary fake function. */
-FAKE_VALUE_FUNC(uint32_t,ITM_SendChar,uint32_t )
 
 /* include module under test */
-#include "SwoAppender.c"
+#include "Logging_RttAppender.c"
 }
 
 /* define a fake call-back function for the frame processor related tests */
 
 /* create test fixture initializing all variables automatically */
 
-class SwoAppender: public testing::Test
+class RttAppender: public testing::Test
 {
 protected:
 
@@ -62,30 +55,30 @@ protected:
     }
 };
 
-TEST_F(SwoAppender, SwoAppenderInit)
+TEST_F(RttAppender, RttAppenderInit)
 {
-    /** @testcase{ SwoAppender::SwoAppenderInit: }
+    /** @testcase{ RttAppender::RttAppenderInit: }
      *
-     * API used to test the SwoAppenderInit functionality
+     * API used to test the RttAppenderInit functionality
      */
-    EXPECT_EQ(RETCODE_OK, Logging_SwoAppender->Init(NULL));
+    EXPECT_EQ(RETCODE_OK, Logging_RttAppender->Init(NULL));
 }
 
-TEST_F(SwoAppender, SwoAppenderWrite)
+TEST_F(RttAppender, RttAppenderWrite)
 {
-    /** @testcase{ SwoAppender::SwoAppenderWrite: }
+    /** @testcase{ RttAppender::RttAppenderWrite: }
      *
-     * API used to test the SwoAppenderWrite functionality
+     * API used to test the RttAppenderWrite functionality
      */
-    const char message[] = "SwoAppenderWriteMessage";
+    const char message[] = "RttAppenderWriteMessage";
     {
-        EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NULL_POINTER), Logging_SwoAppender->Write(NULL,0UL));
+        EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NULL_POINTER), Logging_RttAppender->Write(NULL,0UL));
     }
     {
-        EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_INVALID_PARAM), Logging_SwoAppender->Write(message, 0UL));
+        EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_INVALID_PARAM), Logging_RttAppender->Write(message, 0UL));
     }
     {
-        EXPECT_EQ(RETCODE_OK, Logging_SwoAppender->Write(message, 5UL));
+        EXPECT_EQ(RETCODE_OK, Logging_RttAppender->Write(message, 5UL));
     }
 }
 #else

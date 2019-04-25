@@ -1,6 +1,5 @@
 BCDS_PACKAGE_NAME = SeggerRTT
 BCDS_PACKAGE_ID = 255 # @todo  update this ID
-BCDS_PACKAGE_HOME = $(CURDIR)
 
 # We include the common makefile.
 # Mind that the variable BCDS_COMMON_MAKEFILE must be passed

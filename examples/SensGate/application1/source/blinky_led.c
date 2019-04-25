@@ -58,7 +58,7 @@ void appInitSystem(void * CmdProcessorHandle, uint32_t param2)
 	Retcode_T returnVal = RETCODE_OK;
 
 	// Initialize logging module
-	returnVal = Logging_Init(Logging_SyncRecorder, Logging_SwoAppender);
+	returnVal = Logging_Init(Logging_SyncRecorder, Logging_RttAppender);
     if (RETCODE_OK == returnVal)
     {
     	LOG_DEBUG(" Logging was started successfully");

@@ -38,8 +38,6 @@ BCDS_FREERTOS_PATH  = $(THIRD_PARTY_SHARED_PATH)/FreeRTOS
 BCDS_STM32CUBE_PATH = $(THIRD_PARTY_SHARED_PATH)/stm32cubel4
 BCDS_STM32CUBEL4_PATH = $(BCDS_STM32CUBE_PATH)
 BCDS_SEGGERRTT_PATH = $(THIRD_PARTY_SHARED_PATH)/SeggerRTT
-BCDS_FOTA_PATH = $(BCDS_SHARED_PATH)/FOTA
-BCDS_LIBRARIES_PATH = $(BCDS_PACKAGE_HOME)/../libraries
 
 include Libraries.mk
 
@@ -57,22 +55,17 @@ BCDS_INCLUDES =\
     -I$(BCDS_UTILS_PATH)/include \
     -I$(BCDS_CELLULAR_PATH)/include \
     -I$(BCDS_LIBRARIES_PATH)/include \
-    -I$(BCDS_CONFIG_PATH)/Testling \
-    -I$(BCDS_CONFIG_PATH)/AppController \
     -I$(BCDS_CONFIG_PATH)/Essentials \
     -I$(BCDS_CONFIG_PATH)/Utils \
     -I$(BCDS_CONFIG_PATH)/Cellular \
-    -I$(BCDS_CONFIG_PATH)/BleObserver \
-    -I$(BCDS_CONFIG_PATH)/STM32Cube \
-    -I$(BCDS_CONFIG_PATH)/FOTA \
-    -I$(BCDS_CONFIG_PATH)/DataMemoryIO \
-    -I$(BCDS_CONFIG_PATH)/SelfTest \
+    -I$(BCDS_CONFIG_PATH)/SeggerRTT \
     -I$(BCDS_FREERTOS_PATH)/3rd-party/FreeRTOS/Source/include \
     -I$(BCDS_FREERTOS_PATH)/3rd-party/FreeRTOS/source/portable/GCC/ARM_CM4F \
     -I$(BCDS_STM32CUBE_PATH)/3rd-party/stm32cube/Drivers/$(BCDS_STM32_DEVICE_TYPE)_HAL_Driver/Inc \
     -I$(BCDS_STM32CUBE_PATH)/3rd-party/stm32cube/Drivers/$(BCDS_STM32_DEVICE_TYPE)_HAL_Driver/Inc/Legacy \
     -I$(BCDS_STM32CUBE_PATH)/3rd-party/stm32cube/Drivers/CMSIS/Include \
     -I$(BCDS_STM32CUBE_PATH)/3rd-party/stm32cube/Drivers/CMSIS/Device/ST/$(BCDS_STM32_DEVICE_TYPE)/Include \
+    -I$(BCDS_SEGGERRTT_PATH)/3rd-party/SEGGER_RTT/RTT \
     -Isource/
 
 BCDS_PROJECT_LD_FILE = $(BCDS_PACKAGE_HOME)/../../../boards/SensGate/Application_$(BCDS_STM32_DEVICE_TYPE)_FLASH.ld

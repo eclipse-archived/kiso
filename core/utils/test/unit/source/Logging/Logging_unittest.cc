@@ -37,7 +37,7 @@ extern "C"
 #define Queue_Purge(x) BCDS_UNUSED(x);break;
 
 #undef BCDS_MODULE_ID
-#include "../../../../source/Logging/Carbon/Logging_AsyncRecorder.c"
+#include "../../../../source/Logging/freertos/Logging_AsyncRecorder.c"
 #undef BCDS_MODULE_ID
 #include "Filter.c"
 #undef BCDS_MODULE_ID
