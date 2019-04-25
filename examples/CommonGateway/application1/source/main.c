@@ -27,7 +27,8 @@
 #include "BCDS_CmdProcessor.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "BSP_Sensgate.h"
+
+#include "../../../../boards/CommonGateway/bsp/include/BSP_CommonGateway.h"
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
 #undef BCDS_MODULE_ID  /* Module ID define before including Basics package*/
@@ -100,7 +101,7 @@ void ErrorHandler(Retcode_T error, bool isfromIsr)
     }
     else
     {
-        BSP_LED_Switch(SENSGATE_LED_RED_ID, SENSGATE_LED_COMMAND_ON);
+        BSP_LED_Switch(COMMONGATEWAY_LED_RED_ID, COMMONGATEWAY_LED_COMMAND_ON);
     }
 
 }
@@ -119,7 +120,7 @@ void assertIndicationMapping(const unsigned long line, const unsigned char * con
     /* Switch on the LEDs */
     Retcode_T retcode = RETCODE_OK;
 
-    retcode = BSP_LED_Switch(SENSGATE_LED_ALL,SENSGATE_LED_COMMAND_ON);
+    retcode = BSP_LED_Switch(COMMONGATEWAY_LED_ALL,COMMONGATEWAY_LED_COMMAND_ON);
 
     printf("asserted at Filename %s , line no  %ld \n\r", file, line);
 
@@ -158,7 +159,7 @@ Retcode_T systemStartup(void)
 
     if (RETCODE_OK == returnValue)
     {
-        returnValue = BSP_LED_Enable(SENSGATE_LED_ALL);
+        returnValue = BSP_LED_Enable(COMMONGATEWAY_LED_ALL);
     }
 
     return returnValue;

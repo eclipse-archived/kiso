@@ -14,10 +14,10 @@
 ## Installation guide (eclipse)
 * Use the provided Eclipse IDE provided via USB
 
-## Build Sensgate (via meson):
+## Build CommonGateway (via meson):
 **Build**:
 ```bash
-meson debug --cross-file boards/SensGate/meson_config_stm32l4_gcc8.ini
+meson debug --cross-file boards/CommonGateway/meson_config_stm32l4_gcc8.ini
 cd debug
 ninja hex
 ```
@@ -27,16 +27,16 @@ cd debug
 ninja clean
 ```
 
-### Build Sensgate (via Makefile)
+### Build CommonGateway (via Makefile)
 **Build**:
 ```bash
-cd examples/SensGate/application1
-make makefile=Makefile SENSG_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/common.mk
+cd examples/CommonGateway/application1
+make makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/common.mk
 ```
 **Clean**:
 ```bash
-cd examples/SensGate/application1
-make makefile=Makefile SENSG_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/common.mk
+cd examples/CommonGateway/application1
+make makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/common.mk
 ```
 
-**Note**: *$(CURDIR)* is the absolute path to *xamples/SensGate/application1*
+**Note**: *$(CURDIR)* is the absolute path to *xamples/CommonGateway/application1*

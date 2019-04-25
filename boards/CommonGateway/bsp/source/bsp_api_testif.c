@@ -12,45 +12,40 @@
 *
 ********************************************************************************/
 
-#include "BCDS_BSP_GNSS_MAXM8.h"
+#include "BCDS_BSP_TestInterface.h"
 
-#if BCDS_FEATURE_BSP_GNSS_MAXM8
+#if BCDS_FEATURE_BSP_TEST_INTERFACE
 
 #include "stm32/stm32l4/BCDS_MCU_STM32L4_UART_Handle.h"
 #include "BCDS_HAL_Delay.h"
-#include "BSP_Sensgate.h"
-#include "protected/power_supply.h"
+#include "BSP_CommonGateway.h"
 #include "protected/gpio.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
 #undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID MODULE_BSP_API_MAXM8
+#define BCDS_MODULE_ID MODULE_BSP_API_TEST_IF
 
-#define MAXM8_DELAY_1_MS                     UINT32_C(1)
-#define MAXM8_MAX_TIME_TO_OFF_MS             UINT32_C(1000)
-#define MAXM8_MAX_TIME_TO_ACTIVE_MS          4000
-
-#define MAXM8_UART_INT_PRIORITY              UINT32_C(10)
-#define MAXM8_UART_SUBPRIORITY               UINT32_C(0)
+#define TESTIF_UART_INT_PRIORITY              UINT32_C(10)
+#define TESTIF_UART_SUBPRIORITY               UINT32_C(0)
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
-void UART4_IRQHandler(void);
+void USART1_IRQHandler(void);
 
 /*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/
 
 static uint8_t bspState = (uint8_t) BSP_STATE_INIT; /**< BSP State of the cellular module */
 
 /**
- * Static structure storing the UART handle for GNSS MAXM8.
+ * Static structure storing the UART handle for Test Interface
  */
-static struct MCU_UART_S MaxM8_UARTStruct =
+static struct MCU_UART_S testIf_UARTStruct =
         {
                 .TransferMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
 
-                .huart.Instance = UART4,
-                .huart.Init.BaudRate = 9600,
+                .huart.Instance = USART1,
+                .huart.Init.BaudRate = 115200,
                 .huart.Init.WordLength = UART_WORDLENGTH_8B,
                 .huart.Init.StopBits = UART_STOPBITS_1,
                 .huart.Init.Parity = UART_PARITY_NONE,
@@ -67,7 +62,7 @@ static struct MCU_UART_S MaxM8_UARTStruct =
  * @retval RETCODE_OK in case of success.
  * @retval RETCODE_INCONSISTENT_STATE in case the module is not in a state to allow connecting.
  */
-Retcode_T BSP_GNSS_MAXM8_Connect(void)
+Retcode_T BSP_TestInterface_Connect(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
@@ -79,22 +74,14 @@ Retcode_T BSP_GNSS_MAXM8_Connect(void)
     {
         GPIO_InitTypeDef BSP_GPIOInitStruct = { 0 };
 
-        GPIO_OpenClockGate(GPIO_PORT_B, PINB_POW_GPS_BAK | PINB_GPS_RESN);
-        /* Configure PIN_GPS_RESN PIN_POW_GPS_BAK as output push pull */
-        BSP_GPIOInitStruct.Pin = PINB_POW_GPS_BAK | PINB_GPS_RESN;
-        BSP_GPIOInitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-        BSP_GPIOInitStruct.Pull = GPIO_NOPULL;
-        BSP_GPIOInitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-        HAL_GPIO_Init(GPIOB, &BSP_GPIOInitStruct);
-
-        GPIO_OpenClockGate(GPIO_PORT_A, PINA_GPS_MTX | PINA_GPS_MRX);
+        GPIO_OpenClockGate(GPIO_PORT_B, PINB_DBG_TX | PINB_DBG_RX);
         /* Configure RX TX as alternate function push pull */
-        BSP_GPIOInitStruct.Pin = PINA_GPS_MTX | PINA_GPS_MRX;
+        BSP_GPIOInitStruct.Pin = PINB_DBG_TX | PINB_DBG_RX;
         BSP_GPIOInitStruct.Mode = GPIO_MODE_AF_PP;
         BSP_GPIOInitStruct.Pull = GPIO_NOPULL;
         BSP_GPIOInitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-        BSP_GPIOInitStruct.Alternate = GPIO_AF8_UART4;
-        HAL_GPIO_Init(GPIOA, &BSP_GPIOInitStruct);
+        BSP_GPIOInitStruct.Alternate = GPIO_AF7_USART1;
+        HAL_GPIO_Init(GPIOB, &BSP_GPIOInitStruct);
 
         bspState = (uint8_t) BSP_STATE_CONNECTED;
     }
@@ -106,7 +93,7 @@ Retcode_T BSP_GNSS_MAXM8_Connect(void)
  * @retval RETCODE_OK in case of success.
  * @retval RETCODE_INCONSISTENT_STATE in case the module is not in a state to allow enabling.
  */
-Retcode_T BSP_GNSS_MAXM8_Enable(void)
+Retcode_T BSP_TestInterface_Enable(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
@@ -116,30 +103,21 @@ Retcode_T BSP_GNSS_MAXM8_Enable(void)
     }
     if (RETCODE_OK == retcode)
     {
-        /* Put RESETN and V_BCKP pin to high state before powering the GPS module */
-        HAL_GPIO_WritePin(GPIOB, PINB_POW_GPS_BAK, GPIO_PIN_SET);
-        HAL_GPIO_WritePin(GPIOB, PINB_GPS_RESN, GPIO_PIN_SET);
-        /* supply VCC power to the device */
-        retcode = PowerSupply_EnablePower2V8GPS();
-    }
-    if (RETCODE_OK == retcode)
-    {
         /* Enable the UART clock */
-        __HAL_RCC_UART4_CLK_ENABLE()
-        ;
-        __HAL_RCC_UART4_FORCE_RESET();
-        __HAL_RCC_UART4_RELEASE_RESET();
+        __HAL_RCC_USART1_CLK_ENABLE();
+        __HAL_RCC_USART1_FORCE_RESET();
+        __HAL_RCC_USART1_RELEASE_RESET();
 
         /* Configure the UART resource */
-        if (HAL_OK != HAL_UART_Init(&MaxM8_UARTStruct.huart))
+        if (HAL_OK != HAL_UART_Init(&testIf_UARTStruct.huart))
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_BSP_UART_INIT_FAILED);
         }
     }
     if (RETCODE_OK == retcode)
     {
-        HAL_NVIC_SetPriority(UART4_IRQn, MAXM8_UART_INT_PRIORITY, MAXM8_UART_SUBPRIORITY);
-        HAL_NVIC_EnableIRQ(UART4_IRQn);
+        HAL_NVIC_SetPriority(USART1_IRQn, TESTIF_UART_INT_PRIORITY, TESTIF_UART_SUBPRIORITY);
+        HAL_NVIC_EnableIRQ(USART1_IRQn);
 
         bspState = (uint8_t) BSP_STATE_ENABLED;
     }
@@ -151,7 +129,7 @@ Retcode_T BSP_GNSS_MAXM8_Enable(void)
  * @retval RETCODE_OK in case of success.
  * @retval RETCODE_INCONSISTENT_STATE in case the module is not in a state to allow disabling.
  */
-Retcode_T BSP_GNSS_MAXM8_Disable(void)
+Retcode_T BSP_TestInterface_Disable(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
@@ -162,20 +140,15 @@ Retcode_T BSP_GNSS_MAXM8_Disable(void)
     if (RETCODE_OK == retcode)
     {
         /* Disable interrupts and deactivate UART peripheral */
-        HAL_NVIC_DisableIRQ(UART4_IRQn);
-        if (HAL_OK != HAL_UART_DeInit(&MaxM8_UARTStruct.huart))
+        HAL_NVIC_DisableIRQ(USART1_IRQn);
+        if (HAL_OK != HAL_UART_DeInit(&testIf_UARTStruct.huart))
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_BSP_UART_DEINIT_FAILED);
         }
     }
     if (RETCODE_OK == retcode)
     {
-        __HAL_RCC_UART4_CLK_DISABLE();
-        /* Power-off */
-        retcode = PowerSupply_DisablePower2V8GPS();
-    }
-    if (RETCODE_OK == retcode)
-    {
+        __HAL_RCC_USART1_CLK_DISABLE();
         bspState = (uint8_t) BSP_STATE_DISABLED;
     }
     return retcode;
@@ -186,7 +159,7 @@ Retcode_T BSP_GNSS_MAXM8_Disable(void)
  * @retval RETCODE_OK in case of success.
  * @retval RETCODE_INCONSISTENT_STATE in case the module is not in a state to allow disconnecting.
  */
-Retcode_T BSP_GNSS_MAXM8_Disconnect(void)
+Retcode_T BSP_TestInterface_Disconnect(void)
 {
     Retcode_T retcode = RETCODE_OK;
     if (!(bspState & (uint8_t) BSP_STATE_TO_DISCONNECTED))
@@ -195,11 +168,8 @@ Retcode_T BSP_GNSS_MAXM8_Disconnect(void)
     }
     if (RETCODE_OK == retcode)
     {
-        HAL_GPIO_DeInit(GPIOB, PINB_POW_GPS_BAK | PINB_GPS_RESN);
-        GPIO_CloseClockGate(GPIO_PORT_B, PINB_POW_GPS_BAK | PINB_GPS_RESN);
-
-        HAL_GPIO_DeInit(GPIOA, PINA_GPS_MTX | PINA_GPS_MRX);
-        GPIO_CloseClockGate(GPIO_PORT_A, PINA_GPS_MTX | PINA_GPS_MRX);
+        HAL_GPIO_DeInit(GPIOB, PINB_DBG_TX | PINB_DBG_RX);
+        GPIO_CloseClockGate(GPIO_PORT_B, PINB_DBG_TX | PINB_DBG_RX);
     }
     if (RETCODE_OK == retcode)
     {
@@ -210,27 +180,18 @@ Retcode_T BSP_GNSS_MAXM8_Disconnect(void)
 
 /**
  * See API interface for function documentation
- * @return A pointer to the SARA R4N4 UART control structure
+ * @return A pointer to the UART control structure
  */
-HWHandle_T BSP_GNSS_MAXM8_GetUARTHandle(void)
+HWHandle_T BSP_TestInterface_GetUARTHandle(void)
 {
-    return (HWHandle_T) &MaxM8_UARTStruct;
+    return (HWHandle_T) &testIf_UARTStruct;
 }
 
 /**
  * See API interface for function documentation
- * @retval RETCODE_NOT_SUPPORTED Reset procedure using RESN signal has not been implemented because of high risks.
+ * @retval RETCODE_NOT_SUPPORTED.
  */
-Retcode_T BSP_GNSS_MAXM8_Reset(void)
-{
-    return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
-}
-
-/**
- * See API interface for function documentation
- * @retval RETCODE_NOT_SUPPORTED Reset procedure using RESN signal has not been implemented because of high risks.
- */
-Retcode_T BSP_GNSS_MAXM8_Control(uint32_t command, void* arg)
+Retcode_T BSP_TestInterface_Control(uint32_t command, void* arg)
 {
     BCDS_UNUSED(command);
     BCDS_UNUSED(arg);
@@ -240,13 +201,13 @@ Retcode_T BSP_GNSS_MAXM8_Control(uint32_t command, void* arg)
 /*---------------------- LOCAL FUNCTIONS IMPLEMENTATION -------------------------------------------------------------*/
 
 /**
- * Interrupt Service Routine handling UART4 IRQ. Forwards call to MCU Layer for handling.
+ * Interrupt Service Routine handling USART1 IRQ. Forwards call to MCU Layer for handling.
  */
-void UART4_IRQHandler(void)
+void USART1_IRQHandler(void)
 {
-    if (MaxM8_UARTStruct.IrqCallback)
+    if (testIf_UARTStruct.IrqCallback)
     {
-        MaxM8_UARTStruct.IrqCallback((UART_T) &MaxM8_UARTStruct);
+        testIf_UARTStruct.IrqCallback((UART_T) &testIf_UARTStruct);
     }
 }
-#endif /* BCDS_FEATURE_BSP_GNSS_MAXM8 */
+#endif /* BCDS_FEATURE_BSP_TEST_INTERFACE */

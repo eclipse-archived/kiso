@@ -15,31 +15,31 @@
 
 /**
  * @file
- * @defgroup    BSP_SENSGATE  SENSGATE BSP
- * @ingroup     BSP_SENSGATE
+ * @defgroup    BSP_COMMONGATEWAY  COMMONGATEWAY BSP
+ * @ingroup     BSP_COMMONGATEWAY
  *
- * @defgroup    BSP_SENSGATE_IP  SENSGATE BSP Implementation
- * @ingroup     BSP_SENSGATE
+ * @defgroup    BSP_COMMONGATEWAY_IP  COMMONGATEWAY BSP Implementation
+ * @ingroup     BSP_COMMONGATEWAY
  *
- * @defgroup    BSP_SENSGATE_IF  SENSGATE BSP Interfaces
- * @ingroup     BSP_SENSGATE
+ * @defgroup    BSP_COMMONGATEWAY_IF  COMMONGATEWAY BSP Interfaces
+ * @ingroup     BSP_COMMONGATEWAY
  *
- * @defgroup    BSP_SENSGATE_API  Sensgate BSP main application interface
- * @ingroup     BSP_SENSGATE_IF
+ * @defgroup    BSP_COMMONGATEWAY_API  COMMONGATEWAY BSP main application interface
+ * @ingroup     BSP_COMMONGATEWAY_IF
  *
  * @{
- * @brief       Project Sensgate Board Support Package
+ * @brief       Project COMMONGATEWAY Board Support Package
  */
 
-#ifndef BSP_SENSGATE_H_
-#define BSP_SENSGATE_H_
+#ifndef BSP_COMMONGATEWAY_H_
+#define BSP_COMMONGATEWAY_H_
 
 #include "BCDS_HAL.h"
 
 /**
  * Module IDs provided by the BSP for retcode composition
  */
-enum BSP_Sensgate_Modules_E
+enum BSP_CommonGateway_Modules_E
 {
     /* source units */
     MODULE_BSP_API_BOARD,
@@ -59,7 +59,7 @@ enum BSP_Sensgate_Modules_E
 /**
  * Return Codes provided by the BSP for retcode composition
  */
-enum BSP_Sensgate_Retcodes_E
+enum BSP_CommonGateway_Retcodes_E
 {
     /* BSP Return codes */
     RETCODE_BSP_GENERIC_FAILURE = RETCODE_FIRST_CUSTOM_CODE, /**< Failure code not described below */
@@ -86,38 +86,38 @@ enum BSP_Sensgate_Retcodes_E
 /**
  * @enum        IDs of available LEDs
  */
-enum Sensgate_LED_Ids_E
+enum CommonGateway_LED_Ids_E
 {
-    SENSGATE_LED_ALL = 0, /**< Id to address All LEDs */
-    SENSGATE_LED_RED_ID, /**< Id to address Red LED */
-    SENSGATE_LED_GREEN_ID, /**< Id to address Green LED */
-    SENSGATE_LED_BLUE_ID, /**< Id to address Blue LED */
+    COMMONGATEWAY_LED_ALL = 0, /**< Id to address All LEDs */
+    COMMONGATEWAY_LED_RED_ID, /**< Id to address Red LED */
+    COMMONGATEWAY_LED_GREEN_ID, /**< Id to address Green LED */
+    COMMONGATEWAY_LED_BLUE_ID, /**< Id to address Blue LED */
 };
 
 /**
  * @enum        Commands applicable for LED module
  */
-enum Sensgate_LED_Commands_E
+enum CommonGateway_LED_Commands_E
 {
-    SENSGATE_LED_COMMAND_OFF, //!< SENSGATE_LED_COMMAND_OFF
-    SENSGATE_LED_COMMAND_ON, //!< SENSGATE_LED_COMMAND_ON
-    SENSGATE_LED_COMMAND_TOGGLE, //!< SENSGATE_LED_COMMAND_TOGGLE
+    COMMONGATEWAY_LED_COMMAND_OFF, //!< COMMONGATEWAY_LED_COMMAND_OFF
+    COMMONGATEWAY_LED_COMMAND_ON, //!< COMMONGATEWAY_LED_COMMAND_ON
+    COMMONGATEWAY_LED_COMMAND_TOGGLE, //!< COMMONGATEWAY_LED_COMMAND_TOGGLE
 };
 
 /**
  * @enum        IDs of available BMA280 sensors
  */
-enum Sensgate_BMA280Ids_E
+enum CommonGateway_BMA280Ids_E
 {
-    SENSGATE_BMA280_ID = 1, /**< Id of onboard BMA280 sensor */
+    COMMONGATEWAY_BMA280_ID = 1, /**< Id of onboard BMA280 sensor */
 };
 
 /**
  * @enum        IDs of available BME280 sensors
  */
-enum Sensgate_BME280Ids_E
+enum CommonGateway_BME280Ids_E
 {
-    SENSGATE_BME280_ID = 1, /**< Id of onboard BME280 sensor */
+    COMMONGATEWAY_BME280_ID = 1, /**< Id of onboard BME280 sensor */
 };
 
 /**
@@ -159,6 +159,6 @@ enum BSP_State_E
  */
 #define BSP_BOARD_DEFAULT_PARAM2       NULL
 
-#endif /* BSP_SENSGATE_H_ */
+#endif /* BSP_COMMONGATEWAY_H_ */
 
 /**@}*/

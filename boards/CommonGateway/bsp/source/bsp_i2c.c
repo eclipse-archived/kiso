@@ -17,7 +17,7 @@
 #if BCDS_FEATURE_I2C
 
 #include "stm32/stm32l4/BCDS_MCU_STM32L4_I2C_Handle.h"
-#include "BSP_Sensgate.h"
+#include "BSP_CommonGateway.h"
 #include "protected/i2c.h"
 #include "protected/gpio.h"
 

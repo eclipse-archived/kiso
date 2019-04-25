@@ -16,7 +16,7 @@
 
 #if BCDS_FEATURE_BSP_LED
 
-#include "BSP_Sensgate.h"
+#include "BSP_CommonGateway.h"
 #include "protected/gpio.h"
 #include "protected/power_supply.h"
 
@@ -105,7 +105,7 @@ Retcode_T BSP_LED_Disable(uint32_t id)
     }
     if (RETCODE_OK == retcode)
     {
-        retcode = LED_Off(SENSGATE_LED_ALL);
+        retcode = LED_Off(COMMONGATEWAY_LED_ALL);
     }
     if (RETCODE_OK == retcode)
     {
@@ -158,13 +158,13 @@ Retcode_T BSP_LED_Switch(uint32_t id, uint32_t command)
     {
         switch (command)
         {
-            case SENSGATE_LED_COMMAND_OFF:
+            case COMMONGATEWAY_LED_COMMAND_OFF:
                 retcode = LED_Off(id);
                 break;
-            case SENSGATE_LED_COMMAND_ON:
+            case COMMONGATEWAY_LED_COMMAND_ON:
                 retcode = LED_On(id);
                 break;
-            case SENSGATE_LED_COMMAND_TOGGLE:
+            case COMMONGATEWAY_LED_COMMAND_TOGGLE:
                 retcode = LED_Toggle(id);
                 break;
             default:
@@ -188,16 +188,16 @@ static Retcode_T LED_Off(uint32_t id)
     Retcode_T retcode = RETCODE_OK;
     switch (id)
     {
-        case SENSGATE_LED_ALL:
+        case COMMONGATEWAY_LED_ALL:
             HAL_GPIO_WritePin(GPIOD, PIN_LED_ALL, GPIO_PIN_RESET);
             break;
-        case SENSGATE_LED_RED_ID:
+        case COMMONGATEWAY_LED_RED_ID:
             HAL_GPIO_WritePin(GPIOD, PIND_LED_R, GPIO_PIN_RESET);
             break;
-        case SENSGATE_LED_GREEN_ID:
+        case COMMONGATEWAY_LED_GREEN_ID:
             HAL_GPIO_WritePin(GPIOD, PIND_LED_G, GPIO_PIN_RESET);
             break;
-        case SENSGATE_LED_BLUE_ID:
+        case COMMONGATEWAY_LED_BLUE_ID:
             HAL_GPIO_WritePin(GPIOD, PIND_LED_B, GPIO_PIN_RESET);
             break;
         default:
@@ -218,16 +218,16 @@ static Retcode_T LED_On(uint32_t id)
     Retcode_T retcode = RETCODE_OK;
     switch (id)
     {
-        case SENSGATE_LED_ALL:
+        case COMMONGATEWAY_LED_ALL:
             HAL_GPIO_WritePin(GPIOD, PIN_LED_ALL, GPIO_PIN_SET);
             break;
-        case SENSGATE_LED_RED_ID:
+        case COMMONGATEWAY_LED_RED_ID:
             HAL_GPIO_WritePin(GPIOD, PIND_LED_R, GPIO_PIN_SET);
             break;
-        case SENSGATE_LED_GREEN_ID:
+        case COMMONGATEWAY_LED_GREEN_ID:
             HAL_GPIO_WritePin(GPIOD, PIND_LED_G, GPIO_PIN_SET);
             break;
-        case SENSGATE_LED_BLUE_ID:
+        case COMMONGATEWAY_LED_BLUE_ID:
             HAL_GPIO_WritePin(GPIOD, PIND_LED_B, GPIO_PIN_SET);
             break;
         default:
@@ -248,16 +248,16 @@ static Retcode_T LED_Toggle(uint32_t id)
     Retcode_T retcode = RETCODE_OK;
     switch (id)
     {
-        case SENSGATE_LED_ALL:
+        case COMMONGATEWAY_LED_ALL:
             HAL_GPIO_TogglePin(GPIOD, PIN_LED_ALL);
             break;
-        case SENSGATE_LED_RED_ID:
+        case COMMONGATEWAY_LED_RED_ID:
             HAL_GPIO_TogglePin(GPIOD, PIND_LED_R);
             break;
-        case SENSGATE_LED_GREEN_ID:
+        case COMMONGATEWAY_LED_GREEN_ID:
             HAL_GPIO_TogglePin(GPIOD, PIND_LED_G);
             break;
-        case SENSGATE_LED_BLUE_ID:
+        case COMMONGATEWAY_LED_BLUE_ID:
             HAL_GPIO_TogglePin(GPIOD, PIND_LED_B);
             break;
         default:

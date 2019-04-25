@@ -12,39 +12,41 @@
 *
 ********************************************************************************/
 
-#include "BCDS_BSP_TestInterface.h"
+#include "BSP_BLE_CC2640.h"
 
-#if BCDS_FEATURE_BSP_TEST_INTERFACE
+#if BCDS_FEATURE_BSP_BLE_CC2640
 
-#include "stm32/stm32l4/BCDS_MCU_STM32L4_UART_Handle.h"
-#include "BCDS_HAL_Delay.h"
-#include "BSP_Sensgate.h"
+#include "BSP_CommonGateway.h"
 #include "protected/gpio.h"
+#include "protected/power_supply.h"
+#include "stm32/stm32l4/BCDS_MCU_STM32L4_UART_Handle.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
 #undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID MODULE_BSP_API_TEST_IF
-
-#define TESTIF_UART_INT_PRIORITY              UINT32_C(10)
-#define TESTIF_UART_SUBPRIORITY               UINT32_C(0)
+#define BCDS_MODULE_ID MODULE_BSP_API_BLE_CC2640
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
-
-void USART1_IRQHandler(void);
+/**
+ * @brief   This function is to map the hardware specific UART interrupt
+ *          to the interrupt callback of the UART port used in BLE cc2640
+ */
+void USART3_IRQHandler(void);
 
 /*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/
 
-static uint8_t bspState = (uint8_t) BSP_STATE_INIT; /**< BSP State of the cellular module */
+/**
+ * BSP State of the BLE module
+ */
+static uint8_t bspState = (uint8_t) BSP_STATE_INIT;
 
 /**
- * Static structure storing the UART handle for Test Interface
+ * Static structure which is used to keep the UART handle for Ble_CC2640
  */
-static struct MCU_UART_S testIf_UARTStruct =
+static struct MCU_UART_S CC2640_UartHandle =
         {
                 .TransferMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
-
-                .huart.Instance = USART1,
+                .huart.Instance = USART3,
                 .huart.Init.BaudRate = 115200,
                 .huart.Init.WordLength = UART_WORDLENGTH_8B,
                 .huart.Init.StopBits = UART_STOPBITS_1,
@@ -55,6 +57,7 @@ static struct MCU_UART_S testIf_UARTStruct =
                 .huart.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE,
                 .huart.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT,
         };
+
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
 
 /**
@@ -62,7 +65,7 @@ static struct MCU_UART_S testIf_UARTStruct =
  * @retval RETCODE_OK in case of success.
  * @retval RETCODE_INCONSISTENT_STATE in case the module is not in a state to allow connecting.
  */
-Retcode_T BSP_TestInterface_Connect(void)
+Retcode_T BSP_BLE_CC2640_Connect(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
@@ -74,14 +77,22 @@ Retcode_T BSP_TestInterface_Connect(void)
     {
         GPIO_InitTypeDef BSP_GPIOInitStruct = { 0 };
 
-        GPIO_OpenClockGate(GPIO_PORT_B, PINB_DBG_TX | PINB_DBG_RX);
+        GPIO_OpenClockGate(GPIO_PORT_B, PINB_BLE_RESN);
+        /* Configure PINB_BLE_RESN as output push pull */
+        BSP_GPIOInitStruct.Pin = PINB_BLE_RESN;
+        BSP_GPIOInitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+        BSP_GPIOInitStruct.Pull = GPIO_NOPULL;
+        BSP_GPIOInitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+        HAL_GPIO_Init(GPIOB, &BSP_GPIOInitStruct);
+
+        GPIO_OpenClockGate(GPIO_PORT_D, PIND_BLE_MTX | PIND_BLE_MRX);
         /* Configure RX TX as alternate function push pull */
-        BSP_GPIOInitStruct.Pin = PINB_DBG_TX | PINB_DBG_RX;
+        BSP_GPIOInitStruct.Pin = PIND_BLE_MTX | PIND_BLE_MRX;
         BSP_GPIOInitStruct.Mode = GPIO_MODE_AF_PP;
         BSP_GPIOInitStruct.Pull = GPIO_NOPULL;
         BSP_GPIOInitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-        BSP_GPIOInitStruct.Alternate = GPIO_AF7_USART1;
-        HAL_GPIO_Init(GPIOB, &BSP_GPIOInitStruct);
+        BSP_GPIOInitStruct.Alternate = GPIO_AF7_USART3;
+        HAL_GPIO_Init(GPIOD, &BSP_GPIOInitStruct);
 
         bspState = (uint8_t) BSP_STATE_CONNECTED;
     }
@@ -93,7 +104,7 @@ Retcode_T BSP_TestInterface_Connect(void)
  * @retval RETCODE_OK in case of success.
  * @retval RETCODE_INCONSISTENT_STATE in case the module is not in a state to allow enabling.
  */
-Retcode_T BSP_TestInterface_Enable(void)
+Retcode_T BSP_BLE_CC2640_Enable(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
@@ -103,21 +114,27 @@ Retcode_T BSP_TestInterface_Enable(void)
     }
     if (RETCODE_OK == retcode)
     {
+        /* supply VCC power to the device */
+        retcode = PowerSupply_EnablePower2V8Memory();
+    }
+    if (RETCODE_OK == retcode)
+    {
         /* Enable the UART clock */
-        __HAL_RCC_USART1_CLK_ENABLE();
-        __HAL_RCC_USART1_FORCE_RESET();
-        __HAL_RCC_USART1_RELEASE_RESET();
-
+        __HAL_RCC_SPI1_CLK_ENABLE()
+        ;
+        __HAL_RCC_SPI1_FORCE_RESET();
+        __HAL_RCC_SPI1_RELEASE_RESET();
         /* Configure the UART resource */
-        if (HAL_OK != HAL_UART_Init(&testIf_UARTStruct.huart))
+        if (HAL_OK != HAL_UART_Init(&CC2640_UartHandle.huart))
         {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_BSP_UART_INIT_FAILED);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
         }
     }
     if (RETCODE_OK == retcode)
     {
-        HAL_NVIC_SetPriority(USART1_IRQn, TESTIF_UART_INT_PRIORITY, TESTIF_UART_SUBPRIORITY);
-        HAL_NVIC_EnableIRQ(USART1_IRQn);
+        NVIC_ClearPendingIRQ(UART4_IRQn);
+        HAL_NVIC_SetPriority(UART4_IRQn, 5, 0);
+        HAL_NVIC_EnableIRQ(UART4_IRQn);
 
         bspState = (uint8_t) BSP_STATE_ENABLED;
     }
@@ -129,7 +146,7 @@ Retcode_T BSP_TestInterface_Enable(void)
  * @retval RETCODE_OK in case of success.
  * @retval RETCODE_INCONSISTENT_STATE in case the module is not in a state to allow disabling.
  */
-Retcode_T BSP_TestInterface_Disable(void)
+Retcode_T BSP_BLE_CC2640_Disable(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
@@ -140,15 +157,20 @@ Retcode_T BSP_TestInterface_Disable(void)
     if (RETCODE_OK == retcode)
     {
         /* Disable interrupts and deactivate UART peripheral */
-        HAL_NVIC_DisableIRQ(USART1_IRQn);
-        if (HAL_OK != HAL_UART_DeInit(&testIf_UARTStruct.huart))
+        NVIC_DisableIRQ(UART4_IRQn);
+        if (HAL_OK != HAL_UART_DeInit(&CC2640_UartHandle.huart))
         {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_BSP_UART_DEINIT_FAILED);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
         }
     }
     if (RETCODE_OK == retcode)
     {
-        __HAL_RCC_USART1_CLK_DISABLE();
+        __HAL_RCC_USART3_CLK_DISABLE();
+        /* Power-off */
+        retcode = PowerSupply_DisablePower2V8BLE();
+    }
+    if (RETCODE_OK == retcode)
+    {
         bspState = (uint8_t) BSP_STATE_DISABLED;
     }
     return retcode;
@@ -159,7 +181,7 @@ Retcode_T BSP_TestInterface_Disable(void)
  * @retval RETCODE_OK in case of success.
  * @retval RETCODE_INCONSISTENT_STATE in case the module is not in a state to allow disconnecting.
  */
-Retcode_T BSP_TestInterface_Disconnect(void)
+Retcode_T BSP_BLE_CC2640_Disconnect(void)
 {
     Retcode_T retcode = RETCODE_OK;
     if (!(bspState & (uint8_t) BSP_STATE_TO_DISCONNECTED))
@@ -168,8 +190,11 @@ Retcode_T BSP_TestInterface_Disconnect(void)
     }
     if (RETCODE_OK == retcode)
     {
-        HAL_GPIO_DeInit(GPIOB, PINB_DBG_TX | PINB_DBG_RX);
-        GPIO_CloseClockGate(GPIO_PORT_B, PINB_DBG_TX | PINB_DBG_RX);
+        HAL_GPIO_DeInit(GPIOB, PINB_GPS_RESN);
+        GPIO_CloseClockGate(GPIO_PORT_B, PINB_GPS_RESN);
+
+        HAL_GPIO_DeInit(GPIOD, PIND_BLE_MTX | PIND_BLE_MRX);
+        GPIO_CloseClockGate(GPIO_PORT_D, PIND_BLE_MTX | PIND_BLE_MRX);
     }
     if (RETCODE_OK == retcode)
     {
@@ -182,32 +207,24 @@ Retcode_T BSP_TestInterface_Disconnect(void)
  * See API interface for function documentation
  * @return A pointer to the UART control structure
  */
-HWHandle_T BSP_TestInterface_GetUARTHandle(void)
+HWHandle_T BSP_BLE_CC2640_GetUARTHandle(void)
 {
-    return (HWHandle_T) &testIf_UARTStruct;
-}
-
-/**
- * See API interface for function documentation
- * @retval RETCODE_NOT_SUPPORTED.
- */
-Retcode_T BSP_TestInterface_Control(uint32_t command, void* arg)
-{
-    BCDS_UNUSED(command);
-    BCDS_UNUSED(arg);
-    return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
+    /* Giving out the corresponding handle */
+    return (HWHandle_T) &CC2640_UartHandle;
 }
 
 /*---------------------- LOCAL FUNCTIONS IMPLEMENTATION -------------------------------------------------------------*/
 
 /**
- * Interrupt Service Routine handling USART1 IRQ. Forwards call to MCU Layer for handling.
+ * Interrupt service routine for the UART used by the bluetooth interface.
  */
-void USART1_IRQHandler(void)
+void USART3_IRQHandler(void)
 {
-    if (testIf_UARTStruct.IrqCallback)
+    if (NULL != CC2640_UartHandle.IrqCallback)
     {
-        testIf_UARTStruct.IrqCallback((UART_T) &testIf_UARTStruct);
+        CC2640_UartHandle.IrqCallback((UART_T) &CC2640_UartHandle.huart);
     }
 }
-#endif /* BCDS_FEATURE_BSP_TEST_INTERFACE */
+
+#endif/* if (BCDS_FEATURE_BSP_BLE_CC2640) */
+

@@ -19,7 +19,7 @@
 #include "BCDS_HAL_Delay.h"
 #include "stm32/stm32l4/BCDS_MCU_STM32L4_UART_Handle.h"
 
-#include "BSP_Sensgate.h"
+#include "BSP_CommonGateway.h"
 #include "protected/power_supply.h"
 #include "protected/gpio.h"
 

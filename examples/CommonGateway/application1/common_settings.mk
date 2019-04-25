@@ -1,4 +1,4 @@
-################### Common Makefile for SensGate ##################################
+################### Common Makefile for CommonGateway ##################################
 
 # The following variables are expected to be passed as input variables 
 # from outside.
@@ -21,12 +21,12 @@ export BCDS_ARCH_CPU = ARM_CM4F
 export BCDS_STM32_DEVICE_TYPE ?= STM32L4xx
 export BCDS_MCU_FAMILY ?= stm32l4
 
-ifeq ($(SENSG_HW_PLATFORM),$(filter $(SENSG_HW_PLATFORM),STM32L476RG_NUCLEO))
+ifeq ($(COMMONGATEWAY_HW_PLATFORM),$(filter $(COMMONGATEWAY_HW_PLATFORM),STM32L476RG_NUCLEO))
 export BCDS_STM32_DEVICE_ID ?= STM32L476RG
 export BCDS_STM32_DEVICE_PACKAGE_TYPE ?= STM32L476xx
 endif
 
-ifeq ($(SENSG_HW_PLATFORM),$(filter $(SENSG_HW_PLATFORM),STM32L486VG_V4))
+ifeq ($(COMMONGATEWAY_HW_PLATFORM),$(filter $(COMMONGATEWAY_HW_PLATFORM),STM32L486VG_V4))
 export BCDS_STM32_DEVICE_ID ?= STM32L486VG
 export BCDS_STM32_DEVICE_PACKAGE_TYPE ?= STM32L486xx
 endif
@@ -65,10 +65,10 @@ BCDS_DEBUG_LIB = $(BCDS_DEBUG_PATH)/lib$(BCDS_PACKAGE_NAME)_stm32_debug.a
 BCDS_RELEASE_LIB = $(BCDS_RELEASE_PATH)/lib$(BCDS_PACKAGE_NAME)_stm32_release.a
 
 # The absolute path to the configuration folder. 
-BCDS_CONFIG_PATH = $(abspath $(BCDS_PACKAGE_HOME)/../../../boards/SensGate/kiso_config)
+BCDS_CONFIG_PATH = $(abspath $(BCDS_PACKAGE_HOME)/../../../boards/CommonGateway/kiso_config)
 
 # The absolute path to the BSP implementation folder. 
-BCDS_BOARD_PATH = $(abspath $(BCDS_PACKAGE_HOME)/../../../boards/SensGate/bsp)
+BCDS_BOARD_PATH = $(abspath $(BCDS_PACKAGE_HOME)/../../../boards/CommonGateway/bsp)
 
 # The absolute path to the BSP implementation folder. 
 BCDS_BOOTLOADER_PATH = $(abspath $(BCDS_PACKAGE_HOME)/../Bootloader/Bootloader_Sensgate/Application)
@@ -105,7 +105,7 @@ BCDS_MACROS_DEBUG += \
 	-D BCDS_PACKAGE_NAME=$(BCDS_PACKAGE_NAME) \
 	-D BCDS_PACKAGE_REVISION_ID=$(BCDS_PACKAGE_REVISION_ID) \
 	-D $(BCDS_TARGET_PLATFORM) -D BCDS_TARGET_PLATFORM=$(BCDS_TARGET_PLATFORM) \
-	-D $(SENSG_HW_PLATFORM) -D SENSG_HW_PLATFORM=$(SENSG_HW_PLATFORM) \
+	-D $(COMMONGATEWAY_HW_PLATFORM) -D COMMONGATEWAY_HW_PLATFORM=$(COMMONGATEWAY_HW_PLATFORM) \
 	-D $(BCDS_STM32_DEVICE_TYPE) -D $(BCDS_STM32_DEVICE_ID) -D $(BCDS_MCU_FAMILY) \
 	-D $(BCDS_STM32_DEVICE_PACKAGE_TYPE) -D GCC_ARMCM4 -D USE_HAL_DRIVER=1 \
 	-D APPLICATION_ENTRY_ADDRESS=0x08000000 -D APPLICATION_SECTION_SIZE=0x80000\

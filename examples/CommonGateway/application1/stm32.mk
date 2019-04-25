@@ -7,7 +7,7 @@ export BCDS_SHARED_PATH = $(BCDS_PACKAGE_HOME)/../../../core
 export THIRD_PARTY_SHARED_PATH = $(BCDS_PACKAGE_HOME)/../../../thirdparty
 export BCDS_TOOLS_PATH = $(BCDS_DEVELOPMENT_TOOLS)
 
-BCDS_CONFIG_PATH=$(BCDS_PACKAGE_HOME)/../../../boards/SensGate/kiso_config
+BCDS_CONFIG_PATH=$(BCDS_PACKAGE_HOME)/../../../boards/CommonGateway/kiso_config
 export BCDS_TARGET_PLATFORM
 export BCDS_CONFIG_PATH
 
@@ -17,14 +17,14 @@ BCDS_TOOL_NVM_GENERATOR = $(BCDS_TOOLS_PATH)/nvmgenerator
 
 # Append the memory layout defines to the build macros
 BCDS_MACROS_DEBUG += \
-	$(SENSG_MEM_DEFINES) 
+	$(COMMONGATEWAY_MEM_DEFINES) 
 # Since BCDS_MACROS_RELEASE is a duplicate of BCDS_MACROS_DEBUG, no need to add this definition there
 	
 # The path to the debug and release binaries
-SENSGATE_DEBUG_BIN = $(BCDS_DEBUG_PATH)/$(BCDS_PACKAGE_NAME)_$(SENSG_HW_PLATFORM)_debug.bin
-SENSGATE_DEBUG_BIN_CONT = $(BCDS_DEBUG_PATH)/$(BCDS_PACKAGE_NAME)_cont_debug.bin
-SENSGATE_RELEASE_BIN = $(BCDS_RELEASE_PATH)/$(BCDS_PACKAGE_NAME)_$(SENSG_HW_PLATFORM).bin
-SENSGATE_RELEASE_BIN_CONT = $(BCDS_DEBUG_PATH)/$(BCDS_PACKAGE_NAME)_cont_release.bin
+COMMONGATEWAY_DEBUG_BIN = $(BCDS_DEBUG_PATH)/$(BCDS_PACKAGE_NAME)_$(COMMONGATEWAY_HW_PLATFORM)_debug.bin
+COMMONGATEWAY_DEBUG_BIN_CONT = $(BCDS_DEBUG_PATH)/$(BCDS_PACKAGE_NAME)_cont_debug.bin
+COMMONGATEWAY_RELEASE_BIN = $(BCDS_RELEASE_PATH)/$(BCDS_PACKAGE_NAME)_$(COMMONGATEWAY_HW_PLATFORM).bin
+COMMONGATEWAY_RELEASE_BIN_CONT = $(BCDS_DEBUG_PATH)/$(BCDS_PACKAGE_NAME)_cont_release.bin
 
 BCDS_BSP_PATH = $(BCDS_BOARD_PATH)
 
@@ -68,7 +68,7 @@ BCDS_INCLUDES =\
     -I$(BCDS_SEGGERRTT_PATH)/3rd-party/SEGGER_RTT/RTT \
     -Isource/
 
-BCDS_PROJECT_LD_FILE = $(BCDS_PACKAGE_HOME)/../../../boards/SensGate/Application_$(BCDS_STM32_DEVICE_TYPE)_FLASH.ld
+BCDS_PROJECT_LD_FILE = $(BCDS_PACKAGE_HOME)/../../../boards/CommonGateway/Application_$(BCDS_STM32_DEVICE_TYPE)_FLASH.ld
 
 BCDS_SOURCE_FILES = \
     source/main.c \
@@ -137,25 +137,25 @@ debugAll: debug debugBTL
 releaseAll: release releaseBTL
 ###### Application build Targets
 .PHONY: debug	
-debug: $(SENSGATE_DEBUG_BIN) exp_start_address
+debug: $(COMMONGATEWAY_DEBUG_BIN) exp_start_address
 .PHONY: release	
-release: $(SENSGATE_DEBUG_BIN) exp_start_address
+release: $(COMMONGATEWAY_DEBUG_BIN) exp_start_address
 .PHONY: all exp_start_address
-all: $(SENSGATE_RELEASE_BIN_CONT)
+all: $(COMMONGATEWAY_RELEASE_BIN_CONT)
 
 ###### Bootloader build Targets
 .PHONY: debugBTL	
 debugBTL: cleanBTL
-	@echo "Building Bootloader debug from SensGate"
+	@echo "Building Bootloader debug from CommonGateway"
 	$(MAKE) -C $(BCDS_BOOTLOADER_PATH) debug BCDS_COMMON_MAKEFILE=$(CURDIR)/common.mk
 .PHONY: releaseBTL
 releaseBTL: cleanBTL
-	@echo "Building Bootloader release from SensGate"
+	@echo "Building Bootloader release from CommonGateway"
 	$(MAKE) -C $(BCDS_BOOTLOADER_PATH) release BCDS_COMMON_MAKEFILE=$(CURDIR)/common.mk
 
 .PHONY: cleanBTL	
 cleanBTL:
-	@echo "Building Bootloader debug from SensGate"
+	@echo "Building Bootloader debug from CommonGateway"
 	$(MAKE) -C $(BCDS_BOOTLOADER_PATH) clean_all BCDS_COMMON_MAKEFILE=$(CURDIR)/common.mk
 	
 ##### Application Clean libraries of platform and third party code
@@ -167,11 +167,11 @@ clean_libraries:
 # Cleans all files
 clean_all: clean clean_libraries
 ##### Application debug related rules #####
-$(SENSGATE_DEBUG_BIN_CONT): $(SENSGATE_DEBUG_BIN)
+$(COMMONGATEWAY_DEBUG_BIN_CONT): $(COMMONGATEWAY_DEBUG_BIN)
 	@echo "Creating binary with header $@"
-	@python $(CREATE_CONTAINER_SCRIPT) v4 openssl $(SENSGATE_DEBUG_BIN) $(SENSGATE_DEBUG_BIN_CONT) $(HEADER_VERSION) $(PRODUCT_CLASS) $(PRODUCT_VARIANT) $(FIRMWARE_VERSION)
+	@python $(CREATE_CONTAINER_SCRIPT) v4 openssl $(COMMONGATEWAY_DEBUG_BIN) $(COMMONGATEWAY_DEBUG_BIN_CONT) $(HEADER_VERSION) $(PRODUCT_CLASS) $(PRODUCT_VARIANT) $(FIRMWARE_VERSION)
 
-$(SENSGATE_DEBUG_BIN): $(BCDS_DEBUG_PATH)/$(BCDS_PACKAGE_NAME).out
+$(COMMONGATEWAY_DEBUG_BIN): $(BCDS_DEBUG_PATH)/$(BCDS_PACKAGE_NAME).out
 	@echo "Creating binary $@"
 	@$(OBJCOPY) -R .usrpg -O binary $(BCDS_DEBUG_PATH)/$(BCDS_PACKAGE_NAME).out $@
 
@@ -188,11 +188,11 @@ $(BCDS_DEBUG_OBJECT_PATH)/%.o: $(BCDS_TEST_PATH)/%.c
 	$(CC) -c $(CFLAGS_DEBUG) -I . $(BCDS_INCLUDES) $< -o $@
 
 ##### Application release related rules #####
-$(SENSGATE_RELEASE_BIN_CONT): $(SENSGATE_RELEASE_BIN)
+$(COMMONGATEWAY_RELEASE_BIN_CONT): $(COMMONGATEWAY_RELEASE_BIN)
 	@echo "Creating binary with header $@"
-	@python $(CREATE_CONTAINER_SCRIPT) v4 openssl $(SENSGATE_RELEASE_BIN) $(SENSGATE_RELEASE_BIN_CONT) $(HEADER_VERSION) $(PRODUCT_CLASS) $(PRODUCT_VARIANT) $(FIRMWARE_VERSION)
+	@python $(CREATE_CONTAINER_SCRIPT) v4 openssl $(COMMONGATEWAY_RELEASE_BIN) $(COMMONGATEWAY_RELEASE_BIN_CONT) $(HEADER_VERSION) $(PRODUCT_CLASS) $(PRODUCT_VARIANT) $(FIRMWARE_VERSION)
 
-$(SENSGATE_RELEASE_BIN): $(BCDS_RELEASE_PATH)/$(BCDS_PACKAGE_NAME).out
+$(COMMONGATEWAY_RELEASE_BIN): $(BCDS_RELEASE_PATH)/$(BCDS_PACKAGE_NAME).out
 	@echo "Creating binary $@"
 	@$(OBJCOPY) -R .usrpg -O binary $(BCDS_RELEASE_PATH)/$(BCDS_PACKAGE_NAME).out $@
 
@@ -236,8 +236,8 @@ $(1): $(2)
 	@echo "Flashing $(2) is completed successfully"
 endef
 
-$(eval $(call flash_rule_template,flash_debug_bin,$(SENSGATE_DEBUG_BIN_CONT)))
-$(eval $(call flash_rule_template,flash_release_bin,$(SENSGATE_RELEASE_BIN_CONT)))
+$(eval $(call flash_rule_template,flash_debug_bin,$(COMMONGATEWAY_DEBUG_BIN_CONT)))
+$(eval $(call flash_rule_template,flash_release_bin,$(COMMONGATEWAY_RELEASE_BIN_CONT)))
 
 # Flash application to upload partition
 define flash_update_rule_template =
@@ -247,22 +247,22 @@ $(1): $(2)
 	@echo "Speed 12000" > CommandFile.jlink                                              #speed
 	@echo "r" >> CommandFile.jlink                                                       #reset
 	@echo "h" >> CommandFile.jlink                                                       #halt
-	@echo "loadbin "$(2)" "$(SENSG_DOWNLOAD_SEC_START_ADR) >> CommandFile.jlink          #load bin
-	@echo "verifybin "$(2)" "$(SENSG_DOWNLOAD_SEC_START_ADR) >> CommandFile.jlink        #verify bin
+	@echo "loadbin "$(2)" "$(COMMONGATEWAY_DOWNLOAD_SEC_START_ADR) >> CommandFile.jlink          #load bin
+	@echo "verifybin "$(2)" "$(COMMONGATEWAY_DOWNLOAD_SEC_START_ADR) >> CommandFile.jlink        #verify bin
 	@echo "r" >> CommandFile.jlink                                                       #reset
 	@echo "qc" >> CommandFile.jlink                                                      #quit
 	@$(FLASH_TOOL_PATH) -device $(BCDS_STM32_DEVICE_ID) -if SWD -CommanderScript CommandFile.jlink
 	@echo "Flashing $(2) is completed successfully"
 endef
 
-$(eval $(call flash_update_rule_template,flash_update_debug_cont,$(SENSGATE_DEBUG_BIN_CONT)))
-$(eval $(call flash_update_rule_template,flash_update_release_cont,$(SENSGATE_RELEASE_BIN_CONT)))
+$(eval $(call flash_update_rule_template,flash_update_debug_cont,$(COMMONGATEWAY_DEBUG_BIN_CONT)))
+$(eval $(call flash_update_rule_template,flash_update_release_cont,$(COMMONGATEWAY_RELEASE_BIN_CONT)))
 
 # Flash BTL
 define flash_btl_rule_template =
 .PHONY: flash_btl_$(1)
 flash_btl_$(1):
-	@echo "Flashing Bootloader $(1) from SensGate"
+	@echo "Flashing Bootloader $(1) from CommonGateway"
 	$(MAKE) -C $(BCDS_BOOTLOADER_PATH) flash_$(1)_bin BCDS_COMMON_MAKEFILE=$(CURDIR)/common.mk
 endef
 

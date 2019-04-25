@@ -12,7 +12,7 @@
 *
 ********************************************************************************/
 
-#include "BSP_Sensgate.h"
+#include <BSP_CommonGateway.h>
 #include "protected/gpio.h"
 #include "protected/bitband.h"
 

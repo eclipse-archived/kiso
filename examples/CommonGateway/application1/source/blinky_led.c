@@ -34,7 +34,7 @@
 
 /* additional interface header files */
 #include "blinky_led.h"
-#include "BSP_Sensgate.h"
+#include <BSP_CommonGateway.h>
 #include "BCDS_BSP_LED.h"
 #include "BCDS_CmdProcessor.h"
 #include "BCDS_Assert.h"
@@ -91,7 +91,7 @@ void blink_led(void* param1, uint32_t param2)
 {
     (void)param1;
     (void)param2;
-	BSP_LED_Switch(SENSGATE_LED_BLUE_ID, SENSGATE_LED_COMMAND_TOGGLE);
+	BSP_LED_Switch(COMMONGATEWAY_LED_BLUE_ID, COMMONGATEWAY_LED_COMMAND_TOGGLE);
 	LOG_DEBUG("Led switch");
     vTaskDelay(500);
     CmdProcessor_Enqueue((CmdProcessor_T*)param1,blink_led,param1,0);

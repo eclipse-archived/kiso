@@ -12,8 +12,8 @@
 *
 ********************************************************************************/
 
+#include <BSP_CommonGateway.h>
 #include "protected/power_supply.h"
-#include "BSP_Sensgate.h"
 #include "BCDS_BSP_Board.h"
 #include "BCDS_HAL_Delay.h"
 #include "protected/board.h"

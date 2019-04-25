@@ -16,7 +16,7 @@
 
 #if BCDS_FEATURE_BSP_MEMORY_W25
 
-#include "BSP_Sensgate.h"
+#include "BSP_CommonGateway.h"
 #include "protected/gpio.h"
 #include "protected/power_supply.h"
 #include "stm32/stm32l4/BCDS_MCU_STM32L4_SPI_Handle.h"

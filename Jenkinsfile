@@ -30,7 +30,7 @@ pipeline
                 script // Run static analysis
                 {
                     echo "Build the application"
-                    sh 'meson debug --cross-file boards/SensGate/meson_config_stm32l4_gcc8.ini'
+                    sh 'meson debug --cross-file boards/CommonGateway/meson_config_stm32l4_gcc8.ini'
                     sh 'cd debug && meson configure -Db_pch=false -Db_staticpic=false'
                     sh 'cd debug && ninja hex'
                 }
