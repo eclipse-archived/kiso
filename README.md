@@ -7,7 +7,7 @@
 
 **Note**: python and arm-none-eabi need to be accessible via cmd-line. Therefore, you may need to modify the environment variable *PATH* on windows if it is not done in the installation.
 
-### Extention tooling
+### Extension tooling
 * ```pip3 install meson```
 * ```pip3 install ninja```
 
