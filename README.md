@@ -3,7 +3,7 @@
 ## Installation guide (manual)
 ### Basic tooling
 * Download and install anaconda version **4.4.11**
-* Download and install arm-none-eabi version **4.7_2014q2**
+* Download and install arm-none-eabi version **7.0_2017q4**
 
 **Note**: python and arm-none-eabi need to be accessible via cmd-line. Therefore, you may need to modify the environment variable *PATH* on windows if it is not done in the installation.
 
