@@ -12,14 +12,15 @@
 *
 ********************************************************************************/
 
-#include <BSP_CommonGateway.h>
 #include "BCDS_BSP_Board.h"
 
 #include "BCDS_HAL_Delay.h"
-#include "protected/board.h"
-#include "protected/time.h"
-#include "protected/gpio.h"
 #include <string.h>
+
+#include "protected/board.h"
+#include "protected/gpio.h"
+#include "protected/time.h"
+#include "BSP_CommonGateway.h"
 #include "core_cm4.h"
 #include "stdio.h"
 

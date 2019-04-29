@@ -12,9 +12,9 @@
 *
 ********************************************************************************/
 
-#include <BSP_CommonGateway.h>
-#include "protected/time.h"
 #include "protected/bitband.h"
+#include "protected/time.h"
+#include "BSP_CommonGateway.h"
 #include "stm32l4xx_hal.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/

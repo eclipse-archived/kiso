@@ -12,9 +12,9 @@
 *
 ********************************************************************************/
 
-#include <BSP_CommonGateway.h>
-#include "protected/gpio.h"
 #include "protected/bitband.h"
+#include "protected/gpio.h"
+#include "BSP_CommonGateway.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 

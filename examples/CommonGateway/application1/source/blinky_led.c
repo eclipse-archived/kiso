@@ -34,7 +34,7 @@
 
 /* additional interface header files */
 #include "blinky_led.h"
-#include <BSP_CommonGateway.h>
+#include "BSP_CommonGateway.h"
 #include "BCDS_BSP_LED.h"
 #include "BCDS_CmdProcessor.h"
 #include "BCDS_Assert.h"
@@ -58,6 +58,7 @@ void appInitSystem(void * CmdProcessorHandle, uint32_t param2)
 	Retcode_T returnVal = RETCODE_OK;
 
 	// Initialize logging module
+
 	returnVal = Logging_Init(Logging_SyncRecorder, Logging_RttAppender);
     if (RETCODE_OK == returnVal)
     {

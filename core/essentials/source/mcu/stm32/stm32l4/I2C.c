@@ -1,16 +1,16 @@
 /********************************************************************************
-* Copyright (c) 2010-2019 Robert Bosch GmbH
-*
-* This program and the accompanying materials are made available under the
-* terms of the Eclipse Public License 2.0 which is available at
-* http://www.eclipse.org/legal/epl-2.0.
-*
-* SPDX-License-Identifier: EPL-2.0
-*
-* Contributors:
-*    Robert Bosch GmbH - initial contribution
-*
-********************************************************************************/
+ * Copyright (c) 2010-2019 Robert Bosch GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Robert Bosch GmbH - initial contribution
+ *
+ ********************************************************************************/
 
 /**
  * @file
@@ -53,7 +53,6 @@ enum
 
 volatile uint8_t wTransferState = TRANSFER_WAIT;
 
-
 /* Function prototypes */
 void MCU_BSP_I2C_EV_Callback(I2C_T i2c);
 void MCU_BSP_I2C_ER_Callback(I2C_T i2c);
@@ -78,25 +77,9 @@ void MCU_BSP_I2C_EV_Callback(I2C_T i2c)
          */
         /* Get the STM handle from the BSP handle */
         I2C_HandleTypeDef* hdl = &pI2C->hi2c;
-        /* Check if Master receive has not been invoked before and if there is
-         * data in the receive register*/
-        if ( __HAL_I2C_GET_FLAG(hdl, I2C_FLAG_RXNE) &&
-                (hdl->State != HAL_I2C_STATE_MASTER_BUSY_RX) &&
-                (NULL != pI2C->AppLayerCallback)
-                )
-        {
-            /* Application did not invoke receive, but there is data to receive.
-             * We have to signal this to the application.
-             */
-            struct MCU_I2C_Event_S event = { 0, 0, 0, 0 };
-            /* Set the error bit in the event and signal it to application */
-            event.RxReady = 1;
-            pI2C->AppLayerCallback((I2C_T) pI2C, event);
-        }
-        else
-        {
-            HAL_I2C_EV_IRQHandler(hdl);
-        }
+
+        HAL_I2C_EV_IRQHandler(hdl);
+
     }
 }
 
@@ -109,7 +92,7 @@ void MCU_BSP_I2C_EV_Callback(I2C_T i2c)
  */
 void MCU_BSP_I2C_ER_Callback(I2C_T i2c)
 {
-	struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
+    struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
     if (pI2C)
     {
         /* Now call the IRQ Handler of the STM32 HAL driver layer.
@@ -132,7 +115,7 @@ void MCU_BSP_I2C_ER_Callback(I2C_T i2c)
  */
 void MCU_BSP_I2C_DMA_RX_Callback(I2C_T i2c)
 {
-	struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
+    struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
     if (pI2C)
     {
         /* Now call the DMA Handler of the STM32 HAL driver layer.
@@ -155,7 +138,7 @@ void MCU_BSP_I2C_DMA_RX_Callback(I2C_T i2c)
  */
 void MCU_BSP_I2C_DMA_TX_Callback(I2C_T i2c)
 {
-	struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
+    struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
     if (pI2C)
     {
         /* Now call the DMA Handler of the STM32 HAL driver layer.
@@ -166,8 +149,6 @@ void MCU_BSP_I2C_DMA_TX_Callback(I2C_T i2c)
     }
 }
 
-
-
 /** See description in the interface declaration */
 Retcode_T MCU_I2C_Initialize(I2C_T i2c, MCU_I2C_Callback_T callback)
 {
@@ -175,46 +156,47 @@ Retcode_T MCU_I2C_Initialize(I2C_T i2c, MCU_I2C_Callback_T callback)
     struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
     if (pI2C && callback)
     {
-    	/* Now we have to check the configuration
-    	 * of the interface in order to assign the correct transmit and
-    	 * receive functions depending on the configured transfer mode.
-    	 */
-    	if (BCDS_HAL_TRANSFER_MODE_BLOCKING == pI2C->TransferMode)
-    	{
-    		/* this mode is currently not supported */
-    		rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
-    	}
-    	else if (BCDS_HAL_TRANSFER_MODE_INTERRUPT == pI2C->TransferMode)
-    	{
-    		pI2C->IRQCallback = MCU_BSP_I2C_EV_Callback;
-    		pI2C->ERRCallback = MCU_BSP_I2C_ER_Callback;
-    		pI2C->DMATxCallback = NULL;
-    		pI2C->DMARxCallback = NULL;
-    		pI2C->AppLayerCallback = callback;
+        /* Now we have to check the configuration
+         * of the interface in order to assign the correct transmit and
+         * receive functions depending on the configured transfer mode.
+         */
+        if (BCDS_HAL_TRANSFER_MODE_BLOCKING == pI2C->TransferMode)
+        {
+            /* this mode is currently not supported */
+            rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
+        }
+        else if (BCDS_HAL_TRANSFER_MODE_INTERRUPT == pI2C->TransferMode)
+        {
+            pI2C->IRQCallback = MCU_BSP_I2C_EV_Callback;
+            pI2C->ERRCallback = MCU_BSP_I2C_ER_Callback;
+            pI2C->DMATxCallback = NULL;
+            pI2C->DMARxCallback = NULL;
+            pI2C->AppLayerCallback = callback;
 
-    		pI2C->TxFunPtr = HAL_I2C_Master_Transmit_IT;
-    		pI2C->RxFunPtr = HAL_I2C_Master_Receive_IT;
+            pI2C->TxFunPtr = HAL_I2C_Master_Transmit_IT;
+            pI2C->RxFunPtr = HAL_I2C_Master_Receive_IT;
+            pI2C->State = I2C_STATE_READY;
 
-    		rc = RETCODE_OK;
-    	}
-    	else if (BCDS_HAL_TRANSFER_MODE_DMA == pI2C->TransferMode)
-    	{
-    		pI2C->IRQCallback = MCU_BSP_I2C_EV_Callback;
-    		pI2C->ERRCallback = MCU_BSP_I2C_ER_Callback;
-    		pI2C->DMARxCallback = MCU_BSP_I2C_DMA_RX_Callback;
-    		pI2C->DMATxCallback = MCU_BSP_I2C_DMA_TX_Callback;
-    		pI2C->AppLayerCallback = callback;
+            rc = RETCODE_OK;
+        }
+        else if (BCDS_HAL_TRANSFER_MODE_DMA == pI2C->TransferMode)
+        {
+            pI2C->IRQCallback = MCU_BSP_I2C_EV_Callback;
+            pI2C->ERRCallback = MCU_BSP_I2C_ER_Callback;
+            pI2C->DMARxCallback = MCU_BSP_I2C_DMA_RX_Callback;
+            pI2C->DMATxCallback = MCU_BSP_I2C_DMA_TX_Callback;
+            pI2C->AppLayerCallback = callback;
 
-    		pI2C->RxFunPtr = HAL_I2C_Master_Receive_DMA;
-    		pI2C->TxFunPtr = HAL_I2C_Master_Transmit_DMA;
+            pI2C->RxFunPtr = HAL_I2C_Master_Receive_DMA;
+            pI2C->TxFunPtr = HAL_I2C_Master_Transmit_DMA;
 
-    		rc = RETCODE_OK;
-    	}
-    	else
-    	{
-    		/* all other modes are currently not supported */
-    		rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
-    	}
+            rc = RETCODE_OK;
+        }
+        else
+        {
+            /* all other modes are currently not supported */
+            rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
+        }
     }/* if (pI2C && callback) */
     return rc;
 }
@@ -238,7 +220,6 @@ Retcode_T MCU_I2C_Deinitialize(I2C_T i2c)
         pI2C->ERRCallback = NULL;
         pI2C->DMARxCallback = NULL;
         pI2C->DMATxCallback = NULL;
-        pI2C->Index = 0;
         pI2C->RxFunPtr = NULL;
         pI2C->TxFunPtr = NULL;
         rc = RETCODE_OK;
@@ -277,8 +258,7 @@ Retcode_T MCU_I2C_Send(I2C_T i2c, uint16_t slaveAddr,
                     /* SEND */
                     HAL_StatusTypeDef halStatus;
 
-                    halStatus = pI2C->TxFunPtr(&pI2C->hi2c,
-                            slaveAddr, data, len);
+                    halStatus = pI2C->TxFunPtr(&pI2C->hi2c, slaveAddr, data, len);
 
                     if (HAL_OK == halStatus)
                     {
@@ -339,8 +319,7 @@ Retcode_T MCU_I2C_Receive(I2C_T i2c, uint16_t slaveAddr,
                     /* RECEIVE */
                     HAL_StatusTypeDef halStatus;
 
-                    halStatus = pI2C->RxFunPtr(&pI2C->hi2c,
-                            slaveAddr, buffer, len);
+                    halStatus = pI2C->RxFunPtr(&pI2C->hi2c, slaveAddr, buffer, len);
 
                     if (HAL_OK == halStatus)
                     {
@@ -371,8 +350,7 @@ Retcode_T MCU_I2C_Receive(I2C_T i2c, uint16_t slaveAddr,
 }
 
 /** See description in the interface declaration */
-Retcode_T MCU_I2C_ReadRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAddr,
-        uint8_t * rxBuffer, uint32_t rxLen)
+Retcode_T MCU_I2C_ReadRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAddr, uint8_t * rxBuffer, uint32_t rxLen)
 {
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
@@ -390,42 +368,42 @@ Retcode_T MCU_I2C_ReadRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAd
             }
             else
             {
+                pI2C->State = I2C_STATE_RX;
                 if (I2C_ADDRESSINGMODE_7BIT == pI2C->hi2c.Init.AddressingMode)
                 {
                     slaveAddr = slaveAddr << 1; /**< 7bit Adressing Mode */
                 }
+                /* RECEIVE */
+                HAL_StatusTypeDef halStatus;
 
-                if (HAL_OK == HAL_I2C_IsDeviceReady(&pI2C->hi2c, slaveAddr, TRIALS, TIMEOUT_MS))
+                /* SEND */
+
+                halStatus = pI2C->TxFunPtr(&pI2C->hi2c, slaveAddr, &registerAddr, 1);
+
+                if (HAL_OK == halStatus)
                 {
-                    /* RECEIVE */
-                    HAL_StatusTypeDef halStatus;
+                    rc = RETCODE_OK;
+                }
+                else
+                {
+                    rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+                }
 
-                    rxBuffer[0] = registerAddr;
-
-                    rc = MCU_I2C_Send(i2c, slaveAddr, rxBuffer, 1);
-
-                    if (RETCODE_OK == rc)
+                if (RETCODE_OK == rc)
+                {
+                    while (HAL_I2C_GetState(&pI2C->hi2c) != HAL_I2C_STATE_READY)
                     {
-                        halStatus = pI2C->RxFunPtr(&pI2C->hi2c,
-                                slaveAddr, rxBuffer, rxLen);
+                    }
+                    halStatus = pI2C->RxFunPtr(&pI2C->hi2c, slaveAddr, rxBuffer, rxLen);
 
-                        if (HAL_OK == halStatus)
-                        {
-                            rc = RETCODE_OK;
-                        }
-                        else
-                        {
-                            rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
-                        }
+                    if (HAL_OK == halStatus)
+                    {
+                        rc = RETCODE_OK;
                     }
                     else
                     {
                         rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
                     }
-                }
-                else
-                {
-                    rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
                 }
             }
         }
@@ -468,22 +446,28 @@ Retcode_T MCU_I2C_WriteRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerA
                     slaveAddr = slaveAddr << 1; /**< 7bit Adressing Mode */
                 }
 
-                if (HAL_OK == HAL_I2C_IsDeviceReady(&pI2C->hi2c, slaveAddr, TRIALS, TIMEOUT_MS))
+                HAL_StatusTypeDef halStatus;
+
+                /* SEND */
+
+                halStatus = pI2C->TxFunPtr(&pI2C->hi2c, slaveAddr, &registerAddr, 1);
+
+                if (HAL_OK == halStatus)
                 {
-                    /* SEND */
-                    HAL_StatusTypeDef halStatus;
-
-                    uint8_t Buf[txLen + 1];
-                    uint8_t i;
-
-                    Buf[0] = registerAddr;
-                    for (i = 0; i < txLen; i++)
+                    rc = RETCODE_OK;
+                }
+                else
+                {
+                    rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+                }
+                if (RETCODE_OK == rc)
+                {
+                    while (HAL_I2C_GetState(&pI2C->hi2c) != HAL_I2C_STATE_READY)
                     {
-                        Buf[i + 1] = *(txData + i);
                     }
+                    pI2C->State = I2C_STATE_TX;
 
-                    halStatus = pI2C->TxFunPtr(&pI2C->hi2c,
-                            slaveAddr, Buf, txLen + 1);
+                    halStatus = pI2C->TxFunPtr(&pI2C->hi2c, slaveAddr, txData, txLen);
 
                     if (HAL_OK == halStatus)
                     {
@@ -493,9 +477,6 @@ Retcode_T MCU_I2C_WriteRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerA
                     {
                         rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
                     }
-                }
-                {
-                    rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
                 }
             }
         }
@@ -524,7 +505,7 @@ Retcode_T MCU_I2C_WriteRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerA
  */
 void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
 {
-	struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) hi2c;
+    struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) hi2c;
     if (pI2C)
     {
         /* Has a valid handle, now process the event */
@@ -562,11 +543,15 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
     struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) hi2c;
     if (pI2C && pI2C->AppLayerCallback)
     {
-        /* Has a valid handle, now process the event */
-        struct MCU_I2C_Event_S event = { 0, 0, 0, 0 };
-        /* Signal that transfer is complete to application */
-        event.TxComplete = 1;
-        pI2C->AppLayerCallback((I2C_T) pI2C, event);
+        if (pI2C->State == I2C_STATE_TX)
+        {
+            /* Has a valid handle, now process the event */
+            struct MCU_I2C_Event_S event = { 0, 0, 0, 0 };
+            /* Signal that transfer is complete to application */
+            event.TxComplete = 1;
+            pI2C->AppLayerCallback((I2C_T) pI2C, event);
+            pI2C->State = I2C_STATE_READY;
+        }
     }
 }
 
@@ -582,11 +567,15 @@ void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
     struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) hi2c;
     if (pI2C && pI2C->AppLayerCallback)
     {
-        /* Has a valid handle, now process the event */
-        struct MCU_I2C_Event_S event = { 0, 0, 0, 0 };
-        /* Signal that transfer is complete to application */
-        event.RxComplete = 1;
-        pI2C->AppLayerCallback((I2C_T) pI2C, event);
+        if (pI2C->State == I2C_STATE_RX)
+        {
+            /* Has a valid handle, now process the event */
+            struct MCU_I2C_Event_S event = { 0, 0, 0, 0 };
+            /* Signal that transfer is complete to application */
+            event.RxComplete = 1;
+            pI2C->AppLayerCallback((I2C_T) pI2C, event);
+            pI2C->State = I2C_STATE_READY;
+        }
     }
 }
 

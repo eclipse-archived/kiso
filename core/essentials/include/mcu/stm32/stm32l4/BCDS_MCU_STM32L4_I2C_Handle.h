@@ -52,7 +52,16 @@ typedef HAL_StatusTypeDef (*STM_HAL_RxTxFunPtr)(I2C_HandleTypeDef *hi2c,
         uint8_t *pData,
         uint16_t Size);
 
-
+/**
+ * Enumeration of driver state machine states.
+ */
+typedef enum MCU_I2C_State_E
+{
+    I2C_STATE_INIT,
+    I2C_STATE_READY,
+    I2C_STATE_TX,
+    I2C_STATE_RX,
+} MCU_I2C_State_T;
 /**
  * @brief   Structure which is used as I2C handle.
  *
@@ -79,12 +88,12 @@ struct MCU_I2C_S
      * by the BSP to notify MCU about DMA Tx events. Will be set by MCU I2C
      * upon initialization and if transfer mode is set to DMA.*/
     MCU_BSPI2C_IRQ_Callback_T DMATxCallback;
-    /** Index of the MCU I2C interface. Set by MCU I2C upon initialization. */
-    uint32_t Index;
     /** Identifies the transfer mode that is currently configured for this I2C
      * instance. This value will be set by the BSP upon configuration of the
      * I2C interface.*/
     enum BCDS_HAL_TransferMode_E TransferMode;
+    /** Current State of the I2C transceiver */
+    MCU_I2C_State_T State;
 
     /** Callback function pointer that has been passed with a call to the
      * initialize function. It is used to callback the application layer when

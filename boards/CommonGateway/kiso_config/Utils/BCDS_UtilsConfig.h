@@ -100,6 +100,11 @@
 #define BCDS_FEATURE_UARTTRANSCEIVER    1
 #endif
 
+#ifndef BCDS_FEATURE_I2CTRANSCEIVER
+/** @brief Enable (1) or disable (0) the I2CTransceiver feature. */
+#define BCDS_FEATURE_I2CTRANSCEIVER    1
+#endif
+
 #ifndef BCDS_FEATURE_XPROTOCOL
 /** @brief Enable (1) or disable (0) the XProtocol feature. */
 #define BCDS_FEATURE_XPROTOCOL          1

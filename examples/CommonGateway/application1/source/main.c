@@ -22,13 +22,13 @@
 #include "BCDS_BSP_LED.h"
 #include "BCDS_BSP_Board.h"
 #include <stdio.h>
+
 #include "BCDS_Basics.h"
 #include "BCDS_Assert.h"
 #include "BCDS_CmdProcessor.h"
 #include "FreeRTOS.h"
 #include "task.h"
-
-#include "../../../../boards/CommonGateway/bsp/include/BSP_CommonGateway.h"
+#include "BSP_CommonGateway.h"
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
 #undef BCDS_MODULE_ID  /* Module ID define before including Basics package*/

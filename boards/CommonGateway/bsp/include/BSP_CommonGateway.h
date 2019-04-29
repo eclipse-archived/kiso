@@ -106,11 +106,27 @@ enum CommonGateway_BMA280Ids_E
 };
 
 /**
+ * @enum        I2C addresses of available BMA280 sensors
+ */
+enum CommonGateway_BMA280I2CAddress_E
+{
+    COMMONGATEWAY_BMA280_I2CADDRESS = 0x18, /**< Id of onboard BMA280 sensor */
+};
+
+/**
  * @enum        IDs of available BME280 sensors
  */
 enum CommonGateway_BME280Ids_E
 {
     COMMONGATEWAY_BME280_ID = 1, /**< Id of onboard BME280 sensor */
+};
+
+/**
+ * @enum        I2C addresses of available BMA280 sensors
+ */
+enum CommonGateway_BME280I2CAddress_E
+{
+    COMMONGATEWAY_BME280_I2CADDRESS = 0x77, /**< Id of onboard BME280 sensor */
 };
 
 /**
@@ -141,6 +157,7 @@ enum BSP_State_E
     BSP_STATE_DISCONNECTED = BSP_STATE_TO_CONNECTED | BSP_STATE_TO_ERROR, /**< The device is at disconnected state */
     BSP_STATE_ERROR = 0xFF,
 };
+
 /**
  * @def BSP_BOARD_DEFAULT_PARAM1
  * Default param1 for BSP_Board_Initialize()
