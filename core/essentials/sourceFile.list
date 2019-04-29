@@ -1,1 +1,0 @@
-BCDS_SOURCE_FILES := source/Assert.c source/CriticalSection.c source/Functions.c source/Delay.c source/Signal.c source/Mutex.c source/Retcode.c source/mcu/efm32/I2C.c source/mcu/efm32/Gpio.c source/mcu/efm32/UART.c source/mcu/efm32/SPI.c source/mcu/efm32/Watchdog.c source/mcu/efm32/Flash.c source/mcu/efm32/LEUART.c source/mcu/efm32/Timer.c source/mcu/efm32/Sleep.c
