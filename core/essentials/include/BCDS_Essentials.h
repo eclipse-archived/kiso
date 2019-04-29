@@ -16,10 +16,10 @@
  *
  *
  * @file
- * @defgroup    ESSENTIALS Essentials Retcode support
+ * @defgroup    BCDS_ESSENTIALS Essentials
  * @{
  *
- * @brief       Provides retcode supporting enumerations for Essentials component
+ * @brief       Provides supported enumerations for Essentials component
  *
  * @details This package contains essential components and modules of the BCDS software platform like the
  * hardware abstraction layer (HAL) including a microcontroller unit abstraction (MCU),

@@ -13,12 +13,11 @@
 ********************************************************************************/
 
 /**
- * @file
- * @defgroup HALCONFIG    Sensgate HAL Configuration file
  * @ingroup  BSP_COMMONGATEWAY_IF
+ * @defgroup HALCONFIG    CommonGateway HAL Configuration file
+ *
  * @{
- */
-/**
+ *
  * @brief Contains a default configuration to enable or disable HAL components.
  * 
  * @details 
@@ -31,6 +30,9 @@
  *   #define BCDS_FEATURE_I2C    1   // Enable HAL feature I2C
  *   #define BCDS_FEATURE_SPI    0   // Disable HAL feature SPI
  * If no defines are made then all HAL features will be enabled.
+ * @endcode
+ *
+ * @file
  */
 #ifndef BCDS_HAL_CONFIG_H_
 #define BCDS_HAL_CONFIG_H_
@@ -55,3 +57,4 @@
 #define BCDS_FEATURE_BSP_MEMORY_W25                                             1
 
 #endif /*BCDS_HAL_CONFIG_H_*/
+/**@} */

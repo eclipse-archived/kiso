@@ -14,7 +14,7 @@
 
 /**
  * @file
- * @defgroup    BCDS_HAL HAL Types
+ * @defgroup    BCDS_HAL Hardware Abstraction Layer
  * @ingroup     BCDS_ESSENTIALS
  * @{
  *
@@ -128,9 +128,16 @@ bool HAL_IsInISR(void);
 
 /**
  * @defgroup BCDS_HAL_MCU_IF MCU
+ * @ingroup  BCDS_HAL
+ * @{
  * @brief The MCU abstraction
- *
+ * @}
+ */
+
+/**
  * @defgroup BCDS_HAL_BSP_IF BSP
+ * @ingroup  BCDS_HAL
+ * @{
  * @brief The board support package
- *
+ * @}
  */

@@ -14,21 +14,14 @@
 
 
 /**
- * @file
- * @defgroup    BSP_COMMONGATEWAY  COMMONGATEWAY BSP
  * @ingroup     BSP_COMMONGATEWAY
- *
- * @defgroup    BSP_COMMONGATEWAY_IP  COMMONGATEWAY BSP Implementation
- * @ingroup     BSP_COMMONGATEWAY
- *
- * @defgroup    BSP_COMMONGATEWAY_IF  COMMONGATEWAY BSP Interfaces
- * @ingroup     BSP_COMMONGATEWAY
- *
- * @defgroup    BSP_COMMONGATEWAY_API  COMMONGATEWAY BSP main application interface
- * @ingroup     BSP_COMMONGATEWAY_IF
- *
+ * @defgroup    BSP_COMMONGATEWAY  Common Gateway BSP
  * @{
- * @brief       Project COMMONGATEWAY Board Support Package
+ * @brief       Common Gateway Board Support Package
+ *
+ * @details     Implements the used interface present in \ref BCDS_HAL_BSP_IF
+ *
+ * @file
  */
 
 #ifndef BSP_COMMONGATEWAY_H_

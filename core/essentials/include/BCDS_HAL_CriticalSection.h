@@ -15,7 +15,7 @@
 /**
  * @file
  * @defgroup    HAL_CRITICAL_SECTION CriticalSection
- * @ingroup     BCDS_ESSENTIALS
+ * @ingroup     BCDS_HAL
  * @{
  *
  * @brief       Provides exclusive execution of code, other tasks and ISR's are blocked out.

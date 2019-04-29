@@ -13,7 +13,6 @@
 ********************************************************************************/
 
 /**
- *  @file
  *  @ingroup    BCDS_ESSENTIALS
  *  @defgroup   BCDS_RETCODE Retcode
  *  @{
@@ -24,6 +23,8 @@
  *  This module provides helpful functions for creation and handling of return codes. It supports general error codes
  *  (see #Retcode_General_E), package and module IDs, severity information (see #Retcode_Severity_E) and a callback
  *  that can be registered to be called whenever a module calls Retcode_RaiseError() or Retcode_RaiseErrorFromIsr().
+ *
+ *  @file
  **/
 
 #ifndef BCDS_RETCODE_H_

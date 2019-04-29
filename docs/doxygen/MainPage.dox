@@ -1,0 +1,26 @@
+/** 
+ * @{
+ * @mainpage   Kiso Documentation
+ * @copyright  Robert Bosch GmbH
+ * @brief      Kiso API Documentation
+ * @section    BCDS_REFBOARDS_LICENCE License
+ *
+ * @note       This program and the accompanying materials are made available under the
+ *             terms of the Eclipse Public License 2.0 which is available at
+ *             http://www.eclipse.org/legal/epl-2.0. \n
+ *             SPDX-License-Identifier: EPL-2.0
+ * @warning     Confidential
+ *
+ * @section Small Tutorial
+ *
+ * Each Kiso modules need a configuration file. These files allows to enable/disable different features, 
+ * but also define a configuration for these features. These configurations can be found in the folder `boards/<board_name>/kiso_config`. \n
+ * \n
+ * The build structure respecting the following sequence: \n
+ * * `thirdparty` libraries need to be build with the specific configurations of Kiso.
+ * * The BSP library needs to be build with the specific configuration of Kiso.
+ * * All the `core` libraries need to be build with the configuration of Kiso.
+ * * The Application needs dependencies to all the previous build libraries to be buildable.
+ *
+ * @}
+*/
