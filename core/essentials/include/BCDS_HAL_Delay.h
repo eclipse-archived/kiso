@@ -15,7 +15,7 @@
 /**
  * @file
  * @defgroup    HAL_DELAY Delay
- * @ingroup     BCDS_ESSENTIALS
+ * @ingroup     BCDS_HAL
  * @{
  *
  * @brief       Provide functions for different delay times.

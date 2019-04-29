@@ -15,7 +15,7 @@
 /**
  * @file
  * @defgroup    HAL_MUTEX Mutex
- * @ingroup     BCDS_ESSENTIALS
+ * @ingroup     BCDS_HAL
  * @{
  *
  * @brief       Provides mutual exclusion in multitask environment.

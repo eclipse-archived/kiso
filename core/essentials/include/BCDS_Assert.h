@@ -13,9 +13,8 @@
 ********************************************************************************/
 
 /**
- * @file
- * @defgroup   ASSERT Assertion
  * @ingroup    BCDS_ESSENTIALS
+ * @defgroup   ASSERT Assertion
  * @{
  *
  * @brief      Enhanced Assertion functionality
@@ -24,6 +23,8 @@
  * This module offers assertion function for:
  * - static assertion, i.e. at compile time
  * - dynamic assertion, i.e. during run time, customizable with user defined callback.
+ *
+ * @file
  */
 
 /* header definition ******************************************************** */

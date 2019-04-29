@@ -15,7 +15,7 @@
 /**
  * @file
  * @defgroup        HAL_SIGNAL Signal
- * @ingroup         BCDS_ESSENTIALS
+ * @ingroup         BCDS_HAL
  * @{
  *
  * @brief           This is API to support signaling between concurrent execution contexts, i.e. tasks and ISRs.
