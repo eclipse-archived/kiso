@@ -1,3 +1,4 @@
+
 BCDS_PACKAGE_NAME = App_CommonGateway
 BCDS_PACKAGE_ID = 151
 export BCDS_PACKAGE_HOME := $(CURDIR)

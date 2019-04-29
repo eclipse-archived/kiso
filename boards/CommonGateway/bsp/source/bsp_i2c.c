@@ -41,7 +41,7 @@ struct MCU_I2C_S sensorsI2CStruct =
         {
                 .TransferMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
                 .hi2c.Instance = I2C3,
-                .hi2c.Init.Timing = 0x2010091A, // 400kHz
+                .hi2c.Init.Timing = 0x10b0153d, // 400kHz; 200ns rise time 50ns fall time
                 .hi2c.Init.OwnAddress1 = 0,
                 .hi2c.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT,
                 .hi2c.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED,
@@ -71,6 +71,7 @@ Retcode_T I2C_Connect(enum BSP_I2c_Devices id)
         BSP_GPIOInitStruct.Mode = GPIO_MODE_AF_OD;
         BSP_GPIOInitStruct.Pull = GPIO_NOPULL;
         BSP_GPIOInitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        BSP_GPIOInitStruct.Alternate = GPIO_AF4_I2C3;
         HAL_GPIO_Init(GPIOC, &BSP_GPIOInitStruct);
     }
     i2c3ConnectedState |= 1 << id;
@@ -88,8 +89,7 @@ Retcode_T I2C_Enable(enum BSP_I2c_Devices id)
     if (0 == i2c3EnabledState)
     {
         /* Enable the UART clock */
-        __HAL_RCC_I2C3_CLK_ENABLE()
-        ;
+        __HAL_RCC_I2C3_CLK_ENABLE();
         __HAL_RCC_I2C3_FORCE_RESET();
         __HAL_RCC_I2C3_RELEASE_RESET();
 
@@ -100,8 +100,8 @@ Retcode_T I2C_Enable(enum BSP_I2c_Devices id)
         }
         if (RETCODE_OK == retcode)
         {
-            HAL_NVIC_SetPriority(I2C3_EV_IRQn, 5, 0);
-            HAL_NVIC_SetPriority(I2C3_ER_IRQn, 5, 0);
+            HAL_NVIC_SetPriority(I2C3_EV_IRQn, 6, 0);
+            HAL_NVIC_SetPriority(I2C3_ER_IRQn, 6, 0);
             HAL_NVIC_EnableIRQ(I2C3_EV_IRQn);
             HAL_NVIC_EnableIRQ(I2C3_ER_IRQn);
         }

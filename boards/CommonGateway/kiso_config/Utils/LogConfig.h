@@ -32,14 +32,12 @@
 /* Enable /Disable appenders */
 #define BCDS_RTT_APPENDER  1
 
-
 /* Filter configuration */
 /* Number of allowed filters >=1 */
 #define LOG_FILTER_ITEM_COUNT       (UINT8_C(1))
 /* Default log level for package and module */
 #define LOG_LEVEL_PACKAGE_DEFAULT   (LOG_LEVEL_DEBUG)
 #define LOG_LEVEL_MODULE_DEFAULT    (LOG_LEVEL_DEBUG)
-
 
 /* Configuration for the asynchronous-recorder (if activated) */
 #if BCDS_ASYNC_RECORDER == 1

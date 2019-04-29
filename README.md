@@ -39,4 +39,4 @@ cd examples/CommonGateway/application1
 make makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/common.mk
 ```
 
-**Note**: *$(CURDIR)* is the absolute path to *xamples/CommonGateway/application1*
+**Note**: *$(CURDIR)* is the absolute path to *examples/CommonGateway/application1*

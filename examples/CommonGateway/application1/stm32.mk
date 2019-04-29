@@ -7,6 +7,7 @@ export BCDS_SHARED_PATH = $(BCDS_PACKAGE_HOME)/../../../core
 export THIRD_PARTY_SHARED_PATH = $(BCDS_PACKAGE_HOME)/../../../thirdparty
 export BCDS_TOOLS_PATH = $(BCDS_DEVELOPMENT_TOOLS)
 
+
 BCDS_CONFIG_PATH=$(BCDS_PACKAGE_HOME)/../../../boards/CommonGateway/kiso_config
 export BCDS_TARGET_PLATFORM
 export BCDS_CONFIG_PATH

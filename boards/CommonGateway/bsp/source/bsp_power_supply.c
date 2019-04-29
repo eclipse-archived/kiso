@@ -12,12 +12,12 @@
 *
 ********************************************************************************/
 
-#include <BSP_CommonGateway.h>
-#include "protected/power_supply.h"
-#include "BCDS_BSP_Board.h"
-#include "BCDS_HAL_Delay.h"
 #include "protected/board.h"
 #include "protected/gpio.h"
+#include "protected/power_supply.h"
+#include "BSP_CommonGateway.h"
+#include "BCDS_BSP_Board.h"
+#include "BCDS_HAL_Delay.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
@@ -139,7 +139,7 @@ Retcode_T PowerSupply_EnablePower2V8Sensor(enum PowerSupply_Sensors_E peripheral
     {
         GPIO_OpenClockGate(GPIO_PORT_A, PINA_EN_POW_SENS);
         /*set power enable pin*/
-        HAL_GPIO_WritePin(GPIOA, PINA_EN_POW_SENS, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOA, PINA_EN_POW_SENS, GPIO_PIN_RESET);
         /* wait for setup time */
         HAL_Delay_WaitMs(POWER_SUPPLY_2V8SENS_ON_DELAY_MS);
         /* check power good pin and return error if not set*/

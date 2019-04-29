@@ -1,0 +1,37 @@
+/**
+ * Welcome to Eclipse Mita.
+ *
+ * Not sure what to do now?
+ * Check out the "Getting started" guide on https://mita.io.
+ */
+ 
+package main;
+import platforms.cgw;
+  
+setup leds: LED {
+	var r = light_up(.Red);
+	var g = light_up(.Green);
+	var b = light_up(.Blue); 
+}
+
+var threshold = 0;
+
+every 50 milliseconds {
+	let x = accelerometer.x_axis.read();
+	let y = accelerometer.y_axis.read();
+	let z = accelerometer.z_axis.read();
+	leds.r.write(x > threshold);
+	leds.g.write(y > threshold);
+	leds.b.write(z > threshold);
+}
+
+every 1 second {
+	let h = environment.humidity.read();
+	let t = environment.temperature.read();
+	let p = environment.pressure.read();
+	println(`{
+		"humidity": ${h},
+		"temperature": ${t},
+		"pressure": ${p}
+	}`);
+}

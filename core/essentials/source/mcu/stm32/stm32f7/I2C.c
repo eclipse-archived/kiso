@@ -235,7 +235,6 @@ Retcode_T MCU_I2C_Deinitialize(I2C_T i2c)
         pI2C->ERRCallback = NULL;
         pI2C->DMARxCallback = NULL;
         pI2C->DMATxCallback = NULL;
-        pI2C->Index = 0;
         pI2C->RxFunPtr = NULL;
         pI2C->TxFunPtr = NULL;
         rc = RETCODE_OK;

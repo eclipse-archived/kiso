@@ -6,7 +6,7 @@ Distribution to persons outside the company, only if these persons signed a non-
 Electronic transmission, e.g. via electronic mail, must be made in encrypted form.
 
 # Description
-BSP for SensGate project
+BSP for Common Gateway project
 
 # Release notes
 

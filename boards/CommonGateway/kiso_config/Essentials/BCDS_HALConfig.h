@@ -14,7 +14,7 @@
 
 /**
  * @file
- * @defgroup HALCONFIG    Sensgate HAL Configuration file
+ * @defgroup HALCONFIG    CommonGateway HAL Configuration file
  * @ingroup  BSP_COMMONGATEWAY_IF
  * @{
  */
