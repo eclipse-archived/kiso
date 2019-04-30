@@ -1,4 +1,5 @@
 # Kiso #
+**Note**: Not available for product development, DoD not fulfilled yet.
 
 ## Installation guide (manual) ##
 ### Basic tooling ###
@@ -58,7 +59,7 @@ doxygen Doxyfile
 
 ## Changelog ##
 
-### v0.1.0 ###
+### pre_v0.1.0 ###
 * Initial Kiso code drop
 * Add BSP for CommonGateway
 * Cleanup modules to optimize UX for BCX
