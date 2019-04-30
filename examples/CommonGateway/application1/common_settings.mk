@@ -49,19 +49,6 @@ BCDS_GCC_ARM_PATH = $(BCDS_TOOLS_PATH)/gcc-arm-none-eabi/v7.0_2017q4/
 DOXYGEN ?= $(BCDS_TOOLS_PATH)/Doxygen/V1.8.8_32Bit/doxygen
 HHC ?= $(BCDS_TOOLS_PATH)/Doxygen/V1.8.8_32Bit/hhc.exe
 GRAPHVIZ ?= $(BCDS_TOOLS_PATH)/Graphviz/V2.38-1/bin
-BCDS_FOTA_TOOL_PATH ?= $(BCDS_TOOLS_PATH)/Fota_Tools
-
-
-# The below defined values is to update firmware version formed by given MAJOR MINOR and PATCH 
-MAJOR_SW_NO ?= 01#Defines MAJOR number and maximum value is 255
-MINOR_SW_NO ?= 02#Defines MINOR number and maximum value is 255
-PATCH_SW_NO ?= 03#Defines PATCH number and maximum value is 255
-HEADER_VERSION =4#Defines the current used header version
-PRODUCT_CLASS =0001#(Productcode[12bit]=001 for APLM, Minimum Hardwarerevision[4bit]
-PRODUCT_VARIANT =0001
-FIRMWARE_VERSION = $(MAJOR_SW_NO).$(MINOR_SW_NO).$(PATCH_SW_NO)
-CREATE_CONTAINER_SCRIPT = $(BCDS_FOTA_TOOL_PATH)/create_fota_container.py
-
 
 BCDS_DEBUG_LIB = $(BCDS_DEBUG_PATH)/lib$(BCDS_PACKAGE_NAME)_stm32_debug.a
 BCDS_RELEASE_LIB = $(BCDS_RELEASE_PATH)/lib$(BCDS_PACKAGE_NAME)_stm32_release.a
@@ -71,9 +58,6 @@ BCDS_CONFIG_PATH = $(abspath $(BCDS_PACKAGE_HOME)/../../../boards/CommonGateway/
 
 # The absolute path to the BSP implementation folder. 
 BCDS_BOARD_PATH = $(abspath $(BCDS_PACKAGE_HOME)/../../../boards/CommonGateway/bsp)
-
-# The absolute path to the BSP implementation folder. 
-BCDS_BOOTLOADER_PATH = $(abspath $(BCDS_PACKAGE_HOME)/../Bootloader/Bootloader_Sensgate/Application)
 
 BCDS_PACKAGE_REVISION_ID = `git rev-parse HEAD`
 

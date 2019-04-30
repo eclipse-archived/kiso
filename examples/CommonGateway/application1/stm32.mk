@@ -14,7 +14,6 @@ export BCDS_CONFIG_PATH
 
 OBJCOPY = $(BCDS_GCC_ARM_PATH)/bin/arm-none-eabi-objcopy
 FLASH_TOOL_PATH = $(BCDS_TOOLS_PATH)/JLinkDebugger/v6.32g/JLink
-BCDS_TOOL_NVM_GENERATOR = $(BCDS_TOOLS_PATH)/nvmgenerator
 
 # Append the memory layout defines to the build macros
 BCDS_MACROS_DEBUG += \
@@ -31,10 +30,10 @@ BCDS_BSP_PATH = $(BCDS_BOARD_PATH)
 
 
 BCDS_ESSENTIALS_PATH = $(BCDS_SHARED_PATH)/Essentials
-BCDS_TESTLING_PATH = $(BCDS_SHARED_PATH)/Testing/Testling
 BCDS_UTILS_PATH = $(BCDS_SHARED_PATH)/Utils
 BCDS_CELLULAR_PATH = $(BCDS_SHARED_PATH)/Cellular
 
+# The following paths are used in the libraries.mk to generate them
 BCDS_FREERTOS_PATH  = $(THIRD_PARTY_SHARED_PATH)/FreeRTOS
 BCDS_STM32CUBE_PATH = $(THIRD_PARTY_SHARED_PATH)/stm32cubel4
 BCDS_STM32CUBEL4_PATH = $(BCDS_STM32CUBE_PATH)
@@ -52,10 +51,8 @@ BCDS_INCLUDES =\
     -I$(BCDS_ESSENTIALS_PATH)/include/mcu \
     -I$(BCDS_ESSENTIALS_PATH)/include/mcu/stm32 \
     -I$(BCDS_FOTA_PATH)/include \
-    -I$(BCDS_TESTLING_PATH)/include \
     -I$(BCDS_UTILS_PATH)/include \
     -I$(BCDS_CELLULAR_PATH)/include \
-    -I$(BCDS_LIBRARIES_PATH)/include \
     -I$(BCDS_CONFIG_PATH)/Essentials \
     -I$(BCDS_CONFIG_PATH)/Utils \
     -I$(BCDS_CONFIG_PATH)/Cellular \
@@ -116,19 +113,6 @@ export BCDS_CFLAGS_COMMON = -std=c99 -Wall -Wextra -Wstrict-prototypes -Wshadow 
 
 export BCDS_CFLAGS_DEBUG_COMMON = $(BCDS_CFLAGS_COMMON) -O0 -DBCDS_LOGGING=0 -DLOG_LEVEL_MODULE=1 -g
 export BCDS_CFLAGS_RELEASE_COMMON = $(BCDS_CFLAGS_COMMON) -Os -DNDEBUG
-
-#Get Application package dependencies (move execution to root folder and then run spider script)
-getPackageDep:
-	cd $(BCDS_PACKAGE_HOME)/.. && $(PYTHON_34)/python.exe -u -mspider sync -d Package.dep
-
-#Get BTL package dependencies (move execution to root folder and then run spider script)
-getPackageDepBTL:
-	cd $(BCDS_BOOTLOADER_PATH)/.. && $(PYTHON_34)/python.exe -u -mspider sync -d Package.dep
-
-# Set the application address and size in the ld file
-.PHONY: exp_start_address
-exp_start_address::
-	@printf "APPLICATION_ENTRY_ADDRESS = $(APPLICATION_ENTRY_ADDRESS);\nAPPLICATION_SECTION_SIZE = $(APPLICATION_SECTION_SIZE);"> start_addr.ld
 	
 ######################## Build Targets #######################################
 ###### Application build Targets
@@ -144,21 +128,6 @@ release: $(COMMONGATEWAY_DEBUG_BIN) exp_start_address
 .PHONY: all exp_start_address
 all: $(COMMONGATEWAY_RELEASE_BIN_CONT)
 
-###### Bootloader build Targets
-.PHONY: debugBTL	
-debugBTL: cleanBTL
-	@echo "Building Bootloader debug from CommonGateway"
-	$(MAKE) -C $(BCDS_BOOTLOADER_PATH) debug BCDS_COMMON_MAKEFILE=$(CURDIR)/common.mk
-.PHONY: releaseBTL
-releaseBTL: cleanBTL
-	@echo "Building Bootloader release from CommonGateway"
-	$(MAKE) -C $(BCDS_BOOTLOADER_PATH) release BCDS_COMMON_MAKEFILE=$(CURDIR)/common.mk
-
-.PHONY: cleanBTL	
-cleanBTL:
-	@echo "Building Bootloader debug from CommonGateway"
-	$(MAKE) -C $(BCDS_BOOTLOADER_PATH) clean_all BCDS_COMMON_MAKEFILE=$(CURDIR)/common.mk
-	
 ##### Application Clean libraries of platform and third party code
 .PHONY: clean_libraries
 clean_libraries:
@@ -168,10 +137,6 @@ clean_libraries:
 # Cleans all files
 clean_all: clean clean_libraries
 ##### Application debug related rules #####
-$(COMMONGATEWAY_DEBUG_BIN_CONT): $(COMMONGATEWAY_DEBUG_BIN)
-	@echo "Creating binary with header $@"
-	@python $(CREATE_CONTAINER_SCRIPT) v4 openssl $(COMMONGATEWAY_DEBUG_BIN) $(COMMONGATEWAY_DEBUG_BIN_CONT) $(HEADER_VERSION) $(PRODUCT_CLASS) $(PRODUCT_VARIANT) $(FIRMWARE_VERSION)
-
 $(COMMONGATEWAY_DEBUG_BIN): $(BCDS_DEBUG_PATH)/$(BCDS_PACKAGE_NAME).out
 	@echo "Creating binary $@"
 	@$(OBJCOPY) -R .usrpg -O binary $(BCDS_DEBUG_PATH)/$(BCDS_PACKAGE_NAME).out $@
@@ -189,10 +154,6 @@ $(BCDS_DEBUG_OBJECT_PATH)/%.o: $(BCDS_TEST_PATH)/%.c
 	$(CC) -c $(CFLAGS_DEBUG) -I . $(BCDS_INCLUDES) $< -o $@
 
 ##### Application release related rules #####
-$(COMMONGATEWAY_RELEASE_BIN_CONT): $(COMMONGATEWAY_RELEASE_BIN)
-	@echo "Creating binary with header $@"
-	@python $(CREATE_CONTAINER_SCRIPT) v4 openssl $(COMMONGATEWAY_RELEASE_BIN) $(COMMONGATEWAY_RELEASE_BIN_CONT) $(HEADER_VERSION) $(PRODUCT_CLASS) $(PRODUCT_VARIANT) $(FIRMWARE_VERSION)
-
 $(COMMONGATEWAY_RELEASE_BIN): $(BCDS_RELEASE_PATH)/$(BCDS_PACKAGE_NAME).out
 	@echo "Creating binary $@"
 	@$(OBJCOPY) -R .usrpg -O binary $(BCDS_RELEASE_PATH)/$(BCDS_PACKAGE_NAME).out $@
@@ -229,8 +190,8 @@ $(1): $(2)
 	@echo "Speed 12000" > CommandFile.jlink                                              #speed
 	@echo "r" >> CommandFile.jlink                                                       #reset
 	@echo "h" >> CommandFile.jlink                                                       #halt
-	@echo "loadbin "$(2)" "$(APPLICATION_FLASH_ADDRESS) >> CommandFile.jlink               #load bin
-	@echo "verifybin "$(2)" "$(APPLICATION_FLASH_ADDRESS) >> CommandFile.jlink             #verify bin
+	@echo "loadbin "$(2)" "$(APPLICATION_FLASH_ADDRESS) >> CommandFile.jlink             #load bin
+	@echo "verifybin "$(2)" "$(APPLICATION_FLASH_ADDRESS) >> CommandFile.jlink           #verify bin
 	@echo "r" >> CommandFile.jlink                                                       #reset
 	@echo "qc" >> CommandFile.jlink                                                      #quit
 	@$(FLASH_TOOL_PATH) -device $(BCDS_STM32_DEVICE_ID) -if SWD -CommanderScript CommandFile.jlink
@@ -240,42 +201,12 @@ endef
 $(eval $(call flash_rule_template,flash_debug_bin,$(COMMONGATEWAY_DEBUG_BIN_CONT)))
 $(eval $(call flash_rule_template,flash_release_bin,$(COMMONGATEWAY_RELEASE_BIN_CONT)))
 
-# Flash application to upload partition
-define flash_update_rule_template =
-.PHONY: $(1)
-$(1): $(2)
-	rm -rf CommandFile.jlink
-	@echo "Speed 12000" > CommandFile.jlink                                              #speed
-	@echo "r" >> CommandFile.jlink                                                       #reset
-	@echo "h" >> CommandFile.jlink                                                       #halt
-	@echo "loadbin "$(2)" "$(COMMONGATEWAY_DOWNLOAD_SEC_START_ADR) >> CommandFile.jlink          #load bin
-	@echo "verifybin "$(2)" "$(COMMONGATEWAY_DOWNLOAD_SEC_START_ADR) >> CommandFile.jlink        #verify bin
-	@echo "r" >> CommandFile.jlink                                                       #reset
-	@echo "qc" >> CommandFile.jlink                                                      #quit
-	@$(FLASH_TOOL_PATH) -device $(BCDS_STM32_DEVICE_ID) -if SWD -CommanderScript CommandFile.jlink
-	@echo "Flashing $(2) is completed successfully"
-endef
-
-$(eval $(call flash_update_rule_template,flash_update_debug_cont,$(COMMONGATEWAY_DEBUG_BIN_CONT)))
-$(eval $(call flash_update_rule_template,flash_update_release_cont,$(COMMONGATEWAY_RELEASE_BIN_CONT)))
-
-# Flash BTL
-define flash_btl_rule_template =
-.PHONY: flash_btl_$(1)
-flash_btl_$(1):
-	@echo "Flashing Bootloader $(1) from CommonGateway"
-	$(MAKE) -C $(BCDS_BOOTLOADER_PATH) flash_$(1)_bin BCDS_COMMON_MAKEFILE=$(CURDIR)/common.mk
-endef
-
-$(eval $(call flash_btl_rule_template,debug))
-$(eval $(call flash_btl_rule_template,release))
-
-# Flash application and BTL
+# Flash application
 .PHONY: flash_all_debug
-flash_all_debug: flash_btl_debug flash_debug_bin
+flash_all_debug: flash_debug_bin
 
 .PHONY: flash_all_release
-flash_all_release: flash_btl_release flash_release_bin
+flash_all_release: flash_release_bin
 
 # Rules to extend the Build Targets of the app
 define BuildTargetExtend_rule_template
@@ -288,7 +219,7 @@ bsp_$(1)::
 .PHONY: libraries_$(1)
 
 libraries_$(1)::	
-	$(MAKE) -C $(BCDS_LIBRARIES_PATH) $(1) BCDS_COMMON_MAKEFILE=$(CURDIR)/common.mk	
+	$(MAKE) -C $(1) BCDS_COMMON_MAKEFILE=$(CURDIR)/common.mk	
 	
 endef
 
