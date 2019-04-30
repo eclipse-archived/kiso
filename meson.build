@@ -18,3 +18,6 @@ subdir('core/utils')
 
 # Get application
 subdir('examples/CommonGateway/application1')
+
+# Get doxygen generator
+subdir('docs/doxygen')

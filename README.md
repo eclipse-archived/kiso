@@ -6,7 +6,7 @@
 * Download and install arm-none-eabi version [7-2017-q4-major](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads)
 * Download and install doxygen version [v1.8.8](https://sourceforge.net/projects/doxygen/files/rel-1.8.8/)
 
-**Note**: python and arm-none-eabi need to be accessible via cmd-line. Therefore, you may need to modify the environment variable *PATH* on windows if it is not done in the installation.
+**Note**: python, arm-none-eabi, doxygen need to be accessible via cmd-line. Therefore, you may need to modify the environment variable *PATH* on windows if it is not done in the installation.
 
 ### Extension tooling ###
 * ```pip3 install meson```
@@ -42,13 +42,18 @@ make makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLAT
 
 **Note**: *$(CURDIR)* is the absolute path to *examples/CommonGateway/application1*
 
-### Generate Documentation (via meson) ###
+### Generate Documentation (via meson, after building the application) ###
 **Build**:
 ```bash
+cd debug
+ninja doxygen
 ```
 
-**Clean**:
+### Generate Documentation (via cmd) ###
+**Build**:
 ```bash
+cd docs/doxygen
+doxygen Doxyfile
 ```
 
 ## Changelog ##
