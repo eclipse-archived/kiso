@@ -32,7 +32,7 @@
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
 #undef BCDS_MODULE_ID  /* Module ID define before including Basics package*/
-#define BCDS_MODULE_ID XDK_APP_MODULE_ID_MAIN
+#define BCDS_MODULE_ID APP_MODULE_ID_MAIN
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 

@@ -18,8 +18,8 @@
  *
  */
 
-#ifndef XDK_APPINFO_H_
-#define XDK_APPINFO_H_
+#ifndef APPINFO_H_
+#define APPINFO_H_
 
 
 #define TASK_PRIO_MAIN_CMD_PROCESSOR                (UINT32_C(1))
@@ -32,11 +32,11 @@
  *      #undef BCDS_APP_MODULE_ID
  *      #define BCDS_APP_MODULE_ID BCDS_APP_MODULE_ID_xxx
  */
-enum XDK_App_ModuleID_E
+enum App_ModuleID_E
 {
-    XDK_APP_MODULE_ID_MAIN,
-    XDK_APP_MODULE_ID_LED_BUTTON,
+    APP_MODULE_ID_MAIN,
+    APP_MODULE_ID_BLINKY_LED,
 /* Define next module ID here and assign a value to it! */
 };
 
-#endif /* XDK_APPINFO_H_ */
+#endif /* APPINFO_H_ */

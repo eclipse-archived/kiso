@@ -152,7 +152,7 @@
 		<buildTargets>
 			<target name="gtest" path="core/essentials" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>mingw32-make.exe</buildCommand>
-				<buildArguments>makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/../../examples/CommonGateway/application1/common.mk BCDS_COMMON_GTEST_MAKEFILE=$(CURDIR)/../../examples/CommonGateway/application1/common_gtest.mk BCDS_PACKAGE_HOME=$(CURDIR)/../../examples/CommonGateway/application1 -j8</buildArguments>
+				<buildArguments>makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/../../examples/CommonGateway/c-leds/common.mk BCDS_COMMON_GTEST_MAKEFILE=$(CURDIR)/../../examples/CommonGateway/c-leds/common_gtest.mk BCDS_PACKAGE_HOME=$(CURDIR)/../../examples/CommonGateway/c-leds -j8</buildArguments>
 				<buildTarget>gtest</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>false</useDefaultCommand>
@@ -160,7 +160,7 @@
 			</target>
 			<target name="gtest_clean" path="core/essentials" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>mingw32-make.exe</buildCommand>
-				<buildArguments>makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/../../examples/CommonGateway/application1/common.mk BCDS_COMMON_GTEST_MAKEFILE=$(CURDIR)/../../examples/CommonGateway/application1/common_gtest.mk BCDS_PACKAGE_HOME=$(CURDIR)/../../examples/CommonGateway/application1 -j8</buildArguments>
+				<buildArguments>makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/../../examples/CommonGateway/c-leds/common.mk BCDS_COMMON_GTEST_MAKEFILE=$(CURDIR)/../../examples/CommonGateway/c-leds/common_gtest.mk BCDS_PACKAGE_HOME=$(CURDIR)/../../examples/CommonGateway/c-leds -j8</buildArguments>
 				<buildTarget>gtest_clean</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>false</useDefaultCommand>
@@ -168,7 +168,7 @@
 			</target>
 			<target name="gtest" path="boards/CommonGateway/bsp" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>mingw32-make.exe</buildCommand>
-				<buildArguments>makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/../../../examples/CommonGateway/application1/common.mk BCDS_COMMON_GTEST_MAKEFILE=$(CURDIR)/../../../examples/CommonGateway/application1/common_gtest.mk BCDS_PACKAGE_HOME=$(CURDIR)/../../../examples/CommonGateway/application1 -j8</buildArguments>
+				<buildArguments>makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/../../../examples/CommonGateway/c-leds/common.mk BCDS_COMMON_GTEST_MAKEFILE=$(CURDIR)/../../../examples/CommonGateway/c-leds/common_gtest.mk BCDS_PACKAGE_HOME=$(CURDIR)/../../../examples/CommonGateway/c-leds -j8</buildArguments>
 				<buildTarget>gtest</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>false</useDefaultCommand>
@@ -176,7 +176,7 @@
 			</target>
 			<target name="gtest_clean" path="boards/CommonGateway/bsp" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>mingw32-make.exe</buildCommand>
-				<buildArguments>makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/../../../examples/CommonGateway/application1/common.mk BCDS_COMMON_GTEST_MAKEFILE=$(CURDIR)/../../../examples/CommonGateway/application1/common_gtest.mk BCDS_PACKAGE_HOME=$(CURDIR)/../../../examples/CommonGateway/application1 -j8</buildArguments>
+				<buildArguments>makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/../../../examples/CommonGateway/c-leds/common.mk BCDS_COMMON_GTEST_MAKEFILE=$(CURDIR)/../../../examples/CommonGateway/c-leds/common_gtest.mk BCDS_PACKAGE_HOME=$(CURDIR)/../../../examples/CommonGateway/c-leds -j8</buildArguments>
 				<buildTarget>gtest_clean</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>false</useDefaultCommand>
@@ -184,7 +184,7 @@
 			</target>
 			<target name="gtest" path="core/utils" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>mingw32-make.exe</buildCommand>
-				<buildArguments>makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/../../examples/CommonGateway/application1/common.mk BCDS_COMMON_GTEST_MAKEFILE=$(CURDIR)/../../examples/CommonGateway/application1/common_gtest.mk BCDS_PACKAGE_HOME=$(CURDIR)/../../examples/CommonGateway/application1 -j8</buildArguments>
+				<buildArguments>makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/../../examples/CommonGateway/c-leds/common.mk BCDS_COMMON_GTEST_MAKEFILE=$(CURDIR)/../../examples/CommonGateway/c-leds/common_gtest.mk BCDS_PACKAGE_HOME=$(CURDIR)/../../examples/CommonGateway/c-leds -j8</buildArguments>
 				<buildTarget>gtest</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>false</useDefaultCommand>
@@ -192,13 +192,13 @@
 			</target>
 			<target name="gtest_clean" path="core/utils" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>mingw32-make.exe</buildCommand>
-				<buildArguments>makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/../../examples/CommonGateway/application1/common.mk BCDS_COMMON_GTEST_MAKEFILE=$(CURDIR)/../../examples/CommonGateway/application1/common_gtest.mk BCDS_PACKAGE_HOME=$(CURDIR)/../../examples/CommonGateway/application1 -j8</buildArguments>
+				<buildArguments>makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/../../examples/CommonGateway/c-leds/common.mk BCDS_COMMON_GTEST_MAKEFILE=$(CURDIR)/../../examples/CommonGateway/c-leds/common_gtest.mk BCDS_PACKAGE_HOME=$(CURDIR)/../../examples/CommonGateway/c-leds -j8</buildArguments>
 				<buildTarget>gtest_clean</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>false</useDefaultCommand>
 				<runAllBuilders>true</runAllBuilders>
 			</target>
-			<target name="debug" path="examples/CommonGateway/application1" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="debug" path="examples/CommonGateway/c-leds" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>mingw32-make.exe</buildCommand>
 				<buildArguments>makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=$(CURDIR)/common.mk</buildArguments>
 				<buildTarget>debug</buildTarget>
@@ -206,7 +206,7 @@
 				<useDefaultCommand>false</useDefaultCommand>
 				<runAllBuilders>true</runAllBuilders>
 			</target>
-			<target name="clean" path="examples/CommonGateway/application1" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="clean" path="examples/CommonGateway/c-leds" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>mingw32-make.exe</buildCommand>
 				<buildArguments>makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=./common.mk -j8</buildArguments>
 				<buildTarget>clean</buildTarget>
@@ -214,7 +214,7 @@
 				<useDefaultCommand>false</useDefaultCommand>
 				<runAllBuilders>true</runAllBuilders>
 			</target>
-			<target name="diagnosis" path="examples/CommonGateway/application1" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="diagnosis" path="examples/CommonGateway/c-leds" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>mingw32-make.exe</buildCommand>
 				<buildArguments>makefile=Makefile COMMONGATEWAY_HW_PLATFORM=STM32L486VG_V4 BCDS_TARGET_PLATFORM=stm32 BCDS_COMMON_MAKEFILE=./common.mk -j8</buildArguments>
 				<buildTarget>diagnosis</buildTarget>

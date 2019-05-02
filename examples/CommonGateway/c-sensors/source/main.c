@@ -21,7 +21,7 @@
 #include "BCDS_BSP_LED.h"
 #include "BCDS_BSP_Board.h"
 #include <stdio.h>
-#include "../../../../boards/CommonGateway/bsp/include/BSP_CommonGateway.h"
+#include "BSP_CommonGateway.h"
 #include "BCDS_Basics.h"
 #include "BCDS_Assert.h"
 #include "BCDS_CmdProcessor.h"

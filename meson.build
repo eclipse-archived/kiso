@@ -17,7 +17,7 @@ subdir('core/utils')
 #subdir('core/connectivity/cellular')
 
 # Get application
-subdir('examples/CommonGateway/application1')
+subdir('examples/CommonGateway/c-leds')
 
 # Get doxygen generator
 subdir('docs/doxygen')
