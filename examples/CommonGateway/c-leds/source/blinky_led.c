@@ -27,7 +27,7 @@
 /* own header files */
 #include "AppInfo.h"
 #undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID XDK_APP_MODULE_ID_LED_BUTTON
+#define BCDS_MODULE_ID APP_MODULE_ID_BLINKY_LED
 
 /* system header files */
 #include <stdio.h>

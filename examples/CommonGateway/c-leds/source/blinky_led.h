@@ -16,8 +16,8 @@
  * @file 
  */
 
-#ifndef XDK110_LEDSANDBUTTONS_H_
-#define XDK110_LEDSANDBUTTONS_H_
+#ifndef BLINKY_LED_H_
+#define BLINKY_LED_H_
 
 /* Include all headers which are needed by this file. */
 #include "BCDS_Basics.h"
@@ -35,5 +35,5 @@
  */
 void appInitSystem(void * CmdProcessorHandle, uint32_t param2);
 
-#endif /* XDK110_LEDAANDBUTTONS_H_ */
+#endif /* BLINKY_LED_H_ */
 
