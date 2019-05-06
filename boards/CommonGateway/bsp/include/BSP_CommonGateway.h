@@ -19,7 +19,9 @@
  * @{
  * @brief       Common Gateway Board Support Package
  *
- * @details     Implements the used interface present in \ref BCDS_HAL_BSP_IF
+ * @details     Reflect the circuit-board and implements the needed interfaces present in \ref BCDS_HAL_BSP_IF
+ *
+ * @warning     **maxm8** and **w25q64** were not tested. No Drivers were also implemented.
  *
  * @file
  */

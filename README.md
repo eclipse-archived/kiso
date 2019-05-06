@@ -59,6 +59,15 @@ doxygen Doxyfile
 
 ## Changelog ##
 
+### v0.1.0 ###
+* Release content for BCX:
+** **boards**: 100% new
+** **core/utils**: 60% shared/utils, 0% new
+** **core/essentials**: 25% shared/essential, 0% new
+** **core/connectivity/cellular**: 50% shared/cellular, 30% new
+** **examples/CommonGateway**: 100% new
+**Note**: Not available for product development, BCX requirements fulfilled.
+
 ### pre_v0.1.0 ###
 * Initial Kiso code drop
 * Add BSP for CommonGateway
