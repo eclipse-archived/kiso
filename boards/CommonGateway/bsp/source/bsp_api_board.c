@@ -340,6 +340,8 @@ Retcode_T Board_GPIOInit(void)
     BSP_GPIOInitStruct.Pull = GPIO_NOPULL;
     BSP_GPIOInitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(GPIOA, &BSP_GPIOInitStruct);
+    HAL_GPIO_WritePin(GPIOA, PINA_EN_POW_SENS | PINA_EN_POW_GPS, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOA, PINA_EN_POW_GSM, GPIO_PIN_RESET);
 
     BSP_GPIOInitStruct.Pin = PINA_VUSBM;
     BSP_GPIOInitStruct.Mode = GPIO_MODE_ANALOG;
@@ -354,6 +356,8 @@ Retcode_T Board_GPIOInit(void)
     BSP_GPIOInitStruct.Pull = GPIO_NOPULL;
     BSP_GPIOInitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(GPIOB, &BSP_GPIOInitStruct);
+    HAL_GPIO_WritePin(GPIOB, PINB_EN_POW_BLE | PINB_EN_POW_MEM, GPIO_PIN_SET);
+
     GPIO_CloseClockGate(GPIO_PORT_B, PINB_EN_POW_BLE | PINB_EN_POW_MEM);
 
     GPIO_OpenClockGate(GPIO_PORT_C, PINC_VBATM | PINC_EN_POW_5V_B | PINC_EN_POW_5V_A);
@@ -362,6 +366,7 @@ Retcode_T Board_GPIOInit(void)
     BSP_GPIOInitStruct.Pull = GPIO_NOPULL;
     BSP_GPIOInitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(GPIOC, &BSP_GPIOInitStruct);
+    HAL_GPIO_WritePin(GPIOC, PINC_EN_POW_5V_B | PINC_EN_POW_5V_A, GPIO_PIN_SET);
 
     BSP_GPIOInitStruct.Pin = PINC_VBATM;
     BSP_GPIOInitStruct.Mode = GPIO_MODE_ANALOG;
@@ -384,6 +389,8 @@ Retcode_T Board_GPIOInit(void)
     BSP_GPIOInitStruct.Pull = GPIO_NOPULL;
     BSP_GPIOInitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     HAL_GPIO_Init(GPIOE, &BSP_GPIOInitStruct);
+    HAL_GPIO_WritePin(GPIOE, PINE_EN_POW_CAN, GPIO_PIN_RESET);
+
     GPIO_CloseClockGate(GPIO_PORT_E, PINE_EN_POW_CAN | PINE_EN_VBATM);
     return RETCODE_OK;
 }
