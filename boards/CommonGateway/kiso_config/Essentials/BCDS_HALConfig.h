@@ -55,6 +55,7 @@
 #define BCDS_FEATURE_BSP_BME280                                                 1
 #define BCDS_FEATURE_BSP_BLE_CC2640                                             1
 #define BCDS_FEATURE_BSP_MEMORY_W25                                             1
+#define BCDS_FEATURE_BSP_TEST_INTERFACE                                         1
 
 #endif /*BCDS_HAL_CONFIG_H_*/
 /**@} */
