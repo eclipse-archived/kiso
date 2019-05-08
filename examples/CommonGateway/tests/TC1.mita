@@ -1,0 +1,106 @@
+/**
+ * Welcome to Eclipse Mita.
+ *
+ * Not sure what to do now?
+ * Check out the "Getting started" guide on https://mita.io.
+ */
+
+package main;
+import platforms.cgw;
+
+/** Struct and variables definitions **/
+struct v3d {
+	var x: int16;
+	var y: int16;
+	var z: int16;
+	var mag: uint32;
+}
+
+/* Declare variables for the BMA280 */
+var mean_acc = v3d(0,0,0,0);
+/* Declare variables for the BME280 */
+var mean_p = 0;
+var mean_h = 0;
+var mean_t = 0;
+
+/** Setup **/
+/* Setup logging */
+setup CGW {
+       consoleInterface = .RTT();
+}
+
+/* Setup the leds */
+setup leds: LED {
+	var green = light_up(.Green());
+	var red = light_up(.Red());
+	var blue = light_up(.Blue());
+}
+
+/* Setup the accelerometer sensor BMA280 */
+setup accelerometer {
+	range=.Range_2G;
+	bandwidth=.BW_500Hz();
+}
+
+/* Setup the environment sensor BME280 */
+setup environment {
+}
+
+/* Setup cellular */
+setup net: Radio {
+       radioStandard = .CAT_M1();  
+}
+
+/* Setup http rest client */
+setup backend: HttpRestClient {
+       transport = net;    
+       endpointBase = "http://demo.thingsboard.io";
+       var x = resource(endpoint = "/api/v1/fDtiqXcQEzWbgYeD0fqh/telemetry", contentType = "application/json", writeMethod=.POST);
+}
+
+/** Logic **/
+every 500 milliseconds {
+	/* Read sensor values */
+	mean_acc.x = accelerometer.x_axis.read();
+	mean_acc.y = accelerometer.y_axis.read();
+	mean_acc.z = accelerometer.z_axis.read();
+	mean_acc.mag = accelerometer.magnitude.read();
+	
+	mean_p = environment.pressure.read();
+	mean_h = environment.humidity.read();
+	mean_t = environment.temperature.read();
+	
+	/* Serialize message to send out */
+	let msg = `{
+		"x": ${mean_acc.x},
+		"y": ${mean_acc.y},
+		"z": ${mean_acc.z},
+		"mag": ${mean_acc.mag},
+		"p": ${mean_p},
+		"h": ${mean_h},
+		"t": ${mean_t}
+		}
+	}`;
+	/* Send message out */
+	print(msg);
+	backend.x.write(msg);
+}
+
+/* Led test */
+every 500 milliseconds {
+	if (leds.red.read())
+	{
+		leds.green.write(true);
+		leds.red.write(false);
+	}
+	else if (leds.green.read())
+	{
+		leds.blue.write(true);
+		leds.green.write(false);
+	}
+	else if (leds.blue.read())
+	{
+		leds.red.write(true);
+		leds.blue.write(false);
+	}
+}

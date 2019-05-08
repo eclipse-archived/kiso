@@ -30,7 +30,8 @@
 #define BCDS_ASYNC_RECORDER 0
 
 /* Enable /Disable appenders */
-#define BCDS_RTT_APPENDER  1
+#define BCDS_RTT_APPENDER   1
+#define BCDS_UART_APPENDER  1
 
 /* Filter configuration */
 /* Number of allowed filters >=1 */
@@ -53,6 +54,8 @@
 /* Configuration for the synchronous-recorder (if activated) */
 #if BCDS_SYNC_RECORDER == 1
 #define LOG_BUFFER_SIZE             (UINT16_C(256))
+#define LOG_APPENDER_TIMEOUT        UINT32_C(1000)
+
 #endif
 
 #endif /* LOG_CONFIG_H */

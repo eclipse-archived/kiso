@@ -90,7 +90,7 @@ Retcode_T PowerSupply_EnablePower2V8GPS(void)
     {
         GPIO_OpenClockGate(GPIO_PORT_A, PINA_EN_POW_GPS);
         /*set power enable pin*/
-        HAL_GPIO_WritePin(GPIOA, PINA_EN_POW_GPS, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOA, PINA_EN_POW_GPS, GPIO_PIN_RESET);
         /* wait for setup time */
         HAL_Delay_WaitMs(POWER_SUPPLY_2V8GPS_ON_DELAY_MS);
         powerSupply2V8GPS = 1;
@@ -111,7 +111,7 @@ Retcode_T PowerSupply_EnablePower2V8BLE(void)
     {
         GPIO_OpenClockGate(GPIO_PORT_B, PINB_EN_POW_BLE);
         /*set power enable pin*/
-        HAL_GPIO_WritePin(GPIOB, PINB_EN_POW_BLE, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOB, PINB_EN_POW_BLE, GPIO_PIN_RESET);
         /* wait for setup time */
         HAL_Delay_WaitMs(POWER_SUPPLY_2V8BLE_ON_DELAY_MS);
         powerSupply2V8BLE = 1;
@@ -161,7 +161,7 @@ Retcode_T PowerSupply_EnablePower2V8Memory(void)
     {
         GPIO_OpenClockGate(GPIO_PORT_B, PINB_EN_POW_MEM);
         /*set power enable pin*/
-        HAL_GPIO_WritePin(GPIOB, PINB_EN_POW_MEM, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOB, PINB_EN_POW_MEM, GPIO_PIN_RESET);
         /* wait for setup time */
         HAL_Delay_WaitMs(POWER_SUPPLY_2V8MEM_ON_DELAY_MS);
         powerSupply2V8Memory = 1;
@@ -229,9 +229,13 @@ Retcode_T PowerSupply_EnablePower5VA(enum PowerSupply_5VA_E peripheral)
     }
     if (RETCODE_OK == retcode)
     {
+        retcode = PowerSupply_EnablePower5VCAN(POWER_SUPPLY_5VA);
+    }
+    if (RETCODE_OK == retcode)
+    {
         GPIO_OpenClockGate(GPIO_PORT_C, PINC_EN_POW_5V_A);
         /*set power enable pin*/
-        HAL_GPIO_WritePin(GPIOC, PINC_EN_POW_5V_A, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOC, PINC_EN_POW_5V_A, GPIO_PIN_RESET);
         /* wait for setup time */
         HAL_Delay_WaitMs(POWER_SUPPLY_5VA_ON_DELAY_MS);
         /* check power good pin and return error if not set*/
@@ -258,9 +262,13 @@ Retcode_T PowerSupply_EnablePower5VB(enum PowerSupply_5VB_E peripheral)
     }
     if (RETCODE_OK == retcode)
     {
+        retcode = PowerSupply_EnablePower5VCAN(POWER_SUPPLY_5VB);
+    }
+    if (RETCODE_OK == retcode)
+    {
         GPIO_OpenClockGate(GPIO_PORT_C, PINC_EN_POW_5V_B);
         /*set power enable pin*/
-        HAL_GPIO_WritePin(GPIOC, PINC_EN_POW_5V_B, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOC, PINC_EN_POW_5V_B, GPIO_PIN_RESET);
         /* wait for setup time */
         HAL_Delay_WaitMs(POWER_SUPPLY_5VB_ON_DELAY_MS);
         /* check power good pin and return error if not set*/
@@ -301,7 +309,7 @@ Retcode_T PowerSupply_DisablePower2V8GPS(void)
     {
         powerSupply2V8GPS = 0;
         /* Set power enable pin*/
-        HAL_GPIO_WritePin(GPIOA, PINA_EN_POW_GPS, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOA, PINA_EN_POW_GPS, GPIO_PIN_SET);
         /* Capacitor discharge time */
         HAL_Delay_WaitMs(POWER_SUPPLY_2V8GPS_OFF_DELAY_MS);
         GPIO_CloseClockGate(GPIO_PORT_A, PINA_EN_POW_GPS);
@@ -321,7 +329,7 @@ Retcode_T PowerSupply_DisablePower2V8BLE(void)
     {
         powerSupply2V8BLE = 0;
         /* Set power enable pin*/
-        HAL_GPIO_WritePin(GPIOB, PINB_EN_POW_BLE, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOB, PINB_EN_POW_BLE, GPIO_PIN_SET);
         /* Capacitor discharge time */
         HAL_Delay_WaitMs(POWER_SUPPLY_2V8BLE_OFF_DELAY_MS);
         GPIO_CloseClockGate(GPIO_PORT_B, PINB_EN_POW_BLE);
@@ -351,7 +359,7 @@ Retcode_T PowerSupply_DisablePower2V8Sensor(enum PowerSupply_Sensors_E periphera
         if (0 == powerSupply2V8Sensor)
         {
             /*set power enable pin*/
-            HAL_GPIO_WritePin(GPIOA, PINA_EN_POW_SENS, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(GPIOA, PINA_EN_POW_SENS, GPIO_PIN_SET);
             /* capacitor discharge time */
             HAL_Delay_WaitMs(POWER_SUPPLY_2V8SENS_OFF_DELAY_MS);
             GPIO_CloseClockGate(GPIO_PORT_A, PINA_EN_POW_SENS);
@@ -372,7 +380,7 @@ Retcode_T PowerSupply_DisablePower2V8Memory(void)
     {
         powerSupply2V8Memory = 0;
         /* Set power enable pin*/
-        HAL_GPIO_WritePin(GPIOB, PINB_EN_POW_MEM, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOB, PINB_EN_POW_MEM, GPIO_PIN_SET);
         /* Capacitor discharge time */
         HAL_Delay_WaitMs(POWER_SUPPLY_2V8MEM_OFF_DELAY_MS);
         GPIO_CloseClockGate(GPIO_PORT_B, PINB_EN_POW_MEM);
@@ -432,12 +440,16 @@ Retcode_T PowerSupply_DisablePower5VA(enum PowerSupply_5VA_E peripheral)
         if (0 == powerSupply5VA)
         {
             /* Reset power enable pin */
-            HAL_GPIO_WritePin(GPIOC, PINC_EN_POW_5V_A, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(GPIOC, PINC_EN_POW_5V_A, GPIO_PIN_SET);
             /* Capacitor discharge time */
             HAL_Delay_WaitMs(POWER_SUPPLY_5VA_OFF_DELAY_MS);
             GPIO_CloseClockGate(GPIO_PORT_C, PINC_EN_POW_5V_A);
 
         }
+    }
+    if (RETCODE_OK == retcode)
+    {
+        retcode = PowerSupply_DisablePower5VCAN(POWER_SUPPLY_5VA);
     }
     return retcode;
 }
@@ -463,11 +475,15 @@ Retcode_T PowerSupply_DisablePower5VB(enum PowerSupply_5VB_E peripheral)
         if (0 == powerSupply5VB)
         {
             /* Reset power enable pin */
-            HAL_GPIO_WritePin(GPIOC, PINC_EN_POW_5V_B, GPIO_PIN_RESET);
+            HAL_GPIO_WritePin(GPIOC, PINC_EN_POW_5V_B, GPIO_PIN_SET);
             /* Capacitor discharge time */
             HAL_Delay_WaitMs(POWER_SUPPLY_5VB_OFF_DELAY_MS);
             GPIO_CloseClockGate(GPIO_PORT_C, PINC_EN_POW_5V_B);
         }
+    }
+    if (RETCODE_OK == retcode)
+    {
+        retcode = PowerSupply_DisablePower5VCAN(POWER_SUPPLY_5VB);
     }
     return retcode;
 }
