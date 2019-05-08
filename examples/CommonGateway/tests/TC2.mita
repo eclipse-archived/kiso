@@ -1,0 +1,62 @@
+/**
+ * Welcome to Eclipse Mita.
+ *
+ * Not sure what to do now?
+ * Check out the "Getting started" guide on https://mita.io.
+ */
+
+package main;
+import platforms.cgw;
+
+/** Struct and variables definitions **/
+struct v3d {
+	var x: int16;
+	var y: int16;
+	var z: int16;
+	var mag: uint32;
+}
+
+/* Declare variables for the BMA280 */
+var mean_acc = v3d(0,0,0,0);
+
+/** Setup **/
+/* Setup logging */
+setup CGW {
+       consoleInterface = .RTT();
+}
+
+/* Setup the accelerometer sensor BMA280 */
+setup accelerometer {
+}
+
+/* Setup cellular */
+setup net: Radio {
+       radioStandard = .CAT_M1();  
+}
+
+/* Setup http rest client */
+setup backend: HttpRestClient {
+       transport = net;    
+       endpointBase = "http://demo.thingsboard.io";
+       var x = resource(endpoint = "/api/v1/fDtiqXcQEzWbgYeD0fqh/telemetry", contentType = "application/json", writeMethod=.POST);
+}
+
+/** Logic **/
+every 500 milliseconds {
+	/* Read sensor values */
+	mean_acc.x = accelerometer.x_axis.read();
+	mean_acc.y = accelerometer.y_axis.read();
+	mean_acc.z = accelerometer.z_axis.read();
+	mean_acc.mag = accelerometer.magnitude.read();
+	
+	/* Serialize message to send out */
+	let msg = `{
+		"x": ${mean_acc.x},
+		"y": ${mean_acc.y},
+		"z": ${mean_acc.z},
+		"mag": ${mean_acc.mag}
+	}`;
+	/* Send message out */
+	print(msg);
+	backend.x.write(msg);
+}

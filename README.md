@@ -60,12 +60,43 @@ doxygen Doxyfile
 ## Changelog ##
 
 ### v0.1.0 ###
-* Release content for BCX:
-** **boards**: 100% new
-** **core/utils**: 60% shared/utils, 0% new
-** **core/essentials**: 25% shared/essential, 0% new
-** **core/connectivity/cellular**: 50% shared/cellular, 30% new
-** **examples/CommonGateway**: 100% new
+Release content for BCX:
+* **boards**: 100% new
+* **core/utils**: 60% shared/utils, 0% new
+  * CmdProcessor (Carbon variant)
+  * EventHub (Carbon variant)
+  * GuardedTask (Carbon variant)
+  * I2CTransciever (Carbon variant)
+  * PipeAndFilter (Carbon variant)
+  * Queue (Carbon variant)
+  * TaskMonitor (Carbon variant)
+  * UartTransceiver (Carbon variant)
+  * CmdLineDebugger (Carbon variant)
+  * CRC (Carbon variant)
+  * ErrorLogger (Carbon variant)
+  * LeanB2CAP (Carbon variant)
+  * RingBuffer (Carbon variant)
+  * TLV (Carbon variant)
+  * XProtocol (Carbon variant)
+  * UartTransceiver (Carbon variant)
+  * Logging/AsyncRecorder (Carbon variant)
+  * Logging/SyncRecorder (Carbon variant)
+  * Logging/RttApender (Carbon variant)
+  * Logging/UartApender (Carbon variant)
+* **core/essentials**: 25% shared/essential, 0% new
+  * Assert
+  * CriticalSection
+  * Delay
+  * Mutex
+  * Signal
+  * Retcode
+  * I2C (stm32f4)
+  * SPI (stm32f4)
+  * Timer (stm32f4)
+  * UART (stm32f4)
+* **core/connectivity/cellular**: 50% shared/cellular, 30% new
+  * uBlox SARA
+* **examples/CommonGateway**: 100% new
 **Note**: Not available for product development, BCX requirements fulfilled.
 
 ### pre_v0.1.0 ###

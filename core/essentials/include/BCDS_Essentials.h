@@ -20,7 +20,7 @@
  * @{
  *
  * @brief       Provides supported enumerations for Essentials component
- *
+ * 				\image html Essentials-overview.png
  * @details This package contains essential components and modules of the BCDS software platform like the
  * hardware abstraction layer (HAL) including a microcontroller unit abstraction (MCU),
  * the interface for the board support package (BSP) as well as basic types, an assertion and a

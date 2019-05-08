@@ -10,7 +10,11 @@
  *             http://www.eclipse.org/legal/epl-2.0. \n
  *             SPDX-License-Identifier: EPL-2.0
  *
- * @section Small Tutorial
+ * @section OVERVIEW Overview
+ * \image html Kiso-overview.png
+ *
+ *
+ * @section TUTORIAL Tutorial
  *
  * Each Kiso modules need a configuration file. These files allows to enable/disable different features, 
  * but also define a configuration for these features. These configurations can be found in the folder `boards/<board_name>/kiso_config`. \n

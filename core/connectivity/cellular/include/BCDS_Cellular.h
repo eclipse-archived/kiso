@@ -15,6 +15,7 @@
 /**
  * @file
  * @brief Cellular Interface
+ *
  */
 
 /**
@@ -22,6 +23,8 @@
  * @{
  *
  * @brief This module is used to initialize, connect, disconnect, uninitialize and get modem status.
+ * 		  \image html Cellular-overview.png
+ *
  */
 
 #ifndef BCDS_CELLULAR_H
