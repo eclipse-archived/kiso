@@ -57,7 +57,7 @@
 typedef uint32_t Retcode_T;
 
 /**
- * @deprecated The below enums are provided for backward compatibility.
+ * @warning The below enums are provided for backward compatibility.
  * @note - Interface users are requested to not use this, since it will be removed going forward.
  */
 #define RETCODE_INCONSITENT_STATE RETCODE_INCONSISTENT_STATE
@@ -306,109 +306,6 @@ static BCDS_INLINE uint32_t Retcode_GetCode(Retcode_T retcode)
     return ((uint32_t) retcode & 0x00000FFFUL);
 }
 
-/**
- * @deprecated since version vxx.xx.xx, replaced by #Retcode_Initialize
- * @todo replace vxx.xx.xx with next version
- *
- * @brief   This function initializes the Retcode module.
- *
- * @details This function initializes the Retcode module. It registers an
- *          error handling callback function. When an error is raised,
- *          registered callback function of the corresponding component is called.
- *          This function shall be called only once.
- *
- * @param [in]  func : A callback function which is executed when an error is raised.
- *
- * @retval RETCODE_OK : On successful init
- * @retval RETCODE_INCONSITENT_STATE : When this function is called more than once
- * @retval RETCODE_NULL_POINTER : When the function pointer is NULL
- *
- */
-BCDS_DEPRECATED(Retcode_T Retcode_initialize(Retcode_ErrorHandlingFunc_T func));
-
-/**
- * @deprecated since version vxx.xx.xx, replaced by #Retcode_RaiseError
- * @todo replace vxx.xx.xx with next version
- *
- * @brief   Raises the error passed as parameter to the error handling function.
- * @details Each component may use this function to raise an error to the application
- * if it cannot handle the error itself.
- * This call results in the invocation of the error handling function which has
- * been given while the initialization of the Retcode module using the function
- * Retcode_Initialize().
- *
- * @param [in]  error : The error to be raised to the application
- *
- * @see Retcode_Initialize
- * @see Retcode_ErrorHandlingFunc_T
- */
-BCDS_DEPRECATED(void Retcode_raiseError(Retcode_T error));
-
-/**
- * @deprecated since version vxx.xx.xx, replaced by #Retcode_RaiseErrorFromIsr
- * @todo replace vxx.xx.xx with next version
- *
- * @brief Raises the error passed as parameter to the error handling function, use from ISR (Interrupt) context only.
- * @details Each component may use this function to raise an error from ISR to the application.
- * This call results in the invocation of the error handling function with the isFromIsr flag
- * set. As this is called from ISR, the application can define a custom approach
- * (in the registered callback function) based on the isFromIsr flag
- * on how it wants to deal with the error from ISR. i.e. The application can log it into user page,
- * post-process the error and so on, which cannot be done from ISR.
- *
- * @param [in]  error : The error to be raised to the application
- *
- * @see Retcode_Initialize
- * @see Retcode_ErrorHandlingFunc_T
- */
-BCDS_DEPRECATED(void Retcode_raiseErrorFromIsr(Retcode_T error));
-
-/** LCOV_EXCL_START : Start of section where code coverage is ignored.
- * Ignore code coverage for the deprecated APIs.*/
-
-/**
- * @deprecated since version vxx.xx.xx, replaced by #Retcode_GetSeverity
- * @todo replace vxx.xx.xx with next version
- *
- * @brief   This function provides the Severity of a return code.
- *
- * @param [in]  retcode : return code
- *
- * @return  uint32_t : Severity of the error
- */
-BCDS_DEPRECATED(static BCDS_INLINE Retcode_Severity_T Retcode_getSeverity(Retcode_T retcode));
-static BCDS_INLINE Retcode_Severity_T Retcode_getSeverity(Retcode_T retcode)
-{
-    return Retcode_GetSeverity(retcode);
-}
-
-/**
- * @deprecated since version vxx.xx.xx, replaced by #Retcode_GetCode
- * @todo replace vxx.xx.xx with next version
- *
- * @brief   This function provides the Error code of a return code.
- *
- * @param [in]  retcode : return code
- *
- * @return  uint32_t : Error code
- */
-BCDS_DEPRECATED(static BCDS_INLINE uint32_t Retcode_getCode(Retcode_T retcode));
-static BCDS_INLINE uint32_t Retcode_getCode(Retcode_T retcode)
-{
-    return Retcode_GetCode(retcode);
-}
-
-/**
- * @deprecated since version vxx.xx.xx, replaced by #Retcode_GetPackage
- * @todo replace vxx.xx.xx with next version
-
- * @brief   This function provides the Package of a return code.
- *
- * @param [in]  retcode : return code
- *
- * @return  uint32_t : Package ID of the corresponding module
- */
-BCDS_DEPRECATED(static BCDS_INLINE uint32_t Retcode_getPackage(Retcode_T retcode));
 static BCDS_INLINE uint32_t Retcode_getPackage(Retcode_T retcode)
 {
     return Retcode_GetPackage(retcode);

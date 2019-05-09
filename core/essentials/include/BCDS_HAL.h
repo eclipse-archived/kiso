@@ -67,7 +67,7 @@ enum BCDS_HAL_TransferMode_E
 };
 
 /**
- * @deprecated The below enums are provided for backward compatibility.
+ * @warning The below enums are provided for backward compatibility.
  * @note - Interface users are requested to not use this, since it will be removed going forward.
  */
 #define BCDS_HAL_TRANSFER_MODE_BLOCKING (enum BCDS_HAL_TransferMode_E) 1 /* The implementer shall use BCDS_HAL_TRANSFER_MODE_POLLING instead */

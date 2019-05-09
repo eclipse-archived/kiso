@@ -2,7 +2,10 @@
  * @{
  * @mainpage   Kiso Documentation
  * @copyright  Robert Bosch GmbH
- * @brief      Kiso API Documentation
+ * @brief      Kiso API Documentation 
+ *             \image html Kiso-logo.png
+ * 
+ *
  * @section    BCDS_REFBOARDS_LICENCE License
  *
  * @note       This program and the accompanying materials are made available under the
@@ -11,10 +14,34 @@
  *             SPDX-License-Identifier: EPL-2.0
  *
  * @section OVERVIEW Overview
+ * 
+ * Eclipse Kiso was designed from scratch as a software development kit for IoT devices and has already been used 
+ * and verified on a handful of existing products in the market. Eclipse Kiso’s reusability, robustness and portability 
+ * is a key factor which enables fast development and quick time to market for almost all kinds of IoT “Things” product 
+ * development. \n
+ * Kiso can be represented with the following architecture overview: \n
  * \image html Kiso-overview.png
+ * \image html legend.png
+ * 
+ * \note For a simple usage of Kiso for the BCX,  we are generating code via Mita. \see https://www.eclipse.org/mita/
+ * 
+ * @section FOLDER_STRUCT Folder Structure
+ * 
+ * **Kiso** repository is composed by the following folders:
+ * * **boards** contains different HW-boards Kiso support. Each of the HWs have a folder. Each of these folders contain:
+ *     * A **bsp** (board support package) abstracting Essentials.
+ *     * A **kiso_config** containing the Kiso module specific configurations.
+ *     * Build system informations needed by meson to generate the binary for the specific hardware.
+ * * **core** contains the different Kiso components. The following modules are today existing:
+ *     * **Essentials** contains the hardware abstraction from the board and MCU. It also contains "essentials" modules such as error-handling. See \ref BCDS_ESSENTIALS
+ *     * **Utils** contains RTOS abstractions modules, but also logging, circular-buffers, etc... See \ref UTILS
+ *     * **connectivity/Cellular** contains the driver that allows us to communicate with u-blox SARA via CAT-M1 or NB-IoT. See \ref CELLULAR
+ * * **docs** contains the documentation.
+ * * **examples** contains different examples running on a specific hardware.
+ * * **ide** contains eclipse projects than implement a workbench specifically built for BCX and CommonGateway.
+ * * **thirdparty** contains different source-code of third-parties needed by Kiso.
  *
- *
- * @section TUTORIAL Tutorial
+ * @section BUILD_STRUCT Build Structure (meson or makefile)
  *
  * Each Kiso modules need a configuration file. These files allows to enable/disable different features, 
  * but also define a configuration for these features. These configurations can be found in the folder `boards/<board_name>/kiso_config`. \n
@@ -24,6 +51,8 @@
  * * The BSP library needs to be build with the specific configuration of Kiso.
  * * All the `core` libraries need to be build with the configuration of Kiso.
  * * The Application needs dependencies to all the previous build libraries to be buildable.
+ * \n
+ * The meson.build in the root folder is contains the build knowledge.
  *
  * @}
 */

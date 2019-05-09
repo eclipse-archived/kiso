@@ -86,8 +86,6 @@ enum BCDS_Essentials_ModuleID_E
  *
  * @details     For each component there is a defined range of return codes reserved. The maximum number of codes
  *              available for a component is defined by HAL_RETURN_CODE_RANGE.
- *
- * @todo        CDDKv2 move to API headers
  */
 enum BCDS_HAL_HalRetcode_E
 {
