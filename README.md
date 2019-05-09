@@ -1,5 +1,12 @@
 # Kiso #
-**Note**: Not available for product development, DoD not fulfilled yet.
+**Note**: Not available for product development yet.
+![alt text](./docs/doxygen/Kiso-logo.png)
+
+## Introduction ##
+Eclipse Kiso was designed from scratch as a software development kit for IoT devices and has already been used and verified on a handful of existing products in the market. Eclipse Kiso’s reusability, robustness and portability is a key factor which enables fast development and quick time to market for almost all kinds of IoT “Things” product development.
+
+An overview of what the repository contains and what you can do with it can be found in the doxygen documentation.
+To quickly start working on it, you can go to the next section.
 
 ## Installation guide (manual) ##
 ### Basic tooling ###
@@ -60,44 +67,10 @@ doxygen Doxyfile
 ## Changelog ##
 
 ### v0.1.0 ###
-Release content for BCX:
-* **boards**: 100% new
-* **core/utils**: 60% shared/utils, 0% new
-  * CmdProcessor (Carbon variant)
-  * EventHub (Carbon variant)
-  * GuardedTask (Carbon variant)
-  * I2CTransciever (Carbon variant)
-  * PipeAndFilter (Carbon variant)
-  * Queue (Carbon variant)
-  * TaskMonitor (Carbon variant)
-  * UartTransceiver (Carbon variant)
-  * CmdLineDebugger (Carbon variant)
-  * CRC (Carbon variant)
-  * ErrorLogger (Carbon variant)
-  * LeanB2CAP (Carbon variant)
-  * RingBuffer (Carbon variant)
-  * TLV (Carbon variant)
-  * XProtocol (Carbon variant)
-  * UartTransceiver (Carbon variant)
-  * Logging/AsyncRecorder (Carbon variant)
-  * Logging/SyncRecorder (Carbon variant)
-  * Logging/RttApender (Carbon variant)
-  * Logging/UartApender (Carbon variant)
-* **core/essentials**: 25% shared/essential, 0% new
-  * Assert
-  * CriticalSection
-  * Delay
-  * Mutex
-  * Signal
-  * Retcode
-  * I2C (stm32f4)
-  * SPI (stm32f4)
-  * Timer (stm32f4)
-  * UART (stm32f4)
-* **core/connectivity/cellular**: 50% shared/cellular, 30% new
-  * uBlox SARA
-* **examples/CommonGateway**: 100% new
-**Note**: Not available for product development, BCX requirements fulfilled.
+* Examples running with Mita
+* Improvement documentation
+* Cellular added
+* Test specs and test-implementations via mita added
 
 ### pre_v0.1.0 ###
 * Initial Kiso code drop

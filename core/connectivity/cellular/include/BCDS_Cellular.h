@@ -19,7 +19,7 @@
  */
 
 /**
- * @defgroup Cellular
+ * @defgroup CELLULAR Cellular
  * @{
  *
  * @brief This module is used to initialize, connect, disconnect, uninitialize and get modem status.

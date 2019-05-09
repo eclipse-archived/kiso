@@ -165,51 +165,6 @@ Retcode_T Assert_Initialize(Assert_Callback_T callback);
  */
 void Assert_Dynamic(const unsigned long line, const unsigned char * const file);
 
-/**
- * @deprecated  since version vxx.xx.xx, replaced by #Assert_Initialize
- *
- * @todo        replace vxx.xx.xx with next version
- *
- * @brief       This function initializes the Assert module. It registers an
- *              assertion callback function. When an assertion is hit, registered
- *              callback function is called.
- *
- *              Ideally, the first thing to be done in the callback function it to
- *              disable the interrupts of the system (hardware dependent). For trouble shooting,
- *              it can also trace / log the line number and filename from where the assertion
- *              came.
- *
- * @note        Release builds must be built with the NDEBUG symbol defined.
- *              This API should be called before making use of any one of the
- *              assertion API's except for the static_assert().
- *
- * @param [in]  callback : A callback function which is executed when an assertion is triggered.
- *
- * @retval      #RETCODE_OK on success
- * @retval      #RETCODE_INVALID_PARAM if callback is not valid
- */
-BCDS_DEPRECATED(Retcode_T Assert_initialize(Assert_Callback_T callback));
-
-/**
- * @deprecated  since version vxx.xx.xx, replaced by #Assert_Dynamic
- * @todo        replace vxx.xx.xx with next version
- *
- * @brief       Dynamic assert function.
- *              The dynamic assert function calls a user mapped callback function
- *              (where atleast all the interrupts disabling is expected) and would
- *              freeze the system by entering an endless loop.
- *
- * @note        Release builds must be built with the NDEBUG symbol defined.
- *              User shall not use this API and rather call the assert() macro with
- *              required assertion expression. Defining the ASSERT_USE_STD_EXIT macro
- *              in CFLAGS_DEBUG make variable would use the standard C exit() API.
- *
- * @param [in]  line : The line number of the source code from where the assert() is called.
- *
- * @param [in]  file : The file name of the source code from where the assert() is called.
- */
-BCDS_DEPRECATED(void Assert_dynamic(const unsigned long line, const unsigned char * const file));
-
 #else /* valid only for release builds */
 
 /**
