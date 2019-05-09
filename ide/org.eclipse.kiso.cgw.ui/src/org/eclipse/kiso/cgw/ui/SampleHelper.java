@@ -23,6 +23,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchConfigurationListener;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.core.Launch;
+import org.eclipse.debug.core.model.ISourceLocator;
+import org.eclipse.debug.core.model.IStackFrame;
+import org.eclipse.debug.internal.core.LaunchManager;
 
 
 public class SampleHelper {
@@ -126,7 +134,7 @@ public class SampleHelper {
 
 	private static void setupCgwProject(IProgressMonitor monitor, IProject project, String kisoPath) throws CoreException {
 		IProgressMonitor _monitor = SubMonitor.convert(monitor);
-		_monitor.beginTask("Setting up CGW project", 2);
+		_monitor.beginTask("Setting up CGW project", 3);
 		
 		try {
 			project.refreshLocal(IResource.DEPTH_INFINITE, _monitor);
@@ -156,6 +164,27 @@ public class SampleHelper {
 			}
 			_monitor.worked(1);
 			
+			String launchConfigPath = project.getLocation().append(project.getName() + ".launch").toOSString();
+			LaunchManager launchManager = (LaunchManager) DebugPlugin.getDefault().getLaunchManager();
+			ILaunchConfigurationListener lcl = new ILaunchConfigurationListener() {
+				@Override
+				public void launchConfigurationRemoved(ILaunchConfiguration configuration) {
+				}
+				@Override
+				public void launchConfigurationChanged(ILaunchConfiguration configuration) {
+					launchConfigurationAdded(configuration);
+				}
+				@Override
+				public void launchConfigurationAdded(ILaunchConfiguration configuration) {
+					launchManager.addLaunch(new Launch(configuration, ILaunchManager.DEBUG_MODE, null));
+					launchManager.addLaunch(new Launch(configuration, ILaunchManager.RUN_MODE, null));
+				}
+			};
+			launchManager.addLaunchConfigurationListener(lcl);
+			launchManager.importConfigurations(new File[] {new File(launchConfigPath)}, monitor);
+			launchManager.removeLaunchConfigurationListener(lcl);
+			_monitor.worked(1);
+
 			project.refreshLocal(IResource.DEPTH_INFINITE, _monitor);
 			_monitor.worked(1);
 			
