@@ -102,7 +102,7 @@ struct MCU_I2C_S
     /** Function pointer to the vendor library Tx function. Will be set
      *  upon initialization. */
     HAL_StatusTypeDef (*TxFunPtr)(I2C_HandleTypeDef *hi2c, uint16_t DevAddress,
-            uint8_t *pData, uint16_t Size);
+            uint8_t *pData, uint16_t Size, uint32_t options);
 
     /** Function pointer to the vendor library Rx function. Will be set upon
      *  initialization.*/

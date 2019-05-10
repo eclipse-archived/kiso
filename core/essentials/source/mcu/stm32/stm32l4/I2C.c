@@ -173,7 +173,7 @@ Retcode_T MCU_I2C_Initialize(I2C_T i2c, MCU_I2C_Callback_T callback)
             pI2C->DMARxCallback = NULL;
             pI2C->AppLayerCallback = callback;
 
-            pI2C->TxFunPtr = HAL_I2C_Master_Transmit_IT;
+            pI2C->TxFunPtr = HAL_I2C_Master_Sequential_Transmit_IT;
             pI2C->RxFunPtr = HAL_I2C_Master_Receive_IT;
             pI2C->State = I2C_STATE_READY;
 
@@ -181,16 +181,7 @@ Retcode_T MCU_I2C_Initialize(I2C_T i2c, MCU_I2C_Callback_T callback)
         }
         else if (BCDS_HAL_TRANSFER_MODE_DMA == pI2C->TransferMode)
         {
-            pI2C->IRQCallback = MCU_BSP_I2C_EV_Callback;
-            pI2C->ERRCallback = MCU_BSP_I2C_ER_Callback;
-            pI2C->DMARxCallback = MCU_BSP_I2C_DMA_RX_Callback;
-            pI2C->DMATxCallback = MCU_BSP_I2C_DMA_TX_Callback;
-            pI2C->AppLayerCallback = callback;
-
-            pI2C->RxFunPtr = HAL_I2C_Master_Receive_DMA;
-            pI2C->TxFunPtr = HAL_I2C_Master_Transmit_DMA;
-
-            rc = RETCODE_OK;
+            rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
         }
         else
         {
@@ -258,7 +249,7 @@ Retcode_T MCU_I2C_Send(I2C_T i2c, uint16_t slaveAddr,
                     /* SEND */
                     HAL_StatusTypeDef halStatus;
 
-                    halStatus = pI2C->TxFunPtr(&pI2C->hi2c, slaveAddr, data, len);
+                    halStatus = pI2C->TxFunPtr(&pI2C->hi2c, slaveAddr, data, len,I2C_FIRST_AND_LAST_FRAME);
 
                     if (HAL_OK == halStatus)
                     {
@@ -378,7 +369,8 @@ Retcode_T MCU_I2C_ReadRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAd
 
                 /* SEND */
 
-                halStatus = pI2C->TxFunPtr(&pI2C->hi2c, slaveAddr, &registerAddr, 1);
+
+                halStatus = pI2C->TxFunPtr(&pI2C->hi2c, slaveAddr, &registerAddr, 1,I2C_FIRST_AND_LAST_FRAME);
 
                 if (HAL_OK == halStatus)
                 {
@@ -425,8 +417,7 @@ Retcode_T MCU_I2C_ReadRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAd
 }
 
 /** See description in the interface declaration */
-Retcode_T MCU_I2C_WriteRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAddr,
-        uint8_t * txData, uint32_t txLen)
+Retcode_T MCU_I2C_WriteRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAddr, uint8_t * txData, uint32_t txLen)
 {
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
@@ -450,7 +441,7 @@ Retcode_T MCU_I2C_WriteRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerA
 
                 /* SEND */
 
-                halStatus = pI2C->TxFunPtr(&pI2C->hi2c, slaveAddr, &registerAddr, 1);
+                halStatus = pI2C->TxFunPtr(&pI2C->hi2c, slaveAddr, &registerAddr, 1,I2C_FIRST_AND_NEXT_FRAME);
 
                 if (HAL_OK == halStatus)
                 {
@@ -467,7 +458,7 @@ Retcode_T MCU_I2C_WriteRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerA
                     }
                     pI2C->State = I2C_STATE_TX;
 
-                    halStatus = pI2C->TxFunPtr(&pI2C->hi2c, slaveAddr, txData, txLen);
+                    halStatus = pI2C->TxFunPtr(&pI2C->hi2c, slaveAddr, txData, txLen, I2C_LAST_FRAME);
 
                     if (HAL_OK == halStatus)
                     {
