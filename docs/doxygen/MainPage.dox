@@ -31,7 +31,7 @@
  * * **boards** contains different HW-boards Kiso support. Each of the HWs have a folder. Each of these folders contain:
  *     * A **bsp** (board support package) abstracting Essentials.
  *     * A **kiso_config** containing the Kiso module specific configurations.
- *     * Build system informations needed by meson to generate the binary for the specific hardware.
+ *     * Build system information needed by meson to generate the binary for the specific hardware.
  * * **core** contains the different Kiso components. The following modules are today existing:
  *     * **Essentials** contains the hardware abstraction from the board and MCU. It also contains "essentials" modules such as error-handling. See \ref BCDS_ESSENTIALS
  *     * **Utils** contains RTOS abstractions modules, but also logging, circular-buffers, etc... See \ref UTILS

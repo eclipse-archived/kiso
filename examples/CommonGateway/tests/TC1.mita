@@ -38,28 +38,19 @@ setup leds: LED {
 
 /* Setup the accelerometer sensor BMA280 */
 setup accelerometer {
-	range=.Range_2G;
-	bandwidth=.BW_500Hz();
 }
 
 /* Setup the environment sensor BME280 */
 setup environment {
-}
-
-/* Setup cellular */
-setup net: Radio {
-       radioStandard = .CAT_M1();  
-}
-
-/* Setup http rest client */
-setup backend: HttpRestClient {
-       transport = net;    
-       endpointBase = "http://demo.thingsboard.io";
-       var x = resource(endpoint = "/api/v1/fDtiqXcQEzWbgYeD0fqh/telemetry", contentType = "application/json", writeMethod=.POST);
+	power_mode = .Normal();
 }
 
 /** Logic **/
-every 500 milliseconds {
+every CGW.startup {
+	leds.red.write(true);
+}
+
+every 100 milliseconds {
 	/* Read sensor values */
 	mean_acc.x = accelerometer.x_axis.read();
 	mean_acc.y = accelerometer.y_axis.read();
@@ -79,11 +70,9 @@ every 500 milliseconds {
 		"p": ${mean_p},
 		"h": ${mean_h},
 		"t": ${mean_t}
-		}
-	}`;
+		}\n`;
 	/* Send message out */
 	print(msg);
-	backend.x.write(msg);
 }
 
 /* Led test */
@@ -103,4 +92,5 @@ every 500 milliseconds {
 		leds.red.write(true);
 		leds.blue.write(false);
 	}
+	
 }

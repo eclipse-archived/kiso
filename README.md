@@ -13,6 +13,8 @@ To quickly start working on it, you can go to the next section.
 * Download and install anaconda version [Anaconda3-2019.03](https://repo.continuum.io/archive/)
 * Download and install arm-none-eabi version [7-2017-q4-major](https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads)
 * Download and install doxygen version [v1.8.8](https://sourceforge.net/projects/doxygen/files/rel-1.8.8/)
+* Download and use [HTerm](https://www.heise.de/download/product/hterm-53283/download) or another uart-console.
+* In case the uart-driver does not work, please download [here](https://www.ftdichip.com/Drivers/VCP.htm) the right driver for your machine
 
 **Note**: python, arm-none-eabi, doxygen need to be accessible via cmd-line. Therefore, you may need to modify the environment variable *PATH* on windows if it is not done in the installation.
 
@@ -22,6 +24,10 @@ To quickly start working on it, you can go to the next section.
 
 ## Installation guide (eclipse) ##
 * Use the provided Eclipse IDE provided via USB
+
+## Supported hardwares ##
+* CommonGateway
+* ... more to come
 
 ## Build CommonGateway (via meson) ###
 **Build**:

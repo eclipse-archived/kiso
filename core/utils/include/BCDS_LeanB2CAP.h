@@ -269,7 +269,7 @@ typedef void (*LeanB2CAPCallback)(LeanB2CAP_Event_T Event, void * Data);
 /**
  * @brief   Typedef for the LeanB2CAP handle.
  *
- * @details The actual handle context informations are hidden
+ * @details The actual handle context information are hidden
  *          from the interface user.
  */
 typedef struct LeanB2CAP_HandleDescriptor_S * LeanB2CAP_HandlePtr_T;
@@ -380,7 +380,7 @@ Retcode_T LeanB2CAP_Builder(LeanB2CAP_FrameData_T * LeanB2CAPBuildOuput, LeanB2C
 Retcode_T LeanB2CAP_OverheadBuilder(LeanB2CAP_Overhead_T * OutputOverhead, LeanB2CAP_RawData_T * RawDataInput);
 
 /**
- * @brief   Resets the LeanB2CAP received data process informations.
+ * @brief   Resets the LeanB2CAP received data process information.
  *
  * @note	The handle must be initialized prior to this by
  * making use of the LeanB2CAP_Initialize API.

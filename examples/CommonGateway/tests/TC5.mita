@@ -22,7 +22,7 @@ var mean_acc = v3d(0,0,0,0);
 /** Setup **/
 /* Setup logging */
 setup CGW {
-       consoleInterface = .RTT();
+       consoleInterface = .UART();
 }
 
 /* Setup the accelerometer sensor BMA280 */
