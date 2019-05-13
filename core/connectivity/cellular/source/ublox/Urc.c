@@ -12,23 +12,28 @@
 *
 ********************************************************************************/
 
+
 /**
  * @file
  *
  * @brief Implements various URC handling routines.
  */
 
-#define BCDS_MODULE_ID  BCDS_CELLULAR_MODULE_ID_URC
+#include "BCDS_CellularModules.h"
+#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_URC
 
-#include "CellularModule.h"
+#include "AtUrc.h"
+
+#include "BCDS_Cellular.h"
+#include "AtResponseQueue.h"
+#include "At3Gpp27007.h"
+#include "AT_UBlox.h"
+
 #include "BCDS_Basics.h"
 #include "BCDS_Retcode.h"
 #include "BCDS_Assert.h"
-#include "CellularResponseQueue.h"
-#include "Network.h"
-#include "Socket.h"
+
 #include "BCDS_Logging.h"
-#include "CellularUrc.h"
 
 /**
  * @brief The maximum number of subsequent URC handler chain executions. If this number
@@ -42,7 +47,7 @@
  *
  * @param x The URC handler to register
  */
-#define CELLULAR_REGISTER_URC_HANDLER(x)   (result = CellularUrc_CallHandler((x), result, &OneHandlerCared))
+#define CELLULAR_REGISTER_URC_HANDLER(x)   (result = CallHandler((x), result, &OneHandlerCared))
 
 /**
  * @brief The maximum time to wait for the URC argument to be received.
@@ -50,78 +55,63 @@
 #define CELLULAR_URC_ARG_WAIT_TIME         (UINT32_C(100) / portTICK_PERIOD_MS)
 
 /**
- * @brief Calls a single URC handler and updates the result code/OneHandlerWasInterested flags accordingly.
+ * @brief Calls a single URC handler and updates the
+ * result-code/OneHandlerWasInterested flags accordingly.
  *
- * @warning This function is meant to be called from CellularEngine_HandleUrcResponses() ONLY.
+ * @warning This function is meant to be called from
+ * Engine_HandleUrcResponses() ONLY.
  *
- * @param[in] handler 				The handler to call
- * @param[in] TotalResult 			The result codes returned from previous calls of this function
- * @param[out] HandlerWasInterested True if this handler was interested in the queue content
+ * @param[in] handler
+ * The handler to call
+ *
+ * @param[in] totalResult
+ * The result codes returned from previous calls of this function
+ *
+ * @param[out] handlerWasInterested
+ * True if this handler was interested in the queue content
+ *
+ * @return A #Retcode_T that is equal to the parameter totalResult, in case the
+ * handler was not interested and did not encounter and error. If the handler
+ * did encounter an error, that #Retcode_T will be returned.
  */
-static Retcode_T CellularUrc_CallHandler(CellularUrcHandler_T handler, Retcode_T TotalResult, bool *HandlerWasInterested)
+static Retcode_T CallHandler(CellularUrcHandler_T handler, Retcode_T totalResult, bool* handlerWasInterested);
+
+/**
+ * @brief Handle u-blox variant specific URCs that do not need proper
+ * interpretation. URCs will mostly just be thrown out of the queue.
+ *
+ * @return A #Retcode_T following the URC-handler chaining scheme described in
+ * #CallHandler.
+ */
+static Retcode_T HandleMiscellaneousUrc(void);
+
+static Retcode_T CallHandler(CellularUrcHandler_T handler, Retcode_T totalResult, bool* handlerWasInterested)
 {
-    // check arguments
-    if (NULL == handler || NULL == HandlerWasInterested)
+    if (NULL == handler || NULL == handlerWasInterested)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
 
-    // call the handler
-    Retcode_T HandlerResult = handler();
+    Retcode_T handlerResult = handler();
 
-    // do something with the handler result
-    Retcode_T result = TotalResult;
-    if (RETCODE_OK == HandlerResult)
+    Retcode_T result = totalResult;
+    if (RETCODE_OK == handlerResult)
     {
-        *HandlerWasInterested = true;
+        *handlerWasInterested = true;
     }
-    else if (Retcode_GetCode(HandlerResult) == (uint32_t) RETCODE_CELLULAR_URC_NOT_PRESENT)
+    else if (Retcode_GetCode(handlerResult) == (uint32_t) RETCODE_CELLULAR_URC_NOT_PRESENT)
     {
-        // handler is still ok, but simply wasn't interested. Nothing to do
+        /* Handler is still ok, but simply wasn't interested. Nothing to do. */
     }
     else
     {
-        result = HandlerResult;
+        result = handlerResult;
     }
 
     return result;
 }
 
-Retcode_T CellularUrc_HandleResponses(void)
-{
-    Retcode_T result = RETCODE_OK;
-    bool OneHandlerCared = false;
-    bool OneHandlerWasEverInterested = false;
-
-    for (uint8_t i = 0; 0 == i || (OneHandlerCared && i < CELLULAR_MAX_URC_HANDLER_RUNS); i++, OneHandlerCared = false)
-    {
-        /*
-         * START OF HANDLER LIST
-         */
-        CELLULAR_REGISTER_URC_HANDLER(CellularUrc_Miscellaneous);
-        CELLULAR_REGISTER_URC_HANDLER(CellularSocketUrc_UUSOCL);
-        CELLULAR_REGISTER_URC_HANDLER(CellularSocketUrc_UUSORD);
-        CELLULAR_REGISTER_URC_HANDLER(CellularSocketUrc_UUSORF);
-        CELLULAR_REGISTER_URC_HANDLER(CellularNetworkUrc_CREG);
-        CELLULAR_REGISTER_URC_HANDLER(CellularNetworkUrc_UUPSDA);
-        CELLULAR_REGISTER_URC_HANDLER(CellularNetworkUrc_UUPSDD);
-        /* END OF HANDLER LIST */
-
-        if (OneHandlerCared)
-        {
-            OneHandlerWasEverInterested = true;
-        }
-    }
-
-    if (!OneHandlerWasEverInterested)
-    {
-        result = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_URC_NOT_PRESENT);
-    }
-
-    return result;
-}
-
-Retcode_T CellularUrc_Miscellaneous(void)
+static Retcode_T HandleMiscellaneousUrc(void)
 {
     Retcode_T result = RETCODE(RETCODE_SEVERITY_INFO, RETCODE_CELLULAR_URC_NOT_PRESENT);
     Retcode_T retcode;
@@ -151,6 +141,41 @@ Retcode_T CellularUrc_Miscellaneous(void)
 
         // ignore arg 1
         (void) AtResponseQueue_IgnoreEvent(0);
+    }
+
+    return result;
+}
+
+Retcode_T Urc_HandleResponses(void)
+{
+    Retcode_T result = RETCODE_OK;
+    bool OneHandlerCared = false;
+    bool OneHandlerWasEverInterested = false;
+
+    for (uint8_t i = 0; 0 == i || (OneHandlerCared && i < CELLULAR_MAX_URC_HANDLER_RUNS); i++, OneHandlerCared = false)
+    {
+        /*
+         * START OF HANDLER LIST
+         */
+        CELLULAR_REGISTER_URC_HANDLER(HandleMiscellaneousUrc);
+        CELLULAR_REGISTER_URC_HANDLER(At_HandleUrc_CGREG);
+        CELLULAR_REGISTER_URC_HANDLER(At_HandleUrc_CEREG);
+        CELLULAR_REGISTER_URC_HANDLER(At_HandleUrc_UUSOCL);
+        CELLULAR_REGISTER_URC_HANDLER(At_HandleUrc_UUSOLI);
+        CELLULAR_REGISTER_URC_HANDLER(At_HandleUrc_UUSORD);
+        CELLULAR_REGISTER_URC_HANDLER(At_HandleUrc_UUSORF);
+        CELLULAR_REGISTER_URC_HANDLER(At_HandleUrc_UUHTTPCR);
+        /* END OF HANDLER LIST */
+
+        if (OneHandlerCared)
+        {
+            OneHandlerWasEverInterested = true;
+        }
+    }
+
+    if (!OneHandlerWasEverInterested)
+    {
+        result = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_URC_NOT_PRESENT);
     }
 
     return result;

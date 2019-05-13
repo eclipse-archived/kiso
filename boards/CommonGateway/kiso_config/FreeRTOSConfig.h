@@ -51,13 +51,15 @@ extern "C"
     extern uint32_t SystemCoreClock;
 #endif
 
-/* BCDS FreeRTOS Configuration version information */
-#define BCDS_FREE_RTOS_VERSION_MAJOR			 ( 10 )
-#define BCDS_FREE_RTOS_VERSION_MINOR			 ( 0 )
-#define BCDS_FREE_RTOS_VERSION_BUILD			 ( 1 )
+    /* BCDS FreeRTOS Configuration version information */
+#define BCDS_FREE_RTOS_VERSION_MAJOR             ( 10 )
+#define BCDS_FREE_RTOS_VERSION_MINOR              ( 0 )
+#define BCDS_FREE_RTOS_VERSION_BUILD              ( 1 )
 
-/* Modes of operations of operation system */
+    /* Modes of operations of operation system */
 #define configUSE_PREEMPTION                     ( 1 )
+#define configSUPPORT_DYNAMIC_ALLOCATION         ( 1 )
+#define configSUPPORT_STATIC_ALLOCATION          ( 1 )
 
 /* Energy saving modes */
 #define configUSE_TICKLESS_IDLE                  ( 1 )
@@ -92,6 +94,9 @@ extern "C"
 #define configTIMER_TASK_PRIORITY                ( TASK_PRIORITY_TIMER )
 #define configTIMER_QUEUE_LENGTH                 ( 40 )
 #define configTIMER_TASK_STACK_DEPTH             ( configMINIMAL_STACK_SIZE + 160 )
+
+/* Idle task related definitions. */
+#define IDLE_TASK_SIZE                           ( configMINIMAL_STACK_SIZE )
 
 /* Optional functions - most linkers will remove unused functions anyway. */
 #define INCLUDE_vTaskPrioritySet                 ( 1 )

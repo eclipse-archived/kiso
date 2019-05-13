@@ -12,31 +12,34 @@
 *
 ********************************************************************************/
 
+
 /**
  * @file
  *
  * @brief The engine of the Cellular driver.
  */
 
-#define BCDS_MODULE_ID  BCDS_CELLULAR_MODULE_ID_ENGINE
+#include "BCDS_CellularModules.h"
+#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_ENGINE
 
-#include "CellularModule.h"
+#include "Engine.h"
+
+#include "AtResponseParser.h"
+#include "AtResponseQueue.h"
+#include "AtUtils.h"
+#include "AtUrc.h"
+#include "Hardware.h"
+
+#include "BCDS_Basics.h"
+#include "BCDS_Retcode.h"
 #include "BCDS_Assert.h"
+#include "BCDS_RingBuffer.h"
+
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
 #include "portmacro.h"
-#include "BCDS_RingBuffer.h"
-#include "CellularCommon.h"
-#include "CellularAtResponseParser.h"
-#include "CellularResponseQueue.h"
-#include "CellularUrc.h"
-#include "CellularUtils.h"
-#include "CellularEngine.h"
-#include "CellularBsp.h"
 
-#define LOG_LEVEL_PACKAGE   LOG_LEVEL_DEBUG
-#define LOG_LEVEL_MODULE    LOG_LEVEL_DEBUG
 #include "BCDS_Logging.h"
 
 /**
@@ -54,31 +57,47 @@
  */
 #define CELLULAR_RESPONSE_QUEUE_WAIT_TIME      (UINT32_C(25) / portTICK_PERIOD_MS)
 
-/* Modem initialization status */
-CellularInitStatus_T CellularInitStatus;
-
+static StaticSemaphore_t AtResponseParser_RxWakeupBuffer;
 static SemaphoreHandle_t AtResponseParser_RxWakeupHandle = NULL;
+static StaticSemaphore_t CellularDriver_TxWakeupBuffer;
 static SemaphoreHandle_t CellularDriver_TxWakeupHandle = NULL;
+static StaticTask_t AtResponseParser_TaskBuffer;
+static StackType_t AtResponseParser_TaskStack[CELLULAR_RESP_TASK_STACK_SIZE];
 static TaskHandle_t AtResponseParser_TaskHandle = NULL;
+static StaticTask_t CellularDriver_TaskBuffer;
+static StackType_t CellularDriver_TaskStack[CELLULAR_DRV_TASK_STACK_SIZE];
 static TaskHandle_t CellularDriver_TaskHandle = NULL;
 
 static UART_T CellularSerialDevice = (UART_T) NULL;
 
-static bool IsFlukeFilterEnabled = FALSE;
+static bool IsFlukeFilterEnabled = false;
 
-static xSemaphoreHandle CellularDriver_RequestLock = NULL;
+static StaticSemaphore_t CellularDriver_RequestBuffer;
+static SemaphoreHandle_t CellularDriver_RequestLock = NULL;
 
-/* Cellular event callback function, status and error variables */
-static Cellular_CallbackFunction_T NotifyEvent = NULL;
-static Cellular_DeviceStatus_T DeviceStatus = CELLULAR_DEVICESTATUS_DISCONNECTED;
-static Retcode_T DeviceError = (Retcode_T) RETCODE_UNINITIALIZED;
-static AtResponseParserCallback_T CustomAtResponseParser = NULL;
+static Cellular_State_T State = CELLULAR_STATE_POWEROFF;
+static Cellular_StateChanged_T OnStateChanged = NULL;
+
+static bool EchoModeEnabled = true;
 
 static RingBuffer_T UartRxBufDescr;
 static uint8_t UartRxReadBuffer[CELLULAR_RX_BUFFER_SIZE];
 static uint8_t UartRxByte;
 
-static void Cellular_Callback_ISR(UART_T uart, struct MCU_UART_Event_S event)
+char Engine_AtSendBuffer[CELLULAR_AT_SEND_BUFFER_SIZE];
+
+static Retcode_T ReadData(uint8_t* data, uint32_t dataLength, uint32_t* dataRead)
+{
+    if ((NULL == data) || (NULL == dataRead))
+    {
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
+    }
+
+    *dataRead = RingBuffer_Read(&UartRxBufDescr, data, dataLength);
+    return RETCODE_OK;
+}
+
+static void HandleMcuIsrCallback(UART_T uart, struct MCU_UART_Event_S event)
 {
     if ((UART_T) 0 == uart)
     {
@@ -117,8 +136,8 @@ static void AtResponseParser_Task(void *param)
 {
     BCDS_UNUSED(param);
 
-    uint32_t BytesRead, FlukeFreeBytesRead;
-    uint8_t * FlukeRxReadBuffer;
+    uint32_t bytesRead, flukeFreeBytesRead;
+    uint8_t * flukeRxReadBuffer;
     Retcode_T status = RETCODE_OK;
     uint8_t rxReadBuffer[CELLULAR_RX_READ_BUFFER_SIZE];
 
@@ -127,53 +146,29 @@ static void AtResponseParser_Task(void *param)
         // wait for the RX IRQ to wake us up
         (void) xSemaphoreTake(AtResponseParser_RxWakeupHandle, portMAX_DELAY);
 
-        if (CustomAtResponseParser)
-        {
-            LOG_DEBUG("invoke custom parser: %p", CustomAtResponseParser);
-            AtResponseParserArgument_T arg;
-            arg.Semaphore = AtResponseParser_RxWakeupHandle;
-            arg.Device = CellularSerialDevice;
-
-            Retcode_T retcode = CustomAtResponseParser(&arg);
-            if (RETCODE_OK != retcode)
-            {
-                LOG_ERROR("custom parser failed, retcode: %x", (unsigned int) retcode);
-                AtResponseQueue_EnqueueEvent(AT_EVENT_TYPE_ERROR, NULL, 0);
-            }
-
-            CellularEngine_SetCustomAtResponseParser(NULL);
-        }
-
         while (1)
         {
-            status = Cellular_ReadData(rxReadBuffer, sizeof(rxReadBuffer), &BytesRead);
-
-            if ((RETCODE_OK != status) || (UINT32_C(0) == BytesRead))
+            status = ReadData(rxReadBuffer, sizeof(rxReadBuffer), &bytesRead);
+            if ((RETCODE_OK != status) || (UINT32_C(0) == bytesRead))
             {
                 break;
             }
-
             if (IsFlukeFilterEnabled)
             {
-                FlukeRxReadBuffer = CellularUtils_TrimFlukeCharacters(rxReadBuffer, BytesRead, &FlukeFreeBytesRead);
+                flukeRxReadBuffer = Utils_TrimFlukeCharacters(rxReadBuffer, bytesRead, &flukeFreeBytesRead);
             }
             else
             {
-                FlukeRxReadBuffer = rxReadBuffer;
-                FlukeFreeBytesRead = BytesRead;
+                flukeRxReadBuffer = rxReadBuffer;
+                flukeFreeBytesRead = bytesRead;
             }
-#if defined(BCDS_LOGGING) && (LOG_LEVEL_GET_CURRENT() >= LOG_LEVEL_DEBUG)
-            char hex[BytesRead * 2];
-            CellularUtils_BinToHex(rxReadBuffer, hex, BytesRead);
-            LOG_DEBUG("BytesRead: %d [%.*s]", (int) BytesRead, (int) BytesRead * 2, hex);
-            LOG_DEBUG("parse: %.*s", (int) FlukeFreeBytesRead, FlukeRxReadBuffer);
-#endif /* BCDS_LOGGING */
-            (void) AtResponseParser_Parse(FlukeRxReadBuffer, FlukeFreeBytesRead);
+            //LOG_DEBUG("Cellular-COM [%d]: %.*s", (int) flukeFreeBytesRead, (int) flukeFreeBytesRead, flukeRxReadBuffer);
+            (void) AtResponseParser_Parse(flukeRxReadBuffer, flukeFreeBytesRead);
         }
 
         if (RETCODE_OK != status)
         {
-            LOG_ERROR("status: %d, resetting response parser", (int) status);
+            LOG_ERROR("Error during Cellular response handling (0x%08x), resetting response parser!", (int) status);
             AtResponseParser_Reset();
         }
     }
@@ -191,27 +186,56 @@ static void CellularDriver_Task(void *param)
 
         (void) xSemaphoreTake(CellularDriver_RequestLock, portMAX_DELAY);
         /* handle urc events */
-        (void) CellularEngine_HandleEvents();
+        (void) Engine_HandleEvents();
         /* check if socket data bytes available for reading */
-        CellularSocket_NotifyDataReceived();
+//        CellularSocket_NotifyDataReceived();
         (void) xSemaphoreGive(CellularDriver_RequestLock);
     }
 }
 
-Retcode_T CellularEngine_HandleEvents(void)
+Retcode_T Engine_HandleEvents(void)
 {
     uint32_t count = AtResponseQueue_GetEventCount();
-    Retcode_T retcode = CellularUrc_HandleResponses();
+    Retcode_T retcode = Urc_HandleResponses();
 
     /* remove unhandled events, till next command event */
     if (0 != count && RETCODE_OK != retcode)
     {
         for (uint32_t i = 0; i < count; i++)
         {
-            LOG_WARNING("removing %d unhandled events", (int) AtResponseQueue_GetEventCount());
+            AtResponseQueueEntry_T* event;
+#if BCDS_LOGGING
+            if (RETCODE_OK == AtResponseQueue_GetEvent(0, &event))
+            {
+                switch (event->Type)
+                {
+                case AT_EVENT_TYPE_COMMAND_ECHO:
+                    LOG_WARNING("Removing COMMAND_ECHO-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer);
+                    break;
+                case AT_EVENT_TYPE_COMMAND:
+                    LOG_WARNING("Removing COMMAND-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer);
+                    break;
+                case AT_EVENT_TYPE_COMMAND_ARG:
+                    LOG_WARNING("Removing COMMAND_ARG-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer);
+                    break;
+                case AT_EVENT_TYPE_RESPONSE_CODE:
+                    LOG_WARNING("Removing RESPONSE_CODE-event (%d) from AtResponseQueue!", (int) event->ResponseCode);
+                    break;
+                case AT_EVENT_TYPE_MISC:
+                    LOG_WARNING("Removing MISC-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer);
+                    break;
+                case AT_EVENT_TYPE_ERROR:
+                    LOG_WARNING("Removing ERROR-event from AtResponseQueue!");
+                    break;
+                }
+            }
+            else
+            {
+                LOG_WARNING("Removing unknown unhandled event from AtResponseQueue!");
+            }
+#endif
             AtResponseQueue_MarkBufferAsUnused();
 
-            AtResponseQueueEntry_T *event;
             if (RETCODE_OK != AtResponseQueue_GetEvent(0, &event)
                     || AT_EVENT_TYPE_COMMAND == event->Type)
             {
@@ -223,58 +247,41 @@ Retcode_T CellularEngine_HandleEvents(void)
     return retcode;
 }
 
-Retcode_T CellularEngine_Init(Cellular_CallbackFunction_T EventCallback)
+Retcode_T Engine_Initialize(Cellular_StateChanged_T onStateChanged)
 {
-    if (NULL == EventCallback)
+    if (NULL == onStateChanged)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
 
-    NotifyEvent = EventCallback;
-    memset(&CellularInitStatus, 0, sizeof(CellularInitStatus));
+    OnStateChanged = onStateChanged;
 
     Retcode_T status;
 
-#ifdef BCDS_LOGGING
-    status = Logging_Init(Logging_AsyncRecorder, Logging_UARTAppender);
-    if (RETCODE_OK != status)
-    {
-        return status;
-    }
-#endif /* BCDS_LOGGING */
-
-    LOG_INFO("CellularEngine init");
+    LOG_DEBUG("Initializing Cellular engine.");
 
     // 1. Create RingBuffer for receiving
     RingBuffer_Initialize(&UartRxBufDescr, UartRxReadBuffer, sizeof(UartRxReadBuffer));
 
     // 2. Setup RX/TX signaling
-    AtResponseParser_RxWakeupHandle = xSemaphoreCreateBinary();
-    if (NULL == AtResponseParser_RxWakeupHandle)
-    {
-        LOG_FATAL("Cellular engine init failed: AtResponseParser_RxWakeupHandle create");
-        return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_OUT_OF_RESOURCES);
-    }
+    AtResponseParser_RxWakeupHandle = xSemaphoreCreateBinaryStatic(&AtResponseParser_RxWakeupBuffer);
+    assert(NULL != AtResponseParser_RxWakeupHandle); /* due to static allocation */
 
-    CellularDriver_TxWakeupHandle = xSemaphoreCreateBinary();
-    if (NULL == CellularDriver_TxWakeupHandle)
-    {
-        LOG_FATAL("Cellular engine init failed: CellularDriver_TxWakeupHandle create");
-        return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_OUT_OF_RESOURCES);
-    }
+    CellularDriver_TxWakeupHandle = xSemaphoreCreateBinaryStatic(&CellularDriver_TxWakeupBuffer);
+    assert(NULL != CellularDriver_TxWakeupHandle); /* due to static allocation */
 
     // 3. Setup the hardware using the BSP
-    status = CellularBsp_Init(Cellular_Callback_ISR, &UartRxByte);
+    status = Hardware_Initialize(HandleMcuIsrCallback, &UartRxByte);
     if (RETCODE_OK != status)
     {
-        LOG_FATAL("Cellular engine init failed: CellularBsp_Init");
+        LOG_FATAL("Failed to initialize Hardware!");
         return status;
     }
 
-    status = CellularBsp_GetCommunicationChannel(&CellularSerialDevice);
+    status = Hardware_GetCommunicationChannel(&CellularSerialDevice);
     if (RETCODE_OK != status)
     {
-        LOG_FATAL("Cellular engine init failed: CellularBsp_getCommunicationChannel");
+        LOG_FATAL("Failed to obtain communications-channel!");
         return status;
     }
 
@@ -282,42 +289,30 @@ Retcode_T CellularEngine_Init(Cellular_CallbackFunction_T EventCallback)
     status = AtResponseQueue_Init();
     if (RETCODE_OK != status)
     {
-        LOG_FATAL("Cellular engine init failed: AtResponseQueue_Init");
+        LOG_FATAL("Failed to initialize AtResponseQueue!");
         return status;
     }
 
-    CellularEngine_SetFlukeCharFilterEnabled(false);
+    Engine_SetFlukeCharFilterEnabled(false);
     AtResponseQueue_RegisterWithResponseParser();
 
-    CellularDriver_RequestLock = xSemaphoreCreateMutex();
-    if (NULL == CellularDriver_RequestLock)
-    {
-        LOG_FATAL("Cellular engine init failed: CellularDriver_RequestLock create");
-        return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_OUT_OF_RESOURCES);
-    }
+    CellularDriver_RequestLock = xSemaphoreCreateMutexStatic(&CellularDriver_RequestBuffer);
+    assert(NULL != CellularDriver_RequestLock); /* due to static allocation */
 
     // 5. Setup AT response parser task and Cellular request queue task
-    status = xTaskCreate(AtResponseParser_Task, "CellularAtResponseParser", CELLULAR_RESP_TASK_STACK_SIZE, NULL, CELLULAR_RESP_TASK_PRIORITY, &AtResponseParser_TaskHandle);
-    if (pdPASS != status)
-    {
-        LOG_FATAL("Cellular engine init failed: create AtResponseParser_Task");
-        return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_OUT_OF_RESOURCES);
-    }
+    AtResponseParser_TaskHandle = xTaskCreateStatic(AtResponseParser_Task, "CellularResp", CELLULAR_RESP_TASK_STACK_SIZE, NULL, CELLULAR_RESP_TASK_PRIORITY, AtResponseParser_TaskStack, &AtResponseParser_TaskBuffer);
+    assert(NULL != AtResponseParser_TaskHandle); /* due to static allocation */
 
-    status = xTaskCreate(CellularDriver_Task, "CellDrv", CELLULAR_DRV_TASK_STACK_SIZE, NULL, CELLULAR_DRV_TASK_PRIORITY, &CellularDriver_TaskHandle);
-    if (pdPASS != status)
-    {
-        LOG_FATAL("Cellular engine init failed: create CellularDriver_Task");
-        return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_OUT_OF_RESOURCES);
-    }
-    /* reset device error */
-    CellularEngine_SetDeviceError(RETCODE_OK);
+    CellularDriver_TaskHandle = xTaskCreateStatic(CellularDriver_Task, "CellularDrv", CELLULAR_DRV_TASK_STACK_SIZE, NULL, CELLULAR_DRV_TASK_PRIORITY, CellularDriver_TaskStack, &CellularDriver_TaskBuffer);
+    assert(NULL != CellularDriver_TaskHandle); /* due to static allocation */
 
-    LOG_INFO("CellularEngine init done");
+    State = CELLULAR_STATE_POWEROFF;
+    EchoModeEnabled = true;
+
     return RETCODE_OK;
 }
 
-Retcode_T CellularEngine_SendAtCommand(const uint8_t *buffer, uint32_t BufferLength)
+Retcode_T Engine_SendAtCommand(const uint8_t* buffer, uint32_t bufferLength)
 {
     Retcode_T ret = RETCODE_OK;
     if (NULL == buffer)
@@ -333,8 +328,7 @@ Retcode_T CellularEngine_SendAtCommand(const uint8_t *buffer, uint32_t BufferLen
     /* ensure the semaphore is NOT signaled as we begin to send */
     (void) xSemaphoreTake(CellularDriver_TxWakeupHandle, 0);
 
-    ret = MCU_UART_Send(CellularSerialDevice, (uint8_t *) buffer, BufferLength);
-
+    ret = MCU_UART_Send(CellularSerialDevice, (uint8_t*) buffer, bufferLength);
     if (RETCODE_OK != ret)
     {
         return ret;
@@ -351,60 +345,54 @@ Retcode_T CellularEngine_SendAtCommand(const uint8_t *buffer, uint32_t BufferLen
     (void) AtResponseQueue_GetEvent(CELLULAR_RESPONSE_QUEUE_WAIT_TIME, &entry);
 
     /* handle URC responses */
-    (void) CellularUrc_HandleResponses();
+    (void) Urc_HandleResponses();
 
     return RETCODE_OK;
 }
 
-Retcode_T CellularEngine_SendAtCmdWaitEcho(uint32_t timeout, const char *str)
+Retcode_T Engine_SendAtCommandWaitEcho(const uint8_t* buffer, uint32_t bufferLength, uint32_t timeout)
 {
-    if (NULL == str)
+    if (NULL == buffer)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
 
-    uint32_t len = strlen(str);
-    Retcode_T retcode = CellularEngine_SendAtCommand((uint8_t *) str, len);
+    Retcode_T retcode = Engine_SendAtCommand(buffer, bufferLength);
     if (RETCODE_OK != retcode)
     {
         LOG_ERROR("Failed to send command: %x", (unsigned int) retcode);
         return retcode;
     }
 
-    return AtResponseQueue_WaitForNamedCmdEcho(timeout, (uint8_t *) str, len - strlen(ATCMD_AT_CRLF));
+    if (EchoModeEnabled)
+    {
+        return AtResponseQueue_WaitForNamedCmdEcho(timeout, buffer, bufferLength - strlen(ENGINE_ATCMD_FOOTER));
+    }
+    else
+    {
+        /* There should be no echo to wait for, so return. */
+        return RETCODE_OK;
+    }
 }
 
-void CellularEngine_SetFlukeCharFilterEnabled(bool value)
+void Engine_SetFlukeCharFilterEnabled(bool value)
 {
     IsFlukeFilterEnabled = value;
 }
 
-Cellular_DeviceStatus_T CellularEngine_GetDeviceStatus(void)
+void Engine_NotifyNewState(Cellular_State_T newState, void* param, uint32_t len)
 {
-    return DeviceStatus;
-}
-
-void CellularEngine_SetDeviceStatus(Cellular_DeviceStatus_T status, Cellular_CallbackEvent_T event, void *info)
-{
-    LOG_DEBUG("status: %d, event: %d", (int) status, (int) event);
-    DeviceStatus = status;
-    if (NotifyEvent)
+    assert(NULL != OnStateChanged);
+    if (newState != State)
     {
-        NotifyEvent(event, info);
+        Cellular_State_T oldState = State;
+        State = newState;
+
+        OnStateChanged(oldState, newState, param, len);
     }
 }
 
-Retcode_T CellularEngine_GetDeviceError(void)
-{
-    return DeviceError;
-}
-
-void CellularEngine_SetDeviceError(Retcode_T error)
-{
-    DeviceError = error;
-}
-
-Retcode_T CellularRequest_Dispatch(uint32_t timeout, CellularRequest_CallableFunction_T function, void* parameter, uint32_t ParameterLength)
+Retcode_T Engine_Dispatch(CellularRequest_CallableFunction_T function, uint32_t timeout, void* parameter, uint32_t ParameterLength)
 {
     if (NULL == function)
     {
@@ -428,19 +416,19 @@ Retcode_T CellularRequest_Dispatch(uint32_t timeout, CellularRequest_CallableFun
     return retcode;
 }
 
-void CellularEngine_SetCustomAtResponseParser(AtResponseParserCallback_T callback)
+void Engine_EchoModeEnabled(bool echoMode)
 {
-    CustomAtResponseParser = callback;
+    EchoModeEnabled = echoMode;
 }
 
-Retcode_T CellularEngine_Deinit(void)
+Retcode_T Engine_Deinitialize(void)
 {
     Retcode_T ret = RETCODE_OK;
 
     assert(NULL != CellularDriver_RequestLock &&
             NULL != AtResponseParser_RxWakeupHandle &&
             NULL != CellularDriver_TxWakeupHandle &&
-            NULL != NotifyEvent);
+            NULL != OnStateChanged);
 
     vSemaphoreDelete(CellularDriver_RequestLock);
     CellularDriver_RequestLock = NULL;
@@ -457,7 +445,7 @@ Retcode_T CellularEngine_Deinit(void)
         return ret;
     }
 
-    ret = CellularBsp_Deinit();
+    ret = Hardware_Deinitialize();
     if (RETCODE_OK != ret)
     {
         LOG_FATAL("Cellular engine deinit failed: CellularBsp_Deinit");
@@ -474,18 +462,7 @@ Retcode_T CellularEngine_Deinit(void)
     vSemaphoreDelete(CellularDriver_TxWakeupHandle);
     CellularDriver_TxWakeupHandle = NULL;
 
-    NotifyEvent = NULL;
+    OnStateChanged = NULL;
 
-    return RETCODE_OK;
-}
-
-Retcode_T Cellular_ReadData(uint8_t* data, uint32_t dataLength, uint32_t* dataRead)
-{
-    if((NULL == data) || (NULL == dataRead))
-    {
-        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
-    }
-
-    *dataRead = RingBuffer_Read(&UartRxBufDescr, data, dataLength);
     return RETCODE_OK;
 }

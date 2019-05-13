@@ -14,7 +14,7 @@ subdir('thirdparty/SeggerRTT')
 # Get kiso libraries
 subdir('core/essentials')
 subdir('core/utils')
-#subdir('core/connectivity/cellular')
+subdir('core/connectivity/cellular')
 
 # Get application
 subdir('examples/CommonGateway/c-leds')
