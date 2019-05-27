@@ -75,6 +75,7 @@ uint8_t buffer[LOG_BUFFER_SIZE];
 
 static Retcode_T UartAppenderInit(void *init)
 {
+    (void)init;
     HWHandle_T uartHandle=NULL;
     Retcode_T retcode = BSP_TestInterface_Connect();
     if (RETCODE_OK == retcode)
@@ -99,16 +100,18 @@ static Retcode_T UartAppenderInit(void *init)
 
 static Retcode_T UartAppenderWrite(const char *message, uint32_t length)
 {
-    return UARTTransceiver_WriteData(&LogTransceiver, message, length, LOG_APPENDER_TIMEOUT);
+    return UARTTransceiver_WriteData(&LogTransceiver, (uint8_t *)message, length, LOG_APPENDER_TIMEOUT);
 }
 
 static void UartCallback(UART_T uart, struct MCU_UART_Event_S event)
 {
+    (void)uart;
     UARTTransceiver_LoopCallback(&LogTransceiver, event);
 }
 
 static bool LogCheckEndFrameFunc(uint8_t lastByte)
 {
+    (void)lastByte;
     return false;
 }
 

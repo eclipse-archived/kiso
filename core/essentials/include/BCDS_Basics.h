@@ -33,10 +33,10 @@
 #ifndef BCDS_BASICS_H_
 #define BCDS_BASICS_H_
 
-#include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
+#include <inttypes.h>
 
 #ifndef false
 #define false ((bool) 0)

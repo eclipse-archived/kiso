@@ -49,7 +49,7 @@
 #include "portmacro.h"
 
 /* Message structure definition via macros*/
-#define LOG_LINE_FMT            "%.10u %s %3u %.*s\t[%s:%d]\t"
+#define LOG_LINE_FMT "%" PRIu32 " %s %" PRIu32 " %.*s\t[%s:%" PRIu32 "]\t"
 #define LOG_LINE_ENDING         "\r\n"
 
 const char *LOG_LEVEL_STR[LOG_LEVEL_COUNT] =

@@ -31,6 +31,7 @@
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
+Retcode_T BSP_TestInterface_Control(uint32_t command, void* arg);
 void USART1_IRQHandler(void);
 
 /*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/

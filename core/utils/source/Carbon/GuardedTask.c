@@ -203,28 +203,4 @@ Retcode_T GuardedTask_SignalFromIsr(GuardedTask_T* handle)
     return retcode;
 }
 
-/* Deprecated function. See header file for more information */
-Retcode_T GuardedTask_deinitialize(GuardedTask_T* handle)
-{
-	return(GuardedTask_Deinitialize(handle));
-}
-
-/* Deprecated function. See header file for more information */
-Retcode_T GuardedTask_initialize(GuardedTask_T* handle, GuardedTask_Function_T taskRunFunction, const char* taskName, uint32_t taskPriority, uint32_t taskStackSize)
-{
-	return(GuardedTask_Initialize(handle, taskRunFunction, taskName, taskPriority, taskStackSize));
-}
-
-/* Deprecated function. See header file for more information */
-Retcode_T GuardedTask_signal(GuardedTask_T* handle)
-{
-	return(GuardedTask_Signal(handle));
-}
-
-/* Deprecated function. See header file for more information */
-Retcode_T GuardedTask_signalFromIsr(GuardedTask_T* handle)
-{
-	return(GuardedTask_SignalFromIsr(handle));
-}
-
 #endif /* if BCDS_FEATURE_GUARDEDTASK */

@@ -90,22 +90,5 @@ void Assert_Dynamic(const unsigned long line, const unsigned char * const file)
 #endif
 }
 
-/** LCOV_EXCL_START : Start of section where code coverage is ignored.
- * Ignore code coverage for the deprecated APIs.*/
-
-/* Deprecated function. See header file for more information */
-Retcode_T Assert_initialize(Assert_Callback_T callback)
-{
-    return (Assert_Initialize(callback));
-}
-
-/* Deprecated function. See header file for more information */
-void Assert_dynamic(const unsigned long line, const unsigned char * const file)
-{
-    Assert_Dynamic(line,file);
-}
-
-/** LCOV_EXCL_STOP : End of section where code coverage is ignored. */
-
 #endif /* NDEBUG */
 

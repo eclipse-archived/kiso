@@ -94,27 +94,4 @@ void Retcode_RaiseErrorFromIsr(Retcode_T error)
     errorHandlingFunc(error, true);
 }
 
-/** LCOV_EXCL_START : Start of section where code coverage is ignored.
- * Ignore code coverage for the deprecated APIs.*/
-
-/* Deprecated function. See header file for more information */
-Retcode_T Retcode_initialize(Retcode_ErrorHandlingFunc_T func)
-{
-    return (Retcode_Initialize(func));
-}
-
-/* Deprecated function. See header file for more information */
-void Retcode_raiseError(Retcode_T error)
-{
-    Retcode_RaiseError(error);
-}
-
-/* Deprecated function. See header file for more information */
-void Retcode_raiseErrorFromIsr(Retcode_T error)
-{
-    Retcode_RaiseErrorFromIsr(error);
-}
-
-/** LCOV_EXCL_STOP : End of section where code coverage is ignored. */
-
 /** ************************************************************************* */

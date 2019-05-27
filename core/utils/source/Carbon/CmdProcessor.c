@@ -240,33 +240,4 @@ static void Dequeue(CmdProcessor_T * cmdProcessor)
     }
 }
 
-/* Deprecated function. See header file for more information */
-Retcode_T CmdProcessor_initialize(
-        CmdProcessor_T *cmdProcessor, char *name,
-        uint32_t taskPriority, uint32_t taskStackDepth, uint32_t queueSize)
-{
-	return(CmdProcessor_Initialize(cmdProcessor, name, taskPriority, taskStackDepth, queueSize));
-}
-
-/* Deprecated function. See header file for more information */
-Retcode_T CmdProcessor_enqueue(CmdProcessor_T *cmdProcessor, CmdProcessor_Func_T func, void *param1, uint32_t param2)
-{
-	return(CmdProcessor_Enqueue(cmdProcessor, func, param1, param2));
-}
-/* Deprecated function. See header file for more information */
-Retcode_T CmdProcessor_enqueueFromIsr(CmdProcessor_T *cmdProcessor, CmdProcessor_Func_T func, void *param1, uint32_t param2)
-{
-	return (CmdProcessor_EnqueueFromIsr(cmdProcessor, func, param1, param2));
-}
-/* Deprecated function. See header file for more information */
-void CmdProcessor_suspend(CmdProcessor_T *cmdProcessor)
-{
-	CmdProcessor_Suspend(cmdProcessor);
-}
-/* Deprecated function. See header file for more information */
-void CmdProcessor_resume(CmdProcessor_T *cmdProcessor)
-{
-	CmdProcessor_Resume(cmdProcessor);
-}
-
 #endif /* if BCDS_FEATURE_CMDPROCESSOR */
