@@ -443,7 +443,6 @@ static int32_t AtrpStateMiscContent(uint8_t* buffer, uint32_t len)
 
     if (status & (ATRP_CONSUME_STATUS_FOUND_DELIMITERA))
     {
-        uint32_t NewLength;
         //uint8_t* NewBuffer = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
         state.Buffer[state.BufferPosition++]='\n';
         if (result > 0 && NULL != ATRP_MISC_EVENT)
