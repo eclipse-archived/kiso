@@ -11,4 +11,11 @@ menu:
     weight: 3
 ---
 
-The following people are commiters of Eclipse Kiso:
+# Team
+The following people are committers of Eclipse Kiso:
+
+- Lars Beseke
+- Mohamed Ali Khalifi
+- Simon Wegendt
+- Yong Shen
+- Sebastian Fischer
