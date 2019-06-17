@@ -7,7 +7,7 @@ toc: true
 menu:
   main:
     parent: 4. Contribution guide
-    identifier: contribution_introduction
+    identifier: introduction_contribution
     weight: 1
 ---
 

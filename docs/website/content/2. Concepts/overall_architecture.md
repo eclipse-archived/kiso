@@ -18,6 +18,7 @@ Kiso was build to answer the challenges that comes with the development of the I
 - Battery management
 - Small memory footprint
 - Broad sensor support
+- Broad MCUs support
 - Broad connectivity support
 - Firmware update mechanisms and device management
 

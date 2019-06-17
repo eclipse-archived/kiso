@@ -42,7 +42,7 @@ canonifyurls = true
     	code = "Ubuntu Mono"
 
 [social]
-	mattermost = "eclipse_kiso"
+	mattermost = "eclipse/channels/kiso"
 	github  = "eclipse/kiso"
 
 [[menu.main]]
@@ -66,7 +66,11 @@ canonifyurls = true
     weight = 5
     url = "5. Releases/"
 [[menu.main]]
-    name = "6. Frequently asked questions"
+    name = "6. Reference manual"
     weight = 6
-    url = "6. Frequently asked questions/"
+    url = "6. Reference manual"
+[[menu.main]]
+    name = "7. Frequently asked questions"
+    weight = 7
+    url = "7. Frequently asked questions/"
     

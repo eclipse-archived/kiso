@@ -7,7 +7,7 @@ toc: true
 menu:
   main:
     parent: 5. Releases
-    identifier: release_introduction
+    identifier: introduction_releases
     weight: 1
 ---
 
