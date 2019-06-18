@@ -1,16 +1,16 @@
-/********************************************************************************
-* Copyright (c) 2010-2019 Robert Bosch GmbH
-*
-* This program and the accompanying materials are made available under the
-* terms of the Eclipse Public License 2.0 which is available at
-* http://www.eclipse.org/legal/epl-2.0.
-*
-* SPDX-License-Identifier: EPL-2.0
-*
-* Contributors:
-*    Robert Bosch GmbH - initial contribution
-*
-********************************************************************************/
+/**********************************************************************************************************************
+ * Copyright (c) 2010-2019 Robert Bosch GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Robert Bosch GmbH - initial contribution
+ *
+ **********************************************************************************************************************/
 
 /**
  * @file
@@ -18,17 +18,26 @@
  * @brief
  * Handles MCU STM32 SPI driver encapsulation
  */
-
+/*---------------------- INCLUDED HEADERS ---------------------------------------------------------------------------*/
 #include "BCDS_MCU_SPI.h"
 
 #if BCDS_FEATURE_SPI
-
 #include "BCDS_MCU_SPI_Handle.h"
+/*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
 #undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_ESSENTIALS_MODULE_ID_SPI
+#define BCDS_MODULE_ID              BCDS_ESSENTIALS_MODULE_ID_SPI
 
-/* The STM32Cube Library provides a HAL driver for SPI I/O operations.
+#define SPI_DEFAULT_TIMEOUT_MS      UINT32_C(1000)
+#define SPI_MIN_TIMEOUT_MS          UINT32_C(1)
+#define SPI_8BIT_DATA_SIZE          UINT32_C(8)
+#define SPI_SAFETY_FACTOR           UINT32_C(2)
+#define SPI_SECOND_TO_MILLI         UINT32_C(1000)
+
+/*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
+
+/*
+ * The STM32Cube Library provides a HAL driver for SPI I/O operations.
  * However depending on the configured transfer mode (Polling, Interrupt or DMA)
  * the developer has to call different functions (see stm32l4xx_hal_spi.h).
  * Only the function signatures for IRQ and DMA transfer are the same. The
@@ -39,264 +48,550 @@
  * interface upon initialization.
  */
 
-void MCU_BSP_SPI_IRQ_Callback(SPI_T spi);
-void MCU_BSP_SPI_DMA_TX_Callback(SPI_T spi);
-void MCU_BSP_SPI_DMA_RX_Callback(SPI_T spi);
+void SPI_IRQHandler(SPI_T spi);
+void SPI_DMATxHandler(SPI_T spi);
+void SPI_DMARxHandler(SPI_T spi);
 
+Retcode_T SPI_SendPollMode(struct MCU_SPI_S* spi);
+Retcode_T SPI_ReceivePollMode(struct MCU_SPI_S* spi);
+Retcode_T SPI_TransferPollMode(struct MCU_SPI_S* spi);
 
+Retcode_T SPI_SendIntMode(struct MCU_SPI_S* spi);
+Retcode_T SPI_ReceiveIntMode(struct MCU_SPI_S* spi);
+Retcode_T SPI_TransferIntMode(struct MCU_SPI_S* spi);
+
+Retcode_T SPI_SendDmaMode(struct MCU_SPI_S* spi);
+Retcode_T SPI_ReceiveDmaMode(struct MCU_SPI_S* spi);
+Retcode_T SPI_TransferDmaMode(struct MCU_SPI_S* spi);
+
+Retcode_T SPI_CancelTransaction(struct MCU_SPI_S* spi);
+
+/*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/
+
+/*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
 
 /** See description in the interface declaration */
 Retcode_T MCU_SPI_Initialize(SPI_T spi, MCU_SPI_Callback_T callback)
 {
-    Retcode_T rc = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_INVALID_PARAM);
+    Retcode_T retcode = RETCODE_OK;
 
     struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) spi;
-
-    if (pSPI && callback)
+    if (!pSPI)
     {
-
-        if (BCDS_HAL_TRANSFER_MODE_BLOCKING == pSPI->TransferMode)
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+    }
+    if (RETCODE_OK == retcode)
+    {
+        if (!IS_SPI_ALL_INSTANCE(pSPI->hspi.Instance))
         {
-            /* this mode is currently not supported */
-            rc = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NOT_SUPPORTED);
-        }
-        else if (BCDS_HAL_TRANSFER_MODE_INTERRUPT == pSPI->TransferMode)
-        {
-        	pSPI->IRQCallback = MCU_BSP_SPI_IRQ_Callback;
-        	pSPI->DmaTxCallback = NULL;
-        	pSPI->DmaRxCallback = NULL;
-        	pSPI->AppCallback = callback;
-
-        	pSPI->TxFunPtr = HAL_SPI_Transmit_IT;
-        	pSPI->RxFunPtr = HAL_SPI_Receive_IT;
-        	pSPI->TransferFunPtr = HAL_SPI_TransmitReceive_IT;
-
-            rc = RETCODE_OK;
-        }
-        else if (BCDS_HAL_TRANSFER_MODE_DMA == pSPI->TransferMode)
-        {
-        	pSPI->IRQCallback = MCU_BSP_SPI_IRQ_Callback;
-        	pSPI->DmaTxCallback = MCU_BSP_SPI_DMA_TX_Callback;
-        	pSPI->DmaRxCallback = MCU_BSP_SPI_DMA_RX_Callback;
-        	pSPI->AppCallback = callback;
-
-        	pSPI->TxFunPtr = HAL_SPI_Transmit_DMA;
-        	pSPI->RxFunPtr = HAL_SPI_Receive_DMA;
-        	pSPI->TransferFunPtr = HAL_SPI_TransmitReceive_DMA;
-
-            rc = RETCODE_OK;
-        }
-        else
-        {
-            /* all other modes are currently not supported */
-            rc = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_SPI_INVALID_PERIPHERAL);
         }
     }
+    if (RETCODE_OK == retcode)
+    {
+        if ((SPI_STATE_INIT != pSPI->State))
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
+        }
+    }
+    if (RETCODE_OK == retcode)
+    {
+        switch (pSPI->TransferMode)
+        {
+            case BCDS_HAL_TRANSFER_MODE_POLLING:
+                pSPI->IRQCallback = NULL;
+                pSPI->DmaTxCallback = NULL;
+                pSPI->DmaRxCallback = NULL;
+                pSPI->AppCallback = NULL;
 
-    return rc;
+                pSPI->TxFunPtr = SPI_SendPollMode;
+                pSPI->RxFunPtr = SPI_ReceivePollMode;
+                pSPI->TransferFunPtr = SPI_TransferPollMode;
+                pSPI->CancelFunPtr = SPI_CancelTransaction;
+                pSPI->State = SPI_STATE_READY;
+                break;
+
+            case BCDS_HAL_TRANSFER_MODE_INTERRUPT:
+                if (NULL != callback)
+                {
+                    pSPI->IRQCallback = SPI_IRQHandler;
+                    pSPI->DmaTxCallback = NULL;
+                    pSPI->DmaRxCallback = NULL;
+                    pSPI->AppCallback = callback;
+
+                    pSPI->TxFunPtr = SPI_SendIntMode;
+                    pSPI->RxFunPtr = SPI_ReceiveIntMode;
+                    pSPI->TransferFunPtr = SPI_TransferIntMode;
+                    pSPI->CancelFunPtr = SPI_CancelTransaction;
+                    pSPI->State = SPI_STATE_READY;
+                }
+                else
+                {
+                    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+                }
+                break;
+
+            case BCDS_HAL_TRANSFER_MODE_DMA:
+                if (NULL != callback)
+                {
+                    pSPI->IRQCallback = SPI_IRQHandler;
+                    pSPI->DmaTxCallback = SPI_DMATxHandler;
+                    pSPI->DmaRxCallback = SPI_DMARxHandler;
+                    pSPI->AppCallback = callback;
+
+                    pSPI->TxFunPtr = SPI_SendDmaMode;
+                    pSPI->RxFunPtr = SPI_ReceiveDmaMode;
+                    pSPI->TransferFunPtr = SPI_TransferDmaMode;
+                    pSPI->CancelFunPtr = SPI_CancelTransaction;
+                    pSPI->State = SPI_STATE_READY;
+                }
+                else
+                {
+                    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+                }
+                break;
+
+            default:
+                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
+                break;
+        }
+    }
+    return retcode;
 }
-
 
 /** See description in the interface declaration */
 Retcode_T MCU_SPI_Deinitialize(SPI_T spi)
 {
-    /* Here we are checking if the passed SPI handle is valid and if it
-     * is valid we mark our local interface context for that handle as being
-     * free again.
-     */
-    Retcode_T rc = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_INVALID_PARAM);
-    struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) spi;
-    if (pSPI)
-    {
-        /* Seems to be valid and initialized, now remove it from the
-         * SPI interface array
-         */
-    	pSPI->IRQCallback = NULL;
-    	pSPI->DmaTxCallback = NULL;
-    	pSPI->DmaRxCallback = NULL;
-    	pSPI->AppCallback = NULL;
-    	pSPI->TxFunPtr = NULL;
-    	pSPI->RxFunPtr = NULL;
-    	pSPI->TransferFunPtr = NULL;
+    Retcode_T retcode = RETCODE_OK;
 
-        rc = RETCODE_OK;
+    struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) spi;
+    if (!pSPI)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
-    return rc;
+    if (RETCODE_OK == retcode)
+    {
+        if ((SPI_STATE_READY != pSPI->State))
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
+        }
+    }
+    if (RETCODE_OK == retcode)
+    {
+        pSPI->State = SPI_STATE_INIT;
+    }
+    return retcode;
 }
 
 /** See description in the interface declaration */
 Retcode_T MCU_SPI_Send(SPI_T spi, uint8_t * data, uint32_t len)
 {
-    Retcode_T rc = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_INVALID_PARAM);
+    Retcode_T retcode = RETCODE_OK;
     struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) spi;
-    if (pSPI)
+
+    if (NULL == spi || NULL == data)
     {
-        if (data && len)
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+    }
+    if (RETCODE_OK == retcode)
+    {
+        if (UINT16_MAX < len)
         {
-            /* Need to send something but first check whether len is in uint16_t
-             * range because uint32_t sends are not supported by the STM driver
-             */
-            if (UINT16_MAX < len)
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
+        }
+    }
+    if (RETCODE_OK == retcode)
+    {
+        if (len != 0)
+        {
+            if (SPI_STATE_READY == pSPI->State)
             {
-                rc = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED);
+                pSPI->Transaction.pTxDataBuffer = data;
+                pSPI->Transaction.Size = len;
+                retcode = pSPI->TxFunPtr(pSPI);
             }
             else
             {
-                HAL_StatusTypeDef halStatus;
-                halStatus = pSPI->TxFunPtr(&pSPI->hspi, data, len);
-                if (HAL_OK == halStatus)
-                {
-                    rc = RETCODE_OK;
-                }
-                else
-                {
-                    rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
-                }
+                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
             }
         }
         else
         {
-            rc = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED);
+            if (SPI_STATE_TX == pSPI->State)
+            {
+                /* Application wants to cancel ongoing sending which is signaled by length == 0 */
+                retcode = pSPI->CancelFunPtr(pSPI);
+            }
+            else
+            {
+                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
+            }
         }
     }
-    return rc;
+    return retcode;
 }
 
 /** See description in the interface declaration */
 Retcode_T MCU_SPI_Receive(SPI_T spi, uint8_t * buffer, uint32_t len)
 {
-    Retcode_T rc = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_INVALID_PARAM);
+    Retcode_T retcode = RETCODE_OK;
     struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) spi;
-    if (pSPI)
+
+    if (NULL == spi || NULL == buffer)
     {
-        if (buffer && len)
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+    }
+    if (RETCODE_OK == retcode)
+    {
+        if (UINT16_MAX < len)
         {
-            /* Need to send something but first check whether len is in uint16_t
-             * range because uint32_t sends are not supported by the STM driver
-             */
-            if (UINT16_MAX < len)
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
+        }
+    }
+    if (RETCODE_OK == retcode)
+    {
+        if (len != 0)
+        {
+            if (SPI_STATE_READY == pSPI->State)
             {
-                rc = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED);
+                /*clear the receive buffer*/
+                for (uint32_t i = 0; i < len; i++)
+                {
+                    /* The STM32 HAL Library relies on the receive buffer in order to trigger the clock generation */
+                    buffer[i] = pSPI->DefaultData;
+                }
+                pSPI->Transaction.pRxDataBuffer = buffer;
+                pSPI->Transaction.Size = len;
+                retcode = pSPI->RxFunPtr(pSPI);
             }
             else
             {
-                /*
-                 * Before starting the transfer, it is strongly recommended to flush the rx fifo.
-                 * Otherwise the DMA rx might read the data that was still stored in the rx fifo
-                 * from previous SPI bus communication (like previous send calls). - bnl8fe
-                 */
-                volatile uint32_t dummy = 0;
-                BCDS_UNUSED(dummy);
-                while ((pSPI->hspi.Instance->SR & SPI_FLAG_RXNE) == SPI_FLAG_RXNE)
-                {
-                    dummy = pSPI->hspi.Instance->DR;
-                }
-
-                HAL_StatusTypeDef halStatus;
-                halStatus = pSPI->RxFunPtr(&pSPI->hspi, buffer, len);
-                if (HAL_OK == halStatus)
-                {
-                    rc = RETCODE_OK;
-                }
-                else
-                {
-                    rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
-                }
+                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
             }
         }
         else
         {
-            rc = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED);
+            if (SPI_STATE_RX == pSPI->State)
+            {
+                /* Application wants to cancel ongoing sending which is signaled by length == 0 */
+                retcode = pSPI->CancelFunPtr(pSPI);
+            }
+            else
+            {
+                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
+            }
         }
     }
-    return rc;
+    return retcode;
 }
 
 /** See description in the interface declaration */
-Retcode_T MCU_SPI_Transfer(SPI_T spi, uint8_t* data_out, uint8_t* data_in, uint32_t numTransfer)
+Retcode_T MCU_SPI_Transfer(SPI_T spi, uint8_t* data_out, uint8_t* data_in, uint32_t len)
 {
-    Retcode_T rc = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_INVALID_PARAM);
+    Retcode_T retcode = RETCODE_OK;
     struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) spi;
-    if (pSPI)
+
+    if (NULL == spi || NULL == data_out || NULL == data_in)
     {
-        if (data_out && data_in && numTransfer)
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+    }
+    if (RETCODE_OK == retcode)
+    {
+        if (UINT16_MAX < len)
         {
-            /* Need to send something but first check whether len is in uint16_t
-             * range because uint32_t sends are not supported by the STM driver
-             */
-            if (UINT16_MAX < numTransfer)
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
+        }
+    }
+    if (RETCODE_OK == retcode)
+    {
+        if (len != 0)
+        {
+            if (SPI_STATE_READY == pSPI->State)
             {
-                rc = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED);
+                pSPI->Transaction.pTxDataBuffer = data_out;
+                pSPI->Transaction.pRxDataBuffer = data_in;
+                pSPI->Transaction.Size = len;
+                retcode = pSPI->TransferFunPtr(pSPI);
             }
             else
             {
-                /*
-                 * Before starting the transfer, it is strongly recommended to flush the rx fifo.
-                 * Otherwise the DMA rx might read the data that was still stored in the rx fifo
-                 * from previous SPI bus communication (like previous send calls). - bnl8fe
-                 */
-                volatile uint32_t dummy = 0;
-                BCDS_UNUSED(dummy);
-                while ((pSPI->hspi.Instance->SR & SPI_FLAG_RXNE) == SPI_FLAG_RXNE)
-                {
-                    dummy = pSPI->hspi.Instance->DR;
-                }
-
-                HAL_StatusTypeDef halStatus;
-                halStatus = pSPI->TransferFunPtr(&pSPI->hspi, data_out, data_in, numTransfer);
-                if (HAL_OK == halStatus)
-                {
-                    rc = RETCODE_OK;
-                }
-                else
-                {
-                    rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
-                }
+                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
             }
         }
         else
         {
-            rc = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED);
+            if (SPI_STATE_RX == pSPI->State)
+            {
+                /* Application wants to cancel ongoing sending which is signaled by length == 0 */
+                retcode = pSPI->CancelFunPtr(pSPI);
+            }
+            else
+            {
+                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
+            }
         }
     }
-    return rc;
+    return retcode;
 }
 
+/** See description in the interface declaration */
 uint32_t MCU_SPI_GetDataCount(SPI_T spi)
 {
     uint32_t dataCount = 0;
     struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) spi;
     if (pSPI)
     {
-        HAL_SPI_StateTypeDef halState;
-        halState = HAL_SPI_GetState(&pSPI->hspi);
+        HAL_SPI_StateTypeDef halState = HAL_SPI_GetState(&pSPI->hspi);
 
         switch (halState)
         {
-        case HAL_SPI_STATE_BUSY_TX:
-            dataCount = pSPI->hspi.TxXferCount;
-            break;
-        case HAL_SPI_STATE_BUSY_RX:
-            dataCount = pSPI->hspi.RxXferCount;
-            break;
-        case HAL_SPI_STATE_BUSY_TX_RX:
-            dataCount = (pSPI->hspi.TxXferCount) + (pSPI->hspi.RxXferCount);
-            break;
-        default:
-            dataCount = 0;
-            break;
+            case HAL_SPI_STATE_BUSY_TX:
+                dataCount = pSPI->hspi.TxXferCount;
+                break;
+            case HAL_SPI_STATE_BUSY_RX:
+                dataCount = pSPI->hspi.RxXferCount;
+                break;
+            case HAL_SPI_STATE_BUSY_TX_RX:
+                dataCount = pSPI->hspi.RxXferCount;
+                break;
+            default:
+                dataCount = 0;
+                break;
         }
     }
     return dataCount;
+}
+
+/*---------------------- LOCAL FUNCTIONS IMPLEMENTATION -------------------------------------------------------------*/
+
+/**
+ * @brief       Sends data in polling mode
+ * @param       spi reference to the SPI control block (structure)
+ * @return      RETCODE_OK in case of success
+ *              RETCODE_FAILURE in case of STM32 HAL Library failure.
+ */
+Retcode_T SPI_SendPollMode(struct MCU_SPI_S* spi)
+{
+    Retcode_T retcode = RETCODE_OK;
+    uint32_t timeout_ms = SPI_DEFAULT_TIMEOUT_MS;
+    if (spi->DataRate)
+    {
+        timeout_ms = SPI_MIN_TIMEOUT_MS
+                + ((spi->Transaction.Size * SPI_8BIT_DATA_SIZE * SPI_SAFETY_FACTOR)
+                        / (1 + spi->DataRate / SPI_SECOND_TO_MILLI));
+    }
+
+    spi->State = SPI_STATE_TX;
+    if (HAL_OK
+            != HAL_SPI_Transmit(&spi->hspi, spi->Transaction.pTxDataBuffer, spi->Transaction.Size, timeout_ms))
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    }
+    spi->State = SPI_STATE_READY;
+    return retcode;
+}
+
+/**
+ * @brief       Receives data in polling mode
+ * @param       spi reference to the SPI control block (structure)
+ * @return      RETCODE_OK in case of success
+ *              RETCODE_FAILURE in case of STM32 HAL Library failure.
+ */
+Retcode_T SPI_ReceivePollMode(struct MCU_SPI_S* spi)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    uint32_t timeout_ms = SPI_DEFAULT_TIMEOUT_MS;
+    if (spi->DataRate)
+    {
+        timeout_ms = SPI_MIN_TIMEOUT_MS
+                + ((spi->Transaction.Size * SPI_8BIT_DATA_SIZE * SPI_SAFETY_FACTOR)
+                        / (1 + spi->DataRate / SPI_SECOND_TO_MILLI));
+    }
+    spi->State = SPI_STATE_RX;
+    if (HAL_OK
+            != HAL_SPI_Receive(&spi->hspi, spi->Transaction.pRxDataBuffer, spi->Transaction.Size, timeout_ms))
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    }
+    spi->State = SPI_STATE_READY;
+    return retcode;
+}
+
+/**
+ * @brief       Sends and receives data in polling mode
+ * @param       spi reference to the SPI control block (structure)
+ * @return      RETCODE_OK in case of success
+ *              RETCODE_FAILURE in case of STM32 HAL Library failure.
+ */
+Retcode_T SPI_TransferPollMode(struct MCU_SPI_S* spi)
+{
+    Retcode_T retcode = RETCODE_OK;
+    uint32_t timeout_ms = SPI_DEFAULT_TIMEOUT_MS;
+
+    if (spi->DataRate)
+    {
+        /* Calculate the timeout value as the double of the required time to process the transaction */
+        timeout_ms = SPI_MIN_TIMEOUT_MS
+                + ((spi->Transaction.Size * SPI_8BIT_DATA_SIZE * SPI_SAFETY_FACTOR)
+                        / (1 + spi->DataRate / SPI_SECOND_TO_MILLI));
+    }
+
+    spi->State = SPI_STATE_TX_RX;
+    if (HAL_OK
+            != HAL_SPI_TransmitReceive(&spi->hspi, spi->Transaction.pTxDataBuffer, spi->Transaction.pRxDataBuffer, spi->Transaction.Size, timeout_ms))
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    }
+    spi->State = SPI_STATE_READY;
+    return retcode;
+}
+
+/**
+ * @brief       Sends data in interrupt mode
+ * @param       spi reference to the SPI control block (structure)
+ * @return      RETCODE_OK in case of success
+ *              RETCODE_FAILURE in case of STM32 HAL Library failure.
+ */
+Retcode_T SPI_SendIntMode(struct MCU_SPI_S* spi)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    spi->State = SPI_STATE_TX;
+    if (HAL_OK != HAL_SPI_Transmit_IT(&spi->hspi, spi->Transaction.pTxDataBuffer, spi->Transaction.Size))
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+        spi->State = SPI_STATE_READY;
+    }
+    return retcode;
+}
+
+/**
+ * @brief       Receives data in interrupt mode
+ * @param       spi reference to the SPI control block (structure)
+ * @return      RETCODE_OK in case of success
+ *              RETCODE_FAILURE in case of STM32 HAL Library failure.
+ */
+Retcode_T SPI_ReceiveIntMode(struct MCU_SPI_S* spi)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    spi->State = SPI_STATE_RX;
+    if (HAL_OK != HAL_SPI_Receive_IT(&spi->hspi, spi->Transaction.pRxDataBuffer, spi->Transaction.Size))
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+        spi->State = SPI_STATE_READY;
+    }
+    return retcode;
+}
+
+/**
+ * @brief       Sends and receives data in interrupt mode
+ * @param       spi reference to the SPI control block (structure)
+ * @return      RETCODE_OK in case of success
+ *              RETCODE_FAILURE in case of STM32 HAL Library failure.
+ */
+Retcode_T SPI_TransferIntMode(struct MCU_SPI_S* spi)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    spi->State = SPI_STATE_TX_RX;
+    if (HAL_OK
+            != HAL_SPI_TransmitReceive_IT(&spi->hspi, spi->Transaction.pTxDataBuffer, spi->Transaction.pRxDataBuffer, spi->Transaction.Size))
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+        spi->State = SPI_STATE_READY;
+    }
+    return retcode;
+}
+
+/**
+ * @brief       Sends data in DMA mode
+ * @param       spi reference to the SPI control block (structure)
+ * @return      RETCODE_OK in case of success
+ *              RETCODE_FAILURE in case of STM32 HAL Library failure.
+ */
+Retcode_T SPI_SendDmaMode(struct MCU_SPI_S* spi)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    spi->State = SPI_STATE_TX;
+    if (HAL_OK != HAL_SPI_Transmit_DMA(&spi->hspi, spi->Transaction.pTxDataBuffer, spi->Transaction.Size))
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+        spi->State = SPI_STATE_READY;
+    }
+    return retcode;
+}
+
+/**
+ * @brief       Receives data in DMA mode
+ * @param       spi reference to the SPI control block (structure)
+ * @return      RETCODE_OK in case of success
+ *              RETCODE_FAILURE in case of STM32 HAL Library failure.
+ */
+
+Retcode_T SPI_ReceiveDmaMode(struct MCU_SPI_S* spi)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    spi->State = SPI_STATE_RX;
+    if (HAL_OK != HAL_SPI_Receive_DMA(&spi->hspi, spi->Transaction.pRxDataBuffer, spi->Transaction.Size))
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+        spi->State = SPI_STATE_READY;
+    }
+    return retcode;
+}
+
+/**
+ * @brief       Sends and receives data in DMA mode
+ * @param       spi reference to the SPI control block (structure)
+ * @return      RETCODE_OK in case of success
+ *              RETCODE_FAILURE in case of STM32 HAL Library failure.
+ */
+Retcode_T SPI_TransferDmaMode(struct MCU_SPI_S* spi)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    spi->State = SPI_STATE_TX_RX;
+    if (HAL_OK
+            != HAL_SPI_TransmitReceive_DMA(&spi->hspi, spi->Transaction.pTxDataBuffer, spi->Transaction.pRxDataBuffer, spi->Transaction.Size))
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+        spi->State = SPI_STATE_READY;
+    }
+    return retcode;
+}
+
+/**
+ * @brief       Cancels an ongoing transaction. Valid for all modes.
+ * @param       spi reference to the SPI control block (structure)
+ * @return      RETCODE_OK in case of success
+ *              RETCODE_FAILURE in case of STM32 HAL Library failure.
+ */
+
+Retcode_T SPI_CancelTransaction(struct MCU_SPI_S* spi)
+{
+    Retcode_T retcode = RETCODE_OK;
+    if (HAL_OK != HAL_SPI_Abort(&spi->hspi))
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    }
+    else
+    {
+        spi->State = SPI_STATE_READY;
+    }
+    return retcode;
 }
 
 /** SPI IRQ callback handler which is called back
  * by the BSP SPI IRQ handler
  * @param spi is the BSP handle for the interface
  */
-void MCU_BSP_SPI_IRQ_Callback(SPI_T spi)
+void SPI_IRQHandler(SPI_T spi)
 {
-	struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) spi;
+    struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) spi;
     if (pSPI)
     {
         HAL_SPI_IRQHandler(&pSPI->hspi);
@@ -308,9 +603,9 @@ void MCU_BSP_SPI_IRQ_Callback(SPI_T spi)
  * @param      dma: Handle to MCU uart (MCU_SPI_handle_S)
  * @retval     None
  */
-void MCU_BSP_SPI_DMA_RX_Callback(SPI_T spi)
+void SPI_DMARxHandler(SPI_T spi)
 {
-	struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) spi;
+    struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) spi;
     if (pSPI)
     {
         HAL_DMA_IRQHandler(pSPI->hspi.hdmarx);
@@ -322,9 +617,9 @@ void MCU_BSP_SPI_DMA_RX_Callback(SPI_T spi)
  * @param      dma: Handle to MCU uart (MCU_SPI_handle_S)
  * @retval     None
  */
-void MCU_BSP_SPI_DMA_TX_Callback(SPI_T spi)
+void SPI_DMATxHandler(SPI_T spi)
 {
-	struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) spi;
+    struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) spi;
     if (pSPI)
     {
         HAL_DMA_IRQHandler(pSPI->hspi.hdmatx);
@@ -355,36 +650,37 @@ void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
         uint32_t HalError = HAL_SPI_GetError(hspi);
         switch (HalError)
         {
-        case HAL_SPI_ERROR_MODF : /*!< MODF error                        */
-            Events.DataLoss = 1;
-            break;
-        case HAL_SPI_ERROR_CRC : /*!< CRC error                         */
-            Events.RxError = 1;
-            Events.DataLoss = 1;
-            break;
-        case HAL_SPI_ERROR_OVR : /*!< OVR error                         */
-            Events.RxError = 1;
-            Events.DataLoss = 1;
-            break;
-        case HAL_SPI_ERROR_FRE : /*!< FRE error                         */
-            Events.RxError = 1;
-            Events.DataLoss = 1;
-            break;
-        case HAL_SPI_ERROR_DMA : /*!< DMA transfer error                */
-            Events.RxError = 1;
-            Events.TxError = 1;
-            Events.DataLoss = 1;
-            break;
-        case HAL_SPI_ERROR_FLAG : /*!< Error on BSY/TXE/FTLVL/FRLVL Flag */
-            Events.RxError = 1;
-            Events.TxError = 1;
-            Events.DataLoss = 1;
-            break;
-        default:
-            break;
+            case HAL_SPI_ERROR_MODF: /*!< MODF error                        */
+                Events.DataLoss = 1;
+                break;
+            case HAL_SPI_ERROR_CRC: /*!< CRC error                         */
+                Events.RxError = 1;
+                Events.DataLoss = 1;
+                break;
+            case HAL_SPI_ERROR_OVR: /*!< OVR error                         */
+                Events.RxError = 1;
+                Events.DataLoss = 1;
+                break;
+            case HAL_SPI_ERROR_FRE: /*!< FRE error                         */
+                Events.RxError = 1;
+                Events.DataLoss = 1;
+                break;
+            case HAL_SPI_ERROR_DMA: /*!< DMA transfer error                */
+                Events.RxError = 1;
+                Events.TxError = 1;
+                Events.DataLoss = 1;
+                break;
+            case HAL_SPI_ERROR_FLAG: /*!< Error on BSY/TXE/FTLVL/FRLVL Flag */
+                Events.RxError = 1;
+                Events.TxError = 1;
+                Events.DataLoss = 1;
+                break;
+            default:
+                break;
         }
 
         pSPI->AppCallback((SPI_T) pSPI, Events);
+        pSPI->State = SPI_STATE_READY;
     }
 }
 
@@ -396,14 +692,17 @@ void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
  */
 void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
 {
-	struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) hspi;
+    struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) hspi;
     if (pSPI)
     {
-        /* Has a valid handle, now process the event */
-        struct MCU_SPI_Event_S Events = { 0, 0, 0, 0, 0, 0 };
-        Events.TxComplete = 1;
+        if (pSPI->State == SPI_STATE_TX)
+        {
+            struct MCU_SPI_Event_S Events = { 0, 0, 0, 0, 0, 0 };
+            Events.TxComplete = 1;
 
-        pSPI->AppCallback((SPI_T) pSPI, Events);
+            pSPI->AppCallback((SPI_T) pSPI, Events);
+            pSPI->State = SPI_STATE_READY;
+        }
     }
 }
 
@@ -415,14 +714,18 @@ void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
  */
 void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
 {
-	struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) hspi;
+    struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) hspi;
     if (pSPI)
     {
-        /* Has a valid handle, now process the event */
-        struct MCU_SPI_Event_S Events = { 0, 0, 0, 0, 0, 0 };
-        Events.RxComplete = 1;
+        if (pSPI->State == SPI_STATE_RX)
+        {
+            /* Has a valid handle, now process the event */
+            struct MCU_SPI_Event_S Events = { 0, 0, 0, 0, 0, 0 };
+            Events.RxComplete = 1;
 
-        pSPI->AppCallback((SPI_T) pSPI, Events);
+            pSPI->AppCallback((SPI_T) pSPI, Events);
+            pSPI->State = SPI_STATE_READY;
+        }
     }
 }
 
@@ -434,15 +737,19 @@ void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
  */
 void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
 {
-	struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) hspi;
+    struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) hspi;
     if (pSPI)
     {
-        /* Has a valid handle, now process the event */
-        struct MCU_SPI_Event_S Events = { 0, 0, 0, 0, 0, 0 };
-        Events.RxComplete = 1;
-        Events.TxComplete = 1;
+        if (pSPI->State == SPI_STATE_TX_RX)
+        {
+            /* Has a valid handle, now process the event */
+            struct MCU_SPI_Event_S Events = { 0, 0, 0, 0, 0, 0 };
+            Events.RxComplete = 1;
+            Events.TxComplete = 1;
 
-        pSPI->AppCallback((SPI_T) pSPI, Events);
+            pSPI->AppCallback((SPI_T) pSPI, Events);
+            pSPI->State = SPI_STATE_READY;
+        }
     }
 }
 
