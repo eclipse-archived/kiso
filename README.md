@@ -21,7 +21,7 @@ Please take a look at [documentation](documentation_link_anker)
 Please take a look at [doxygen documentation](doxygen_documentation_link_anker)
 
 ## Supported hardwares ##
-* CommonGateway
+* XDK
 * ... more to come
 
 ## Changelog ##

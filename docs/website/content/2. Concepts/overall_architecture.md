@@ -29,7 +29,7 @@ The key challenges in defining the architecture were:
 - What should be Kiso code, what should be application code?
 - Which components should exist within Kiso, what do they contain?
 
-We also need to consider [our quality goals]({{< ref "what_are_the_rules_i_need_to_take_care_of_when_i_contribute.md" >}}#our-quality-goals)
+We also need to consider [our quality goals]({{< ref "rules_for_development.md" >}}#our-quality-goals)
 
 ## The abstracted overview
 ![overview_abstract_kiso-error](/images/overview_abstract_kiso.png)

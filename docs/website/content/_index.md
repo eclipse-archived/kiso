@@ -19,5 +19,5 @@ Eclipse Kiso was designed from scratch as a software development kit for IoT dev
 - If you want to have a look at what we have today, I would recommend you to look at the [releases]({{< ref "introduction_releases.md" >}})
 
 ## Advance
-- **If you want to start contributing to Kiso, go to the [quick start]({{< ref "introduction_contribution.md" >}})**
+- **If you want to start contributing to Kiso, go to the [contributor guidelines]({{< ref "first_contribution.md" >}}).**
 - If you want to have an API overview of the latest release version, check out our latest [reference manual](#)
