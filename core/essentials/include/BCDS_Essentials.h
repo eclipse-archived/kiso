@@ -113,10 +113,12 @@ enum BCDS_HAL_HalRetcode_E
     RETCODE_LEUART_MAX = RETCODE_LEUART_GENERAL + HAL_RETURN_CODE_RANGE - 1, /**< End of LEUART return codes */
 
     /* HAL I2C RETURN CODES */
-    RETCODE_IC2_GENERAL, /**< General I2C return code */
+    RETCODE_I2C_GENERAL, /**< General I2C return code */
+    RETCODE_I2C_INVALID_PERIPHERAL, /**< General I2C return code */
+    RETCODE_I2C_NACK, /**< I2C NACK received */
 
     /* ... */
-    RETCODE_IC2_MAX = RETCODE_IC2_GENERAL + HAL_RETURN_CODE_RANGE - 1, /**< End of I2C return codes  */
+    RETCODE_I2C_MAX = RETCODE_I2C_GENERAL + HAL_RETURN_CODE_RANGE - 1, /**< End of I2C return codes  */
 
     /* HAL SLEEP RETURN CODES */
     RETCODE_SLEEP_GENERAL, /**< General Sleep return code */

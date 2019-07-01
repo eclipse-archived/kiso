@@ -1,21 +1,21 @@
 /********************************************************************************
-* Copyright (c) 2010-2019 Robert Bosch GmbH
-*
-* This program and the accompanying materials are made available under the
-* terms of the Eclipse Public License 2.0 which is available at
-* http://www.eclipse.org/legal/epl-2.0.
-*
-* SPDX-License-Identifier: EPL-2.0
-*
-* Contributors:
-*    Robert Bosch GmbH - initial contribution
-*
-********************************************************************************/
+ * Copyright (c) 2010-2019 Robert Bosch GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Robert Bosch GmbH - initial contribution
+ *
+ ********************************************************************************/
 
 /**
  * @file
  *
- * @brief Declares the I2C handle used by BSP and MCU for STM32 targets
+ * @brief       Declares the I2C handle used by BSP and MCU for STM32L4 targets
  *
  */
 
@@ -31,29 +31,7 @@
 #include "stm32l4xx_hal_i2c.h"
 
 /**
- * @brief This data type represents a function pointer which is used between
- * BSP and MCU I2C as a callback whenever an IRQ event/error is to be notified
- * from the BSP to the MCU I2C driver.
- *
- * @param [in] i2c : Handle of the I2C whose IRQ event should be handled.
- */
-typedef void (*MCU_BSPI2C_IRQ_Callback_T)(I2C_T i2c);
-
-/**
- * @brief Declares a function pointer for master receive and transmit functions
- * which has the same signature like:
- *  - HAL_I2C_Master_Transmit_IT
- *  - HAL_I2C_Master_Receive_IT
- *  - HAL_I2C_Master_Transmit_DMA
- *  - HAL_I2C_Master_Receive_DMA
- */
-typedef HAL_StatusTypeDef (*STM_HAL_RxTxFunPtr)(I2C_HandleTypeDef *hi2c,
-        uint16_t DevAddress,
-        uint8_t *pData,
-        uint16_t Size);
-
-/**
- * Enumeration of driver state machine states.
+ * @brief       Enumerates the driver state machine states.
  */
 typedef enum MCU_I2C_State_E
 {
@@ -62,54 +40,43 @@ typedef enum MCU_I2C_State_E
     I2C_STATE_TX,
     I2C_STATE_RX,
 } MCU_I2C_State_T;
+
 /**
- * @brief   Structure which is used as I2C handle.
- *
- * @detail  The handle is usually created by the BSP and fetched by the
- * application layer to use the I2C interface.
+ * @brief       Structure used internally for i2c transactions.
  */
-struct MCU_I2C_S
+struct MCU_I2C_Transaction_S
 {
-    /** Context struct of stm32 I2C driver*/
-    I2C_HandleTypeDef hi2c;
-    /** Function pointer of the MCU I2C EV IRQ callback handler which is used
-     * by the BSP to notify MCU about IRQ events. Will be set by MCU I2C upon
-     * initialization. */
-    MCU_BSPI2C_IRQ_Callback_T IRQCallback;
-    /** Function pointer of the MCU I2C Error IRQ callback handler which is
-     * used by the BSP to notify MCU about IRQ error events. Will be set by MCU
-     * I2C upon initialization. */
-    MCU_BSPI2C_IRQ_Callback_T ERRCallback;
-    /** Function pointer of the MCU I2C DMA Rx callback handler which is used
-     * by the BSP to notify MCU about DMA Rx events. Will be set by MCU I2C
-     * upon initialization and if transfer mode is set to DMA.*/
-    MCU_BSPI2C_IRQ_Callback_T DMARxCallback;
-    /** Function pointer of the MCU I2C DMA Tx callback handler which is used
-     * by the BSP to notify MCU about DMA Tx events. Will be set by MCU I2C
-     * upon initialization and if transfer mode is set to DMA.*/
-    MCU_BSPI2C_IRQ_Callback_T DMATxCallback;
-    /** Identifies the transfer mode that is currently configured for this I2C
-     * instance. This value will be set by the BSP upon configuration of the
-     * I2C interface.*/
-    enum BCDS_HAL_TransferMode_E TransferMode;
-    /** Current State of the I2C transceiver */
-    MCU_I2C_State_T State;
-
-    /** Callback function pointer that has been passed with a call to the
-     * initialize function. It is used to callback the application layer when
-     * needed.*/
-    MCU_I2C_Callback_T AppLayerCallback;
-    /** Function pointer to the vendor library Tx function. Will be set
-     *  upon initialization. */
-    HAL_StatusTypeDef (*TxFunPtr)(I2C_HandleTypeDef *hi2c, uint16_t DevAddress,
-            uint8_t *pData, uint16_t Size, uint32_t options);
-
-    /** Function pointer to the vendor library Rx function. Will be set upon
-     *  initialization.*/
-    HAL_StatusTypeDef (*RxFunPtr)(I2C_HandleTypeDef *hi2c, uint16_t DevAddress,
-            uint8_t *pData, uint16_t Size);
+    uint16_t DevAddress; /**< Slave address of the I2C device target of the transaction */
+    uint8_t *pDataBuffer; /**< Reference to the data buffer used for the transaction (Read/Write) */
+    uint16_t Size; /**< Count of bytes to be transmitted or received */
+    bool PrependRegAddr; /**< If set to true the driver will send the provided RegisterAddr first and then continues the transaction (send or receive) */
+    uint8_t RegisterAddr; /**< The register address to be written */
 };
 
-#endif /* BCDS_FEATURE_I2C && BCDS_I2C_COUNT */
+/**
+ * @brief       Structure which is used as I2C handle.
+ *
+ * @details     The handle is usually created by the BSP and fetched by the application layer to use the I2C interface.
+ */
+struct MCU_I2C_S;/* forward declaration of the structure */
+struct MCU_I2C_S
+{
+    I2C_HandleTypeDef hi2c; /**< Context struct of stm32 I2C driver*/
+    enum BCDS_HAL_TransferMode_E TransferMode; /**< The transfer mode configured for this I2C instance. This value will be set by the BSP upon configuration of the I2C interface.*/
+    uint32_t DataRate; /**< Data rate in bits per second as configured by the BSP */
+    MCU_I2C_State_T State; /** Current State of the I2C transceiver */
+    void (*IRQCallback)(I2C_T i2c); /**< Reference to the I2C_EV IRQ handler. Will be set by MCU I2C upon initialization.*/
+    void (*ERRCallback)(I2C_T i2c); /**< Reference to the I2C_ER IRQ handler. Will be set by MCU I2C upon initialization.*/
+    void (*DMARxCallback)(I2C_T i2c); /**< Reference to the DMA Rx IRQ handler. Will be set by MCU I2C upon initialization.*/
+    void (*DMATxCallback)(I2C_T i2c); /**< Reference to the DMA Tx IRQ handler. Will be set by MCU I2C upon initialization.*/
+    MCU_I2C_Callback_T AppLayerCallback; /**< Reference to the application callback which will be executed for event notification to the upper layers. */
+    Retcode_T (*SendFunPtr)(struct MCU_I2C_S *pi2c); /**< Reference to the send function. Will be set upon initialization depending on the mode in use. */
+    Retcode_T (*ReceiveFunPtr)(struct MCU_I2C_S *pi2c); /**< Reference to the receive function. Will be set upon initialization depending on the mode in use. */
+    Retcode_T (*ReadRegisterFunPtr)(struct MCU_I2C_S *pi2c); /**< Reference to the read register function. Will be set upon initialization depending on the mode in use. */
+    Retcode_T (*WriteRegisterFunPtr)(struct MCU_I2C_S *pi2c); /**< Reference to the write register function. Will be set upon initialization depending on the mode in use. */
+    void (*CancelFunPtr)(struct MCU_I2C_S *pi2c); /**< Reference to the cancel function. Will be set upon initialization.*/
+    struct MCU_I2C_Transaction_S Transaction; /**< Current transaction parameters */
+};
 
+#endif /* BCDS_FEATURE_I2C */
 #endif /* BCDS_MCU_STM32L4_I2C_HANDLE_H_ */
