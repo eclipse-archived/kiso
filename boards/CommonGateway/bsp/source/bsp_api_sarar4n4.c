@@ -55,8 +55,9 @@ static uint8_t bspState = (uint8_t) BSP_STATE_INIT;
  */
 static struct MCU_UART_S SaraR4N4_UARTStruct =
         {
-                .TransferMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
-
+                .TxMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
+                .RxMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
+                .Datarate = 115200,
                 .huart.Instance = USART2,
                 .huart.Init.BaudRate = 115200,
                 .huart.Init.WordLength = UART_WORDLENGTH_8B,

@@ -69,6 +69,7 @@ struct MCU_UART_Event_S
 {
     uint32_t RxError        :1; /**<  Receiver error has occurred.*/
     uint32_t RxComplete     :1; /**< The expected bytes have been received.*/
+    uint32_t RxAborted      :1; /**< The receive operation has been aborted for some reason (e.g error ).*/
     uint32_t TxError        :1; /**< Transmitter error has occurred.*/
     uint32_t TxComplete     :1; /**< All bytes have been sent.*/
     uint32_t Cts            :1; /**< CTS (Clear To Send) line state has changed. */
@@ -91,13 +92,11 @@ union MCU_UART_Event_U
 /**
  * @brief       Enumeration of special Uart interface error return codes
  */
-enum RETCODE_HAL_UART_E
+enum RETCODE_MCU_UART_E
 {
-    RETCODE_HAL_UART_DRIVER_RX_NOT_READY = RETCODE_FIRST_CUSTOM_CODE,
-    RETCODE_HAL_UART_DRIVER_TX_NOT_READY,
-    RETCODE_HAL_UART_DRIVER_RX_NOT_RUN,
-    RETCODE_HAL_UART_DRIVER_RESSOURCE_NOT_AVAILABLE,
+    RETCODE_MCU_UART_FAILURE = RETCODE_FIRST_CUSTOM_CODE ,
 };
+
 
 /**
  * @brief       Type definition for the UART event callback.

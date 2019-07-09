@@ -59,7 +59,7 @@ extern "C"
     /* Modes of operations of operation system */
 #define configUSE_PREEMPTION                     ( 1 )
 #define configSUPPORT_DYNAMIC_ALLOCATION         ( 1 )
-#define configSUPPORT_STATIC_ALLOCATION          ( 1 )
+#define configSUPPORT_STATIC_ALLOCATION          ( 0 )
 
 /* Energy saving modes */
 #define configUSE_TICKLESS_IDLE                  ( 1 )

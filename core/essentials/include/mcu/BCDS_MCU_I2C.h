@@ -65,6 +65,16 @@
 #if BCDS_FEATURE_I2C
 
 /**
+ * @brief       Enumeration of special I2C interface error return codes
+ */
+enum RETCODE_MCU_I2C_E
+{
+    RETCODE_MCU_I2C_FAILURE = RETCODE_FIRST_CUSTOM_CODE ,
+    RETCODE_MCU_I2C_NACK,
+    RETCODE_MCU_I2C_INVALID_PERIPHERAL
+};
+
+/**
  * @brief       Type definition for the I2C handle which is used to identify the I2C instance to work with.
  */
 typedef HWHandle_T I2C_T;

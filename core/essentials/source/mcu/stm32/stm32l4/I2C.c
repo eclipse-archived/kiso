@@ -86,7 +86,7 @@ Retcode_T MCU_I2C_Initialize(I2C_T i2c, MCU_I2C_Callback_T callback)
     {
         if (!IS_I2C_ALL_INSTANCE(pI2C->hi2c.Instance))
         {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_I2C_INVALID_PERIPHERAL);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_I2C_INVALID_PERIPHERAL);
         }
     }
     if (RETCODE_OK == retcode)
@@ -365,7 +365,7 @@ Retcode_T MCU_I2C_ReadRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAd
  * @param       pi2c reference to the I2C control structure.
  * @retval      RETCODE_OK in case of success
  * @retval      RETCODE_TIMEOUT in case of timeout
- * @retval      RETCODE_I2C_NACK in case of unexpected NACK reception
+ * @retval      RETCODE_MCU_I2C_NACK in case of unexpected NACK reception
  */
 static Retcode_T I2C_SendPollMode(struct MCU_I2C_S * pi2c)
 {
@@ -427,7 +427,7 @@ static Retcode_T I2C_SendPollMode(struct MCU_I2C_S * pi2c)
                 {
                     /* Wait for STOP to be sent */
                     (void) I2C_WaitUntilTimeout_ms(pi2c, I2C_IsSTOPFReset, timeout);
-                    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_I2C_NACK);
+                    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_I2C_NACK);
                 }
                 /* exit the loop once an error is detected */
                 break;
@@ -772,6 +772,7 @@ Retcode_T I2C_ReceiveDmaMode(struct MCU_I2C_S* pI2C)
  */
 Retcode_T I2C_WriteRegisterDmaMode(struct MCU_I2C_S* pI2C)
 {
+    BCDS_UNUSED(pI2C);
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
 }
 

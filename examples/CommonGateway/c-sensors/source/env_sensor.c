@@ -20,7 +20,7 @@
 #include "sensors_common.h"
 #include "env_sensor.h"
 
-#include "../../../../boards/CommonGateway/bsp/include/BSP_CommonGateway.h"
+#include "BSP_CommonGateway.h"
 #include "BCDS_BSP_BME280.h"
 #include "BCDS_BSP_Board.h"
 #include "BCDS_I2CTransceiver.h"

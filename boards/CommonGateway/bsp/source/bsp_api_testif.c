@@ -43,10 +43,11 @@ static uint8_t bspState = (uint8_t) BSP_STATE_INIT; /**< BSP State of the cellul
  */
 static struct MCU_UART_S testIf_UARTStruct =
         {
-                .TransferMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
-
+                .TxMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
+                .RxMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
+                .Datarate = 115200U,
                 .huart.Instance = USART1,
-                .huart.Init.BaudRate = 115200,
+                .huart.Init.BaudRate = 115200U,
                 .huart.Init.WordLength = UART_WORDLENGTH_8B,
                 .huart.Init.StopBits = UART_STOPBITS_1,
                 .huart.Init.Parity = UART_PARITY_NONE,
