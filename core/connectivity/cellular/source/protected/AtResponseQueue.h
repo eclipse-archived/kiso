@@ -67,17 +67,44 @@
 #define AT_RESPONSE_QUEUE_BUFFER_SIZE   (CELLULAR_AT_SEND_BUFFER_SIZE * 2)
 
 /**
- * @brief the types of events triggered by the AT response parser
+ * @brief
+ * 		the types of events triggered by the AT response parser
+ * @details
+ * 		the enum will be repesented as a enumeration using one bit per type for better optimization.
+ *      the types will be used to filter events in the queue through the event mask
  */
 typedef enum
 {
-    AT_EVENT_TYPE_COMMAND_ECHO,
-    AT_EVENT_TYPE_COMMAND,
-    AT_EVENT_TYPE_COMMAND_ARG,
-    AT_EVENT_TYPE_RESPONSE_CODE,
-    AT_EVENT_TYPE_MISC,
-    AT_EVENT_TYPE_ERROR
+    AT_EVENT_TYPE_COMMAND_ECHO=(1<<0),
+    AT_EVENT_TYPE_COMMAND=(1<<1),
+    AT_EVENT_TYPE_COMMAND_ARG=(1<<2),
+    AT_EVENT_TYPE_RESPONSE_CODE=(1<<3),
+    AT_EVENT_TYPE_MISC=(1<<4),
+    AT_EVENT_TYPE_ERROR=(1<<5),
+    AT_EVENT_TYPE_OUT_OF_RANGE = (1<<6)
 } AtEventType_T;
+
+
+/**
+ * @brief
+ * 		the macro enables all featured events
+*/
+#define AT_EVENT_TYPE_ALL   (  AT_EVENT_TYPE_COMMAND_ECHO  \
+                             | AT_EVENT_TYPE_COMMAND       \
+                             | AT_EVENT_TYPE_COMMAND_ARG   \
+                             | AT_EVENT_TYPE_RESPONSE_CODE \
+                             | AT_EVENT_TYPE_MISC \
+                             | AT_EVENT_TYPE_ERROR )
+
+/**
+ * @brief
+ * 		the macro enables all featured events except misc
+*/
+#define AT_EVENT_TYPE_ALL_EXCEPT_MISC   (  AT_EVENT_TYPE_COMMAND_ECHO  \
+                                         | AT_EVENT_TYPE_COMMAND       \
+                                         | AT_EVENT_TYPE_COMMAND_ARG   \
+                                         | AT_EVENT_TYPE_RESPONSE_CODE \
+                                         | AT_EVENT_TYPE_ERROR )
 
 /**
  * @brief An entry in the AT response queue
@@ -98,8 +125,11 @@ typedef enum
     RETCODE_AT_RESPONSE_QUEUE_TIMEOUT = AT_RESPONSE_PARSER_LAST_CUSTOM_CODE,
     RETCODE_AT_RESPONSE_QUEUE_WRONG_EVENT,
     RETCODE_AT_RESPONSE_QUEUE_ERROR_EVENT,
-    RETCODE_AT_RESPONSE_QUEUE_WRONG_RESPONSE
+    RETCODE_AT_RESPONSE_QUEUE_WRONG_RESPONSE,
+	RETCODE_AT_RESPONSE_QUEUE_LAST_CUSTOM_CODE
 } AtResponseQueueRetcode_T;
+
+
 
 /**
  * @brief Initializes the AT response queue by setting up the queue itself.
@@ -384,6 +414,28 @@ uint32_t AtResponseQueue_GetEventCount(void);
  * @param[in] len The length of the event payload
  */
 void AtResponseQueue_EnqueueEvent(AtEventType_T EventType, uint8_t *arg, uint32_t len);
+
+/**
+ * @brief set the event mask of the at response queue
+ *
+ *
+ * @param[in] Mask of EventType_T events
+ * @returns whether or not the provided event mask is valid or not
+ * @retval  RETCODE_OK - if the mask is in the valid range
+ * @retval  RETCODE_INVALID_PARAMETER - if the parameter is out of range
+ */
+Retcode_T AtResponseQueue_SetEventMask(uint32_t eventMask);
+
+
+/**
+ * @brief get the event mask of the AT-response-queue
+ *
+ *
+ * @param[in] Mask of EventType_T events
+ * @returns the currently set event mask
+ */
+
+uint32_t AtResponseQueue_GetEventMask(uint32_t eventMask);
 
 /**
  * @brief Clears the content of the response event queue

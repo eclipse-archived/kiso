@@ -1435,6 +1435,9 @@ Retcode_T At_Set_UDWNFILE(AT_UDWNFILE_Param_T*param)
 	int32_t len;
 	uint8_t * buffer;
 	uint32_t bufferLen;
+	AtResponseQueueEntry_T  * entry;
+	uint32_t eventCount;
+	uint32_t i;
 	assert(NULL!=param);
 
 	len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUDWNFILE_FMT,
@@ -1444,6 +1447,8 @@ Retcode_T At_Set_UDWNFILE(AT_UDWNFILE_Param_T*param)
 		retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
 	}
 
+	AtResponseQueue_SetEventMask(AT_EVENT_TYPE_ALL);
+
 	if (RETCODE_OK == retcode)
 	{
 		retcode = Engine_SendAtCommandWaitEcho((uint8_t*) Engine_AtSendBuffer, (uint32_t) len, CMD_UBLOX_FILE_TIMEOUT);
@@ -1452,16 +1457,24 @@ Retcode_T At_Set_UDWNFILE(AT_UDWNFILE_Param_T*param)
 	{
 		retcode = Engine_SendAtCommand(param->buffer, param->filesize);
 	}
-	if (RETCODE_OK == retcode)
-	{
-		retcode = AtResponseQueue_WaitForMiscContent(1000, &buffer,  &bufferLen);
 
-	}
-	if (RETCODE_OK == retcode)
+	/* we wait some time in order to fill up the queue with responses*/
+	vTaskDelay(2*CMD_UBLOX_FILE_TIMEOUT);
+
+	eventCount = AtResponseQueue_GetEventCount();
+	for (i=0; i<eventCount; i++)
 	{
-		AtResponseQueue_MarkBufferAsUnused();
-		retcode = Utils_WaitForAndHandleResponseCode(4*CMD_UBLOX_FILE_TIMEOUT, retcode);
+		retcode = AtResponseQueue_GetEvent(1000, &entry);
+		if (entry->Type == AT_EVENT_TYPE_MISC)
+		{
+			AtResponseQueue_MarkBufferAsUnused();
+		}
+		else
+		{
+			retcode = Utils_WaitForAndHandleResponseCode(4*CMD_UBLOX_FILE_TIMEOUT, retcode);
+		}
 	}
+	AtResponseQueue_SetEventMask(AT_EVENT_TYPE_ALL-AT_EVENT_TYPE_MISC);
 	return retcode;
 
 }
@@ -1559,6 +1572,7 @@ Retcode_T At_Set_URDBLOCK(AT_URDBLOCK_Param_T* param)
 	uint32_t  bufferLen;
 	int32_t len = 0;
 	uint32_t readLength=0;
+	AtResponseQueueEntry_T  * entry;
 
 	len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATURDBLOCK_FMT,
 			 param->filename, (int) param->offset, (int)param->length);
@@ -1567,9 +1581,17 @@ Retcode_T At_Set_URDBLOCK(AT_URDBLOCK_Param_T* param)
 		retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
 	}
 
+	AtResponseQueue_SetEventMask(AT_EVENT_TYPE_ALL);
+
 	if (RETCODE_OK == retcode)
 	{
 		retcode = Engine_SendAtCommandWaitEcho((uint8_t*) Engine_AtSendBuffer, (uint32_t) len, CMD_UBLOX_FILE_TIMEOUT);
+	}
+
+	retcode = AtResponseQueue_GetEvent(1000, &entry);
+	if (entry->Type == AT_EVENT_TYPE_MISC)
+	{
+		AtResponseQueue_MarkBufferAsUnused();
 	}
 
 	if (RETCODE_OK == retcode)
@@ -1584,7 +1606,7 @@ Retcode_T At_Set_URDBLOCK(AT_URDBLOCK_Param_T* param)
 				&buffer, &bufferLen);
 		AtResponseQueue_MarkBufferAsUnused();
 	}
-	// here we read back the lenght:
+	// here we read back the length:
 	if (RETCODE_OK == retcode)
 	{
 		retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT,
@@ -1609,10 +1631,18 @@ Retcode_T At_Set_URDBLOCK(AT_URDBLOCK_Param_T* param)
 	   AtResponseQueue_MarkBufferAsUnused();
 	   readLength+=bufferLen;
 	}
+	retcode = AtResponseQueue_GetEvent(1000, &entry);
+	if (entry->Type == AT_EVENT_TYPE_MISC)
+	{
+		AtResponseQueue_MarkBufferAsUnused();
+	}
+
 	if (RETCODE_OK == retcode)
 	{
 		retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_FILE_TIMEOUT, retcode);
 	}
+
+	AtResponseQueue_SetEventMask(AT_EVENT_TYPE_ALL- AT_EVENT_TYPE_MISC);
 
 	return retcode;
 }

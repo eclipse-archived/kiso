@@ -26,6 +26,7 @@
 
 #include "AtResponseParser.h"
 #include "AtResponseQueue.h"
+
 #include "AtUtils.h"
 #include "AtUrc.h"
 #include "Hardware.h"
@@ -57,34 +58,39 @@
  */
 #define CELLULAR_RESPONSE_QUEUE_WAIT_TIME      (UINT32_C(25) / portTICK_PERIOD_MS)
 
-static StaticSemaphore_t AtResponseParser_RxWakeupBuffer;
-static SemaphoreHandle_t AtResponseParser_RxWakeupHandle = NULL;
-static StaticSemaphore_t CellularDriver_TxWakeupBuffer;
-static SemaphoreHandle_t CellularDriver_TxWakeupHandle = NULL;
-static StaticTask_t AtResponseParser_TaskBuffer;
-static StackType_t AtResponseParser_TaskStack[CELLULAR_RESP_TASK_STACK_SIZE];
-static TaskHandle_t AtResponseParser_TaskHandle = NULL;
-static StaticTask_t CellularDriver_TaskBuffer;
-static StackType_t CellularDriver_TaskStack[CELLULAR_DRV_TASK_STACK_SIZE];
-static TaskHandle_t CellularDriver_TaskHandle = NULL;
 
-static UART_T CellularSerialDevice = (UART_T) NULL;
+static StaticSemaphore_t AtResponseParser_RxWakeupBuffer;   //!< Semaphore storage for rx data ready signalling
+static SemaphoreHandle_t AtResponseParser_RxWakeupHandle = NULL;  //!< Handle for rx data ready semaphore
 
-static bool IsFlukeFilterEnabled = false;
+static StaticSemaphore_t CellularDriver_TxWakeupBuffer;     //!< Semaphore storage for tx data sent signalling
+static SemaphoreHandle_t CellularDriver_TxWakeupHandle = NULL;  //!< Handle for tx data sent semaphore
 
-static StaticSemaphore_t CellularDriver_RequestBuffer;
-static SemaphoreHandle_t CellularDriver_RequestLock = NULL;
+static StaticTask_t AtResponseParser_TaskBuffer;            //!< static task allocation for Response parser task
+static StackType_t  AtResponseParser_TaskStack[CELLULAR_RESP_TASK_STACK_SIZE]; //!< Stack allocation for response parser
+static TaskHandle_t AtResponseParser_TaskHandle = NULL;     //!< Task handle of static response parser task
 
-static Cellular_State_T State = CELLULAR_STATE_POWEROFF;
-static Cellular_StateChanged_T OnStateChanged = NULL;
 
-static bool EchoModeEnabled = true;
+static StaticTask_t CellularDriver_TaskBuffer;            //!< static task allocation for cellular driver task
+static StackType_t  CellularDriver_TaskStack[CELLULAR_DRV_TASK_STACK_SIZE];  //!< stack for cellular driver task
+static TaskHandle_t CellularDriver_TaskHandle = NULL;     //!< handle to cellular driver task
 
-static RingBuffer_T UartRxBufDescr;
-static uint8_t UartRxReadBuffer[CELLULAR_RX_BUFFER_SIZE];
-static uint8_t UartRxByte;
+static UART_T CellularSerialDevice = (UART_T) NULL;       //!< handle to the MCU essentials serial device
 
-char Engine_AtSendBuffer[CELLULAR_AT_SEND_BUFFER_SIZE];
+static bool IsFlukeFilterEnabled = false;                 //!< state of fluke filter
+
+static StaticSemaphore_t CellularDriver_RequestBuffer;    //!< static semaphore buffer for cellular request locks
+static SemaphoreHandle_t CellularDriver_RequestLock = NULL;  //!< handle for semaphore request locks
+
+static Cellular_State_T State = CELLULAR_STATE_POWEROFF;  //!< Cellular driver state context
+static Cellular_StateChanged_T OnStateChanged = NULL;     //!< dirty flag for state handling
+
+static bool EchoModeEnabled = true;                       //!< state of modem echo mode (on/off)
+
+static RingBuffer_T UartRxBufDescr;                       //!< RingBuffer instance for rx data reception
+static uint8_t UartRxReadBuffer[CELLULAR_RX_BUFFER_SIZE]; //!< physical storage of the ring buffer
+static uint8_t UartRxByte;                                //!< single byte rx buffer
+
+char Engine_AtSendBuffer[CELLULAR_AT_SEND_BUFFER_SIZE];   //!< At engine TX buffer
 
 static Retcode_T ReadData(uint8_t* data, uint32_t dataLength, uint32_t* dataRead)
 {
@@ -132,6 +138,7 @@ static void HandleMcuIsrCallback(UART_T uart, struct MCU_UART_Event_S event)
     }
 }
 
+
 static void AtResponseParser_Task(void *param)
 {
     BCDS_UNUSED(param);
@@ -173,6 +180,7 @@ static void AtResponseParser_Task(void *param)
         }
     }
 }
+
 
 static void CellularDriver_Task(void *param)
 {
@@ -292,6 +300,7 @@ Retcode_T Engine_Initialize(Cellular_StateChanged_T onStateChanged)
         LOG_FATAL("Failed to initialize AtResponseQueue!");
         return status;
     }
+
 
     Engine_SetFlukeCharFilterEnabled(false);
     AtResponseQueue_RegisterWithResponseParser();

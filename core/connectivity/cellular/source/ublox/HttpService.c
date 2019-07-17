@@ -138,7 +138,7 @@ Retcode_T CellularHttp_GetResponse(CellularHttp_Data_T * response)
 		urdBlockParam.buffer=(uint8_t*)response->Buffer;
 		urdBlockParam.offset = 0;
 		urdBlockParam.length = response->BufferLength;
-		retcode = Engine_Dispatch(HttpService_urdBlock,1000,  &urdBlockParam, 0);
+		retcode = Engine_Dispatch(HttpService_urdBlock, 1000,  &urdBlockParam, 0);
 	}
 	else
 	{

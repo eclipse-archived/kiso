@@ -512,7 +512,12 @@ static int32_t AtrpStateRoot(uint8_t* buffer, uint32_t len)
 
         if (0 == NewLength)
         {
-            // empty line ... only needs to be consumed
+            // empty line will be filed as Misc content
+
+        	AtrpRollbackBuffer(result - 1);
+        	result = 0;
+        	AtrpSwitchState(AtrpStateMiscContent);
+
         }
         else if (isResponseCode)
         {

@@ -34,6 +34,10 @@
 static Queue_T EventQueue;
 static uint8_t EventQueueBuffer[AT_RESPONSE_QUEUE_BUFFER_SIZE];
 
+/*response queue event mask*/
+static AtEventType_T AtEventMask=0;
+
+
 static Retcode_T AtResponseQueue_WaitForEntry(uint32_t timeout, AtEventType_T EventType, AtResponseQueueEntry_T **entry)
 {
     Retcode_T retcode = Queue_Get(&EventQueue, (void **) entry, NULL, timeout);
@@ -132,11 +136,15 @@ void AtResponseQueue_EnqueueEvent(AtEventType_T EventType, uint8_t *arg, uint32_
             .BufferLength = len
     };
 
-    Retcode_T retcode = Queue_Put(&EventQueue, &entry, sizeof(entry), arg, len);
-
-    if (RETCODE_OK != retcode)
+    if (AtEventMask&EventType)
     {
-        Retcode_RaiseError(retcode);
+
+        Retcode_T retcode = Queue_Put(&EventQueue, &entry, sizeof(entry), arg, len);
+
+        if (RETCODE_OK != retcode)
+        {
+            Retcode_RaiseError(retcode);
+        }
     }
 }
 
@@ -183,6 +191,8 @@ static void AtResponseQueue_CallbackResponseCode(AtResponseCode_T response)
 
 Retcode_T AtResponseQueue_Init(void)
 {
+	AtResponseQueue_SetEventMask(AT_EVENT_TYPE_ALL-AT_EVENT_TYPE_MISC);
+
     return Queue_Create(&EventQueue, EventQueueBuffer, sizeof(EventQueueBuffer));
 }
 
@@ -194,6 +204,30 @@ void AtResponseQueue_RegisterWithResponseParser(void)
     AtResponseParser_RegisterCmdCallback(AtResponseQueue_CallbackCmd);
     AtResponseParser_RegisterCmdArgCallback(AtResponseQueue_CallbackCmdArg);
     AtResponseParser_RegisterMiscCallback(AtResponseQueue_CallbackMiscContent);
+}
+
+Retcode_T AtResponseQueue_SetEventMask(uint32_t eventMask)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    /* check if the mask is in the possible range*/
+    if (eventMask<AT_EVENT_TYPE_OUT_OF_RANGE)
+    {
+        retcode = RETCODE_OK;
+        AtEventMask=eventMask;
+    }
+    else
+    {
+        /* input value eventMask is out of range */
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+    }
+    return retcode;
+
+}
+
+uint32_t AtResponseQueue_GetEventMask(uint32_t eventMask)
+{
+    return AtEventMask;
 }
 
 void AtResponseQueue_Reset(void)
