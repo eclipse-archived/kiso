@@ -20,13 +20,13 @@
  */
 #include <gtest.h>
 
-
-/* start of global scope symbol and fake definitions section */
-FFF_DEFINITION_BLOCK_START
 extern "C"
 {
 
-/* setup compile time configuration defines */
+#include "BCDS_Basics.h"
+
+#if BCDS_FEATURE_UART
+
 /* include faked interfaces */
 #include "BCDS_HAL_th.hh"
 #include "stm32l4xx_hal_th.hh"
@@ -34,11 +34,10 @@ extern "C"
 #include "stm32l4xx_hal_uart_th.hh"
 #include "stm32l4xx_hal_cryp_th.hh"
 
-#undef BCDS_FEATURE_UART
-#define BCDS_FEATURE_UART 1
-
-/* include module under test */
+/* Include module under test */
 #include "UART.c"
+
+} /* extern "C"*/
 
 void HAL_UART_TxCpltCallback_Peripherals(UART_HandleTypeDef *huart)
 {
@@ -461,3 +460,6 @@ TEST_F(HalUartTest, test_MCU_UART_Receive_001)
     rc = MCU_UART_Receive(uart01, buffer, size);
     EXPECT_EQ(RETCODE_OK, rc);
 }
+#else
+}
+#endif /* BCDS_FEATURE_UART */

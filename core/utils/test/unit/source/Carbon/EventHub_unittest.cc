@@ -99,7 +99,7 @@ TEST_F(eventHub, EventHub_Initialize_Success)
     xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t)1;
     rc = EventHub_Initialize(&eventHub);
     EXPECT_EQ(RETCODE_OK, Retcode_GetCode(rc));
-    EXPECT_EQ(0, eventHub.observerCount);
+    EXPECT_EQ(0u, eventHub.observerCount);
 }
 
 TEST_F(eventHub, EventHub_Initialize_Failure)
@@ -134,7 +134,7 @@ TEST_F(eventHub, EventHub_Observe_Success)
     xSemaphoreGive_fake.return_val = (uint32_t)1;
     rc = EventHub_Observe(&eventHub, TestObserver_A, (TaskEvent_T) TEST_EVENT);
     EXPECT_EQ(RETCODE_OK, Retcode_GetCode(rc));
-    EXPECT_EQ(1, eventHub.observerCount);
+    EXPECT_EQ(1u, eventHub.observerCount);
 }
 
 TEST_F(eventHub, EventHub_Observe_Failure)

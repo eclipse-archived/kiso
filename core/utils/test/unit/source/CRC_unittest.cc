@@ -1205,7 +1205,7 @@ TEST_F(CRCRoutines,TestCRC32EathStandard)
     CRC32_INVERSE(crc32_Utils);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(0x6A237477, crc32_Utils);
+    EXPECT_EQ(0x6A237477u, crc32_Utils);
     EXPECT_EQ(RETCODE_OK, retVal);
 }
 

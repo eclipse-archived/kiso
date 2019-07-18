@@ -88,7 +88,7 @@ TEST_F(TS_MCU_RNG_Initialize, HalInit_Fail)
 
     retcode = MCU_RNG_Initialize(rng);
 
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_RNG_HAL_ERROR), retcode);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), retcode);
     EXPECT_EQ(1U, HAL_RNG_Init_fake.call_count);
 }
 
@@ -143,7 +143,7 @@ TEST_F(TS_MCU_RNG_Deinitialize, HalDeInit_Fail)
 
     retcode = MCU_RNG_Deinitialize(rng);
 
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_RNG_HAL_ERROR), retcode);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), retcode);
     EXPECT_EQ(1U, HAL_RNG_DeInit_fake.call_count);
 }
 
@@ -344,20 +344,20 @@ TEST_F(TS_MCU_RNG_Generate, InvalidBuffer_errorPropagation)
 
     /* Length is superior to a word representation. */
     retcode = MCU_RNG_Generate(rng, buffer, length);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_RNG_HAL_BUSY), retcode);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), retcode);
 
     HAL_RNG_GenerateRandomNumber_fake.return_val = HAL_TIMEOUT;
     retcode = MCU_RNG_Generate(rng, buffer, length);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_RNG_HAL_TIMEOUT), retcode);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMEOUT), retcode);
 
     HAL_RNG_GenerateRandomNumber_fake.return_val = HAL_ERROR;
     retcode = MCU_RNG_Generate(rng, buffer, length);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_RNG_HAL_ERROR), retcode);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), retcode);
 
     /* Length is inferior to a word representation. */
     length = sizeof(uint32_t) - 1;
     retcode = MCU_RNG_Generate(rng, buffer, length);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_RNG_HAL_ERROR), retcode);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), retcode);
 
     RESET_FAKE (HAL_RNG_GenerateRandomNumber);
 }

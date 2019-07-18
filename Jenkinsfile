@@ -5,7 +5,7 @@ pipeline
         docker
         {
             label 'RT-Z0KHU'
-            image 'rb-dtr.de.bosch.com/software-campus/cddk-toolchain:v0.2.0'
+            image 'rb-dtr.de.bosch.com/software-campus/cddk-toolchain:v0.2.3'
             registryUrl 'https://rb-dtr.de.bosch.com'
             registryCredentialsId 'docker-registry'
         }
@@ -30,9 +30,8 @@ pipeline
                 script // Run static analysis
                 {
                     echo "Build the application"
-                    sh 'meson debug --cross-file boards/CommonGateway/meson_config_stm32l4_gcc8.ini'
-                    sh 'cd debug && meson configure -Db_pch=false -Db_staticpic=false'
-                    sh 'cd debug && ninja hex'
+                    sh 'meson builddir-debug --cross-file boards/CommonGateway/meson_config_stm32l4_gcc8.ini'
+                    sh 'cd builddir-debug && ninja hex'
                 }
             }
         }
@@ -56,7 +55,9 @@ pipeline
                     {
                         script // Run unittests
                         {
-                            echo "run unit-tests placeholder"
+                            echo "run unit-tests"
+                            sh 'meson builddir-unittests --cross-file boards/Host/meson_config_unittest.ini -Dc_link_args="-pthread" -Dcpp_link_args="-pthread"' 
+                    		sh 'cd builddir-unittests && ninja test' // For later:  && ninja coverage-html'
                         }
                     }
                 }
@@ -76,7 +77,8 @@ pipeline
                     {
                         script // Run unittests
                         {
-                            echo "Generate doxygen placeholder"
+                            echo "Generate doxygen"
+                            sh 'cd builddir-debug && ninja doxygen'
                         }
                     }
                 }

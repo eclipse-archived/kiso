@@ -678,36 +678,6 @@ TEST_F(XProtocolRoutines, testIsCompleteFrame)
      * function as NULL so, we don't expect the lastCheckPosition to change. */
     EXPECT_EQ(&frame[5], lastCheckPosition);
 }
-TEST_F(XProtocolRoutines, DeprecatedInit)
-{
-    Retcode_T returnValue;
-    returnValue = xProtocol_Init();
-    EXPECT_EQ(RETCODE_OK, returnValue);
-}
-TEST_F(XProtocolRoutines, DeprecatedEncodeFrame)
-{
-    Retcode_T returnValue;
-    returnValue = xProtocol_EncodeFrame(NULL,0,0,NULL,NULL);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), returnValue);
-}
-TEST_F(XProtocolRoutines, DeprecatedGetPayloadLength)
-{
-    Retcode_T returnValue;
-    returnValue = xProtocol_GetPayloadLength(NULL,0,NULL);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), returnValue);
-}
-TEST_F(XProtocolRoutines, DeprecatedDecodeFrame)
-{
-    Retcode_T returnValue;
-    returnValue = xProtocol_DecodeFrame(NULL,0,0,NULL,NULL);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), returnValue);
-}
-TEST_F(XProtocolRoutines, DeprecatedIsCompleteFrame)
-{
-    Retcode_T returnValue;
-    returnValue = xProtocol_IsCompleteFrame(NULL,0,NULL);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), returnValue);
-}
 #else
 }
 #endif /* if BCDS_FEATURE_XPROTOCOL */

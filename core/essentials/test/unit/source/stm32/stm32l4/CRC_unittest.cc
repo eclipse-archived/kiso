@@ -15,23 +15,18 @@
 /* include gtest interface */
 #include "gtest.h"
 
-FFF_DEFINITION_BLOCK_START
-
-/* include faked interface */
 extern "C"
 {
+#include "BCDS_Basics.h"
+
+#if BCDS_FEATURE_MCU_CRC
 /* include faked interfaces */
 #include "BCDS_HAL_th.hh"
-
-#include "BCDS_Basics.h"
 #include "BCDS_Retcode_th.hh"
-
 #include "stm32l4xx_th.hh"
 #include "stm32l4xx_hal_th.hh"
 #include "stm32l4xx_hal_crc_th.hh"
-//#include "stm32l4xx_hal_rcc_th.hh"
 
-// todo: include "stm32l4xx_hal_rcc_th.hh" and delete the following fakes when the header
 // implements all the necessary fake functions
 #undef __HAL_RCC_CRC_CLK_ENABLE
 FAKE_VOID_FUNC(__HAL_RCC_CRC_CLK_ENABLE);
@@ -39,16 +34,10 @@ FAKE_VOID_FUNC(__HAL_RCC_CRC_CLK_ENABLE);
 #undef __HAL_RCC_CRC_CLK_DISABLE
 FAKE_VOID_FUNC(__HAL_RCC_CRC_CLK_DISABLE);
 
-/* setup compile time configuration defines */
-#undef BCDS_FEATURE_MCU_CRC
-#define BCDS_FEATURE_MCU_CRC 1
-
 /* Include unit under test */
 #include "CRC.c"
 
 } /* extern "C"*/
-
-FFF_DEFINITION_BLOCK_END
 
 class BCDS_CRCtest: public testing::Test
 {
@@ -516,3 +505,6 @@ TEST_F(BCDS_CRCtest, Crc32RetcodeFailure)
     EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
     EXPECT_EQ(RETCODE_CRC_HAL_DEINIT_FAIL, Retcode_GetCode(retcode));
 }
+#else
+}
+#endif /* BCDS_FEATURE_MCU_CRC */

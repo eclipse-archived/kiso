@@ -15,24 +15,22 @@
 /* include gtest interface */
 #include <gtest.h>
 
-/* start of global scope symbol and fake definitions section */
-FFF_DEFINITION_BLOCK_START 
+extern "C"
+{/* start of global scope symbol and fake definitions section */
 
-/* setup compile time configuration defines */
+#include "BCDS_Basics.h"
 
+#if BCDS_FEATURE_WATCHDOG
 /* include faked interfaces */
+#include "BCDS_HAL_th.hh"
 #include "stm32l4xx_th.hh"
 #include "stm32l4xx_hal_iwdg_th.hh"
 #include "stm32l4xx_hal_rcc_th.hh"
 
-#undef BCDS_FEATURE_WATCHDOG
-#define BCDS_FEATURE_WATCHDOG 1
-
 /* include module under test */
 #include "Watchdog.c"
 
-/* end of global scope symbol and fake definitions section */
-FFF_DEFINITION_BLOCK_END 
+}
 
 class STM32_WATCHDOG_TEST: public testing::Test
 {
@@ -273,3 +271,7 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_IsResetCausedByWatchdog_success_notDueT
     RESET_FAKE (__HAL_RCC_GET_FLAG);
     RESET_FAKE (__HAL_RCC_CLEAR_RESET_FLAGS);
 }
+#else
+}
+
+#endif /* if BCDS_FEATURE_WATCHDOG */

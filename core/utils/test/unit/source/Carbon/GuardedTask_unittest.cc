@@ -492,32 +492,6 @@ TEST_F(guardedTask, guardedTaskExecuteSuccess)
 
     /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
-
-TEST_F(guardedTask,DeprecatedDeinit)
-{
-    Retcode_T  retval = RETCODE_FAILURE;
-    retval = GuardedTask_deinitialize(NULL);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t ) RETCODE_INVALID_PARAM), retval);
-}
-TEST_F(guardedTask,DeprecatedInit)
-{
-    Retcode_T  retval = RETCODE_FAILURE;
-    retval = GuardedTask_initialize(NULL,NULL,NULL,1,1);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t ) RETCODE_INVALID_PARAM), retval);
-}
-TEST_F(guardedTask,DeprecatedSignal)
-{
-    Retcode_T  retval = RETCODE_FAILURE;
-    retval = GuardedTask_signal(NULL);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t ) RETCODE_INVALID_PARAM), retval);
-}
-TEST_F(guardedTask,DeprecatedSignalFromIsr)
-{
-    Retcode_T  retval = RETCODE_FAILURE;
-    retval = GuardedTask_signalFromIsr(NULL);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t ) RETCODE_INVALID_PARAM), retval);
-}
-
 /*****************************************************************************************/
 #else
 }

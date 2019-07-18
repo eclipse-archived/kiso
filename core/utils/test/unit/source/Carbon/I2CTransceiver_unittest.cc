@@ -27,7 +27,7 @@ extern "C"
 /* include faked interfaces */
 #include "BCDS_Retcode_th.hh"
 #include "BCDS_MCU_I2C_th.hh"
-#include "freeRTOS_th.hh"
+#include "FreeRTOS_th.hh"
 #include "semphr_th.hh"
 uint32_t tempI2CHandle = 0x55;
 I2C_T I2CHandle = (I2C_T)&tempI2CHandle;

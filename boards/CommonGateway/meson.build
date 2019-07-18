@@ -11,12 +11,14 @@ gdb_type = 'segger'
 cellular_vendor = 'ublox'
 
 # Build macro types: (influence the meson build)
-add_global_arguments([
+macros = [
 	'-DBCDS_PACKAGE_ID=0',
 	'-Dstm32',
 	'-Dstm32l4',
 	'-DSTM32L486xx',
-	'-DSTM32L486VG'], language : 'c')
+	'-DSTM32L486VG']
+add_global_arguments(macros, language : 'c')
+add_global_arguments(macros, language : 'cpp')
 
 add_project_arguments([
 	'-DAPPLICATION_ENTRY_ADDRESS=0x08000000',
@@ -34,7 +36,3 @@ config_dirs = include_directories([
 	'kiso_config/Utils',
 	'kiso_config/Cellular',
 	'kiso_config/SeggerRTT'])
-
-
-# Build the BSP:
-subdir('bsp')

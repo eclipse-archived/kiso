@@ -23,30 +23,22 @@
 /* include gtest interface */
 #include <gtest.h>
 
-FFF_DEFINITION_BLOCK_START /* start of global scope symbol and fake definitions section */
-
-/* setup compile time configuration defines */
-
 /* include module under test */
 extern "C"
 {
-
-/* include faked interfaces */
 #include "BCDS_Basics.h"
+
+#if BCDS_FEATURE_SPI
+/* include faked interfaces */
 #include "BCDS_HAL_th.hh"
 #include "stm32l4xx_th.hh"
 #include "stm32l4xx_hal_dma_th.hh"
 #include "stm32l4xx_hal_spi_th.hh"
 
-//-- instead of BCDS_BSP_BoardConfig.h mock
-#undef BCDS_FEATURE_SPI
-#define BCDS_FEATURE_SPI 1
-
+/* Include unit under test */
 #include "SPI.c"
-}
 
-FFF_DEFINITION_BLOCK_END
-/* end of global scope symbol and fake definitions section */
+} /* extern "C"*/
 
 class SPITestContext
 {
@@ -529,3 +521,6 @@ TEST_F(BCDS_SPItest, testSPI_DeInitializer)
 
 }
 /*****************************************************************************************/
+#else
+}
+#endif /* BCDS_FEATURE_SPI */

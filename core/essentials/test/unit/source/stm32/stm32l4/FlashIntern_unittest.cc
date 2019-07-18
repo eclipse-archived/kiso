@@ -21,22 +21,16 @@
  */
 #include <gtest.h>
 
-/* start of global scope symbol and fake definitions section */
-FFF_DEFINITION_BLOCK_START
-
 extern "C"
 {
-#include "BCDS_RetCode_th.hh"
+#include "BCDS_Basics.h"
 
+#if BCDS_FEATURE_FLASH_INTERN
+/* include faked interface */
+#include "BCDS_RetCode_th.hh"
 #include "stm32l4xx_hal_th.hh"
 #include "stm32l4xx_hal_flash_th.hh"
 #include "stm32l4xx_hal_flash_ex_th.hh"
-
-/* Put the type and macro definitions here */
-
-/* setup compile time configuration defines */
-#undef BCDS_FEATURE_FLASH_INTERN
-#define BCDS_FEATURE_FLASH_INTERN          1
 
 #undef FLASH_SIZE
 #define FLASH_SIZE  UINT32_C(0x00080000)
@@ -50,9 +44,8 @@ extern "C"
 /* include module under test */
 #include "FlashIntern.c"
 
-}
-/* end of global scope symbol and fake definitions section */
-FFF_DEFINITION_BLOCK_END
+} /* extern "C"*/
+
 /* create test fixture initializing all variables automatically */
 
 class MCU_FlashIntern: public testing::Test
@@ -174,9 +167,9 @@ TEST_F( MCU_FlashIntern, MCU_FlashIntern_Erase)
             RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_FLASH_INTERN_ADDRESS_OUT_OF_BOUND),
             MCU_FlashIntern_Erase(StartAddress, StartAddress + Length));
 
-    EXPECT_EQ(UINT8_C(0), HAL_FLASH_Unlock_fake.call_count);
-    EXPECT_EQ(UINT8_C(0), HAL_FLASHEx_Erase_fake.call_count);
-    EXPECT_EQ(UINT8_C(0), HAL_FLASH_Lock_fake.call_count);
+    EXPECT_EQ(0u, HAL_FLASH_Unlock_fake.call_count);
+    EXPECT_EQ(0u, HAL_FLASHEx_Erase_fake.call_count);
+    EXPECT_EQ(0u, HAL_FLASH_Lock_fake.call_count);
 }
 
 /**
@@ -195,9 +188,9 @@ TEST_F( MCU_FlashIntern, MCU_FlashIntern_Erase2)
             RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_FLASH_INTERN_ADDRESS_OUT_OF_BOUND),
             MCU_FlashIntern_Erase(StartAddress, StartAddress + Length));
 
-    EXPECT_EQ(UINT8_C(0), HAL_FLASH_Unlock_fake.call_count);
-    EXPECT_EQ(UINT8_C(0), HAL_FLASHEx_Erase_fake.call_count);
-    EXPECT_EQ(UINT8_C(0), HAL_FLASH_Lock_fake.call_count);
+    EXPECT_EQ(0u, HAL_FLASH_Unlock_fake.call_count);
+    EXPECT_EQ(0u, HAL_FLASHEx_Erase_fake.call_count);
+    EXPECT_EQ(0u, HAL_FLASH_Lock_fake.call_count);
 }
 
 /**
@@ -216,9 +209,9 @@ TEST_F( MCU_FlashIntern, MCU_FlashIntern_Erase3)
             RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_FLASH_INTERN_UNLOCK_FAILED),
             MCU_FlashIntern_Erase(StartAddress, StartAddress + Length));
 
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Unlock_fake.call_count);
-    EXPECT_EQ(UINT8_C(0), HAL_FLASHEx_Erase_fake.call_count);
-    EXPECT_EQ(UINT8_C(0), HAL_FLASH_Lock_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Unlock_fake.call_count);
+    EXPECT_EQ(0u, HAL_FLASHEx_Erase_fake.call_count);
+    EXPECT_EQ(0u, HAL_FLASH_Lock_fake.call_count);
 }
 
 /**
@@ -237,9 +230,9 @@ TEST_F( MCU_FlashIntern, MCU_FlashIntern_Erase4)
             RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_FLASH_INTERN_LOCK_FAILED),
             MCU_FlashIntern_Erase(StartAddress, StartAddress + Length));
 
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Unlock_fake.call_count);
-    EXPECT_EQ(UINT8_C(1), HAL_FLASHEx_Erase_fake.call_count);
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Lock_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Unlock_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASHEx_Erase_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
 /**
@@ -258,9 +251,9 @@ TEST_F( MCU_FlashIntern, MCU_FlashIntern_Erase5)
             RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_FLASH_INTERN_LOCK_FAILED),
             MCU_FlashIntern_Erase(StartAddress, StartAddress + Length));
 
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Unlock_fake.call_count);
-    EXPECT_EQ(UINT8_C(1), HAL_FLASHEx_Erase_fake.call_count);
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Lock_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Unlock_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASHEx_Erase_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
 /**
@@ -279,9 +272,9 @@ TEST_F( MCU_FlashIntern, MCU_FlashIntern_Erase6)
             RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_FLASH_INTERN_LOCK_FAILED),
             MCU_FlashIntern_Erase(StartAddress, StartAddress + Length));
 
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Unlock_fake.call_count);
-    EXPECT_EQ(UINT8_C(2), HAL_FLASHEx_Erase_fake.call_count);
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Lock_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Unlock_fake.call_count);
+    EXPECT_EQ(2u, HAL_FLASHEx_Erase_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
 /**
@@ -298,9 +291,9 @@ TEST_F( MCU_FlashIntern, MCU_FlashIntern_Erase7)
 
     EXPECT_EQ(RETCODE_OK, MCU_FlashIntern_Erase(StartAddress, StartAddress + Length));
 
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Unlock_fake.call_count);
-    EXPECT_EQ(UINT8_C(2), HAL_FLASHEx_Erase_fake.call_count);
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Lock_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Unlock_fake.call_count);
+    EXPECT_EQ(2u, HAL_FLASHEx_Erase_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
 /**
@@ -319,9 +312,9 @@ TEST_F( MCU_FlashIntern, MCU_FlashIntern_Erase8)
             RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_FLASH_INTERN_ERASE_ERROR),
             MCU_FlashIntern_Erase(StartAddress, StartAddress + Length));
 
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Unlock_fake.call_count);
-    EXPECT_EQ(UINT8_C(1), HAL_FLASHEx_Erase_fake.call_count);
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Lock_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Unlock_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASHEx_Erase_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
 /**
@@ -342,9 +335,9 @@ TEST_F( MCU_FlashIntern, MCU_FlashIntern_Erase9)
             RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_FLASH_INTERN_ERASE_ERROR),
             MCU_FlashIntern_Erase(StartAddress, StartAddress + Length));
 
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Unlock_fake.call_count);
-    EXPECT_EQ(UINT8_C(2), HAL_FLASHEx_Erase_fake.call_count);
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Lock_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Unlock_fake.call_count);
+    EXPECT_EQ(2u, HAL_FLASHEx_Erase_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
 /**
@@ -363,9 +356,9 @@ TEST_F( MCU_FlashIntern, MCU_FlashIntern_Erase10)
             RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_FLASH_INTERN_ADDRESS_OUT_OF_BOUND),
             MCU_FlashIntern_Erase(StartAddress, StartAddress + Length));
 
-    EXPECT_EQ(UINT8_C(0), HAL_FLASH_Unlock_fake.call_count);
-    EXPECT_EQ(UINT8_C(0), HAL_FLASHEx_Erase_fake.call_count);
-    EXPECT_EQ(UINT8_C(0), HAL_FLASH_Lock_fake.call_count);
+    EXPECT_EQ(0u, HAL_FLASH_Unlock_fake.call_count);
+    EXPECT_EQ(0u, HAL_FLASHEx_Erase_fake.call_count);
+    EXPECT_EQ(0u, HAL_FLASH_Lock_fake.call_count);
 }
 
 /**
@@ -510,9 +503,9 @@ TEST_F( MCU_FlashIntern, MCU_FlashIntern_Write4)
             RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_FLASH_INTERN_UNLOCK_FAILED),
             MCU_FlashIntern_Write(StartAddress, Buffer, Length));
 
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Unlock_fake.call_count);
-    EXPECT_EQ(UINT8_C(0), HAL_FLASH_Program_fake.call_count);
-    EXPECT_EQ(UINT8_C(0), HAL_FLASH_Lock_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Unlock_fake.call_count);
+    EXPECT_EQ(0u, HAL_FLASH_Program_fake.call_count);
+    EXPECT_EQ(0u, HAL_FLASH_Lock_fake.call_count);
 }
 
 /**
@@ -532,9 +525,9 @@ TEST_F( MCU_FlashIntern, MCU_FlashIntern_Write5)
             RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_FLASH_INTERN_LOCK_FAILED),
             MCU_FlashIntern_Write(StartAddress, Buffer, Length));
 
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Unlock_fake.call_count);
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Program_fake.call_count);
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Lock_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Unlock_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Program_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
 /**
@@ -554,9 +547,9 @@ TEST_F( MCU_FlashIntern, MCU_FlashIntern_Write6)
             RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_FLASH_INTERN_LOCK_FAILED),
             MCU_FlashIntern_Write(StartAddress, Buffer, Length));
 
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Unlock_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Unlock_fake.call_count);
     EXPECT_EQ(Length / sizeof(uint64_t), HAL_FLASH_Program_fake.call_count);
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Lock_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
 /**
@@ -575,9 +568,9 @@ TEST_F( MCU_FlashIntern, MCU_FlashIntern_Write7)
     EXPECT_EQ(RETCODE_OK,
             MCU_FlashIntern_Write(StartAddress, Buffer, Length));
 
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Unlock_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Unlock_fake.call_count);
     EXPECT_EQ(Length / sizeof(uint64_t), HAL_FLASH_Program_fake.call_count);
-    EXPECT_EQ(UINT8_C(1), HAL_FLASH_Lock_fake.call_count);
+    EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
 /**
@@ -593,3 +586,6 @@ TEST_F( MCU_FlashIntern, MCU_FlashIntern_Write8)
             RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_FLASH_INTERN_ADDRESS_OUT_OF_BOUND),
             MCU_FlashIntern_Write(StartAddress, Buffer, Length));
 }
+#else
+}
+#endif /* BCDS_FEATURE_FLASH_INTERN */

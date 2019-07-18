@@ -42,15 +42,15 @@ static inline Retcode_T MapHalRetToMcuRet(HAL_StatusTypeDef halRet)
         ret = RETCODE_OK;
         break;
     case HAL_BUSY:
-        ret = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_RNG_HAL_BUSY);
+        ret = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
         break;
     case HAL_TIMEOUT:
-        ret = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_RNG_HAL_TIMEOUT);
+        ret = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMEOUT);
         break;
     case HAL_ERROR:
         /* Fall Through */
     default:
-        ret = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_RNG_HAL_ERROR);
+        ret = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
         break;
     }
     return ret;

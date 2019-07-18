@@ -176,6 +176,7 @@ Retcode_T Queue_Get(Queue_T *Queue, void **Data, uint32_t *DataSize, uint32_t Ti
             (void) xSemaphoreGive(Queue->Lock);
             return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNEXPECTED_BEHAVIOR);
         }
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
     }
 
     QueueItem_T *m = (QueueItem_T*) Queue->PosRead;

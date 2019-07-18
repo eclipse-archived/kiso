@@ -22,6 +22,10 @@
 #include "gtest.h"
 
 /* Faked variables needs to be initialized by the test fixture */
+#undef __HAL_RCC_GET_FLAG
+FAKE_VOID_FUNC(__HAL_RCC_GET_FLAG, uint32_t);
+#undef __HAL_RCC_CLEAR_RESET_FLAGS
+FAKE_VOID_FUNC(__HAL_RCC_CLEAR_RESET_FLAGS);
 
 /* Mock-ups for the provided interfaces */
 FAKE_VOID_FUNC(HAL_RCC_DeInit);

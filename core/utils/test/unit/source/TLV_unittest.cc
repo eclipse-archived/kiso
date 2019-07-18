@@ -477,7 +477,7 @@ TEST_F(TLV,GarbageCollectGroupTest)
      * The API under test is GarbageCollectGroup(). Requirements against the API:
      */
     TLV_GroupHandle_TP Handle;
-    uint32_t status = 1;
+    uint16_t sizeLeft = 0;
 
     /* set up test case */
     typedef struct parameterSet_s
@@ -494,8 +494,8 @@ TEST_F(TLV,GarbageCollectGroupTest)
     Handle = TLV_AddGroup(parameterSet[0].Buffer, parameterSet[0].bufferSize);
     (void)TLV_AddElement(Handle, TLV_TEST_TYPE_0, 0, "");
 
-    status = GarbageCollectGroup(Handle);
-    EXPECT_EQ(248U, status);
+    sizeLeft = GarbageCollectGroup(Handle);
+    EXPECT_EQ((dataBufferSize-sizeof(TLV_Element_T)), sizeLeft);
 }
 /** ************************************************************************* */
 #else

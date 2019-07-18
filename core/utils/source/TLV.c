@@ -135,7 +135,7 @@ static uint16_t GarbageCollectGroup(TLV_GroupHandle_TP const Handle)
     {
         uint8_t* WritePointer;
 
-        WritePointer = (uint8_t*) ((uint32_t) &Handle->Buffer[Handle->Limit]);
+        WritePointer = &(Handle->Buffer[Handle->Limit]);
 
         for (ElementTableIndex = 0; ElementTableIndex < Handle->Elements; ElementTableIndex++)
         {
@@ -143,7 +143,7 @@ static uint16_t GarbageCollectGroup(TLV_GroupHandle_TP const Handle)
 
             if (IsElementValid(Element))
             {
-                WritePointer = (uint8_t*) ((uint32_t) WritePointer - (Element->DataLength));
+                WritePointer = (uint8_t*)(WritePointer - (Element->DataLength));
 
                 if (WritePointer != Element->DataBuffer)
                 {
@@ -184,18 +184,18 @@ static TLV_Element_T* GetLastElement(TLV_GroupHandle_TP const Handle)
 static uint16_t GetAvailableMemorySize(TLV_GroupHandle_TP const Handle)
 {
     TLV_Element_T* Element = GetLastElement(Handle);
-    uint16_t AvailableMemory;
+    uint32_t AvailableMemory;
 
     if (Element != (TLV_Element_T*) NULL)
     {
-        AvailableMemory = (uint32_t) Element->DataBuffer - ((uint32_t) Element + sizeof(TLV_Element_T));
+        AvailableMemory = ((uint32_t) Element->DataBuffer) - (((uint32_t)Element) + (uint32_t)sizeof(TLV_Element_T));
     }
     else
     {
         AvailableMemory = Handle->Limit;
     }
 
-    return (AvailableMemory);
+    return (uint16_t)(AvailableMemory); // Not ok fix... Function need to be revisited
 }
 
 /* global functions ********************************************************* */

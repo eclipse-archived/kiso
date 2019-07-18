@@ -241,7 +241,7 @@ TEST_F(CommandLineInterface, RegisterArray_NULL)
 TEST_F(CommandLineInterface, ConvertArrayToLinkedList_Complex)
 {
     ASSERT_EQ(NULL, testList[0].next);
-    ASSERT_EQ(5, testListElements);
+    ASSERT_EQ(5u, testListElements);
 
     CmdLineDbg_RegisterCmdArray(testList, 1);
     ASSERT_EQ(NULL, testList[0].next);
@@ -338,7 +338,7 @@ TEST_F(CommandLineInterface, TokenizeString1)
     char * argv[16];
 
     size_t i = CmdLine_ExtractTokensFromString(argv, parserTest); /* Split elements by inserting string-terminators */
-    EXPECT_EQ(5,i); /* 5-Arguments found */
+    EXPECT_EQ((size_t)5,i); /* 5-Arguments found */
     ASSERT_STREQ("Test1", argv[0]);
     ASSERT_STREQ("param1", argv[1]);
     ASSERT_STREQ("param2", argv[2]);
@@ -346,16 +346,16 @@ TEST_F(CommandLineInterface, TokenizeString1)
     ASSERT_STREQ("param4", argv[4]);
 
     i = CmdLine_ExtractTokensFromString(argv, parserTest1);
-    EXPECT_EQ(0,i); /* 0-Arguments found */
+    EXPECT_EQ((size_t)0,i); /* 0-Arguments found */
     ASSERT_EQ(NULL, argv[0]);
 
     i = CmdLine_ExtractTokensFromString(argv, parserTest2);
-    EXPECT_EQ(1,i); /* 1 Argument found */
+    EXPECT_EQ((size_t)1,i); /* 1 Argument found */
     ASSERT_STREQ("Test1", argv[0]);
     ASSERT_EQ(NULL, argv[1]);
 
     i = CmdLine_ExtractTokensFromString(argv, parserTest3);
-    EXPECT_EQ(2,i); /* 2 Arguments found */
+    EXPECT_EQ((size_t)2,i); /* 2 Arguments found */
     ASSERT_STREQ("Test1", argv[0]);
     ASSERT_STREQ("param1", argv[1]);
     ASSERT_EQ(NULL, argv[2]);
@@ -370,7 +370,7 @@ TEST_F(CommandLineInterface, TokenizeString2)
 
     i = CmdLine_ExtractTokensFromString(GitParameters, inputString);
 
-    EXPECT_EQ(5, i);
+    EXPECT_EQ((size_t)5, i);
 
     EXPECT_EQ(&inputString[0], GitParameters[0]);
     EXPECT_EQ(&inputString[4], GitParameters[1]);
@@ -409,7 +409,7 @@ TEST_F(CommandLineInterface,CmdLine_ExecuteCmd)
   /* Execute Command and Inspect Callback Arguments*/
   rc = CmdLine_ExecuteCmd(&testCommand, argv, argc);
   ASSERT_EQ((const char *)argv, (const char *)testCallback_fake.arg1_val);
-  ASSERT_EQ(4, testCallback_fake.arg0_val);
+  ASSERT_EQ((size_t)4, testCallback_fake.arg0_val);
   ASSERT_EQ(RETCODE_OK, rc);
 
 }
@@ -438,7 +438,7 @@ TEST_F(CommandLineInterface, CmdLine_Parse_VALID)
     /*  Valid input */
      rc = CmdLineDbg_Parse(testList, inputBuffer);
      ASSERT_EQ(RETCODE_OK, rc);
-     ASSERT_EQ(3, testCallback_fake.arg0_val);
+     ASSERT_EQ(3u, testCallback_fake.arg0_val);
 
 }
 
@@ -451,7 +451,7 @@ TEST_F(CommandLineInterface, CmdLine_Parse_INVALID_CMD)
     rc = CmdLineDbg_Parse(testList, inputBuffer);
     ASSERT_EQ(RETCODE(RETCODE_SEVERITY_INFO, RETCODE_CMDLINE_DEBUGGER_COMMAND_NOT_FOUND), rc);
 
-    ASSERT_EQ(0, testCallback_fake.arg0_val);
+    ASSERT_EQ(0u, testCallback_fake.arg0_val);
 }
 
 TEST_F(CommandLineInterface, CmdLine_Parse_NOARC)
@@ -463,7 +463,7 @@ TEST_F(CommandLineInterface, CmdLine_Parse_NOARC)
     rc = CmdLineDbg_Parse(testList, inputBuffer);
     ASSERT_EQ(RETCODE(RETCODE_SEVERITY_INFO, RETCODE_CMDLINE_DEBUGGER_COMMAND_NOT_FOUND), rc);
 
-    ASSERT_EQ(0, testCallback_fake.arg0_val);
+    ASSERT_EQ(0u, testCallback_fake.arg0_val);
 }
 #else
 }

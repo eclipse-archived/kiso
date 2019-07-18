@@ -520,33 +520,6 @@ TEST_F(cmdProcessor, CmdProcessorDequeueCmdPrcsrQueueFail)
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(UINT32_C(1), Retcode_RaiseError_fake.call_count);
 }
-TEST_F(cmdProcessor,DeprecatedInitialize)
-{
-    Retcode_T retval = RETCODE_OK;
-    retval = CmdProcessor_initialize(NULL,NULL,1,1,1);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t )RETCODE_INVALID_PARAM), retval);
-}
-TEST_F(cmdProcessor,DeprecatedEnqueue)
-{
-    Retcode_T retval = RETCODE_OK;
-    retval = CmdProcessor_enqueue(NULL,NULL,NULL,1);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t )RETCODE_INVALID_PARAM), retval);
-}
-TEST_F(cmdProcessor,DeprecatedEnqueueFromIsr)
-{
-    Retcode_T retval = RETCODE_OK;
-    retval = CmdProcessor_enqueueFromIsr(NULL,NULL,NULL,1);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t )RETCODE_INVALID_PARAM), retval);
-}
-TEST_F(cmdProcessor,DeprecatedSuspend)
-{
-    CmdProcessor_suspend(NULL);
-}
-TEST_F(cmdProcessor,DeprecatedResume)
-{
-    CmdProcessor_resume(NULL);
-}
-
 #else
 }
 #endif /* if BCDS_FEATURE_CMDPROCESSOR */

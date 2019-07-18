@@ -23,26 +23,21 @@
 /* include gtest interface */
 #include "gtest.h"
 
-FFF_DEFINITION_BLOCK_START
-
-/* include faked interface */
 extern "C"
 {
 #include "BCDS_Basics.h"
+
+#if BCDS_FEATURE_I2C
+/* include faked interface */
 #include "stm32l4xx_th.hh"
 #include "stm32l4xx_hal_dma_th.hh"
 #include "stm32l4xx_hal_i2c_th.hh"
 #include "BCDS_HAL_CriticalSection_th.hh"
 
-#undef BCDS_FEATURE_I2C
-#define BCDS_FEATURE_I2C 1
-
 /* Include unit under test */
 #include "I2C.c"
 
 } /* extern "C"*/
-
-FFF_DEFINITION_BLOCK_END
 
 // Macro is used to manipulate the Status values of the fake stm32 handle
 #define I2C_FLAG_MASK  ((uint32_t)0x0001FFFF)
@@ -328,12 +323,12 @@ TEST_F(BCDS_I2Ctest, testI2C_MCU_BSP_I2C_EV_Callback)
     // where the RXReady event is set.
     MCU_BSP_I2C_EV_Callback((I2C_T)&testContext.mBSPHandleI2C);
     // Now the callback should be called onece
-    EXPECT_EQ(1,testContext.mTestAppCallbackCount);
+    EXPECT_EQ(1u,testContext.mTestAppCallbackCount);
     // RxReady should be set, all others 0
-    EXPECT_EQ(1,testContext.mLastEvent.RxReady);
-    EXPECT_EQ(0,testContext.mLastEvent.RxComplete);
-    EXPECT_EQ(0,testContext.mLastEvent.TxComplete);
-    EXPECT_EQ(0,testContext.mLastEvent.TransferError);
+    EXPECT_EQ(1u,testContext.mLastEvent.RxReady);
+    EXPECT_EQ(0u,testContext.mLastEvent.RxComplete);
+    EXPECT_EQ(0u,testContext.mLastEvent.TxComplete);
+    EXPECT_EQ(0u,testContext.mLastEvent.TransferError);
     // reset the counter
     testContext.mTestAppCallbackCount = 0;
 }
@@ -347,10 +342,10 @@ TEST_F(BCDS_I2Ctest, testI2C_MCU_BSP_I2C_ER_Callback)
     /* First try with totally wrong parameters */
 	RESET_FAKE(HAL_I2C_ER_IRQHandler);
     MCU_BSP_I2C_ER_Callback(0);
-    EXPECT_EQ(0, HAL_I2C_ER_IRQHandler_fake.call_count);
+    EXPECT_EQ(0u, HAL_I2C_ER_IRQHandler_fake.call_count);
     /* Then use a valid handle */
     MCU_BSP_I2C_ER_Callback((I2C_T)&testContext.mBSPHandleI2C);
-    EXPECT_EQ(1, HAL_I2C_ER_IRQHandler_fake.call_count);
+    EXPECT_EQ(1u, HAL_I2C_ER_IRQHandler_fake.call_count);
     RESET_FAKE(HAL_I2C_ER_IRQHandler);
 }
 
@@ -363,10 +358,10 @@ TEST_F(BCDS_I2Ctest, testI2C_MCU_BSP_I2C_DMA_RX_Callback)
     /* First try with totally wrong parameters */
 	RESET_FAKE(HAL_DMA_IRQHandler);
     MCU_BSP_I2C_DMA_RX_Callback(0);
-    EXPECT_EQ(0, HAL_DMA_IRQHandler_fake.call_count);
+    EXPECT_EQ(0u, HAL_DMA_IRQHandler_fake.call_count);
     /* Then use a valid handle */
     MCU_BSP_I2C_DMA_RX_Callback((I2C_T)&testContext.mBSPHandleI2C);
-    EXPECT_EQ(1, HAL_DMA_IRQHandler_fake.call_count);
+    EXPECT_EQ(1u, HAL_DMA_IRQHandler_fake.call_count);
     RESET_FAKE(HAL_DMA_IRQHandler);
 }
 
@@ -379,10 +374,10 @@ TEST_F(BCDS_I2Ctest, testI2C_MCU_BSP_I2C_DMA_TX_Callback)
     /* First try with totally wrong parameters */
 	RESET_FAKE(HAL_DMA_IRQHandler);
     MCU_BSP_I2C_DMA_TX_Callback(0);
-    EXPECT_EQ(0, HAL_DMA_IRQHandler_fake.call_count);
+    EXPECT_EQ(0u, HAL_DMA_IRQHandler_fake.call_count);
     /* Then use a valid handle */
     MCU_BSP_I2C_DMA_TX_Callback((I2C_T)&testContext.mBSPHandleI2C);
-    EXPECT_EQ(1, HAL_DMA_IRQHandler_fake.call_count);
+    EXPECT_EQ(1u, HAL_DMA_IRQHandler_fake.call_count);
     RESET_FAKE(HAL_DMA_IRQHandler);
 }
 
@@ -401,7 +396,7 @@ TEST_F(BCDS_I2Ctest, testI2C_HAL_I2C_ErrorCallback)
      */
     HAL_I2C_ErrorCallback(&testContext.mBSPHandleI2C.hi2c);
     // Now the callback should not be called
-    EXPECT_EQ(0,testContext.mTestAppCallbackCount);
+    EXPECT_EQ(0u,testContext.mTestAppCallbackCount);
     // Then set an error value for the handle. Possible codes are:
     // HAL_I2C_ERROR_NONE      ((uint32_t)0x00000000)    /*!< No error              */
     // HAL_I2C_ERROR_BERR      ((uint32_t)0x00000001)    /*!< BERR error            */
@@ -414,11 +409,11 @@ TEST_F(BCDS_I2Ctest, testI2C_HAL_I2C_ErrorCallback)
     testContext.mBSPHandleI2C.hi2c.ErrorCode = HAL_I2C_ERROR_BERR;
     // then call the function. This should result in an call back for the app
     HAL_I2C_ErrorCallback(&testContext.mBSPHandleI2C.hi2c);
-    EXPECT_EQ(1,testContext.mTestAppCallbackCount);
-    EXPECT_EQ(0,testContext.mLastEvent.RxReady);
-    EXPECT_EQ(0,testContext.mLastEvent.TxComplete);
-    EXPECT_EQ(0,testContext.mLastEvent.RxComplete);
-    EXPECT_EQ(1,testContext.mLastEvent.TransferError);
+    EXPECT_EQ(1u,testContext.mTestAppCallbackCount);
+    EXPECT_EQ(0u,testContext.mLastEvent.RxReady);
+    EXPECT_EQ(0u,testContext.mLastEvent.TxComplete);
+    EXPECT_EQ(0u,testContext.mLastEvent.RxComplete);
+    EXPECT_EQ(1u,testContext.mLastEvent.TransferError);
     testContext.mTestAppCallbackCount = 0;
 }
 
@@ -437,7 +432,7 @@ TEST_F(BCDS_I2Ctest, testI2C_HAL_I2C_MasterTxCpltCallback)
     HAL_I2C_MasterTxCpltCallback(&testContext.mBSPHandleI2C.hi2c);
     appcallbackcount += 1;
     EXPECT_EQ(appcallbackcount,testContext.mTestAppCallbackCount);
-    EXPECT_EQ(1, testContext.mLastEvent.TxComplete);
+    EXPECT_EQ(1u, testContext.mLastEvent.TxComplete);
 }
 
 /**
@@ -455,7 +450,7 @@ TEST_F(BCDS_I2Ctest, testI2C_HAL_I2C_MasterRxCpltCallback)
     HAL_I2C_MasterRxCpltCallback(&testContext.mBSPHandleI2C.hi2c);
     appcallbackcount += 1;
     EXPECT_EQ(appcallbackcount,testContext.mTestAppCallbackCount);
-    EXPECT_EQ(1, testContext.mLastEvent.RxComplete);
+    EXPECT_EQ(1u, testContext.mLastEvent.RxComplete);
 }
 
 
@@ -473,13 +468,13 @@ TEST_F(BCDS_I2Ctest, testI2C_DeInitializer)
     /* Then use the correct handle */
     rc = MCU_I2C_Deinitialize((I2C_T)&testContext.mBSPHandleI2C);
     EXPECT_EQ(RETCODE_OK,rc);
-    EXPECT_EQ((uint32_t)testContext.mBSPHandleI2C.AppLayerCallback,NULL);
-    EXPECT_EQ((uint32_t)testContext.mBSPHandleI2C.IRQCallback,NULL);
-    EXPECT_EQ((uint32_t)testContext.mBSPHandleI2C.ERRCallback,NULL);
-    EXPECT_EQ((uint32_t)testContext.mBSPHandleI2C.DMARxCallback,NULL);
-    EXPECT_EQ((uint32_t)testContext.mBSPHandleI2C.DMATxCallback,NULL);
-    EXPECT_EQ((uint32_t)testContext.mBSPHandleI2C.RxFunPtr,NULL);
-    EXPECT_EQ((uint32_t)testContext.mBSPHandleI2C.TxFunPtr,NULL);
+    ASSERT_FALSE(testContext.mBSPHandleI2C.AppLayerCallback == NULL);
+    ASSERT_FALSE(testContext.mBSPHandleI2C.IRQCallback == NULL);
+    ASSERT_FALSE(testContext.mBSPHandleI2C.ERRCallback == NULL);
+    ASSERT_FALSE(testContext.mBSPHandleI2C.DMARxCallback == NULL);
+    ASSERT_FALSE(testContext.mBSPHandleI2C.DMATxCallback == NULL);
+    ASSERT_FALSE(testContext.mBSPHandleI2C.RxFunPtr == NULL);
+    ASSERT_FALSE(testContext.mBSPHandleI2C.TxFunPtr == NULL);
     /* After this any call except to initalize should fail */
     rc = MCU_I2C_Send((I2C_T)&testContext.mBSPHandleI2C,0x01,NULL,0);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR,RETCODE_NOT_SUPPORTED),rc);
@@ -502,3 +497,6 @@ TEST_F(BCDS_I2Ctest, test_MCU_I2C_ReadRegister)
     rc = MCU_I2C_ReadRegister(i2cU, slaveAddrU, registerAddrU, rxBufferU, rxLenU);
     EXPECT_NE(RETCODE_OK, rc);
 }
+#else
+}
+#endif /* BCDS_FEATURE_I2C */

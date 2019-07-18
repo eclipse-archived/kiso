@@ -106,7 +106,7 @@ TEST_F(Assert, Assert_Initialize)
 	Retcode_T retcode = Assert_Initialize(NULL);
 	EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
 	EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
-	EXPECT_EQ(BCDS_PACKAGE_ID, Retcode_GetPackage(retcode));
+	EXPECT_EQ((uint32_t)BCDS_PACKAGE_ID, Retcode_GetPackage(retcode));
 	EXPECT_EQ(BCDS_ESSENTIALS_MODULE_ID_ASSERT, Retcode_GetModuleId(retcode));
 
 	retcode = Assert_Initialize(assertCallbackFn);
