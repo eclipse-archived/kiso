@@ -35,4 +35,6 @@ config_dirs = include_directories([
 	'kiso_config/Essentials',
 	'kiso_config/Utils',
 	'kiso_config/Cellular',
-	'kiso_config/SeggerRTT'])
+	'kiso_config/SeggerRTT',
+	'kiso_config/MbedTLS'])
+

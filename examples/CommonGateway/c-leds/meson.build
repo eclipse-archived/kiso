@@ -9,7 +9,7 @@ application_files = [
 exe = executable('Application', 
 	application_files,
 	c_args : '-Werror',
-	dependencies : [bsp_lib_dep, freertos_lib_dep, stm32cubel4_lib_dep, seggerrtt_lib_dep, essentials_lib_dep, utils_lib_dep],
+	dependencies : [bsp_lib_dep, freertos_lib_dep, stm32cubel4_lib_dep, seggerrtt_lib_dep, essentials_lib_dep, utils_lib_dep, mbedtls_lib_dep],
 	install : true)
 
 # Build the hex file
