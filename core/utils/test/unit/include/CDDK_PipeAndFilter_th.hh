@@ -15,6 +15,8 @@
 #ifndef TEST_UNIT_INCLUDE_CDDK_PIPEANDFILTER_TH_HH_
 #define TEST_UNIT_INCLUDE_CDDK_PIPEANDFILTER_TH_HH_
 
+#include "gtest.h"
+
 /* header definition ******************************************************** */
 #include "BCDS_Retcode.h"
 

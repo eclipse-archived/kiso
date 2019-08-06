@@ -27,6 +27,7 @@ extern "C"
 #if BCDS_FEATURE_LOGGING
 
 /* include faked interfaces */
+#include "SEGGER_RTT_th.hh"
 #include "BCDS_Retcode_th.hh"
 
 /* include module under test */

@@ -22,8 +22,6 @@
 /* include gtest interface */
 #include <gtest.h>
 
-FFF_DEFINITION_BLOCK_START /* start of global scope symbol and fake definitions section */
-
 /* Setup compile time configuration defines */
 extern "C"
 {
@@ -33,8 +31,6 @@ extern "C"
 
 /* Include faked interfaces */
 #include "BCDS_Assert_th.hh"
-
-FFF_DEFINITION_BLOCK_END /* end of global scope symbol and fake definitions section */
 
 /* Include Module under Test */
 #include "Retcode.c"

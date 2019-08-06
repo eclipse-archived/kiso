@@ -27,7 +27,7 @@
 
 /* wrap the real interface header */
 #include "BCDS_Retcode.h"
-
+#include "gtest.h"
 /* faked variables needs to be initialized by the test fixture */
 
 /* mock-ups for the provided interfaces */

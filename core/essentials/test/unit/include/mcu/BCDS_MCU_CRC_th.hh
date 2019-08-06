@@ -15,6 +15,8 @@
 #ifndef BCDS_MCU_CRC_TH_HH_
 #define BCDS_MCU_CRC_TH_HH_
 
+#include "gtest.h"
+
 /* Include the needed headers */
 #include "BCDS_HAL_th.hh"
 

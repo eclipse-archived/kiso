@@ -14,6 +14,8 @@
 #ifndef BCDS_EVENTHUB_TH_HH_
 #define BCDS_EVENTHUB_TH_HH_
 
+#include "gtest.h"
+
 #include "BCDS_Retcode_th.hh"
 #include "BCDS_EventHub.h"
 

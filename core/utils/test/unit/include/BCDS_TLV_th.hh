@@ -22,6 +22,7 @@
 #define BCDS_TLV_TH_HH_
 
 /* include system header files */
+#include "gtest.h"
 
 /* ban the real BCDS_TLV.h interface header */
 #define BCDS_TLV_H_

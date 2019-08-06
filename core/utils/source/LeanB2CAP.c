@@ -418,13 +418,12 @@ Retcode_T LeanB2CAP_ResetRxDataProcessor(LeanB2CAP_HandlePtr_T * Handle)
 {
     Retcode_T Rc = RETCODE_OK;
     uint8_t Index = LEANB2CAP_UNSIGNED_LONG_ZERO;
-    uint32_t * HandlePtr = (uint32_t *) Handle;
 
     if (NULL != Handle)
     {
         for (Index = LEANB2CAP_UNSIGNED_LONG_ZERO; Index < LEAN_B2CAP_INSTANCE_COUNT; Index++)
         {
-            if ((void *)*HandlePtr == (void *)&LeanB2CAPHandle[Index])
+            if (*Handle == &LeanB2CAPHandle[Index])
             {
                 LeanB2CAPHandle[Index].FrameProcState = LEAN_B2CAP_FRMPRC_SD;
                 LeanB2CAPHandle[Index].CRC1OfRxFrameInProgress = LEANB2CAP_UNSIGNED_LONG_ZERO;

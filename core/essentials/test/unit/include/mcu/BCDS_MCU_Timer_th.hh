@@ -15,6 +15,8 @@
 #ifndef BCDS_MCU_Timer_TH_HH
 #define BCDS_MCU_Timer_TH_HH
 
+#include "gtest.h"
+
 /* Include the needed headers */
 #include "BCDS_HAL_th.hh"
 

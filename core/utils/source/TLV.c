@@ -184,18 +184,19 @@ static TLV_Element_T* GetLastElement(TLV_GroupHandle_TP const Handle)
 static uint16_t GetAvailableMemorySize(TLV_GroupHandle_TP const Handle)
 {
     TLV_Element_T* Element = GetLastElement(Handle);
-    uint32_t AvailableMemory;
+    uint16_t AvailableMemory = 0;
 
     if (Element != (TLV_Element_T*) NULL)
     {
-        AvailableMemory = ((uint32_t) Element->DataBuffer) - (((uint32_t)Element) + (uint32_t)sizeof(TLV_Element_T));
+        // TODO: Take a closer look if there is a better way - -Wpointer-to-int-cast
+        AvailableMemory = (unsigned long)Element->DataBuffer - ((unsigned long)Element + sizeof(TLV_Element_T));
     }
     else
     {
         AvailableMemory = Handle->Limit;
     }
 
-    return (uint16_t)(AvailableMemory); // Not ok fix... Function need to be revisited
+    return AvailableMemory;
 }
 
 /* global functions ********************************************************* */
@@ -204,7 +205,7 @@ TLV_GroupHandle_TP TLV_AddGroup(void* const Buffer, const uint16_t Size)
 {
     /* perform plausibility tests on the input parameters */
     if ((NULL == Buffer) ||
-            ((uint32_t) Buffer % sizeof(TLV_group_t) != 0) ||
+            ((unsigned long) Buffer % sizeof(TLV_group_t) != 0) ||
             (Size <= (sizeof(TLV_group_t))))
     {
         /* return invalid Handle to report generic failure */
@@ -301,13 +302,13 @@ TLV_Element_T* TLV_AddElement(TLV_GroupHandle_TP const Handle, const uint16_t Ty
                 LastElement = Element;
                 Element = &Element[1];
 
-                Element->DataBuffer = (uint8_t*) ((uint32_t) &LastElement->DataBuffer[0] - Length);
+                Element->DataBuffer = (uint8_t*) (&LastElement->DataBuffer[0] - Length);
             }
             else
             {
                 /* Element database is empty */
                 Element = (TLV_Element_T*) Handle->Buffer;
-                Element->DataBuffer = (uint8_t*) ((uint32_t) &Handle->Buffer[Handle->Limit] - Length);
+                Element->DataBuffer = (uint8_t*) (&Handle->Buffer[Handle->Limit] - Length);
             }
 
             Element->DataType = Type;

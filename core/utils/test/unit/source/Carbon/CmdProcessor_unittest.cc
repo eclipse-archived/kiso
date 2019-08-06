@@ -244,7 +244,14 @@ TEST_F(cmdProcessor, CmdProcessorEnqueueFromISRFail)
     uint32_t param2 = INIT_VAL;
     Retcode_T retVal = RETCODE_OK;
     CmdProcessor_Func_T fun = dump_fn;
+    char taskName[] = "abcdefghijklmnopqrstuvwxya123456789";
+    xQueueCreate_fake.return_val = (void *) QUEUE_CREATED;
+    xTaskCreate_fake.return_val = pdTRUE;
     xQueueSendFromISR_fake.return_val = errQUEUE_FULL;
+
+    /* INITIALIZE: Prepare the fixture */
+    retVal = CmdProcessor_Initialize(&cmdProcessor, taskName, TASK_PRIORITY, STACK_SIZE, QUEUE_SIZE);
+    EXPECT_EQ(RETCODE_OK, retVal);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = CmdProcessor_EnqueueFromIsr(&cmdProcessor, fun, NULL, param2);
@@ -285,7 +292,14 @@ TEST_F(cmdProcessor, CmdProcessorEnqueueFromISRSuccess)
     uint32_t param2 = INIT_VAL;
     Retcode_T retVal = RETCODE_OK;
     CmdProcessor_Func_T fun = dump_fn;
+    char taskName[] = "abcdefghijklmnopqrstuvwxya123456789";
+    xQueueCreate_fake.return_val = (void *) QUEUE_CREATED;
+    xTaskCreate_fake.return_val = pdTRUE;
     xQueueSendFromISR_fake.return_val = pdPASS;
+
+    /* INITIALIZE: Prepare the fixture */
+    retVal = CmdProcessor_Initialize(&cmdProcessor, taskName, TASK_PRIORITY, STACK_SIZE, QUEUE_SIZE);
+    EXPECT_EQ(RETCODE_OK, retVal);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = CmdProcessor_EnqueueFromIsr(&cmdProcessor, fun, NULL, param2);
@@ -306,7 +320,14 @@ TEST_F(cmdProcessor, CmdProcessorEnqueueError)
     uint32_t param2 = INIT_VAL;
     Retcode_T retVal = RETCODE_OK;
     CmdProcessor_Func_T fun = dump_fn;
+    char taskName[] = "abcdefghijklmnopqrstuvwxya123456789";
+    xQueueCreate_fake.return_val = (void *) QUEUE_CREATED;
+    xTaskCreate_fake.return_val = pdTRUE;
     xQueueSend_fake.return_val = errQUEUE_FULL;
+
+    /* INITIALIZE: Prepare the fixture */
+    retVal = CmdProcessor_Initialize(&cmdProcessor, taskName, TASK_PRIORITY, STACK_SIZE, QUEUE_SIZE);
+    EXPECT_EQ(RETCODE_OK, retVal);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = CmdProcessor_Enqueue(&cmdProcessor, fun, NULL, param2);
@@ -347,7 +368,14 @@ TEST_F(cmdProcessor, CmdProcessorEnqueueSuccess)
     uint32_t param2 = INIT_VAL;
     Retcode_T retVal = RETCODE_OK;
     CmdProcessor_Func_T fun = dump_fn;
+    char taskName[] = "abcdefghijklmnopqrstuvwxya123456789";
+    xQueueCreate_fake.return_val = (void *) QUEUE_CREATED;
+    xTaskCreate_fake.return_val = pdTRUE;
     xQueueSend_fake.return_val = pdPASS;
+
+    /* INITIALIZE: Prepare the fixture */
+    retVal = CmdProcessor_Initialize(&cmdProcessor, taskName, TASK_PRIORITY, STACK_SIZE, QUEUE_SIZE);
+    EXPECT_EQ(RETCODE_OK, retVal);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = CmdProcessor_Enqueue(&cmdProcessor, fun, NULL, param2);

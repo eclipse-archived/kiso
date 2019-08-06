@@ -679,7 +679,10 @@ void HAL_SPI_ErrorCallback(SPI_HandleTypeDef *hspi)
                 break;
         }
 
-        pSPI->AppCallback((SPI_T) pSPI, Events);
+        if(NULL != pSPI->AppCallback)
+        {
+            pSPI->AppCallback((SPI_T) pSPI, Events);
+        }
         pSPI->State = SPI_STATE_READY;
     }
 }

@@ -19,8 +19,8 @@
  * @{
  *
  * @brief Contains a default configuration to enable or disable HAL components.
- * 
- * @details 
+ *
+ * @details
  * This header file is included by the BCDS_HAL.h from the HAL (Hardware Abstraction Layer) module. It is used to allow
  * a per project configuration of the features provided by the HAL component.
  *
@@ -45,6 +45,8 @@
 #define BCDS_FEATURE_WATCHDOG                                                   0
 #define BCDS_FEATURE_PWM                                                        0
 #define BCDS_FEATURE_SLEEP                                                      0
+#define BCDS_FEATURE_RNG                                                        0
+#define BCDS_FEATURE_MCU_CRC                                                    0
 
 /* BSP Features */
 #define BCDS_FEATURE_BSP_LED                                                    1

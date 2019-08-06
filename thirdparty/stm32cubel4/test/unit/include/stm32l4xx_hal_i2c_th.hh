@@ -20,7 +20,6 @@
 
 /* Include the needed headers */
 #include "gtest.h"
-
 /* Faked variables needs to be initialized by the test fixture */
 
 /* Mock-ups for the provided interfaces */

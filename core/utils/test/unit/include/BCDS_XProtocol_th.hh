@@ -20,6 +20,8 @@
 #include "BCDS_Basics.h"
 #include "BCDS_Retcode.h"
 
+#include "gtest.h"
+
 /* wrap the real BCDS_XProtocol.h interface header */
 #include "BCDS_XProtocol.h"
 

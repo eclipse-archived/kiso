@@ -25,7 +25,6 @@
 
 /* include system header files */
 #include <gtest.h>
-
 #include "FreeRTOS_th.hh"
 
 /* ban the real queue.h header */

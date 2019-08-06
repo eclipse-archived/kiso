@@ -18,11 +18,12 @@
 extern "C"
 {/* start of global scope symbol and fake definitions section */
 
+
 #include "BCDS_Basics.h"
+#include "BCDS_HAL_th.hh"
 
 #if BCDS_FEATURE_WATCHDOG
 /* include faked interfaces */
-#include "BCDS_HAL_th.hh"
 #include "stm32l4xx_th.hh"
 #include "stm32l4xx_hal_iwdg_th.hh"
 #include "stm32l4xx_hal_rcc_th.hh"

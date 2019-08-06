@@ -15,8 +15,6 @@
 /* include gtest interface */
 #include <gtest.h>
 
-FFF_DEFINITION_BLOCK_START
-
 extern "C"
 {
 
@@ -96,8 +94,6 @@ const char * testStrings[] =
         };
 
 }
-
-FFF_DEFINITION_BLOCK_END
 
 class CommandLineInterface: public testing::Test
 {

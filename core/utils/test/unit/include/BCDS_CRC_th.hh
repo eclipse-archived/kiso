@@ -24,7 +24,7 @@
 #define BCDS_CRC_TH_HH_
 
 /* include system header files */
-
+#include "gtest.h"
 /*wrap the real BCDS_ComoCRC.h interface header */
 #include"BCDS_CRC.h"
 

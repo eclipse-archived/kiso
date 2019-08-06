@@ -22,22 +22,23 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-*/#ifndef FAKE_FUNCTIONS
+*/
+#ifndef FAKE_FUNCTIONS
 #define FAKE_FUNCTIONS
 
-/* 2012-12-18, klt2bp: provide a macro to be able to fake variables FFF style */
+/* 2012-12-18: provide a macro to be able to fake variables FFF style */
 #define FAKE_VAR(type,VARNAME) type VARNAME
 
-/* 2012-12-18, klt2bp: abstract unnamed namespace declaration from the user */
+/* 2012-12-18: abstract unnamed namespace declaration from the user */
 #define FFF_DEFINITION_BLOCK_START namespace {
 #define FFF_DEFINITION_BLOCK_END }
 
-/* 2013-02-25, klt2bp: forbid usage of GCC versions older than 4.7.x */
+/* 2013-02-25: forbid usage of GCC versions older than 4.7.x */
 #if (__GNUC__ < 4)
 #error "At least GCC 4.7.0 is required for the unit test framework and related tools to work properly. See the Unit testing with gtest wiki article."
 #endif
 
-/* 2014-02-09, klt2bp: provide a macro to be able to fetch the state of FAKE functions easily */
+/* 2014-02-09: provide a macro to be able to fetch the state of FAKE functions easily */
 #define FAKE_GET_STATE(fake_function) \
     (fake_function##_fake)
 	

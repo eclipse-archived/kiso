@@ -16,11 +16,13 @@
 #include <gtest.h>
 
 /* start of global scope symbol and fake definitions section */
-FFF_DEFINITION_BLOCK_START
+
 extern "C"
 {
 /* include faked interfaces */
 #include "BCDS_HAL_th.hh"
+
+#if BCDS_FEATURE_RNG
 
 #include "BCDS_Basics.h"
 #include "BCDS_Retcode_th.hh"
@@ -29,13 +31,10 @@ extern "C"
 #include "stm32l4xx_hal_rng_th.hh"
 
 /* setup compile time configuration defines */
-#undef BCDS_FEATURE_RNG
-#define BCDS_FEATURE_RNG 1
 /* include module under test */
 #include "RNG.c"
 }
 /* end of global scope symbol and fake definitions section */
-FFF_DEFINITION_BLOCK_END
 
 class TS_MCU_RNG_Initialize: public testing::Test
 {
@@ -361,3 +360,6 @@ TEST_F(TS_MCU_RNG_Generate, InvalidBuffer_errorPropagation)
 
     RESET_FAKE (HAL_RNG_GenerateRandomNumber);
 }
+#else
+}
+#endif

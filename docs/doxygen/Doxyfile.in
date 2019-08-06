@@ -58,7 +58,7 @@ PROJECT_LOGO           =
 # entered, it will be relative to the location where doxygen was started. If
 # left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       = ./generated_documentation
+OUTPUT_DIRECTORY       = @cmake_doxy_output_root@/documentation
 
 # If the CREATE_SUBDIRS tag is set to YES, then doxygen will create 4096 sub-
 # directories (in 2 levels) under the output directory of each output format and
@@ -763,7 +763,8 @@ WARN_LOGFILE           = ./doxygenWarning.log
 # spaces.
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = ./MainPage.dox ../../ 
+INPUT                  = @cmake_doxy_input_root@/MainPage.dox \
+                         @cmake_doxy_input_root@/../..
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses

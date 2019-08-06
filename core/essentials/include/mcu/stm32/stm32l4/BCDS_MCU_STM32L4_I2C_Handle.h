@@ -74,7 +74,7 @@ struct MCU_I2C_S
     Retcode_T (*ReceiveFunPtr)(struct MCU_I2C_S *pi2c); /**< Reference to the receive function. Will be set upon initialization depending on the mode in use. */
     Retcode_T (*ReadRegisterFunPtr)(struct MCU_I2C_S *pi2c); /**< Reference to the read register function. Will be set upon initialization depending on the mode in use. */
     Retcode_T (*WriteRegisterFunPtr)(struct MCU_I2C_S *pi2c); /**< Reference to the write register function. Will be set upon initialization depending on the mode in use. */
-    void (*CancelFunPtr)(struct MCU_I2C_S *pi2c); /**< Reference to the cancel function. Will be set upon initialization.*/
+    Retcode_T (*CancelFunPtr)(struct MCU_I2C_S *pi2c); /**< Reference to the cancel function. Will be set upon initialization.*/
     struct MCU_I2C_Transaction_S Transaction; /**< Current transaction parameters */
 };
 

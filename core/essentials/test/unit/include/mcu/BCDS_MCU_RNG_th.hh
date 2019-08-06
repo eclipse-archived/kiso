@@ -15,6 +15,8 @@
 #ifndef BCDS_MCU_RNG_TH_HH_
 #define BCDS_MCU_RNG_TH_HH_
 
+#include "gtest.h"
+
 /* include or ban the real interface header */
 #include "BCDS_MCU_RNG.h"
 

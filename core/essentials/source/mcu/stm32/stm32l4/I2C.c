@@ -406,13 +406,13 @@ static Retcode_T I2C_SendPollMode(struct MCU_I2C_S * pi2c)
         {
             /* reloading is needed, write in 255 byte chunks*/
             pi2c->hi2c.XferSize = I2C_MAX_NBYTES;
-            I2C_WriteControlWord(&pi2c->hi2c.Instance, slaveAddr, pi2c->hi2c.XferSize, I2C_RELOAD_MODE, I2C_GENERATE_START_WRITE);
+            I2C_WriteControlWord(pi2c->hi2c.Instance, slaveAddr, pi2c->hi2c.XferSize, I2C_RELOAD_MODE, I2C_GENERATE_START_WRITE);
         }
         else
         {
             /* No reloading is needed */
             pi2c->hi2c.XferSize = pi2c->hi2c.XferCount;
-            I2C_WriteControlWord(&pi2c->hi2c.Instance, slaveAddr, pi2c->hi2c.XferSize, I2C_AUTOEND_MODE, I2C_GENERATE_START_WRITE);
+            I2C_WriteControlWord(pi2c->hi2c.Instance, slaveAddr, pi2c->hi2c.XferSize, I2C_AUTOEND_MODE, I2C_GENERATE_START_WRITE);
         }
 
         /* loop sending the data */
@@ -456,12 +456,12 @@ static Retcode_T I2C_SendPollMode(struct MCU_I2C_S * pi2c)
                     if (pi2c->hi2c.XferCount > I2C_MAX_NBYTES)
                     {
                         pi2c->hi2c.XferSize = I2C_MAX_NBYTES;
-                        I2C_WriteControlWord(&pi2c->hi2c.Instance, slaveAddr, pi2c->hi2c.XferSize, I2C_RELOAD_MODE, I2C_NO_STARTSTOP);
+                        I2C_WriteControlWord(pi2c->hi2c.Instance, slaveAddr, pi2c->hi2c.XferSize, I2C_RELOAD_MODE, I2C_NO_STARTSTOP);
                     }
                     else
                     {
                         pi2c->hi2c.XferSize = pi2c->hi2c.XferCount;
-                        I2C_WriteControlWord(&pi2c->hi2c.Instance, slaveAddr, pi2c->hi2c.XferSize, I2C_AUTOEND_MODE, I2C_NO_STARTSTOP);
+                        I2C_WriteControlWord(pi2c->hi2c.Instance, slaveAddr, pi2c->hi2c.XferSize, I2C_AUTOEND_MODE, I2C_NO_STARTSTOP);
                     }
                 }
             }

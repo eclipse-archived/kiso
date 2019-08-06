@@ -24,6 +24,7 @@
 extern "C"
 {
 #include "BCDS_Basics.h"
+#include "BCDS_HAL_th.hh"
 
 #if BCDS_FEATURE_FLASH_INTERN
 /* include faked interface */

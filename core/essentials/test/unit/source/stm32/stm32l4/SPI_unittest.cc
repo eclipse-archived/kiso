@@ -27,10 +27,11 @@
 extern "C"
 {
 #include "BCDS_Basics.h"
+#include "BCDS_HAL_th.hh"
 
 #if BCDS_FEATURE_SPI
 /* include faked interfaces */
-#include "BCDS_HAL_th.hh"
+
 #include "stm32l4xx_th.hh"
 #include "stm32l4xx_hal_dma_th.hh"
 #include "stm32l4xx_hal_spi_th.hh"
@@ -325,15 +326,15 @@ TEST_F(BCDS_SPItest, testSPI_GetDataCount)
  * This test is currently just used to call the SPI interrupt callback
  * and to see if it can be called without problems
  */
-TEST_F(BCDS_SPItest, testSPI_MCU_BSP_SPI_IRQ_Callback)
+TEST_F(BCDS_SPItest, testSPI_IRQHandler)
 {
     /* First try with totally wrong parameters */
 	RESET_FAKE(HAL_SPI_IRQHandler);
-    MCU_BSP_SPI_IRQ_Callback(0);
-    EXPECT_EQ(0, HAL_SPI_IRQHandler_fake.call_count);
+    SPI_IRQHandler(0);
+    EXPECT_EQ(0u, HAL_SPI_IRQHandler_fake.call_count);
     /* Then use a valid handle */
-    MCU_BSP_SPI_IRQ_Callback((SPI_T) &testContext.mBSPHandleSPI);
-    EXPECT_EQ(1, HAL_SPI_IRQHandler_fake.call_count);
+    SPI_IRQHandler((SPI_T) &testContext.mBSPHandleSPI);
+    EXPECT_EQ(1u, HAL_SPI_IRQHandler_fake.call_count);
     RESET_FAKE(HAL_SPI_IRQHandler);
 }
 
@@ -341,15 +342,15 @@ TEST_F(BCDS_SPItest, testSPI_MCU_BSP_SPI_IRQ_Callback)
  * This test is currently just used to call the SPI DMA Rx callback
  * and to see if it can be called without problems
  */
-TEST_F(BCDS_SPItest, testSPI_MCU_BSP_SPI_DMA_RX_Callback)
+TEST_F(BCDS_SPItest, testSPI_DMARxHandler)
 {
     /* First try with totally wrong parameters */
 	RESET_FAKE(HAL_DMA_IRQHandler);
-    MCU_BSP_SPI_DMA_RX_Callback(0);
-    EXPECT_EQ(0, HAL_DMA_IRQHandler_fake.call_count);
+    SPI_DMARxHandler(0);
+    EXPECT_EQ(0u, HAL_DMA_IRQHandler_fake.call_count);
     /* Then use a valid handle */
-    MCU_BSP_SPI_DMA_RX_Callback((SPI_T) &testContext.mBSPHandleSPI);
-    EXPECT_EQ(1, HAL_DMA_IRQHandler_fake.call_count);
+    SPI_DMARxHandler((SPI_T) &testContext.mBSPHandleSPI);
+    EXPECT_EQ(1u, HAL_DMA_IRQHandler_fake.call_count);
     RESET_FAKE(HAL_DMA_IRQHandler);
 }
 
@@ -357,15 +358,15 @@ TEST_F(BCDS_SPItest, testSPI_MCU_BSP_SPI_DMA_RX_Callback)
  * This test is currently just used to call the SPI DMA Tx callback
  * and to see if it can be called without problems
  */
-TEST_F(BCDS_SPItest, testSPI_MCU_BSP_SPI_DMA_TX_Callback)
+TEST_F(BCDS_SPItest, testSPI_DMATxHandler)
 {
     /* First try with totally wrong parameters */
 	RESET_FAKE(HAL_DMA_IRQHandler);
-    MCU_BSP_SPI_DMA_TX_Callback(0);
-    EXPECT_EQ(0, HAL_DMA_IRQHandler_fake.call_count);
+    SPI_DMATxHandler(0);
+    EXPECT_EQ(0u, HAL_DMA_IRQHandler_fake.call_count);
     /* Then use a valid handle */
-    MCU_BSP_SPI_DMA_TX_Callback((SPI_T) &testContext.mBSPHandleSPI);
-    EXPECT_EQ(1, HAL_DMA_IRQHandler_fake.call_count);
+    SPI_DMATxHandler((SPI_T) &testContext.mBSPHandleSPI);
+    EXPECT_EQ(1u, HAL_DMA_IRQHandler_fake.call_count);
     RESET_FAKE(HAL_DMA_IRQHandler);
 }
 
@@ -393,55 +394,55 @@ TEST_F(BCDS_SPItest, testSPI_HAL_SPI_ErrorCallback)
     HAL_SPI_GetError_fake.return_val = HAL_SPI_ERROR_NONE;
     /* Then use a valid handle */
     HAL_SPI_ErrorCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(0,testContext.mLastEvent.RxReady);
-    EXPECT_EQ(0,testContext.mLastEvent.RxError);
-    EXPECT_EQ(0,testContext.mLastEvent.RxComplete);
-    EXPECT_EQ(0,testContext.mLastEvent.TxError);
-    EXPECT_EQ(0,testContext.mLastEvent.TxComplete);
-    EXPECT_EQ(0,testContext.mLastEvent.DataLoss);
+    EXPECT_EQ(0u,testContext.mLastEvent.RxReady);
+    EXPECT_EQ(0u,testContext.mLastEvent.RxError);
+    EXPECT_EQ(0u,testContext.mLastEvent.RxComplete);
+    EXPECT_EQ(0u,testContext.mLastEvent.TxError);
+    EXPECT_EQ(0u,testContext.mLastEvent.TxComplete);
+    EXPECT_EQ(0u,testContext.mLastEvent.DataLoss);
 
     /* Fake return of STM32 SPI GetError function */
     HAL_SPI_GetError_fake.return_val = HAL_SPI_ERROR_MODF;
     /* Then use a valid handle */
     HAL_SPI_ErrorCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1,testContext.mLastEvent.DataLoss);
+    EXPECT_EQ(1u,testContext.mLastEvent.DataLoss);
 
     /* Fake return of STM32 SPI GetError function */
     HAL_SPI_GetError_fake.return_val = HAL_SPI_ERROR_CRC;
     /* Then use a valid handle */
     HAL_SPI_ErrorCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1,testContext.mLastEvent.DataLoss);
-    EXPECT_EQ(1,testContext.mLastEvent.RxError);
+    EXPECT_EQ(1u,testContext.mLastEvent.DataLoss);
+    EXPECT_EQ(1u,testContext.mLastEvent.RxError);
 
     /* Fake return of STM32 SPI GetError function */
     HAL_SPI_GetError_fake.return_val = HAL_SPI_ERROR_OVR;
     /* Then use a valid handle */
     HAL_SPI_ErrorCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1,testContext.mLastEvent.DataLoss);
-    EXPECT_EQ(1,testContext.mLastEvent.RxError);
+    EXPECT_EQ(1u,testContext.mLastEvent.DataLoss);
+    EXPECT_EQ(1u,testContext.mLastEvent.RxError);
 
     /* Fake return of STM32 SPI GetError function */
     HAL_SPI_GetError_fake.return_val = HAL_SPI_ERROR_FRE;
     /* Then use a valid handle */
     HAL_SPI_ErrorCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1,testContext.mLastEvent.DataLoss);
-    EXPECT_EQ(1,testContext.mLastEvent.RxError);
+    EXPECT_EQ(1u,testContext.mLastEvent.DataLoss);
+    EXPECT_EQ(1u,testContext.mLastEvent.RxError);
 
     /* Fake return of STM32 SPI GetError function */
     HAL_SPI_GetError_fake.return_val = HAL_SPI_ERROR_DMA;
     /* Then use a valid handle */
     HAL_SPI_ErrorCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1,testContext.mLastEvent.DataLoss);
-    EXPECT_EQ(1,testContext.mLastEvent.RxError);
-    EXPECT_EQ(1,testContext.mLastEvent.TxError);
+    EXPECT_EQ(1u,testContext.mLastEvent.DataLoss);
+    EXPECT_EQ(1u,testContext.mLastEvent.RxError);
+    EXPECT_EQ(1u,testContext.mLastEvent.TxError);
 
     /* Fake return of STM32 SPI GetError function */
     HAL_SPI_GetError_fake.return_val = HAL_SPI_ERROR_FLAG;
     /* Then use a valid handle */
     HAL_SPI_ErrorCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1,testContext.mLastEvent.DataLoss);
-    EXPECT_EQ(1,testContext.mLastEvent.RxError);
-    EXPECT_EQ(1,testContext.mLastEvent.TxError);
+    EXPECT_EQ(1u,testContext.mLastEvent.DataLoss);
+    EXPECT_EQ(1u,testContext.mLastEvent.RxError);
+    EXPECT_EQ(1u,testContext.mLastEvent.TxError);
 
 }
 
@@ -454,11 +455,11 @@ TEST_F(BCDS_SPItest, testSPI_HAL_SPI_TxCpltCallback)
     /* First try with totally wrong parameters */
 	testContext.mTestAppCallbackCount = 0;
     HAL_SPI_TxCpltCallback(NULL);
-    EXPECT_EQ(0,testContext.mTestAppCallbackCount);
+    EXPECT_EQ(0u,testContext.mTestAppCallbackCount);
     /* Then use a valid handle */
     HAL_SPI_TxCpltCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1,testContext.mLastEvent.TxComplete);
-    EXPECT_EQ(1,testContext.mTestAppCallbackCount);
+    EXPECT_EQ(1u,testContext.mLastEvent.TxComplete);
+    EXPECT_EQ(1u,testContext.mTestAppCallbackCount);
 }
 
 /**
@@ -470,11 +471,11 @@ TEST_F(BCDS_SPItest, testSPI_HAL_SPI_RxCpltCallback)
     /* First try with totally wrong parameters */
 	testContext.mTestAppCallbackCount = 0;
     HAL_SPI_RxCpltCallback(NULL);
-    EXPECT_EQ(0,testContext.mTestAppCallbackCount);
+    EXPECT_EQ(0u,testContext.mTestAppCallbackCount);
     /* Then use a valid handle */
     HAL_SPI_RxCpltCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1,testContext.mLastEvent.RxComplete);
-    EXPECT_EQ(1,testContext.mTestAppCallbackCount);
+    EXPECT_EQ(1u,testContext.mLastEvent.RxComplete);
+    EXPECT_EQ(1u,testContext.mTestAppCallbackCount);
 }
 
 /**
@@ -486,12 +487,12 @@ TEST_F(BCDS_SPItest, testSPI_HAL_SPI_TxRxCpltCallback)
     /* First try with totally wrong parameters */
 	testContext.mTestAppCallbackCount = 0;
     HAL_SPI_TxRxCpltCallback(NULL);
-    EXPECT_EQ(0,testContext.mTestAppCallbackCount);
+    EXPECT_EQ(0u,testContext.mTestAppCallbackCount);
     /* Then use a valid handle */
     HAL_SPI_TxRxCpltCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1,testContext.mLastEvent.RxComplete);
-    EXPECT_EQ(1,testContext.mLastEvent.TxComplete);
-    EXPECT_EQ(1,testContext.mTestAppCallbackCount);
+    EXPECT_EQ(1u,testContext.mLastEvent.RxComplete);
+    EXPECT_EQ(1u,testContext.mLastEvent.TxComplete);
+    EXPECT_EQ(1u,testContext.mTestAppCallbackCount);
 }
 
 /**
@@ -509,12 +510,12 @@ TEST_F(BCDS_SPItest, testSPI_DeInitializer)
     rc = MCU_SPI_Deinitialize((SPI_T) &testContext.mBSPHandleSPI);
     EXPECT_EQ(RETCODE_OK, rc);
     /* check if the pointers are reset to default */
-    EXPECT_EQ((uint32_t)testContext.mBSPHandleSPI.AppCallback,NULL);
-    EXPECT_EQ((uint32_t)testContext.mBSPHandleSPI.IRQCallback,NULL);
-    EXPECT_EQ((uint32_t)testContext.mBSPHandleSPI.DmaTxCallback,NULL);
-    EXPECT_EQ((uint32_t)testContext.mBSPHandleSPI.DmaRxCallback,NULL);
-    EXPECT_EQ((uint32_t)testContext.mBSPHandleSPI.RxFunPtr,NULL);
-    EXPECT_EQ((uint32_t)testContext.mBSPHandleSPI.TxFunPtr,NULL);
+    EXPECT_EQ(testContext.mBSPHandleSPI.AppCallback,nullptr);
+    EXPECT_EQ(testContext.mBSPHandleSPI.IRQCallback,nullptr);
+    EXPECT_EQ(testContext.mBSPHandleSPI.DmaTxCallback,nullptr);
+    EXPECT_EQ(testContext.mBSPHandleSPI.DmaRxCallback,nullptr);
+    EXPECT_EQ(testContext.mBSPHandleSPI.RxFunPtr,nullptr);
+    EXPECT_EQ(testContext.mBSPHandleSPI.TxFunPtr,nullptr);
     /* After this any call except to initalize should fail */
     rc = MCU_SPI_Send((SPI_T) &testContext.mBSPHandleSPI, NULL, 0);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_NOT_SUPPORTED), rc);

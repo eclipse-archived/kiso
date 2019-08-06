@@ -23,6 +23,7 @@
 #define BCDS_ERRORLOGGER_HH_
 
 /* include system header files */
+#include "gtest.h"
 
 /* wrap the real interface header */
 #include "BCDS_ErrorLogger.h"

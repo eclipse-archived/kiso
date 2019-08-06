@@ -5,7 +5,7 @@ pipeline
         docker
         {
             label 'RT-Z0KHU'
-            image 'rb-dtr.de.bosch.com/software-campus/cddk-toolchain:v0.2.3'
+            image 'rb-dtr.de.bosch.com/software-campus/cddk-toolchain:v0.2.4'
             registryUrl 'https://rb-dtr.de.bosch.com'
             registryCredentialsId 'docker-registry'
         }
@@ -27,11 +27,11 @@ pipeline
         {
             steps // Define the steps of a stage
             {
-                script // Run static analysis
+                script // Run build
                 {
                     echo "Build the application"
-                    sh 'meson builddir-debug --cross-file boards/CommonGateway/meson_config_stm32l4_gcc8.ini'
-                    sh 'cd builddir-debug && ninja hex'
+                    sh 'cmake . -Bbuilddir-debug -G"Ninja" -DKISO_BOARD_NAME=CommonGateway'
+                    sh 'cmake --build builddir-debug'
                 }
             }
         }
@@ -56,8 +56,9 @@ pipeline
                         script // Run unittests
                         {
                             echo "run unit-tests"
-                            sh 'meson builddir-unittests --cross-file boards/Host/meson_config_unittest.ini -Dc_link_args="-pthread" -Dcpp_link_args="-pthread"' 
-                    		sh 'cd builddir-unittests && ninja test' // For later:  && ninja coverage-html'
+                            sh 'cmake . -Bbuilddir-unittests -G"Ninja" -DKISO_BOARD_NAME=CommonGateway -DENABLE_TESTING=1'
+                            sh 'cmake --build builddir-unittests' // For later:  && ninja coverage-html'
+                            sh 'cd builddir-unittests && ctest -T test --no-compress-output'
                         }
                     }
                 }
@@ -78,7 +79,7 @@ pipeline
                         script // Run unittests
                         {
                             echo "Generate doxygen"
-                            sh 'cd builddir-debug && ninja doxygen'
+                            sh 'cmake --build builddir-debug --target docs'
                         }
                     }
                 }
@@ -88,6 +89,13 @@ pipeline
 
     post // Called at very end of the script to notify developer and github about the result of the build
     {
+        always
+        {
+            archiveArtifacts (
+                artifacts: 'builddir-unittests/Testing/**/*.xml',
+                fingerprint: true
+            )
+        }
         success
         {
             echo 'To do'

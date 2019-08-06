@@ -23,6 +23,8 @@
 #ifndef BCDS_LEANB2CAP_TH_HH_
 #define BCDS_LEANB2CAP_TH_HH_
 
+#include "gtest.h"
+
 /* wrap the real BCDS_LeanB2CAP.h interface header */
 #include "BCDS_LeanB2CAP.h"
 

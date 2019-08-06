@@ -22,6 +22,7 @@
 #define BCDS_UARTTransceiver_TH_HH_
 
 /* include system header files */
+#include "gtest.h"
 
 /* wrap the real UartTransceiver.h interface header */
 #include "BCDS_UARTTransceiver.h"

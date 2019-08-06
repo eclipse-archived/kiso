@@ -18,10 +18,10 @@
 extern "C"
 {
 #include "BCDS_Basics.h"
+#include "BCDS_HAL_th.hh"
 
 #if BCDS_FEATURE_MCU_CRC
 /* include faked interfaces */
-#include "BCDS_HAL_th.hh"
 #include "BCDS_Retcode_th.hh"
 #include "stm32l4xx_th.hh"
 #include "stm32l4xx_hal_th.hh"

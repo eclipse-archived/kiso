@@ -131,7 +131,7 @@ protected:
             /* calculate group Handle Size based on the base address of the application Buffer
              * and the address of the created first Element
              */
-            groupHandleSize = (uint32_t) Element - (uint32_t) DataBuffer;
+            groupHandleSize = (uint64_t) Element - (uint64_t) DataBuffer;
         }
         else
         {

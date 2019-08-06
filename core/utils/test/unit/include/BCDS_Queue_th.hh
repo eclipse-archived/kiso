@@ -15,7 +15,7 @@
 #ifndef BCDS_QUEUE_TH_HH
 #define BCDS_QUEUE_TH_HH
 
-#include <gtest.h>
+#include "gtest.h"
 #include "BCDS_Basics.h"
 #include "BCDS_Retcode_th.hh"
 #include "FreeRTOS_th.hh"

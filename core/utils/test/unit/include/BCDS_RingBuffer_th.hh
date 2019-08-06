@@ -23,6 +23,7 @@
 #define BCDS_RINGBUFFER_TH_HH_
 
 /* include system header files */
+#include "gtest.h"
 
 #define BCDS_RINGBUFFER_H
 /**

@@ -24,11 +24,11 @@ extern "C"
 {
 
 #include "BCDS_Basics.h"
+#include "BCDS_HAL_th.hh"
 
 #if BCDS_FEATURE_UART
 
 /* include faked interfaces */
-#include "BCDS_HAL_th.hh"
 #include "stm32l4xx_hal_th.hh"
 #include "stm32l4xx_hal_dma_th.hh"
 #include "stm32l4xx_hal_uart_th.hh"
@@ -36,8 +36,6 @@ extern "C"
 
 /* Include module under test */
 #include "UART.c"
-
-} /* extern "C"*/
 
 void HAL_UART_TxCpltCallback_Peripherals(UART_HandleTypeDef *huart)
 {
@@ -57,7 +55,6 @@ void HAL_UART_ErrorCallback_Peripherals(UART_HandleTypeDef *huart)
 } /* extern "C" */
 
 /* end of global scope symbol and fake definitions section */
-FFF_DEFINITION_BLOCK_END
 
 /*
  static Retcode_T FakeFailSend(struct MCU_UART_Driver_S* const element_ptr, uint8_t * data, uint32_t len)

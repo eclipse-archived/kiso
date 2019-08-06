@@ -19,6 +19,7 @@
 #include "BCDS_I2CTransceiver.h"
 
 /* Include the needed headers */
+#include "gtest.h"
 
 /* Faked variables needs to be initialized by the test fixture */
 

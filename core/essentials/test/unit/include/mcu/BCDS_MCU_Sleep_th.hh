@@ -15,6 +15,8 @@
 #ifndef BCDS_MCU_Sleep_th_HH
 #define BCDS_MCU_Sleep_th_HH
 
+#include "gtest.h"
+
 /* Include the needed headers */
 #include "BCDS_HAL_th.hh"
 
