@@ -35,7 +35,7 @@ static Queue_T EventQueue;
 static uint8_t EventQueueBuffer[AT_RESPONSE_QUEUE_BUFFER_SIZE];
 
 /*response queue event mask*/
-static AtEventType_T AtEventMask=0;
+static AtEventType_T AtEventMask = (AtEventType_T) 0;
 
 
 static Retcode_T AtResponseQueue_WaitForEntry(uint32_t timeout, AtEventType_T EventType, AtResponseQueueEntry_T **entry)
@@ -178,7 +178,8 @@ static void AtResponseQueue_CallbackResponseCode(AtResponseCode_T response)
 {
     AtResponseQueueEntry_T entry = {
             .Type = AT_EVENT_TYPE_RESPONSE_CODE,
-            .ResponseCode = response
+            .ResponseCode = response,
+            .BufferLength = 0
     };
 
     Retcode_T retcode = Queue_Put(&EventQueue, &entry, sizeof(entry), NULL, 0);
@@ -214,7 +215,7 @@ Retcode_T AtResponseQueue_SetEventMask(uint32_t eventMask)
     if (eventMask<AT_EVENT_TYPE_OUT_OF_RANGE)
     {
         retcode = RETCODE_OK;
-        AtEventMask=eventMask;
+        AtEventMask = (AtEventType_T) eventMask;
     }
     else
     {
@@ -225,7 +226,7 @@ Retcode_T AtResponseQueue_SetEventMask(uint32_t eventMask)
 
 }
 
-uint32_t AtResponseQueue_GetEventMask(uint32_t eventMask)
+uint32_t AtResponseQueue_GetEventMask(void)
 {
     return AtEventMask;
 }

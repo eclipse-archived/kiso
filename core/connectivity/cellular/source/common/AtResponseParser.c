@@ -443,6 +443,7 @@ static int32_t AtrpStateMiscContent(uint8_t* buffer, uint32_t len)
 
     if (status & (ATRP_CONSUME_STATUS_FOUND_DELIMITERA))
     {
+        //FIXME: Find better way of handling non-AT conform responses!
         //uint8_t* NewBuffer = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
         state.Buffer[state.BufferPosition++]='\n';
         if (result > 0 && NULL != ATRP_MISC_EVENT)

@@ -17,9 +17,8 @@
 
 /* Include all headers which are needed by this file. */
 #include <gtest.h>
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode_th.hh"
-#include "CellularResponseQueue.h"
+
+#include "AtResponseQueue.h"
 
 FAKE_VALUE_FUNC(Retcode_T, AtResponseQueue_Init);
 FAKE_VALUE_FUNC(Retcode_T, AtResponseQueue_Deinit);

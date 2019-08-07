@@ -12,30 +12,24 @@
 *
 ********************************************************************************/
 
-#ifndef CELLULAR_ENGINE_TH_HH
-#define CELLULAR_ENGINE_TH_HH
+#ifndef ENGINE_TH_HH_
+#define ENGINE_TH_HH_
 
-/* Include all headers which are needed by this file. */
 #include <gtest.h>
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode_th.hh"
-#include "Semphr_th.hh"
-#include "BCDS_MCU_UART_th.hh"
-#include "CellularEngine.h"
 
-/* Mock-ups for the provided interfaces */
-FAKE_VALUE_FUNC(Retcode_T, CellularEngine_Init, Cellular_CallbackFunction_T);
-FAKE_VALUE_FUNC(Retcode_T, CellularEngine_Deinit);
-FAKE_VOID_FUNC(CellularEngine_SetFlukeCharFilterEnabled, bool);
-FAKE_VALUE_FUNC(Retcode_T, CellularEngine_SendAtCommand, const uint8_t*, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, CellularEngine_SendAtCmdWaitEcho, uint32_t, const char *);
-FAKE_VALUE_FUNC(Cellular_DeviceStatus_T, CellularEngine_GetDeviceStatus);
-FAKE_VOID_FUNC(CellularEngine_SetDeviceStatus, Cellular_DeviceStatus_T, Cellular_CallbackEvent_T, void *);
-FAKE_VALUE_FUNC(Retcode_T, CellularEngine_GetDeviceError);
-FAKE_VOID_FUNC(CellularEngine_SetDeviceError, Retcode_T);
-FAKE_VALUE_FUNC(Retcode_T, CellularRequest_Dispatch, uint32_t, CellularRequest_CallableFunction_T, void *, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, CellularEngine_HandleEvents);
-FAKE_VOID_FUNC(CellularEngine_SetCustomAtResponseParser, AtResponseParserCallback_T);
-FAKE_VALUE_FUNC(Retcode_T, Cellular_ReadData, uint8_t*, uint32_t, uint32_t*);
+#include "Engine.h"
 
-#endif /* CELLULAR_ENGINE_TH_HH */
+FAKE_VALUE_FUNC(Retcode_T, Engine_Initialize, Cellular_StateChanged_T);
+FAKE_VALUE_FUNC(Retcode_T, Engine_Deinitialize);
+FAKE_VOID_FUNC(Engine_SetFlukeCharFilterEnabled, bool);
+FAKE_VOID_FUNC(Engine_NotifyNewState, Cellular_State_T, void*, uint32_t);
+FAKE_VALUE_FUNC(Retcode_T, Engine_SendAtCommand, const uint8_t*, uint32_t);
+FAKE_VALUE_FUNC(Retcode_T, Engine_SendAtCommandWaitEcho, const uint8_t*, uint32_t, uint32_t);
+FAKE_VALUE_FUNC(Retcode_T, Engine_Dispatch, CellularRequest_CallableFunction_T, uint32_t, void *, uint32_t);
+FAKE_VOID_FUNC(Engine_EchoModeEnabled, bool);
+FAKE_VALUE_FUNC(Retcode_T, Engine_HandleEvents);
+FAKE_VALUE_FUNC(Retcode_T, Engine_ReadData, uint8_t*, uint32_t, uint32_t*);
+
+char Engine_AtSendBuffer[CELLULAR_AT_SEND_BUFFER_SIZE];
+
+#endif /* ENGINE_TH_HH_ */

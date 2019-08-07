@@ -430,12 +430,10 @@ Retcode_T AtResponseQueue_SetEventMask(uint32_t eventMask);
 /**
  * @brief get the event mask of the AT-response-queue
  *
- *
- * @param[in] Mask of EventType_T events
  * @returns the currently set event mask
  */
 
-uint32_t AtResponseQueue_GetEventMask(uint32_t eventMask);
+uint32_t AtResponseQueue_GetEventMask(void);
 
 /**
  * @brief Clears the content of the response event queue

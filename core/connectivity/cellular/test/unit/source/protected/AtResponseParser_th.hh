@@ -15,14 +15,10 @@
 #ifndef ATRESPONSEPARSER_TH_HH_
 #define ATRESPONSEPARSER_TH_HH_
 
-/* Include the needed headers */
 #include <gtest.h>
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode_th.hh"
-#include "Common_th.hh"
-#include "CellularAtResponseParser.h"
 
-/* Mock-ups for the provided interfaces */
+#include "AtResponseParser.h"
+
 FAKE_VOID_FUNC(AtResponseParser_RegisterResponseCodeCallback, AtrpEventWithResponseCodeCallback_T);
 FAKE_VOID_FUNC(AtResponseParser_RegisterErrorCallback, AtrpEventCallback_T);
 FAKE_VOID_FUNC(AtResponseParser_RegisterCmdEchoCallback, AtrpEventWithDataCallback_T);

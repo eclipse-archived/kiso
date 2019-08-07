@@ -180,7 +180,7 @@ Retcode_T Queue_Get(Queue_T *Queue, void **Data, uint32_t *DataSize, uint32_t Ti
     }
 
     QueueItem_T *m = (QueueItem_T*) Queue->PosRead;
-    *Data = m->Data;
+    *Data = Queue->PosRead + sizeof(QueueItem_T);
     if (DataSize)
     {
         *DataSize = m->Size;

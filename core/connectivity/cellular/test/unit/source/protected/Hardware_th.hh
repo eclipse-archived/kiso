@@ -12,21 +12,18 @@
 *
 ********************************************************************************/
 
-#ifndef LOG_TH_HH
-#define LOG_TH_HH
+#ifndef HARDWARE_TH_HH_
+#define HARDWARE_TH_HH_
 
-/* Include all headers which are needed by this file. */
 #include <gtest.h>
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode_th.hh"
 
-#undef BCDS_LOGGING
+#include "Hardware.h"
 
-#include "BCDS_Logging.h"
+FAKE_VALUE_FUNC(Retcode_T, Hardware_Initialize, MCU_UART_Callback_T, uint8_t*);
+FAKE_VALUE_FUNC(Retcode_T, Hardware_Deinitialize);
+FAKE_VALUE_FUNC(Retcode_T, Hardware_Startup);
+FAKE_VALUE_FUNC(Retcode_T, Hardware_Shutdown);
+FAKE_VALUE_FUNC(Retcode_T, Hardware_Reset);
+FAKE_VALUE_FUNC(Retcode_T, Hardware_GetCommunicationChannel, UART_T*);
 
-/* Mock-ups for the provided interfaces */
-FAKE_VALUE_FUNC(Retcode_T, Log_Init);
-FAKE_VOID_FUNC(Log_InitHardware, void *);
-FAKE_VOID_FUNC(Log_SendMessage, const char *, uint32_t);
-
-#endif /* LOG_TH_HH */
+#endif /* HARDWARE_TH_HH_ */

@@ -105,11 +105,8 @@ static Retcode_T ReadData(uint8_t* data, uint32_t dataLength, uint32_t* dataRead
 
 static void HandleMcuIsrCallback(UART_T uart, struct MCU_UART_Event_S event)
 {
-    if ((UART_T) 0 == uart)
-    {
-        Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM));
-        return;
-    }
+    BCDS_UNUSED(uart);
+    assert(uart != 0);
 
     if (event.TxComplete)
     {
@@ -124,7 +121,7 @@ static void HandleMcuIsrCallback(UART_T uart, struct MCU_UART_Event_S event)
         uint32_t bytesWritten = RingBuffer_Write(&UartRxBufDescr, &UartRxByte, UINT32_C(1));
         if(UINT32_C(1) != bytesWritten)
         {
-            Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES));
+            Retcode_RaiseErrorFromIsr(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES));
             return;
         }
 
@@ -137,7 +134,6 @@ static void HandleMcuIsrCallback(UART_T uart, struct MCU_UART_Event_S event)
         }
     }
 }
-
 
 static void AtResponseParser_Task(void *param)
 {
@@ -235,6 +231,9 @@ Retcode_T Engine_HandleEvents(void)
                 case AT_EVENT_TYPE_ERROR:
                     LOG_WARNING("Removing ERROR-event from AtResponseQueue!");
                     break;
+                default:
+                    LOG_ERROR("Unexpected event type!");
+                    break;
                 }
             }
             else
@@ -261,8 +260,6 @@ Retcode_T Engine_Initialize(Cellular_StateChanged_T onStateChanged)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
-
-    OnStateChanged = onStateChanged;
 
     Retcode_T status;
 
@@ -315,6 +312,7 @@ Retcode_T Engine_Initialize(Cellular_StateChanged_T onStateChanged)
     CellularDriver_TaskHandle = xTaskCreateStatic(CellularDriver_Task, "CellularDrv", CELLULAR_DRV_TASK_STACK_SIZE, NULL, CELLULAR_DRV_TASK_PRIORITY, CellularDriver_TaskStack, &CellularDriver_TaskBuffer);
     assert(NULL != CellularDriver_TaskHandle); /* due to static allocation */
 
+    OnStateChanged = onStateChanged;
     State = CELLULAR_STATE_POWEROFF;
     EchoModeEnabled = true;
 
@@ -361,11 +359,6 @@ Retcode_T Engine_SendAtCommand(const uint8_t* buffer, uint32_t bufferLength)
 
 Retcode_T Engine_SendAtCommandWaitEcho(const uint8_t* buffer, uint32_t bufferLength, uint32_t timeout)
 {
-    if (NULL == buffer)
-    {
-        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-    }
-
     Retcode_T retcode = Engine_SendAtCommand(buffer, bufferLength);
     if (RETCODE_OK != retcode)
     {

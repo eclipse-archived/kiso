@@ -45,93 +45,93 @@
 #define AT_UBLOX_EMPTY_DATA         ("\"\"")
 
 #define CMD_UBLOX_ATULSTFILE                "ULSTFILE"
-#define CMD_UBLOX_SET_ATULSTFILE_FMT       ("AT+"CMD_UBLOX_ATULSTFILE"=%d,\"%s\"\r\n")
+#define CMD_UBLOX_SET_ATULSTFILE_FMT       ("AT+" CMD_UBLOX_ATULSTFILE "=%d,\"%s\"\r\n")
 
 
 #define CMD_UBLOX_ATUDELFILE               "UDELFILE"
-#define CMD_UBLOX_SET_ATUDELFILE_FMT       ("AT+"CMD_UBLOX_ATUDELFILE"=\"%s\"\r\n")
+#define CMD_UBLOX_SET_ATUDELFILE_FMT       ("AT+" CMD_UBLOX_ATUDELFILE "=\"%s\"\r\n")
 
 #define CMD_UBLOX_ATURDFILE                "URDFILE"
-#define CMD_UBLOX_SET_ATURDFILE_FMT       ("AT+"CMD_UBLOX_ATURDFILE"=\"%s\"\r\n")
+#define CMD_UBLOX_SET_ATURDFILE_FMT       ("AT+" CMD_UBLOX_ATURDFILE "=\"%s\"\r\n")
 
 #define CMD_UBLOX_ATUDWNFILE              "UDWNFILE"
-#define CMD_UBLOX_SET_ATUDWNFILE_FMT       ("AT+"CMD_UBLOX_ATUDWNFILE"=\"%s\",%d\r\n")
+#define CMD_UBLOX_SET_ATUDWNFILE_FMT       ("AT+" CMD_UBLOX_ATUDWNFILE "=\"%s\",%d\r\n")
 
 
 #define CMD_UBLOX_ATURDBLOCK                "URDBLOCK"
-#define CMD_UBLOX_SET_ATURDBLOCK_FMT       ("AT+"CMD_UBLOX_ATURDBLOCK"=\"%s\",%d,%d\r\n")
+#define CMD_UBLOX_SET_ATURDBLOCK_FMT       ("AT+" CMD_UBLOX_ATURDBLOCK "=\"%s\",%d,%d\r\n")
 
 #define CMD_UBLOX_ATUHTTP                  "UHTTP"
-#define CMD_UBLOX_SET_ATUHTTP1_FMT           ("AT+"CMD_UBLOX_ATUHTTP"=%d\r\n")
-#define CMD_UBLOX_SET_ATUHTTP2_FMT           ("AT+"CMD_UBLOX_ATUHTTP"=%d,%d,\"%s\"\r\n")
-#define CMD_UBLOX_SET_ATUHTTP3_FMT           ("AT+"CMD_UBLOX_ATUHTTP"=%d,%d,%d\r\n")
+#define CMD_UBLOX_SET_ATUHTTP1_FMT           ("AT+" CMD_UBLOX_ATUHTTP "=%d\r\n")
+#define CMD_UBLOX_SET_ATUHTTP2_FMT           ("AT+" CMD_UBLOX_ATUHTTP "=%d,%d,\"%s\"\r\n")
+#define CMD_UBLOX_SET_ATUHTTP3_FMT           ("AT+" CMD_UBLOX_ATUHTTP "=%d,%d,%d\r\n")
 
 #define CMD_UBLOX_ATUHTTPC                  "UHTTPC"
 #define CMD_UBLOX_ATUHTTPCR                  "UUHTTPCR"
-#define CMD_UBLOX_SET_ATUHTTPC1_FMT          ("AT+"CMD_UBLOX_ATUHTTPC"=%d,%d,\"%s\",\"%s\"\r\n")
-#define CMD_UBLOX_SET_ATUHTTPC2_FMT          ("AT+"CMD_UBLOX_ATUHTTPC"=%d,%d,\"%s\",\"%s\",\"%s\",%d\r\n")
-#define CMD_UBLOX_SET_ATUHTTPC3_FMT          ("AT+"CMD_UBLOX_ATUHTTPC"=%d,%d,\"%s\",\"%s\",\"%s\",%d\r\n")
+#define CMD_UBLOX_SET_ATUHTTPC1_FMT          ("AT+" CMD_UBLOX_ATUHTTPC "=%d,%d,\"%s\",\"%s\"\r\n")
+#define CMD_UBLOX_SET_ATUHTTPC2_FMT          ("AT+" CMD_UBLOX_ATUHTTPC "=%d,%d,\"%s\",\"%s\",\"%s\",%d\r\n")
+#define CMD_UBLOX_SET_ATUHTTPC3_FMT          ("AT+" CMD_UBLOX_ATUHTTPC "=%d,%d,\"%s\",\"%s\",\"%s\",%d\r\n")
 
 #define CMD_UBLOX_ATURAT                    "URAT"
-#define CMD_UBLOX_SET_ATURAT1_FMT           ("AT+"CMD_UBLOX_ATURAT"=%d\r\n")
-#define CMD_UBLOX_SET_ATURAT2_FMT           ("AT+"CMD_UBLOX_ATURAT"=%d,%d\r\n")
-#define CMD_UBLOX_SET_ATURAT3_FMT           ("AT+"CMD_UBLOX_ATURAT"=%d,%d,%d\r\n")
+#define CMD_UBLOX_SET_ATURAT1_FMT           ("AT+" CMD_UBLOX_ATURAT "=%d\r\n")
+#define CMD_UBLOX_SET_ATURAT2_FMT           ("AT+" CMD_UBLOX_ATURAT "=%d,%d\r\n")
+#define CMD_UBLOX_SET_ATURAT3_FMT           ("AT+" CMD_UBLOX_ATURAT "=%d,%d,%d\r\n")
 
 #define CMD_UBLOX_ATUMNOPROF                "UMNOPROF"
-#define CMD_UBLOX_SET_ATUMNOPROF_FMT        ("AT+"CMD_UBLOX_ATUMNOPROF"=%d\r\n")
-#define CMD_UBLOX_GET_ATUMNOPROF            ("AT+"CMD_UBLOX_ATUMNOPROF"?\r\n")
+#define CMD_UBLOX_SET_ATUMNOPROF_FMT        ("AT+" CMD_UBLOX_ATUMNOPROF "=%d\r\n")
+#define CMD_UBLOX_GET_ATUMNOPROF            ("AT+" CMD_UBLOX_ATUMNOPROF "?\r\n")
 
 #define CMD_UBLOX_ATUBANDMASK               "UBANDMASK"
-#define CMD_UBLOX_SET_ATUBANDMASK_FMT       ("AT+"CMD_UBLOX_ATUBANDMASK"=%d,%d,%d\r\n")
+#define CMD_UBLOX_SET_ATUBANDMASK_FMT       ("AT+" CMD_UBLOX_ATUBANDMASK "=%d,%d,%d\r\n")
 
 #define CMD_UBLOX_ATUSOCR                   "USOCR"
-#define CMD_UBLOX_SET_ATUSOCR_FMT           ("AT+"CMD_UBLOX_ATUSOCR"=%d,%d\r\n")
+#define CMD_UBLOX_SET_ATUSOCR_FMT           ("AT+" CMD_UBLOX_ATUSOCR "=%d,%d\r\n")
 
 #define CMD_UBLOX_ATUSOCO                   "USOCO"
-#define CMD_UBLOX_SET_ATUSOCO_FMTIPV4       ("AT+"CMD_UBLOX_ATUSOCO"=%d,\"%d.%d.%d.%d\",%d\r\n")
-#define CMD_UBLOX_SET_ATUSOCO_FMTIPV6       ("AT+"CMD_UBLOX_ATUSOCO"=%d,\"%x:%x:%x:%x:%x:%x:%x:%x\",%d\r\n")
+#define CMD_UBLOX_SET_ATUSOCO_FMTIPV4       ("AT+" CMD_UBLOX_ATUSOCO "=%d,\"%d.%d.%d.%d\",%d\r\n")
+#define CMD_UBLOX_SET_ATUSOCO_FMTIPV6       ("AT+" CMD_UBLOX_ATUSOCO "=%d,\"%x:%x:%x:%x:%x:%x:%x:%x\",%d\r\n")
 
 #define CMD_UBLOX_ATUSOWR                   "USOWR"
-#define CMD_UBLOX_SET_ATUSOWR_FMTBASE       ("AT+"CMD_UBLOX_ATUSOWR"=%d,%d,\"%.*s\"\r\n")
-#define CMD_UBLOX_SET_ATUSOWR_FMTHEX        ("AT+"CMD_UBLOX_ATUSOWR"=%d,%d,\"%n%.*s\"\r\n")
+#define CMD_UBLOX_SET_ATUSOWR_FMTBASE       ("AT+" CMD_UBLOX_ATUSOWR "=%d,%d,\"%.*s\"\r\n")
+#define CMD_UBLOX_SET_ATUSOWR_FMTHEX        ("AT+" CMD_UBLOX_ATUSOWR "=%d,%d,\"%n%.*s\"\r\n")
 #define CMD_UBLOX_ATUSOWR_FOOTER            ("\"\r\n")
 
 #define CMD_UBLOX_ATUSOST                   "USOST"
-#define CMD_UBLOX_SET_ATUSOST_FMTIPV4BASE   ("AT+"CMD_UBLOX_ATUSOST"=%d,\"%d.%d.%d.%d\",%d,%d,\"%.*s\"\r\n")
-#define CMD_UBLOX_SET_ATUSOST_FMTIPV6BASE   ("AT+"CMD_UBLOX_ATUSOST"=%d,\"%x:%x:%x:%x:%x:%x:%x:%x\",%d,%d,\"%.*s\"\r\n")
-#define CMD_UBLOX_SET_ATUSOST_FMTIPV4HEX    ("AT+"CMD_UBLOX_ATUSOST"=%d,\"%d.%d.%d.%d\",%d,%d,\"%n%.*s\"\r\n")
-#define CMD_UBLOX_SET_ATUSOST_FMTIPV6HEX    ("AT+"CMD_UBLOX_ATUSOST"=%d,\"%x:%x:%x:%x:%x:%x:%x:%x\",%d,%d,\"%n%.*s\"\r\n")
+#define CMD_UBLOX_SET_ATUSOST_FMTIPV4BASE   ("AT+" CMD_UBLOX_ATUSOST "=%d,\"%d.%d.%d.%d\",%d,%d,\"%.*s\"\r\n")
+#define CMD_UBLOX_SET_ATUSOST_FMTIPV6BASE   ("AT+" CMD_UBLOX_ATUSOST "=%d,\"%x:%x:%x:%x:%x:%x:%x:%x\",%d,%d,\"%.*s\"\r\n")
+#define CMD_UBLOX_SET_ATUSOST_FMTIPV4HEX    ("AT+" CMD_UBLOX_ATUSOST "=%d,\"%d.%d.%d.%d\",%d,%d,\"%n%.*s\"\r\n")
+#define CMD_UBLOX_SET_ATUSOST_FMTIPV6HEX    ("AT+" CMD_UBLOX_ATUSOST "=%d,\"%x:%x:%x:%x:%x:%x:%x:%x\",%d,%d,\"%n%.*s\"\r\n")
 
 #define CMD_UBLOX_ATUSORD                   "USORD"
 #define CMD_UBLOX_ATUUSORD                  "UUSORD"
-#define CMD_UBLOX_SET_ATUSORD_FMTHEX        ("AT+"CMD_UBLOX_ATUSORD"=%d,%d\r\n")
+#define CMD_UBLOX_SET_ATUSORD_FMTHEX        ("AT+" CMD_UBLOX_ATUSORD "=%d,%d\r\n")
 
 #define CMD_UBLOX_ATUSORF                   "USORF"
 #define CMD_UBLOX_ATUUSORF                  "UUSORF"
-#define CMD_UBLOX_SET_ATUSORF_FMTHEX        ("AT+"CMD_UBLOX_ATUSORF"=%d,%d\r\n")
+#define CMD_UBLOX_SET_ATUSORF_FMTHEX        ("AT+" CMD_UBLOX_ATUSORF "=%d,%d\r\n")
 
 #define CMD_UBLOX_ATUSOLI                   "USOLI"
 #define CMD_UBLOX_ATUUSOLI                  "UUSOLI"
-#define CMD_UBLOX_SET_ATUSOLI_FMT           ("AT+"CMD_UBLOX_ATUSOLI"=%d,%d\r\n")
+#define CMD_UBLOX_SET_ATUSOLI_FMT           ("AT+" CMD_UBLOX_ATUSOLI "=%d,%d\r\n")
 
 #define CMD_UBLOX_ATUSOCL                   "USOCL"
 #define CMD_UBLOX_ATUUSOCL                  "UUSOCL"
-#define CMD_UBLOX_SET_ATUSOCL_FMT           ("AT+"CMD_UBLOX_ATUSOCL"=%d\r\n")
+#define CMD_UBLOX_SET_ATUSOCL_FMT           ("AT+" CMD_UBLOX_ATUSOCL "=%d\r\n")
 
 #define CMD_UBLOX_ATUDCONF                  "UDCONF"
-#define CMD_UBLOX_SET_ATUDCONF_FMTHEXMODE   ("AT+"CMD_UBLOX_ATUDCONF"=%d,%d\r\n")
-#define CMD_UBLOX_GET_ATUDCONF_FMT          ("AT+"CMD_UBLOX_ATUDCONF"=%d\r\n")
+#define CMD_UBLOX_SET_ATUDCONF_FMTHEXMODE   ("AT+" CMD_UBLOX_ATUDCONF "=%d,%d\r\n")
+#define CMD_UBLOX_GET_ATUDCONF_FMT          ("AT+" CMD_UBLOX_ATUDCONF "=%d\r\n")
 
 #define CMD_UBLOX_ATCCID                    "CCID"
-#define CMD_UBLOX_GET_ATCCID                ("AT+"CMD_UBLOX_ATCCID"?\r\n")
+#define CMD_UBLOX_GET_ATCCID                ("AT+" CMD_UBLOX_ATCCID "?\r\n")
 
 #define CMD_UBLOX_ATUTEST                   "UTEST"
-#define CMD_UBLOX_SET_ATUTEST_FMT           ("AT+"CMD_UBLOX_ATUTEST"=%d\r\n")
+#define CMD_UBLOX_SET_ATUTEST_FMT           ("AT+" CMD_UBLOX_ATUTEST "=%d\r\n")
 
 #define CMD_UBLOX_ATUDNSRN                  "UDNSRN"
-#define CMD_UBLOX_SET_ATUDNSRN_FMT1         ("AT+"CMD_UBLOX_ATUDNSRN"=%d,\"%s\"\r\n")
-#define CMD_UBLOX_SET_ATUDNSRN_FMT2         ("AT+"CMD_UBLOX_ATUDNSRN"=%d,\"%d.%d.%d.%d\"\r\n")
-#define CMD_UBLOX_SET_ATUDNSRN_FMT3         ("AT+"CMD_UBLOX_ATUDNSRN"=%d,\"%x:%x:%x:%x:%x:%x:%x:%x\"\r\n")
+#define CMD_UBLOX_SET_ATUDNSRN_FMT1         ("AT+" CMD_UBLOX_ATUDNSRN "=%d,\"%s\"\r\n")
+#define CMD_UBLOX_SET_ATUDNSRN_FMT2         ("AT+" CMD_UBLOX_ATUDNSRN "=%d,\"%d.%d.%d.%d\"\r\n")
+#define CMD_UBLOX_SET_ATUDNSRN_FMT3         ("AT+" CMD_UBLOX_ATUDNSRN "=%d,\"%x:%x:%x:%x:%x:%x:%x:%x\"\r\n")
 
 static Retcode_T ExtractUmnoprofMno(const uint8_t* data, uint32_t length,
         AT_UMNOPROF_Mno_T* value);
@@ -665,7 +665,7 @@ static Retcode_T ParseIPv6LeftToRight(const uint8_t* addressBuff, uint32_t addre
             break;
         }
 
-        if (i == addressBuffLen - 1)
+        if (RETCODE_OK == retcode && i == addressBuffLen - 1)
         {
             groupsParsed++;
             parsedAddress->Address.IPv6[AT_UBLOX_IPV6_GROUP_COUNT - groupsParsed] = currentGroup;
@@ -733,7 +733,7 @@ static Retcode_T ParseIPv4(const uint8_t* addressBuff, uint32_t addressBuffLen,
             break;
         }
 
-        if (i == addressBuffLen - 1)
+        if (RETCODE_OK == retcode && i == addressBuffLen - 1)
         {
             groupsParsed++;
             parsedAddress->Address.IPv4[AT_UBLOX_IPV4_GROUP_COUNT - groupsParsed] = currentGroup;
@@ -1433,8 +1433,6 @@ Retcode_T At_Set_UDWNFILE(AT_UDWNFILE_Param_T*param)
 {
 	Retcode_T retcode = RETCODE_OK;
 	int32_t len;
-	uint8_t * buffer;
-	uint32_t bufferLen;
 	AtResponseQueueEntry_T  * entry;
 	uint32_t eventCount;
 	uint32_t i;

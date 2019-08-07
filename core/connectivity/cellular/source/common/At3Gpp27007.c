@@ -32,7 +32,7 @@
 #include "BCDS_Logging.h"
 
 #include <inttypes.h>
-#include <limits.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <ctype.h>
 
@@ -47,48 +47,47 @@
 #define AT_3GPP_27007_MAX_IP_STR_LENGTH (UINT32_C(65)) /* "255.255.255.255" or "255.255.255.255.255.255.255.255.255.255.255.255.255.255.255.255" */
 
 #define CMD_3GPP_27007_ATCREG               "CREG"
-#define CMD_3GPP_27007_SET_ATCREG_FMT       ("AT+"CMD_3GPP_27007_ATCREG"=%d\r\n")
-#define CMD_3GPP_27007_GET_ATCREG           ("AT+"CMD_3GPP_27007_ATCREG"?\r\n")
+#define CMD_3GPP_27007_SET_ATCREG_FMT       ("AT+" CMD_3GPP_27007_ATCREG "=%d\r\n")
+#define CMD_3GPP_27007_GET_ATCREG           ("AT+" CMD_3GPP_27007_ATCREG "?\r\n")
 
 #define CMD_3GPP_27007_ATCGREG              "CGREG"
-#define CMD_3GPP_27007_SET_ATCGREG_FMT      ("AT+"CMD_3GPP_27007_ATCGREG"=%d\r\n")
-#define CMD_3GPP_27007_GET_ATCGREG          ("AT+"CMD_3GPP_27007_ATCGREG"?\r\n")
+#define CMD_3GPP_27007_SET_ATCGREG_FMT      ("AT+" CMD_3GPP_27007_ATCGREG "=%d\r\n")
+#define CMD_3GPP_27007_GET_ATCGREG          ("AT+" CMD_3GPP_27007_ATCGREG "?\r\n")
 
 #define CMD_3GPP_27007_ATCEREG              "CEREG"
-#define CMD_3GPP_27007_SET_ATCEREG_FMT      ("AT+"CMD_3GPP_27007_ATCEREG"=%d\r\n")
-#define CMD_3GPP_27007_GET_ATCEREG          ("AT+"CMD_3GPP_27007_ATCEREG"?\r\n")
+#define CMD_3GPP_27007_SET_ATCEREG_FMT      ("AT+" CMD_3GPP_27007_ATCEREG "=%d\r\n")
+#define CMD_3GPP_27007_GET_ATCEREG          ("AT+" CMD_3GPP_27007_ATCEREG "?\r\n")
 
 #define CMD_3GPP_27007_ATCOPS               "COPS"
-#define CMD_3GPP_27007_SET_ATCOPS_FMT       ("AT+"CMD_3GPP_27007_ATCOPS"=%d\r\n")
+#define CMD_3GPP_27007_SET_ATCOPS_FMT       ("AT+" CMD_3GPP_27007_ATCOPS "=%d\r\n")
 
 #define CMD_3GPP_27007_ATCGDCONT            "CGDCONT"
-#define CMD_3GPP_27007_SET_ATCGDCONT_FMT1   ("AT+"CMD_3GPP_27007_ATCGDCONT"=%d\r\n")
-#define CMD_3GPP_27007_SET_ATCGDCONT_FMT2   ("AT+"CMD_3GPP_27007_ATCGDCONT"=%d,%s\r\n")
-#define CMD_3GPP_27007_SET_ATCGDCONT_FMT3   ("AT+"CMD_3GPP_27007_ATCGDCONT"=%d,%s,\"%s\"\r\n")
+#define CMD_3GPP_27007_SET_ATCGDCONT_FMT1   ("AT+" CMD_3GPP_27007_ATCGDCONT "=%d\r\n")
+#define CMD_3GPP_27007_SET_ATCGDCONT_FMT2   ("AT+" CMD_3GPP_27007_ATCGDCONT "=%d,%s\r\n")
+#define CMD_3GPP_27007_SET_ATCGDCONT_FMT3   ("AT+" CMD_3GPP_27007_ATCGDCONT "=%d,%s,\"%s\"\r\n")
 #define ARG_3GPP_27007_ATCGDCONT_PDPTYPE_IP     ("\"IP\"")
 #define ARG_3GPP_27007_ATCGDCONT_PDPTYPE_IPV6   ("\"IPV6\"")
 #define ARG_3GPP_27007_ATCGDCONT_PDPTYPE_IPV4V6 ("\"IPV4V6\"")
 
 #define CMD_3GPP_27007_ATCGACT              "CGACT"
-#define CMD_3GPP_27007_SET_ATCGACT_FMT      ("AT+"CMD_3GPP_27007_ATCGACT"=%d,%d\r\n")
+#define CMD_3GPP_27007_SET_ATCGACT_FMT      ("AT+" CMD_3GPP_27007_ATCGACT "=%d,%d\r\n")
 
 #define CMD_3GPP_27007_ATCGPADDR            "CGPADDR"
-#define CMD_3GPP_27007_EXE_ATCGPADDR        ("AT+"CMD_3GPP_27007_ATCGPADDR"=%d\r\n")
+#define CMD_3GPP_27007_EXE_ATCGPADDR        ("AT+" CMD_3GPP_27007_ATCGPADDR "=%d\r\n")
 
 #define CMD_3GPP_27007_ATCPIN               "CPIN"
-#define CMD_3GPP_27007_SET_ATCPIN_FMT       ("AT+"CMD_3GPP_27007_ATCPIN"=\"%s\"\r\n")
+#define CMD_3GPP_27007_SET_ATCPIN_FMT       ("AT+" CMD_3GPP_27007_ATCPIN "=\"%s\"\r\n")
 
 #define CMD_3GPP_27007_SET_AT               ("AT\r\n")
 #define CMD_3GPP_27007_SET_ATE_FMT          ("ATE%d\r\n")
 
 #define CMD_3GPP_27007_ATCFUN               "CFUN"
-#define CMD_3GPP_27007_SET_ATCFUN_FMT1      ("AT+"CMD_3GPP_27007_ATCFUN"=%d\r\n")
-#define CMD_3GPP_27007_SET_ATCFUN_FMT2      ("AT+"CMD_3GPP_27007_ATCFUN"=%d,%d\r\n")
-#define CMD_3GPP_27007_GET_ATCFUN           ("AT+"CMD_3GPP_27007_ATCFUN"?\r\n")
-
+#define CMD_3GPP_27007_SET_ATCFUN_FMT1      ("AT+" CMD_3GPP_27007_ATCFUN "=%d\r\n")
+#define CMD_3GPP_27007_SET_ATCFUN_FMT2      ("AT+" CMD_3GPP_27007_ATCFUN "=%d,%d\r\n")
+#define CMD_3GPP_27007_GET_ATCFUN           ("AT+" CMD_3GPP_27007_ATCFUN "?\r\n")
 
 #define CMD_3GPP_27007_ATCMEE               "CMEE"
-#define CMD_3GPP_27007_SET_ATCMEE_FMT      ("AT+"CMD_3GPP_27007_ATCMEE"=%d\r\n")
+#define CMD_3GPP_27007_SET_ATCMEE_FMT      ("AT+" CMD_3GPP_27007_ATCMEE "=%d\r\n")
 
 static Retcode_T ExtractCxregN(const uint8_t* data, uint32_t length,
         AT_CXREG_N_T* value)
@@ -110,7 +109,7 @@ static Retcode_T ExtractCxregN(const uint8_t* data, uint32_t length,
     }
 
     *value = AT_CXREG_N_INVALID;
-    LOG_ERROR("AT_3GPP_27007 ExtractCregN value %"PRIi32" out of range",
+    LOG_ERROR("AT_3GPP_27007 ExtractCregN value %" PRIi32 " out of range",
             number);
     return RETCODE(RETCODE_SEVERITY_ERROR,
             RETCODE_CELLULAR_RESPONSE_UNEXPECTED);
@@ -139,7 +138,7 @@ static Retcode_T ExtractCxregStat(const uint8_t* data, uint32_t length,
     }
 
     *value = AT_CXREG_STAT_INVALID;
-    LOG_ERROR("AT_3GPP_27007 ExtractCregStat value %"PRIi32" out of range",
+    LOG_ERROR("AT_3GPP_27007 ExtractCregStat value %" PRIi32 " out of range",
             number);
     return RETCODE(RETCODE_SEVERITY_ERROR,
             RETCODE_CELLULAR_RESPONSE_UNEXPECTED);
@@ -163,7 +162,7 @@ static Retcode_T IdFromHex(const uint8_t* data, uint32_t length,
     if (NULL != ptr)
     {
         *value = (uint32_t) strtoul(ptr, NULL, 16);
-        if ((LONG_MAX == *value) || ((0 == *value) && ('0' != ptr[0])))
+        if ((UINT32_MAX == *value) || ((0 == *value) && ('0' != ptr[0])))
         {
             *value = errorValue;
             return RETCODE(RETCODE_SEVERITY_ERROR,
@@ -227,7 +226,7 @@ static Retcode_T ExtractCxregAct(const uint8_t* data, uint32_t length,
         }
     }
 
-    LOG_ERROR("AT_3GPP_27007 ExtractCregAct value %"PRIi32" out of range",
+    LOG_ERROR("AT_3GPP_27007 ExtractCregAct value %" PRIi32 " out of range",
             number);
     return RETCODE(RETCODE_SEVERITY_ERROR,
             RETCODE_CELLULAR_RESPONSE_UNEXPECTED);
@@ -1279,7 +1278,7 @@ Retcode_T At_HandleUrc_CREG(void)
     {
         if (AT_INVALID_LAC != data.Lac && AT_INVALID_CI != data.Ci)
         {
-            LOG_DEBUG("CREG stat:%d lac:%"PRIu32" ci:%"PRIu32" AcT:%d",
+            LOG_DEBUG("CREG stat:%d lac:%" PRIu32 " ci:%" PRIu32 " AcT:%d",
                     (int ) data.Stat, data.Lac, data.Ci, data.AcT);
         }
         else
@@ -1415,7 +1414,7 @@ Retcode_T At_HandleUrc_CGREG(void)
     {
         if (AT_INVALID_LAC != data.Lac && AT_INVALID_CI != data.Ci)
         {
-            LOG_DEBUG("CGREG stat:%d lac:%"PRIu32" ci:%"PRIu32" AcT:%d",
+            LOG_DEBUG("CGREG stat:%d lac:%" PRIu32 " ci:%" PRIu32 " AcT:%d",
                     (int ) data.Stat, data.Lac, data.Ci, data.AcT);
         }
         else
@@ -1539,7 +1538,7 @@ Retcode_T At_HandleUrc_CEREG(void)
     {
         if (AT_INVALID_TAC != data.Tac && AT_INVALID_CI != data.Ci)
         {
-            LOG_DEBUG("CEREG stat:%d tac:%"PRIu32" ci:%"PRIu32" AcT:%d",
+            LOG_DEBUG("CEREG stat:%d tac:%" PRIu32 " ci:%" PRIu32 " AcT:%d",
                     (int ) data.Stat, data.Tac, data.Ci, data.AcT);
         }
         else

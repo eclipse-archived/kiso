@@ -18,536 +18,759 @@ FFF_DEFINITION_BLOCK_START
 
 extern "C"
 {
-#ifndef __STDC_FORMAT_MACROS
-#define __STDC_FORMAT_MACROS
-#endif /* __STDC_FORMAT_MACROS */
+#include "BCDS_CellularModules.h"
+#undef BCDS_MODULE_ID
+#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_ENGINE
 
-#define portNUM_CONFIGURABLE_REGIONS    1
-#define BCDS_MODULE_ID  BCDS_CELLULAR_MODULE_ID_ENGINE
-
-#include "CellularModule.h"
-#include "BCDS_Assert_th.hh"
-#include "FreeRTOS_th.hh"
-#include "task_th.hh"
-#include "queue_th.hh"
-#include "semphr_th.hh"
-#include "BCDS_Ringbuffer_th.hh"
 #include "AtResponseParser_th.hh"
 #include "AtResponseQueue_th.hh"
-#include "Control_th.hh"
-#include "Socket_th.hh"
-#include "Network_th.hh"
-#include "Utils_th.hh"
-#include "Log_th.hh"
 
+#include "AtUtils_th.hh"
+#include "AtUrc_th.hh"
+#include "Hardware_th.hh"
 #include "BCDS_MCU_UART_th.hh"
-#include "Bsp_th.hh"
 
-#define CellularSocket_NotifyDataReceived() break
+#include "BCDS_Retcode_th.hh"
+#include "BCDS_Assert_th.hh"
+#include "BCDS_RingBuffer_th.hh"
+#include "BCDS_Logging_th.hh"
 
-#undef RETCODE
-#define RETCODE(severity,code) ((Retcode_T) code)
-
-#undef BCDS_MODULE_ID
-#include "Urc.c"
+#include "FreeRTOS_th.hh"
+#include "task_th.hh"
+#include "semphr_th.hh"
+#include "portmacro_th.hh"
 
 #undef BCDS_MODULE_ID
 #include "Engine.c"
-
-Retcode_T ParseCallback(AtResponseParserArgument_T * callback)
-{
-    BCDS_UNUSED(callback);
-    return RETCODE_OK;
 }
 
-static void EventCb(Cellular_CallbackEvent_T event, void *notified)
-{
-    BCDS_UNUSED(event);
-
-    if (notified)
-    {
-        *(bool *) notified = true;
-    }
-}
-
-static Retcode_T UartReceiveCustom(UART_T uart, uint8_t* buffer, uint32_t size)
-{
-    BCDS_UNUSED(uart);
-    BCDS_UNUSED(size);
-
-    *buffer = AT_DEFAULT_S4_CHARACTER;
-
-    return RETCODE_OK;
-}
-
-static Retcode_T CellularBsp_GetCommunicationChannelCustom(UART_T* uartHandle)
-{
-    *uartHandle = (UART_T)10;
-
-    return RETCODE_OK;
-}
-
-static uint32_t SemphrPass = 0;
-static uint32_t SemphrCount = 0;
-
-static SemaphoreHandle_t SemphrCreateBinaryHandle(void)
-{
-    SemphrCount = (SemphrCount + 1) % 2;
-
-    switch (SemphrPass)
-    {
-    case 0:
-        return (SemaphoreHandle_t) 1;
-    case 1:
-        return SemphrCount == 1 ? (SemaphoreHandle_t) 1 : NULL;
-    case 2:
-        return SemphrCount == 1 ? NULL : (SemaphoreHandle_t) 1;
-    default:
-        return NULL;
-    }
-}
-
-static uint8_t TaskFailNr = 0;
-static uint8_t TaskCount = 0;
-
-static BaseType_t TaskCreate(TaskFunction_t pvTaskCode,
-        const char * const pcName,
-        uint16_t usStackDepth,
-        void *pvParameters,
-        UBaseType_t uxPriority,
-        TaskHandle_t *pvCreatedTask)
-{
-    BCDS_UNUSED(pvTaskCode);
-    BCDS_UNUSED(pcName);
-    BCDS_UNUSED(usStackDepth);
-    BCDS_UNUSED(pvParameters);
-    BCDS_UNUSED(uxPriority);
-    BCDS_UNUSED(pvCreatedTask);
-
-    TaskCount = (TaskCount + 1) % 2;
-
-    return ((TaskCount + 1) ^ TaskFailNr) > 0 ? pdPASS : pdFAIL;
-}
-
-static Retcode_T AtrspqMiscContentReturnVal = RETCODE_OK;
-static uint8_t AtrspqArgNbr = 0;
-
-static Retcode_T AtrspqMiscContent(uint32_t timeout, uint8_t **BufferPtr, uint32_t *BufferLen)
-{
-    BCDS_UNUSED(timeout);
-    BCDS_UNUSED(BufferLen);
-
-    const char* arguments[6] =
-            {
-                    "RDY", "NORMAL POWER DOWN", "POWERED DOWN", "READY", "SMS DONE", "PB DONE"
-            };
-
-    *BufferPtr = (uint8_t *) arguments[AtrspqArgNbr];
-    return AtrspqMiscContentReturnVal;
-
-}
-
-} //-- extern "C"
+#include <array>
 
 FFF_DEFINITION_BLOCK_END
 
-class CellularEngine: public testing::Test
+static SemaphoreHandle_t Custom_xSemaphoreCreateBinaryStatic(StaticSemaphore_t *staticSemphr)
+{
+    return (SemaphoreHandle_t)staticSemphr;
+}
+
+static SemaphoreHandle_t Custom_xSemaphoreCreateMutexStatic(StaticSemaphore_t *staticSemphr)
+{
+    return (SemaphoreHandle_t)staticSemphr;
+}
+
+static TaskHandle_t Custom_xTaskCreateStatic(TaskFunction_t fun, const char *, uint32_t, void *, UBaseType_t, StackType_t *, StaticTask_t *)
+{
+    return (TaskHandle_t)fun;
+}
+
+class TS_Engine_Initialize : public testing::Test
 {
 protected:
     virtual void SetUp()
     {
-        FFF_RESET_HISTORY()
+        srand(time(NULL));
 
-        RESET_FAKE(xSemaphoreCreateBinary);
-        RESET_FAKE(xSemaphoreTake);
-        RESET_FAKE(xSemaphoreGive);
-        RESET_FAKE(xSemaphoreGiveFromISR);
-        RESET_FAKE(xSemaphoreCreateMutex);
-
-        RESET_FAKE(xTaskCreate);
-        RESET_FAKE(vTaskDelete);
-
+        FFF_RESET_HISTORY();
+        RESET_FAKE(RingBuffer_Initialize);
+        RESET_FAKE(xSemaphoreCreateBinaryStatic);
+        RESET_FAKE(Hardware_Initialize);
+        RESET_FAKE(Hardware_GetCommunicationChannel);
         RESET_FAKE(AtResponseQueue_Init);
-        RESET_FAKE(AtResponseQueue_Deinit);
-        RESET_FAKE(AtResponseQueue_WaitForNamedCmd);
-        RESET_FAKE(AtResponseQueue_EnqueueEvent);
-        RESET_FAKE(AtResponseQueue_GetEvent);
+        RESET_FAKE(AtResponseQueue_RegisterWithResponseParser);
+        RESET_FAKE(xSemaphoreCreateMutexStatic);
+        RESET_FAKE(xTaskCreateStatic);
 
-        RESET_FAKE(CellularSocketUrc_UUSOCL);
-        RESET_FAKE(CellularSocketUrc_UUSORD);
-        RESET_FAKE(CellularSocketUrc_UUSORF);
-        RESET_FAKE(CellularSocketUrc_QIURC);
+        xSemaphoreCreateBinaryStatic_fake.custom_fake = Custom_xSemaphoreCreateBinaryStatic;
+        xSemaphoreCreateMutexStatic_fake.custom_fake = Custom_xSemaphoreCreateMutexStatic;
+        xTaskCreateStatic_fake.custom_fake = Custom_xTaskCreateStatic;
 
-        RESET_FAKE(CellularNetworkUrc_UUPSDA);
-        RESET_FAKE(CellularNetworkUrc_UUPSDD);
-        RESET_FAKE(CellularNetworkUrc_CREG);
-
-        RESET_FAKE(CellularBsp_Init);
-        RESET_FAKE(CellularBsp_GetCommunicationChannel);
-        RESET_FAKE(CellularBsp_Deinit);
-
-        RESET_FAKE(MCU_UART_Receive);
-        RESET_FAKE(MCU_UART_GetRxCount);
-        RESET_FAKE(MCU_UART_Send);
-
-        RESET_FAKE(Retcode_RaiseError);
-
-        CellularBsp_GetCommunicationChannel_fake.custom_fake = CellularBsp_GetCommunicationChannelCustom;
-        xSemaphoreCreateBinary_fake.custom_fake = SemphrCreateBinaryHandle;
-        xTaskCreate_fake.custom_fake = TaskCreate;
-        AtResponseQueue_WaitForMiscContent_fake.custom_fake = AtrspqMiscContent;
-
-        IsFlukeFilterEnabled = false;
-
-    }
-
-    virtual void TearDown()
-    {
-        ;
+        OnStateChanged = NULL;
+        AtResponseParser_RxWakeupHandle = NULL;
+        CellularDriver_TxWakeupHandle = NULL;
+        CellularDriver_RequestLock = NULL;
+        AtResponseParser_TaskHandle = NULL;
+        CellularDriver_TaskHandle = NULL;
+        State = CELLULAR_STATE_MAX;
+        EchoModeEnabled = false;
     }
 };
 
-/* test cases ******************************************************* */
-
-TEST_F(CellularEngine, TestCellularDriverTask)
+TEST_F(TS_Engine_Initialize, Success)
 {
-    CellularDriver_Task(NULL);
-    EXPECT_EQ(1U,AtResponseQueue_GetEvent_fake.call_count);
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    Cellular_StateChanged_T excpStateChanged = (Cellular_StateChanged_T)123;
+
+    rc = Engine_Initialize(excpStateChanged);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+
+    EXPECT_EQ(1U, RingBuffer_Initialize_fake.call_count);
+    EXPECT_EQ(&UartRxBufDescr, RingBuffer_Initialize_fake.arg0_val);
+
+    EXPECT_EQ(2U, xSemaphoreCreateBinaryStatic_fake.call_count);
+    EXPECT_EQ(&AtResponseParser_RxWakeupBuffer, AtResponseParser_RxWakeupHandle);
+    EXPECT_EQ(&CellularDriver_TxWakeupBuffer, CellularDriver_TxWakeupHandle);
+
+    EXPECT_EQ(1U, Hardware_Initialize_fake.call_count);
+    EXPECT_EQ((void *)HandleMcuIsrCallback, Hardware_Initialize_fake.arg0_val);
+    EXPECT_EQ(&UartRxByte, Hardware_Initialize_fake.arg1_val);
+    EXPECT_EQ(1U, Hardware_GetCommunicationChannel_fake.call_count);
+    EXPECT_EQ(&CellularSerialDevice, Hardware_GetCommunicationChannel_fake.arg0_val);
+
+    EXPECT_EQ(1U, AtResponseQueue_Init_fake.call_count);
+
+    EXPECT_EQ(1U, AtResponseQueue_RegisterWithResponseParser_fake.call_count);
+
+    EXPECT_EQ(1U, xSemaphoreCreateMutexStatic_fake.call_count);
+    EXPECT_EQ(&CellularDriver_RequestBuffer, CellularDriver_RequestLock);
+
+    EXPECT_EQ(2U, xTaskCreateStatic_fake.call_count);
+    EXPECT_EQ((void *)AtResponseParser_Task, xTaskCreateStatic_fake.arg0_history[0]);
+    EXPECT_EQ((void *)AtResponseParser_Task, AtResponseParser_TaskHandle);
+    EXPECT_EQ((void *)CellularDriver_Task, xTaskCreateStatic_fake.arg0_history[1]);
+    EXPECT_EQ((void *)CellularDriver_Task, CellularDriver_TaskHandle);
+
+    EXPECT_EQ(excpStateChanged, OnStateChanged);
+    EXPECT_EQ(CELLULAR_STATE_POWEROFF, State);
+    EXPECT_TRUE(EchoModeEnabled);
 }
 
-TEST_F(CellularEngine, TestCellularEngineInit)
+TEST_F(TS_Engine_Initialize, StateChangedParamNull_Failure)
 {
-    /* test failing scenarios */
-    EXPECT_EQ(RETCODE_INVALID_PARAM, CellularEngine_Init(NULL));
-    SemphrPass = 1;
-    EXPECT_EQ(RETCODE_OUT_OF_RESOURCES, CellularEngine_Init(EventCb));
-    SemphrPass = 2;
-    EXPECT_EQ(RETCODE_OUT_OF_RESOURCES, CellularEngine_Init(EventCb));
-    SemphrPass = 0;
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    Cellular_StateChanged_T excpStateChanged = NULL;
 
-    CellularBsp_Init_fake.return_val = RETCODE_FAILURE;
-    EXPECT_EQ(RETCODE_FAILURE, CellularEngine_Init(EventCb));
+    rc = Engine_Initialize(excpStateChanged);
 
-    CellularBsp_Init_fake.return_val = RETCODE_OK;
-    EXPECT_EQ(RETCODE_OUT_OF_RESOURCES, CellularEngine_Init(EventCb));
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
 
-    AtResponseQueue_Init_fake.return_val = RETCODE_OUT_OF_RESOURCES;
-    EXPECT_EQ(RETCODE_OUT_OF_RESOURCES, CellularEngine_Init(EventCb));
+    EXPECT_EQ(0U, RingBuffer_Initialize_fake.call_count);
+    EXPECT_EQ(0U, xSemaphoreCreateBinaryStatic_fake.call_count);
+    EXPECT_EQ(0U, Hardware_Initialize_fake.call_count);
+    EXPECT_EQ(0U, Hardware_GetCommunicationChannel_fake.call_count);
+    EXPECT_EQ(0U, AtResponseQueue_Init_fake.call_count);
+    EXPECT_EQ(0U, AtResponseQueue_RegisterWithResponseParser_fake.call_count);
+    EXPECT_EQ(0U, xSemaphoreCreateMutexStatic_fake.call_count);
+    EXPECT_EQ(0U, xTaskCreateStatic_fake.call_count);
 
-    AtResponseQueue_Init_fake.return_val = RETCODE_OK;
-    xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t) 0;
-    EXPECT_EQ(RETCODE_OUT_OF_RESOURCES, CellularEngine_Init(EventCb));
-
-    xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t) 1;
-
-    TaskFailNr = 1;
-    EXPECT_EQ(RETCODE_OUT_OF_RESOURCES, CellularEngine_Init(EventCb));
-    TaskFailNr = 2;
-    EXPECT_EQ(RETCODE_OUT_OF_RESOURCES, CellularEngine_Init(EventCb));
-
-    /* test passing scenario */
-    TaskFailNr = 0;
-    EXPECT_EQ(RETCODE_OK, CellularEngine_Init(EventCb));
+    EXPECT_EQ(excpStateChanged, OnStateChanged);
+    EXPECT_EQ(CELLULAR_STATE_MAX, State);
+    EXPECT_FALSE(EchoModeEnabled);
 }
 
-TEST_F(CellularEngine, TestCellularEngineSendAtCommand)
+TEST_F(TS_Engine_Initialize, HwInit_Failure)
 {
-    uint8_t buffer[1];
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    Cellular_StateChanged_T excpStateChanged = (Cellular_StateChanged_T)123;
+    Hardware_Initialize_fake.return_val = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
 
-    /* test failing scenarios */
-    EXPECT_EQ(RETCODE_INVALID_PARAM, CellularEngine_SendAtCommand(NULL, 1));
-    CellularBsp_Init_fake.return_val = RETCODE_FAILURE;
-    CellularEngine_Init(EventCb);
-    EXPECT_NE(RETCODE_OK, CellularEngine_SendAtCommand(buffer, sizeof(buffer)));
+    rc = Engine_Initialize(excpStateChanged);
+
+    EXPECT_EQ(Hardware_Initialize_fake.return_val, rc);
+
+    EXPECT_EQ(1U, RingBuffer_Initialize_fake.call_count);
+    EXPECT_EQ(2U, xSemaphoreCreateBinaryStatic_fake.call_count);
+    EXPECT_EQ(1U, Hardware_Initialize_fake.call_count);
+
+    EXPECT_EQ(0U, Hardware_GetCommunicationChannel_fake.call_count);
+    EXPECT_EQ(0U, AtResponseQueue_Init_fake.call_count);
+    EXPECT_EQ(0U, AtResponseQueue_RegisterWithResponseParser_fake.call_count);
+    EXPECT_EQ(0U, xSemaphoreCreateMutexStatic_fake.call_count);
+    EXPECT_EQ(0U, xTaskCreateStatic_fake.call_count);
+
+    EXPECT_EQ(NULL, OnStateChanged);
+    EXPECT_EQ(CELLULAR_STATE_MAX, State);
+    EXPECT_FALSE(EchoModeEnabled);
+}
+
+TEST_F(TS_Engine_Initialize, HwComInit_Failure)
+{
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    Cellular_StateChanged_T excpStateChanged = (Cellular_StateChanged_T)123;
+    Hardware_GetCommunicationChannel_fake.return_val = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+
+    rc = Engine_Initialize(excpStateChanged);
+
+    EXPECT_EQ(Hardware_GetCommunicationChannel_fake.return_val, rc);
+
+    EXPECT_EQ(1U, RingBuffer_Initialize_fake.call_count);
+    EXPECT_EQ(2U, xSemaphoreCreateBinaryStatic_fake.call_count);
+    EXPECT_EQ(1U, Hardware_Initialize_fake.call_count);
+    EXPECT_EQ(1U, Hardware_GetCommunicationChannel_fake.call_count);
+
+    EXPECT_EQ(0U, AtResponseQueue_Init_fake.call_count);
+    EXPECT_EQ(0U, AtResponseQueue_RegisterWithResponseParser_fake.call_count);
+    EXPECT_EQ(0U, xSemaphoreCreateMutexStatic_fake.call_count);
+    EXPECT_EQ(0U, xTaskCreateStatic_fake.call_count);
+
+    EXPECT_EQ(NULL, OnStateChanged);
+    EXPECT_EQ(CELLULAR_STATE_MAX, State);
+    EXPECT_FALSE(EchoModeEnabled);
+}
+
+TEST_F(TS_Engine_Initialize, AtQueueInit_Failure)
+{
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    Cellular_StateChanged_T excpStateChanged = (Cellular_StateChanged_T)123;
+    AtResponseQueue_Init_fake.return_val = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+
+    rc = Engine_Initialize(excpStateChanged);
+
+    EXPECT_EQ(AtResponseQueue_Init_fake.return_val, rc);
+
+    EXPECT_EQ(1U, RingBuffer_Initialize_fake.call_count);
+    EXPECT_EQ(2U, xSemaphoreCreateBinaryStatic_fake.call_count);
+    EXPECT_EQ(1U, Hardware_Initialize_fake.call_count);
+    EXPECT_EQ(1U, Hardware_GetCommunicationChannel_fake.call_count);
+    EXPECT_EQ(1U, AtResponseQueue_Init_fake.call_count);
+
+    EXPECT_EQ(0U, AtResponseQueue_RegisterWithResponseParser_fake.call_count);
+    EXPECT_EQ(0U, xSemaphoreCreateMutexStatic_fake.call_count);
+    EXPECT_EQ(0U, xTaskCreateStatic_fake.call_count);
+
+    EXPECT_EQ(NULL, OnStateChanged);
+    EXPECT_EQ(CELLULAR_STATE_MAX, State);
+    EXPECT_FALSE(EchoModeEnabled);
+}
+
+class TS_Engine_EchoModeEnabled : public testing::Test
+{
+protected:
+    virtual void SetUp()
+    {
+        FFF_RESET_HISTORY();
+
+        EchoModeEnabled = false;
+    }
+};
+
+TEST_F(TS_Engine_EchoModeEnabled, Success)
+{
+    bool expEchoMode = true;
+
+    Engine_EchoModeEnabled(expEchoMode);
+
+    EXPECT_EQ(expEchoMode, EchoModeEnabled);
+}
+
+class TS_Engine_SendAtCommand : public testing::Test
+{
+private:
+    std::array<BaseType_t, 2> takeRetVals = {pdFAIL, pdPASS};
+
+protected:
+    virtual void SetUp()
+    {
+        FFF_RESET_HISTORY();
+
+        RESET_FAKE(xSemaphoreTake);
+        RESET_FAKE(MCU_UART_Send);
+        RESET_FAKE(AtResponseQueue_GetEvent);
+        RESET_FAKE(Urc_HandleResponses);
+
+        SET_RETURN_SEQ(xSemaphoreTake, takeRetVals.data(), takeRetVals.size());
+
+        CellularSerialDevice = (UART_T)123;
+        CellularDriver_TxWakeupHandle = (SemaphoreHandle_t)&CellularDriver_TxWakeupBuffer;
+    }
+};
+
+TEST_F(TS_Engine_SendAtCommand, Success)
+{
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    uint8_t buffer[128];
+
+    rc = Engine_SendAtCommand(buffer, sizeof(buffer));
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(2U, xSemaphoreTake_fake.call_count);
+    EXPECT_EQ(CellularDriver_TxWakeupHandle, xSemaphoreTake_fake.arg0_history[0]);
+    EXPECT_EQ(0U, xSemaphoreTake_fake.arg1_history[0]);
+    EXPECT_EQ(CellularDriver_TxWakeupHandle, xSemaphoreTake_fake.arg0_history[1]);
+    EXPECT_EQ(CELLULAR_SEND_AT_COMMAND_WAIT_TIME, xSemaphoreTake_fake.arg1_history[1]);
+    EXPECT_EQ(1U, MCU_UART_Send_fake.call_count);
+    EXPECT_EQ(buffer, MCU_UART_Send_fake.arg1_val);
+    EXPECT_EQ(sizeof(buffer), MCU_UART_Send_fake.arg2_val);
+    EXPECT_EQ(1U, AtResponseQueue_GetEvent_fake.call_count);
+    EXPECT_EQ(1U, Urc_HandleResponses_fake.call_count);
+}
+
+TEST_F(TS_Engine_SendAtCommand, BufferNull_Failure)
+{
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+
+    rc = Engine_SendAtCommand(NULL, 123);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
+    EXPECT_EQ(0U, xSemaphoreTake_fake.call_count);
+    EXPECT_EQ(0U, MCU_UART_Send_fake.call_count);
+    EXPECT_EQ(0U, AtResponseQueue_GetEvent_fake.call_count);
+    EXPECT_EQ(0U, Urc_HandleResponses_fake.call_count);
+}
+
+TEST_F(TS_Engine_SendAtCommand, ComDeviceNonInit_Failure)
+{
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    uint8_t buffer[128];
+    CellularSerialDevice = (UART_T)0;
+
+    rc = Engine_SendAtCommand(buffer, sizeof(buffer));
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNINITIALIZED), rc);
+    EXPECT_EQ(0U, xSemaphoreTake_fake.call_count);
+    EXPECT_EQ(0U, MCU_UART_Send_fake.call_count);
+    EXPECT_EQ(0U, AtResponseQueue_GetEvent_fake.call_count);
+    EXPECT_EQ(0U, Urc_HandleResponses_fake.call_count);
+}
+
+TEST_F(TS_Engine_SendAtCommand, Send_Failure)
+{
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    uint8_t buffer[128];
+
+    MCU_UART_Send_fake.return_val = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+
+    rc = Engine_SendAtCommand(buffer, sizeof(buffer));
+
+    EXPECT_EQ(MCU_UART_Send_fake.return_val, rc);
+    EXPECT_EQ(1U, xSemaphoreTake_fake.call_count);
+    EXPECT_EQ(CellularDriver_TxWakeupHandle, xSemaphoreTake_fake.arg0_history[0]);
+    EXPECT_EQ(0U, xSemaphoreTake_fake.arg1_history[0]);
+    EXPECT_EQ(1U, MCU_UART_Send_fake.call_count);
+    EXPECT_EQ(buffer, MCU_UART_Send_fake.arg1_val);
+    EXPECT_EQ(sizeof(buffer), MCU_UART_Send_fake.arg2_val);
+    EXPECT_EQ(0U, AtResponseQueue_GetEvent_fake.call_count);
+    EXPECT_EQ(0U, Urc_HandleResponses_fake.call_count);
+}
+
+TEST_F(TS_Engine_SendAtCommand, TimeoutAfterSend_Failure)
+{
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    uint8_t buffer[128];
+
+    std::array<BaseType_t, 2> takeRetVals = {pdFAIL, pdFAIL};
+    SET_RETURN_SEQ(xSemaphoreTake, takeRetVals.data(), takeRetVals.size());
+
+    rc = Engine_SendAtCommand(buffer, sizeof(buffer));
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_SEMAPHORE_ERROR), rc);
+    EXPECT_EQ(2U, xSemaphoreTake_fake.call_count);
+    EXPECT_EQ(CellularDriver_TxWakeupHandle, xSemaphoreTake_fake.arg0_history[0]);
+    EXPECT_EQ(0U, xSemaphoreTake_fake.arg1_history[0]);
+    EXPECT_EQ(CellularDriver_TxWakeupHandle, xSemaphoreTake_fake.arg0_history[1]);
+    EXPECT_EQ(CELLULAR_SEND_AT_COMMAND_WAIT_TIME, xSemaphoreTake_fake.arg1_history[1]);
+    EXPECT_EQ(1U, MCU_UART_Send_fake.call_count);
+    EXPECT_EQ(buffer, MCU_UART_Send_fake.arg1_val);
+    EXPECT_EQ(sizeof(buffer), MCU_UART_Send_fake.arg2_val);
+    EXPECT_EQ(0U, AtResponseQueue_GetEvent_fake.call_count);
+    EXPECT_EQ(0U, Urc_HandleResponses_fake.call_count);
+}
+
+class TS_Engine_SetFlukeCharFilterEnabled : public testing::Test
+{
+protected:
+    virtual void SetUp()
+    {
+        FFF_RESET_HISTORY();
+
+        IsFlukeFilterEnabled = false;
+    }
+};
+
+TEST_F(TS_Engine_SetFlukeCharFilterEnabled, Success)
+{
+    bool expFlukeFilterEnabled = true;
+
+    Engine_SetFlukeCharFilterEnabled(expFlukeFilterEnabled);
+
+    EXPECT_EQ(expFlukeFilterEnabled, IsFlukeFilterEnabled);
+}
+
+class TS_Engine_SendAtCommandWaitEcho : public TS_Engine_SendAtCommand
+{
+protected:
+    virtual void SetUp() override
+    {
+        TS_Engine_SendAtCommand::SetUp();
+
+        RESET_FAKE(AtResponseQueue_WaitForNamedCmdEcho);
+
+        EchoModeEnabled = true;
+    }
+};
+
+TEST_F(TS_Engine_SendAtCommandWaitEcho, EchoEnabled_Success)
+{
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    uint8_t buffer[128];
+    size_t footerLen = strlen(ENGINE_ATCMD_FOOTER);
+    for (size_t i = 0; i < sizeof(buffer) - 1 - footerLen; ++i)
+    {
+        buffer[i] = (uint8_t)((rand() % ('Z' - 'A')) + 'A'); // generate some random A-Z string
+    }
+    memcpy(buffer + sizeof(buffer) - 1 - footerLen, ENGINE_ATCMD_FOOTER, footerLen);
+    buffer[sizeof(buffer) - 1] = '\0';
+    uint32_t expTimeout = rand();
+    EchoModeEnabled = true;
+
+    rc = Engine_SendAtCommandWaitEcho(buffer, strlen((const char *)buffer), expTimeout);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(2U, xSemaphoreTake_fake.call_count);
+    EXPECT_EQ(CellularDriver_TxWakeupHandle, xSemaphoreTake_fake.arg0_history[0]);
+    EXPECT_EQ(0U, xSemaphoreTake_fake.arg1_history[0]);
+    EXPECT_EQ(CellularDriver_TxWakeupHandle, xSemaphoreTake_fake.arg0_history[1]);
+    EXPECT_EQ(CELLULAR_SEND_AT_COMMAND_WAIT_TIME, xSemaphoreTake_fake.arg1_history[1]);
+    EXPECT_EQ(1U, MCU_UART_Send_fake.call_count);
+    EXPECT_EQ(buffer, MCU_UART_Send_fake.arg1_val);
+    EXPECT_EQ(strlen((const char *)buffer), MCU_UART_Send_fake.arg2_val);
+    EXPECT_EQ(1U, AtResponseQueue_GetEvent_fake.call_count);
+    EXPECT_EQ(1U, Urc_HandleResponses_fake.call_count);
+    EXPECT_EQ(1U, AtResponseQueue_WaitForNamedCmdEcho_fake.call_count);
+    EXPECT_EQ(expTimeout, AtResponseQueue_WaitForNamedCmdEcho_fake.arg0_val);
+    EXPECT_STREQ((const char *)buffer, (const char *)AtResponseQueue_WaitForNamedCmdEcho_fake.arg1_val);
+    EXPECT_EQ(strlen((const char *)buffer) - footerLen, AtResponseQueue_WaitForNamedCmdEcho_fake.arg2_val);
+}
+
+TEST_F(TS_Engine_SendAtCommandWaitEcho, EchoDisabled_Success)
+{
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    uint8_t buffer[128];
+    size_t footerLen = strlen(ENGINE_ATCMD_FOOTER);
+    for (size_t i = 0; i < sizeof(buffer) - 1 - footerLen; ++i)
+    {
+        buffer[i] = (uint8_t)((rand() % ('Z' - 'A')) + 'A'); // generate some random A-Z string
+    }
+    memcpy(buffer + sizeof(buffer) - 1 - footerLen, ENGINE_ATCMD_FOOTER, footerLen);
+    buffer[sizeof(buffer) - 1] = '\0';
+    uint32_t expTimeout = rand();
+    EchoModeEnabled = false;
+
+    rc = Engine_SendAtCommandWaitEcho(buffer, strlen((const char *)buffer), expTimeout);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(2U, xSemaphoreTake_fake.call_count);
+    EXPECT_EQ(CellularDriver_TxWakeupHandle, xSemaphoreTake_fake.arg0_history[0]);
+    EXPECT_EQ(0U, xSemaphoreTake_fake.arg1_history[0]);
+    EXPECT_EQ(CellularDriver_TxWakeupHandle, xSemaphoreTake_fake.arg0_history[1]);
+    EXPECT_EQ(CELLULAR_SEND_AT_COMMAND_WAIT_TIME, xSemaphoreTake_fake.arg1_history[1]);
+    EXPECT_EQ(1U, MCU_UART_Send_fake.call_count);
+    EXPECT_EQ(buffer, MCU_UART_Send_fake.arg1_val);
+    EXPECT_EQ(strlen((const char *)buffer), MCU_UART_Send_fake.arg2_val);
+    EXPECT_EQ(1U, AtResponseQueue_GetEvent_fake.call_count);
+    EXPECT_EQ(1U, Urc_HandleResponses_fake.call_count);
+    EXPECT_EQ(0U, AtResponseQueue_WaitForNamedCmdEcho_fake.call_count);
+}
+
+FAKE_VOID_FUNC(TS_Engine_NotifyNewState_DummyCallback, Cellular_State_T, Cellular_State_T, void *, uint32_t);
+
+class TS_Engine_NotifyNewState : public testing::Test
+{
+protected:
+    virtual void SetUp()
+    {
+        FFF_RESET_HISTORY();
+
+        RESET_FAKE(TS_Engine_NotifyNewState_DummyCallback)
+
+        OnStateChanged = TS_Engine_NotifyNewState_DummyCallback;
+        State = CELLULAR_STATE_MAX;
+    }
+};
+
+TEST_F(TS_Engine_NotifyNewState, NewState_Success)
+{
+    Cellular_State_T expState = CELLULAR_STATE_POWERON;
+    const char *expParam = "Hello World!";
+
+    Engine_NotifyNewState(expState, (void *)expParam, strlen(expParam));
+
+    EXPECT_EQ(1U, TS_Engine_NotifyNewState_DummyCallback_fake.call_count);
+    EXPECT_EQ(CELLULAR_STATE_MAX, TS_Engine_NotifyNewState_DummyCallback_fake.arg0_val);
+    EXPECT_EQ(expState, TS_Engine_NotifyNewState_DummyCallback_fake.arg1_val);
+    EXPECT_STREQ(expParam, (const char *)TS_Engine_NotifyNewState_DummyCallback_fake.arg2_val);
+    EXPECT_EQ(strlen(expParam), TS_Engine_NotifyNewState_DummyCallback_fake.arg3_val);
+    EXPECT_EQ(expState, State);
+}
+
+TEST_F(TS_Engine_NotifyNewState, SameState_Success)
+{
+    Cellular_State_T expState = CELLULAR_STATE_POWERON;
+    const char *expParam = "Hello World!";
+    State = expState;
+
+    Engine_NotifyNewState(expState, (void *)expParam, strlen(expParam));
+
+    EXPECT_EQ(0U, TS_Engine_NotifyNewState_DummyCallback_fake.call_count);
+    EXPECT_EQ(expState, State);
+}
+
+FAKE_VALUE_FUNC(Retcode_T, TS_Engine_Dispatch_DummyCallback, void *, uint32_t);
+
+class TS_Engine_Dispatch : public testing::Test
+{
+protected:
+    virtual void SetUp()
+    {
+        srand(time(NULL));
+
+        FFF_RESET_HISTORY();
+
+        RESET_FAKE(xSemaphoreTake);
+        RESET_FAKE(TS_Engine_Dispatch_DummyCallback);
+        RESET_FAKE(xSemaphoreGive);
+
+        xSemaphoreTake_fake.return_val = pdPASS;
+
+        CellularDriver_RequestLock = (SemaphoreHandle_t)123;
+    }
+};
+
+TEST_F(TS_Engine_Dispatch, Success)
+{
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    uint32_t expTimeout = rand();
+    const char *expParam = "Hello World!";
+
+    rc = Engine_Dispatch(TS_Engine_Dispatch_DummyCallback, expTimeout, (void *)expParam, strlen(expParam));
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(1U, xSemaphoreTake_fake.call_count);
+    EXPECT_EQ(1U, TS_Engine_Dispatch_DummyCallback_fake.call_count);
+    EXPECT_EQ(1U, xSemaphoreGive_fake.call_count);
+}
+
+TEST_F(TS_Engine_Dispatch, InvalidFunc_Failure)
+{
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    uint32_t expTimeout = rand();
+    const char *expParam = "Hello World!";
+
+    rc = Engine_Dispatch(NULL, expTimeout, (void *)expParam, strlen(expParam));
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), rc);
+    EXPECT_EQ(0U, xSemaphoreTake_fake.call_count);
+    EXPECT_EQ(0U, TS_Engine_Dispatch_DummyCallback_fake.call_count);
+    EXPECT_EQ(0U, xSemaphoreGive_fake.call_count);
+}
+
+TEST_F(TS_Engine_Dispatch, LockNotInit_Failure)
+{
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    uint32_t expTimeout = rand();
+    const char *expParam = "Hello World!";
+
+    CellularDriver_RequestLock = NULL;
+
+    rc = Engine_Dispatch(TS_Engine_Dispatch_DummyCallback, expTimeout, (void *)expParam, strlen(expParam));
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_UNINITIALIZED), rc);
+    EXPECT_EQ(0U, xSemaphoreTake_fake.call_count);
+    EXPECT_EQ(0U, TS_Engine_Dispatch_DummyCallback_fake.call_count);
+    EXPECT_EQ(0U, xSemaphoreGive_fake.call_count);
+}
+
+TEST_F(TS_Engine_Dispatch, LockTimeout_Failure)
+{
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    uint32_t expTimeout = rand();
+    const char *expParam = "Hello World!";
+
     xSemaphoreTake_fake.return_val = pdFAIL;
-    EXPECT_EQ(RETCODE_SEMAPHORE_ERROR, CellularEngine_SendAtCommand(buffer, sizeof(buffer)));
 
-    xSemaphoreTake_fake.return_val = pdPASS;
-    MCU_UART_Send_fake.return_val = RETCODE_FAILURE;
-    EXPECT_EQ(RETCODE_FAILURE, CellularEngine_SendAtCommand(buffer, sizeof(buffer)));
+    rc = Engine_Dispatch(TS_Engine_Dispatch_DummyCallback, expTimeout, (void *)expParam, strlen(expParam));
 
-    /* test passing scenario */
-    MCU_UART_Send_fake.return_val = RETCODE_OK;
-    xTaskGetTickCount_fake.return_val = 1;
-    xSemaphoreTake_fake.return_val = pdPASS;
-    EXPECT_EQ(RETCODE_OK, CellularEngine_SendAtCommand(buffer, sizeof(buffer)));
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_DRIVER_BUSY), rc);
+    EXPECT_EQ(1U, xSemaphoreTake_fake.call_count);
+    EXPECT_EQ(0U, TS_Engine_Dispatch_DummyCallback_fake.call_count);
+    EXPECT_EQ(0U, xSemaphoreGive_fake.call_count);
 }
 
-TEST_F(CellularEngine, TestCellularEngineSendAtCmdWaitEcho)
+std::array<AtResponseQueueEntry_T*, 6> TS_Engine_HandleEvents_GetEventVals;
+size_t TS_Engine_HandleEvents_GetEventVals_Index = 0;
+
+void TS_Engine_HandleEvents_DummyMarkUnused(void)
 {
-    const char *buffer = "a";
-
-    /* test failing scenarios */
-    EXPECT_EQ(RETCODE_INVALID_PARAM, CellularEngine_SendAtCmdWaitEcho(0,NULL));
-
-    MCU_UART_Send_fake.return_val = RETCODE_FAILURE;
-    EXPECT_EQ(RETCODE_FAILURE, CellularEngine_SendAtCmdWaitEcho(0,buffer));
-
-    /* test passing scenario */
-    MCU_UART_Send_fake.return_val = RETCODE_OK;
-    xTaskGetTickCount_fake.return_val = 1;
-    xSemaphoreTake_fake.return_val = pdPASS;
-    AtResponseQueue_WaitForNamedCmdEcho_fake.return_val = RETCODE_OK;
-    EXPECT_EQ(RETCODE_OK, CellularEngine_SendAtCmdWaitEcho(0,buffer));
+    TS_Engine_HandleEvents_GetEventVals_Index = (TS_Engine_HandleEvents_GetEventVals_Index + 1) % TS_Engine_HandleEvents_GetEventVals.size();
 }
 
-static Retcode_T TestFunction(void* buffer, uint32_t SizeBuffer)
+Retcode_T TS_Engine_HandleEvents_DummyGetEvent(uint32_t, AtResponseQueueEntry_T **entry)
 {
-    BCDS_UNUSED(buffer);
-    BCDS_UNUSED(SizeBuffer);
+    *entry = TS_Engine_HandleEvents_GetEventVals[TS_Engine_HandleEvents_GetEventVals_Index];
+
     return RETCODE_OK;
 }
 
-TEST_F(CellularEngine, TestCellularRequestDispatch)
+class TS_Engine_HandleEvents : public testing::Test
 {
-    uint8_t buffer[1];
+protected:
+    void CreateQueueEntry(AtResponseQueueEntry_T **entry, AtEventType_T type, AtResponseCode_T code, size_t len)
+    {
+        if (AT_EVENT_TYPE_OUT_OF_RANGE == type)
+        {
+            std::cerr << "Error during test-setup: Invalid EventType '" << type << "'" << std::endl;
+            exit(1);
+        }
 
-    CellularDriver_RequestLock = (void*)1;
-    EXPECT_EQ(RETCODE_NULL_POINTER, CellularRequest_Dispatch(0, NULL, (void*) buffer, sizeof(buffer)));
+        *entry = (AtResponseQueueEntry_T *) malloc(sizeof(AtResponseQueueEntry_T) + len + 1);
+        for (size_t i = 0; i < len; ++i)
+        {
+            (*entry)->Buffer[i] = (char)((rand() % ('Z' - 'A')) + 'A'); // generate some random A-Z string
+        }
+        (*entry)->Buffer[len] = '\0';
+        (*entry)->Type = type;
+        (*entry)->ResponseCode = code;
+        (*entry)->BufferLength = len;
+    }
+    virtual void SetUp()
+    {
+        srand(time(NULL));
+        FFF_RESET_HISTORY();
 
-    xSemaphoreTake_fake.return_val = pdFAIL;
-    EXPECT_EQ(RETCODE_CELLULAR_DRIVER_BUSY, CellularRequest_Dispatch(0, TestFunction, (void*) buffer,
-            sizeof(buffer)));
+        RESET_FAKE(AtResponseQueue_GetEventCount);
+        RESET_FAKE(Urc_HandleResponses);
+        RESET_FAKE(AtResponseQueue_GetEvent);
+        RESET_FAKE(AtResponseQueue_MarkBufferAsUnused);
 
-    xSemaphoreTake_fake.return_val = pdPASS;
-    EXPECT_EQ(RETCODE_OK, CellularRequest_Dispatch(0, TestFunction, (void*) buffer, sizeof(buffer)));
+        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[0], AT_EVENT_TYPE_COMMAND_ECHO, (AtResponseCode_T) 666, std::min(rand() % 16, 2));
+        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[1], AT_EVENT_TYPE_COMMAND_ARG, (AtResponseCode_T) 667, std::min(rand() % 16, 2));
+        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[2], AT_EVENT_TYPE_ERROR, (AtResponseCode_T) 669, 0);
+        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[3], AT_EVENT_TYPE_MISC, (AtResponseCode_T) 670, std::min(rand() % 32, 2));
+        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[4], AT_EVENT_TYPE_RESPONSE_CODE, AT_RESPONSE_CODE_OK, 0);
+        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[5], AT_EVENT_TYPE_COMMAND, (AtResponseCode_T) 668, std::min(rand() % 16, 2));
+        TS_Engine_HandleEvents_GetEventVals_Index = 0;
+
+        AtResponseQueue_GetEventCount_fake.return_val = TS_Engine_HandleEvents_GetEventVals.size();
+        AtResponseQueue_GetEvent_fake.custom_fake = TS_Engine_HandleEvents_DummyGetEvent;
+        AtResponseQueue_MarkBufferAsUnused_fake.custom_fake = TS_Engine_HandleEvents_DummyMarkUnused;
+        Urc_HandleResponses_fake.return_val = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_URC_NOT_PRESENT);
+    }
+    virtual void TearDown()
+    {
+        for (auto *val : TS_Engine_HandleEvents_GetEventVals)
+        {
+            free(val);
+            val = nullptr;
+        }
+    }
+};
+
+TEST_F(TS_Engine_HandleEvents, Success)
+{
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+
+    rc = Engine_HandleEvents();
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_URC_NOT_PRESENT), rc);
+    EXPECT_EQ(1U, AtResponseQueue_GetEventCount_fake.call_count);
+    EXPECT_EQ(1U, Urc_HandleResponses_fake.call_count);
+#if BCDS_LOGGING
+    EXPECT_EQ((AtResponseQueue_GetEventCount_fake.return_val - 1) * 2, AtResponseQueue_GetEvent_fake.call_count);
+#else
+    EXPECT_EQ(AtResponseQueue_GetEventCount_fake.return_val, AtResponseQueue_GetEvent_fake.call_count);
+#endif
+    EXPECT_EQ(AtResponseQueue_GetEventCount_fake.return_val - 1, AtResponseQueue_MarkBufferAsUnused_fake.call_count);
 }
 
-TEST_F(CellularEngine, TestCellularCellularCallBack_Error)
+
+class TS_ReadData : public testing::Test
 {
-    UART_T uart = (UART_T) 0;
+protected:
+    uint8_t data[128];
+    uint32_t expDataRead;
+    virtual void SetUp()
+    {
+        srand(time(NULL));
+
+        FFF_RESET_HISTORY();
+
+        RESET_FAKE(RingBuffer_Read);
+
+        RingBuffer_Read_fake.return_val = std::min(rand() % sizeof(data), (size_t) 2);
+    }
+};
+
+TEST_F(TS_ReadData, Success)
+{
+    uint32_t dataRead;
+    Retcode_T rc = ReadData(this->data, sizeof(this->data), &dataRead);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(1U, RingBuffer_Read_fake.call_count);
+    EXPECT_EQ(data, RingBuffer_Read_fake.arg1_val);
+    EXPECT_EQ(sizeof(data), RingBuffer_Read_fake.arg2_val);
+    EXPECT_EQ(RingBuffer_Read_fake.return_val, dataRead);
+}
+
+TEST_F(TS_ReadData, InvalidData_Failure)
+{
+    uint32_t dataRead;
+    Retcode_T rc = ReadData(NULL, sizeof(this->data), &dataRead);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), rc);
+    EXPECT_EQ(0U, RingBuffer_Read_fake.call_count);
+}
+
+class TS_HandleMcuIsrCallback : public testing::Test
+{
+protected:
+    virtual void SetUp()
+    {
+        FFF_RESET_HISTORY();
+
+        RESET_FAKE(Retcode_RaiseErrorFromIsr);
+        RESET_FAKE(xSemaphoreGiveFromISR);
+        RESET_FAKE(RingBuffer_Write);
+
+        xSemaphoreGiveFromISR_fake.return_val = pdPASS;
+        RingBuffer_Write_fake.return_val = 1U;
+    }
+};
+
+TEST_F(TS_HandleMcuIsrCallback, Tx_Success)
+{
     struct MCU_UART_Event_S event;
-
-    memset((void*)&event, UINT32_C(0), sizeof(MCU_UART_Event_S));
-
-    Cellular_Callback_ISR(uart, event);
-    EXPECT_EQ(0U, xSemaphoreGiveFromISR_fake.call_count);
-}
-
-TEST_F(CellularEngine, TestCellularCellularTxCallBack_ISR)
-{
+    memset(&event, 0U, sizeof(event));
+    event.TxComplete = 1;
     UART_T uart = (UART_T) 1;
-    struct MCU_UART_Event_S event;
 
-    memset((void*)&event, UINT32_C(0), sizeof(MCU_UART_Event_S));
+    HandleMcuIsrCallback(uart, event);
 
-    event.TxComplete = UINT32_C(1);
-
-    Cellular_Callback_ISR(uart, event);
     EXPECT_EQ(1U, xSemaphoreGiveFromISR_fake.call_count);
-
-    Cellular_Callback_ISR(uart, event);
-    EXPECT_EQ(2U, xSemaphoreGiveFromISR_fake.call_count);
+    EXPECT_EQ(CellularDriver_TxWakeupHandle, xSemaphoreGiveFromISR_fake.arg0_val);
+    EXPECT_EQ(0U, RingBuffer_Write_fake.call_count);
+    EXPECT_EQ(0U, Retcode_RaiseErrorFromIsr_fake.call_count);
 }
 
-TEST_F(CellularEngine, TestCellularCellularRxCallBack_ISR_Error)
+TEST_F(TS_HandleMcuIsrCallback, RxS4Char_Success)
 {
-    UART_T uart = (UART_T) 1;
     struct MCU_UART_Event_S event;
-
-    memset((void*)&event, UINT32_C(0), sizeof(MCU_UART_Event_S));
-
-    event.RxComplete = UINT32_C(1);
-
-    MCU_UART_Receive_fake.return_val = RETCODE_FAILURE;
-    Cellular_Callback_ISR(uart, event);
-    EXPECT_EQ(1U, Retcode_RaiseError_fake.call_count);
-    EXPECT_EQ(0U, xSemaphoreGiveFromISR_fake.call_count);
-
-    RESET_FAKE(Retcode_RaiseError);
-
-    MCU_UART_Receive_fake.return_val = RETCODE_OK;
-    RingBuffer_Write_fake.return_val = UINT32_C(0);
-    Cellular_Callback_ISR(uart, event);
-    EXPECT_EQ(1U, Retcode_RaiseError_fake.call_count);
-    EXPECT_EQ(0U, xSemaphoreGiveFromISR_fake.call_count);
-
-    RESET_FAKE(MCU_UART_Receive);
+    memset(&event, 0U, sizeof(event));
+    event.RxComplete = 1;
+    UART_T uart = (UART_T) 1;
     UartRxByte = AT_DEFAULT_S4_CHARACTER;
 
-    MCU_UART_Receive_fake.custom_fake = UartReceiveCustom;
-    RingBuffer_Write_fake.return_val = UINT32_C(1);
-    Cellular_Callback_ISR(uart, event);
+    HandleMcuIsrCallback(uart, event);
+
     EXPECT_EQ(1U, xSemaphoreGiveFromISR_fake.call_count);
+    EXPECT_EQ(AtResponseParser_RxWakeupHandle, xSemaphoreGiveFromISR_fake.arg0_val);
+    EXPECT_EQ(1U, RingBuffer_Write_fake.call_count);
+    EXPECT_EQ(1U, RingBuffer_Write_fake.arg2_val);
+    EXPECT_EQ(0U, Retcode_RaiseErrorFromIsr_fake.call_count);
 }
 
-TEST_F(CellularEngine, TestCellularDeviceStatus)
+TEST_F(TS_HandleMcuIsrCallback, RxNonS4Char_Success)
 {
-    bool notified = false;
+    struct MCU_UART_Event_S event;
+    memset(&event, 0U, sizeof(event));
+    event.RxComplete = 1;
+    UART_T uart = (UART_T) 1;
+    UartRxByte = '0';
 
-    CellularEngine_SetDeviceStatus(CELLULAR_DEVICESTATUS_CONNECTED, CELLULAR_EVENT_CONNECTED, &notified);
-    EXPECT_EQ(CELLULAR_DEVICESTATUS_CONNECTED, CellularEngine_GetDeviceStatus());
-    EXPECT_EQ(true, notified);
+    HandleMcuIsrCallback(uart, event);
 
-    CellularEngine_SetDeviceStatus(CELLULAR_DEVICESTATUS_DISCONNECTED, CELLULAR_EVENT_DISCONNECTED, NULL);
-    EXPECT_EQ(CELLULAR_DEVICESTATUS_DISCONNECTED, CellularEngine_GetDeviceStatus());
+    EXPECT_EQ(0U, xSemaphoreGiveFromISR_fake.call_count);
+    EXPECT_EQ(1U, RingBuffer_Write_fake.call_count);
+    EXPECT_EQ(1U, RingBuffer_Write_fake.arg2_val);
+    EXPECT_EQ(0U, Retcode_RaiseErrorFromIsr_fake.call_count);
 }
-
-TEST_F(CellularEngine, TestCellularDeviceError)
-{
-    CellularEngine_SetDeviceError(RETCODE_INVALID_PARAM);
-    EXPECT_EQ(RETCODE_INVALID_PARAM, CellularEngine_GetDeviceError());
-    CellularEngine_SetDeviceError(RETCODE_OK);
-    EXPECT_EQ(RETCODE_OK, CellularEngine_GetDeviceError());
-}
-
-TEST_F(CellularEngine, TestCellularUrcCallHandler)
-{
-    bool arg = false;
-
-    /* test failing scenarios */
-    EXPECT_EQ(RETCODE_INVALID_PARAM, CellularUrc_CallHandler(NULL, RETCODE_OK, &arg));
-    EXPECT_EQ(RETCODE_INVALID_PARAM, CellularUrc_CallHandler(CellularNetworkUrc_CREG, RETCODE_OK, NULL));
-    EXPECT_EQ(0U, CellularNetworkUrc_CREG_fake.call_count);
-
-    /* test passing scenario */
-    EXPECT_EQ(RETCODE_OK, CellularUrc_CallHandler(CellularNetworkUrc_CREG, RETCODE_OK, &arg));
-    EXPECT_EQ(1U, CellularNetworkUrc_CREG_fake.call_count);
-    EXPECT_EQ(true, arg);
-}
-
-TEST_F(CellularEngine, TestCellularUrcMiscellaneous)
-{
-    /* test failing scenarios */
-    AtrspqMiscContentReturnVal = RETCODE_FAILURE;
-    AtResponseQueue_WaitForArbitraryCmdArg_fake.return_val = RETCODE_FAILURE;
-    AtResponseQueue_WaitForNamedCmd_fake.return_val = RETCODE_FAILURE;
-    EXPECT_EQ(RETCODE_CELLULAR_URC_NOT_PRESENT, CellularUrc_Miscellaneous());
-
-    /* test passing scenarios */
-    AtrspqMiscContentReturnVal = RETCODE_OK;
-    AtResponseQueue_WaitForNamedCmd_fake.return_val = RETCODE_OK;
-    EXPECT_EQ(RETCODE_OK, CellularUrc_Miscellaneous());
-
-    AtResponseQueue_WaitForArbitraryCmdArg_fake.return_val = RETCODE_OK;
-    EXPECT_EQ(RETCODE_OK, CellularUrc_Miscellaneous());
-
-    AtrspqArgNbr = 1;
-    EXPECT_EQ(RETCODE_OK, CellularUrc_Miscellaneous());
-    AtrspqArgNbr = 2;
-    EXPECT_EQ(RETCODE_OK, CellularUrc_Miscellaneous());
-    AtrspqArgNbr = 3;
-    EXPECT_EQ(RETCODE_OK, CellularUrc_Miscellaneous());
-    AtrspqArgNbr = 4;
-    EXPECT_EQ(RETCODE_OK, CellularUrc_Miscellaneous());
-    AtrspqArgNbr = 5;
-    EXPECT_EQ(RETCODE_OK, CellularUrc_Miscellaneous());
-
-    CellularUtils_StrtolBounds_fake.return_val = RETCODE_FAILURE;
-    EXPECT_EQ(RETCODE_OK, CellularUrc_Miscellaneous());
-
-    CellularUtils_StrtolBounds_fake.return_val = RETCODE_OK;
-
-}
-
-TEST_F(CellularEngine, TestCellularUrcHandleResponses)
-{
-    /* test handled scenario */
-    EXPECT_EQ(RETCODE_OK, CellularUrc_HandleResponses());
-
-    /* test unhandled scenario */
-    AtResponseQueue_WaitForNamedCmd_fake.return_val = RETCODE_AT_RESPONSE_QUEUE_WRONG_RESPONSE;
-
-    CellularSocketUrc_UUSOCL_fake.return_val = RETCODE_AT_RESPONSE_QUEUE_WRONG_RESPONSE;
-    CellularSocketUrc_UUSORD_fake.return_val = RETCODE_AT_RESPONSE_QUEUE_WRONG_RESPONSE;
-    CellularSocketUrc_UUSORF_fake.return_val = RETCODE_AT_RESPONSE_QUEUE_WRONG_RESPONSE;
-    CellularNetworkUrc_UUPSDA_fake.return_val = RETCODE_AT_RESPONSE_QUEUE_WRONG_RESPONSE;
-    CellularNetworkUrc_UUPSDD_fake.return_val = RETCODE_AT_RESPONSE_QUEUE_WRONG_RESPONSE;
-    CellularSocketUrc_QIURC_fake.return_val = RETCODE_AT_RESPONSE_QUEUE_WRONG_RESPONSE;
-    CellularNetworkUrc_CREG_fake.return_val = RETCODE_AT_RESPONSE_QUEUE_WRONG_RESPONSE;
-
-    EXPECT_EQ(RETCODE_CELLULAR_URC_NOT_PRESENT, CellularUrc_HandleResponses());
-}
-
-TEST_F(CellularEngine, TestCellularEngineHandleEvents)
-{
-    /* test passing scenarios */
-    AtResponseQueue_GetEventCount_fake.return_val = 0;
-    EXPECT_EQ(RETCODE_OK, CellularEngine_HandleEvents());
-
-    AtResponseQueue_GetEventCount_fake.return_val = 8;
-    EXPECT_EQ(RETCODE_OK, CellularEngine_HandleEvents());
-
-    AtResponseQueue_GetEvent_fake.return_val = RETCODE_OK;
-
-    /* test failing scenarios */
-    CellularSocketUrc_UUSOCL_fake.return_val = RETCODE_CELLULAR_URC_NOT_PRESENT;
-    CellularSocketUrc_UUSORD_fake.return_val = RETCODE_CELLULAR_URC_NOT_PRESENT;
-    CellularSocketUrc_UUSORF_fake.return_val = RETCODE_CELLULAR_URC_NOT_PRESENT;
-    CellularNetworkUrc_UUPSDA_fake.return_val = RETCODE_CELLULAR_URC_NOT_PRESENT;
-    CellularNetworkUrc_UUPSDD_fake.return_val = RETCODE_CELLULAR_URC_NOT_PRESENT;
-    CellularSocketUrc_QIURC_fake.return_val = RETCODE_CELLULAR_URC_NOT_PRESENT;
-    CellularNetworkUrc_CREG_fake.return_val = RETCODE_CELLULAR_URC_NOT_PRESENT;
-    EXPECT_EQ(RETCODE_OK, CellularEngine_HandleEvents());
-
-    AtResponseQueue_GetEvent_fake.return_val = RETCODE_AT_RESPONSE_QUEUE_TIMEOUT;
-    EXPECT_EQ(RETCODE_OK, CellularEngine_HandleEvents());
-    AtResponseQueue_Clear();
-}
-
-TEST_F(CellularEngine, TestCellularEngineDeinit)
-{
-    CellularDriver_RequestLock = (xSemaphoreHandle)1;
-    AtResponseParser_RxWakeupHandle = (SemaphoreHandle_t)1;
-    CellularDriver_TxWakeupHandle = (xSemaphoreHandle)1;
-    NotifyEvent = (Cellular_CallbackFunction_T)1;
-
-    AtResponseQueue_Deinit_fake.return_val = RETCODE_FAILURE;
-    CellularBsp_Deinit_fake.return_val = RETCODE_OK;
-
-    EXPECT_EQ(RETCODE_FAILURE, CellularEngine_Deinit());
-    EXPECT_EQ(UINT32_C(1), AtResponseQueue_Deinit_fake.call_count);
-    EXPECT_EQ(UINT32_C(0), CellularBsp_Deinit_fake.call_count);
-
-    AtResponseQueue_Deinit_fake.return_val = RETCODE_OK;
-    CellularBsp_Deinit_fake.return_val = RETCODE_FAILURE;
-    EXPECT_EQ(RETCODE_FAILURE, CellularEngine_Deinit());
-    EXPECT_EQ(UINT32_C(1), CellularBsp_Deinit_fake.call_count);
-    EXPECT_EQ(UINT32_C(0), RingBuffer_Reset_fake.call_count);
-
-    CellularBsp_Deinit_fake.return_val = RETCODE_OK;
-    EXPECT_EQ(RETCODE_OK, CellularEngine_Deinit());
-    EXPECT_EQ(UINT32_C(1), RingBuffer_Reset_fake.call_count);
-}
-
-TEST_F(CellularEngine, TestCellular_ReadData)
-{
-    Retcode_T retcode = RETCODE_OK;
-    RingBuffer_Read_fake.return_val = UINT32_C(2);
-
-    uint8_t data = AT_DEFAULT_S4_CHARACTER;
-    uint32_t dataLength = UINT32_C(1);
-    uint32_t dataRead = UINT32_C(0);
-
-    /* test failing scenario */
-    retcode = Cellular_ReadData(NULL, dataLength, &dataRead);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retcode);
-    EXPECT_EQ(UINT32_C(0), RingBuffer_Read_fake.call_count);
-
-    /* test passing scenarios */
-    retcode = Cellular_ReadData(&data, dataLength, &dataRead);
-    EXPECT_EQ(RETCODE_OK, retcode);
-    EXPECT_EQ(UINT32_C(1), RingBuffer_Read_fake.call_count);
-}
-
-TEST_F(CellularEngine, SetCustomAtResponseParserTest)
-{
-    CustomAtResponseParser = ParseCallback;
-    CellularEngine_SetCustomAtResponseParser(CustomAtResponseParser);
-}
-
-TEST_F(CellularEngine, DispatchTest)
-{
-    uint8_t buffer[1] = {0};
-    Retcode_T retcode = RETCODE_OK;
-    CellularDriver_RequestLock = NULL;
-    retcode = CellularRequest_Dispatch(0, TestFunction, (void*) buffer, sizeof(buffer));
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_UNINITIALIZED), retcode);
-}
-TEST_F(CellularEngine, SendAtCommandTest)
-{
-    uint8_t buffer[1] = {0};
-    CellularSerialDevice = (UART_T) 0;
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNINITIALIZED), CellularEngine_SendAtCommand(buffer, sizeof(buffer)));
-}
-

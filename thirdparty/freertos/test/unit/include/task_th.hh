@@ -118,9 +118,6 @@ FAKE_VOID_FUNC(taskEXIT_CRITICAL_FROM_ISR);
 FAKE_VOID_FUNC(taskDISABLE_INTERRUPTS);
 FAKE_VOID_FUNC(taskENABLE_INTERRUPTS);
 
-FAKE_VALUE_FUNC(BaseType_t, xTaskCreate, TaskHookFunction_t, const char *, unsigned short, void *, UBaseType_t, TaskHandle_t*);
-FAKE_VALUE_FUNC(BaseType_t, xTaskCreateRestricted, TaskParameters_t*, TaskHandle_t*);
-
 FAKE_VALUE_FUNC(BaseType_t, xTaskNotify, TaskHandle_t, uint32_t, eNotifyAction);
 FAKE_VALUE_FUNC(BaseType_t, xTaskNotifyAndQuery, TaskHandle_t, uint32_t, eNotifyAction, uint32_t*);
 
@@ -207,7 +204,16 @@ FAKE_VALUE_FUNC(BaseType_t, xTaskGetSchedulerState);
 FAKE_VOID_FUNC(vTaskPriorityInherit, TaskHandle_t);
 FAKE_VALUE_FUNC(BaseType_t, xTaskPriorityDisinherit, TaskHandle_t);
 
-FAKE_VALUE_FUNC(BaseType_t, xTaskGenericCreate, TaskFunction_t, char *, uint16_t, void *, UBaseType_t, TaskHandle_t*, short*, MemoryRegion_t*);
+#if (configSUPPORT_STATIC_ALLOCATION == 1)
+FAKE_VALUE_FUNC(TaskHandle_t, xTaskCreateStatic, TaskFunction_t, const char *, uint32_t, void *, UBaseType_t, StackType_t *, StaticTask_t *);
+FAKE_VALUE_FUNC(BaseType_t, xTaskCreateRestrictedStatic, const TaskParameters_t *, TaskHandle_t *);
+
+#endif /* configSUPPORT_STATIC_ALLOCATION */
+
+#if (configSUPPORT_DYNAMIC_ALLOCATION == 1)
+FAKE_VALUE_FUNC(BaseType_t, xTaskCreate, TaskHookFunction_t, const char *, unsigned short, void *, UBaseType_t, TaskHandle_t*);
+FAKE_VALUE_FUNC(BaseType_t, xTaskCreateRestricted, TaskParameters_t*, TaskHandle_t*);
+#endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 
 FAKE_VALUE_FUNC(UBaseType_t, uxTaskGetTaskNumber, TaskHandle_t);
 FAKE_VOID_FUNC(vTaskSetTaskNumber, TaskHandle_t, UBaseType_t);

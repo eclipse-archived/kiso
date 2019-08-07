@@ -11,17 +11,14 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
- 
-#ifndef CELLULAR_DNS_TH_HH
-#define CELLULAR_DNS_TH_HH
 
-/* Include the needed headers */
+#ifndef ATURC_TH_HH_
+#define ATURC_TH_HH_
+
 #include <gtest.h>
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode_th.hh"
-#include "Dns.h"
 
-/* Mock-ups for the provided interfaces */
-FAKE_VALUE_FUNC(Retcode_T, Cellular_ResolveDomainName, uint8_t*, uint32_t, uint32_t*);
+#include "AtUrc.h"
 
-#endif /* CELLULAR_DNS_TH_HH */
+FAKE_VALUE_FUNC(Retcode_T, Urc_HandleResponses);
+
+#endif /* ATURC_TH_HH_ */

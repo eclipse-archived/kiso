@@ -12,17 +12,13 @@
 *
 ********************************************************************************/
 
-#ifndef CELLULAR_URC_TH_HH
-#define CELLULAR_URC_TH_HH
+#ifndef HTTPSERVICE_TH_HH_
+#define HTTPSERVICE_TH_HH_
 
-/* Include the needed headers */
-#include <gtest.h>
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode_th.hh"
-#include "CellularUrc.h"
+#include "HttpService.h"
 
-/* Mock-ups for the provided interfaces */
-FAKE_VALUE_FUNC(Retcode_T, CellularUrc_Miscellaneous);
-FAKE_VALUE_FUNC(Retcode_T, CellularUrc_HandleResponses);
+#include "gtest.h"
 
-#endif /* CELLULAR_URC_TH_HH */
+FAKE_VOID_FUNC(HttpService_NotifyResult, AT_UHTTP_ProfileId_T, AT_UHTTPC_Command_T, AT_UHTTPC_Result_T);
+
+#endif /* HTTPSERVICE_TH_HH_ */
