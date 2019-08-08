@@ -27,6 +27,9 @@
 #include "BCDS_Assert.h"
 #include "BCDS_Logging.h"
 
+#include "FreeRTOS.h"
+#include "task.h"
+
 #include <inttypes.h>
 #include <stdio.h>
 #include <limits.h>

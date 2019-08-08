@@ -15,7 +15,7 @@ if(${CMAKE_CROSSCOMPILING})
 
    file(GLOB CELLULAR_SOURCES
       cellular/source/common/*.c
-      cellular/source/common/ublox/*.c
+      cellular/source/ublox/*.c
    )
    add_library(cellular STATIC EXCLUDE_FROM_ALL ${CELLULAR_SOURCES})
    target_include_directories(cellular
