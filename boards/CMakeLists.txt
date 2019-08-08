@@ -20,6 +20,7 @@ if(${CMAKE_CROSSCOMPILING})
       ${KISO_BOARD_NAME}/bsp/source/*.c
       ${KISO_BOARD_NAME}/bsp/source/*.s
       ${KISO_BOARD_NAME}/bsp/source/*.S
+      ${KISO_BOARD_NAME}/bsp/source/protected/*.c
    )
    add_library(bsp STATIC ${BSP_SOURCES})
    target_include_directories(bsp
