@@ -8,7 +8,7 @@ menu:
   main:
     parent: 4. Contribution guide
     identifier: communication_channel
-    weight: 7 
+    weight: 8
 ---
 
 # How can I communicate with the Kiso team?

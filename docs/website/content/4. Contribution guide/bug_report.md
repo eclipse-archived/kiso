@@ -8,7 +8,7 @@ menu:
   main:
     parent: 4. Contribution guide
     identifier: bug_report
-    weight: 7
+    weight: 8
 ---
 
 # How can I create bug-report?
