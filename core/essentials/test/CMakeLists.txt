@@ -20,7 +20,6 @@ file(GLOB TEST_CODE
 # TODO: Enable later - not working for now
 # Need little attention
 list(FILTER TEST_CODE EXCLUDE REGEX ".*SPI_unittest.cc$")
-list(FILTER TEST_CODE EXCLUDE REGEX ".*I2C_unittest.cc$")
 # Needs major work
 list(FILTER TEST_CODE EXCLUDE REGEX ".*UART_unittest.cc$")
 # Unknown

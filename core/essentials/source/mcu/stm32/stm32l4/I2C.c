@@ -159,6 +159,10 @@ Retcode_T MCU_I2C_Initialize(I2C_T i2c, MCU_I2C_Callback_T callback)
                     break;
             }
         }
+        else
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
+        }
     }
     return retcode;
 }
@@ -645,7 +649,10 @@ Retcode_T I2C_WriteRegisterIntMode(struct MCU_I2C_S* pI2C)
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
         }
     }
-
+    if (RETCODE_OK != retcode)
+    {
+        pI2C->State = I2C_STATE_READY;
+    }
     return retcode;
 }
 

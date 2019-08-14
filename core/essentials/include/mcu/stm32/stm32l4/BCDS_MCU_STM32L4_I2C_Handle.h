@@ -64,7 +64,7 @@ struct MCU_I2C_S
     I2C_HandleTypeDef hi2c; /**< Context struct of stm32 I2C driver*/
     enum BCDS_HAL_TransferMode_E TransferMode; /**< The transfer mode configured for this I2C instance. This value will be set by the BSP upon configuration of the I2C interface.*/
     uint32_t DataRate; /**< Data rate in bits per second as configured by the BSP */
-    MCU_I2C_State_T State; /** Current State of the I2C transceiver */
+    MCU_I2C_State_T State; /**< Current State of the I2C transceiver */
     void (*IRQCallback)(I2C_T i2c); /**< Reference to the I2C_EV IRQ handler. Will be set by MCU I2C upon initialization.*/
     void (*ERRCallback)(I2C_T i2c); /**< Reference to the I2C_ER IRQ handler. Will be set by MCU I2C upon initialization.*/
     void (*DMARxCallback)(I2C_T i2c); /**< Reference to the DMA Rx IRQ handler. Will be set by MCU I2C upon initialization.*/
