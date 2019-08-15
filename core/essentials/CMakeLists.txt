@@ -9,8 +9,8 @@ INTERFACE
    include
    include/bsp
    include/mcu
-   include/mcu/${KISO_MCU_TYPE}
-   include/mcu/${KISO_MCU_TYPE}/${KISO_MCU_FAMILY}
+   include/mcu/${KISO_MCU_FAMILY}
+   include/mcu/${KISO_MCU_FAMILY}/${KISO_MCU_SERIES}
 )
 target_link_libraries(essentials_int INTERFACE kiso_config)
 
@@ -19,8 +19,8 @@ target_link_libraries(essentials_int INTERFACE kiso_config)
 if(${CMAKE_CROSSCOMPILING})
    file(GLOB ESSENTIALS_SOURCES
       source/*.c
-      source/mcu/${KISO_MCU_TYPE}/*.c
-      source/mcu/${KISO_MCU_TYPE}/${KISO_MCU_FAMILY}/*.c
+      source/mcu/${KISO_MCU_FAMILY}/*.c
+      source/mcu/${KISO_MCU_FAMILY}/${KISO_MCU_SERIES}/*.c
    )
    add_library(essentials STATIC ${ESSENTIALS_SOURCES})
    target_link_libraries(essentials essentials_int bsp ${KISO_BOARD_LIBS})

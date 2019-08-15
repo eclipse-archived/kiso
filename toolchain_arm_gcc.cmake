@@ -5,8 +5,7 @@ set(CMAKE_SYSTEM_PROCESSOR arm)
 # Or ARM_TOOLCHAIN_DIR should be specified explicitly
 
 if(NOT ARM_TOOLCHAIN_PREFIX)
-  set(ARM_TOOLCHAIN_PREFIX arm-none-eabi-)
-  message("ARM_TOOLCHAIN_PREFIX not set, using '${ARM_TOOLCHAIN_PREFIX}'")
+   set(ARM_TOOLCHAIN_PREFIX arm-none-eabi-)
 endif()
 
 if(NOT ARM_TOOLCHAIN_DIR)
@@ -21,7 +20,6 @@ if(NOT ARM_TOOLCHAIN_DIR)
     OUTPUT_STRIP_TRAILING_WHITESPACE
   )
   get_filename_component(ARM_TOOLCHAIN_DIR ${FOUND_GCC_PATH} DIRECTORY)
-  message("ARM_TOOLCHAIN_DIR not set, detected '${ARM_TOOLCHAIN_DIR}'")
 endif()
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)

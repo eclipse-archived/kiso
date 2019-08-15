@@ -3,14 +3,19 @@
 
 ## Kiso configuration
 # MCU configuration for this board
-set(KISO_MCU_TYPE efm32)
-set(KISO_MCU_FAMILY efm32gg)
+set(KISO_MCU_FAMILY efm32)
+set(KISO_MCU_SERIES efm32gg)
+# set(KISO_MCU_TYPE   x) # Not applicable for board
+set(KISO_MCU_DEVICE EFM32GG390F1024)
+# set(KISO_MCU_REVISION x) # Not applicable for board
+
+# GCC portmacro to use in freertos
+set(KISO_MCU_CORE ARM_CM3)
+
 # Additional thirdparty libraries for the board
 set(KISO_BOARD_LIBS emlib)
 
 ## Libs configuration
-# GCC portmacros to use in freertos
-set(FREERTOS_CPU_VARIANCE ARM_CM3)
 # Add usb to emlib
 set(EMLIB_INCLUDE_USB 1)
 
@@ -20,7 +25,7 @@ add_definitions(
    -DBCDS_PACKAGE_ID=0
    -D${KISO_MCU_TYPE}
    -D${KISO_MCU_FAMILY}
-   -DEFM32GG390F1024
+   -D${KISO_MCU_DEVICE}
    -DARM_MATH_CM3
 )
 
@@ -63,10 +68,7 @@ if(${CMAKE_CROSSCOMPILING} AND "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
       -Wl,--end-group
       -Wl,-u,_printf_float
    )
-   # Join the items on the list with a space between them and write the result in CMAKE_EXE_LINKER_FLAGS
+   # Join the items on the list separated by a space and write the result in CMAKE_EXE_LINKER_FLAGS
    string(REPLACE ";" " " CMAKE_EXE_LINKER_FLAGS "${BOARD_LINKER_FLAGS}")
 
-elseif(${CMAKE_TESTING_ENABLED})
-   # Add some warnings and debug symbols in unit tests
-   add_compile_options(-g -Wall -Wextra)
 endif()

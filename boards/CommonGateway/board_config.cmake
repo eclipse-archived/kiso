@@ -3,23 +3,27 @@
 
 ## Kiso configuration
 # MCU configuration for this board
-set(KISO_MCU_TYPE stm32)
-set(KISO_MCU_FAMILY stm32l4)
-# Additional thirdparty libraries for the board
-set(KISO_BOARD_LIBS stm32cubel4)
+set(KISO_MCU_FAMILY stm32)
+set(KISO_MCU_SERIES stm32l4)
+set(KISO_MCU_TYPE   STM32L486xx)
+set(KISO_MCU_DEVICE STM32L486VG)
+# set(KISO_MCU_REVISION x) # Not applicable for board
+
+# GCC portmacro to use in freertos
+set(KISO_MCU_CORE ARM_CM4F)
 
 ## Libs configuration
-# GCC portmacros to use in freertos
-set(FREERTOS_CPU_VARIANCE ARM_CM4F)
+# Additional thirdparty libraries for the board
+set(KISO_BOARD_LIBS stm32cubel4)
 
 ## Board definitions
 # Compile definitions for all subprojects after this call
 add_definitions(
    -DBCDS_PACKAGE_ID=0
-   -D${KISO_MCU_TYPE}
    -D${KISO_MCU_FAMILY}
-   -DSTM32L486xx
-   -DSTM32L486VG
+   -D${KISO_MCU_SERIES}
+   -D${KISO_MCU_TYPE}
+   -D${KISO_MCU_DEVICE}
    -DAPPLICATION_ENTRY_ADDRESS=0x08000000
    -DAPPLICATION_SECTION_SIZE=0x80000
 )
@@ -66,10 +70,7 @@ if(${CMAKE_CROSSCOMPILING} AND "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
       -Wl,--end-group
       -Wl,-u,_printf_float
    )
-   # Join the items on the list with a space between them and write the result in CMAKE_EXE_LINKER_FLAGS
+   # Join the items on the list separated by a space and write the result in CMAKE_EXE_LINKER_FLAGS
    string(REPLACE ";" " " CMAKE_EXE_LINKER_FLAGS "${BOARD_LINKER_FLAGS}")
 
-elseif(${CMAKE_TESTING_ENABLED})
-   # Add some warnings and debug symbols in unit tests
-   add_compile_options(-g -Wall -Wextra)
 endif()

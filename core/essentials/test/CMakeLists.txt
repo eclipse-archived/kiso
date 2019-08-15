@@ -13,8 +13,8 @@ target_link_libraries(essentials_test_int INTERFACE essentials_int)
 
 file(GLOB TEST_CODE
    unit/source/*.cc
-   unit/source/${KISO_MCU_TYPE}/*.cc
-   unit/source/${KISO_MCU_TYPE}/${KISO_MCU_FAMILY}/*.cc
+   unit/source/${KISO_MCU_FAMILY}/*.cc
+   unit/source/${KISO_MCU_FAMILY}/${KISO_MCU_SERIES}/*.cc
 )
 
 # TODO: Enable later - not working for now
@@ -30,8 +30,8 @@ list(FILTER TEST_CODE EXCLUDE REGEX ".*efm32/Sleep_unittest.cc$")
 # Valid for all tragets in current project
 include_directories(
    ../source
-   ../source/mcu/${KISO_MCU_TYPE}
-   ../source/mcu/${KISO_MCU_TYPE}/${KISO_MCU_FAMILY}
+   ../source/mcu/${KISO_MCU_FAMILY}
+   ../source/mcu/${KISO_MCU_FAMILY}/${KISO_MCU_SERIES}
 )
 link_libraries(essentials_test_int gtest)
 foreach(lib ${KISO_BOARD_LIBS})

@@ -98,7 +98,10 @@ pipeline
         }
         success
         {
-            echo 'To do'
+            archiveArtifacts (
+                artifacts: 'builddir-debug/docs/doxygen/**',
+                fingerprint: true
+            )
         }
         unstable
         {
