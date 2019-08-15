@@ -24,46 +24,6 @@ menu:
 
 **Note**: python, arm-none-eabi, doxygen need to be accessible via cmd-line. Therefore, you may need to modify the environment variable *PATH* on windows if it is not done in the installation.
 
-### Extension tooling ###
-* ```pip3 install meson```
-* ```pip3 install ninja```
-
-## Build HelloWorld with your supported hardware (meson build) ##
-
-**Modify root meson.build**:
-```bash
-# Define project name
-project('Hello World', 'c', default_options: meson.get_cross_property('project_config'))
-
-# Get board & configuration
-subdir('boards/<folder_of_supported_board>') # Only one allowed
-
-# Get application
-subdir('examples/HelloWorld/hello-world')
-```
-
-**Build**:
-```bash
-meson builddir --cross-file boards/<folder_of_supported_board>/meson_config_<mcu_id>.ini
-cd builddir
-ninja hex
-```
-**Clean**:
-```bash
-cd builddir
-ninja clean
-```
-
-**Small summary**
-
-In the meson.build, you always need:
-
-- the project name
-- to load the board specific information via `subdir('boards/<folder_of_supported_board>')`
-- to load the example you want to use via `subdir('examples/HelloWorld/<example_folder>')`
-
-To utilize your board with Kiso, please take a look at [the next step]({{< ref "advance_guide.md" >}})
-
 ## Build HelloWorld with your supported hardware (CMake build) ##
 
 **Modify root CMakeLists.txt**:

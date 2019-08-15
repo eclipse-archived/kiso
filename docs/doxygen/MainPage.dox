@@ -31,7 +31,6 @@
  * * **boards** contains different HW-boards Kiso support. Each of the HWs have a folder. Each of these folders contain:
  *     * A **bsp** (board support package) abstracting Essentials.
  *     * A **kiso_config** containing the Kiso module specific configurations.
- *     * Build system information needed by meson to generate the binary for the specific hardware.
  * * **core** contains the different Kiso components. The following modules are today existing:
  *     * **Essentials** contains the hardware abstraction from the board and MCU. It also contains "essentials" modules such as error-handling. See \ref BCDS_ESSENTIALS
  *     * **Utils** contains RTOS abstractions modules, but also logging, circular-buffers, etc... See \ref UTILS
@@ -41,7 +40,7 @@
  * * **ide** contains eclipse projects than implement a workbench specifically built for BCX and CommonGateway.
  * * **thirdparty** contains different source-code of third-parties needed by Kiso.
  *
- * @section BUILD_STRUCT Build Structure (meson or makefile)
+ * @section BUILD_STRUCT Build Structure
  *
  * Each Kiso modules need a configuration file. These files allows to enable/disable different features, 
  * but also define a configuration for these features. These configurations can be found in the folder `boards/<board_name>/kiso_config`. \n
@@ -52,7 +51,6 @@
  * * All the `core` libraries need to be build with the configuration of Kiso.
  * * The Application needs dependencies to all the previous build libraries to be buildable.
  * \n
- * The meson.build in the root folder is contains the build knowledge.
  *
  * @}
 */
