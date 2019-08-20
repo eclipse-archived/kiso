@@ -1,24 +1,17 @@
-/********************************************************************************
-* Copyright (c) 2010-2019 Robert Bosch GmbH
-*
-* This program and the accompanying materials are made available under the
-* terms of the Eclipse Public License 2.0 which is available at
-* http://www.eclipse.org/legal/epl-2.0.
-*
-* SPDX-License-Identifier: EPL-2.0
-*
-* Contributors:
-*    Robert Bosch GmbH - initial contribution
-*
-********************************************************************************/
-/**
- *  @file
+/*----------------------------------------------------------------------------*/
+/*
+ * Copyright (C) Bosch Connected Devices and Solutions GmbH.
+ * 
+ * All Rights Reserved. Confidential.
  *
- *  Module test specification for the GuardedTask_unittest module.
- *
- * The unit test file template follows the Four-Phase test pattern. 
- *
- * ****************************************************************************/
+ * Distribution only to people who need to know this information in
+ * order to do their job.(Need-to-know principle).
+ * Distribution to persons outside the company, only if these persons
+ * signed a non-disclosure agreement.
+ * Electronic transmission, e.g. via electronic mail, must be made in
+ * encrypted form.
+ */
+/*----------------------------------------------------------------------------*/
 
 /* include gtest interface */
 #include <gtest.h>
@@ -56,11 +49,16 @@ static void dummyRunFunction(void)
 
 class guardedTask: public testing::Test
 {
-protected:
+public:
+    GuardedTask_T guardTask;
+
+    protected:
     virtual void SetUp()
     {
-        FFF_RESET_HISTORY()
-
+        guardTask.task = (TaskHandle_t) 1;
+        guardTask.signal = (SemaphoreHandle_t) 1;
+        guardTask.runFunction = &dummyRunFunction;
+        runFunctionCalled = false;
         RESET_FAKE(xTaskCreate);
         RESET_FAKE(xSemaphoreGiveFromISR);
         RESET_FAKE(xSemaphoreGive);
@@ -70,16 +68,12 @@ protected:
         RESET_FAKE(vQueueDelete);
         RESET_FAKE(Retcode_RaiseError);
 
-        runFunctionCalled = false;
-    }
-
-    virtual void TearDown()
-    {
-        ; /* nothing to do if clean up is not required */
+        FFF_RESET_HISTORY();
     }
 };
 
 /* specify test cases ******************************************************* */
+
 TEST_F(guardedTask, GuardedTaskInitializeInvalidParam1)
 {
     /** @testcase{ guardedTask::GuardedTaskInitializeInvalidParam1: }
@@ -89,19 +83,17 @@ TEST_F(guardedTask, GuardedTaskInitializeInvalidParam1)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T* handle = NULL;
-    Retcode_T retcode;
+    Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = GuardedTask_Initialize(handle, &dummyRunFunction, (const char*) NULL, 0, 0);
+    retVal = GuardedTask_Initialize(handle, &dummyRunFunction, (const char*) NULL, 0, 0);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
-    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
+    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retVal));
     EXPECT_EQ(UINT32_C(0), xTaskCreate_fake.call_count);
     EXPECT_EQ(UINT32_C(0), xSemaphoreCreateBinary_fake.call_count);
     EXPECT_EQ(UINT32_C(0), xSemaphoreCreateMutex_fake.call_count);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(guardedTask, GuardedTaskInitializeInvalidParam2)
@@ -113,19 +105,17 @@ TEST_F(guardedTask, GuardedTaskInitializeInvalidParam2)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T handleBlock;
-    Retcode_T retcode;
+    Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = GuardedTask_Initialize(&handleBlock, &dummyRunFunction, (const char*) NULL, 0, 0);
+    retVal = GuardedTask_Initialize(&handleBlock, &dummyRunFunction, (const char*) NULL, 0, 0);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
-    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
+    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retVal));
     EXPECT_EQ(UINT32_C(0), xTaskCreate_fake.call_count);
     EXPECT_EQ(UINT32_C(0), xSemaphoreCreateBinary_fake.call_count);
     EXPECT_EQ(UINT32_C(0), xSemaphoreCreateMutex_fake.call_count);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(guardedTask, GuardedTaskInitializeInvalidParam3)
@@ -137,19 +127,17 @@ TEST_F(guardedTask, GuardedTaskInitializeInvalidParam3)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T handleBlock;
-    Retcode_T retcode;
+    Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = GuardedTask_Initialize(&handleBlock, NULL, (const char*) "abc", 0, 0);
+    retVal = GuardedTask_Initialize(&handleBlock, NULL, (const char*) "abc", 0, 0);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
-    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
+    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retVal));
     EXPECT_EQ(UINT32_C(0), xTaskCreate_fake.call_count);
     EXPECT_EQ(UINT32_C(0), xSemaphoreCreateBinary_fake.call_count);
     EXPECT_EQ(UINT32_C(0), xSemaphoreCreateMutex_fake.call_count);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(guardedTask, GuardedTaskInitializeTaskFail)
@@ -161,22 +149,20 @@ TEST_F(guardedTask, GuardedTaskInitializeTaskFail)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T handleBlock;
-    Retcode_T retcode;
+    Retcode_T retVal;
     xTaskCreate_fake.return_val = pdFAIL;
     xSemaphoreCreateBinary_fake.return_val = (SemaphoreHandle_t) 1;
     xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t) 1;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = GuardedTask_Initialize(&handleBlock, &dummyRunFunction, (const char*) "abc", 0, 0);
+    retVal = GuardedTask_Initialize(&handleBlock, &dummyRunFunction, (const char*) "abc", 0, 0);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_OUT_OF_RESOURCES, Retcode_GetCode(retcode));
-    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
+    EXPECT_EQ(RETCODE_OUT_OF_RESOURCES, Retcode_GetCode(retVal));
+    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retVal));
     EXPECT_EQ(UINT32_C(1), xTaskCreate_fake.call_count);
     EXPECT_EQ(UINT32_C(1), xSemaphoreCreateBinary_fake.call_count);
     EXPECT_EQ(UINT32_C(0), xSemaphoreCreateMutex_fake.call_count);;
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(guardedTask, GuardedTaskInitializeSemaphoreBinaryFail)
@@ -188,22 +174,20 @@ TEST_F(guardedTask, GuardedTaskInitializeSemaphoreBinaryFail)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T handleBlock;
-    Retcode_T retcode;
+    Retcode_T retVal;
     xTaskCreate_fake.return_val = pdPASS;
     xSemaphoreCreateBinary_fake.return_val = (SemaphoreHandle_t) NULL;
     xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t) 1;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = GuardedTask_Initialize(&handleBlock, &dummyRunFunction, (const char*) "abc", 0, 0);
+    retVal = GuardedTask_Initialize(&handleBlock, &dummyRunFunction, (const char*) "abc", 0, 0);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_OUT_OF_RESOURCES, Retcode_GetCode(retcode));
-    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
+    EXPECT_EQ(RETCODE_OUT_OF_RESOURCES, Retcode_GetCode(retVal));
+    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retVal));
     EXPECT_EQ(UINT32_C(0), xTaskCreate_fake.call_count);
     EXPECT_EQ(UINT32_C(1), xSemaphoreCreateBinary_fake.call_count);
     EXPECT_EQ(UINT32_C(0), xSemaphoreCreateMutex_fake.call_count);;
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(guardedTask, GuardedTaskInitializeSuccess)
@@ -215,21 +199,21 @@ TEST_F(guardedTask, GuardedTaskInitializeSuccess)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T handleBlock;
-    Retcode_T retcode;
+    Retcode_T retVal;
     xTaskCreate_fake.return_val = pdPASS;
     xSemaphoreCreateBinary_fake.return_val = (SemaphoreHandle_t) 1;
     xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t) 1;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = GuardedTask_Initialize(&handleBlock, &dummyRunFunction, (const char*) "abc", 0, 0);
+    retVal = GuardedTask_Initialize(&handleBlock, &dummyRunFunction, (const char*) "abc", 0, 0);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_OK, retcode);
+    EXPECT_EQ(RETCODE_OK, retVal);
+    EXPECT_NE(RETCODE_OUT_OF_RESOURCES, Retcode_GetCode(retVal));
+    EXPECT_NE(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retVal));
     EXPECT_EQ(UINT32_C(1), xTaskCreate_fake.call_count);
     EXPECT_EQ(UINT32_C(1), xSemaphoreCreateBinary_fake.call_count);
     EXPECT_EQ(&dummyRunFunction, handleBlock.runFunction);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(guardedTask, GuardedTaskDeinitializeInvalidParam1)
@@ -241,16 +225,15 @@ TEST_F(guardedTask, GuardedTaskDeinitializeInvalidParam1)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T* handle = NULL;
-    Retcode_T retcode;
+    Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = GuardedTask_Deinitialize(handle);
+    retVal = GuardedTask_Deinitialize(handle);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
-    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
+    EXPECT_NE(RETCODE_OK,Retcode_GetCode(retVal));
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
+    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retVal));
 }
 
 TEST_F(guardedTask, GuardedTaskDeinitializeSuccess)
@@ -262,22 +245,22 @@ TEST_F(guardedTask, GuardedTaskDeinitializeSuccess)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T handleBlock;
-    Retcode_T retcode;
+    Retcode_T retVal;
     handleBlock.task = (TaskHandle_t) 1;
     handleBlock.signal = (SemaphoreHandle_t) 1;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = GuardedTask_Deinitialize(&handleBlock);
+    retVal = GuardedTask_Deinitialize(&handleBlock);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_OK, retcode);
+    EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(1), vTaskDelete_fake.call_count);
     EXPECT_EQ(UINT32_C(1), vQueueDelete_fake.call_count);
     EXPECT_EQ(NULL, handleBlock.runFunction);
     EXPECT_EQ(NULL, handleBlock.signal);
     EXPECT_EQ(NULL, handleBlock.task);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
+    EXPECT_NE(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
+    EXPECT_NE(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retVal));
 }
 
 TEST_F(guardedTask, GuardedTaskSignalInvalidParam1)
@@ -289,17 +272,15 @@ TEST_F(guardedTask, GuardedTaskSignalInvalidParam1)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T* handle = NULL;
-    Retcode_T retcode;
+    Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = GuardedTask_Signal(handle);
+    retVal = GuardedTask_Signal(handle);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
-    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
+    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retVal));
     EXPECT_EQ(UINT32_C(0), xSemaphoreGive_fake.call_count);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(guardedTask, GuardedTaskSignalMultipleGives)
@@ -311,23 +292,21 @@ TEST_F(guardedTask, GuardedTaskSignalMultipleGives)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T handleBlock;
-    Retcode_T retcode1;
-    Retcode_T retcode2;
+    Retcode_T retVal1;
+    Retcode_T retVal2;
     xSemaphoreGive_fake.return_val = pdPASS;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode1 = GuardedTask_Signal(&handleBlock);
+    retVal1 = GuardedTask_Signal(&handleBlock);
 
     xSemaphoreGive_fake.return_val = pdFAIL;
-    retcode2 = GuardedTask_Signal(&handleBlock);
+    retVal2 = GuardedTask_Signal(&handleBlock);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_OK, retcode1);
-    EXPECT_EQ(RETCODE_GUARDEDTASK_SEMAPHORE_ALREADY_GIVEN, Retcode_GetCode(retcode2));
-    EXPECT_EQ(RETCODE_SEVERITY_WARNING, Retcode_GetSeverity(retcode2));
+    EXPECT_EQ(RETCODE_OK, retVal1);
+    EXPECT_EQ(RETCODE_GUARDEDTASK_SEMAPHORE_ALREADY_GIVEN, Retcode_GetCode(retVal2));
+    EXPECT_EQ(RETCODE_SEVERITY_WARNING, Retcode_GetSeverity(retVal2));
     EXPECT_EQ(UINT32_C(2), xSemaphoreGive_fake.call_count);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(guardedTask, GuardedTaskSignalSuccess)
@@ -339,18 +318,16 @@ TEST_F(guardedTask, GuardedTaskSignalSuccess)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T handleBlock;
-    Retcode_T retcode;
+    Retcode_T retVal;
     handleBlock.signal = (SemaphoreHandle_t) 1;
     xSemaphoreGive_fake.return_val = pdPASS;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = GuardedTask_Signal(&handleBlock);
+    retVal = GuardedTask_Signal(&handleBlock);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_OK, retcode);
+    EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(1), xSemaphoreGive_fake.call_count);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(guardedTask, GuardedTaskSignalFromIsrInvalidParam1)
@@ -362,17 +339,15 @@ TEST_F(guardedTask, GuardedTaskSignalFromIsrInvalidParam1)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T* handle = NULL;
-    Retcode_T retcode;
+    Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = GuardedTask_SignalFromIsr(handle);
+    retVal = GuardedTask_SignalFromIsr(handle);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
-    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
+    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retVal));
     EXPECT_EQ(UINT32_C(0), xSemaphoreGiveFromISR_fake.call_count);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(guardedTask, GuardedTaskSignalFromIsrMultipleGives)
@@ -384,23 +359,21 @@ TEST_F(guardedTask, GuardedTaskSignalFromIsrMultipleGives)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T handleBlock;
-    Retcode_T retcode1;
-    Retcode_T retcode2;
+    Retcode_T retVal1;
+    Retcode_T retVal2;
     xSemaphoreGiveFromISR_fake.return_val = pdPASS;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode1 = GuardedTask_SignalFromIsr(&handleBlock);
+    retVal1 = GuardedTask_SignalFromIsr(&handleBlock);
 
     xSemaphoreGiveFromISR_fake.return_val = pdFAIL;
-    retcode2 = GuardedTask_SignalFromIsr(&handleBlock);
+    retVal2 = GuardedTask_SignalFromIsr(&handleBlock);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_OK, retcode1);
-    EXPECT_EQ(RETCODE_GUARDEDTASK_SEMAPHORE_ALREADY_GIVEN, Retcode_GetCode(retcode2));
-    EXPECT_EQ(RETCODE_SEVERITY_WARNING, Retcode_GetSeverity(retcode2));
+    EXPECT_EQ(RETCODE_OK, retVal1);
+    EXPECT_EQ(RETCODE_GUARDEDTASK_SEMAPHORE_ALREADY_GIVEN, Retcode_GetCode(retVal2));
+    EXPECT_EQ(RETCODE_SEVERITY_WARNING, Retcode_GetSeverity(retVal2));
     EXPECT_EQ(UINT32_C(2), xSemaphoreGiveFromISR_fake.call_count);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(guardedTask, GuardedTaskSignalFromIsrSuccess)
@@ -412,18 +385,16 @@ TEST_F(guardedTask, GuardedTaskSignalFromIsrSuccess)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T handleBlock;
-    Retcode_T retcode;
+    Retcode_T retVal;
     handleBlock.signal = (SemaphoreHandle_t) 1;
     xSemaphoreGiveFromISR_fake.return_val = pdPASS;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = GuardedTask_SignalFromIsr(&handleBlock);
+    retVal = GuardedTask_SignalFromIsr(&handleBlock);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_OK, retcode);
+    EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(1), xSemaphoreGiveFromISR_fake.call_count);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(guardedTask, guardedTaskExecuteInvalidParam1)
@@ -441,8 +412,6 @@ TEST_F(guardedTask, guardedTaskExecuteInvalidParam1)
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(UINT32_C(1), Retcode_RaiseError_fake.call_count);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(guardedTask, guardedTaskExecuteTakeFail)
@@ -465,8 +434,6 @@ TEST_F(guardedTask, guardedTaskExecuteTakeFail)
     EXPECT_EQ(UINT32_C(1), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(1), Retcode_RaiseError_fake.call_count);
     EXPECT_EQ(UINT32_C(0), runFunctionCalled);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(guardedTask, guardedTaskExecuteSuccess)
@@ -488,11 +455,10 @@ TEST_F(guardedTask, guardedTaskExecuteSuccess)
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(UINT32_C(1), xSemaphoreTake_fake.call_count);
+    EXPECT_EQ(UINT32_C(0), Retcode_RaiseError_fake.call_count);
     EXPECT_EQ(true, runFunctionCalled);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
-/*****************************************************************************************/
+
 #else
 }
 #endif /* BCDS_FEATURE_GUARDEDTASK */

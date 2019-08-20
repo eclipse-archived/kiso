@@ -114,7 +114,7 @@ TEST_F(XProtocolRoutines, testEncodeFrameFail)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     const uint8_t nodata[3] = { 1 };
-    uint8_t frame[6] = { 1 };
+    uint8_t frame[13] = { 1 };
     uint32_t framelength;
     Retcode_T retVal;
     /* EXECISE: call relevant production code Interface with appropriate test inputs */

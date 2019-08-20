@@ -79,7 +79,7 @@ static void GuardedTaskRunFunction(void* param)
 /* The description of the function is available in header file */
 Retcode_T GuardedTask_Deinitialize(GuardedTask_T* handle)
 {
-    Retcode_T retcode;
+    Retcode_T retcode = RETCODE_OK;
 
     if (NULL != handle)
     {
@@ -149,7 +149,7 @@ Retcode_T GuardedTask_Initialize(GuardedTask_T* handle, GuardedTask_Function_T t
 /* The description of the function is available in header file */
 Retcode_T GuardedTask_Signal(GuardedTask_T* handle)
 {
-    Retcode_T retcode;
+    Retcode_T retcode = RETCODE_OK;
 
     if ((NULL != handle) && (NULL != handle->signal))
     {
@@ -176,7 +176,7 @@ Retcode_T GuardedTask_Signal(GuardedTask_T* handle)
 /* The description of the function is available in header file */
 Retcode_T GuardedTask_SignalFromIsr(GuardedTask_T* handle)
 {
-    Retcode_T retcode;
+    Retcode_T retcode = RETCODE_OK;
 
     if ((NULL != handle) && (NULL != handle->signal))
     {

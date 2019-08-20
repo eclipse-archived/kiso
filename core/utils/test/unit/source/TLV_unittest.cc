@@ -327,6 +327,7 @@ TEST_F(TLV,tlvElementAdd)
 
         /* Testing the negative case by invalid Buffer Length as parameter */
         uint8_t TestdataBuffer[5];
+        testSpecificBufferSize  = 7;
         Handle = TLV_AddGroup(TestdataBuffer, testSpecificBufferSize);
         EXPECT_EQ((TLV_GroupHandle_TP)NULL, Handle);
 

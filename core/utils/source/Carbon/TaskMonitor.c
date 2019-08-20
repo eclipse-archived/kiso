@@ -121,7 +121,7 @@ bool TaskMonitor_Check(void)
         taskTagValue[loopcnt] = 0UL;
         if (TaskInfo[loopcnt].IsReg)
         {
-            taskTagValue[loopcnt] = (uint32_t) xTaskGetApplicationTaskTag(
+            taskTagValue[loopcnt] = (uint32_t)xTaskGetApplicationTaskTag(
                     TaskInfo[loopcnt].Task);
         }
     }

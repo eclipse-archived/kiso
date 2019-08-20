@@ -285,7 +285,7 @@ TEST_F(LeanB2CAP, LeanB2CAP_ResetRxDataProcessorPassTest)
 
     ValidOutputDataStorageBufferInfo.FrameDataPointer = OutputDataBuffer;
     ValidOutputDataStorageBufferInfo.FrameDataSize = 200;
-
+    
     /* Validating implementation with API initialization */
     Return_status = LeanB2CAP_Initialize(&Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallback_Ttest);
     EXPECT_EQ(RETCODE_OK, Return_status);
@@ -293,6 +293,7 @@ TEST_F(LeanB2CAP, LeanB2CAP_ResetRxDataProcessorPassTest)
     /* call relevant production code Interface and verify implementation */
     Return_status = LeanB2CAP_ResetRxDataProcessor(&Handle);
     EXPECT_EQ(RETCODE_OK, Return_status);
+
     EXPECT_EQ(0UL, LeanB2CAPHandle[0].CRC2OfRxFrameInProgress);
     EXPECT_NE((LeanB2CAP_HandlePtr_T *)NULL, &Handle);
 

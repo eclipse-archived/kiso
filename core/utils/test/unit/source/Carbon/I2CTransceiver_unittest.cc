@@ -1,16 +1,17 @@
-/********************************************************************************
-* Copyright (c) 2010-2019 Robert Bosch GmbH
-*
-* This program and the accompanying materials are made available under the
-* terms of the Eclipse Public License 2.0 which is available at
-* http://www.eclipse.org/legal/epl-2.0.
-*
-* SPDX-License-Identifier: EPL-2.0
-*
-* Contributors:
-*    Robert Bosch GmbH - initial contribution
-*
-********************************************************************************/
+/*----------------------------------------------------------------------------*/
+/*
+ * Copyright (C) Bosch Connected Devices and Solutions GmbH.
+ * 
+ * All Rights Reserved. Confidential.
+ *
+ * Distribution only to people who need to know this information in
+ * order to do their job.(Need-to-know principle).
+ * Distribution to persons outside the company, only if these persons
+ * signed a non-disclosure agreement.
+ * Electronic transmission, e.g. via electronic mail, must be made in
+ * encrypted form.
+ */
+/*----------------------------------------------------------------------------*/
 
 /* include gtest interface */
 #include <gtest.h>
@@ -39,7 +40,7 @@ class I2CTransceiver: public testing::Test
 {
 public:
     I2cTranceiverHandle_T TranceiverHandle;
-
+    
     protected:
     /* Remember that SetUp() is run immediately before a test starts. */
     virtual void SetUp()
@@ -49,23 +50,18 @@ public:
         TranceiverHandle.I2CMutexLock = (xSemaphoreHandle) 0x1234;
         TranceiverHandle.I2cTransferStatusFlag = INT8_C(0);
         TranceiverHandle.InitializationStatus = false;
-        RESET_FAKE(xSemaphoreCreateMutex)
-        RESET_FAKE(xSemaphoreCreateBinary)
-        RESET_FAKE(xSemaphoreTake)
-        RESET_FAKE(xSemaphoreGive)
-        RESET_FAKE(MCU_I2C_ReadRegister)
-        RESET_FAKE(MCU_I2C_Send)
-        RESET_FAKE(MCU_I2C_WriteRegister)
-        RESET_FAKE(MCU_I2C_Deinitialize)
-        RESET_FAKE(Retcode_RaiseErrorFromIsr)
-        RESET_FAKE(xSemaphoreGiveFromISR)
-        FFF_RESET_HISTORY()
-    }
+        RESET_FAKE(xSemaphoreCreateMutex);
+        RESET_FAKE(xSemaphoreCreateBinary);
+        RESET_FAKE(xSemaphoreTake);
+        RESET_FAKE(xSemaphoreGive);
+        RESET_FAKE(MCU_I2C_ReadRegister);
+        RESET_FAKE(MCU_I2C_Send);
+        RESET_FAKE(MCU_I2C_WriteRegister);
+        RESET_FAKE(MCU_I2C_Deinitialize);
+        RESET_FAKE(Retcode_RaiseErrorFromIsr);
+        RESET_FAKE(xSemaphoreGiveFromISR);
 
-    /* TearDown() is invoked immediately after a test finishes. */
-    virtual void TearDown()
-    {
-
+        FFF_RESET_HISTORY();
     }
 };
 
@@ -78,15 +74,15 @@ TEST_F(I2CTransceiver, I2CTransceiverInitSuccess)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle) 0x124;
     xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle) 0x124;
     TranceiverHandle.I2CHandle = I2CHandle;
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Init(&TranceiverHandle, I2CHandle);
+    retVal = I2CTransceiver_Init(&TranceiverHandle, I2CHandle);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_OK, ReturnValue);
+    EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(1), xSemaphoreCreateBinary_fake.call_count);
     EXPECT_EQ(UINT32_C(1), xSemaphoreCreateMutex_fake.call_count);
     EXPECT_EQ((xSemaphoreHandle)0x124, TranceiverHandle.I2CBusSync);
@@ -100,15 +96,15 @@ TEST_F(I2CTransceiver, I2CTransceiverInitNULLHandle)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle) 0x1234;
     xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle) 0x1234;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Init(NULL, I2CHandle);
+    retVal = I2CTransceiver_Init(NULL, I2CHandle);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retVal);
     EXPECT_EQ(UINT32_C(0), xSemaphoreCreateBinary_fake.call_count);
     EXPECT_EQ(UINT32_C(0), xSemaphoreCreateMutex_fake.call_count);
     EXPECT_FALSE(TranceiverHandle.InitializationStatus);
@@ -121,15 +117,15 @@ TEST_F(I2CTransceiver, I2CTransceiverInitNULLI2CHandle)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle) 0x1234;
     xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle) 0x1234;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Init(&TranceiverHandle, NULL);
+    retVal = I2CTransceiver_Init(&TranceiverHandle, NULL);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retVal);
     EXPECT_EQ(UINT32_C(0), xSemaphoreCreateBinary_fake.call_count);
     EXPECT_EQ(UINT32_C(0), xSemaphoreCreateMutex_fake.call_count);
     EXPECT_FALSE(TranceiverHandle.InitializationStatus);
@@ -142,16 +138,16 @@ TEST_F(I2CTransceiver, I2CTransceiverInitDoppleInit)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle) 0x1234;
     xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle) 0x1234;
     TranceiverHandle.InitializationStatus = true;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Init(&TranceiverHandle, I2CHandle);
+    retVal = I2CTransceiver_Init(&TranceiverHandle, I2CHandle);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_OK, ReturnValue);
+    EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(0), xSemaphoreCreateBinary_fake.call_count);
     EXPECT_EQ(UINT32_C(0), xSemaphoreCreateMutex_fake.call_count);
     EXPECT_TRUE(TranceiverHandle.InitializationStatus);
@@ -164,15 +160,15 @@ TEST_F(I2CTransceiver, I2CTransceiverInitSemaphoreFail)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle) NULL;
     xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle) 0x1234;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Init(&TranceiverHandle, I2CHandle);
+    retVal = I2CTransceiver_Init(&TranceiverHandle, I2CHandle);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES), retVal);
     EXPECT_EQ(UINT32_C(1), xSemaphoreCreateBinary_fake.call_count);
     EXPECT_EQ(UINT32_C(1), xSemaphoreCreateMutex_fake.call_count);
     EXPECT_FALSE(TranceiverHandle.InitializationStatus);
@@ -185,15 +181,15 @@ TEST_F(I2CTransceiver, I2CTransceiverInitMutexFail)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle) 0x1234;
     xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle) NULL;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Init(&TranceiverHandle, I2CHandle);
+    retVal = I2CTransceiver_Init(&TranceiverHandle, I2CHandle);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES), retVal);
     EXPECT_EQ(UINT32_C(1), xSemaphoreCreateBinary_fake.call_count);
     EXPECT_EQ(UINT32_C(1), xSemaphoreCreateMutex_fake.call_count);
     EXPECT_FALSE(TranceiverHandle.InitializationStatus);
@@ -206,7 +202,7 @@ TEST_F(I2CTransceiver, I2CTransceiverReadZeroByte)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     uint8_t I2Caddr = 0x68;
     uint8_t Reg = 0x80;
@@ -214,10 +210,10 @@ TEST_F(I2CTransceiver, I2CTransceiverReadZeroByte)
     uint8_t NbrBytesToRead = 0;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
+    retVal = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), retVal);
     EXPECT_EQ(UINT32_C(0), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_ReadRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -232,7 +228,7 @@ TEST_F(I2CTransceiver, I2CTransceiverReadNullReg)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     uint8_t I2Caddr = 0x68;
     uint8_t Reg = 0x80;
@@ -240,10 +236,10 @@ TEST_F(I2CTransceiver, I2CTransceiverReadNullReg)
     uint8_t NbrBytesToRead = 10;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, RegData, NbrBytesToRead);
+    retVal = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, RegData, NbrBytesToRead);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retVal);
     EXPECT_EQ(UINT32_C(0), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_ReadRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -258,17 +254,17 @@ TEST_F(I2CTransceiver, I2CTransceiverReadNullTransceiver)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     uint8_t I2Caddr = 0x68;
     uint8_t Reg = 0x80;
     uint8_t RegData = 5;
     uint8_t NbrBytesToRead = 10;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Read(NULL, I2Caddr, Reg, &RegData, NbrBytesToRead);
+    retVal = I2CTransceiver_Read(NULL, I2Caddr, Reg, &RegData, NbrBytesToRead);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retVal);
     EXPECT_EQ(UINT32_C(0), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_ReadRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -282,7 +278,7 @@ TEST_F(I2CTransceiver, I2CTransceiverReadNullBusSyn)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.I2CBusSync = NULL;
     uint8_t I2Caddr = 0x68;
     uint8_t Reg = 0x80;
@@ -290,10 +286,10 @@ TEST_F(I2CTransceiver, I2CTransceiverReadNullBusSyn)
     uint8_t NbrBytesToRead = 10;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
+    retVal = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retVal);
     EXPECT_EQ(UINT32_C(0), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_ReadRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -307,7 +303,7 @@ TEST_F(I2CTransceiver, I2CTransceiverReadNullMutex)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.I2CMutexLock = NULL;
     uint8_t I2Caddr = 0x68;
     uint8_t Reg = 0x80;
@@ -315,10 +311,10 @@ TEST_F(I2CTransceiver, I2CTransceiverReadNullMutex)
     uint8_t NbrBytesToRead = 10;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
+    retVal = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retVal);
     EXPECT_EQ(UINT32_C(0), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_ReadRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -332,7 +328,7 @@ TEST_F(I2CTransceiver, I2CTransceiverReadNullI2cHandle)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.I2CHandle = NULL;
     uint8_t I2Caddr = 0x68;
     uint8_t Reg = 0x80;
@@ -340,10 +336,10 @@ TEST_F(I2CTransceiver, I2CTransceiverReadNullI2cHandle)
     uint8_t NbrBytesToRead = 10;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
+    retVal = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retVal);
     EXPECT_EQ(UINT32_C(0), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_ReadRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -357,7 +353,7 @@ TEST_F(I2CTransceiver, I2CTransceiverReadUnInitialized)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = false;
     TranceiverHandle.I2CHandle = I2CHandle;
     uint8_t I2Caddr = 0x68;
@@ -366,10 +362,10 @@ TEST_F(I2CTransceiver, I2CTransceiverReadUnInitialized)
     uint8_t NbrBytesToRead = 10;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
+    retVal = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNINITIALIZED), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNINITIALIZED), retVal);
     EXPECT_EQ(UINT32_C(0), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_ReadRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -383,7 +379,7 @@ TEST_F(I2CTransceiver, I2CTransceiverReadMutexTakeFail)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     TranceiverHandle.I2CHandle = I2CHandle;
     uint8_t I2Caddr = 0x68;
@@ -393,10 +389,10 @@ TEST_F(I2CTransceiver, I2CTransceiverReadMutexTakeFail)
     xSemaphoreTake_fake.return_val = pdFALSE;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
+    retVal = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_SEMAPHORE_ERROR), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_SEMAPHORE_ERROR), retVal);
     EXPECT_EQ(UINT32_C(1), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_ReadRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -410,7 +406,7 @@ TEST_F(I2CTransceiver, I2CTransceiverReadFail)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     TranceiverHandle.I2CHandle = I2CHandle;
     uint8_t I2Caddr = 0x68;
@@ -422,10 +418,10 @@ TEST_F(I2CTransceiver, I2CTransceiverReadFail)
     MCU_I2C_ReadRegister_fake.return_val = RETCODE_FAILURE;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
+    retVal = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_FAILURE, ReturnValue);
+    EXPECT_EQ(RETCODE_FAILURE, retVal);
     EXPECT_EQ(UINT32_C(1), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(1), MCU_I2C_ReadRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -439,7 +435,7 @@ TEST_F(I2CTransceiver, I2CTransceiverSynFail)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     TranceiverHandle.I2CHandle = I2CHandle;
     uint8_t I2Caddr = 0x68;
@@ -453,10 +449,10 @@ TEST_F(I2CTransceiver, I2CTransceiverSynFail)
     MCU_I2C_ReadRegister_fake.return_val = RETCODE_OK;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
+    retVal = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMEOUT), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMEOUT), retVal);
     EXPECT_EQ(UINT32_C(2), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(1), MCU_I2C_ReadRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(1), MCU_I2C_Send_fake.call_count);
@@ -470,7 +466,7 @@ TEST_F(I2CTransceiver, I2CTransceiverSendFail)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     TranceiverHandle.I2CHandle = I2CHandle;
     uint8_t I2Caddr = 0x68;
@@ -485,10 +481,10 @@ TEST_F(I2CTransceiver, I2CTransceiverSendFail)
     MCU_I2C_Send_fake.return_val = RETCODE_FAILURE;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
+    retVal = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_FAILURE, ReturnValue);
+    EXPECT_EQ(RETCODE_FAILURE, retVal);
     EXPECT_EQ(UINT32_C(2), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(1), MCU_I2C_ReadRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(1), MCU_I2C_Send_fake.call_count);
@@ -502,7 +498,7 @@ TEST_F(I2CTransceiver, I2CTransceiverReadErrorTransfer)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     TranceiverHandle.I2CHandle = I2CHandle;
     uint8_t I2Caddr = 0x68;
@@ -516,10 +512,10 @@ TEST_F(I2CTransceiver, I2CTransceiverReadErrorTransfer)
     TranceiverHandle.I2cTransferStatusFlag = INT8_C(-1);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
+    retVal = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_I2CTRANSCEIVER_TRANSFER_ERROR), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_I2CTRANSCEIVER_TRANSFER_ERROR), retVal);
     EXPECT_EQ(UINT32_C(2), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(1), MCU_I2C_ReadRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -533,7 +529,7 @@ TEST_F(I2CTransceiver, I2CTransceiverReadSemaphoreGiveFail)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     TranceiverHandle.I2CHandle = I2CHandle;
     uint8_t I2Caddr = 0x68;
@@ -547,10 +543,10 @@ TEST_F(I2CTransceiver, I2CTransceiverReadSemaphoreGiveFail)
     TranceiverHandle.I2cTransferStatusFlag = INT8_C(0);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
+    retVal = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_SEMAPHORE_ERROR), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_SEMAPHORE_ERROR), retVal);
     EXPECT_EQ(UINT32_C(2), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(1), MCU_I2C_ReadRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -564,7 +560,7 @@ TEST_F(I2CTransceiver, I2CTransceiverReadSuccess)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     TranceiverHandle.I2CHandle = I2CHandle;
     uint8_t I2Caddr = 0x68;
@@ -578,10 +574,10 @@ TEST_F(I2CTransceiver, I2CTransceiverReadSuccess)
     TranceiverHandle.I2cTransferStatusFlag = INT8_C(0);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
+    retVal = I2CTransceiver_Read(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToRead);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_OK, ReturnValue);
+    EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(2), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(1), MCU_I2C_ReadRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -595,7 +591,7 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteZeroByte)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     uint8_t I2Caddr = 0x68;
     uint8_t Reg = 0x80;
@@ -603,10 +599,10 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteZeroByte)
     uint8_t NbrBytesToWrite = 0;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
+    retVal = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), retVal);
     EXPECT_EQ(UINT32_C(0), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_WriteRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -621,7 +617,7 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteNullReg)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     uint8_t I2Caddr = 0x68;
     uint8_t Reg = 0x80;
@@ -629,10 +625,10 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteNullReg)
     uint8_t NbrBytesToWrite = 10;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, RegData, NbrBytesToWrite);
+    retVal = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, RegData, NbrBytesToWrite);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retVal);
     EXPECT_EQ(UINT32_C(0), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_WriteRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -671,7 +667,7 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteNullBusSyn)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.I2CBusSync = NULL;
     uint8_t I2Caddr = 0x68;
     uint8_t Reg = 0x80;
@@ -679,10 +675,10 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteNullBusSyn)
     uint8_t NbrBytesToWrite = 10;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
+    retVal = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retVal);
     EXPECT_EQ(UINT32_C(0), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_WriteRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -696,7 +692,7 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteNullMutex)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.I2CMutexLock = NULL;
     uint8_t I2Caddr = 0x68;
     uint8_t Reg = 0x80;
@@ -704,10 +700,10 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteNullMutex)
     uint8_t NbrBytesToWrite = 10;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
+    retVal = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retVal);
     EXPECT_EQ(UINT32_C(0), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_WriteRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -721,7 +717,7 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteNullI2cHandle)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.I2CHandle = NULL;
     uint8_t I2Caddr = 0x68;
     uint8_t Reg = 0x80;
@@ -729,10 +725,10 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteNullI2cHandle)
     uint8_t NbrBytesToWrite = 10;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
+    retVal = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retVal);
     EXPECT_EQ(UINT32_C(0), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_WriteRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -746,7 +742,7 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteUnInitialized)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = false;
     TranceiverHandle.I2CHandle = I2CHandle;
     uint8_t I2Caddr = 0x68;
@@ -755,10 +751,10 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteUnInitialized)
     uint8_t NbrBytesToWrite = 10;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
+    retVal = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNINITIALIZED), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNINITIALIZED), retVal);
     EXPECT_EQ(UINT32_C(0), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_WriteRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -772,7 +768,7 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteMutexTakeFail)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     TranceiverHandle.I2CHandle = I2CHandle;
     uint8_t I2Caddr = 0x68;
@@ -782,10 +778,10 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteMutexTakeFail)
     xSemaphoreTake_fake.return_val = pdFALSE;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
+    retVal = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_SEMAPHORE_ERROR), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_SEMAPHORE_ERROR), retVal);
     EXPECT_EQ(UINT32_C(1), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_WriteRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -799,7 +795,7 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteFail)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     TranceiverHandle.I2CHandle = I2CHandle;
     uint8_t I2Caddr = 0x68;
@@ -811,10 +807,10 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteFail)
     MCU_I2C_WriteRegister_fake.return_val = RETCODE_FAILURE;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
+    retVal = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_FAILURE, ReturnValue);
+    EXPECT_EQ(RETCODE_FAILURE, retVal);
     EXPECT_EQ(UINT32_C(1), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(1), MCU_I2C_WriteRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -828,7 +824,7 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteSynFail)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     TranceiverHandle.I2CHandle = I2CHandle;
     uint8_t I2Caddr = 0x68;
@@ -842,10 +838,10 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteSynFail)
     MCU_I2C_WriteRegister_fake.return_val = RETCODE_OK;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
+    retVal = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMEOUT), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMEOUT), retVal);
     EXPECT_EQ(UINT32_C(2), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(1), MCU_I2C_WriteRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(1), MCU_I2C_Send_fake.call_count);
@@ -859,7 +855,7 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteSendFail)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     TranceiverHandle.I2CHandle = I2CHandle;
     uint8_t I2Caddr = 0x68;
@@ -874,10 +870,10 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteSendFail)
     MCU_I2C_Send_fake.return_val = RETCODE_FAILURE;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
+    retVal = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_FAILURE, ReturnValue);
+    EXPECT_EQ(RETCODE_FAILURE, retVal);
     EXPECT_EQ(UINT32_C(2), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(1), MCU_I2C_WriteRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(1), MCU_I2C_Send_fake.call_count);
@@ -891,7 +887,7 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteErrorTransfer)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     TranceiverHandle.I2CHandle = I2CHandle;
     uint8_t I2Caddr = 0x68;
@@ -905,10 +901,10 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteErrorTransfer)
     TranceiverHandle.I2cTransferStatusFlag = INT8_C(-1);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
+    retVal = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_I2CTRANSCEIVER_TRANSFER_ERROR), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_I2CTRANSCEIVER_TRANSFER_ERROR), retVal);
     EXPECT_EQ(UINT32_C(2), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(1), MCU_I2C_WriteRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -922,7 +918,7 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteSemaphoreGiveFail)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     TranceiverHandle.I2CHandle = I2CHandle;
     uint8_t I2Caddr = 0x68;
@@ -936,10 +932,10 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteSemaphoreGiveFail)
     TranceiverHandle.I2cTransferStatusFlag = INT8_C(0);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
+    retVal = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_SEMAPHORE_ERROR), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_SEMAPHORE_ERROR), retVal);
     EXPECT_EQ(UINT32_C(2), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(1), MCU_I2C_WriteRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -953,7 +949,7 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteSuccess)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     TranceiverHandle.I2CHandle = I2CHandle;
     uint8_t I2Caddr = 0x68;
@@ -967,10 +963,10 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteSuccess)
     TranceiverHandle.I2cTransferStatusFlag = INT8_C(0);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
+    retVal = I2CTransceiver_Write(&TranceiverHandle, I2Caddr, Reg, &RegData, NbrBytesToWrite);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_OK, ReturnValue);
+    EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(2), xSemaphoreTake_fake.call_count);
     EXPECT_EQ(UINT32_C(1), MCU_I2C_WriteRegister_fake.call_count);
     EXPECT_EQ(UINT32_C(0), MCU_I2C_Send_fake.call_count);
@@ -984,13 +980,13 @@ TEST_F(I2CTransceiver, I2CTransceiverDeInitNULLHandle)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Deinit(NULL);
+    retVal = I2CTransceiver_Deinit(NULL);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retVal);
     EXPECT_FALSE(TranceiverHandle.InitializationStatus);
 }
 
@@ -1001,14 +997,14 @@ TEST_F(I2CTransceiver, I2CTransceiverDeInitNULLSynHandle)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     TranceiverHandle.I2CBusSync = NULL;
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Deinit(&TranceiverHandle);
+    retVal = I2CTransceiver_Deinit(&TranceiverHandle);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retVal);
 }
 
 TEST_F(I2CTransceiver, I2CTransceiverDeInitNULLMutexHandle)
@@ -1018,14 +1014,14 @@ TEST_F(I2CTransceiver, I2CTransceiverDeInitNULLMutexHandle)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     TranceiverHandle.I2CMutexLock = NULL;
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Deinit(&TranceiverHandle);
+    retVal = I2CTransceiver_Deinit(&TranceiverHandle);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), ReturnValue);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retVal);
 }
 
 TEST_F(I2CTransceiver, I2CTransceiverDeInitUnintialized)
@@ -1035,14 +1031,14 @@ TEST_F(I2CTransceiver, I2CTransceiverDeInitUnintialized)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = false;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Deinit(&TranceiverHandle);
+    retVal = I2CTransceiver_Deinit(&TranceiverHandle);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_OK, ReturnValue);
+    EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_FALSE(TranceiverHandle.InitializationStatus);
 }
 
@@ -1053,13 +1049,13 @@ TEST_F(I2CTransceiver, I2CTransceiverDeInitSuccess)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    Retcode_T ReturnValue = RETCODE_FAILURE;
+    Retcode_T retVal = RETCODE_FAILURE;
     TranceiverHandle.InitializationStatus = true;
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    ReturnValue = I2CTransceiver_Deinit(&TranceiverHandle);
+    retVal = I2CTransceiver_Deinit(&TranceiverHandle);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_OK, ReturnValue);
+    EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_FALSE(TranceiverHandle.InitializationStatus);
 }
 

@@ -256,7 +256,7 @@ TEST_F(TS_Engine_EchoModeEnabled, Success)
 class TS_Engine_SendAtCommand : public testing::Test
 {
 private:
-    std::array<BaseType_t, 2> takeRetVals = {pdFAIL, pdPASS};
+    std::array<BaseType_t, 2> takeRetVals = {{pdFAIL, pdPASS}};
 
 protected:
     virtual void SetUp()

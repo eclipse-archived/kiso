@@ -1,16 +1,17 @@
-/********************************************************************************
-* Copyright (c) 2010-2019 Robert Bosch GmbH
-*
-* This program and the accompanying materials are made available under the
-* terms of the Eclipse Public License 2.0 which is available at
-* http://www.eclipse.org/legal/epl-2.0.
-*
-* SPDX-License-Identifier: EPL-2.0
-*
-* Contributors:
-*    Robert Bosch GmbH - initial contribution
-*
-********************************************************************************/
+/*----------------------------------------------------------------------------*/
+/*
+ * Copyright (C) Bosch Connected Devices and Solutions GmbH.
+ * 
+ * All Rights Reserved. Confidential.
+ *
+ * Distribution only to people who need to know this information in
+ * order to do their job.(Need-to-know principle).
+ * Distribution to persons outside the company, only if these persons
+ * signed a non-disclosure agreement.
+ * Electronic transmission, e.g. via electronic mail, must be made in
+ * encrypted form.
+ */
+/*----------------------------------------------------------------------------*/
 
 /* include gtest interface */
 #include <gtest.h>
@@ -64,15 +65,10 @@ protected:
 
     virtual void SetUp()
     {
-        FFF_RESET_HISTORY()
-        ;
-    }
-
-    /* TearDown() is invoked immediately after a test finishes. */
-    virtual void TearDown()
-    {
-        ; /* nothing to do if clean up is not required */
-    }
+		RESET_FAKE(xTaskGetTickCount);
+		
+        FFF_RESET_HISTORY();
+	}
 };
 
 /* specify test cases ******************************************************* */
@@ -81,12 +77,18 @@ TEST_F(TaskMonitor, TaskMonitor_InitializeTest)
 {
     /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal;
+	TaskMonitor_TaskInfo_S taskMonitor;
+	taskMonitor.IsReg = false;
+    taskMonitor.Task = NULL;
+    taskMonitor.UpperLimitTickTime = 0UL;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = TaskMonitor_Initialize();
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
+    EXPECT_EQ(false, IsReg);
+
 }
 
 TEST_F(TaskMonitor, TaskMonitor_UpdateTest)
