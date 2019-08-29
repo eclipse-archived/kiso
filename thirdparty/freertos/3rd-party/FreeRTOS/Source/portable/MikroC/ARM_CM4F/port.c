@@ -30,6 +30,7 @@
  *----------------------------------------------------------*/
 
 /* Scheduler includes. */
+#include"portmacro.h"
 #include "FreeRTOS.h"
 #include "task.h"
 

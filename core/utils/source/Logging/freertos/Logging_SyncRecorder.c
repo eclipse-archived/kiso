@@ -97,7 +97,7 @@ static Retcode_T SyncRecorder_Write(void *self, LogLevel_T level, uint8_t packag
     /* Add first into the buffer different information relative to what is logged such as tick, file name, line, log level, ... */
     size = snprintf(buffer, sizeof(buffer), LOG_LINE_FMT,
             (uint32_t) xTaskGetTickCount(), LOG_LEVEL_STRING[level], (uint32_t) package,
-            configMAX_TASK_NAME_LEN, pcTaskGetTaskName(NULL), file, (uint32_t) line); /*lint -esym(515 516,snprintf) */
+            configMAX_TASK_NAME_LEN, pcTaskGetTaskName(NULL), file, (uint32_t) line);
 
     /* Parse and add the message sent via the log function */
     if (size > 0 && (uint32_t) size < sizeof(buffer))

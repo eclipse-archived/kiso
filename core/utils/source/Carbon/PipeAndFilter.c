@@ -104,7 +104,6 @@ void RunFilter(void * pvParameters)
 			Retcode_RaiseError(retcode);
 		}
 	}
-	//lint -e506 It is a constant because we are in a task
 	while(RUN_FILTER_ALWAYS);
 }
 
@@ -179,7 +178,6 @@ Retcode_T PipeAndFilter_FillPipe(PipeAndFilter_Pipe_T pipe, uint8_t * xTxBuffer,
 
 	if(retcode == RETCODE_OK)
 	{
-        //lint -e645 The xTxBuffer was tested on l.172, therefore we are shure it containts something.
 		xSendBytes = xMessageBufferSend((MessageBufferHandle_t)pipe.pipeInternalHandle, ( void * )xTxBuffer, xToSendBytes, 0);
 	}
 

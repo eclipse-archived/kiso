@@ -63,9 +63,6 @@ StackType_t DS_Reg = 0;
 	*pxTopOfStack = 0x5555;
 	pxTopOfStack--;
 
-
-	/*lint -e950 -e611 -e923 Lint doesn't like this much - but nothing I can do about it. */
-
 	/* We are going to start the scheduler using a return from interrupt
 	instruction to load the program counter, so first there would be the
 	function call with parameters preamble. */
@@ -111,8 +108,6 @@ StackType_t DS_Reg = 0;
 	*pxTopOfStack = ( StackType_t ) 0xDDDD;	/* DI */
 	pxTopOfStack--;
 	*pxTopOfStack = ( StackType_t ) 0xBBBB;	/* BP */
-
-	/*lint +e950 +e611 +e923 */
 
 	return pxTopOfStack;
 }

@@ -12,7 +12,6 @@
 *
 ********************************************************************************/
 
-//lint -e49 error in standard libraries suppressed
 /**
  * @file
  * @defgroup    BASICS Basics

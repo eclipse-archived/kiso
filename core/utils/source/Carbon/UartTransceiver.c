@@ -30,8 +30,6 @@
 #include "task.h"
 #include "semphr.h"
 
-/*lint +rw(_to_semi) -d__asm=_to_semi */
-
 #if BCDS_FEATURE_UART || BCDS_FEATURE_LEUART
 /*
  * Default End of frame checking function

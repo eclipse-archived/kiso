@@ -66,7 +66,7 @@
 
 #if BCDS_FEATURE_LOGGING
 
-#include <stdarg.h> /*lint !e451 */
+#include <stdarg.h>
 #include "BCDS_Basics.h"
 #include "BCDS_Retcode.h"
 #include "LogConfig.h"
@@ -80,7 +80,7 @@
 
 /*For IAR compiler __builtin_va_list is not available in stdarg.h file, In IAR type defined as  defined as va_list*/
 #ifndef ti_cc26xx
-#ifndef va_list /* if lint can't find it */
+#ifndef va_list
     typedef __builtin_va_list va_list;
 #endif /* va_list */
 #endif

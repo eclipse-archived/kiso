@@ -36,14 +36,11 @@
 #include "BCDS_Essentials.h"
 
 /*
- * Check for usage of the C99 standard or PC-Lint in order to provide
+ * Check for usage of the C99 standard in order to provide
  * support of the static assertion functionality
  */
-#if ((__STDC_VERSION__ <= 199901L) || defined(_lint))
+#if (__STDC_VERSION__ <= 199901L)
 
-/* Adding linting exceptions for common static_assert() lint issues. */
-//lint -emacro(514, static_assert)  Unusual boolean expression happens when asserting boolean expressions
-//lint -emacro(19, static_assert)   Useless declaration of code or declaration which are not used
 #ifndef __FILE__
 #define __FILE_    "Filename not defined"
 #endif
@@ -94,7 +91,7 @@
 #define static_assert _Static_assert
 #endif
 
-#endif /* __STDC_VERSION__ || _lint*/
+#endif /* __STDC_VERSION__ */
 
 #ifndef NDEBUG /* valid only for debug builds */
 

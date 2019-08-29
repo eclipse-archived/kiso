@@ -34,8 +34,6 @@
 #include "portmacro.h"
 #include "projdefs.h"
 
-/*lint +rw(_to_semi) -d__asm=_to_semi */
-
 /* Structure saving the data of the function handles enqueued*/
 struct CmdProcessor_Cmd_S
 {
@@ -204,7 +202,6 @@ static void Run(void *pvParameters)
     {
         Dequeue(cmdProcessor);
     }
-    //lint -e{527} to guard unexpected exit out of loop
     Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, (uint32_t) RETCODE_FAILURE));
 }
 

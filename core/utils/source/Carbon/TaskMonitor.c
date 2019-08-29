@@ -94,16 +94,11 @@ Retcode_T TaskMonitor_Register(TaskHandle_t task, uint32_t upperLimit)
 }
 
 /* The description of the function is available in header file */
-/*lint -e695 */
-/* @note  Inline is added for run time optimization. Hence lint waring is suppressed
- * Data types is added as unsigned int to avoid compilation warning in FreeRTOSConfig.h file
- *
- */
 BCDS_INLINE void TaskMonitor_Update(unsigned int * taskTag, unsigned int tickCount)
 {
     *taskTag = tickCount;
 }
-/*lint +e695 */
+
 
 /* The description of the function is available in header file */
 bool TaskMonitor_Check(void)

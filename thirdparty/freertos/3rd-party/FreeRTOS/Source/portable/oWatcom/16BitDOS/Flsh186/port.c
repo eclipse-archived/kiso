@@ -57,8 +57,6 @@ Changes from V2.6.1
 #include "task.h"
 #include "portasm.h"
 
-/*lint -e950 Non ANSI reserved words okay in this file only. */
-
 #define portTIMER_EOI_TYPE		( 8 )
 #define portRESET_PIC()			portOUTPUT_WORD( ( uint16_t ) 0xff22, portTIMER_EOI_TYPE )
 #define portTIMER_INT_NUMBER	0x12
@@ -86,8 +84,6 @@ static void prvExitFunction( void );
 /* Trap routine used by taskYIELD() to manually cause a context switch. */
 static void __interrupt __far prvYieldProcessor( void );
 
-/*lint -e956 File scopes necessary here. */
-
 /* Set true when the vectors are set so the scheduler will service the tick. */
 static int16_t sSchedulerRunning = pdFALSE;
 
@@ -97,7 +93,6 @@ static void ( __interrupt __far *pxOldSwitchISR )();
 /* Used to restore the original DOS context when the scheduler is ended. */
 static jmp_buf xJumpBuf;
 
-/*lint +e956 */
 
 /*-----------------------------------------------------------*/
 BaseType_t xPortStartScheduler( void )
@@ -240,7 +235,3 @@ uint32_t ulTimerCount = ulClockFrequency / ulTickRateHz;
 	usTimer0Control &= ~portTIMER_INTERRUPT_ENABLE;
 	portOUTPUT_WORD( portTIMER_0_CONTROL_REGISTER, usTimer0Control );
 }
-
-
-/*lint +e950 */
-

@@ -42,11 +42,7 @@ task.h is included from an application file. */
 	#error configUSE_TIMERS must be set to 1 to make the xTimerPendFunctionCall() function available.
 #endif
 
-/* Lint e961 and e750 are suppressed as a MISRA exception justified because the
-MPU ports require MPU_WRAPPERS_INCLUDED_FROM_API_FILE to be defined for the
-header files above, but not in this file, in order to generate the correct
-privileged Vs unprivileged linkage and placement. */
-#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE /*lint !e961 !e750. */
+#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE 
 
 
 /* This entire source file will be skipped if the application is not configured
@@ -67,7 +63,7 @@ defining trmTIMER_SERVICE_TASK_NAME in FreeRTOSConfig.h. */
 /* The definition of the timers themselves. */
 typedef struct tmrTimerControl
 {
-	const char				*pcTimerName;		/*<< Text name.  This is not used by the kernel, it is included simply to make debugging easier. */ /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	const char				*pcTimerName;		/*<< Text name.  This is not used by the kernel, it is included simply to make debugging easier. */
 	ListItem_t				xTimerListItem;		/*<< Standard linked list item as used by all kernel features for event management. */
 	TickType_t				xTimerPeriodInTicks;/*<< How quickly and often the timer expires. */
 	UBaseType_t				uxAutoReload;		/*<< Set to pdTRUE if the timer should be automatically restarted once expired.  Set to pdFALSE if the timer is, in effect, a one-shot timer. */
@@ -122,9 +118,6 @@ typedef struct tmrTimerQueueMessage
 	} u;
 } DaemonTaskMessage_t;
 
-/*lint -save -e956 A manual analysis and inspection has been used to determine
-which static variables must be declared volatile. */
-
 /* The list in which active timers are stored.  Timers are referenced in expire
 time order, with the nearest expiry time at the front of the list.  Only the
 timer service task is allowed to access these lists. */
@@ -136,8 +129,6 @@ PRIVILEGED_DATA static List_t *pxOverflowTimerList;
 /* A queue that is used to send commands to the timer service task. */
 PRIVILEGED_DATA static QueueHandle_t xTimerQueue = NULL;
 PRIVILEGED_DATA static TaskHandle_t xTimerTaskHandle = NULL;
-
-/*lint -restore */
 
 /*-----------------------------------------------------------*/
 
@@ -212,7 +203,7 @@ static void prvProcessTimerOrBlockTask( const TickType_t xNextExpireTime, BaseTy
  * Called after a Timer_t structure has been allocated either statically or
  * dynamically to fill in the structure's members.
  */
-static void prvInitialiseNewTimer(	const char * const pcTimerName,			/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+static void prvInitialiseNewTimer(	const char * const pcTimerName,			
 									const TickType_t xTimerPeriodInTicks,
 									const UBaseType_t uxAutoReload,
 									void * const pvTimerID,
@@ -275,7 +266,7 @@ BaseType_t xReturn = pdFAIL;
 
 #if( configSUPPORT_DYNAMIC_ALLOCATION == 1 )
 
-	TimerHandle_t xTimerCreate(	const char * const pcTimerName,			/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	TimerHandle_t xTimerCreate(	const char * const pcTimerName,			
 								const TickType_t xTimerPeriodInTicks,
 								const UBaseType_t uxAutoReload,
 								void * const pvTimerID,
@@ -307,7 +298,7 @@ BaseType_t xReturn = pdFAIL;
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
 
-	TimerHandle_t xTimerCreateStatic(	const char * const pcTimerName,		/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+	TimerHandle_t xTimerCreateStatic(	const char * const pcTimerName,		
 										const TickType_t xTimerPeriodInTicks,
 										const UBaseType_t uxAutoReload,
 										void * const pvTimerID,
@@ -328,7 +319,7 @@ BaseType_t xReturn = pdFAIL;
 
 		/* A pointer to a StaticTimer_t structure MUST be provided, use it. */
 		configASSERT( pxTimerBuffer );
-		pxNewTimer = ( Timer_t * ) pxTimerBuffer; /*lint !e740 Unusual cast is ok as the structures are designed to have the same alignment, and the size is checked by an assert. */
+		pxNewTimer = ( Timer_t * ) pxTimerBuffer;
 
 		if( pxNewTimer != NULL )
 		{
@@ -349,7 +340,7 @@ BaseType_t xReturn = pdFAIL;
 #endif /* configSUPPORT_STATIC_ALLOCATION */
 /*-----------------------------------------------------------*/
 
-static void prvInitialiseNewTimer(	const char * const pcTimerName,			/*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+static void prvInitialiseNewTimer(	const char * const pcTimerName,			
 									const TickType_t xTimerPeriodInTicks,
 									const UBaseType_t uxAutoReload,
 									void * const pvTimerID,
@@ -450,7 +441,7 @@ TickType_t xReturn;
 }
 /*-----------------------------------------------------------*/
 
-const char * pcTimerGetName( TimerHandle_t xTimer ) /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+const char * pcTimerGetName( TimerHandle_t xTimer ) 
 {
 Timer_t *pxTimer = ( Timer_t * ) xTimer;
 
@@ -624,7 +615,7 @@ TickType_t xNextExpireTime;
 static TickType_t prvSampleTimeNow( BaseType_t * const pxTimerListsWereSwitched )
 {
 TickType_t xTimeNow;
-PRIVILEGED_DATA static TickType_t xLastTime = ( TickType_t ) 0U; /*lint !e956 Variable is only accessible to one task. */
+PRIVILEGED_DATA static TickType_t xLastTime = ( TickType_t ) 0U;
 
 	xTimeNow = xTaskGetTickCount();
 
@@ -655,7 +646,7 @@ BaseType_t xProcessTimerNow = pdFALSE;
 	{
 		/* Has the expiry time elapsed between the command to start/reset a
 		timer was issued, and the time the command was processed? */
-		if( ( ( TickType_t ) ( xTimeNow - xCommandTime ) ) >= pxTimer->xTimerPeriodInTicks ) /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+		if( ( ( TickType_t ) ( xTimeNow - xCommandTime ) ) >= pxTimer->xTimerPeriodInTicks ) 
 		{
 			/* The time between a command being issued and the command being
 			processed actually exceeds the timers period.  */
@@ -692,7 +683,7 @@ Timer_t *pxTimer;
 BaseType_t xTimerListsWereSwitched, xResult;
 TickType_t xTimeNow;
 
-	while( xQueueReceive( xTimerQueue, &xMessage, tmrNO_DELAY ) != pdFAIL ) /*lint !e603 xMessage does not have to be initialised as it is passed out, not in, and it is not used unless xQueueReceive() returns pdTRUE. */
+	while( xQueueReceive( xTimerQueue, &xMessage, tmrNO_DELAY ) != pdFAIL ) 
 	{
 		#if ( INCLUDE_xTimerPendFunctionCall == 1 )
 		{
@@ -724,7 +715,7 @@ TickType_t xTimeNow;
 			software timer. */
 			pxTimer = xMessage.u.xTimerParameters.pxTimer;
 
-			if( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) == pdFALSE ) /*lint !e961. The cast is only redundant when NULL is passed into the macro. */
+			if( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) == pdFALSE ) 
 			{
 				/* The timer is in a list, remove it. */
 				( void ) uxListRemove( &( pxTimer->xTimerListItem ) );
@@ -909,8 +900,8 @@ static void prvCheckForValidListAndQueue( void )
 			{
 				/* The timer queue is allocated statically in case
 				configSUPPORT_DYNAMIC_ALLOCATION is 0. */
-				static StaticQueue_t xStaticTimerQueue; /*lint !e956 Ok to declare in this manner to prevent additional conditional compilation guards in other locations. */
-				static uint8_t ucStaticTimerQueueStorage[ ( size_t ) configTIMER_QUEUE_LENGTH * sizeof( DaemonTaskMessage_t ) ]; /*lint !e956 Ok to declare in this manner to prevent additional conditional compilation guards in other locations. */
+				static StaticQueue_t xStaticTimerQueue; 
+				static uint8_t ucStaticTimerQueueStorage[ ( size_t ) configTIMER_QUEUE_LENGTH * sizeof( DaemonTaskMessage_t ) ];
 
 				xTimerQueue = xQueueCreateStatic( ( UBaseType_t ) configTIMER_QUEUE_LENGTH, ( UBaseType_t ) sizeof( DaemonTaskMessage_t ), &( ucStaticTimerQueueStorage[ 0 ] ), &xStaticTimerQueue );
 			}
@@ -955,12 +946,12 @@ Timer_t *pxTimer = ( Timer_t * ) xTimer;
 		/* Checking to see if it is in the NULL list in effect checks to see if
 		it is referenced from either the current or the overflow timer lists in
 		one go, but the logic has to be reversed, hence the '!'. */
-		xTimerIsInActiveList = ( BaseType_t ) !( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) ); /*lint !e961. Cast is only redundant when NULL is passed into the macro. */
+		xTimerIsInActiveList = ( BaseType_t ) !( listIS_CONTAINED_WITHIN( NULL, &( pxTimer->xTimerListItem ) ) );
 	}
 	taskEXIT_CRITICAL();
 
 	return xTimerIsInActiveList;
-} /*lint !e818 Can't be pointer to const due to the typedef. */
+}
 /*-----------------------------------------------------------*/
 
 void *pvTimerGetTimerID( const TimerHandle_t xTimer )

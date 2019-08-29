@@ -31,8 +31,6 @@
 #include "task.h"
 #include "semphr.h"
 
-/*lint +rw(_to_semi) -d__asm=_to_semi */
-
 /* prototypes */
 static void GuardedTaskExecute(GuardedTask_T* context);
 

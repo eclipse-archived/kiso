@@ -164,7 +164,6 @@ Retcode_T CmdLineDbg_Parse(struct CmdLineDbg_Element_S * list, char * input)
 
     struct CmdLineDbg_Element_S * result = NULL;
 
-    /* Step 1: Avoid the Null Pointers. Multiple return to avoid Lint warnings  */
     if (NULL == list)
     {
         return rc;

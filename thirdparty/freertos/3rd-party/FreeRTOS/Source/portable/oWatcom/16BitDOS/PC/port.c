@@ -63,8 +63,6 @@ Changes from V4.0.1
  * PC port.
  *----------------------------------------------------------*/
 
-/*lint -e950 Non ANSI reserved words okay in this file only. */
-
 #define portTIMER_INT_NUMBER	0x08
 
 /* Setup hardware for required tick interrupt rate. */
@@ -96,7 +94,6 @@ static void __interrupt __far prvYieldProcessor( void );
 scheduler exits. */
 static void prvSetTickFrequencyDefault( void );
 
-/*lint -e956 File scopes necessary here. */
 
 /* Used to signal when to chain to the DOS tick, and when to just clear the PIC ourselves. */
 static int16_t sDOSTickCounter;							
@@ -113,7 +110,6 @@ static void ( __interrupt __far *pxOldSwitchISRPlus1 )();
 /* Used to restore the original DOS context when the scheduler is ended. */
 static jmp_buf xJumpBuf;
 
-/*lint +e956 */
 
 /*-----------------------------------------------------------*/
 BaseType_t xPortStartScheduler( void )
@@ -296,7 +292,3 @@ const uint16_t us8254_CTR0_MODE3 = ( uint16_t ) 0x36;
 	portOUTPUT_BYTE( usPIT0,0 );
 	portOUTPUT_BYTE( usPIT0,0 );
 }
-
-
-/*lint +e950 */
-

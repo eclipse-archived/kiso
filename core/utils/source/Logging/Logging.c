@@ -81,7 +81,7 @@ Retcode_T Logging_Log(LogLevel_T level, uint8_t package, uint8_t module, const c
     assert(NULL != file && NULL != fmt);
 
     va_list args;
-    va_start(args, fmt); /*lint !e530 !e10 !e40 */
+    va_start(args, fmt);
     Retcode_T retcode = Logging_Recorder.Write(&Logging_Recorder, level, package, module, file, line, fmt, args);
     va_end(args);
 

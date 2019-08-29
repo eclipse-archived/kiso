@@ -120,9 +120,8 @@ bool MCU_Watchdog_IsResetCausedByWatchdog(void)
 {
     bool retcode = false;
     uint32_t WatchDogResetFlag;
-/*lint -save -e504 -e666 -e641 expression is coming from 3rd party library stm32cube*/
     WatchDogResetFlag = (uint32_t) __HAL_RCC_GET_FLAG(RCC_FLAG_IWDGRST);
-/*lint -restore */
+
     /* Check if the system has resumed from WWDG reset */
     if ((uint32_t) RESET != WatchDogResetFlag)
     {

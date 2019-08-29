@@ -74,7 +74,7 @@ typedef struct xMEMORY_REGION
 typedef struct xTASK_PARAMETERS
 {
     TaskFunction_t pvTaskCode;
-    const char * const pcName; /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+    const char * const pcName;
     uint16_t usStackDepth;
     void *pvParameters;
     UBaseType_t uxPriority;
@@ -85,7 +85,7 @@ typedef struct xTASK_PARAMETERS
 typedef struct xTASK_STATUS
 {
     TaskHandle_t xHandle; /* The handle of the task to which the rest of the information in the structure relates. */
-    const char *pcTaskName; /* A pointer to the task's name.  This value will be invalid if the task was deleted since the structure was populated! *//*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+    const char *pcTaskName; /* A pointer to the task's name.  This value will be invalid if the task was deleted since the structure was populated! */
     UBaseType_t xTaskNumber; /* A number unique to the task. */
     eTaskState eCurrentState; /* The state in which the task existed when the structure was populated. */
     UBaseType_t uxCurrentPriority; /* The priority at which the task was running (may be inherited) when the structure was populated. */

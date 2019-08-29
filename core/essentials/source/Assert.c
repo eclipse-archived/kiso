@@ -44,7 +44,7 @@
 /* system header files */
 
 #if defined(ASSERT_USE_STD_EXIT)
-//lint -e49 error in standard libraries suppressed
+
 #include <stdlib.h>
 #endif
 

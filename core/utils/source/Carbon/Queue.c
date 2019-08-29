@@ -82,7 +82,7 @@ Retcode_T Queue_Delete(Queue_T *Queue)
 
 Retcode_T Queue_Put(Queue_T *Queue, const void *Item, uint32_t ItemSize, const void *payload, uint32_t PayloadSize)
 {
-    assert(NULL != Queue && NULL != Item && 0 != ItemSize); /*lint -e613 -e668 */
+    assert(NULL != Queue && NULL != Item && 0 != ItemSize);
     (void) xSemaphoreTake(Queue->Lock, portMAX_DELAY);
 
     QueueItem_T m;

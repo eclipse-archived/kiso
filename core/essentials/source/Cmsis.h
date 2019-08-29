@@ -15,8 +15,6 @@
 #ifndef CMSIS_H_
 #define CMSIS_H_
 
-/*lint -save -e451 suppression of repeatedly included files in 3rd party code */
-
 #if defined (stm32)
 
     #if defined (stm32l4)
@@ -46,8 +44,6 @@
 #else
 #error "invalid target"
 #endif
-
-/*lint -restore */
 
 #endif /* CMSIS_H_ */
 

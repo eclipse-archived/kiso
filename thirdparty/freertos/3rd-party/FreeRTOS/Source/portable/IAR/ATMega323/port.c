@@ -92,10 +92,6 @@ StackType_t *pxTopOfHardwareStack;
 
 	/* Simulate how the stack would look after a call to vPortYield(). */
 
-	/*lint -e950 -e611 -e923 Lint doesn't like this much - but nothing I can do about it. */
-
-
-
 	/* The IAR compiler requires two stacks per task.  First there is the
 	hardware call stack which uses the AVR stack pointer.  Second there is the
 	software stack (local variables, parameter passing, etc.) which uses the
@@ -224,8 +220,6 @@ StackType_t *pxTopOfHardwareStack;
 
 	pxTopOfStack--;
 	*pxTopOfStack = portNO_CRITICAL_NESTING;	/* Critical nesting is zero when the task starts. */
-
-	/*lint +e950 +e611 +e923 */
 
 	return pxTopOfStack;
 }

@@ -60,7 +60,6 @@ void HardFault_Handler(void);
  *
  * @param pulFaultStackAddress Pointer to the saved fault stack.
  */
-/*lint -e550*/
 void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress)
 {
     /* variables must be volatile to prevent the optimizer removing them */
@@ -87,7 +86,6 @@ void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress)
         ;
 
 }
-/*lint +e550*/
 
 /** Usage Fault exception handler */
 __attribute__((weak, noreturn)) void UsageFault_Handler(void)

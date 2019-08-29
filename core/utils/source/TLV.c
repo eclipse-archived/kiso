@@ -48,8 +48,6 @@ typedef struct TLV_Group_S TLV_group_t;
 static uint16_t GetAvailableMemorySize(TLV_GroupHandle_TP const Handle);
 
 /* static assertion tests *************************************************** */
-/*lint -save -e514 */
-/*lint -save -e19 */
 static_assert((sizeof(TLV_Element_T) % sizeof(uint32_t)) == 0,
         "TLV_Element_T structure must be aligned to the machine word Size for optimal memory utilization.")
 
