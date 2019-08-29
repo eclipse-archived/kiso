@@ -67,6 +67,7 @@ static BCDS_INLINE bool RingBuffer_IsEmpty(RingBuffer_T *ringBuffer)
     return ringBuffer->ReadIndex == ringBuffer->WriteIndex ? true : false;
 }
 
+/*  The description of the function is available in BCDS_RingBuffer.h */
 void RingBuffer_Initialize(RingBuffer_T * ringBuffer, uint8_t * bufferSpace, uint32_t size)
 {
     if ((NULL == ringBuffer) || (NULL == bufferSpace) || (0UL == size))
@@ -83,6 +84,7 @@ void RingBuffer_Initialize(RingBuffer_T * ringBuffer, uint8_t * bufferSpace, uin
     }
 }
 
+/*  The description of the function is available in BCDS_RingBuffer.h */
 uint32_t RingBuffer_Write(RingBuffer_T * ringBuffer, uint8_t * data, uint32_t length)
 {
     uint32_t actualLength = 0UL;
@@ -97,6 +99,7 @@ uint32_t RingBuffer_Write(RingBuffer_T * ringBuffer, uint8_t * data, uint32_t le
     return actualLength;
 }
 
+/*  The description of the function is available in BCDS_RingBuffer.h */
 uint32_t RingBuffer_Read(RingBuffer_T * ringBuffer, uint8_t * data, uint32_t length)
 {
     uint32_t actualLength = 0UL;
@@ -112,6 +115,7 @@ uint32_t RingBuffer_Read(RingBuffer_T * ringBuffer, uint8_t * data, uint32_t len
     return actualLength;
 }
 
+/*  The description of the function is available in BCDS_RingBuffer.h */
 void RingBuffer_Reset(RingBuffer_T *ringBuffer)
 {
     if (NULL != ringBuffer)

@@ -25,13 +25,7 @@
 #define CANCEL_I2C_TRANSMISSION  UINT32_C(0)
 #define DATA_TRANSFER_TIMEOUT_MS  UINT32_C(1000)
 
-/* Put private function declarations here */
-
-/* Private function definitions */
-
-/* Put function implementations here */
-
-/* API documentation is in the interface header file */
+/*  The description of the function is available in BCDS_I2CTransceiver.h */
 void I2CTransceiver_LoopCallback(I2cTranceiverHandlePtr_T i2cTransceiver, struct MCU_I2C_Event_S event)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -81,7 +75,7 @@ void I2CTransceiver_LoopCallback(I2cTranceiverHandlePtr_T i2cTransceiver, struct
     }
 }
 
-/* API documentation is in the interface header file */
+/*  The description of the function is available in BCDS_I2CTransceiver.h */
 Retcode_T I2CTransceiver_Init(I2cTranceiverHandlePtr_T i2cTransceiver, I2C_T i2cHandle)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -126,7 +120,7 @@ Retcode_T I2CTransceiver_Init(I2cTranceiverHandlePtr_T i2cTransceiver, I2C_T i2c
     return retcode;
 }
 
-/* API documentation is in the interface header file */
+/*  The description of the function is available in BCDS_I2CTransceiver.h */
 Retcode_T I2CTransceiver_Read(I2cTranceiverHandlePtr_T i2cTransceiver, uint8_t I2Caddr, uint8_t Reg, uint8_t *RegData, uint8_t NbrBytesToRead)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -177,7 +171,7 @@ Retcode_T I2CTransceiver_Read(I2cTranceiverHandlePtr_T i2cTransceiver, uint8_t I
     return retcode;
 }
 
-/* API documentation is in the interface header file */
+/*  The description of the function is available in BCDS_I2CTransceiver.h */
 Retcode_T I2CTransceiver_Write(I2cTranceiverHandlePtr_T i2cTransceiver, uint8_t I2Caddr, uint8_t Reg, uint8_t *RegData, uint8_t NbrBytesToWrite)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -227,7 +221,7 @@ Retcode_T I2CTransceiver_Write(I2cTranceiverHandlePtr_T i2cTransceiver, uint8_t 
     return retcode;
 }
 
-/* API documentation is in the interface header file */
+/*  The description of the function is available in BCDS_I2CTransceiver.h */
 Retcode_T I2CTransceiver_Deinit(I2cTranceiverHandlePtr_T i2cTransceiver)
 {
     Retcode_T retcode = RETCODE_OK;

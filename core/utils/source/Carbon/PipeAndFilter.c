@@ -107,8 +107,7 @@ void RunFilter(void * pvParameters)
 	while(RUN_FILTER_ALWAYS);
 }
 
-/******** Creational *********/
-/** See header file */
+/*  The description of the function is available in CDDK_PipeAndFilter.h */
 Retcode_T PipeAndFilter_CreatePipe(PipeAndFilter_Pipe_T * pipeHandle)
 {
 	Retcode_T retcode = RETCODE_OK;
@@ -128,7 +127,7 @@ Retcode_T PipeAndFilter_CreatePipe(PipeAndFilter_Pipe_T * pipeHandle)
 	return retcode;
 }
 
-/** See header file */
+/*  The description of the function is available in CDDK_PipeAndFilter.h */
 Retcode_T PipeAndFilter_CreateFilter(PipeAndFilter_FilterFunction_T filterFunction, PipeAndFilter_Pipe_T * pipeInHandle, PipeAndFilter_Pipe_T * pipeOutHandle, PipeAndFilter_Filter_T * filterHandle)
 {
 	Retcode_T retcode = RETCODE_OK;
@@ -164,8 +163,7 @@ Retcode_T PipeAndFilter_CreateFilter(PipeAndFilter_FilterFunction_T filterFuncti
 	return retcode;
 }
 
-/******** Behavioral *********/
-/** See header file */
+/*  The description of the function is available in CDDK_PipeAndFilter.h */
 Retcode_T PipeAndFilter_FillPipe(PipeAndFilter_Pipe_T pipe, uint8_t * xTxBuffer, uint32_t xToSendBytes)
 {
 	Retcode_T retcode = RETCODE_OK;
@@ -188,7 +186,7 @@ Retcode_T PipeAndFilter_FillPipe(PipeAndFilter_Pipe_T pipe, uint8_t * xTxBuffer,
 	return retcode;
 }
 
-/** See header file */
+/*  The description of the function is available in CDDK_PipeAndFilter.h */
 Retcode_T PipeAndFilter_FillPipeFromISR(PipeAndFilter_Pipe_T pipe, uint8_t * xTxBuffer, uint32_t xToSendBytes)
 {
 	Retcode_T retcode = RETCODE_OK;

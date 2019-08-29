@@ -35,18 +35,75 @@
 #define XPROTOCOL_ESCAPED_ED		0xDE	/**< Escaped ED */
 #define XPROTOCOL_ESCAPED_ESC		0xDD	/**< Escaped ESC */
 
-/* functions */
-static Retcode_T Escape_SpecialCharacters(uint8_t *frame, uint32_t *indicator, uint32_t maxFrameLength);
-static void UnEscape_SpecialCharacters(const uint8_t *frame, uint32_t indicator,
-        uint8_t *data, uint32_t counter);
 
-/* API description is in interface header BCDS_XProtocol.h */
+static Retcode_T Escape_SpecialCharacters(uint8_t *frame, uint32_t *indicator, uint32_t maxFrameLength)
+{
+    if (XPROTOCOL_SD == frame[*indicator])
+    {
+        frame[*indicator] = XPROTOCOL_ESC;
+        (*indicator)++;
+        if (maxFrameLength <= *indicator)
+        {
+            return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_XPROTOCOL_FRAME_BUFFER_TOO_SMALL);
+        }
+        frame[*indicator] = XPROTOCOL_ESCAPED_SD;
+    }
+    else if (XPROTOCOL_ED == frame[*indicator])
+    {
+        frame[*indicator] = XPROTOCOL_ESC;
+        (*indicator)++;
+        if (maxFrameLength <= *indicator)
+        {
+            return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_XPROTOCOL_FRAME_BUFFER_TOO_SMALL);
+        }
+        frame[*indicator] = XPROTOCOL_ESCAPED_ED;
+    }
+    else if (XPROTOCOL_ESC == frame[*indicator])
+    {
+        frame[*indicator] = XPROTOCOL_ESC;
+        (*indicator)++;
+        if (maxFrameLength <= *indicator)
+        {
+            return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_XPROTOCOL_FRAME_BUFFER_TOO_SMALL);
+        }
+        frame[*indicator] = XPROTOCOL_ESCAPED_ESC;
+    }
+    (*indicator)++;
+    return RETCODE_OK;
+}
+
+static void UnEscape_SpecialCharacters(const uint8_t *frame, uint32_t indicator,
+        uint8_t *data, uint32_t counter)
+{
+    if (XPROTOCOL_ESC == frame[indicator])
+    {
+        /* check the byte after escape letter */
+        if (XPROTOCOL_ESCAPED_SD == frame[indicator + 1])
+        {
+            data[counter] = XPROTOCOL_SD;
+        }
+        else if (XPROTOCOL_ESCAPED_ED == frame[indicator + 1])
+        {
+            data[counter] = XPROTOCOL_ED;
+        }
+        else if (XPROTOCOL_ESCAPED_ESC == frame[indicator + 1])
+        {
+            data[counter] = XPROTOCOL_ESC;
+        }
+    }
+    else
+    {
+        data[counter] = frame[indicator];
+    }
+}
+
+/*  The description of the function is available in BCDS_XProtocol.h */
 Retcode_T XProtocol_Init(void)
 {
     return RETCODE_OK;
 }
 
-/* API description is in interface header BCDS_XProtocol.h */
+/*  The description of the function is available in BCDS_XProtocol.h */
 Retcode_T XProtocol_EncodeFrame(const uint8_t *data, uint32_t dataLength,
         uint32_t maxFrameLength, uint8_t *frame, uint32_t *frameLength)
 {
@@ -143,7 +200,7 @@ Retcode_T XProtocol_EncodeFrame(const uint8_t *data, uint32_t dataLength,
     return RETCODE_OK;
 }
 
-/* API description is in interface header BCDS_XProtocol.h */
+/*  The description of the function is available in BCDS_XProtocol.h */
 Retcode_T XProtocol_GetPayloadLength(const uint8_t *frame, uint32_t frameLength,
         uint32_t *payloadLength)
 {
@@ -177,7 +234,7 @@ Retcode_T XProtocol_GetPayloadLength(const uint8_t *frame, uint32_t frameLength,
     return RETCODE_OK;
 }
 
-/* API description is in interface header BCDS_XProtocol.h */
+/*  The description of the function is available in BCDS_XProtocol.h */
 Retcode_T XProtocol_DecodeFrame(const uint8_t *frame, uint32_t frameLength,
         uint32_t maxDataLength, uint8_t *data, uint32_t *dataLength)
 {
@@ -274,7 +331,7 @@ Retcode_T XProtocol_DecodeFrame(const uint8_t *frame, uint32_t frameLength,
     return RETCODE_OK;
 }
 
-/* API description is in interface header BCDS_XProtocol.h */
+/*  The description of the function is available in BCDS_XProtocol.h */
 Retcode_T XProtocol_IsCompleteFrame(const uint8_t *frame, uint32_t frameLength,
         const uint8_t **lastCheckPosition)
 {
@@ -301,67 +358,6 @@ Retcode_T XProtocol_IsCompleteFrame(const uint8_t *frame, uint32_t frameLength,
     }
 
     return RETCODE_OK;
-}
-
-static Retcode_T Escape_SpecialCharacters(uint8_t *frame, uint32_t *indicator, uint32_t maxFrameLength)
-{
-    if (XPROTOCOL_SD == frame[*indicator])
-    {
-        frame[*indicator] = XPROTOCOL_ESC;
-        (*indicator)++;
-        if (maxFrameLength <= *indicator)
-        {
-            return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_XPROTOCOL_FRAME_BUFFER_TOO_SMALL);
-        }
-        frame[*indicator] = XPROTOCOL_ESCAPED_SD;
-    }
-    else if (XPROTOCOL_ED == frame[*indicator])
-    {
-        frame[*indicator] = XPROTOCOL_ESC;
-        (*indicator)++;
-        if (maxFrameLength <= *indicator)
-        {
-            return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_XPROTOCOL_FRAME_BUFFER_TOO_SMALL);
-        }
-        frame[*indicator] = XPROTOCOL_ESCAPED_ED;
-    }
-    else if (XPROTOCOL_ESC == frame[*indicator])
-    {
-        frame[*indicator] = XPROTOCOL_ESC;
-        (*indicator)++;
-        if (maxFrameLength <= *indicator)
-        {
-            return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_XPROTOCOL_FRAME_BUFFER_TOO_SMALL);
-        }
-        frame[*indicator] = XPROTOCOL_ESCAPED_ESC;
-    }
-    (*indicator)++;
-    return RETCODE_OK;
-}
-
-static void UnEscape_SpecialCharacters(const uint8_t *frame, uint32_t indicator,
-        uint8_t *data, uint32_t counter)
-{
-    if (XPROTOCOL_ESC == frame[indicator])
-    {
-        /* check the byte after escape letter */
-        if (XPROTOCOL_ESCAPED_SD == frame[indicator + 1])
-        {
-            data[counter] = XPROTOCOL_SD;
-        }
-        else if (XPROTOCOL_ESCAPED_ED == frame[indicator + 1])
-        {
-            data[counter] = XPROTOCOL_ED;
-        }
-        else if (XPROTOCOL_ESCAPED_ESC == frame[indicator + 1])
-        {
-            data[counter] = XPROTOCOL_ESC;
-        }
-    }
-    else
-    {
-        data[counter] = frame[indicator];
-    }
 }
 
 #endif /* if BCDS_FEATURE_XPROTOCOL */

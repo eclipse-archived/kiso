@@ -57,9 +57,7 @@ static ErrorLogger_LogEntry_T (*pErrorEntries)[MAXENTRIES];
 
 ErrorLoggerConfig_T ErrorLoggerHandle;
 
-/* Put function implementations here */
-
-/* The description of the function is available under function prototypes of this file */
+/*  The description of the function is available in BCDS_ErrorLogger.h */
 Retcode_T ErrorLogger_Init(ErrorLoggerConfig_T LoggerData)
 {
     Retcode_T nvmRetCode = RETCODE_OK;
@@ -98,7 +96,7 @@ Retcode_T ErrorLogger_Init(ErrorLoggerConfig_T LoggerData)
     }
 }
 
-/* The description of the function is available under function prototypes of this file */
+/*  The description of the function is available in BCDS_ErrorLogger.h */
 Retcode_T ErrorLogger_LogError(Retcode_T Error)
 {
     Retcode_T nvmRet = RETCODE_OK;
@@ -133,7 +131,7 @@ Retcode_T ErrorLogger_LogError(Retcode_T Error)
     return nvmRet;
 }
 
-/* The description of the function is available under function prototypes of this file */
+/*  The description of the function is available in BCDS_ErrorLogger.h */
 Retcode_T ErrorLogger_GetLastErrorLog(ErrorLogger_LogEntry_T *LogEntry)
 {
     if (LogEntry)
@@ -165,7 +163,7 @@ Retcode_T ErrorLogger_GetLastErrorLog(ErrorLogger_LogEntry_T *LogEntry)
     }
 }
 
-/* The description of the function is available under function prototypes of this file */
+/*  The description of the function is available in BCDS_ErrorLogger.h */
 Retcode_T ErrorLogger_HasError(Retcode_T Error)
 {
     /* Loop through the logged errors and search the error code passed */
@@ -184,12 +182,13 @@ Retcode_T ErrorLogger_HasError(Retcode_T Error)
     return retcode;
 }
 
-/* The description of the function is available under function prototypes of this file */
+/*  The description of the function is available in BCDS_ErrorLogger.h */
 uint16_t ErrorLogger_GetTotalErrors(void)
 {
     return ErrorSeqNo;
 }
 
+/*  The description of the function is available in BCDS_ErrorLogger.h */
 uint8_t ErrorLogger_GetCurrentErrors(void)
 {
     uint8_t ErrorCount;
@@ -204,7 +203,7 @@ uint8_t ErrorLogger_GetCurrentErrors(void)
     return ErrorCount;
 }
 
-/* The description of the function is available under function prototypes of this file */
+/*  The description of the function is available in BCDS_ErrorLogger.h */
 Retcode_T ErrorLogger_GetErrorAt(uint8_t index, ErrorLogger_LogEntry_T *LogEntry)
 {
     Retcode_T retcode = RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T )RETCODE_INVALID_PARAM);
@@ -224,7 +223,7 @@ Retcode_T ErrorLogger_GetErrorAt(uint8_t index, ErrorLogger_LogEntry_T *LogEntry
     return retcode;
 }
 
-/* The description of the function is available under function prototypes of this file */
+/*  The description of the function is available in BCDS_ErrorLogger.h */
 Retcode_T ErrorLogger_ClearAllErrorLogs(void)
 {
     Retcode_T retcode = RETCODE_OK;

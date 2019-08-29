@@ -47,11 +47,7 @@ typedef struct TaskMonitor_TaskInfo_S TaskMonitor_TaskInfo_T;
 
 TaskMonitor_TaskInfo_T TaskInfo[BCDS_TASKMONITOR_MAX_TASKS];
 
-/* Put private function declarations here */
-
-/* Put function implementations here */
-
-/* The description of the function is available in header file */
+/*  The description of the function is available in BCDS_TaskMonitor.h */
 Retcode_T TaskMonitor_Initialize(void)
 {
     uint32_t loopcnt;
@@ -64,7 +60,7 @@ Retcode_T TaskMonitor_Initialize(void)
     return RETCODE_OK;
 }
 
-/* The description of the function is available in header file */
+/*  The description of the function is available in BCDS_TaskMonitor.h */
 Retcode_T TaskMonitor_Register(TaskHandle_t task, uint32_t upperLimit)
 {
     uint32_t loopcnt;
@@ -100,7 +96,7 @@ BCDS_INLINE void TaskMonitor_Update(unsigned int * taskTag, unsigned int tickCou
 }
 
 
-/* The description of the function is available in header file */
+/*  The description of the function is available in BCDS_TaskMonitor.h */
 bool TaskMonitor_Check(void)
 {
     uint32_t loopcnt;

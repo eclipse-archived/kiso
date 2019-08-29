@@ -50,7 +50,7 @@ static void Run(void *pvParameters);
 
 static void Dequeue(CmdProcessor_T * cmdProcessor);
 
-/* The description of the function is available in header file */
+/* The description of the function is available in BCDS_CmdProcessor.h*/
 Retcode_T CmdProcessor_Initialize(
         CmdProcessor_T *cmdProcessor, char *name,
         uint32_t taskPriority, uint32_t taskStackDepth, uint32_t queueSize)
@@ -94,11 +94,11 @@ Retcode_T CmdProcessor_Initialize(
     return retcode;
 }
 
-/*  The description of the function is available in header file. */
+/*  The description of the function is available in BCDS_CmdProcessor.h */
 Retcode_T CmdProcessor_Enqueue(CmdProcessor_T *cmdProcessor, CmdProcessor_Func_T func, void *param1, uint32_t param2)
 {
+    Retcode_T retcode = RETCODE_OK;
     uint32_t rc;
-    Retcode_T retcode;
 
     /* Null checking */
     assert(func);
@@ -130,7 +130,7 @@ Retcode_T CmdProcessor_Enqueue(CmdProcessor_T *cmdProcessor, CmdProcessor_Func_T
     return retcode;
 }
 
-/*  The description of the function is available in header file. */
+/*  The description of the function is available in BCDS_CmdProcessor.h */
 Retcode_T CmdProcessor_EnqueueFromIsr(CmdProcessor_T *cmdProcessor, CmdProcessor_Func_T func, void *param1, uint32_t param2)
 {
     int32_t rc = pdPASS;
@@ -167,7 +167,7 @@ Retcode_T CmdProcessor_EnqueueFromIsr(CmdProcessor_T *cmdProcessor, CmdProcessor
     return retcode;
 }
 
-/* The description of the function is available in header file */
+/*  The description of the function is available in BCDS_CmdProcessor.h */
 void CmdProcessor_Suspend(CmdProcessor_T *cmdProcessor)
 {
     if ((NULL != cmdProcessor) && (NULL != cmdProcessor->task))
@@ -180,7 +180,7 @@ void CmdProcessor_Suspend(CmdProcessor_T *cmdProcessor)
     }
 }
 
-/* The description of the function is available in header file */
+/*  The description of the function is available in BCDS_CmdProcessor.h */
 void CmdProcessor_Resume(CmdProcessor_T *cmdProcessor)
 {
     if ((NULL != cmdProcessor) && (NULL != cmdProcessor->task))
@@ -205,6 +205,7 @@ static void Run(void *pvParameters)
     Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, (uint32_t) RETCODE_FAILURE));
 }
 
+/*  The description of the function is available in BCDS_CmdProcessor.h */
 static void Dequeue(CmdProcessor_T * cmdProcessor)
 {
     if ((NULL != cmdProcessor) && (NULL != cmdProcessor->queue))

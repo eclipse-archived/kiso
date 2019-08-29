@@ -94,7 +94,7 @@ static const char CmdLine_separator[] = BCDS_COMMAND_LINE_SEPARATOR_TOKENS;
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-/* Register command into linked list */
+/*  The description of the function is available in BCDS_CmdLineDebugger.h */
 Retcode_T CmdLineDbg_RegisterCmd(struct CmdLineDbg_Element_S * list, struct CmdLineDbg_Element_S * cmd)
 {
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
@@ -123,7 +123,7 @@ Retcode_T CmdLineDbg_RegisterCmd(struct CmdLineDbg_Element_S * list, struct CmdL
     return rc;
 }
 
-/* Convert array into a linked list */
+/*  The description of the function is available in BCDS_CmdLineDebugger.h */
 Retcode_T CmdLineDbg_RegisterCmdArray(struct CmdLineDbg_Element_S * list, size_t nElements)
 {
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
@@ -154,7 +154,7 @@ Retcode_T CmdLineDbg_RegisterCmdArray(struct CmdLineDbg_Element_S * list, size_t
     return rc;
 }
 
-/* Parse by string and execute the callback */
+/*  The description of the function is available in BCDS_CmdLineDebugger.h */
 Retcode_T CmdLineDbg_Parse(struct CmdLineDbg_Element_S * list, char * input)
 {
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);

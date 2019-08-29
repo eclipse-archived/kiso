@@ -72,9 +72,7 @@ static void GuardedTaskRunFunction(void* param)
     }
 }
 
-/* global functions */
-
-/* The description of the function is available in header file */
+/*  The description of the function is available in BCDS_GuardedTask.h */
 Retcode_T GuardedTask_Deinitialize(GuardedTask_T* handle)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -105,6 +103,7 @@ Retcode_T GuardedTask_Deinitialize(GuardedTask_T* handle)
     return retcode;
 }
 
+/*  The description of the function is available in BCDS_GuardedTask.h */
 Retcode_T GuardedTask_Initialize(GuardedTask_T* handle, GuardedTask_Function_T taskRunFunction, const char* taskName, uint32_t taskPriority, uint32_t taskStackSize)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -144,7 +143,7 @@ Retcode_T GuardedTask_Initialize(GuardedTask_T* handle, GuardedTask_Function_T t
     return retcode;
 }
 
-/* The description of the function is available in header file */
+/*  The description of the function is available in BCDS_GuardedTask.h */
 Retcode_T GuardedTask_Signal(GuardedTask_T* handle)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -171,7 +170,7 @@ Retcode_T GuardedTask_Signal(GuardedTask_T* handle)
     return retcode;
 }
 
-/* The description of the function is available in header file */
+/*  The description of the function is available in BCDS_GuardedTask.h */
 Retcode_T GuardedTask_SignalFromIsr(GuardedTask_T* handle)
 {
     Retcode_T retcode = RETCODE_OK;

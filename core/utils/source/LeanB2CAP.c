@@ -46,7 +46,7 @@ static const uint8_t LeanB2CAPCommandList[LEANB2CAP_SUPPORTED_CMD_SIZE] =
     (uint8_t)LEAN_B2CAP_CMD_INFO_CHANNEL3
 };
 
-/* The API description is in function declaration */
+/*  The description of the function is available in BCDS_LeanB2CAP.h */
 static Retcode_T LeanB2CAPIsCommandTypeValid(LeanB2CAP_CommandType_T Type)
 {
     Retcode_T Rc = (Retcode_T)RETCODE_FAILURE;
@@ -69,7 +69,7 @@ static Retcode_T LeanB2CAPIsCommandTypeValid(LeanB2CAP_CommandType_T Type)
     return (Rc);
 }
 
-/* The API description is in Interface header */
+/*  The description of the function is available in BCDS_LeanB2CAP.h */
 Retcode_T LeanB2CAP_Initialize(LeanB2CAP_HandlePtr_T * Handle, LeanB2CAP_FrameData_T * ValidOutputDataStorageBufferInfo, LeanB2CAPCallback Callback)
 {
     Retcode_T Rc = RETCODE_OK;
@@ -109,7 +109,7 @@ Retcode_T LeanB2CAP_Initialize(LeanB2CAP_HandlePtr_T * Handle, LeanB2CAP_FrameDa
     return (Rc);
 }
 
-/* The API description is in Interface header */
+/*  The description of the function is available in BCDS_LeanB2CAP.h */
 Retcode_T LeanB2CAP_RxDataProcessor(LeanB2CAP_HandlePtr_T * Handle, LeanB2CAP_FrameData_T * PayLoad)
 {
     Retcode_T Rc = RETCODE(RETCODE_SEVERITY_ERROR,(Retcode_T)RETCODE_LEANB2CAP_RX_PROCESSOR_FAIL);
@@ -308,7 +308,7 @@ Retcode_T LeanB2CAP_RxDataProcessor(LeanB2CAP_HandlePtr_T * Handle, LeanB2CAP_Fr
     return (Rc);
 }
 
-/* The API description is in Interface header */
+/*  The description of the function is available in BCDS_LeanB2CAP.h */
 Retcode_T LeanB2CAP_Builder(LeanB2CAP_FrameData_T * LeanB2CAPBuildOuput, LeanB2CAP_RawData_T * RawDataInput)
 {
     Retcode_T Rc = RETCODE_OK;
@@ -360,7 +360,7 @@ Retcode_T LeanB2CAP_Builder(LeanB2CAP_FrameData_T * LeanB2CAPBuildOuput, LeanB2C
     return (Rc);
 }
 
-/* The API description is in Interface header */
+/*  The description of the function is available in BCDS_LeanB2CAP.h */
 Retcode_T LeanB2CAP_OverheadBuilder(LeanB2CAP_Overhead_T * OutputOverhead, LeanB2CAP_RawData_T * RawDataInput)
 {
     Retcode_T Rc = RETCODE_OK;
@@ -413,7 +413,7 @@ Retcode_T LeanB2CAP_OverheadBuilder(LeanB2CAP_Overhead_T * OutputOverhead, LeanB
     return (Rc);
 }
 
-/* The API description is in Interface header */
+/*  The description of the function is available in BCDS_LeanB2CAP.h */
 Retcode_T LeanB2CAP_ResetRxDataProcessor(LeanB2CAP_HandlePtr_T * Handle)
 {
     Retcode_T Rc = RETCODE_OK;
@@ -447,7 +447,7 @@ Retcode_T LeanB2CAP_ResetRxDataProcessor(LeanB2CAP_HandlePtr_T * Handle)
     return (Rc);
 }
 
-/* The API description is in Interface header */
+/*  The description of the function is available in BCDS_LeanB2CAP.h */
 Retcode_T LeanB2CAP_Deinitialize(LeanB2CAP_HandlePtr_T * Handle)
 {
     Retcode_T Rc = RETCODE_OK;

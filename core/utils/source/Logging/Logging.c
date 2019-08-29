@@ -35,6 +35,7 @@ static LogRecorder_T Logging_Recorder =
 {   .Init = NULL, .Deinit = NULL, .Write = NULL, .Wakeup = NULL, .Appender =
     {   .Init = NULL, .Write = NULL}};
 
+/*  The description of the function is available in BCDS_Logging.h */
 Retcode_T Logging_Init(const LogRecorder_T *recorder, const LogAppender_T *appender)
 {
     if (NULL == recorder || NULL == recorder->Init || NULL == recorder->Deinit
@@ -65,6 +66,7 @@ Retcode_T Logging_Init(const LogRecorder_T *recorder, const LogAppender_T *appen
     return retcode;
 }
 
+/*  The description of the function is available in BCDS_Logging.h */
 Retcode_T Logging_Log(LogLevel_T level, uint8_t package, uint8_t module, const char *file,
         uint32_t line, const char *fmt, ...)
 {

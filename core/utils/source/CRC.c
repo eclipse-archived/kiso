@@ -31,8 +31,7 @@
 #define CRC32_MASK_VAL                  UINT32_C(0X80000000)      /**< used to mask MSB bit of the byte */
 #define CRC32_ETHERNET_MASK_VAL         UINT32_C(0x00000001)      /**< used to mask LSB bit of the byte */
 
-/* functions */
-/* API description is in interface header BCDS_ComoCRC.h */
+/*  The description of the function is available in BCDS_CRC.h */
 Retcode_T CRC_8(uint8_t poly, uint8_t * shifter, uint8_t * data_p, uint16_t len)
 {
     uint8_t lftmstShftrBit;
@@ -85,7 +84,7 @@ Retcode_T CRC_8(uint8_t poly, uint8_t * shifter, uint8_t * data_p, uint16_t len)
     return (retVal);
 }
 
-/* API description is in interface header BCDS_ComoCRC.h */
+/*  The description of the function is available in BCDS_CRC.h */
 Retcode_T CRC_16(uint16_t poly, uint16_t * shifter, uint8_t * data_p, uint16_t len)
 {
     uint16_t lftmstShftrBit;
@@ -137,7 +136,7 @@ Retcode_T CRC_16(uint16_t poly, uint16_t * shifter, uint8_t * data_p, uint16_t l
     return (retVal);
 }
 
-/* API description is in interface header BCDS_ComoCRC.h */
+/*  The description of the function is available in BCDS_CRC.h */
 Retcode_T CRC_32(uint32_t poly, uint32_t * shifter, uint8_t * data_p, uint16_t len)
 {
     uint32_t lftmstShftrBit;
@@ -190,6 +189,7 @@ Retcode_T CRC_32(uint32_t poly, uint32_t * shifter, uint8_t * data_p, uint16_t l
     return (retVal);
 }
 
+/*  The description of the function is available in BCDS_CRC.h */
 Retcode_T CRC_32_Reverse(uint32_t poly, uint32_t * shifter, uint8_t * data_p, uint16_t len)
 {
     uint32_t lftmstShftrBit;

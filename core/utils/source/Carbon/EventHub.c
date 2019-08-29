@@ -26,6 +26,7 @@
 #include "task.h"
 #include "semphr.h"
 
+/*  The description of the function is available in BCDS_EventHub.h */
 Retcode_T EventHub_Initialize(EventHub_T *hub)
 {
     if (NULL == hub)
@@ -44,6 +45,7 @@ Retcode_T EventHub_Initialize(EventHub_T *hub)
     return RETCODE_OK;
 }
 
+/*  The description of the function is available in BCDS_EventHub.h */
 Retcode_T EventHub_Observe(EventHub_T *hub, EventHandler_T handler, TaskEvent_T event)
 {
     Retcode_T retval = RETCODE_OK;
@@ -84,6 +86,7 @@ Retcode_T EventHub_Observe(EventHub_T *hub, EventHandler_T handler, TaskEvent_T 
     return retval;
 }
 
+/*  The description of the function is available in BCDS_EventHub.h */
 Retcode_T EventHub_ObserveAll(EventHub_T *hub, EventHandler_T handler)
 {
     Retcode_T retval = RETCODE_OK;
@@ -123,6 +126,7 @@ Retcode_T EventHub_ObserveAll(EventHub_T *hub, EventHandler_T handler)
     return retval;
 }
 
+/*  The description of the function is available in BCDS_EventHub.h */
 Retcode_T EventHub_Notify(EventHub_T *hub, TaskEvent_T event, void *data)
 {
     if (NULL == hub)

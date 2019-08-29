@@ -37,9 +37,7 @@
  */
 static bool dummyFrameEndCheckFunc(uint8_t x);
 
-/*
- * Refer to interface for description
- */
+/*  The description of the function is available in BCDS_UARTTransceiver.h */
 Retcode_T UARTTransceiver_Initialize(UARTTransceiver_T *transceiver,
         HWHandle_T handle, uint8_t * rawRxBuffer, uint32_t rawRxBufferSize,
         enum UARTTransceiver_UartType_E type)
@@ -77,9 +75,7 @@ Retcode_T UARTTransceiver_Initialize(UARTTransceiver_T *transceiver,
     return retcode;
 }
 
-/*
- * Refer to interface for description
- */
+/*  The description of the function is available in BCDS_UARTTransceiver.h */
 Retcode_T UARTTransceiver_Deinitialize(UARTTransceiver_T *transceiver)
 {
     Retcode_T retcode;
@@ -99,9 +95,7 @@ Retcode_T UARTTransceiver_Deinitialize(UARTTransceiver_T *transceiver)
     return retcode;
 }
 
-/*
- * Refer to interface for description
- */
+/*  The description of the function is available in BCDS_UARTTransceiver.h */
 Retcode_T UARTTransceiver_Start(UARTTransceiver_T *transceiver, UARTTransceiver_EndofFrameCheckFunc_T frameEndCheckFunc)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -147,9 +141,7 @@ Retcode_T UARTTransceiver_Start(UARTTransceiver_T *transceiver, UARTTransceiver_
     return retcode;
 }
 
-/*
- *  Refer to interface for description
- */
+/*  The description of the function is available in BCDS_UARTTransceiver.h */
 Retcode_T UARTTransceiver_StartInAsyncMode(UARTTransceiver_T *transceiver,
         UARTTransceiver_EndofFrameCheckFunc_T frameEndCheckFunc,
         UARTransceiver_Callback_T callback)
@@ -199,9 +191,7 @@ Retcode_T UARTTransceiver_StartInAsyncMode(UARTTransceiver_T *transceiver,
     return retcode;
 }
 
-/*
- * Refer to interface for description
- */
+/*  The description of the function is available in BCDS_UARTTransceiver.h */
 Retcode_T UARTTransceiver_Stop(UARTTransceiver_T *transceiver)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -238,9 +228,7 @@ Retcode_T UARTTransceiver_Stop(UARTTransceiver_T *transceiver)
     return retcode;
 }
 
-/*
- * Refer to interface for description
- */
+/*  The description of the function is available in BCDS_UARTTransceiver.h */
 Retcode_T UARTTransceiver_Suspend(UARTTransceiver_T *transceiver)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -276,9 +264,7 @@ Retcode_T UARTTransceiver_Suspend(UARTTransceiver_T *transceiver)
     return retcode;
 }
 
-/*
- * Refer to interface for description
- */
+/*  The description of the function is available in BCDS_UARTTransceiver.h */
 Retcode_T UARTTransceiver_Resume(UARTTransceiver_T *transceiver)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -314,9 +300,7 @@ Retcode_T UARTTransceiver_Resume(UARTTransceiver_T *transceiver)
     return retcode;
 }
 
-/*
- * Refer to interface for description
- */
+/*  The description of the function is available in BCDS_UARTTransceiver.h */
 Retcode_T UARTTransceiver_ReadData(UARTTransceiver_T *transceiver, uint8_t *buffer, uint32_t size, uint32_t *length, uint32_t timeout_ms)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -356,9 +340,7 @@ Retcode_T UARTTransceiver_ReadData(UARTTransceiver_T *transceiver, uint8_t *buff
     return retcode;
 }
 
-/*
- * Refer to interface for description
- */
+/*  The description of the function is available in BCDS_UARTTransceiver.h */
 Retcode_T UARTTransceiver_WriteData(UARTTransceiver_T *transceiver, uint8_t* data, uint32_t length, uint32_t timeout_ms)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -410,9 +392,8 @@ Retcode_T UARTTransceiver_WriteData(UARTTransceiver_T *transceiver, uint8_t* dat
 }
 
 #if BCDS_FEATURE_UART
-/*
- * Refer to interface for description
- */
+
+/*  The description of the function is available in BCDS_UARTTransceiver.h */
 void UARTTransceiver_LoopCallback(UARTTransceiver_T *transceiver, struct MCU_UART_Event_S event)
 {
     transceiver->AsyncEvent.registerValue = 0;
@@ -477,9 +458,8 @@ void UARTTransceiver_LoopCallback(UARTTransceiver_T *transceiver, struct MCU_UAR
 }
 
 #elif BCDS_FEATURE_LEUART
-/*
- * Refer to interface for description
- */
+
+/*  The description of the function is available in BCDS_UARTTransceiver.h */
 void UARTTransceiver_LoopCallbackLE(UARTTransceiver_T *transceiver, struct MCU_LEUART_Event_S event)
 {
     transceiver->AsyncEvent.registerValue = 0;

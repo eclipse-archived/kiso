@@ -36,6 +36,7 @@
 #include "semphr.h"
 #include "task.h"
 
+/*  The description of the function is available in BCDS_Queue.h */
 Retcode_T Queue_Create(Queue_T *Queue, uint8_t *Buffer, uint32_t BufferSize)
 {
     if (NULL == Queue || NULL == Buffer || 0 == BufferSize)
@@ -65,6 +66,7 @@ Retcode_T Queue_Create(Queue_T *Queue, uint8_t *Buffer, uint32_t BufferSize)
     return RETCODE_OK;
 }
 
+/*  The description of the function is available in BCDS_Queue.h */
 Retcode_T Queue_Delete(Queue_T *Queue)
 {
     if (NULL == Queue)
@@ -80,6 +82,7 @@ Retcode_T Queue_Delete(Queue_T *Queue)
     return RETCODE_OK;
 }
 
+/*  The description of the function is available in BCDS_Queue.h */
 Retcode_T Queue_Put(Queue_T *Queue, const void *Item, uint32_t ItemSize, const void *payload, uint32_t PayloadSize)
 {
     assert(NULL != Queue && NULL != Item && 0 != ItemSize);
@@ -153,6 +156,7 @@ Retcode_T Queue_Put(Queue_T *Queue, const void *Item, uint32_t ItemSize, const v
     return RETCODE_OK;
 }
 
+/*  The description of the function is available in BCDS_Queue.h */
 Retcode_T Queue_Get(Queue_T *Queue, void **Data, uint32_t *DataSize, uint32_t Timeout)
 {
     assert(NULL != Queue && NULL != Data);
@@ -190,6 +194,7 @@ Retcode_T Queue_Get(Queue_T *Queue, void **Data, uint32_t *DataSize, uint32_t Ti
     return RETCODE_OK;
 }
 
+/*  The description of the function is available in BCDS_Queue.h */
 Retcode_T Queue_Purge(Queue_T *Queue)
 {
     assert(NULL != Queue);
@@ -215,12 +220,14 @@ Retcode_T Queue_Purge(Queue_T *Queue)
     return RETCODE_OK;
 }
 
+/*  The description of the function is available in BCDS_Queue.h */
 uint32_t Queue_Count(const Queue_T *Queue)
 {
     assert(NULL != Queue);
     return Queue->Count;
 }
 
+/*  The description of the function is available in BCDS_Queue.h */
 void Queue_Clear(Queue_T *Queue)
 {
     assert(NULL != Queue);

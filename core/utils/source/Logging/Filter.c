@@ -18,6 +18,7 @@
  * @brief Implements log generic filter.
  *
  */
+#include "LogConfig.h"
 
 #include "BCDS_Utils.h"
 #undef BCDS_MODULE_ID
@@ -26,7 +27,6 @@
 #if BCDS_FEATURE_LOGGING
 
 #include "BCDS_Logging.h"
-#include "LogConfig.h"
 
 #include "BCDS_Basics.h"
 #include "BCDS_Retcode.h"
@@ -54,6 +54,7 @@ static LogFilterItem_T LogFilterItems[LOG_FILTER_ITEM_COUNT] =
     }
 };
 
+/*  The description of the function is available in BCDS_Logging.h */
 LogFilterId_T LogFilter_Add(LogLevel_T level, uint8_t package, uint8_t module)
 {
     uint32_t i;
@@ -72,6 +73,7 @@ LogFilterId_T LogFilter_Add(LogLevel_T level, uint8_t package, uint8_t module)
     return i;
 }
 
+/*  The description of the function is available in BCDS_Logging.h */
 Retcode_T LogFilter_Delete(LogFilterId_T id)
 {
     if (id >= LOG_FILTER_ITEM_COUNT)
@@ -83,6 +85,7 @@ Retcode_T LogFilter_Delete(LogFilterId_T id)
     return RETCODE_OK;
 }
 
+/*  The description of the function is available in BCDS_Logging.h */
 Retcode_T LogFilter_Configure(LogFilterId_T id, LogLevel_T level, uint8_t package, uint8_t module)
 {
     if (id >= LOG_FILTER_ITEM_COUNT)
@@ -97,6 +100,7 @@ Retcode_T LogFilter_Configure(LogFilterId_T id, LogLevel_T level, uint8_t packag
     return RETCODE_OK;
 }
 
+/*  The description of the function is available in BCDS_Logging.h */
 bool LogFilter_Apply(LogLevel_T level, uint8_t package, uint8_t module)
 {
     bool enabled = true;
