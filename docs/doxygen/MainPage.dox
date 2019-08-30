@@ -38,6 +38,7 @@
  * * **docs** contains the documentation.
  * * **examples** contains different examples running on a specific hardware.
  * * **ide** contains eclipse projects than implement a workbench specifically built for BCX and CommonGateway.
+ * * **ci** contains the continuous-integration elements such as docker-files and integration-test settings.
  * * **thirdparty** contains different source-code of third-parties needed by Kiso.
  *
  * @section BUILD_STRUCT Build Structure
