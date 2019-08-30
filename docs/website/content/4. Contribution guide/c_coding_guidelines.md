@@ -578,47 +578,53 @@ Retcode_T function(param_type param_name, param_type2 param_name2);
 Every source file and header file must have the following header format that contains the copyright, license disclaimer, file name and a brief description of the purpose of the module. It is sufficient to include only the tag @file. Doxygen will extract the name of the file.
 
 ```c
-/*----------------------------------------------------------------------------*/
-/*
- * Copyright (c) 2010-2019 Robert Bosch GmbH
- *
- * All Rights Reserved. Confidential.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Distribution only to people who need to know this information in
- * order to do their job.(Need-to-know principle).
- * Distribution to persons outside the company, only if these persons
- * signed a non-disclosure agreement.
- * Electronic transmission, e.g. via electronic mail, must be made in
- * encrypted form.
- */
-/*----------------------------------------------------------------------------*/
+ /********************************************************************************
+* Copyright (c) 2010-2019 Robert Bosch GmbH
+*
+* This program and the accompanying materials are made available under the
+* terms of the Eclipse Public License 2.0 which is available at
+* http://www.eclipse.org/legal/epl-2.0.
+*
+* SPDX-License-Identifier: EPL-2.0
+*
+* Contributors:
+*    Robert Bosch GmbH - initial contribution
+*
+********************************************************************************/
 
 /**
- * @file
- * @brief Add a brief description here.
  *
- * @detail Put here the documentation of this header file. Explain the interface exposed
- * by this header, e.g. what is the purpose of use, how to use it, etc.
- */
+ * @brief
+ *      Add a brief description here.
+ *
+ * @details
+ *      Put here the documentation of this header file. Explain the interface exposed
+ *      by this header, e.g. what is the purpose of use, how to use it, etc.
+ *
+ * @file
+ **/
+
 ```
 
 ### Group comments
 
 Group comments is for doxygen to document relative definitions as a group which may consist of certain definitions including macros, enumerations, structures, functions and so on.
 
-A group is defined by **“@defgroup”**. Additionally, tag **“@ingroup”** defines the group name under which group exists. The comments of group starts with the tag **“@brief”**, followed by tag **“@details”** which mostly contains the lists of functions that are used in the header. The group is enclosed within “ /**@{ */ and /**@}*/ ” .
+A group is defined by **"@defgroup"**. Additionally, tag **"@ingroup"** defines the group name under which group exists. The comments of group starts with the tag **"@brief"**, followed by tag **"@details"** which mostly contains the lists of functions that are used in the header. The group is enclosed within " /**@{ */ and /**@}*/ " .
 
 ```c
 /**
- * @defgroup ${file_base}
  * @ingroup ${group name in which file_base comes under}
+ *
+ * @defgroup ${file_base}
  * @{
  *
- * @brief Brief description about the module
+ * @brief
+ *      Add a brief description here.
  *
- * @details Detailed description about the module
+ * @details
+ *      Put here the documentation of this header file. Explain the interface exposed
+ *      by this header, e.g. what is the purpose of use, how to use it, etc.
  */
 
 /**@}*/
@@ -630,10 +636,16 @@ Doxygen provides special commands to document the notes and warnings also. They 
 
 ```c
 /**
- * @note    Important notes about the function's usage(like Mutex are created such that the first call to OS_semaphoreTake() on the mutex will pass.)
- * @warning Warning to the user that function should not be used in certain scenario(like Mutex type semaphores cannot be used in Interrupt Service Routines(ISR))
- * @pre     Used to specify calling context rules or preconditions for an API or interface. For example many APIs do not support reentrancy,
- *          so these APIs cannot be called from interrupt context.
+ * @note
+ *      Important notes about the function's usage(like Mutex are created such that the
+ *      first call to OS_semaphoreTake() on the mutex will pass.)
+ * @warning
+ *      Warning to the user that function should not be used in certain scenario(like Mutex
+ *      type semaphores cannot be used in Interrupt Service Routines(ISR))
+ * @pre
+ *      Used to specify calling context rules or preconditions for an API or interface. For
+ *      example many APIs do not support reentrancy, so these APIs cannot be called from
+ *      interrupt context.
  */
 ```
 
