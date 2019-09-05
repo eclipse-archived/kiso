@@ -22,18 +22,18 @@
 #include "BCDS_Basics.h"
 #include "BCDS_Retcode.h"
 
-#define UBLOX_MAX_DNS_DOMAIN_NAME_LENGTH    (UINT32_C(253))
-
+#define UBLOX_MAX_DNS_DOMAIN_NAME_LENGTH (UINT32_C(253))
+#define UBLOX_MAX_FILE_NAME_LENGTH (UINT32_C(248))
 
 /**
  * @brief u-blox specific <ProfileId> parameter for the AT+HTTP command.
  */
 enum AT_UHTTP_ProfileId_E
 {
-    AT_UHTTP_PROFILE_ID_0 = 0, //!<    HTTP profile id 0
-	AT_UHTTP_PROFILE_ID_1 = 1, //!<    HTTP profile id 1
-	AT_UHTTP_PROFILE_ID_2 = 2, //!<    HTTP profile id 2
-	AT_UHTTP_PROFILE_ID_3 = 3, //!<    HTTP profile id 3
+    AT_UHTTP_PROFILE_ID_0 = 0,         //!<    HTTP profile id 0
+    AT_UHTTP_PROFILE_ID_1 = 1,         //!<    HTTP profile id 1
+    AT_UHTTP_PROFILE_ID_2 = 2,         //!<    HTTP profile id 2
+    AT_UHTTP_PROFILE_ID_3 = 3,         //!<    HTTP profile id 3
     AT_UHTTP_PROFILE_ID_INVALID = 255, //!<invalid value
 };
 typedef enum AT_UHTTP_ProfileId_E AT_UHTTP_ProfileId_T;
@@ -43,21 +43,19 @@ typedef enum AT_UHTTP_ProfileId_E AT_UHTTP_ProfileId_T;
  */
 enum AT_UHTTP_Opcode_E
 {
-    AT_UHTTP_OPCODE_SERVER_IP     = 0, //!<    HTTP server IP address
-	AT_UHTTP_OPCODE_SERVER_NAME   = 1, //!<    HTTP server name
-	AT_UHTTP_OPCODE_USERNAME      = 2, //!<    username
-	AT_UHTTP_OPCODE_PASSWORD      = 3, //!<    password
-	AT_UHTTP_OPCODE_AUTH_TYPE     = 4, //!<    authentication type
-	AT_UHTTP_OPCODE_SERVER_PORT   = 5, //!<    HTTP server port
-	AT_UHTTP_OPCODE_SECURE_OPTION = 6, //!<    HTTP Secure option (SSL encryption)
-	AT_UHTTP_OPCODE_RESERVED0     = 7, //!<    reserved for internal use only
-	AT_UHTTP_OPCODE_RESERVED1     = 8, //!<    reserved for internal use only
-	AT_UHTTP_OPCODE_CUSTOM_HEADER = 9, //!<    HTTP add custom request headers
-    AT_UHTTP_OPCODE_INVALID       = 255, //!<invalid value
+    AT_UHTTP_OPCODE_SERVER_IP = 0,     //!<    HTTP server IP address
+    AT_UHTTP_OPCODE_SERVER_NAME = 1,   //!<    HTTP server name
+    AT_UHTTP_OPCODE_USERNAME = 2,      //!<    username
+    AT_UHTTP_OPCODE_PASSWORD = 3,      //!<    password
+    AT_UHTTP_OPCODE_AUTH_TYPE = 4,     //!<    authentication type
+    AT_UHTTP_OPCODE_SERVER_PORT = 5,   //!<    HTTP server port
+    AT_UHTTP_OPCODE_SECURE_OPTION = 6, //!<    HTTP Secure option (SSL encryption)
+    AT_UHTTP_OPCODE_RESERVED0 = 7,     //!<    reserved for internal use only
+    AT_UHTTP_OPCODE_RESERVED1 = 8,     //!<    reserved for internal use only
+    AT_UHTTP_OPCODE_CUSTOM_HEADER = 9, //!<    HTTP add custom request headers
+    AT_UHTTP_OPCODE_INVALID = 255,     //!<invalid value
 };
 typedef enum AT_UHTTP_Opcode_E AT_UHTTP_Opcode_T;
-
-
 
 /**
  * @brief u-blox specific HTTP parameters
@@ -67,31 +65,30 @@ struct AT_UHTTP_Param_S
     /**
      * @brief Indicates http profile to use
      */
-	AT_UHTTP_ProfileId_T ProfileId;
+    AT_UHTTP_ProfileId_T ProfileId;
 
     /**
      * @brief Indicates OpCode (config item) to set
      */
-	AT_UHTTP_Opcode_T OpCode;
-	const uint8_t * StringParam;
-	uint32_t NumericParam;
+    AT_UHTTP_Opcode_T OpCode;
+    const uint8_t *StringParam;
+    uint32_t NumericParam;
 };
 typedef struct AT_UHTTP_Param_S AT_UHTTP_Param_T;
-
 
 /**
  * @brief u-blox specific <Command> parameter for the AT+HTTPC command.
  */
 enum AT_UHTTPC_Command_E
 {
-    AT_UHTTPC_COMMAND_HEAD        = 0,  //!<    HTTP HEAD
-	AT_UHTTPC_COMMAND_GET         = 1,  //!<    HTTP GET
-	AT_UHTTPC_COMMAND_DELETE      = 2,  //!<    HTTP DELETE
-	AT_UHTTPC_COMMAND_PUT         = 3,  //!<    HTTP PUT
-	AT_UHTTPC_COMMAND_POST_FILE   = 4,  //!<    HTTP POST FILE
-	AT_UHTTPC_COMMAND_POST_DATA   = 5,  //!<    HTTP POST DATA
-	AT_UHTTPC_COMMAND_GET_FOTA    = 100,//!<    HTTP GET FOTA (ublox proprietary)
-	AT_UHTTPC_COMMAND_INVALID     = 255, //!<invalid value
+    AT_UHTTPC_COMMAND_HEAD = 0,       //!<    HTTP HEAD
+    AT_UHTTPC_COMMAND_GET = 1,        //!<    HTTP GET
+    AT_UHTTPC_COMMAND_DELETE = 2,     //!<    HTTP DELETE
+    AT_UHTTPC_COMMAND_PUT = 3,        //!<    HTTP PUT
+    AT_UHTTPC_COMMAND_POST_FILE = 4,  //!<    HTTP POST FILE
+    AT_UHTTPC_COMMAND_POST_DATA = 5,  //!<    HTTP POST DATA
+    AT_UHTTPC_COMMAND_GET_FOTA = 100, //!<    HTTP GET FOTA (ublox proprietary)
+    AT_UHTTPC_COMMAND_INVALID = 255,  //!<invalid value
 };
 typedef enum AT_UHTTPC_Command_E AT_UHTTPC_Command_T;
 
@@ -100,8 +97,8 @@ typedef enum AT_UHTTPC_Command_E AT_UHTTPC_Command_T;
  */
 enum AT_UHTTPC_Result_E
 {
-    AT_UHTTPC_RESULT_FAILURE        = 0,  //!<    Failure
-	AT_UHTTPC_RESULT_SUCCESS        = 1  //!<    Success
+    AT_UHTTPC_RESULT_FAILURE = 0, //!<    Failure
+    AT_UHTTPC_RESULT_SUCCESS = 1  //!<    Success
 };
 typedef enum AT_UHTTPC_Result_E AT_UHTTPC_Result_T;
 
@@ -110,14 +107,14 @@ typedef enum AT_UHTTPC_Result_E AT_UHTTPC_Result_T;
  */
 enum AT_UHTTPC_Content_E
 {
-    AT_UHTTPC_CONTENT_APP_X_WWW_URL  = 0,  //!<    application/x-www-form-urlencoded
-	AT_UHTTPC_CONTENT_TEXT_PLAIN     = 1,  //!<    text/plain
-	AT_UHTTPC_CONTENT_APP_OCTET      = 2,  //!<    application/octet-stream
-	AT_UHTTPC_CONTENT_MULTIPART      = 3,  //!<    multipart/form-data
-	AT_UHTTPC_CONTENT_APP_JSON       = 4,  //!<    application/json
-	AT_UHTTPC_CONTENT_APP_XML        = 5,  //!<    application/xml
-	AT_UHTTPC_CONTENT_USER_DEFINED   = 6  ,//!<    user defined
-	AT_UHTTPC_CONTENT_INVALID        = 255, //!<invalid value
+    AT_UHTTPC_CONTENT_APP_X_WWW_URL = 0, //!<    application/x-www-form-urlencoded
+    AT_UHTTPC_CONTENT_TEXT_PLAIN = 1,    //!<    text/plain
+    AT_UHTTPC_CONTENT_APP_OCTET = 2,     //!<    application/octet-stream
+    AT_UHTTPC_CONTENT_MULTIPART = 3,     //!<    multipart/form-data
+    AT_UHTTPC_CONTENT_APP_JSON = 4,      //!<    application/json
+    AT_UHTTPC_CONTENT_APP_XML = 5,       //!<    application/xml
+    AT_UHTTPC_CONTENT_USER_DEFINED = 6,  //!<    user defined
+    AT_UHTTPC_CONTENT_INVALID = 255,     //!<invalid value
 };
 typedef enum AT_UHTTPC_Content_E AT_UHTTPC_Content_T;
 
@@ -129,22 +126,21 @@ struct AT_UHTTPC_Param_S
     /**
      * @brief Indicates http profile to use
      */
-	AT_UHTTP_ProfileId_T ProfileId;
+    AT_UHTTP_ProfileId_T ProfileId;
 
     /**
      * @brief
      * is selected.
      */
-	AT_UHTTPC_Command_T Command;
-	const uint8_t * ServerPath;
-	const uint8_t * FileName;
-	uint8_t * data;
-	uint32_t DataLength;
-	uint32_t NumericParam;
-	AT_UHTTPC_Command_T ContentType;
+    AT_UHTTPC_Command_T Command;
+    const uint8_t *ServerPath;
+    const uint8_t *FileName;
+    uint8_t *data;
+    uint32_t DataLength;
+    uint32_t NumericParam;
+    AT_UHTTPC_Command_T ContentType;
 };
 typedef struct AT_UHTTPC_Param_S AT_UHTTPC_Param_T;
-
 
 /**
  * @brief u-blox specific <SelectedAct> parameter for the AT+URAT command.
@@ -152,16 +148,16 @@ typedef struct AT_UHTTPC_Param_S AT_UHTTPC_Param_T;
 enum AT_URAT_SelectedAcT_E
 {
     AT_URAT_SELECTEDACT_GSM_GPRS_EGPRS = 0, //!<    GSM/GPRS/eGPRS (single mode)
-    AT_URAT_SELECTEDACT_GSM_UMTS = 1, //!<          GSM/UMTS (dual mode)
-    AT_URAT_SELECTEDACT_UMTS = 2, //!<              UMTS (single mode)
-    AT_URAT_SELECTEDACT_LTE = 3, //!<               LTE (single mode)
-    AT_URAT_SELECTEDACT_GSM_UMTS_LTE = 4, //!<      GSM/UMTS/LTE (tri mode)
-    AT_URAT_SELECTEDACT_GSM_LTE = 5, //!<           GSM/LTE (dual mode)
-    AT_URAT_SELECTEDACT_UMTS_LTE = 6, //!<          UMTS/LTE (dual mode)
-    AT_URAT_SELECTEDACT_LTEM1 = 7, //!<             LTE Cat.M1
-    AT_URAT_SELECTEDACT_LTENB1 = 8, //!<            LTE Cat.NB1
-    AT_URAT_SELECTEDACT_GPRS_EGPRS = 9, //!<        GPRS/eGPRS
-    AT_URAT_SELECTEDACT_INVALID = 255, //!<         Invalid <SelectedAct> value, used to signal that parameter not present
+    AT_URAT_SELECTEDACT_GSM_UMTS = 1,       //!<          GSM/UMTS (dual mode)
+    AT_URAT_SELECTEDACT_UMTS = 2,           //!<              UMTS (single mode)
+    AT_URAT_SELECTEDACT_LTE = 3,            //!<               LTE (single mode)
+    AT_URAT_SELECTEDACT_GSM_UMTS_LTE = 4,   //!<      GSM/UMTS/LTE (tri mode)
+    AT_URAT_SELECTEDACT_GSM_LTE = 5,        //!<           GSM/LTE (dual mode)
+    AT_URAT_SELECTEDACT_UMTS_LTE = 6,       //!<          UMTS/LTE (dual mode)
+    AT_URAT_SELECTEDACT_LTEM1 = 7,          //!<             LTE Cat.M1
+    AT_URAT_SELECTEDACT_LTENB1 = 8,         //!<            LTE Cat.NB1
+    AT_URAT_SELECTEDACT_GPRS_EGPRS = 9,     //!<        GPRS/eGPRS
+    AT_URAT_SELECTEDACT_INVALID = 255,      //!<         Invalid <SelectedAct> value, used to signal that parameter not present
 };
 typedef enum AT_URAT_SelectedAcT_E AT_URAT_SelectedAcT_T;
 
@@ -173,12 +169,12 @@ enum AT_URAT_PreferredAcT_E
     AT_URAT_PREFERREDACT_GSM_GPRS_EGPRS = 0, //!<   GSM/GPRS/eGPRS
     /* no #1 */
     AT_URAT_PREFERREDACT_UTRAN = 2, //!<            UTRAN
-    AT_URAT_PREFERREDACT_LTE = 3, //!<              LTE
+    AT_URAT_PREFERREDACT_LTE = 3,   //!<              LTE
     /* no #4, #5, #6*/
-    AT_URAT_PREFERREDACT_LTEM1 = 7, //!<            LTE Cat.M1
-    AT_URAT_PREFERREDACT_LTENB1 = 8, //!<           LTE Cat.NB1
+    AT_URAT_PREFERREDACT_LTEM1 = 7,      //!<            LTE Cat.M1
+    AT_URAT_PREFERREDACT_LTENB1 = 8,     //!<           LTE Cat.NB1
     AT_URAT_PREFERREDACT_GPRS_EGPRS = 9, //!<       GPRS/eGPRS
-    AT_URAT_PREFERREDACT_INVALID = 255, //!<        Invalid <PreferredAct> value, used to signal that parameter not present
+    AT_URAT_PREFERREDACT_INVALID = 255,  //!<        Invalid <PreferredAct> value, used to signal that parameter not present
 };
 typedef enum AT_URAT_PreferredAcT_E AT_URAT_PreferredAcT_T;
 
@@ -190,12 +186,12 @@ enum AT_URAT_SecondPreferredAcT_E
     AT_URAT_SECONDPREFERREDACT_GSM_GPRS_EGPRS = 0, //!< GSM/GPRS/eGPRS
     /* no #1 */
     AT_URAT_SECONDPREFERREDACT_UTRAN = 2, //!<          UTRAN
-    AT_URAT_SECONDPREFERREDACT_LTE = 3, //!<            LTE
+    AT_URAT_SECONDPREFERREDACT_LTE = 3,   //!<            LTE
     /* no #4, #5, #6*/
-    AT_URAT_SECONDPREFERREDACT_LTEM1 = 7, //!<          LTE Cat.M1
-    AT_URAT_SECONDPREFERREDACT_LTENB1 = 8, //!<         LTE Cat.NB1
+    AT_URAT_SECONDPREFERREDACT_LTEM1 = 7,      //!<          LTE Cat.M1
+    AT_URAT_SECONDPREFERREDACT_LTENB1 = 8,     //!<         LTE Cat.NB1
     AT_URAT_SECONDPREFERREDACT_GPRS_EGPRS = 9, //!<     GPRS/eGPRS
-    AT_URAT_SECONDPREFERREDACT_INVALID = 255, //!<      Invalid <2ndPreferredAct> value, used to signal that parameter not present
+    AT_URAT_SECONDPREFERREDACT_INVALID = 255,  //!<      Invalid <2ndPreferredAct> value, used to signal that parameter not present
 };
 typedef enum AT_URAT_SecondPreferredAcT_E AT_URAT_SecondPreferredAcT_T;
 
@@ -228,17 +224,16 @@ typedef struct AT_URAT_Param_S AT_URAT_Param_T;
  */
 enum AT_UMNOPROF_Mno_E
 {
-    AT_UMNOPROF_MNO_DEFAULT = 0, //!<   SW default (MNO not set, may hinder registration)
-    AT_UMNOPROF_MNO_SIM = 1, //!<       Select SIM ICCID
-    AT_UMNOPROF_MNO_ATT = 2, //!<       Select AT&T
-    AT_UMNOPROF_MNO_VERIZON = 3, //!<   Select Verizon
-    AT_UMNOPROF_MNO_TELSTRA = 4, //!<   Select Telstra
-    AT_UMNOPROF_MNO_TMO = 5, //!<       Select T-Mobile (US)
-    AT_UMNOPROF_MNO_CT = 6, //!<        China Telecom
+    AT_UMNOPROF_MNO_DEFAULT = 0,  //!<   SW default (MNO not set, may hinder registration)
+    AT_UMNOPROF_MNO_SIM = 1,      //!<       Select SIM ICCID
+    AT_UMNOPROF_MNO_ATT = 2,      //!<       Select AT&T
+    AT_UMNOPROF_MNO_VERIZON = 3,  //!<   Select Verizon
+    AT_UMNOPROF_MNO_TELSTRA = 4,  //!<   Select Telstra
+    AT_UMNOPROF_MNO_TMO = 5,      //!<       Select T-Mobile (US)
+    AT_UMNOPROF_MNO_CT = 6,       //!<        China Telecom
     AT_UMNOPROF_MNO_INVALID = 255 //!<  Invalid <MNO> value, used to signal that parameter not present
 };
 typedef enum AT_UMNOPROF_Mno_E AT_UMNOPROF_Mno_T;
-
 
 /**
  * @brief u-blox specific <MNO> parameter settings for the AT+UMNOPROF command.
@@ -246,63 +241,65 @@ typedef enum AT_UMNOPROF_Mno_E AT_UMNOPROF_Mno_T;
 enum AT_ULSTFILE_Opcode_E
 {
     AT_ULSTFILE_OPCODE_DEFAULT = 0,  //!<  default (list a files for a given tag)
-	AT_ULSTFILE_OPCODE_FREE = 1,     //!<  get free space for a given tag
-	AT_ULSTFILE_OPCODE_SIZE = 2,     //!<  get size of a given tag
-	AT_ULSTFILE_OPCODE_INVALID = 255 //!<  Invalid <OPCODE> value, used to signal that parameter not present
+    AT_ULSTFILE_OPCODE_FREE = 1,     //!<  get free space for a given tag
+    AT_ULSTFILE_OPCODE_SIZE = 2,     //!<  get size of a given tag
+    AT_ULSTFILE_OPCODE_INVALID = 255 //!<  Invalid <OPCODE> value, used to signal that parameter not present
 };
 typedef enum AT_ULSTFILE_Opcode_E AT_ULSTFILE_Opcode_T;
 
 struct AT_ULSTFILE_Param_S
 {
-	AT_ULSTFILE_Opcode_T opcode;
-	const char * filename;
-	uint32_t filesize;
+    AT_ULSTFILE_Opcode_T opcode;
+    const char *filename;
+    uint32_t filesize;
 };
 typedef struct AT_ULSTFILE_Param_S AT_ULSTFILE_Param_T;
 
 struct AT_URDBLOCK_Param_S
 {
-	const char * filename;
-	uint32_t offset;
-	uint32_t length;
-	uint8_t * buffer;
+    const char *Filename;
+    uint32_t Offset;
+    uint32_t Size;
 };
 typedef struct AT_URDBLOCK_Param_S AT_URDBLOCK_Param_T;
 
+struct AT_URDBLOCK_Resp_S
+{
+    char Filename[UBLOX_MAX_FILE_NAME_LENGTH + 1];
+    uint32_t Size;
+    uint8_t *Data;
+};
+typedef struct AT_URDBLOCK_Resp_S AT_URDBLOCK_Resp_T;
+
 struct AT_URDFILE_Param_S
 {
-	const char * filename;
-	uint32_t filesize;
-	uint8_t * buffer;
+    const char *filename;
+    uint32_t filesize;
+    uint8_t *buffer;
 };
 typedef struct AT_URDFILE_Param_S AT_URDFILE_Param_T;
 
-
 struct AT_UDWNFILE_Param_S
 {
-	const char * filename;
-	uint32_t filesize;
-	uint8_t * buffer;
+    const char *filename;
+    uint32_t filesize;
+    const uint8_t *buffer;
 };
 typedef struct AT_UDWNFILE_Param_S AT_UDWNFILE_Param_T;
 
 struct AT_UDELFILE_Param_S
 {
-	const char * filename;
+    const char *filename;
 };
 typedef struct AT_UDELFILE_Param_S AT_UDELFILE_Param_T;
-
-
-
-
 
 /**
  * @brief u-blox specific <protocol> parameter for the AT+USOCR command.
  */
 enum AT_USOCR_Protocol_E
 {
-    AT_USOCR_PROTOCOL_TCP = 6, //!<         TCP protocol
-    AT_USOCR_PROTOCOL_UDP = 17, //!<        UDP protocol
+    AT_USOCR_PROTOCOL_TCP = 6,      //!<         TCP protocol
+    AT_USOCR_PROTOCOL_UDP = 17,     //!<        UDP protocol
     AT_USOCR_PROTOCOL_INVALID = 255 //!<    Invalid <protocol> value, used to signal that parameter not present
 };
 typedef enum AT_USOCR_Protocol_E AT_USOCR_Protocol_T;
@@ -335,8 +332,7 @@ typedef enum AT_UBlox_AddressType_E AT_UBlox_AddressType_T;
 struct AT_UBlox_Address_S
 {
     AT_UBlox_AddressType_T Type;
-    union
-    {
+    union {
         uint8_t IPv4[4];
         uint16_t IPv6[8];
     } Address;
@@ -372,8 +368,8 @@ typedef struct AT_USOCO_Param_S AT_USOCO_Param_T;
  */
 enum AT_UBlox_PayloadEncoding_E
 {
-    AT_UBLOX_PAYLOADENCODING_BASE, //!<     Normal ASCII strings only. Some characters are forbidden.
-    AT_UBLOX_PAYLOADENCODING_HEX, //!<      Encode the payload in ASCII HEX. So { 0x12, 0x34, 0x56 } becomes the C-string "123456".
+    AT_UBLOX_PAYLOADENCODING_BASE,   //!<     Normal ASCII strings only. Some characters are forbidden.
+    AT_UBLOX_PAYLOADENCODING_HEX,    //!<      Encode the payload in ASCII HEX. So { 0x12, 0x34, 0x56 } becomes the C-string "123456".
     AT_UBLOX_PAYLOADENCODING_BINARY, //!<   Send the payload in raw binary using special out-of-AT mode.
     AT_UBLOX_PAYLOADENCODING_INVALID //!<   Invalid payload encoding scheme.
 };
@@ -410,7 +406,7 @@ struct AT_USOWR_Param_S
      * taken by the caller that the Data buffer does not contain any illegal
      * characters.
      */
-    const uint8_t* Data;
+    const uint8_t *Data;
 };
 typedef struct AT_USOWR_Param_S AT_USOWR_Param_T;
 
@@ -472,7 +468,7 @@ struct AT_USOST_Param_S
      * taken by the caller that the Data buffer does not contain any illegal
      * characters.
      */
-    const uint8_t* Data;
+    const uint8_t *Data;
 };
 typedef struct AT_USOST_Param_S AT_USOST_Param_T;
 
@@ -543,7 +539,7 @@ struct AT_USORD_Resp_S
      * buffer must be at least twice the length given in the
      * #AT_USORD_Param_T::Length field.
      */
-    uint8_t* Data;
+    uint8_t *Data;
 };
 typedef struct AT_USORD_Resp_S AT_USORD_Resp_T;
 
@@ -607,7 +603,7 @@ struct AT_USORF_Resp_S
      * buffer must be at least twice the length given in the
      * #AT_USORF_Param_T::Length field.
      */
-    uint8_t* Data;
+    uint8_t *Data;
 };
 typedef struct AT_USORF_Resp_S AT_USORF_Resp_T;
 
@@ -645,7 +641,7 @@ typedef struct AT_USOCL_Param_S AT_USOCL_Param_T;
  */
 enum AT_UDCONF_Config_E
 {
-    AT_UDCONF_CONFIG_HEXMODE = 1, //!<   Enable/disable HEX-mode for +USOWR, +USOST, +USORD, +USORF.
+    AT_UDCONF_CONFIG_HEXMODE = 1,   //!<   Enable/disable HEX-mode for +USOWR, +USOST, +USORD, +USORF.
     AT_UDCONF_CONFIG_INVALID = 255, //!< Invalid <config> parameter.
 };
 typedef enum AT_UDCONF_Config_E AT_UDCONF_Config_T;
@@ -667,7 +663,7 @@ struct AT_UDCONF_Param_S
      * @note When reading a value from the modem, this parameter must point to
      * a valid data structure to hold the result.
      */
-    void* Value;
+    void *Value;
 };
 typedef struct AT_UDCONF_Param_S AT_UDCONF_Param_T;
 
@@ -676,8 +672,8 @@ typedef struct AT_UDCONF_Param_S AT_UDCONF_Param_T;
  */
 enum AT_CCID_Type_E
 {
-    AT_CCID_TYPE_19CHAR = 19, //!<  Used for ICCIDs with length of 19 chars
-    AT_CCID_TYPE_20CHAR = 20, //!<  Used for ICCIDs with length of 20 chars
+    AT_CCID_TYPE_19CHAR = 19,  //!<  Used for ICCIDs with length of 19 chars
+    AT_CCID_TYPE_20CHAR = 20,  //!<  Used for ICCIDs with length of 20 chars
     AT_CCID_TYPE_INVALID = 255 //!< Invalid ICCID type.
 };
 typedef enum AT_CCID_Type_E AT_CCID_Type_T;
@@ -699,7 +695,7 @@ enum AT_UDNSRN_ResolutionType_E
 {
     AT_UDNSRN_RESOLUTIONTYPE_DOMAINTOIP = 0, //!<   Domain to IP address
     AT_UDNSRN_RESOLUTIONTYPE_IPTODOMAIN = 1, //!<   IP address to domain name (host by name)
-    AT_UDNSRN_RESOLUTIONTYPE_INVALID = 255 //!<     Invalid <resolution_type> parameter.
+    AT_UDNSRN_RESOLUTIONTYPE_INVALID = 255   //!<     Invalid <resolution_type> parameter.
 };
 typedef enum AT_UDNSRN_ResolutionType_E AT_UDNSRN_ResolutionType_T;
 
@@ -709,10 +705,9 @@ typedef enum AT_UDNSRN_ResolutionType_E AT_UDNSRN_ResolutionType_T;
 struct AT_UDNSRN_Param_S
 {
     AT_UDNSRN_ResolutionType_T ResolutionType;
-    union
-    {
-        const char* Domain;
-        const AT_UBlox_Address_T* Ip;
+    union {
+        const char *Domain;
+        const AT_UBlox_Address_T *Ip;
     } DomainIpString;
 };
 typedef struct AT_UDNSRN_Param_S AT_UDNSRN_Param_T;
@@ -722,8 +717,7 @@ typedef struct AT_UDNSRN_Param_S AT_UDNSRN_Param_T;
  */
 struct AT_UDNSRN_Resp_S
 {
-    union
-    {
+    union {
         char Domain[UBLOX_MAX_DNS_DOMAIN_NAME_LENGTH + 1]; /* zero-terminated */
         AT_UBlox_Address_T Ip;
     } DomainIpString;
@@ -735,9 +729,9 @@ typedef struct AT_UDNSRN_Resp_S AT_UDNSRN_Resp_T;
  */
 enum AT_UBANDMASK_Rat_E
 {
-    AT_UBANDMASK_RAT_LTECATM1 = 0, //!< Control the Radio Access Technology LTE Cat M1
-    AT_UBANDMASK_RAT_LTECATNB1 = 1,//!< Control the Radio Access Technology LTE Cat NB1
-    AT_UBANDMASK_RAT_INVALID = 255 //!< Invalid <RAT> value.
+    AT_UBANDMASK_RAT_LTECATM1 = 0,  //!< Control the Radio Access Technology LTE Cat M1
+    AT_UBANDMASK_RAT_LTECATNB1 = 1, //!< Control the Radio Access Technology LTE Cat NB1
+    AT_UBANDMASK_RAT_INVALID = 255  //!< Invalid <RAT> value.
 };
 typedef enum AT_UBANDMASK_Rat_E AT_UBANDMASK_Rat_T;
 
@@ -768,20 +762,32 @@ typedef struct AT_UBANDMASK_Param_S AT_UBANDMASK_Param_T;
 
 /* *** RADIO CONFIGURATION ************************************************** */
 
+Retcode_T At_Set_UHTTP(const AT_UHTTP_Param_T *param);
 
-Retcode_T At_Set_UHTTP(const AT_UHTTP_Param_T * param);
+Retcode_T At_Set_UHTTPC(const AT_UHTTPC_Param_T *param);
 
-Retcode_T At_Set_UHTTPC(const AT_UHTTPC_Param_T* param);
+Retcode_T At_Set_UDWNFILE(const AT_UDWNFILE_Param_T *param);
 
-Retcode_T At_Set_UDWNFILE(AT_UDWNFILE_Param_T*param);
+Retcode_T At_Set_UDELFILE(const AT_UDELFILE_Param_T *param);
 
-Retcode_T At_Set_UDELFILE(AT_UDELFILE_Param_T*param);
+Retcode_T At_Set_ULSTFILE(AT_ULSTFILE_Param_T *param);
 
-Retcode_T At_Set_ULSTFILE(AT_ULSTFILE_Param_T*param);
+/**
+ * @brief Read a block of data from a file on the modem internal flash.
+ *
+ * @param[in] param
+ * Block-read parameters to be used.
+ *
+ * @param[in,out] resp
+ * Will contain read response. Please provide a valid Data buffer within the
+ * response structure into which data can be written. The length of that buffer
+ * has to match the length requested in the #AT_URDBLOCK_Param_T structure.
+ *
+ * @return A #Retcode_T indicating the result of the requested action.
+ */
+Retcode_T At_Set_URDBLOCK(const AT_URDBLOCK_Param_T *param, AT_URDBLOCK_Resp_T* resp);
 
-Retcode_T At_Set_URDBLOCK(AT_URDBLOCK_Param_T* param);
-
-Retcode_T At_Set_URDFILE(AT_URDFILE_Param_T* param);
+Retcode_T At_Set_URDFILE(AT_URDFILE_Param_T *param);
 
 /**
  * @brief Set the forced selection of which RATs to use in the modem
@@ -793,7 +799,7 @@ Retcode_T At_Set_URDFILE(AT_URDFILE_Param_T* param);
  *
  * @return A #Retcode_T indicating the result of the requested action.
  */
-Retcode_T At_Set_URAT(const AT_URAT_Param_T* param);
+Retcode_T At_Set_URAT(const AT_URAT_Param_T *param);
 
 /**
  * @brief Set the MNO (Mobile Network Operator) profile. This will automatically
@@ -819,7 +825,7 @@ Retcode_T At_Set_UMNOPROF(AT_UMNOPROF_Mno_T mno);
  *
  * @return A #Retcode_T indicating the result of the requested action.
  */
-Retcode_T At_Get_UMNOPROF(AT_UMNOPROF_Mno_T* mno);
+Retcode_T At_Get_UMNOPROF(AT_UMNOPROF_Mno_T *mno);
 
 /**
  * @brief Set the 4G LTE bands for different RATs. Each bit in the bitmask
@@ -830,7 +836,7 @@ Retcode_T At_Get_UMNOPROF(AT_UMNOPROF_Mno_T* mno);
  *
  * @return A #Retcode_T indicating the result of the requested action.
  */
-Retcode_T At_Set_UBANDMASK(const AT_UBANDMASK_Param_T* param);
+Retcode_T At_Set_UBANDMASK(const AT_UBANDMASK_Param_T *param);
 
 /* *** SOCKET SERVICE ******************************************************* */
 
@@ -845,7 +851,7 @@ Retcode_T At_Set_UBANDMASK(const AT_UBANDMASK_Param_T* param);
  *
  * @return A #Retcode_T indicating the result of the requested action.
  */
-Retcode_T At_Set_USOCR(const AT_USOCR_Param_T* param, uint32_t* socketId);
+Retcode_T At_Set_USOCR(const AT_USOCR_Param_T *param, uint32_t *socketId);
 
 /**
  * @brief Connect a socket using the u-blox internal TCP/IP stack.
@@ -855,7 +861,7 @@ Retcode_T At_Set_USOCR(const AT_USOCR_Param_T* param, uint32_t* socketId);
  *
  * @return A #Retcode_T indicating the result of the requested action.
  */
-Retcode_T At_Set_USOCO(const AT_USOCO_Param_T* param);
+Retcode_T At_Set_USOCO(const AT_USOCO_Param_T *param);
 
 /**
  * @brief Send data over an already connected socket. This command also works
@@ -869,7 +875,7 @@ Retcode_T At_Set_USOCO(const AT_USOCO_Param_T* param);
  *
  * @return A #Retcode_T indicating the result of the requested action.
  */
-Retcode_T At_Set_USOWR(const AT_USOWR_Param_T* param, AT_USOWR_Resp_T* resp);
+Retcode_T At_Set_USOWR(const AT_USOWR_Param_T *param, AT_USOWR_Resp_T *resp);
 
 /**
  * @brief Send data over a UDP socket. This command only works
@@ -883,7 +889,7 @@ Retcode_T At_Set_USOWR(const AT_USOWR_Param_T* param, AT_USOWR_Resp_T* resp);
  *
  * @return A #Retcode_T indicating the result of the requested action.
  */
-Retcode_T At_Set_USOST(const AT_USOST_Param_T* param, AT_USOST_Resp_T* resp);
+Retcode_T At_Set_USOST(const AT_USOST_Param_T *param, AT_USOST_Resp_T *resp);
 
 /**
  * @brief Read data from an already connected socket. This command also works
@@ -903,7 +909,7 @@ Retcode_T At_Set_USOST(const AT_USOST_Param_T* param, AT_USOST_Resp_T* resp);
  *
  * @return A #Retcode_T indicating the result of the requested action.
  */
-Retcode_T At_Set_USORD(const AT_USORD_Param_T* param, AT_USORD_Resp_T* resp);
+Retcode_T At_Set_USORD(const AT_USORD_Param_T *param, AT_USORD_Resp_T *resp);
 
 /**
  * @brief Read data from a UDP socket. Similar to #At_Set_USORD but including
@@ -919,7 +925,7 @@ Retcode_T At_Set_USORD(const AT_USORD_Param_T* param, AT_USORD_Resp_T* resp);
  *
  * @return A #Retcode_T indicating the result of the requested action.
  */
-Retcode_T At_Set_USORF(const AT_USORF_Param_T* param, AT_USORF_Resp_T* resp);
+Retcode_T At_Set_USORF(const AT_USORF_Param_T *param, AT_USORF_Resp_T *resp);
 
 /**
  * @brief Set an already created socket in listening mode and wait for incoming
@@ -934,7 +940,7 @@ Retcode_T At_Set_USORF(const AT_USORF_Param_T* param, AT_USORF_Resp_T* resp);
  *
  * @return A #Retcode_T indicating the result of the requested action.
  */
-Retcode_T At_Set_USOLI(const AT_USOLI_Param_T* param);
+Retcode_T At_Set_USOLI(const AT_USOLI_Param_T *param);
 
 /**
  * @brief Close an open socket inside the u-blox internal TCP/IP stack..
@@ -944,7 +950,7 @@ Retcode_T At_Set_USOLI(const AT_USOLI_Param_T* param);
  *
  * @return A #Retcode_T indicating the result of the requested action.
  */
-Retcode_T At_Set_USOCL(const AT_USOCL_Param_T* param);
+Retcode_T At_Set_USOCL(const AT_USOCL_Param_T *param);
 
 /**
  * @brief Set general purpose config parameters.
@@ -954,7 +960,7 @@ Retcode_T At_Set_USOCL(const AT_USOCL_Param_T* param);
  *
  * @return A #Retcode_T indicating the result of the requested action.
  */
-Retcode_T At_Set_UDCONF(const AT_UDCONF_Param_T* param);
+Retcode_T At_Set_UDCONF(const AT_UDCONF_Param_T *param);
 
 /**
  * @brief Get general purpose config parameters.
@@ -964,7 +970,7 @@ Retcode_T At_Set_UDCONF(const AT_UDCONF_Param_T* param);
  *
  * @return A #Retcode_T indicating the result of the requested action.
  */
-Retcode_T At_Get_UDCONF(AT_UDCONF_Param_T* param);
+Retcode_T At_Get_UDCONF(AT_UDCONF_Param_T *param);
 
 /* *** SIM SERVICE ********************************************************** */
 
@@ -978,7 +984,7 @@ Retcode_T At_Get_UDCONF(AT_UDCONF_Param_T* param);
  *
  * @return A #Retcode_T indicating the result of the requested action.
  */
-Retcode_T At_Get_CCID(AT_CCID_Resp_T* resp);
+Retcode_T At_Get_CCID(AT_CCID_Resp_T *resp);
 
 /* *** DNS SERVICE ********************************************************** */
 
@@ -994,8 +1000,7 @@ Retcode_T At_Get_CCID(AT_CCID_Resp_T* resp);
  *
  * @return A #Retcode_T indicating the result of the requested action.
  */
-Retcode_T At_Set_UDNSRN(const AT_UDNSRN_Param_T* param, AT_UDNSRN_Resp_T* resp);
-
+Retcode_T At_Set_UDNSRN(const AT_UDNSRN_Param_T *param, AT_UDNSRN_Resp_T *resp);
 
 /**
  * @brief Configures the test mode of the ublox module

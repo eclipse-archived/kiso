@@ -12,7 +12,6 @@
 *
 ********************************************************************************/
 
-
 /**
  * @file
  *
@@ -46,53 +45,51 @@
 /**
  * @brief Number of bytes per chunk with which we read the receive buffer
  */
-#define CELLULAR_RX_READ_BUFFER_SIZE  (UINT32_C(128))
+#define CELLULAR_RX_READ_BUFFER_SIZE (UINT32_C(128))
 
 /**
  * @brief The number of times we wait for a free RX line before sending
  */
-#define CELLULAR_SEND_AT_COMMAND_WAIT_TIME     (UINT32_C(1000) / portTICK_PERIOD_MS)
+#define CELLULAR_SEND_AT_COMMAND_WAIT_TIME (UINT32_C(1000) / portTICK_PERIOD_MS)
 
 /**
  * @brief The time until we check again when the last character was received
  */
-#define CELLULAR_RESPONSE_QUEUE_WAIT_TIME      (UINT32_C(25) / portTICK_PERIOD_MS)
+#define CELLULAR_RESPONSE_QUEUE_WAIT_TIME (UINT32_C(25) / portTICK_PERIOD_MS)
 
+static StaticSemaphore_t AtResponseParser_RxWakeupBuffer;        //!< Semaphore storage for rx data ready signalling
+static SemaphoreHandle_t AtResponseParser_RxWakeupHandle = NULL; //!< Handle for rx data ready semaphore
 
-static StaticSemaphore_t AtResponseParser_RxWakeupBuffer;   //!< Semaphore storage for rx data ready signalling
-static SemaphoreHandle_t AtResponseParser_RxWakeupHandle = NULL;  //!< Handle for rx data ready semaphore
+static StaticSemaphore_t CellularDriver_TxWakeupBuffer;        //!< Semaphore storage for tx data sent signalling
+static SemaphoreHandle_t CellularDriver_TxWakeupHandle = NULL; //!< Handle for tx data sent semaphore
 
-static StaticSemaphore_t CellularDriver_TxWakeupBuffer;     //!< Semaphore storage for tx data sent signalling
-static SemaphoreHandle_t CellularDriver_TxWakeupHandle = NULL;  //!< Handle for tx data sent semaphore
+static StaticTask_t AtResponseParser_TaskBuffer;                              //!< static task allocation for Response parser task
+static StackType_t AtResponseParser_TaskStack[CELLULAR_RESP_TASK_STACK_SIZE]; //!< Stack allocation for response parser
+static TaskHandle_t AtResponseParser_TaskHandle = NULL;                       //!< Task handle of static response parser task
 
-static StaticTask_t AtResponseParser_TaskBuffer;            //!< static task allocation for Response parser task
-static StackType_t  AtResponseParser_TaskStack[CELLULAR_RESP_TASK_STACK_SIZE]; //!< Stack allocation for response parser
-static TaskHandle_t AtResponseParser_TaskHandle = NULL;     //!< Task handle of static response parser task
+static StaticTask_t CellularDriver_TaskBuffer;                             //!< static task allocation for cellular driver task
+static StackType_t CellularDriver_TaskStack[CELLULAR_DRV_TASK_STACK_SIZE]; //!< stack for cellular driver task
+static TaskHandle_t CellularDriver_TaskHandle = NULL;                      //!< handle to cellular driver task
 
+static UART_T CellularSerialDevice = (UART_T)NULL; //!< handle to the MCU essentials serial device
 
-static StaticTask_t CellularDriver_TaskBuffer;            //!< static task allocation for cellular driver task
-static StackType_t  CellularDriver_TaskStack[CELLULAR_DRV_TASK_STACK_SIZE];  //!< stack for cellular driver task
-static TaskHandle_t CellularDriver_TaskHandle = NULL;     //!< handle to cellular driver task
+static bool IsFlukeFilterEnabled = false; //!< state of fluke filter
 
-static UART_T CellularSerialDevice = (UART_T) NULL;       //!< handle to the MCU essentials serial device
+static StaticSemaphore_t CellularDriver_RequestBuffer;      //!< static semaphore buffer for cellular request locks
+static SemaphoreHandle_t CellularDriver_RequestLock = NULL; //!< handle for semaphore request locks
 
-static bool IsFlukeFilterEnabled = false;                 //!< state of fluke filter
+static Cellular_State_T State = CELLULAR_STATE_POWEROFF; //!< Cellular driver state context
+static Cellular_StateChanged_T OnStateChanged = NULL;    //!< dirty flag for state handling
 
-static StaticSemaphore_t CellularDriver_RequestBuffer;    //!< static semaphore buffer for cellular request locks
-static SemaphoreHandle_t CellularDriver_RequestLock = NULL;  //!< handle for semaphore request locks
-
-static Cellular_State_T State = CELLULAR_STATE_POWEROFF;  //!< Cellular driver state context
-static Cellular_StateChanged_T OnStateChanged = NULL;     //!< dirty flag for state handling
-
-static bool EchoModeEnabled = true;                       //!< state of modem echo mode (on/off)
+static bool EchoModeEnabled = true; //!< state of modem echo mode (on/off)
 
 static RingBuffer_T UartRxBufDescr;                       //!< RingBuffer instance for rx data reception
 static uint8_t UartRxReadBuffer[CELLULAR_RX_BUFFER_SIZE]; //!< physical storage of the ring buffer
 static uint8_t UartRxByte;                                //!< single byte rx buffer
 
-char Engine_AtSendBuffer[CELLULAR_AT_SEND_BUFFER_SIZE];   //!< At engine TX buffer
+char Engine_AtSendBuffer[CELLULAR_AT_SEND_BUFFER_SIZE]; //!< At engine TX buffer
 
-static Retcode_T ReadData(uint8_t* data, uint32_t dataLength, uint32_t* dataRead)
+static Retcode_T ReadData(uint8_t *data, uint32_t dataLength, uint32_t *dataRead)
 {
     if ((NULL == data) || (NULL == dataRead))
     {
@@ -112,14 +109,14 @@ static void HandleMcuIsrCallback(UART_T uart, struct MCU_UART_Event_S event)
     {
         /* all bytes have been transmitted, signal semaphore */
         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-        (void) xSemaphoreGiveFromISR(CellularDriver_TxWakeupHandle, &xHigherPriorityTaskWoken);
+        (void)xSemaphoreGiveFromISR(CellularDriver_TxWakeupHandle, &xHigherPriorityTaskWoken);
         portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
     }
 
     if (event.RxComplete)
     {
         uint32_t bytesWritten = RingBuffer_Write(&UartRxBufDescr, &UartRxByte, UINT32_C(1));
-        if(UINT32_C(1) != bytesWritten)
+        if (UINT32_C(1) != bytesWritten)
         {
             Retcode_RaiseErrorFromIsr(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES));
             return;
@@ -129,28 +126,68 @@ static void HandleMcuIsrCallback(UART_T uart, struct MCU_UART_Event_S event)
         {
             //-- Wake up task to trigger AT command response parser
             BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-            (void) xSemaphoreGiveFromISR(AtResponseParser_RxWakeupHandle, &xHigherPriorityTaskWoken);
+            (void)xSemaphoreGiveFromISR(AtResponseParser_RxWakeupHandle, &xHigherPriorityTaskWoken);
             portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
         }
     }
 }
+
+#if CELLULAR_ENABLE_TRACING
+static const char *TrimWhitespace(uint8_t *buf, size_t len, size_t *trimmedLen)
+{
+    for (size_t i = 0; i < len; ++i)
+    {
+        if (' ' == buf[i] || '\t' == buf[i] || '\n' == buf[i] || '\r' == buf[i])
+        {
+            buf += 1;
+            len -= 1;
+        }
+        else
+        {
+            break;
+        }
+    }
+
+    *trimmedLen = len;
+    for (size_t i = len; i > 0; --i)
+    {
+        if (' ' != buf[i - 1] && '\t' != buf[i - 1] && '\n' != buf[i - 1] && '\r' != buf[i - 1])
+        {
+            break;
+        }
+        else
+        {
+            (*trimmedLen)--;
+        }
+    }
+
+    return (const char *)buf;
+}
+#endif
 
 static void AtResponseParser_Task(void *param)
 {
     BCDS_UNUSED(param);
 
     uint32_t bytesRead, flukeFreeBytesRead;
-    uint8_t * flukeRxReadBuffer;
+    uint8_t *flukeRxReadBuffer;
     Retcode_T status = RETCODE_OK;
     uint8_t rxReadBuffer[CELLULAR_RX_READ_BUFFER_SIZE];
 
     while (1)
     {
         // wait for the RX IRQ to wake us up
-        (void) xSemaphoreTake(AtResponseParser_RxWakeupHandle, portMAX_DELAY);
+        (void)xSemaphoreTake(AtResponseParser_RxWakeupHandle, portMAX_DELAY);
 
         while (1)
         {
+#if CELLULAR_ENABLE_TRACING
+            /* We add a delay to hopefully grab a bigger chunk of data.
+             * Better tracability but we could lose some bytes if we wait too
+             * long.
+             */
+            vTaskDelay(50);
+#endif
             status = ReadData(rxReadBuffer, sizeof(rxReadBuffer), &bytesRead);
             if ((RETCODE_OK != status) || (UINT32_C(0) == bytesRead))
             {
@@ -165,18 +202,22 @@ static void AtResponseParser_Task(void *param)
                 flukeRxReadBuffer = rxReadBuffer;
                 flukeFreeBytesRead = bytesRead;
             }
-            //LOG_DEBUG("Cellular-COM [%d]: %.*s", (int) flukeFreeBytesRead, (int) flukeFreeBytesRead, flukeRxReadBuffer);
-            (void) AtResponseParser_Parse(flukeRxReadBuffer, flukeFreeBytesRead);
+#if CELLULAR_ENABLE_TRACING
+            size_t traceLen = 0;
+            const char *trace = TrimWhitespace(flukeRxReadBuffer, flukeFreeBytesRead, &traceLen);
+            if (traceLen)
+                LOG_DEBUG("Cellular-COM [%d]: %.*s", traceLen, traceLen, trace);
+#endif
+            (void)AtResponseParser_Parse(flukeRxReadBuffer, flukeFreeBytesRead);
         }
 
         if (RETCODE_OK != status)
         {
-            LOG_ERROR("Error during Cellular response handling (0x%08x), resetting response parser!", (int) status);
+            LOG_ERROR("Error during Cellular response handling (0x%08x), resetting response parser!", (int)status);
             AtResponseParser_Reset();
         }
     }
 }
-
 
 static void CellularDriver_Task(void *param)
 {
@@ -186,14 +227,14 @@ static void CellularDriver_Task(void *param)
     {
         /* wait for any event */
         AtResponseQueueEntry_T *event;
-        (void) AtResponseQueue_GetEvent(portMAX_DELAY, &event);
+        (void)AtResponseQueue_GetEvent(portMAX_DELAY, &event);
 
-        (void) xSemaphoreTake(CellularDriver_RequestLock, portMAX_DELAY);
+        (void)xSemaphoreTake(CellularDriver_RequestLock, portMAX_DELAY);
         /* handle urc events */
-        (void) Engine_HandleEvents();
+        (void)Engine_HandleEvents();
         /* check if socket data bytes available for reading */
-//        CellularSocket_NotifyDataReceived();
-        (void) xSemaphoreGive(CellularDriver_RequestLock);
+        //        CellularSocket_NotifyDataReceived();
+        (void)xSemaphoreGive(CellularDriver_RequestLock);
     }
 }
 
@@ -207,7 +248,7 @@ Retcode_T Engine_HandleEvents(void)
     {
         for (uint32_t i = 0; i < count; i++)
         {
-            AtResponseQueueEntry_T* event;
+            AtResponseQueueEntry_T *event;
 #if BCDS_LOGGING
             if (RETCODE_OK == AtResponseQueue_GetEvent(0, &event))
             {
@@ -223,7 +264,7 @@ Retcode_T Engine_HandleEvents(void)
                     LOG_WARNING("Removing COMMAND_ARG-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer);
                     break;
                 case AT_EVENT_TYPE_RESPONSE_CODE:
-                    LOG_WARNING("Removing RESPONSE_CODE-event (%d) from AtResponseQueue!", (int) event->ResponseCode);
+                    LOG_WARNING("Removing RESPONSE_CODE-event (%d) from AtResponseQueue!", (int)event->ResponseCode);
                     break;
                 case AT_EVENT_TYPE_MISC:
                     LOG_WARNING("Removing MISC-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer);
@@ -236,15 +277,10 @@ Retcode_T Engine_HandleEvents(void)
                     break;
                 }
             }
-            else
-            {
-                LOG_WARNING("Removing unknown unhandled event from AtResponseQueue!");
-            }
 #endif
             AtResponseQueue_MarkBufferAsUnused();
 
-            if (RETCODE_OK != AtResponseQueue_GetEvent(0, &event)
-                    || AT_EVENT_TYPE_COMMAND == event->Type)
+            if (RETCODE_OK != AtResponseQueue_GetEvent(0, &event) || AT_EVENT_TYPE_COMMAND == event->Type)
             {
                 break;
             }
@@ -298,7 +334,6 @@ Retcode_T Engine_Initialize(Cellular_StateChanged_T onStateChanged)
         return status;
     }
 
-
     Engine_SetFlukeCharFilterEnabled(false);
     AtResponseQueue_RegisterWithResponseParser();
 
@@ -319,7 +354,7 @@ Retcode_T Engine_Initialize(Cellular_StateChanged_T onStateChanged)
     return RETCODE_OK;
 }
 
-Retcode_T Engine_SendAtCommand(const uint8_t* buffer, uint32_t bufferLength)
+Retcode_T Engine_SendAtCommand(const uint8_t *buffer, uint32_t bufferLength)
 {
     Retcode_T ret = RETCODE_OK;
     if (NULL == buffer)
@@ -327,15 +362,15 @@ Retcode_T Engine_SendAtCommand(const uint8_t* buffer, uint32_t bufferLength)
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
 
-    if ((UART_T) 0 == CellularSerialDevice)
+    if ((UART_T)0 == CellularSerialDevice)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNINITIALIZED);
     }
 
     /* ensure the semaphore is NOT signaled as we begin to send */
-    (void) xSemaphoreTake(CellularDriver_TxWakeupHandle, 0);
+    (void)xSemaphoreTake(CellularDriver_TxWakeupHandle, 0);
 
-    ret = MCU_UART_Send(CellularSerialDevice, (uint8_t*) buffer, bufferLength);
+    ret = MCU_UART_Send(CellularSerialDevice, (uint8_t *)buffer, bufferLength);
     if (RETCODE_OK != ret)
     {
         return ret;
@@ -349,20 +384,20 @@ Retcode_T Engine_SendAtCommand(const uint8_t* buffer, uint32_t bufferLength)
 
     /* wait for any response */
     AtResponseQueueEntry_T *entry;
-    (void) AtResponseQueue_GetEvent(CELLULAR_RESPONSE_QUEUE_WAIT_TIME, &entry);
+    (void)AtResponseQueue_GetEvent(CELLULAR_RESPONSE_QUEUE_WAIT_TIME, &entry);
 
     /* handle URC responses */
-    (void) Urc_HandleResponses();
+    (void)Urc_HandleResponses();
 
     return RETCODE_OK;
 }
 
-Retcode_T Engine_SendAtCommandWaitEcho(const uint8_t* buffer, uint32_t bufferLength, uint32_t timeout)
+Retcode_T Engine_SendAtCommandWaitEcho(const uint8_t *buffer, uint32_t bufferLength, uint32_t timeout)
 {
     Retcode_T retcode = Engine_SendAtCommand(buffer, bufferLength);
     if (RETCODE_OK != retcode)
     {
-        LOG_ERROR("Failed to send command: %x", (unsigned int) retcode);
+        LOG_ERROR("Failed to send command: %x", (unsigned int)retcode);
         return retcode;
     }
 
@@ -382,7 +417,7 @@ void Engine_SetFlukeCharFilterEnabled(bool value)
     IsFlukeFilterEnabled = value;
 }
 
-void Engine_NotifyNewState(Cellular_State_T newState, void* param, uint32_t len)
+void Engine_NotifyNewState(Cellular_State_T newState, void *param, uint32_t len)
 {
     assert(NULL != OnStateChanged);
     if (newState != State)
@@ -394,7 +429,7 @@ void Engine_NotifyNewState(Cellular_State_T newState, void* param, uint32_t len)
     }
 }
 
-Retcode_T Engine_Dispatch(CellularRequest_CallableFunction_T function, uint32_t timeout, void* parameter, uint32_t ParameterLength)
+Retcode_T Engine_Dispatch(CellularRequest_CallableFunction_T function, uint32_t timeout, void *parameter, uint32_t ParameterLength)
 {
     if (NULL == function)
     {
@@ -408,12 +443,12 @@ Retcode_T Engine_Dispatch(CellularRequest_CallableFunction_T function, uint32_t 
 
     if (pdPASS != xSemaphoreTake(CellularDriver_RequestLock, timeout))
     {
-        LOG_ERROR("Unable to get lock within %d ms, driver is busy", (int) timeout);
+        LOG_ERROR("Unable to get lock within %d ms, driver is busy", (int)timeout);
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_DRIVER_BUSY);
     }
 
     Retcode_T retcode = function(parameter, ParameterLength);
-    (void) xSemaphoreGive(CellularDriver_RequestLock);
+    (void)xSemaphoreGive(CellularDriver_RequestLock);
 
     return retcode;
 }
@@ -428,9 +463,9 @@ Retcode_T Engine_Deinitialize(void)
     Retcode_T ret = RETCODE_OK;
 
     assert(NULL != CellularDriver_RequestLock &&
-            NULL != AtResponseParser_RxWakeupHandle &&
-            NULL != CellularDriver_TxWakeupHandle &&
-            NULL != OnStateChanged);
+           NULL != AtResponseParser_RxWakeupHandle &&
+           NULL != CellularDriver_TxWakeupHandle &&
+           NULL != OnStateChanged);
 
     vSemaphoreDelete(CellularDriver_RequestLock);
     CellularDriver_RequestLock = NULL;

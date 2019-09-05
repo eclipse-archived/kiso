@@ -153,7 +153,6 @@ static Retcode_T AsyncRecorder_Deinit(void *self)
 static Retcode_T AsyncRecorder_Write(void *self, LogLevel_T level, uint8_t package, uint8_t module, const char *file, uint32_t line, const char *fmt, va_list args)
 {
     char buffer[LOG_BUFFER_SIZE];
-    int32_t size = 0;
     BCDS_UNUSED(module);
     BCDS_UNUSED(self);
 

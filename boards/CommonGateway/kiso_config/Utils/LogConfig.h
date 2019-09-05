@@ -44,11 +44,11 @@
 #if BCDS_ASYNC_RECORDER == 1
 #define LOG_BUFFER_SIZE             (UINT16_C(256))
 #define LOG_QUEUE_BUFFER_SIZE       (UINT16_C(2048))
-#define LOG_TASK_STACK_SIZE         (UINT16_C(128))
+#define LOG_TASK_STACK_SIZE         (UINT16_C(256))
 #define LOG_TASK_PRIORITY           (UINT8_C(4))
 
 #define LOG_SYS_CLOCK_DELAY     (10)
-#define LOG_APPENDER_TIMEOUT    (1000)
+#define LOG_APPENDER_TIMEOUT    (50)
 #endif
 
 /* Configuration for the synchronous-recorder (if activated) */

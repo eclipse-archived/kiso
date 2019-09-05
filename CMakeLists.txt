@@ -38,7 +38,7 @@ endif()
 
 ## Check for valid board and include the configuration
 if(NOT DEFINED KISO_BOARD_NAME)
-   message(SEND_ERROR "KISO_BOARD_NAME is a required parameter! Use cmake <...> -D KISO_BOARD_NAME=... to specify.")
+   message(SEND_ERROR "KISO_BOARD_NAME is a required parameter! Use cmake <...> -DKISO_BOARD_NAME=... to specify.")
 elseif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/boards/${KISO_BOARD_NAME}) # Use full path - undefined behavior with relative path
    message(SEND_ERROR "board_config.cmake missing for board ${KISO_BOARD_NAME}")
 else()

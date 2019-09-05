@@ -15,22 +15,20 @@
 #ifndef BCDS_CELLULARHTTPSERVICE_H_
 #define BCDS_CELLULARHTTPSERVICE_H_
 
-
 #include "BCDS_Cellular.h"
 
 #include "BCDS_Basics.h"
 #include "BCDS_Retcode.h"
-
 
 /**
  * @brief Cellular http methods
  */
 enum CellularHttp_Method_E
 {
-    CELLULARHTTP_METHOD_HEAD=0,
-    CELLULARHTTP_METHOD_GET,
-    CELLULARHTTP_METHOD_POST,
-    CELLULARHTTP_METHOD_INVALID=255
+    CELLULAR_HTTP_METHOD_HEAD = 0,
+    CELLULAR_HTTP_METHOD_GET,
+    CELLULAR_HTTP_METHOD_POST,
+    CELLULAR_HTTP_METHOD_INVALID = 255
 };
 typedef enum CellularHttp_Method_E CellularHttp_Method_T;
 
@@ -39,23 +37,22 @@ typedef enum CellularHttp_Method_E CellularHttp_Method_T;
  */
 enum CellularHttp_ContentType_E
 {
-    CELLULARHTTP_CONTENTTYPE_APP_X_WWW_URL  = 0,  //!<    application/x-www-form-urlencoded
-    CELLULARHTTP_CONTENTTYPE_TEXT_PLAIN     = 1,  //!<    text/plain
-    CELLULARHTTP_CONTENTTYPE_APP_OCTET      = 2,  //!<    application/octet-stream
-    CELLULARHTTP_CONTENTTYPE_MULTIPLART     = 3,  //!<    multipart/form-data
-    CELLULARHTTP_CONTENTTYPE_APP_JSON       = 4,  //!<    application/json
-    CELLULARHTTP_CONTENTTYPE_APP_XML        = 5,  //!<    application/xml
+    CELLULAR_HTTP_CONTENTTYPE_APP_X_WWW_URL = 0, //!< application/x-www-form-urlencoded
+    CELLULAR_HTTP_CONTENTTYPE_TEXT_PLAIN = 1,    //!< text/plain
+    CELLULAR_HTTP_CONTENTTYPE_APP_OCTET = 2,     //!< application/octet-stream
+    CELLULAR_HTTP_CONTENTTYPE_MULTIPLART = 3,    //!< multipart/form-data
+    CELLULAR_HTTP_CONTENTTYPE_APP_JSON = 4,      //!< application/json
+    CELLULAR_HTTP_CONTENTTYPE_APP_XML = 5,       //!< application/xml
 };
 typedef enum CellularHttp_ContentType_E CellularHttp_ContentType_T;
-
 
 /**
  * @brief Cellular http result
  */
 enum CellularHttp_Result_E
 {
-    CELLULARHTTP_RESULT_SUCCESS,
-    CELLULARHTTP_RESULT_FAILURE
+    CELLULAR_HTTP_RESULT_SUCCESS,
+    CELLULAR_HTTP_RESULT_FAILURE
 };
 typedef enum CellularHttp_Result_E CellularHttp_Result_T;
 
@@ -66,28 +63,26 @@ typedef void (*CellularHttp_ResultCallback_T)(CellularHttp_Method_T method, Cell
  */
 struct CellularHttp_Data_S
 {
-    uint32_t BufferSize;           //!<    the actual buffer size in bytes
-    uint32_t BufferLength;         //!<    the actual data length in buffer in bytes
-    uint8_t * Buffer;              //!<    the pointer to the buffer of size BufferSize
+    uint32_t BufferSize;   //!< the actual buffer size in bytes
+    uint32_t BufferLength; //!< the current number of bytes stored in the buffer
+    uint8_t *Buffer;       //!< the pointer to the buffer of size BufferSize
 };
 typedef struct CellularHttp_Data_S CellularHttp_Data_T;
-
 
 /**
  * @brief Cellular http request structure
  */
 struct CellularHttp_Request_S
 {
-    CellularHttp_Method_T Method;               //!<   the http method (CellularHttp_Method_E) to be used
-    const uint8_t * Server;                     //!<   server IP address or name server
-    const uint8_t * Path;                       //!<   path of the resource to access
-    uint16_t Port;                              //!<   server port to be used
-    bool IsSecure;                              //!<   use a secure connection
-    CellularHttp_ContentType_T ContentType;     //!<   content type specification (CellularHttp_ContentType_E)
-    CellularHttp_Data_T * Data;                 //!<   cellular data structure (struct CellularHttp_Data_S)
+    CellularHttp_Method_T Method;           //!< the http method (CellularHttp_Method_E) to be used
+    const uint8_t *Server;                  //!< server IP address or name server
+    const uint8_t *Path;                    //!< path of the resource to access
+    uint16_t Port;                          //!< server port to be used
+    bool IsSecure;                          //!< use a secure connection
+    CellularHttp_ContentType_T ContentType; //!< content type specification (CellularHttp_ContentType_E)
+    CellularHttp_Data_T *Data;              //!< cellular data structure (struct CellularHttp_Data_S)
 };
 typedef struct CellularHttp_Request_S CellularHttp_Request_T;
-
 
 /**
  * @brief Initialize http callback to return http events
@@ -106,7 +101,7 @@ Retcode_T CellularHttp_Initialize(CellularHttp_ResultCallback_T callback);
   *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-Retcode_T CellularHttp_SendRequest(CellularHttp_Request_T * httpRequest);
+Retcode_T CellularHttp_SendRequest(const CellularHttp_Request_T *httpRequest);
 
 /**
  * @brief Read the http response on successfull request
@@ -115,7 +110,7 @@ Retcode_T CellularHttp_SendRequest(CellularHttp_Request_T * httpRequest);
   *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-Retcode_T CellularHttp_GetResponse(CellularHttp_Data_T * httpResponse);
+Retcode_T CellularHttp_GetResponse(CellularHttp_Data_T *httpResponse);
 
 /**
  * @brief Read the http response size successfull request
@@ -125,7 +120,5 @@ Retcode_T CellularHttp_GetResponse(CellularHttp_Data_T * httpResponse);
  * @return A #Retcode_T indicating the result of the procedure.
  */
 Retcode_T CellularHttp_GetResponseSize(uint32_t *size);
-
-
 
 #endif /* BCDS_CELLULARHTTPSERVICE_H__ */

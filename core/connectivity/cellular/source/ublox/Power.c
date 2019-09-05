@@ -267,11 +267,6 @@ static Retcode_T StartupCellular(void *parameter, uint32_t parameterLength)
 
         if (RETCODE_OK == cellularIsResponsive)
         {
-            /* Everything fine, modem is responsive! Exit gracefully */
-            LOG_INFO("Cellular hardware powered up!");
-            IsPoweredOn = true;
-            Engine_NotifyNewState(CELLULAR_STATE_POWERON, NULL, 0);
-
             assert(sizeof(Pin) > 0);
             if (NULL != powerUpParam->SimPin)
             {
@@ -283,6 +278,18 @@ static Retcode_T StartupCellular(void *parameter, uint32_t parameterLength)
                 Pin[0] = '\0';
             }
             retcode = Power_SetupModem();
+
+            if (RETCODE_OK == retcode)
+            {
+                /* Everything fine, modem is responsive! Exit gracefully */
+                LOG_INFO("Cellular hardware powered up!");
+                IsPoweredOn = true;
+                Engine_NotifyNewState(CELLULAR_STATE_POWERON, NULL, 0);
+            }
+            else
+            {
+                LOG_ERROR("Cellular power-on-setup failed")
+            }
         }
         else
         {
@@ -291,6 +298,7 @@ static Retcode_T StartupCellular(void *parameter, uint32_t parameterLength)
             IsPoweredOn = false;
             (void) ResetCellular(NULL, 0);
         }
+
     }
     else
     {

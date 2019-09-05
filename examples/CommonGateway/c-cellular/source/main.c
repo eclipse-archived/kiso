@@ -1,0 +1,331 @@
+/*
+ * Copyright (c) 2010-2019 Robert Bosch GmbH
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *     Robert Bosch GmbH - initial contribution
+ */
+
+/**
+ * @file
+ * @brief Implemented first application function main() here.
+ */
+
+#include "AppModules.h"
+#define BCDS_MODULE_ID CGW_APP_MODULE_MAIN
+
+#include "App.h"
+#include "AppConfig.h"
+
+#include "BCDS_Basics.h"
+#include "BCDS_Assert.h"
+#include <stdio.h>
+#include "BCDS_CmdProcessor.h"
+#include "BCDS_Logging.h"
+#include "BSP_CommonGateway.h"
+#include "BCDS_BSP_LED.h"
+#include "BCDS_BSP_Board.h"
+#include "BCDS_HAL_Delay.h"
+
+#include "FreeRTOS.h"
+#include "task.h"
+
+/*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
+
+#undef BCDS_MODULE_ID /* Module ID define before including Basics package*/
+#define BCDS_MODULE_ID CGW_APP_MODULE_ID_MAIN
+
+/*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
+
+Retcode_T SystemStartup(void);
+
+void ErrorHandler(Retcode_T error, bool isfromIsr);
+
+void AssertIndicationMapping(const unsigned long line, const unsigned char *const file);
+
+static void SysTickPreCallback(void);
+
+extern void xPortSysTickHandler(void);
+
+#if (configCHECK_FOR_STACK_OVERFLOW > 0)
+void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName);
+#endif
+
+static Retcode_T Delay(uint32_t delay);
+
+static void PostOsInit(void *param, uint32_t len);
+
+#if configSUPPORT_STATIC_ALLOCATION
+/* static memory allocation for the IDLE task */
+static StaticTask_t IdleTaskTCBBuffer;
+static StackType_t IdleStack[IDLE_TASK_SIZE];
+
+void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize);
+
+#if configUSE_TIMERS
+static StaticTask_t TimerTaskTCBBuffer;
+static StackType_t TimerStack[configTIMER_TASK_STACK_DEPTH];
+
+/* If static allocation is supported then the application must provide the
+   following callback function - which enables the application to optionally
+   provide the memory that will be used by the timer task as the task's stack
+   and TCB. */
+void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize);
+#endif
+#endif
+
+BCDS_UNUSED_FUNC(static void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress));
+
+BCDS_UNUSED_FUNC(void HardFault_Handler(void) __attribute__((naked)));
+
+/*---------------------- VARIABLES DECLARATIONS ---------------------------------------------------------------------*/
+
+static CmdProcessor_T MainCmdProcessor;
+
+/*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
+
+int main(void)
+{
+    /* Mapping Default Error Handling function */
+    Retcode_T returnValue = Retcode_Initialize(ErrorHandler);
+    if (RETCODE_OK == returnValue)
+    {
+        returnValue = SystemStartup();
+    }
+    if (RETCODE_OK == returnValue)
+    {
+        /* We prefer the async recorder over the synchronous variant, and UART
+         * over RTT. */
+#if (defined(BCDS_ASYNC_RECORDER) && BCDS_ASYNC_RECORDER)
+#if (defined(BCDS_UART_APPENDER) && BCDS_UART_APPENDER)
+        returnValue = Logging_Init(Logging_AsyncRecorder, Logging_UARTAppender);
+#elif (defined(BCDS_RTT_APPENDER) && BCDS_RTT_APPENDER)
+        returnValue = Logging_Init(Logging_AsyncRecorder, Logging_RttAppender);
+#endif
+#elif (defined(BCDS_SYNC_RECORDER) && BCDS_SYNC_RECORDER)
+#if (defined(BCDS_UART_APPENDER) && BCDS_UART_APPENDER)
+        returnValue = Logging_Init(Logging_SyncRecorder, Logging_UARTAppender);
+#elif (defined(BCDS_RTT_APPENDER) && BCDS_RTT_APPENDER)
+        returnValue = Logging_Init(Logging_SyncRecorder, Logging_RttAppender);
+#endif
+#endif
+    }
+    if (RETCODE_OK == returnValue)
+    {
+        returnValue = CmdProcessor_Initialize(&MainCmdProcessor,
+                                              (char *)"MainCmdProcessor", APP_CMDPROCESSOR_MAIN_PRIORITY,
+                                              APP_CMDPROCESSOR_MAIN_STACKSIZE, APP_CMDPROCESSOR_MAIN_QLEN);
+    }
+    if (RETCODE_OK == returnValue)
+    {
+        /* To be sure that the OS-aware-delay is only called _after_ the
+         * FreeRTOS scheduler has started, we enqueue it as the very first
+         * CmdProcessor job.
+         */
+        returnValue = CmdProcessor_Enqueue(&MainCmdProcessor, PostOsInit, NULL, 0U);
+    }
+    if (RETCODE_OK == returnValue)
+    {
+        /* Here we enqueue the application initialization into the command
+         * processor, such that the initialization function will be invoked
+         * once the RTOS scheduler is started below.
+         */
+        returnValue = CmdProcessor_Enqueue(&MainCmdProcessor, App_InitSystem, &MainCmdProcessor, 0U);
+    }
+    if (RETCODE_OK != returnValue)
+    {
+        puts("System Startup failed");
+        assert(false);
+    }
+    /* start scheduler */
+    vTaskStartScheduler();
+}
+
+/*---------------------- LOCAL FUNCTIONS IMPLEMENTATION -------------------------------------------------------------*/
+void ErrorHandler(Retcode_T error, bool isfromIsr)
+{
+    if (false == isfromIsr)
+    {
+        /** @TODO ERROR HANDLING SHOULD BE DONE FOR THE ERRORS RAISED FROM PLATFORM */
+        uint32_t PackageID = Retcode_GetPackage(error);
+        uint32_t ErrorCode = Retcode_GetCode(error);
+        uint32_t ModuleID = Retcode_GetModuleId(error);
+        Retcode_Severity_T SeverityCode = Retcode_GetSeverity(error);
+
+        if (RETCODE_SEVERITY_FATAL == SeverityCode)
+            printf("Fatal error from package %u , Error code: %u and module ID is :%u \r\n", (unsigned int)PackageID, (unsigned int)ErrorCode, (unsigned int)ModuleID);
+
+        if (RETCODE_SEVERITY_ERROR == SeverityCode)
+            printf("Severe error from package %u , Error code: %u and module ID is :%u \r\n", (unsigned int)PackageID, (unsigned int)ErrorCode, (unsigned int)ModuleID);
+    }
+    else
+    {
+        BSP_LED_Switch(COMMONGATEWAY_LED_RED_ID, COMMONGATEWAY_LED_COMMAND_ON);
+    }
+}
+
+#ifndef NDEBUG /* valid only for debug builds */
+/**
+ * @brief This API is called when function enters an assert
+ *
+ * @param[in] line : line number where asserted
+ * @param[in] file : file name which is asserted
+ */
+void AssertIndicationMapping(const unsigned long line, const unsigned char *const file)
+{
+    /* Switch on the LEDs */
+    Retcode_T retcode = RETCODE_OK;
+
+    retcode = BSP_LED_Switch(COMMONGATEWAY_LED_ALL, COMMONGATEWAY_LED_COMMAND_ON);
+
+    printf("asserted at Filename %s , line no  %ld \n\r", file, line);
+
+    if (retcode != RETCODE_OK)
+    {
+        printf("LED's ON failed during assert");
+    }
+    __asm__("bkpt;");
+}
+#endif
+
+Retcode_T SystemStartup(void)
+{
+    Retcode_T returnValue = RETCODE_OK;
+    uint32_t param1 = 0;
+    void *param2 = NULL;
+
+    /* Initialize the callbacks for the system tick */
+    BSP_Board_OSTickInitialize(SysTickPreCallback, NULL);
+
+#ifndef NDEBUG /* valid only for debug builds */
+    if (RETCODE_OK == returnValue)
+    {
+        returnValue = Assert_Initialize(AssertIndicationMapping);
+    }
+#endif
+    /* First we initialize the board. */
+    if (RETCODE_OK == returnValue)
+    {
+        returnValue = BSP_Board_Initialize(param1, param2);
+    }
+    if (RETCODE_OK == returnValue)
+    {
+        returnValue = BSP_LED_Connect();
+    }
+    if (RETCODE_OK == returnValue)
+    {
+        returnValue = BSP_LED_Enable(COMMONGATEWAY_LED_ALL);
+    }
+    return returnValue;
+}
+
+#if configSUPPORT_STATIC_ALLOCATION
+void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize)
+{
+    *ppxIdleTaskTCBBuffer = &IdleTaskTCBBuffer;
+    *ppxIdleTaskStackBuffer = &IdleStack[0];
+    *pulIdleTaskStackSize = IDLE_TASK_SIZE;
+}
+#if configUSE_TIMERS
+void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize)
+{
+    *ppxTimerTaskTCBBuffer = &TimerTaskTCBBuffer;
+    *ppxTimerTaskStackBuffer = &TimerStack[0];
+    *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+}
+#endif
+#endif
+
+/**
+ * @brief This function is SysTick Handler. This is called when ever the IRQ is
+ * hit. This is a temporary implementation where the SysTick_Handler() is not
+ * directly mapped to xPortSysTickHandler(). Instead it is only called if the
+ * scheduler has started.
+ */
+static void SysTickPreCallback(void)
+{
+    if (xTaskGetSchedulerState() != taskSCHEDULER_NOT_STARTED)
+    {
+        xPortSysTickHandler();
+    }
+}
+
+static void PostOsInit(void *param, uint32_t len)
+{
+    BCDS_UNUSED(param);
+    BCDS_UNUSED(len);
+    HAL_Delay_SetMsHook(Delay);
+}
+
+static Retcode_T Delay(uint32_t delay)
+{
+    vTaskDelay(delay);
+    return RETCODE_OK;
+}
+
+#if (configCHECK_FOR_STACK_OVERFLOW > 0)
+void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName)
+{
+    BCDS_UNUSED(xTask);
+    BCDS_UNUSED(pcTaskName);
+    assert(0);
+}
+#endif
+
+static void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress)
+{
+    /* These are volatile to try and prevent the compiler/linker optimising them
+     * away as the variables never actually get used.  If the debugger won't show the
+     * values of the variables, make them global my moving their declaration outside
+     * of this function. */
+    volatile uint32_t r0;
+    volatile uint32_t r1;
+    volatile uint32_t r2;
+    volatile uint32_t r3;
+    volatile uint32_t r12;
+    volatile uint32_t lr;  /* Link register. */
+    volatile uint32_t pc;  /* Program counter. */
+    volatile uint32_t psr; /* Program status register. */
+
+    r0 = pulFaultStackAddress[0];
+    r1 = pulFaultStackAddress[1];
+    r2 = pulFaultStackAddress[2];
+    r3 = pulFaultStackAddress[3];
+
+    r12 = pulFaultStackAddress[4];
+    lr = pulFaultStackAddress[5];
+    pc = pulFaultStackAddress[6];
+    psr = pulFaultStackAddress[7];
+
+    BCDS_UNUSED(r0);
+    BCDS_UNUSED(r1);
+    BCDS_UNUSED(r2);
+    BCDS_UNUSED(r3);
+    BCDS_UNUSED(r12);
+    BCDS_UNUSED(lr);
+    BCDS_UNUSED(pc);
+    BCDS_UNUSED(psr);
+
+    __asm__("bkpt");
+
+    /* When the following line is hit, the variables contain the register values. */
+    for (;;)
+        ;
+}
+
+void HardFault_Handler(void)
+{
+    __asm volatile(
+        " tst lr, #4                                                \n"
+        " ite eq                                                    \n"
+        " mrseq r0, msp                                             \n"
+        " mrsne r0, psp                                             \n"
+        " ldr r1, [r0, #24]                                         \n"
+        " ldr r2, handler2_address_const                            \n"
+        " bx r2                                                     \n"
+        " handler2_address_const: .word prvGetRegistersFromStack    \n");
+}
