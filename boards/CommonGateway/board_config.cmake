@@ -12,6 +12,10 @@ set(KISO_MCU_DEVICE STM32L486VG)
 # GCC portmacro to use in freertos
 set(KISO_MCU_CORE ARM_CM4F)
 
+if(${ENABLE_STATIC_CHECKS})
+   set(KISO_MCU_CORE ARM_CM3)
+endif()
+
 ## Libs configuration
 # Additional thirdparty libraries for the board
 set(KISO_BOARD_LIBS stm32cubel4)
@@ -31,15 +35,25 @@ add_definitions(
 if(${CMAKE_CROSSCOMPILING} AND "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
    ## Compiler and linker configuration
    # GCC options common to compiler and linker
-   set(BOARD_COMMON_OPTIONS
+   if(${ENABLE_STATIC_CHECKS})  
+      set(BOARD_COMMON_OPTIONS
       -march=armv7e-m
-      -mtune=cortex-m4
-      -mfloat-abi=softfp
+      -mtune=cortex-m3
+      -mfloat-abi=soft
       -mfpu=fpv4-sp-d16
-      -mthumb
-      -mno-thumb-interwork
-   )
-
+      -mthumb      
+      )
+   else()
+      set(BOARD_COMMON_OPTIONS
+         -march=armv7e-m
+         -mtune=cortex-m4
+         -mfloat-abi=softfp
+         -mfpu=fpv4-sp-d16
+         -mthumb
+         -mno-thumb-interwork      
+         )
+   endif()
+   
    # Enable some warnings, debug symbols and set optimization level
    add_compile_options(
       ${BOARD_COMMON_OPTIONS}
@@ -51,11 +65,11 @@ if(${CMAKE_CROSSCOMPILING} AND "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
       -Wstrict-prototypes
       -O0
       -g
-   )
-
-   # Use board-specific linkerfile and put system libs in their own section
-   # CMake 3.13 and up has add_link_options which does the same as this hack
-   set(BOARD_LINKER_FLAGS
+      )
+      
+      # Use board-specific linkerfile and put system libs in their own section
+      # CMake 3.13 and up has add_link_options which does the same as this hack
+      set(BOARD_LINKER_FLAGS
       ${BOARD_COMMON_OPTIONS}
       --specs=nosys.specs
       -T${CMAKE_CURRENT_LIST_DIR}/Application_STM32L4xx_FLASH.ld

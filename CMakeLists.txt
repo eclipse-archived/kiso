@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.6)
 
 ## Command line parameter for build variant
 option(ENABLE_TESTING "Configure a build tree for testing instead of normal application mode" OFF)
+option(ENABLE_STATIC_CHECKS "Configure a build tree for static code analysis" OFF)
 
 ## Include config file if it exists
 include(default_config.cmake OPTIONAL)

@@ -123,8 +123,6 @@ __attribute__((naked, noreturn)) void HardFault_Handler(void)
             " bx r2                                                     \n"
             " handler2_address_const: .word prvGetRegistersFromStack    \n"
     );
-    for (;;)
-        ;
 }
 #else
 void HardFault_Handler(void)

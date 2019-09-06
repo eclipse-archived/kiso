@@ -5,7 +5,7 @@ pipeline
         docker
         {
             label 'RT-Z0KHU'
-            image 'rb-dtr.de.bosch.com/software-campus/cddk-toolchain:v0.2.4'
+            image 'rb-dtr.de.bosch.com/software-campus/cddk-toolchain:v0.4.1'
             registryUrl 'https://rb-dtr.de.bosch.com'
             registryCredentialsId 'docker-registry'
         }
@@ -45,7 +45,9 @@ pipeline
                     {
                         script // Run static analysis
                         {
-                            echo "run static placeholder"
+                            echo "run static analysis"
+                            sh 'cmake . -Bbuilddir-static -G"Unix Makefiles" -DKISO_BOARD_NAME=CommonGateway -DENABLE_STATIC_CHECKS=1 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON'
+                            sh 'cmake --build builddir-static 2> builddir-static/clang-report.txt'
                         }
                     }
                 }
@@ -93,6 +95,10 @@ pipeline
         {
             archiveArtifacts (
                 artifacts: 'builddir-unittests/Testing/**/*.xml',
+                fingerprint: true
+            )
+             archiveArtifacts (
+                artifacts: 'builddir-static/clang-report.txt',
                 fingerprint: true
             )
         }
