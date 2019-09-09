@@ -12,18 +12,18 @@
 *
 ********************************************************************************/
 
-#include "BCDS_CellularModules.h"
-#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_ATQUEUE
+#include "Kiso_CellularModules.h"
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_ATQUEUE
 
 #include "AtResponseParser.h"
 #include "AtResponseQueue.h"
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
-#include "BCDS_Assert.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
 
-#include "BCDS_Queue.h"
-#include "BCDS_Logging.h"
+#include "Kiso_Queue.h"
+#include "Kiso_Logging.h"
 
 #include "FreeRTOS.h"
 #include "portmacro.h"

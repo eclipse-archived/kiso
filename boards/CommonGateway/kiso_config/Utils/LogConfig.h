@@ -23,15 +23,15 @@
 #define LOG_CONFIG_H
 
 /* Enable logging extension macro */
-#define BCDS_LOGGING 1
+#define KISO_LOGGING 1
 
 /* Enable/Disable recorders */
-#define BCDS_SYNC_RECORDER  1
-#define BCDS_ASYNC_RECORDER 0
+#define KISO_SYNC_RECORDER  1
+#define KISO_ASYNC_RECORDER 0
 
 /* Enable /Disable appenders */
-#define BCDS_RTT_APPENDER   1
-#define BCDS_UART_APPENDER  1
+#define KISO_RTT_APPENDER   1
+#define KISO_UART_APPENDER  1
 
 /* Filter configuration */
 /* Number of allowed filters >=1 */
@@ -41,7 +41,7 @@
 #define LOG_LEVEL_MODULE_DEFAULT    (LOG_LEVEL_DEBUG)
 
 /* Configuration for the asynchronous-recorder (if activated) */
-#if BCDS_ASYNC_RECORDER == 1
+#if KISO_ASYNC_RECORDER == 1
 #define LOG_BUFFER_SIZE             (UINT16_C(256))
 #define LOG_QUEUE_BUFFER_SIZE       (UINT16_C(2048))
 #define LOG_TASK_STACK_SIZE         (UINT16_C(256))
@@ -52,7 +52,7 @@
 #endif
 
 /* Configuration for the synchronous-recorder (if activated) */
-#if BCDS_SYNC_RECORDER == 1
+#if KISO_SYNC_RECORDER == 1
 #define LOG_BUFFER_SIZE             (UINT16_C(256))
 #define LOG_APPENDER_TIMEOUT        UINT32_C(1000)
 

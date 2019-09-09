@@ -16,13 +16,13 @@
 #include "protected/gpio.h"
 #include "protected/power_supply.h"
 #include "BSP_CommonGateway.h"
-#include "BCDS_BSP_Board.h"
-#include "BCDS_HAL_Delay.h"
+#include "Kiso_BSP_Board.h"
+#include "Kiso_HAL_Delay.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID  MODULE_BSP_POWER_SUPPLY
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID  MODULE_BSP_POWER_SUPPLY
 
 #define POWER_SUPPLY_3V9GSM_ON_DELAY_MS     UINT32_C(100)
 #define POWER_SUPPLY_2V8GPS_ON_DELAY_MS     UINT32_C(10)

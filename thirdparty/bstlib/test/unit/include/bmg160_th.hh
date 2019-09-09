@@ -13,8 +13,8 @@
 ********************************************************************************/
  
 /* header definition ******************************************************** */
-#ifndef BCDS_BMG160_TH_HH_
-#define BCDS_BMG160_TH_HH_
+#ifndef KISO_BMG160_TH_HH_
+#define KISO_BMG160_TH_HH_
 
 
 #include "bmg160.h"
@@ -156,6 +156,6 @@ FAKE_VALUE_FUNC(BMG160_RETURN_FUNCTION_TYPE,bmg160_set_autosleepdur,u8,u8);
 FAKE_VALUE_FUNC(BMG160_RETURN_FUNCTION_TYPE,bmg160_get_auto_offset_enable,u8 *);
 FAKE_VALUE_FUNC(BMG160_RETURN_FUNCTION_TYPE,bmg160_set_auto_offset_enable,u8);
 
-#endif /* BCDS_BMG160_TH_HH_ */
+#endif /* KISO_BMG160_TH_HH_ */
 
 /*************************************************************************** */

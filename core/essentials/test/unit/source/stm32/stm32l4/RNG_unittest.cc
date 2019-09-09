@@ -20,12 +20,12 @@
 extern "C"
 {
 /* include faked interfaces */
-#include "BCDS_HAL_th.hh"
+#include "Kiso_HAL_th.hh"
 
-#if BCDS_FEATURE_RNG
+#if KISO_FEATURE_RNG
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode_th.hh"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode_th.hh"
 
 #include "stm32l4xx_hal_th.hh"
 #include "stm32l4xx_hal_rng_th.hh"
@@ -153,7 +153,7 @@ static uint32_t RandomDataPosition = 0;
 HAL_StatusTypeDef Fake_HAL_RNG_GenerateRandomNumber(RNG_HandleTypeDef* rng,
         uint32_t* random32Bits)
 {
-    BCDS_UNUSED(rng);
+    KISO_UNUSED(rng);
 
     if (RandomDataPosition < RandomDataLength)
     {

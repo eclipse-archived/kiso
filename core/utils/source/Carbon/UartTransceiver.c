@@ -12,32 +12,32 @@
 *
 ********************************************************************************/
 
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_UART_TRANSCEIVER
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_UART_TRANSCEIVER
 
-#include "BCDS_UARTTransceiver.h"
+#include "Kiso_UARTTransceiver.h"
 
-#if BCDS_FEATURE_UARTTRANSCEIVER
+#if KISO_FEATURE_UARTTRANSCEIVER
 
-#include "BCDS_Retcode.h"
-#include "BCDS_Assert.h"
-#include "BCDS_RingBuffer.h"
-#include "BCDS_MCU_UART.h"
-#include "BCDS_MCU_LEUART.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
+#include "Kiso_RingBuffer.h"
+#include "Kiso_MCU_UART.h"
+#include "Kiso_MCU_LEUART.h"
 #include <stdlib.h>
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
 
-#if BCDS_FEATURE_UART || BCDS_FEATURE_LEUART
+#if KISO_FEATURE_UART || KISO_FEATURE_LEUART
 /*
  * Default End of frame checking function
  * This function shall be substituted during uart transceiver initialization by a user defined function
  */
 static bool dummyFrameEndCheckFunc(uint8_t x);
 
-/*  The description of the function is available in BCDS_UARTTransceiver.h */
+/*  The description of the function is available in Kiso_UARTTransceiver.h */
 Retcode_T UARTTransceiver_Initialize(UARTTransceiver_T *transceiver,
         HWHandle_T handle, uint8_t * rawRxBuffer, uint32_t rawRxBufferSize,
         enum UARTTransceiver_UartType_E type)
@@ -75,7 +75,7 @@ Retcode_T UARTTransceiver_Initialize(UARTTransceiver_T *transceiver,
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_UARTTransceiver.h */
+/*  The description of the function is available in Kiso_UARTTransceiver.h */
 Retcode_T UARTTransceiver_Deinitialize(UARTTransceiver_T *transceiver)
 {
     Retcode_T retcode;
@@ -95,7 +95,7 @@ Retcode_T UARTTransceiver_Deinitialize(UARTTransceiver_T *transceiver)
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_UARTTransceiver.h */
+/*  The description of the function is available in Kiso_UARTTransceiver.h */
 Retcode_T UARTTransceiver_Start(UARTTransceiver_T *transceiver, UARTTransceiver_EndofFrameCheckFunc_T frameEndCheckFunc)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -117,12 +117,12 @@ Retcode_T UARTTransceiver_Start(UARTTransceiver_T *transceiver, UARTTransceiver_
             {
                 transceiver->EndOfFrameCheck = dummyFrameEndCheckFunc;
             }
-#if BCDS_FEATURE_UART
+#if KISO_FEATURE_UART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_UART)
             {
                 retcode = MCU_UART_Receive((UART_T) transceiver->handle, &(transceiver->LastByte), 1);
             }
-#elif BCDS_FEATURE_LEUART
+#elif KISO_FEATURE_LEUART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_LEUART)
             {
                 retcode = MCU_LEUART_Receive((LEUART_T) transceiver->handle, &transceiver->LastByte, 1);
@@ -141,7 +141,7 @@ Retcode_T UARTTransceiver_Start(UARTTransceiver_T *transceiver, UARTTransceiver_
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_UARTTransceiver.h */
+/*  The description of the function is available in Kiso_UARTTransceiver.h */
 Retcode_T UARTTransceiver_StartInAsyncMode(UARTTransceiver_T *transceiver,
         UARTTransceiver_EndofFrameCheckFunc_T frameEndCheckFunc,
         UARTransceiver_Callback_T callback)
@@ -166,12 +166,12 @@ Retcode_T UARTTransceiver_StartInAsyncMode(UARTTransceiver_T *transceiver,
             {
                 transceiver->EndOfFrameCheck = dummyFrameEndCheckFunc;
             }
-#if BCDS_FEATURE_UART
+#if KISO_FEATURE_UART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_UART)
             {
                 retcode = MCU_UART_Receive((UART_T) transceiver->handle, &(transceiver->LastByte), 1);
             }
-#elif BCDS_FEATURE_LEUART
+#elif KISO_FEATURE_LEUART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_LEUART)
             {
                 retcode = MCU_LEUART_Receive((LEUART_T) transceiver->handle, &transceiver->LastByte, 1);
@@ -191,7 +191,7 @@ Retcode_T UARTTransceiver_StartInAsyncMode(UARTTransceiver_T *transceiver,
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_UARTTransceiver.h */
+/*  The description of the function is available in Kiso_UARTTransceiver.h */
 Retcode_T UARTTransceiver_Stop(UARTTransceiver_T *transceiver)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -204,12 +204,12 @@ Retcode_T UARTTransceiver_Stop(UARTTransceiver_T *transceiver)
         if ((transceiver->State == UART_TRANSCEIVER_STATE_ACTIVE) || (transceiver->State == UART_TRANSCEIVER_STATE_SUSPENDED))
         {
             transceiver->EndOfFrameCheck = dummyFrameEndCheckFunc;
-#if BCDS_FEATURE_UART
+#if KISO_FEATURE_UART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_UART)
             {
                 retcode = MCU_UART_Receive((UART_T) transceiver->handle, &(transceiver->LastByte), 0);
             }
-#elif BCDS_FEATURE_LEUART
+#elif KISO_FEATURE_LEUART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_LEUART)
             {
                 retcode = MCU_LEUART_Receive((LEUART_T) transceiver->handle, &(transceiver->LastByte), 0);
@@ -228,7 +228,7 @@ Retcode_T UARTTransceiver_Stop(UARTTransceiver_T *transceiver)
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_UARTTransceiver.h */
+/*  The description of the function is available in Kiso_UARTTransceiver.h */
 Retcode_T UARTTransceiver_Suspend(UARTTransceiver_T *transceiver)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -240,12 +240,12 @@ Retcode_T UARTTransceiver_Suspend(UARTTransceiver_T *transceiver)
     {
         if (transceiver->State == UART_TRANSCEIVER_STATE_ACTIVE)
         {
-#if BCDS_FEATURE_UART
+#if KISO_FEATURE_UART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_UART)
             {
                 retcode = MCU_UART_Receive((UART_T) transceiver->handle, &(transceiver->LastByte), 0);
             }
-#elif BCDS_FEATURE_LEUART
+#elif KISO_FEATURE_LEUART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_LEUART)
             {
                 retcode = MCU_LEUART_Receive((LEUART_T) transceiver->handle, &(transceiver->LastByte), 0);
@@ -264,7 +264,7 @@ Retcode_T UARTTransceiver_Suspend(UARTTransceiver_T *transceiver)
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_UARTTransceiver.h */
+/*  The description of the function is available in Kiso_UARTTransceiver.h */
 Retcode_T UARTTransceiver_Resume(UARTTransceiver_T *transceiver)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -276,12 +276,12 @@ Retcode_T UARTTransceiver_Resume(UARTTransceiver_T *transceiver)
     {
         if (transceiver->State == UART_TRANSCEIVER_STATE_SUSPENDED)
         {
-#if BCDS_FEATURE_UART
+#if KISO_FEATURE_UART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_UART)
             {
                 retcode = MCU_UART_Receive((UART_T) transceiver->handle, &(transceiver->LastByte), 1);
             }
-#elif BCDS_FEATURE_LEUART
+#elif KISO_FEATURE_LEUART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_LEUART)
             {
                 retcode = MCU_LEUART_Receive((LEUART_T) transceiver->handle, &transceiver->LastByte, 1);
@@ -300,7 +300,7 @@ Retcode_T UARTTransceiver_Resume(UARTTransceiver_T *transceiver)
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_UARTTransceiver.h */
+/*  The description of the function is available in Kiso_UARTTransceiver.h */
 Retcode_T UARTTransceiver_ReadData(UARTTransceiver_T *transceiver, uint8_t *buffer, uint32_t size, uint32_t *length, uint32_t timeout_ms)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -340,7 +340,7 @@ Retcode_T UARTTransceiver_ReadData(UARTTransceiver_T *transceiver, uint8_t *buff
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_UARTTransceiver.h */
+/*  The description of the function is available in Kiso_UARTTransceiver.h */
 Retcode_T UARTTransceiver_WriteData(UARTTransceiver_T *transceiver, uint8_t* data, uint32_t length, uint32_t timeout_ms)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -352,12 +352,12 @@ Retcode_T UARTTransceiver_WriteData(UARTTransceiver_T *transceiver, uint8_t* dat
     {
         if (UART_TRANSCEIVER_STATE_ACTIVE == transceiver->State)
         {
-#if BCDS_FEATURE_UART
+#if KISO_FEATURE_UART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_UART)
             {
                 retcode = MCU_UART_Send((UART_T) transceiver->handle, data, length);
             }
-#elif BCDS_FEATURE_LEUART
+#elif KISO_FEATURE_LEUART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_LEUART)
             {
                 retcode = MCU_LEUART_Send((LEUART_T) transceiver->handle, data, length);
@@ -391,9 +391,9 @@ Retcode_T UARTTransceiver_WriteData(UARTTransceiver_T *transceiver, uint8_t* dat
     return retcode;
 }
 
-#if BCDS_FEATURE_UART
+#if KISO_FEATURE_UART
 
-/*  The description of the function is available in BCDS_UARTTransceiver.h */
+/*  The description of the function is available in Kiso_UARTTransceiver.h */
 void UARTTransceiver_LoopCallback(UARTTransceiver_T *transceiver, struct MCU_UART_Event_S event)
 {
     transceiver->AsyncEvent.registerValue = 0;
@@ -457,9 +457,9 @@ void UARTTransceiver_LoopCallback(UARTTransceiver_T *transceiver, struct MCU_UAR
     }
 }
 
-#elif BCDS_FEATURE_LEUART
+#elif KISO_FEATURE_LEUART
 
-/*  The description of the function is available in BCDS_UARTTransceiver.h */
+/*  The description of the function is available in Kiso_UARTTransceiver.h */
 void UARTTransceiver_LoopCallbackLE(UARTTransceiver_T *transceiver, struct MCU_LEUART_Event_S event)
 {
     transceiver->AsyncEvent.registerValue = 0;
@@ -522,13 +522,13 @@ void UARTTransceiver_LoopCallbackLE(UARTTransceiver_T *transceiver, struct MCU_L
         transceiver->callback(transceiver->AsyncEvent.bitfield);
     }
 }
-#endif /* BCDS_FEATURE_LEUART */
+#endif /* KISO_FEATURE_LEUART */
 
 static bool dummyFrameEndCheckFunc(uint8_t x)
 {
-    BCDS_UNUSED(x);
+    KISO_UNUSED(x);
     return false;
 }
-#endif /* BCDS_FEATURE_UART || BCDS_FEATURE_LEUART */
+#endif /* KISO_FEATURE_UART || KISO_FEATURE_LEUART */
 
-#endif /* if BCDS_FEATURE_UARTTRANSCEIVER */
+#endif /* if KISO_FEATURE_UARTTRANSCEIVER */

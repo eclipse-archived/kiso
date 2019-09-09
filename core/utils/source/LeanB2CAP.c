@@ -13,19 +13,19 @@
 ********************************************************************************/
 
 
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_LEANB2CAP
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_LEANB2CAP
 
-#include "BCDS_LeanB2CAP.h"
+#include "Kiso_LeanB2CAP.h"
 
-#if BCDS_FEATURE_LEANB2CAP
+#if KISO_FEATURE_LEANB2CAP
 
 #include "LeanB2CAPConfig.h"
 #include "LeanB2CAP.h"
 
-#include "BCDS_Utils.h"
-#include "BCDS_CRC.h"
+#include "Kiso_Utils.h"
+#include "Kiso_CRC.h"
 
 /* Instances for LeanB2CAP. The total count is configurable and must be at-least of size 1UL. */
 static LeanB2CAP_HandleDescriptor_T LeanB2CAPHandle[LEAN_B2CAP_INSTANCE_COUNT];
@@ -46,7 +46,7 @@ static const uint8_t LeanB2CAPCommandList[LEANB2CAP_SUPPORTED_CMD_SIZE] =
     (uint8_t)LEAN_B2CAP_CMD_INFO_CHANNEL3
 };
 
-/*  The description of the function is available in BCDS_LeanB2CAP.h */
+/*  The description of the function is available in Kiso_LeanB2CAP.h */
 static Retcode_T LeanB2CAPIsCommandTypeValid(LeanB2CAP_CommandType_T Type)
 {
     Retcode_T Rc = (Retcode_T)RETCODE_FAILURE;
@@ -69,7 +69,7 @@ static Retcode_T LeanB2CAPIsCommandTypeValid(LeanB2CAP_CommandType_T Type)
     return (Rc);
 }
 
-/*  The description of the function is available in BCDS_LeanB2CAP.h */
+/*  The description of the function is available in Kiso_LeanB2CAP.h */
 Retcode_T LeanB2CAP_Initialize(LeanB2CAP_HandlePtr_T * Handle, LeanB2CAP_FrameData_T * ValidOutputDataStorageBufferInfo, LeanB2CAPCallback Callback)
 {
     Retcode_T Rc = RETCODE_OK;
@@ -109,7 +109,7 @@ Retcode_T LeanB2CAP_Initialize(LeanB2CAP_HandlePtr_T * Handle, LeanB2CAP_FrameDa
     return (Rc);
 }
 
-/*  The description of the function is available in BCDS_LeanB2CAP.h */
+/*  The description of the function is available in Kiso_LeanB2CAP.h */
 Retcode_T LeanB2CAP_RxDataProcessor(LeanB2CAP_HandlePtr_T * Handle, LeanB2CAP_FrameData_T * PayLoad)
 {
     Retcode_T Rc = RETCODE(RETCODE_SEVERITY_ERROR,(Retcode_T)RETCODE_LEANB2CAP_RX_PROCESSOR_FAIL);
@@ -308,7 +308,7 @@ Retcode_T LeanB2CAP_RxDataProcessor(LeanB2CAP_HandlePtr_T * Handle, LeanB2CAP_Fr
     return (Rc);
 }
 
-/*  The description of the function is available in BCDS_LeanB2CAP.h */
+/*  The description of the function is available in Kiso_LeanB2CAP.h */
 Retcode_T LeanB2CAP_Builder(LeanB2CAP_FrameData_T * LeanB2CAPBuildOuput, LeanB2CAP_RawData_T * RawDataInput)
 {
     Retcode_T Rc = RETCODE_OK;
@@ -360,7 +360,7 @@ Retcode_T LeanB2CAP_Builder(LeanB2CAP_FrameData_T * LeanB2CAPBuildOuput, LeanB2C
     return (Rc);
 }
 
-/*  The description of the function is available in BCDS_LeanB2CAP.h */
+/*  The description of the function is available in Kiso_LeanB2CAP.h */
 Retcode_T LeanB2CAP_OverheadBuilder(LeanB2CAP_Overhead_T * OutputOverhead, LeanB2CAP_RawData_T * RawDataInput)
 {
     Retcode_T Rc = RETCODE_OK;
@@ -413,7 +413,7 @@ Retcode_T LeanB2CAP_OverheadBuilder(LeanB2CAP_Overhead_T * OutputOverhead, LeanB
     return (Rc);
 }
 
-/*  The description of the function is available in BCDS_LeanB2CAP.h */
+/*  The description of the function is available in Kiso_LeanB2CAP.h */
 Retcode_T LeanB2CAP_ResetRxDataProcessor(LeanB2CAP_HandlePtr_T * Handle)
 {
     Retcode_T Rc = RETCODE_OK;
@@ -447,7 +447,7 @@ Retcode_T LeanB2CAP_ResetRxDataProcessor(LeanB2CAP_HandlePtr_T * Handle)
     return (Rc);
 }
 
-/*  The description of the function is available in BCDS_LeanB2CAP.h */
+/*  The description of the function is available in Kiso_LeanB2CAP.h */
 Retcode_T LeanB2CAP_Deinitialize(LeanB2CAP_HandlePtr_T * Handle)
 {
     Retcode_T Rc = RETCODE_OK;
@@ -485,4 +485,4 @@ Retcode_T LeanB2CAP_Deinitialize(LeanB2CAP_HandlePtr_T * Handle)
     return (Rc);
 }
 
-#endif /* if BCDS_FEATURE_LEANB2CAP */
+#endif /* if KISO_FEATURE_LEANB2CAP */

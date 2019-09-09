@@ -25,7 +25,7 @@
 #ifndef PROTECTED_BOARD_H_
 #define PROTECTED_BOARD_H_
 
-#include "BCDS_HAL.h"
+#include "Kiso_HAL.h"
 /*
  * Returns true if BSP_Board_Initialize() successfully executed.
  */

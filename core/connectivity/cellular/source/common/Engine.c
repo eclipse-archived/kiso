@@ -18,8 +18,8 @@
  * @brief The engine of the Cellular driver.
  */
 
-#include "BCDS_CellularModules.h"
-#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_ENGINE
+#include "Kiso_CellularModules.h"
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_ENGINE
 
 #include "Engine.h"
 
@@ -30,17 +30,17 @@
 #include "AtUrc.h"
 #include "Hardware.h"
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
-#include "BCDS_Assert.h"
-#include "BCDS_RingBuffer.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
+#include "Kiso_RingBuffer.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
 #include "portmacro.h"
 
-#include "BCDS_Logging.h"
+#include "Kiso_Logging.h"
 
 /**
  * @brief Number of bytes per chunk with which we read the receive buffer
@@ -102,7 +102,7 @@ static Retcode_T ReadData(uint8_t *data, uint32_t dataLength, uint32_t *dataRead
 
 static void HandleMcuIsrCallback(UART_T uart, struct MCU_UART_Event_S event)
 {
-    BCDS_UNUSED(uart);
+    KISO_UNUSED(uart);
     assert(uart != 0);
 
     if (event.TxComplete)
@@ -167,7 +167,7 @@ static const char *TrimWhitespace(uint8_t *buf, size_t len, size_t *trimmedLen)
 
 static void AtResponseParser_Task(void *param)
 {
-    BCDS_UNUSED(param);
+    KISO_UNUSED(param);
 
     uint32_t bytesRead, flukeFreeBytesRead;
     uint8_t *flukeRxReadBuffer;
@@ -221,7 +221,7 @@ static void AtResponseParser_Task(void *param)
 
 static void CellularDriver_Task(void *param)
 {
-    BCDS_UNUSED(param);
+    KISO_UNUSED(param);
 
     while (1)
     {
@@ -249,7 +249,7 @@ Retcode_T Engine_HandleEvents(void)
         for (uint32_t i = 0; i < count; i++)
         {
             AtResponseQueueEntry_T *event;
-#if BCDS_LOGGING
+#if KISO_LOGGING
             if (RETCODE_OK == AtResponseQueue_GetEvent(0, &event))
             {
                 switch (event->Type)

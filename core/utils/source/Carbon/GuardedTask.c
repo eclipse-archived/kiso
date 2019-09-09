@@ -13,19 +13,19 @@
 ********************************************************************************/
 
 
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_GUARDEDTASK
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_GUARDEDTASK
 
 /* own header files */
-#include "BCDS_GuardedTask.h"
+#include "Kiso_GuardedTask.h"
 
-#if BCDS_FEATURE_GUARDEDTASK
+#if KISO_FEATURE_GUARDEDTASK
 
 /* additional interface header files */
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
-#include "BCDS_Assert.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -72,7 +72,7 @@ static void GuardedTaskRunFunction(void* param)
     }
 }
 
-/*  The description of the function is available in BCDS_GuardedTask.h */
+/*  The description of the function is available in Kiso_GuardedTask.h */
 Retcode_T GuardedTask_Deinitialize(GuardedTask_T* handle)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -103,7 +103,7 @@ Retcode_T GuardedTask_Deinitialize(GuardedTask_T* handle)
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_GuardedTask.h */
+/*  The description of the function is available in Kiso_GuardedTask.h */
 Retcode_T GuardedTask_Initialize(GuardedTask_T* handle, GuardedTask_Function_T taskRunFunction, const char* taskName, uint32_t taskPriority, uint32_t taskStackSize)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -143,7 +143,7 @@ Retcode_T GuardedTask_Initialize(GuardedTask_T* handle, GuardedTask_Function_T t
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_GuardedTask.h */
+/*  The description of the function is available in Kiso_GuardedTask.h */
 Retcode_T GuardedTask_Signal(GuardedTask_T* handle)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -170,7 +170,7 @@ Retcode_T GuardedTask_Signal(GuardedTask_T* handle)
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_GuardedTask.h */
+/*  The description of the function is available in Kiso_GuardedTask.h */
 Retcode_T GuardedTask_SignalFromIsr(GuardedTask_T* handle)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -200,4 +200,4 @@ Retcode_T GuardedTask_SignalFromIsr(GuardedTask_T* handle)
     return retcode;
 }
 
-#endif /* if BCDS_FEATURE_GUARDEDTASK */
+#endif /* if KISO_FEATURE_GUARDEDTASK */

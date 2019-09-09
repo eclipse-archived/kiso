@@ -19,7 +19,7 @@
 #ifndef POWER_H_
 #define POWER_H_
 
-#include "BCDS_Retcode.h"
+#include "Kiso_Retcode.h"
 
 #define UBLOX_MAX_PIN_LENGTH    (UINT32_C(12))
 

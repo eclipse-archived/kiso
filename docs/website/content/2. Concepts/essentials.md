@@ -55,7 +55,7 @@ One more guideline related to the application development is that only MCU and B
 <p>Picture1</p>
 </div>
 
-  
+
 
 Such an approach brings huge benefits for the end product. The splitting of the hardware abstraction layer into two sub-components MCU and BSP is the natural consequence of a translation of the circuit board of an embedded product into code, where the BSP takes care of the Board representation and peripherals configuration, and the MCU implements the core assets of a micro-controller's resources without the burden of configuration, which makes code portability to different micro-controllers a seamless task.
 ## Create a BSP abstraction
@@ -69,7 +69,7 @@ For constrained embedded systems, during handover from hardware developer to the
 4. Once the Component is disabled what GPIO configurations do we need to maintain in order to achieve the lowest power consumption safest state (DISCONNECTED) ?
 5. What special considerations need to be taken to keep the whole system in operational state ?
 
-Those questions are the core of the KISO BSP concept, and their answer is directly translated into code in the implementation. 
+Those questions are the core of the KISO BSP concept, and their answer is directly translated into code in the implementation.
 
 The BSP interface should reflect the components datasheet and the BSP implementation should translate the circuit diagram into code. This is mostly what the embedded software developer needs to know in order to start working on BSP creation. We assume that we have a circuit board populated with a Micro-controller and some peripherals(e.g. sensors, modems...) as in Picture2.
 
@@ -84,7 +84,7 @@ The first step in the creation of BSP interfaces is to assess which board compon
 
 Above, in Picture2, Peripheral1 and Peripheral2 are considered BSP components but Peripheral3 is not, because it does not have any ties to the micro-controller and thus it is probably controllable only through Peripheral1.
 
-Once done with the identification, and if the component does not have already a BSP interface, you can copy the template file BCDS_BSP_Template.h in essentials/include/bsp rename it to KISO_BSP_<ComponentDesignation>.h where ComponentDesignation is ideally the official manufacturer's designation, reason for that is that another BSP developer can easily check whether for his component there has been an API created or not.
+Once done with the identification, and if the component does not have already a BSP interface, you can copy the template file Kiso_BSP_Template.h in essentials/include/bsp rename it to Kiso_BSP_<ComponentDesignation>.h where ComponentDesignation is ideally the official manufacturer's designation, reason for that is that another BSP developer can easily check whether for his component there has been an API created or not.
 
 Now you can start tailoring the template to you needs.
 
@@ -96,7 +96,7 @@ After the copyright section you have to adjust the file documentation which will
 /*
  * Copyright (C) Robert Bosch GmbH.
  * All Rights Reserved. Confidential.
-  
+
  * Distribution only to people who need to know this information in
  * order to do their job.(Need-to-know principle).
  * Distribution to persons outside the company, only if these persons
@@ -106,34 +106,34 @@ After the copyright section you have to adjust the file documentation which will
  */
 /*----------------------------------------------------------------------------*/
 /**
-  
- *  @defgroup   BCDS_HAL_BSP_Template Template
-  
+
+ *  @defgroup   KISO_HAL_BSP_Template Template
+
  *  @brief      Generic interface to Template Peripheral  BSP API
-  
- *  @ingroup  BCDS_HAL_BSP_IF
+
+ *  @ingroup  KISO_HAL_BSP_IF
  *  @{
-  
+
  * A prior call to BSP_Board_Initialize(param1, param2) function is necessary to initialize
  * the MCU resources needed by the Peripheral.
-  
+
  * Once the Peripheral is requested a call to BSP_Template_Connect(deviceId) function
  * is required to map the internal MCU resources to their associated function.
  * The application needs get the deviceHandle via BSP_Template_GetHandle() and initializes
  * the resource driver by calling the MCU_<RESOURCE>_Initialize() and providing it with the previously
  * acquired BusHandle member of the deviceHandle and an event callback function.
- * @see HAL_DeviceHandle_S in BCDS_HAL.h
+ * @see HAL_DeviceHandle_S in Kiso_HAL.h
  * Then a call to BSP_Template_Enable(deviceId) will execute the required sequence
  * to enable the specified Peripheral peripheral and the MCU resources dedicated for
  * it (UART, SPI, I2C, etc.) and will associate the interrupt requests to their
  * appropriate service routines.
-  
+
  * The BSP_Template_Disable(deviceId) will revert back what the
  * BSP_Template_Enable(deviceId) has done and set the Peripheral and the MCU resource
  * into disabled state.
  * The BSP_Template_Disconnect(deviceId) will put the GPIO pins associated to the
  * Peripherals peripheral in lowest possible power consumption configuration.
-  
+
  * The following diagram describes the states and transitions for the Template Peripheral Device
  * @dot
  * digraph state_diagram {
@@ -147,26 +147,26 @@ After the copyright section you have to adjust the file documentation which will
  *      DISABLED -> DISCONNECTED [label="BSP_Template_Disconnect()"]
  *  }
  * @enddot
-  
+
  * @file
-  
+
  */
- * 
+ *
 ~~~~
 
-Rename the guarding macro according to your header file name and include "BCDS_HAL.h"
+Rename the guarding macro according to your header file name and include "Kiso_HAL.h"
 ~~~~
-#ifndef BCDS_BSP_Template_H_
-#define BCDS_BSP_Template_H_
-#include "BCDS_HAL.h"
+#ifndef KISO_BSP_Template_H_
+#define KISO_BSP_Template_H_
+#include "Kiso_HAL.h"
 ~~~~
 
 
-The feature switch will prevent the compiler from accessing the function declarations if the feature has not been enabled in your configuration file BCDS_HALConfig.h. This is particulary useful if in your project you have included this file and referred to its functions but you still do not have the implementation of the functions, What will happen if this feature switch does not exist is that the compiler will not complain, only at link time you will get an error. you can Imagine 30 minutes of compilation time wasted because of this feature switch.
+The feature switch will prevent the compiler from accessing the function declarations if the feature has not been enabled in your configuration file Kiso_HALConfig.h. This is particulary useful if in your project you have included this file and referred to its functions but you still do not have the implementation of the functions, What will happen if this feature switch does not exist is that the compiler will not complain, only at link time you will get an error. you can Imagine 30 minutes of compilation time wasted because of this feature switch.
 
 ~~~~
 /* Code is only effective if feature is enabled in configuration */
-#if BCDS_FEATURE_BSP_TEMPLATE
+#if KISO_FEATURE_BSP_TEMPLATE
 ~~~~
 
 
@@ -175,14 +175,14 @@ Now we come to the APIs. There have to be four core functions in each component 
 ~~~~
      /**
      * @brief       Maps the GPIO pins to their desired function.
-      
+
      * @details     This function once called will map the GPIO pins related to the Peripheral to their desired functions.
-      
+
      * @param[in]   deviceId: Id of the targeted device. The deviceID is given by the BSP
      *              in /your/bsp/repo/include/BSP_<yourBoardName>.h
-      
+
      * @note        deviceId = 0 is used to address all devices of this type.
-      
+
      * @return      RETCODE_OK in the case of success, error code otherwise.
      */
     Retcode_T BSP_Template_Connect(int32_t deviceId);
@@ -191,15 +191,15 @@ Now we come to the APIs. There have to be four core functions in each component 
 ~~~~
      /**
      * @brief       Enables the control over the peripheral.
-      
+
      * @details     This function once called will enable the peripheral and allow it receive data, execute commands
      *              and transmit process data.
-      
+
      * @param[in]   deviceId: Id of the targeted device. The deviceID is given by the BSP
      *              in /your/bsp/repo/include/BSP_<yourBoardName>.h
-      
+
      * @note        deviceId=0 is used to address all devices of this type.
-      
+
      * @return      RETCODE_OK in the case of success, error code otherwise.
      */
     Retcode_T BSP_Template_Enable(int32_t deviceId);
@@ -208,16 +208,16 @@ Now we come to the APIs. There have to be four core functions in each component 
 ~~~~
     /**
      * @brief       Disables the control over the peripheral.
-      
+
      * @details     This function once called will disable control over the requested
      *              peripheral by executing the disabling procedure as prescribed in the
      *              vendor datasheet.
-      
+
      * @param[in]   deviceId: Id of the targeted device. The deviceID is given by the BSP
      *              in /your/bsp/repo/include/BSP_<yourBoardName>.h
-      
+
      * @note        deviceId=0 is used to address all devices of this type
-      
+
      * @return      RETCODE_OK in the case of success, error code otherwise.
      */
     Retcode_T BSP_Template_Disable(int32_t deviceId);
@@ -226,40 +226,40 @@ Now we come to the APIs. There have to be four core functions in each component 
 ~~~~
     /**
      * @brief       Disconnects the peripheral.
-      
+
      * @details     This function disconnects the GPIO pins dedicated to the peripheral
      *              and put them into low power consumption configuration.
-      
+
      * @param[in]   deviceId: Id of the targeted device. The deviceID is given by the BSP
      *              in /your/bsp/repo/include/BSP_<yourBoardName>.h
-      
+
      * @note        deviceId=0 is used to address all devices of this type
-      
+
      * @return      RETCODE_OK in the case of success, error code otherwise.
      */
     Retcode_T BSP_Template_Disconnect(int32_t deviceId);
 ~~~~
-* In case the Peripheral is a communicator device the MCU layer should get a handle from the BSP pointing to the Peripheral's control structure, this handle is the contract between BSP and MCU and should therefore be accordingly initilized for the proper function of the peripheral. Since the application is not hardware dependent the Handle is passed as an abstract type known only from the BSP and MCU layers. 
+* In case the Peripheral is a communicator device the MCU layer should get a handle from the BSP pointing to the Peripheral's control structure, this handle is the contract between BSP and MCU and should therefore be accordingly initilized for the proper function of the peripheral. Since the application is not hardware dependent the Handle is passed as an abstract type known only from the BSP and MCU layers.
 ~~~~
     /**
      * @brief       Returns the handle of the communication interface used by the peripheral.
-      
+
      * @details     After successful execution of BSP_Board_Initialize(param1, param2), the
      *              application is free to call this function in order to get the handle needed
      *              by the resources drivers. This handle will be used by the MCU drivers for the
      *              intended resources.
-      
+
      * @return      HWHandle: Handle to the SPI interface
      */
     HWHandle_T BSP_Template_GetHandle(int32_t deviceId);
 ~~~~
-* Besides these core functions the datasheet of the peripheral may dictate other helper functions, the recommendation for deciding on the helper functions is to spot in the components datasheet where GPIO operations are needed and to create functions for them. take for example the Bosch BMM150 Magnetometer sensor, in its BSP API interface in BCDS_BSP_BMM150.h you can see that there has been added helper functions which are managing CS, DATA_READY and INT lines and you can remark the difference of handling between input (DATA_READY, INT) and output (CS).
+* Besides these core functions the datasheet of the peripheral may dictate other helper functions, the recommendation for deciding on the helper functions is to spot in the components datasheet where GPIO operations are needed and to create functions for them. take for example the Bosch BMM150 Magnetometer sensor, in its BSP API interface in Kiso_BSP_BMM150.h you can see that there has been added helper functions which are managing CS, DATA_READY and INT lines and you can remark the difference of handling between input (DATA_READY, INT) and output (CS).
 
 
 Now that you created your component's API please do not hide them into your project, rather commit them to Essentials and let the community review and refine them.
 ### How to create a new BSP implementation?
 
-As said before, the BSP implementation should mirror you circuit diagram (though it is a bit more). let us concertize this into code. We will consider a the below simplified circuit diagram for the implementation of the Board Support Package, We will name it Project Compass. We start with creating our BSP repository for our Project Compass. 
+As said before, the BSP implementation should mirror you circuit diagram (though it is a bit more). let us concertize this into code. We will consider a the below simplified circuit diagram for the implementation of the Board Support Package, We will name it Project Compass. We start with creating our BSP repository for our Project Compass.
 
 
 <div style="width:100%; text-align:center">
@@ -268,11 +268,11 @@ As said before, the BSP implementation should mirror you circuit diagram (though
 </div>
 
 * BSP Repository Structure
-  
+
   * /include folder shall contain interfaces specific to your BSP implementation required by your application,
   * /source folder contains the implementation,
   * /test folder contains unit test files.
-  
+
 
 <div style="width:100%; text-align:center">
     <img src="../../images/BSP_Repo.jpg">
@@ -310,7 +310,7 @@ As said before, the BSP implementation should mirror you circuit diagram (though
     #ifndef BSP_COMPASS_H_
     #define BSP_COMPASS_H_
 
-    #include "BCDS_Basics.h"
+    #include "Kiso_Basics.h"
     #include "BSP_CompassRetcodes.h"
 
     /**
@@ -378,7 +378,7 @@ As said before, the BSP implementation should mirror you circuit diagram (though
     /*
      * Copyright (C) Robert Bosch GmbH.
      * All Rights Reserved. Confidential.
-      
+
      * Distribution only to people who need to know this information in
      * order to do their job.(Need-to-know principle).
      * Distribution to persons outside the company, only if these persons
@@ -390,12 +390,12 @@ As said before, the BSP implementation should mirror you circuit diagram (though
     /**
      * @file
      * @brief Contains Retcode Module Ids and BSP's implementation specific return codes
-      
+
      * @details Enumerates ".c" files as retcode module Ids and specific error codes from each module's implementation.
      */
     #ifndef INCLUDE_BSP_RETCODES_H_
     #define INCLUDE_BSP_RETCODES_H_
-    #include "BCDS_Retcode.h"
+    #include "Kiso_Retcode.h"
     /**
      * Module IDs provided by the BSP for retcode composition
      */
@@ -414,11 +414,11 @@ As said before, the BSP implementation should mirror you circuit diagram (though
     {
         /* BSP Return codes */
     };
-    #endif /* INCLUDE_BSP_RETCODES_H_ */ 
+    #endif /* INCLUDE_BSP_RETCODES_H_ */
 
 
 ~~~~
-  * include/BCDS_HALConfig.h is where HAL features switches for implemented features are defined.
+  * include/Kiso_HALConfig.h is where HAL features switches for implemented features are defined.
 
 ~~~~
 
@@ -439,54 +439,54 @@ As said before, the BSP implementation should mirror you circuit diagram (though
     /**
      * @file
      * @brief Contains a default configuration to enable or disable HAL components.
-     * @details This header file is usually included by the BCDS_HAL.h from the
+     * @details This header file is usually included by the Kiso_HAL.h from the
      * HAL (Hardware Abstraction Layer) module. It is used to allow a per project
      * configuration of the features provided by the HAL component.
      *
      * Features are enabled or disabled by defining a particular feature to either
      * 1 or 0 e.g.
      * @code
-     *   #define BCDS_FEATURE_I2C    1   // Enable HAL feature I2C
-     *   #define BCDS_FEATURE_SPI    0   // Disable HAL feature SPI
+     *   #define KISO_FEATURE_I2C    1   // Enable HAL feature I2C
+     *   #define KISO_FEATURE_SPI    0   // Disable HAL feature SPI
      * If no defines are made then all HAL features will be enabled.
      */
-    #ifndef BCDS_HAL_CONFIG_H_
-    #define BCDS_HAL_CONFIG_H_
+    #ifndef KISO_HAL_CONFIG_H_
+    #define KISO_HAL_CONFIG_H_
 
-    #define BCDS_FEATURE_UART                                                       0
-    #define BCDS_FEATURE_I2C                                                        1
-    #define BCDS_FEATURE_SPI                                                        0
-    #define BCDS_FEATURE_FLASH                                                      0
-    #define BCDS_FEATURE_WATCHDOG                                                   0
-    #define BCDS_FEATURE_PWM                                                        0
-    #define BCDS_FEATURE_SLEEP                                                      0
+    #define KISO_FEATURE_UART                                                       0
+    #define KISO_FEATURE_I2C                                                        1
+    #define KISO_FEATURE_SPI                                                        0
+    #define KISO_FEATURE_FLASH                                                      0
+    #define KISO_FEATURE_WATCHDOG                                                   0
+    #define KISO_FEATURE_PWM                                                        0
+    #define KISO_FEATURE_SLEEP                                                      0
 
-    #if (BCDS_FEATURE_UART)
+    #if (KISO_FEATURE_UART)
     /* Defines the default count of possible UART handles */
-    #define BCDS_UART_COUNT                                                         (UINT32_C(1))
-    #endif /* if (BCDS_FEATURE_UART) */
+    #define KISO_UART_COUNT                                                         (UINT32_C(1))
+    #endif /* if (KISO_FEATURE_UART) */
 
-    #if (BCDS_FEATURE_I2C)
+    #if (KISO_FEATURE_I2C)
     /* Defines the default count of possible I2C handles */
-    #define BCDS_I2C_COUNT                                                          (UINT32_C(1))
-    #endif /* if (BCDS_FEATURE_I2C) */
+    #define KISO_I2C_COUNT                                                          (UINT32_C(1))
+    #endif /* if (KISO_FEATURE_I2C) */
 
-    #if (BCDS_FEATURE_SPI)
+    #if (KISO_FEATURE_SPI)
     /* Defines the default count of possible SPI handles */
-    #define BCDS_SPI_COUNT                                                          (UINT32_C(2))
-    #endif /* if (BCDS_FEATURE_SPI) */
+    #define KISO_SPI_COUNT                                                          (UINT32_C(2))
+    #endif /* if (KISO_FEATURE_SPI) */
 
 
     /* Define the BSP features which are supported by the Compass board BSP */
-    #define BCDS_FEATURE_BSP_PWM_LED                                                1
-    #define BCDS_FEATURE_BSP_BUTTON                                                 1
-    #define BCDS_FEATURE_BSP_BMM150                                                 1
+    #define KISO_FEATURE_BSP_PWM_LED                                                1
+    #define KISO_FEATURE_BSP_BUTTON                                                 1
+    #define KISO_FEATURE_BSP_BMM150                                                 1
 
-    #endif /*BCDS_HAL_CONFIG_H_*/
+    #endif /*KISO_HAL_CONFIG_H_*/
 ~~~~
 
 
-The source folder is where this translation from circuit diagram to code takes place. For our Project Compass, the source folder as in Picture4 contains a common settings header file and the implementation of the different BSP API functions for the board components. 
+The source folder is where this translation from circuit diagram to code takes place. For our Project Compass, the source folder as in Picture4 contains a common settings header file and the implementation of the different BSP API functions for the board components.
 
   * source/protected/BSP_Settings.h is where your board settings are defined (e.g pin mapping, pin attributes) and the circuit diagram translated into defines which will be later used in the implementation. Below is the settings file for our Project Compass
 
@@ -671,14 +671,14 @@ The source folder is where this translation from circuit diagram to code takes p
 > **_NOTE:_**  Particulary for the settings section, it is possible to split the above settings file into small fractions defining each component settings, this is useful if your board contains many components, in whichcase, a single file approach would hinder the maintainability of your code. You can choose whatever approach is suitable for your project.
 
 
-  * source/BSP_API_Board.c is where you implement functions in BCDS_BSP_Board.h interface particularly BSP_Board_Initialize() which shall bring up your board to a determined safe state after Power on reset. Among others the function:
+  * source/BSP_API_Board.c is where you implement functions in Kiso_BSP_Board.h interface particularly BSP_Board_Initialize() which shall bring up your board to a determined safe state after Power on reset. Among others the function:
 
     * Initializes board pins for which the tristated state could pose a safety or security risk,
-    * Initializes the micro-controller resources (SPI, UART, I2C, Watchdog, etc.) 
+    * Initializes the micro-controller resources (SPI, UART, I2C, Watchdog, etc.)
     * Initializes the micro-controller power system,
     * Initializes the micro-controller memory system,
     * Initializes the micro-controller clock system,
-  
+
 BSP_Board_Initialize() will be the first function to call in your Application main. Param1 and param2 are to be defined in BSP_Compass.h file and are implementation specific. It could be the case that you need an initialization in the bootloader contex that differs from the initialization in normal operation context, those abstract parameters are there to allow you to do so. The function for our Compass project looks approximately like below.
 
 
@@ -688,8 +688,8 @@ BSP_Board_Initialize() will be the first function to call in your Application ma
          */
         Retcode_T BSP_Board_Initialize(uint32_t param1, void* param2)
         {
-            BCDS_UNUSED(param1);
-            BCDS_UNUSED(param2);
+            KISO_UNUSED(param1);
+            KISO_UNUSED(param2);
 
             Power_init();
         #ifdef CACHE_AS_RAM
@@ -713,7 +713,7 @@ BSP_Board_Initialize() will be the first function to call in your Application ma
             PIN_init(BoardGpioInitTable);
             PWM_init();
 
-        #if BCDS_FEATURE_I2C
+        #if KISO_FEATURE_I2C
             I2C_init();
         #endif
             return RETCODE_OK;
@@ -723,9 +723,9 @@ BSP_Board_Initialize() will be the first function to call in your Application ma
 
 We will not dig deep into other Board APIs rather we will move forward to other modules.
 
-  * source/BSP_API_BMM150.c : In this file we want to implement the functions in the BSP API for the BMM150. We want to step by step through the implementation  
-The heading of the BSP_API_BMM150.c file contains, after doxygen documentation header, inclusion of the API header file. The rest of the sources shall be protected with a feature switch macro.  
-After including the rest of headers needed, it is recommended to overwrite BCDS_MODULE_ID macro to assign it the  id of the current module, here MODULE_BSP_API_BMM150 defined in include/BSP_CompassRetcodes.h
+  * source/BSP_API_BMM150.c : In this file we want to implement the functions in the BSP API for the BMM150. We want to step by step through the implementation
+The heading of the BSP_API_BMM150.c file contains, after doxygen documentation header, inclusion of the API header file. The rest of the sources shall be protected with a feature switch macro.
+After including the rest of headers needed, it is recommended to overwrite KISO_MODULE_ID macro to assign it the  id of the current module, here MODULE_BSP_API_BMM150 defined in include/BSP_CompassRetcodes.h
 
 ~~~~
     /**
@@ -738,19 +738,19 @@ After including the rest of headers needed, it is recommended to overwrite BCDS_
      * @brief  Implementation of Magnetometer BMM150 BSP functions ModuleID: MODULE_BSP_API_BMM150
      */
 
-    #include "BCDS_BSP_BMM150.h"
+    #include "Kiso_BSP_BMM150.h"
 
     /* Code is effective when the feature is enabled */
-    #if BCDS_FEATURE_BSP_BMM150
+    #if KISO_FEATURE_BSP_BMM150
 
     #include "protected/BSP_Common.h"
 
     /* Include target's I2C handle definition */
-    #include "ti_cc26xx/BCDS_MCU_I2C_Handle.h"
+    #include "ti_cc26xx/Kiso_MCU_I2C_Handle.h"
 
     /* Redefine retcode Module ID */
-    #undef BCDS_MODULE_ID
-    #define BCDS_MODULE_ID  MODULE_BSP_API_BMM150
+    #undef KISO_MODULE_ID
+    #define KISO_MODULE_ID  MODULE_BSP_API_BMM150
 
     Macros, static functions and variables can then be declared (preferably in that order).
 
@@ -791,7 +791,7 @@ After including the rest of headers needed, it is recommended to overwrite BCDS_
     static struct MCU_I2C_Handle_S I2CStruct =
             {
                     .handle = NULL,
-                    .callMode = BCDS_HAL_CALL_MODE_BLOCKING,
+                    .callMode = KISO_HAL_CALL_MODE_BLOCKING,
             };
 
     /**
@@ -811,7 +811,7 @@ After including the rest of headers needed, it is recommended to overwrite BCDS_
 Now we come to the API implementation and we start it with the connect() function. Here the goal of the function, like in API description, is to configure and control pins to their desired function. I2C_SCL and I2C_SDA, are here exception because they are managed through the I2C driver from TI_CC26xx SDK. PWR, INT, and DRDY pins will be configured during the call to PIN_open() API.  the implementation is as follows:
 ~~~~
     /**
-     * Refer to interface header BCDS_BSP_BMM150.h for API documentation
+     * Refer to interface header Kiso_BSP_BMM150.h for API documentation
      * @retval RETCODE_OK in case of success
      * @retval RETCODE_INCONSISTENT_STATE if device state prohibits routine execution
      * @retval RETCODE_FAILURE if PIN_open failed to execute
@@ -820,7 +820,7 @@ Now we come to the API implementation and we start it with the connect() functio
     Retcode_T BSP_BMM150_Connect(int32_t deviceId)
     {
         /* Only because there is one instance of the BMM150 sensor on board, processing of deviceId is omitted */
-        BCDS_UNUSED(deviceId);
+        KISO_UNUSED(deviceId);
 
         Retcode_T retcode = RETCODE_OK;
 
@@ -849,7 +849,7 @@ Now we come to the API implementation and we start it with the connect() functio
 Enbale() function will power on the device via setting to high PWR pin and enable the I2C peripheral. After call to this function successfully executed, it should be possible to communicate with the sensor via MCU_I2C APIs.
 ~~~~
     /**
-     * Refer to interface header BCDS_BSP_BMM150.h for API documentation
+     * Refer to interface header Kiso_BSP_BMM150.h for API documentation
      * @retval RETCODE_OK in case of success
      * @retval RETCODE_INCONSISTENT_STATE if device state prohibits routine execution
      * @retval RETCODE_FAILURE if PIN_setOutputValue or I2C_open failed to execute
@@ -857,7 +857,7 @@ Enbale() function will power on the device via setting to high PWR pin and enabl
     Retcode_T BSP_BMM150_Enable(int32_t deviceId)
     {
         /* Only because there is one instance of the BMM150 sensor on board, processing of deviceId is omitted */
-        BCDS_UNUSED(deviceId);
+        KISO_UNUSED(deviceId);
 
         Retcode_T retcode = RETCODE_OK;
 
@@ -901,7 +901,7 @@ Enbale() function will power on the device via setting to high PWR pin and enabl
 Disable() and Disconnect() roll back Enable() and Connect() functions
 ~~~~
     /**
-     * Refer to interface header BCDS_BSP_BMM150.h for API documentation
+     * Refer to interface header Kiso_BSP_BMM150.h for API documentation
      * @retval RETCODE_OK in case of success
      * @retval RETCODE_INCONSISTENT_STATE if device state prohibits routine execution
      * @retval RETCODE_FAILURE if PIN_setOutputValue failed to execute
@@ -909,7 +909,7 @@ Disable() and Disconnect() roll back Enable() and Connect() functions
     Retcode_T BSP_BMM150_Disable(int32_t deviceId)
     {
         /* Only because there is one instance of the BMM150 sensor on board, processing of deviceId is omitted */
-        BCDS_UNUSED(deviceId);
+        KISO_UNUSED(deviceId);
 
         Retcode_T retcode = RETCODE_OK;
 
@@ -942,14 +942,14 @@ Disable() and Disconnect() roll back Enable() and Connect() functions
 
 
     /**
-     * Refer to interface header BCDS_BSP_BMM150.h for API documentation
+     * Refer to interface header Kiso_BSP_BMM150.h for API documentation
      * @retval RETCODE_OK in case of success
      * @retval RETCODE_INCONSISTENT_STATE if device state prohibits routine execution
      */
     Retcode_T BSP_BMM150_Disconnect(int32_t deviceId)
     {
         /* only because there is one instance of the BMM150 sensor on board, processing of deviceId is omitted */
-        BCDS_UNUSED(deviceId);
+        KISO_UNUSED(deviceId);
 
         Retcode_T retcode = RETCODE_OK;
 
@@ -970,21 +970,21 @@ Disable() and Disconnect() roll back Enable() and Connect() functions
 GetHandle() function returns a pointer to I2CStruct variable previously declared in this file. this pointer will be used as handle for communication with the device over I2C bus via the MCU_I2C APIs. Before sending or receiving it is mandatory to call the function MCU_I2C_Initialize to "Initialize" the driver context according to which communication mode has been choosed by the BSP.
 ~~~~
     /**
-     * Refer to interface header BCDS_BSP_BMM150.h for API documentation
+     * Refer to interface header Kiso_BSP_BMM150.h for API documentation
      * @return Pointer to #I2CStruct
      */
     HWHandle_T BSP_BMM150_GetHandle(int32_t deviceId)
     {
         /* Only because there is one instance of the BMM150 sensor on board, processing of deviceId is omitted */
-        BCDS_UNUSED(deviceId);
+        KISO_UNUSED(deviceId);
         return (HWHandle_T) &I2CStruct;
     }
 ~~~~
-Time now to implement APIs specific to the BMM150 chip.  
+Time now to implement APIs specific to the BMM150 chip.
 IntEnable()  Assigns an interrupt callback passed from the application to process events coming from INT line and enables this Interrupt.
 ~~~~
     /**
-     * Refer to interface header BCDS_BSP_BMM150.h for API documentation
+     * Refer to interface header Kiso_BSP_BMM150.h for API documentation
      * @retval RETCODE_OK in case of success
      * @retval RETCODE_INCONSISTENT_STATE if device state prohibits routine execution
      * @retval RETCODE_FAILURE if PIN_registerIntCb or PIN_setInterrupt failed to execute
@@ -992,7 +992,7 @@ IntEnable()  Assigns an interrupt callback passed from the application to proces
     Retcode_T BSP_BMM150_IntEnable(int32_t deviceId, BSP_BMM150_InterruptCallback_T callback)
     {
         /* only because there is one instance of the BMM150 sensor on board processing of deviceId is omitted */
-        BCDS_UNUSED(deviceId);
+        KISO_UNUSED(deviceId);
 
         Retcode_T retcode = RETCODE_OK;
         /* check input parameters */
@@ -1032,7 +1032,7 @@ IntEnable()  Assigns an interrupt callback passed from the application to proces
 IntDisable() Disables this interrupt and de-assigns the application callback.
 ~~~~
     /**
-     * Refer to interface header BCDS_BSP_BMM150.h for API documentation
+     * Refer to interface header Kiso_BSP_BMM150.h for API documentation
      * @retval RETCODE_OK in case of success
      * @retval RETCODE_INCONSISTENT_STATE if device state prohibits routine execution
      * @retval RETCODE_FAILURE if PIN_setInterrupt failed to execute
@@ -1040,7 +1040,7 @@ IntDisable() Disables this interrupt and de-assigns the application callback.
     Retcode_T BSP_BMM150_IntDisable(int32_t deviceId)
     {
         /* Only because there is one instance of the BMM150 sensor on board processing of deviceId is omitted  */
-        BCDS_UNUSED(deviceId);
+        KISO_UNUSED(deviceId);
 
         Retcode_T retcode = RETCODE_OK;
 

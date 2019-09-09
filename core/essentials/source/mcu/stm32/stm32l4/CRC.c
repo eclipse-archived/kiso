@@ -17,16 +17,16 @@
  * @brief Contains the realization of the MCU CRC interface for STM32
  */
 
-#include "BCDS_MCU_CRC.h"
+#include "Kiso_MCU_CRC.h"
 
-#if BCDS_FEATURE_MCU_CRC
+#if KISO_FEATURE_MCU_CRC
 
 #include "stm32l4xx.h"
 #include "stm32l4xx_hal_crc.h"
 #include "stm32l4xx_hal_rcc.h"
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_ESSENTIALS_MODULE_ID_CRC
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_CRC
 
 /** See description in the interface declaration */
 Retcode_T MCU_CRC8(struct MCU_CRC8_S *initParms, uint8_t * data_in, uint32_t dataLength, uint8_t * crc)
@@ -208,4 +208,4 @@ Retcode_T MCU_CRC32(struct MCU_CRC32_S *initParms, uint32_t * data_in, uint32_t 
 	return retcode;
 }
 
-#endif /* BCDS_FEATURE_MCU_CRC */
+#endif /* KISO_FEATURE_MCU_CRC */

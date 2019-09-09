@@ -26,10 +26,10 @@ extern "C"
 #endif /* GTEST */
 
 #define portNUM_CONFIGURABLE_REGIONS    1
-#define BCDS_MODULE_ID  BCDS_CELLULAR_MODULE_ID_ATPARSER
+#define KISO_MODULE_ID  KISO_CELLULAR_MODULE_ID_ATPARSER
 
-#include "BCDS_Retcode_th.hh"
-#include "BCDS_Assert_th.hh"
+#include "Kiso_Retcode_th.hh"
+#include "Kiso_Assert_th.hh"
 #include "FreeRTOS_th.hh"
 #include "task_th.hh"
 #include "queue_th.hh"
@@ -37,7 +37,7 @@ extern "C"
 #undef RETCODE
 #define RETCODE(severity,code) ((Retcode_T) code)
 
-#undef BCDS_MODULE_ID
+#undef KISO_MODULE_ID
 #include "AtResponseParser.c"
 
 #ifndef countof
@@ -104,7 +104,7 @@ TEST_F(AtResponseParser, AtrpTrimWhitespaceAllContent)
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     uint8_t *TrimmedBuffer = AtrpTrimWhitespace((uint8_t *) buffer, NewLength, &NewLength);
-    BCDS_UNUSED(TrimmedBuffer);
+    KISO_UNUSED(TrimmedBuffer);
 
     /* VERIFY: Compare the expected with actual */
     EXPECT_EQ(0U, NewLength);

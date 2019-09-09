@@ -16,12 +16,12 @@
 #include <gtest.h>
 
 /* include faked interfaces */
-#include "BCDS_HAL_th.hh"
+#include "Kiso_HAL_th.hh"
 #include "em_wdog_th.hh"
 #include "em_rmu_th.hh"
 
 
-#if BCDS_FEATURE_WATCHDOG
+#if KISO_FEATURE_WATCHDOG
 
 /* include module under test */
 #include "Watchdog.c"

@@ -13,8 +13,8 @@
 ********************************************************************************/
  
 /* header definition ******************************************************** */
-#ifndef BCDS_BMM050_TH_HH_
-#define BCDS_BMM050_TH_HH_
+#ifndef KISO_BMM050_TH_HH_
+#define KISO_BMM050_TH_HH_
 
 
 #include "bmm050.h"
@@ -64,6 +64,6 @@ FAKE_VALUE_FUNC(BMM050_RETURN_FUNCTION_TYPE,bmm050_read_bmx055_remapped_mag_data
 FAKE_VALUE_FUNC(BMM050_RETURN_FUNCTION_TYPE,bmm050_read_bmx055_remapped_mag_data_XYZ_s32,struct bmm050_remapped_mag_s32_data_t *);
 FAKE_VALUE_FUNC(BMM050_RETURN_FUNCTION_TYPE,bmm050_read_bmx055_remapped_mdataXYZ,struct bmm050_remapped_mdata *);
 
-#endif /* BCDS_BMM050_TH_HH_ */
+#endif /* KISO_BMM050_TH_HH_ */
 
 /*************************************************************************** */

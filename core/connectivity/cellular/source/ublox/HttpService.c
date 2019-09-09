@@ -12,25 +12,24 @@
 *
 ********************************************************************************/
 
-#include "BCDS_CellularModules.h"
-#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_HTTP_SERVICE
+#include "Kiso_CellularModules.h"
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_HTTP_SERVICE
 
-#include "BCDS_CellularHttpService.h"
-#include "BCDS_Cellular.h"
-#include "BCDS_CellularConfig.h"
+#include "Kiso_CellularHttpService.h"
+#include "Kiso_Cellular.h"
+#include "Kiso_CellularConfig.h"
 #include "UBloxUtils.h"
 #include "HttpService.h"
 
 #include "Engine.h"
 #include "AT_UBlox.h"
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
-#include "BCDS_Assert.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
 
 #define CELLULAR_HTTP_RESULT_FILE "r.slt"
 #define CELLULAR_HTTP_POST_FILE "r.qst"
-
 
 struct CellularHttp_GetResponseParam_S
 {
@@ -57,7 +56,7 @@ static CellularHttp_Result_T HttpService_UbloxResultToHttpResult(AT_UHTTPC_Resul
 
 void HttpService_NotifyResult(AT_UHTTP_ProfileId_T profileId, AT_UHTTPC_Command_T command, AT_UHTTPC_Result_T result)
 {
-    BCDS_UNUSED(profileId);
+    KISO_UNUSED(profileId);
 
     if (CellularHttp_resultCallback != NULL)
     {
@@ -154,7 +153,7 @@ Retcode_T CellularHttp_GetResponse(CellularHttp_Data_T *response)
 
 static Retcode_T HttpService_uhttp(void *param, uint32_t length)
 {
-    BCDS_UNUSED(length);
+    KISO_UNUSED(length);
 
     assert(param != NULL);
     Retcode_T retcode = RETCODE_OK;
@@ -168,7 +167,7 @@ static Retcode_T HttpService_uhttp(void *param, uint32_t length)
 
 static Retcode_T HttpService_uhttpc(void *param, uint32_t length)
 {
-    BCDS_UNUSED(length);
+    KISO_UNUSED(length);
 
     assert(param != NULL);
     Retcode_T retcode = RETCODE_OK;
@@ -182,7 +181,7 @@ static Retcode_T HttpService_uhttpc(void *param, uint32_t length)
 
 Retcode_T HttpService_ulstFile(void *param, uint32_t length)
 {
-    BCDS_UNUSED(length);
+    KISO_UNUSED(length);
     assert(param != NULL);
     Retcode_T retcode = RETCODE_OK;
 
@@ -195,7 +194,7 @@ Retcode_T HttpService_ulstFile(void *param, uint32_t length)
 
 static Retcode_T HttpService_udwnFile(void *param, uint32_t length)
 {
-    BCDS_UNUSED(length);
+    KISO_UNUSED(length);
     assert(param != NULL);
     Retcode_T retcode = RETCODE_OK;
 
@@ -208,7 +207,7 @@ static Retcode_T HttpService_udwnFile(void *param, uint32_t length)
 
 static Retcode_T HttpService_udelFile(void *param, uint32_t length)
 {
-    BCDS_UNUSED(length);
+    KISO_UNUSED(length);
     assert(param != NULL);
     Retcode_T retcode = RETCODE_OK;
 
@@ -221,7 +220,7 @@ static Retcode_T HttpService_udelFile(void *param, uint32_t length)
 
 static Retcode_T HttpService_urdBlock(void *param, uint32_t length)
 {
-    BCDS_UNUSED(length);
+    KISO_UNUSED(length);
     assert(param != NULL);
 
     struct CellularHttp_GetResponseParam_S *getResponseParam = (struct CellularHttp_GetResponseParam_S *)param;

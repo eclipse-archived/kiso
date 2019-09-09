@@ -17,15 +17,15 @@
 
 extern "C"
 {
-#include "BCDS_HAL_th.hh"
+#include "Kiso_HAL_th.hh"
 
-#define BCDS_MODULE_ID 0
+#define KISO_MODULE_ID 0
 
-#if BCDS_FEATURE_SLEEP
+#if KISO_FEATURE_SLEEP
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode_th.hh"
-#include "BCDS_Assert_th.hh"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode_th.hh"
+#include "Kiso_Assert_th.hh"
 
 
 #include "em_device_th.hh"
@@ -85,7 +85,7 @@ protected:
 
 TEST_F(HAL_MCU_Sleep_Test, ModuleIdValidation)
 {
-    ASSERT_EQ(BCDS_ESSENTIALS_MODULE_ID_SLEEP, BCDS_MODULE_ID);
+    ASSERT_EQ(KISO_ESSENTIALS_MODULE_ID_SLEEP, KISO_MODULE_ID);
 }
 
 

@@ -10,8 +10,8 @@
  *     Robert Bosch GmbH - initial contribution
  */
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
 
 /**
  * @brief Initialize application.

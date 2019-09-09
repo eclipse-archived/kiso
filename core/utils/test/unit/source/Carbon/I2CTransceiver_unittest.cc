@@ -20,14 +20,14 @@ extern "C"
 {
 /* setup compile time configuration defines */
 
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_I2C_TRANSCEIVER
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_I2C_TRANSCEIVER
 
-#if BCDS_FEATURE_I2CTRANSCEIVER
+#if KISO_FEATURE_I2CTRANSCEIVER
 /* include faked interfaces */
-#include "BCDS_Retcode_th.hh"
-#include "BCDS_MCU_I2C_th.hh"
+#include "Kiso_Retcode_th.hh"
+#include "Kiso_MCU_I2C_th.hh"
 #include "FreeRTOS_th.hh"
 #include "semphr_th.hh"
 uint32_t tempI2CHandle = 0x55;
@@ -1160,4 +1160,4 @@ TEST_F(I2CTransceiver, I2CTransceiverLoopCallbackTransferSuccess)
 
 #else
 }
-#endif /* #if BCDS_FEATURE_I2CTRANSCEIVER */
+#endif /* #if KISO_FEATURE_I2CTRANSCEIVER */

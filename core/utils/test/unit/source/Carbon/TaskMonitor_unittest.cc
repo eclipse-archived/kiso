@@ -18,17 +18,17 @@
 
 extern "C"
 {
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_TASKMONITOR
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_TASKMONITOR
 
-#if BCDS_FEATURE_TASKMONITOR
+#if KISO_FEATURE_TASKMONITOR
 
 /* start of global scope symbol and fake definitions section */
 
 /* include faked interfaces */
-#include "BCDS_Retcode_th.hh"
-#include "BCDS_Assert_th.hh"
+#include "Kiso_Retcode_th.hh"
+#include "Kiso_Assert_th.hh"
 
 #include "task_th.hh"
 
@@ -38,8 +38,8 @@ extern "C"
 
 } /* end of global scope symbol and fake definitions section */
 
-TaskHandle_t Tasklist[BCDS_TASKMONITOR_MAX_TASKS];
-uint32_t TaskTag[BCDS_TASKMONITOR_MAX_TASKS];
+TaskHandle_t Tasklist[KISO_TASKMONITOR_MAX_TASKS];
+uint32_t TaskTag[KISO_TASKMONITOR_MAX_TASKS];
 
 TaskHookFunction_t xTaskGetApplicationTaskTagCustom( TaskHandle_t xTask )
 {
@@ -47,7 +47,7 @@ TaskHookFunction_t xTaskGetApplicationTaskTagCustom( TaskHandle_t xTask )
 	uint32_t loopcnt;
 	ret = (TaskHookFunction_t ) TaskTag[0];
 
-	for(loopcnt = 0U; loopcnt < BCDS_TASKMONITOR_MAX_TASKS; loopcnt++)
+	for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
 	{
 		if(xTask == Tasklist[loopcnt])
 		{
@@ -116,7 +116,7 @@ TEST_F(TaskMonitor, TaskMonitor_RegisterTest)
     retVal = TaskMonitor_Initialize();
 	EXPECT_EQ(RETCODE_OK, retVal);
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    for(loopcnt = 0U; loopcnt < BCDS_TASKMONITOR_MAX_TASKS; loopcnt++)
+    for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
     {
        retVal = TaskMonitor_Register(task, (loopcnt+1));
        /* VERIFY : Compare the expected with actual */
@@ -153,7 +153,7 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
 	memset(TaskTag, 0x00, sizeof(TaskTag));
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    for(loopcnt = 0U; loopcnt < BCDS_TASKMONITOR_MAX_TASKS; loopcnt++)
+    for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
     {
     	Tasklist[loopcnt] = (TaskHandle_t)&TaskTag[loopcnt];
     	retVal = TaskMonitor_Register(Tasklist[loopcnt], 1UL);
@@ -210,12 +210,12 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
 	/* task 6 is not executed with in 1 second */
 	xTaskGetTickCount_fake.return_val = 5000UL;
 	/* update all tasks execution time */
-	for(loopcnt = 0U; loopcnt < BCDS_TASKMONITOR_MAX_TASKS; loopcnt++)
+	for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
 	{
 		TaskMonitor_Update(&TaskTag[loopcnt], 4500UL);
 	}
 	/* change task 6 execution time to test the failure condition  */
-	TaskMonitor_Update(&TaskTag[BCDS_TASKMONITOR_MAX_TASKS -1], 2100UL);
+	TaskMonitor_Update(&TaskTag[KISO_TASKMONITOR_MAX_TASKS -1], 2100UL);
 	monitorCheck = TaskMonitor_Check();
 	if(monitorCheck == false)
 	{
@@ -230,7 +230,7 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
 	/* test with current tick count souver flow condition */
 	xTaskGetTickCount_fake.return_val = 10UL; /* current time 10mS counter overflow*/
 	/* update all tasks execution time */
-	for(loopcnt = 0U; loopcnt < BCDS_TASKMONITOR_MAX_TASKS; loopcnt++)
+	for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
 	{
 		TaskMonitor_Update(&TaskTag[loopcnt], UINT32_MAX-5);
 	}
@@ -249,12 +249,12 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
 	/* test : last task has failed to execute */
 	xTaskGetTickCount_fake.return_val = 150UL; /* current time 10mS counter overflow*/
 	/* update all tasks execution time */
-	for(loopcnt = 0U; loopcnt < BCDS_TASKMONITOR_MAX_TASKS; loopcnt++)
+	for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
 	{
 		TaskMonitor_Update(&TaskTag[loopcnt], UINT32_MAX-5);
 	}
 	/* change last task execution time to test the failure condition  */
-	TaskMonitor_Update(&TaskTag[BCDS_TASKMONITOR_MAX_TASKS-1], UINT32_MAX-1000);
+	TaskMonitor_Update(&TaskTag[KISO_TASKMONITOR_MAX_TASKS-1], UINT32_MAX-1000);
 	monitorCheck = TaskMonitor_Check();
 	if(monitorCheck == false)
 	{
@@ -269,7 +269,7 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
 	/* test : last task has failed to execute */
 	xTaskGetTickCount_fake.return_val = 149UL; /* current time 10mS counter overflow*/
 	/* update all tasks execution time */
-	for(loopcnt = 0U; loopcnt < BCDS_TASKMONITOR_MAX_TASKS; loopcnt++)
+	for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
 	{
 		TaskMonitor_Update(&TaskTag[loopcnt], 150UL);
 	}
@@ -287,7 +287,7 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
 	/* test : last task has failed to execute */
 	xTaskGetTickCount_fake.return_val = 148UL; /* current time 10mS counter overflow*/
 	/* update all tasks execution time */
-	for(loopcnt = 0U; loopcnt < BCDS_TASKMONITOR_MAX_TASKS; loopcnt++)
+	for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
 	{
 		TaskMonitor_Update(&TaskTag[loopcnt], 150UL);
 	}
@@ -305,7 +305,7 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
 	/* test : last task has failed to execute */
 	xTaskGetTickCount_fake.return_val = 147UL; /* current time 10mS counter overflow*/
 	/* update all tasks execution time */
-	for(loopcnt = 0U; loopcnt < BCDS_TASKMONITOR_MAX_TASKS; loopcnt++)
+	for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
 	{
 		TaskMonitor_Update(&TaskTag[loopcnt], 150UL);
 	}

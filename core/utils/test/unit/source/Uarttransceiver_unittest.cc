@@ -30,17 +30,17 @@
 extern "C"
 {
 /* setup compile time configuration defines */
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_UART_TRANSCEIVER
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_UART_TRANSCEIVER
 
-#if BCDS_FEATURE_UARTTRANSCEIVER
+#if KISO_FEATURE_UARTTRANSCEIVER
 
 /* include faked interfaces */
-#include "BCDS_Assert_th.hh"
-#include "BCDS_Retcode_th.hh"
-#include "BCDS_RingBuffer_th.hh"
-#include "BCDS_MCU_UART_th.hh"
+#include "Kiso_Assert_th.hh"
+#include "Kiso_Retcode_th.hh"
+#include "Kiso_RingBuffer_th.hh"
+#include "Kiso_MCU_UART_th.hh"
 #include "FreeRTOS_th.hh"
 #include "semphr_th.hh"
 #include "task_th.hh"
@@ -50,27 +50,27 @@ extern "C"
 
 static bool frameEndCheckFunc_FAKE(uint8_t value)
 {
-    BCDS_UNUSED(value);
+    KISO_UNUSED(value);
     return true;
 }
 
-#if BCDS_FEATURE_UART
+#if KISO_FEATURE_UART
 static void frameEndNotifyFunc_FAKE(struct MCU_UART_Event_S event)
-#elif BCDS_FEATURE_LEUART
+#elif KISO_FEATURE_LEUART
 static void frameEndNotifyFunc_FAKE(struct MCU_LEUART_Event_S event)
 #endif
 {
-    BCDS_UNUSED(event);
+    KISO_UNUSED(event);
     return;
 }
 static UARTTransceiver_T transceiver;
 
 }
 
-#if BCDS_FEATURE_UART
+#if KISO_FEATURE_UART
 #define UART_Receive_fake    MCU_UART_Receive_fake
 #define UART_TRANSCEIVER_UART_TYPE UART_TRANSCEIVER_UART_TYPE_UART
-#elif BCDS_FEATURE_LEUART
+#elif KISO_FEATURE_LEUART
 FAKE_VALUE_FUNC(Retcode_T, MCU_LEUART_Receive, LEUART_T, uint8_t*, uint32_t);
 FAKE_VALUE_FUNC(Retcode_T, MCU_LEUART_Send, LEUART_T, uint8_t*, uint32_t);
 #define UART_Receive_fake    MCU_LEUART_Receive_fake
@@ -108,9 +108,9 @@ protected:
         transceiver.errorCode = RETCODE_SUCCESS;
 
         RESET_FAKE(xSemaphoreCreateBinary);
-#if BCDS_FEATURE_UART
+#if KISO_FEATURE_UART
         RESET_FAKE(MCU_UART_Receive);
-#elif BCDS_FEATURE_LEUART
+#elif KISO_FEATURE_LEUART
         RESET_FAKE(MCU_LEUART_Receive);
 #endif
         FFF_RESET_HISTORY()
@@ -125,7 +125,7 @@ protected:
 bool EndOfFrameCheckFlag = TRUE;
 bool EndOfFrameCheck(uint8_t lastByte)
 {
-    BCDS_UNUSED(lastByte);
+    KISO_UNUSED(lastByte);
     if(TRUE == EndOfFrameCheckFlag)
     {
         return (TRUE);
@@ -137,7 +137,7 @@ bool EndOfFrameCheck(uint8_t lastByte)
 }
 void UartCallback(struct MCU_UART_Event_S event)
 {
-    BCDS_UNUSED(event);
+    KISO_UNUSED(event);
 }
 /**
  *  @brief
@@ -313,7 +313,7 @@ TEST_F(UARTTransceiverTest, UartTransceiverStop_FAILURE_INVALID_PARAM)
     retcode = UARTTransceiver_Stop((UARTTransceiver_T*) NULL);
     EXPECT_NE(RETCODE_OK, retcode);
 
-#if BCDS_FEATURE_UART
+#if KISO_FEATURE_UART
     transceiver.UartType = UART_TRANSCEIVER_UART_TYPE_NONE;
     transceiver.State = UART_TRANSCEIVER_STATE_ACTIVE;
     retcode = UARTTransceiver_Stop(&transceiver);
@@ -390,7 +390,7 @@ TEST_F(UARTTransceiverTest, UartTransceiverStartInAsyncMode_FAILURE_INVALID_PARA
     retcode = UARTTransceiver_StartInAsyncMode(NULL, frameEndCheckFunc_FAKE, frameEndNotifyFunc_FAKE);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), retcode);
 
-#if BCDS_FEATURE_UART
+#if KISO_FEATURE_UART
     transceiver.UartType = UART_TRANSCEIVER_UART_TYPE_NONE;
     retcode = UARTTransceiver_StartInAsyncMode(&transceiver, NULL, frameEndNotifyFunc_FAKE);
     EXPECT_EQ(RETCODE_OK, retcode);
@@ -461,7 +461,7 @@ TEST_F(UARTTransceiverTest, UartTransceiverSuspend_FAILURE_INVALID_PARAM)
     retcode = UARTTransceiver_Suspend((UARTTransceiver_T*) NULL);
     EXPECT_NE(RETCODE_OK, retcode);
 
-#if BCDS_FEATURE_UART
+#if KISO_FEATURE_UART
     transceiver.UartType = UART_TRANSCEIVER_UART_TYPE_NONE;
     retcode = UARTTransceiver_Suspend(&transceiver);
     EXPECT_EQ(RETCODE_OK, retcode);
@@ -545,7 +545,7 @@ TEST_F(UARTTransceiverTest, UartTransceiverResume_FAILURE_INVALID_PARAM)
     retcode = UARTTransceiver_Resume((UARTTransceiver_T*) NULL);
 
     EXPECT_NE(RETCODE_OK, retcode);
-#if BCDS_FEATURE_UART
+#if KISO_FEATURE_UART
     transceiver.UartType = UART_TRANSCEIVER_UART_TYPE_NONE;
     retcode = UARTTransceiver_Resume(&transceiver);
     EXPECT_EQ(RETCODE_OK, retcode);
@@ -690,7 +690,7 @@ TEST_F(UARTTransceiverTest, UARTTransceiverWriteDataTest)
     retcode = UARTTransceiver_WriteData(&transceiver, rawRxBuffer, rawRxBufferSize, timeout_ms);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), retcode);
 
-#if BCDS_FEATURE_UART
+#if KISO_FEATURE_UART
     transceiver.UartType = UART_TRANSCEIVER_UART_TYPE_NONE;
     retcode = UARTTransceiver_WriteData(&transceiver, rawRxBuffer, rawRxBufferSize, timeout_ms);
     EXPECT_EQ(RETCODE_OK, retcode);
@@ -700,7 +700,7 @@ TEST_F(UARTTransceiverTest, UARTTransceiverWriteDataTest)
     retcode = UARTTransceiver_WriteData(&transceiver, rawRxBuffer, rawRxBufferSize, timeout_ms);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSITENT_STATE), retcode);
 }
-#if BCDS_FEATURE_UART
+#if KISO_FEATURE_UART
 TEST_F(UARTTransceiverTest, UARTTransceiverLoopCallbackReceiveTest)
 {
     struct MCU_UART_Event_S event;
@@ -791,7 +791,7 @@ TEST_F(UARTTransceiverTest, LoopCallbackRxErrorTest)
     EXPECT_EQ(RETCODE_FAILURE, transceiver.errorCode);
 }
 
-#elif BCDS_FEATURE_LEUART
+#elif KISO_FEATURE_LEUART
 TEST_F(UARTTransceiverTest, UARTLELoopCallbackReceiveTest)
 {
     struct MCU_LEUART_Event_S event;
@@ -881,7 +881,7 @@ TEST_F(UARTTransceiverTest, LELoopCallbackRxErrorTest)
     EXPECT_EQ(0U, transceiver.AsyncEvent.bitfield.RxError);
     EXPECT_EQ(RETCODE_FAILURE, transceiver.errorCode);
 }
-#endif /* BCDS_FEATURE_LEUART */
+#endif /* KISO_FEATURE_LEUART */
 TEST_F(UARTTransceiverTest, DummyFrameEndCheckFuncTest)
 {
     bool status;
@@ -892,7 +892,7 @@ TEST_F(UARTTransceiverTest, DummyFrameEndCheckFuncTest)
 
 }
 
-#endif //BCDS_FEATURE_UARTTRANSCEIVER
+#endif //KISO_FEATURE_UARTTRANSCEIVER
 
 
 

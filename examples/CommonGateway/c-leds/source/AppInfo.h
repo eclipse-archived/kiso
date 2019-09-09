@@ -27,10 +27,10 @@
 #define TASK_Q_LEN_MAIN_CMD_PROCESSOR                (UINT32_C(10))
 
 /**
- * @brief BCDS_APP_MODULE_ID for Application C module of XDK
+ * @brief KISO_APP_MODULE_ID for Application C module of XDK
  * @info  usage:
- *      #undef BCDS_APP_MODULE_ID
- *      #define BCDS_APP_MODULE_ID BCDS_APP_MODULE_ID_xxx
+ *      #undef KISO_APP_MODULE_ID
+ *      #define KISO_APP_MODULE_ID KISO_APP_MODULE_ID_xxx
  */
 enum App_ModuleID_E
 {

@@ -31,7 +31,7 @@ extern "C"
 #undef RETCODE
 #define RETCODE(severity,code) ((Retcode_T) code)
 
-#undef BCDS_MODULE_ID
+#undef KISO_MODULE_ID
 #include "AtUtils.c"
 
 #ifndef countof
@@ -44,7 +44,7 @@ static Retcode_T WaitArbitraryResponseResult = RETCODE_OK;
 
 static Retcode_T WaitArbitaryResponseCustom(uint32_t timeout, AtResponseCode_T *response)
 {
-    BCDS_UNUSED(timeout);
+    KISO_UNUSED(timeout);
 
     *response = WaitArbitraryResponseValue;
     return WaitArbitraryResponseResult;

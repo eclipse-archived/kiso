@@ -12,20 +12,20 @@
 *
 ********************************************************************************/
 
-#include "BCDS_CellularModules.h"
-#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_SOCKET_SERVICE
+#include "Kiso_CellularModules.h"
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_SOCKET_SERVICE
 
 #include "SocketService.h"
 #include "UBloxUtils.h"
-#include "BCDS_CellularSocketService.h"
-#include "BCDS_Cellular.h"
-#include "BCDS_CellularConfig.h"
+#include "Kiso_CellularSocketService.h"
+#include "Kiso_Cellular.h"
+#include "Kiso_CellularConfig.h"
 #include "Engine.h"
 #include "AT_UBlox.h"
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
-#include "BCDS_Assert.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
 
 #include <limits.h>
 
@@ -321,7 +321,7 @@ static inline Retcode_T CelToUbloxProt(CellularSocket_Protocol_T from, AT_USOCR_
 
 static Retcode_T CreateAndBind(void* param, uint32_t len)
 {
-    BCDS_UNUSED(len);
+    KISO_UNUSED(len);
 
     assert(NULL != param);
     assert(sizeof(struct CellularSocket_CreateAndBindParam_S) == len);
@@ -381,7 +381,7 @@ static Retcode_T CreateAndBind(void* param, uint32_t len)
 
 static Retcode_T Connect(void* param, uint32_t len)
 {
-    BCDS_UNUSED(len);
+    KISO_UNUSED(len);
 
     assert(NULL != param);
     assert(sizeof(struct CellularSocket_ConnectParam_S) == len);
@@ -404,7 +404,7 @@ static Retcode_T Connect(void* param, uint32_t len)
 
 static Retcode_T Listen(void* param, uint32_t len)
 {
-    BCDS_UNUSED(len);
+    KISO_UNUSED(len);
 
     assert(NULL != param);
     assert(sizeof(struct CellularSocket_ListenParam_S) == len);
@@ -431,7 +431,7 @@ static Retcode_T Listen(void* param, uint32_t len)
 
 static Retcode_T Send(void* param, uint32_t len)
 {
-    BCDS_UNUSED(len);
+    KISO_UNUSED(len);
 
     assert(NULL != param);
     assert(sizeof(struct CellularSocket_SendToParam_S) == len);
@@ -449,7 +449,7 @@ static Retcode_T Send(void* param, uint32_t len)
 
 static Retcode_T SendTo(void* param, uint32_t len)
 {
-    BCDS_UNUSED(len);
+    KISO_UNUSED(len);
 
     assert(NULL != param);
     assert(sizeof(struct CellularSocket_SendToParam_S) == len);
@@ -474,7 +474,7 @@ static Retcode_T SendTo(void* param, uint32_t len)
 
 static Retcode_T Receive(void* param, uint32_t len)
 {
-    BCDS_UNUSED(len);
+    KISO_UNUSED(len);
 
     assert(NULL != param);
     assert(sizeof(struct CellularSocket_ReceiveFromParam_S) == len);
@@ -497,7 +497,7 @@ static Retcode_T Receive(void* param, uint32_t len)
 
 static Retcode_T ReceiveFrom(void* param, uint32_t len)
 {
-    BCDS_UNUSED(len);
+    KISO_UNUSED(len);
 
     assert(NULL != param);
     assert(sizeof(struct CellularSocket_ReceiveFromParam_S) == len);
@@ -531,7 +531,7 @@ static Retcode_T ReceiveFrom(void* param, uint32_t len)
 
 static Retcode_T Close(void* param, uint32_t len)
 {
-    BCDS_UNUSED(len);
+    KISO_UNUSED(len);
 
     assert(NULL != param);
     assert(sizeof(struct CellularSocket_Context_S) == len);
@@ -613,7 +613,7 @@ static inline Retcode_T CelToUbloxProt(CellularSocket_Protocol_T from, AT_USOCR_
 
 void SocketService_NotifySocketDataReceived(uint32_t socketId, uint32_t length)
 {
-    BCDS_UNUSED(length);
+    KISO_UNUSED(length);
 
     struct CellularSocket_Context_S* ctx = NULL;
     CellularSocket_Handle_T handle;
@@ -645,8 +645,8 @@ void SocketService_NotifySocketAccepted(uint32_t createdSocketId,
         const AT_UBlox_Address_T* localIp,
         uint16_t listeningPort)
 {
-    BCDS_UNUSED(localIp);
-    BCDS_UNUSED(listeningPort);
+    KISO_UNUSED(localIp);
+    KISO_UNUSED(listeningPort);
 
     struct CellularSocket_Context_S* listeningCtx = NULL;
     struct CellularSocket_Context_S* createdCtx = NULL;

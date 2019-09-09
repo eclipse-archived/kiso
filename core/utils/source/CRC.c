@@ -17,13 +17,13 @@
 /* additional interface header files */
 
 /* own header files */
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_CRC
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_CRC
 
-#include "BCDS_CRC.h"
+#include "Kiso_CRC.h"
 
-#if BCDS_FEATURE_CRC
+#if KISO_FEATURE_CRC
 
 #define CRC_SHIFT_VAL                   UINT8_C(1)                /**< used to shift data by one time */
 #define CRC8_MASK_VAL                   UINT8_C(0X80)             /**< used to mask MSB bit of the byte */
@@ -31,7 +31,7 @@
 #define CRC32_MASK_VAL                  UINT32_C(0X80000000)      /**< used to mask MSB bit of the byte */
 #define CRC32_ETHERNET_MASK_VAL         UINT32_C(0x00000001)      /**< used to mask LSB bit of the byte */
 
-/*  The description of the function is available in BCDS_CRC.h */
+/*  The description of the function is available in Kiso_CRC.h */
 Retcode_T CRC_8(uint8_t poly, uint8_t * shifter, uint8_t * data_p, uint16_t len)
 {
     uint8_t lftmstShftrBit;
@@ -84,7 +84,7 @@ Retcode_T CRC_8(uint8_t poly, uint8_t * shifter, uint8_t * data_p, uint16_t len)
     return (retVal);
 }
 
-/*  The description of the function is available in BCDS_CRC.h */
+/*  The description of the function is available in Kiso_CRC.h */
 Retcode_T CRC_16(uint16_t poly, uint16_t * shifter, uint8_t * data_p, uint16_t len)
 {
     uint16_t lftmstShftrBit;
@@ -136,7 +136,7 @@ Retcode_T CRC_16(uint16_t poly, uint16_t * shifter, uint8_t * data_p, uint16_t l
     return (retVal);
 }
 
-/*  The description of the function is available in BCDS_CRC.h */
+/*  The description of the function is available in Kiso_CRC.h */
 Retcode_T CRC_32(uint32_t poly, uint32_t * shifter, uint8_t * data_p, uint16_t len)
 {
     uint32_t lftmstShftrBit;
@@ -189,7 +189,7 @@ Retcode_T CRC_32(uint32_t poly, uint32_t * shifter, uint8_t * data_p, uint16_t l
     return (retVal);
 }
 
-/*  The description of the function is available in BCDS_CRC.h */
+/*  The description of the function is available in Kiso_CRC.h */
 Retcode_T CRC_32_Reverse(uint32_t poly, uint32_t * shifter, uint8_t * data_p, uint16_t len)
 {
     uint32_t lftmstShftrBit;
@@ -242,4 +242,4 @@ Retcode_T CRC_32_Reverse(uint32_t poly, uint32_t * shifter, uint8_t * data_p, ui
     return (retVal);
 }
 
-#endif /* if BCDS_FEATURE_CRC */
+#endif /* if KISO_FEATURE_CRC */

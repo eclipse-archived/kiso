@@ -18,16 +18,16 @@
  * @brief Implementation of a Mutex for non Os
  *
  */
-#include "BCDS_Essentials.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_ESSENTIALS_MODULE_ID_LOCK
+#include "Kiso_Essentials.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_LOCK
 
 
 /* own header files */
-#include "BCDS_HAL_Mutex.h"
+#include "Kiso_HAL_Mutex.h"
 
 /* additional interface header files */
-#include "BCDS_Basics.h"
+#include "Kiso_Basics.h"
 #include "Cmsis.h"
 
 
@@ -83,13 +83,13 @@ Retcode_T HAL_Mutex_Unlock(HAL_Mutex_T *mutex)
 
 static Retcode_T NoOs_Mutex_Lock(HAL_Mutex_T *mutex)
 {
-	BCDS_UNUSED(mutex);
+	KISO_UNUSED(mutex);
 	return RETCODE_OK;
 }
 
 static Retcode_T NoOs_Mutex_Unlock(HAL_Mutex_T *mutex)
 {
-	BCDS_UNUSED(mutex);
+	KISO_UNUSED(mutex);
 	return RETCODE_OK;
 }
 

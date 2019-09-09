@@ -1081,7 +1081,7 @@ uint32_t HAL_ADCEx_MultiModeGetValue(ADC_HandleTypeDef* hadc)
   /* Pointer to the common control register  */
   tmpADC_Common = ADC_COMMON_REGISTER(hadc);
   
-  BCDS_UNUSED(hadc);
+  KISO_UNUSED(hadc);
   /* Return the multi mode conversion value */
   return tmpADC_Common->CDR;
 }

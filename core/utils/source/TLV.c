@@ -16,17 +16,17 @@
 /* module includes ********************************************************** */
 
 /* own header files */
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_TLV
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_TLV
 
-#include "BCDS_TLV.h"
+#include "Kiso_TLV.h"
 
-#if BCDS_FEATURE_TLV
+#if KISO_FEATURE_TLV
 
 /* system header files */
-#include "BCDS_Basics.h"
-#include "BCDS_Assert.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Assert.h"
 
 /* additional interface header files */
 
@@ -365,4 +365,4 @@ void TLV_RemoveElement(TLV_GroupHandle_TP const Handle, const uint16_t Type)
     }
 }
 
-#endif /* if BCDS_FEATURE_TLV */
+#endif /* if KISO_FEATURE_TLV */

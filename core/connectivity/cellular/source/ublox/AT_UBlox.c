@@ -12,8 +12,8 @@
 *
 ********************************************************************************/
 
-#include "BCDS_CellularModules.h"
-#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_AT_UBLOX
+#include "Kiso_CellularModules.h"
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_AT_UBLOX
 
 #include "AT_UBlox.h"
 #include "AtResponseQueue.h"
@@ -22,10 +22,10 @@
 #include "SocketService.h"
 #include "HttpService.h"
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
-#include "BCDS_Assert.h"
-#include "BCDS_Logging.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
+#include "Kiso_Logging.h"
 
 #include "FreeRTOS.h"
 #include "task.h"

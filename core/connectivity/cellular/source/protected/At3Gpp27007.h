@@ -19,7 +19,7 @@
 #ifndef AT3GPP27007_H_
 #define AT3GPP27007_H_
 
-#include "BCDS_Retcode.h"
+#include "Kiso_Retcode.h"
 #include <limits.h>
 
 #define AT_COPS_OPER_FORMAT_LONG_ALPHANUMERIC_MAX_LEN   (UINT32_C(16))

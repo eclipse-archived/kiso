@@ -39,7 +39,7 @@
  *  the ARM Embedded ABI.
  */
 
-#include "BCDS_HAL.h"
+#include "Kiso_HAL.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
@@ -63,14 +63,14 @@ void HardFault_Handler(void);
 void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress)
 {
     /* variables must be volatile to prevent the optimizer removing them */
-    volatile uint32_t BCDS_UNUSED_FUNC(r0);
-    volatile uint32_t BCDS_UNUSED_FUNC(r1);
-    volatile uint32_t BCDS_UNUSED_FUNC(r2);
-    volatile uint32_t BCDS_UNUSED_FUNC(r3);
-    volatile uint32_t BCDS_UNUSED_FUNC(r12);
-    volatile uint32_t BCDS_UNUSED_FUNC(lr); /* link register */
-    volatile uint32_t BCDS_UNUSED_FUNC(pc); /* program counter */
-    volatile uint32_t BCDS_UNUSED_FUNC(psr); /* program status register */
+    volatile uint32_t KISO_UNUSED_FUNC(r0);
+    volatile uint32_t KISO_UNUSED_FUNC(r1);
+    volatile uint32_t KISO_UNUSED_FUNC(r2);
+    volatile uint32_t KISO_UNUSED_FUNC(r3);
+    volatile uint32_t KISO_UNUSED_FUNC(r12);
+    volatile uint32_t KISO_UNUSED_FUNC(lr); /* link register */
+    volatile uint32_t KISO_UNUSED_FUNC(pc); /* program counter */
+    volatile uint32_t KISO_UNUSED_FUNC(psr); /* program status register */
 
     r0 = pulFaultStackAddress[0];
     r1 = pulFaultStackAddress[1];

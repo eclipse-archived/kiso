@@ -20,24 +20,24 @@
  */
 
 /* Include utils to have access to the defined module and error IDs */
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID  BCDS_UTILS_MODULE_ID_LOGGING_RECORD_SYNCHRONOUS
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_LOGGING_RECORD_SYNCHRONOUS
 
 /* Include the Logging header, which include the configuration that enable and define macros for this module */
-#include "BCDS_Logging.h"
+#include "Kiso_Logging.h"
 
 /* Enable/Disable macro for the feature */
-#if BCDS_FEATURE_LOGGING && BCDS_SYNC_RECORDER
+#if KISO_FEATURE_LOGGING && KISO_SYNC_RECORDER
 
 /* Include needed headers */
 #include <stdio.h>
 #include <stdarg.h>
 #include "FreeRTOS.h"
 #include "task.h"
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
-#include "BCDS_Assert.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
 
 /* Message structure definition via macros*/
 #define LOG_LINE_FMT "%" PRIu32 " %s %" PRIu32 " %.*s\t[%s:%" PRIu32 "]\t"
@@ -83,7 +83,7 @@ static Retcode_T SyncRecorder_Write(void *self, LogLevel_T level, uint8_t packag
 {
     char buffer[LOG_BUFFER_SIZE] = {0};
     int32_t size = 0;
-    BCDS_UNUSED(module);
+    KISO_UNUSED(module);
 
     /* Check NULL pointers to avoid overflows or wrong addressing */
     if ( (NULL == file) || (NULL == fmt) || (NULL == self))
@@ -129,4 +129,4 @@ static const LogRecorder_T LogRecordSyncCompact =
 };
 const LogRecorder_T* Logging_SyncRecorder = &LogRecordSyncCompact;
 
-#endif /* if BCDS_FEATURE_LOGGING && BCDS_SYNC_RECORDER*/
+#endif /* if KISO_FEATURE_LOGGING && KISO_SYNC_RECORDER*/

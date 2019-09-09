@@ -13,8 +13,8 @@
 ********************************************************************************/
  
 /* header definition ******************************************************** */
-#ifndef BCDS_BNO055_TH_HH_
-#define BCDS_BNO055_TH_HH_
+#ifndef KISO_BNO055_TH_HH_
+#define KISO_BNO055_TH_HH_
 
 
 #include "bno055.h"
@@ -261,6 +261,6 @@ FAKE_VALUE_FUNC(BNO055_RETURN_FUNCTION_TYPE, bno055_set_gyro_any_motion_slope_sa
 FAKE_VALUE_FUNC(BNO055_RETURN_FUNCTION_TYPE, bno055_get_gyro_any_motion_awake_durn, u8 *);
 FAKE_VALUE_FUNC(BNO055_RETURN_FUNCTION_TYPE, bno055_set_gyro_any_motion_awake_durn, u8 );
 
-#endif /* BCDS_BNO055_TH_HH_ */
+#endif /* KISO_BNO055_TH_HH_ */
 
 /*************************************************************************** */

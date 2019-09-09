@@ -26,8 +26,8 @@
 
 /* own header files */
 #include "AppInfo.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID APP_MODULE_ID_BLINKY_LED
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID APP_MODULE_ID_BLINKY_LED
 
 /* system header files */
 #include <stdio.h>
@@ -35,12 +35,12 @@
 /* additional interface header files */
 #include "blinky_led.h"
 #include "BSP_CommonGateway.h"
-#include "BCDS_BSP_LED.h"
-#include "BCDS_CmdProcessor.h"
-#include "BCDS_Assert.h"
+#include "Kiso_BSP_LED.h"
+#include "Kiso_CmdProcessor.h"
+#include "Kiso_Assert.h"
 #include "FreeRTOS.h"
 #include "timers.h"
-#include "BCDS_Logging.h"
+#include "Kiso_Logging.h"
 #include "SEGGER_RTT.h"
 
 void blink_led(void* param1, uint32_t param2);

@@ -19,7 +19,7 @@
  * @{
  * @brief       Common Gateway Board Support Package
  *
- * @details     Reflect the circuit-board and implements the needed interfaces present in \ref BCDS_HAL_BSP_IF
+ * @details     Reflect the circuit-board and implements the needed interfaces present in \ref KISO_HAL_BSP_IF
  *
  * @warning     **maxm8** and **w25q64** were not tested. No Drivers were also implemented.
  *
@@ -29,7 +29,7 @@
 #ifndef BSP_COMMONGATEWAY_H_
 #define BSP_COMMONGATEWAY_H_
 
-#include "BCDS_HAL.h"
+#include "Kiso_HAL.h"
 
 /**
  * Module IDs provided by the BSP for retcode composition

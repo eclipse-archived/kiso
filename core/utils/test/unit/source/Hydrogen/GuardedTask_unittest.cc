@@ -29,15 +29,15 @@ FFF_DEFINITION_BLOCK_START /* start of global scope symbol and fake definitions 
 /* setup compile time configuration defines */
 extern "C"
 {
-#include "BCDS_Utils.h"
-#if BCDS_FEATURE_GUARDEDTASK
+#include "Kiso_Utils.h"
+#if KISO_FEATURE_GUARDEDTASK
 
 /* include faked interfaces */
 #include "Task_th.hh"
 #include "Semaphore_th.hh"
 #include "ICall_th.hh"
 #include "util_th.hh"
-#include "BCDS_Retcode_th.hh"
+#include "Kiso_Retcode_th.hh"
 
 /* include module under test */
 #undef while
@@ -50,13 +50,13 @@ extern "C"
 void fun(void)
 {
     uint8_t temp = 5;
-    BCDS_UNUSED(temp);
+    KISO_UNUSED(temp);
 }
 
 ti_sysbios_knl_Task_Handle ti_sysbios_knl_Task_create_customfake(ti_sysbios_knl_Task_FuncPtr fxn, const ti_sysbios_knl_Task_Params *__paramsPtr, xdc_runtime_Error_Block *__eb )
 {
-    BCDS_UNUSED(__paramsPtr);
-    BCDS_UNUSED(__eb);
+    KISO_UNUSED(__paramsPtr);
+    KISO_UNUSED(__eb);
     fxn((UArg)0,(UArg)0);
 
     return (ti_sysbios_knl_Task_Handle)(0xAA);
@@ -64,7 +64,7 @@ ti_sysbios_knl_Task_Handle ti_sysbios_knl_Task_create_customfake(ti_sysbios_knl_
 
 void ti_sysbios_knl_Semaphore_post__E_customfake(ti_sysbios_knl_Semaphore_Handle a)
 {
-    BCDS_UNUSED(a);
+    KISO_UNUSED(a);
     GuardedTaskRunFunction(0,0);
 }
 
@@ -334,4 +334,4 @@ TEST_F(GuardedTask,DeprecatedSignal)
 /*****************************************************************************************/
 #else
 }
-#endif /* if BCDS_FEATURE_GUARDEDTASK */
+#endif /* if KISO_FEATURE_GUARDEDTASK */

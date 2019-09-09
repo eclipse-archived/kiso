@@ -19,10 +19,10 @@ extern "C"
 {/* start of global scope symbol and fake definitions section */
 
 
-#include "BCDS_Basics.h"
-#include "BCDS_HAL_th.hh"
+#include "Kiso_Basics.h"
+#include "Kiso_HAL_th.hh"
 
-#if BCDS_FEATURE_WATCHDOG
+#if KISO_FEATURE_WATCHDOG
 /* include faked interfaces */
 #include "stm32l4xx_th.hh"
 #include "stm32l4xx_hal_iwdg_th.hh"
@@ -275,4 +275,4 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_IsResetCausedByWatchdog_success_notDueT
 #else
 }
 
-#endif /* if BCDS_FEATURE_WATCHDOG */
+#endif /* if KISO_FEATURE_WATCHDOG */

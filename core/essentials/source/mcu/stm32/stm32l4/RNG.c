@@ -12,15 +12,15 @@
 *
 ********************************************************************************/
 
-#include "BCDS_MCU_RNG.h"
+#include "Kiso_MCU_RNG.h"
 
-#if BCDS_FEATURE_RNG
+#if KISO_FEATURE_RNG
 
 #include "stm32l4xx_hal.h"
 #include "stm32l4xx_hal_rng.h"
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_ESSENTIALS_MODULE_ID_RNG
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_RNG
 
 #define AS_CUBE_HANDLE(rng) ((RNG_HandleTypeDef*) rng)
 
@@ -141,4 +141,4 @@ Retcode_T MCU_RNG_Generate(RNG_T rng, uint8_t* buffer, uint32_t length)
     return retcode;
 }
 
-#endif /* if BCDS_FEATURE_RNG */
+#endif /* if KISO_FEATURE_RNG */

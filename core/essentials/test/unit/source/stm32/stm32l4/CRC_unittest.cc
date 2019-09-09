@@ -17,12 +17,12 @@
 
 extern "C"
 {
-#include "BCDS_Basics.h"
-#include "BCDS_HAL_th.hh"
+#include "Kiso_Basics.h"
+#include "Kiso_HAL_th.hh"
 
-#if BCDS_FEATURE_MCU_CRC
+#if KISO_FEATURE_MCU_CRC
 /* include faked interfaces */
-#include "BCDS_Retcode_th.hh"
+#include "Kiso_Retcode_th.hh"
 #include "stm32l4xx_th.hh"
 #include "stm32l4xx_hal_th.hh"
 #include "stm32l4xx_hal_crc_th.hh"
@@ -39,7 +39,7 @@ FAKE_VOID_FUNC(__HAL_RCC_CRC_CLK_DISABLE);
 
 } /* extern "C"*/
 
-class BCDS_CRCtest: public testing::Test
+class KISO_CRCtest: public testing::Test
 {
 protected:
     virtual void SetUp()
@@ -60,9 +60,9 @@ protected:
 
 /*************************specify test cases******************************* */
 
-TEST_F(BCDS_CRCtest, Crc8InvalidParmeters)
+TEST_F(KISO_CRCtest, Crc8InvalidParmeters)
 {
-	/** @testcase{ BCDS_CRCtest::Crc8InvalidParmeters: }
+	/** @testcase{ KISO_CRCtest::Crc8InvalidParmeters: }
 	 * MCU_CRC8() with Inavalid parameters test cases.
 	 */
 
@@ -121,10 +121,10 @@ TEST_F(BCDS_CRCtest, Crc8InvalidParmeters)
 
 }
 
-TEST_F(BCDS_CRCtest, Crc8Success)
+TEST_F(KISO_CRCtest, Crc8Success)
 {
 
-	/** @testcase{ BCDS_CRCtest::Crc8Success: }
+	/** @testcase{ KISO_CRCtest::Crc8Success: }
 	 * MCU_CRC8() with CRC calculate success test case.
 	 */
 
@@ -153,9 +153,9 @@ TEST_F(BCDS_CRCtest, Crc8Success)
 }
 
 
-TEST_F(BCDS_CRCtest, Crc8RetcodeFailure)
+TEST_F(KISO_CRCtest, Crc8RetcodeFailure)
 {
-	/** @testcase{ BCDS_CRCtest::Crc8RetcodeFailure: }
+	/** @testcase{ KISO_CRCtest::Crc8RetcodeFailure: }
 	 * MCU_CRC8() with return code failure test case.
 	 */
 
@@ -204,9 +204,9 @@ TEST_F(BCDS_CRCtest, Crc8RetcodeFailure)
 
 }
 
-TEST_F(BCDS_CRCtest, Crc16InvalidParmeters )
+TEST_F(KISO_CRCtest, Crc16InvalidParmeters )
 {
-	/** @testcase{ BCDS_CRCtest::Crc16InvalidParmeters: }
+	/** @testcase{ KISO_CRCtest::Crc16InvalidParmeters: }
 	 * MCU_CRC16() with Invalid parameters test cases.
 	 */
 
@@ -265,9 +265,9 @@ TEST_F(BCDS_CRCtest, Crc16InvalidParmeters )
 }
 
 
-TEST_F(BCDS_CRCtest, Crc16Success)
+TEST_F(KISO_CRCtest, Crc16Success)
 {
-	/** @testcase{ BCDS_CRCtest::Crc16Success: }
+	/** @testcase{ KISO_CRCtest::Crc16Success: }
 	 * MCU_CRC16() CRC 16-Bit calculate success test case.
 	 */
 
@@ -296,9 +296,9 @@ TEST_F(BCDS_CRCtest, Crc16Success)
 }
 
 
-TEST_F(BCDS_CRCtest, Crc16RetcodeFailure)
+TEST_F(KISO_CRCtest, Crc16RetcodeFailure)
 {
-	/** @testcase{ BCDS_CRCtest::Crc16retcodefail: }
+	/** @testcase{ KISO_CRCtest::Crc16retcodefail: }
 	 * MCU_CRC16() return code failure test case.
 	 */
 
@@ -347,9 +347,9 @@ TEST_F(BCDS_CRCtest, Crc16RetcodeFailure)
 
 }
 
-TEST_F(BCDS_CRCtest, Crc32InvalidParmeters )
+TEST_F(KISO_CRCtest, Crc32InvalidParmeters )
 {
-	/** @testcase{ BCDS_CRCtest::Crc32InvalidParmeters: }
+	/** @testcase{ KISO_CRCtest::Crc32InvalidParmeters: }
 	 * MCU_CRC32() invalid parameters(NULL) test cases.
 	 */
 
@@ -427,9 +427,9 @@ TEST_F(BCDS_CRCtest, Crc32InvalidParmeters )
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
 }
 
-TEST_F(BCDS_CRCtest, Crc32Success)
+TEST_F(KISO_CRCtest, Crc32Success)
 {
-	/** @testcase{ BCDS_CRCtest::Crc32Success: }
+	/** @testcase{ KISO_CRCtest::Crc32Success: }
 	 * MCU_CRC32() CRC calculate success test case.
 	 */
 
@@ -458,9 +458,9 @@ TEST_F(BCDS_CRCtest, Crc32Success)
 	EXPECT_EQ(RETCODE_OK, retcode);
 }
 
-TEST_F(BCDS_CRCtest, Crc32RetcodeFailure)
+TEST_F(KISO_CRCtest, Crc32RetcodeFailure)
 {
-	/** @testcase{ BCDS_CRCtest::Crc32RetcodeFailure: }
+	/** @testcase{ KISO_CRCtest::Crc32RetcodeFailure: }
 	 * MCU_CRC32() retcode failure test case.
 	 */
 
@@ -507,4 +507,4 @@ TEST_F(BCDS_CRCtest, Crc32RetcodeFailure)
 }
 #else
 }
-#endif /* BCDS_FEATURE_MCU_CRC */
+#endif /* KISO_FEATURE_MCU_CRC */

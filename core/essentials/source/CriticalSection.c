@@ -20,21 +20,21 @@
  *
  * @note
  */
-#include "BCDS_Essentials.h"
+#include "Kiso_Essentials.h"
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_ESSENTIALS_MODULE_ID_CRITICALSECTION
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_CRITICALSECTION
 
 
 /* additional interface header files */
-#include "BCDS_Basics.h"
+#include "Kiso_Basics.h"
 
 
 
 #ifdef __GNUC__
 
 /* own header files */
-#include "BCDS_HAL_CriticalSection.h"
+#include "Kiso_HAL_CriticalSection.h"
 #include "Cmsis.h"
 
 #ifdef ti_cc26xx

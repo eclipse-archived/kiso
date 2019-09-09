@@ -12,22 +12,22 @@
 *
 ********************************************************************************/
 
-#include "BCDS_CellularModules.h"
-#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_POWER
+#include "Kiso_CellularModules.h"
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_POWER
 
 #include "Power.h"
-#include "BCDS_Cellular.h"
-#include "BCDS_CellularConfig.h"
+#include "Kiso_Cellular.h"
+#include "Kiso_CellularConfig.h"
 #include "Engine.h"
 #include "AtResponseQueue.h"
 #include "Hardware.h"
 #include "At3Gpp27007.h"
 #include "AT_UBlox.h"
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
 
-#include "BCDS_Logging.h"
+#include "Kiso_Logging.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -232,7 +232,7 @@ static Retcode_T ProbeForResponsiveness(void)
 
 static Retcode_T StartupCellular(void *parameter, uint32_t parameterLength)
 {
-    BCDS_UNUSED(parameterLength);
+    KISO_UNUSED(parameterLength);
     assert(NULL != parameter);
     assert(sizeof(Cellular_PowerUpParameters_T) == parameterLength);
     const Cellular_PowerUpParameters_T* powerUpParam = (const Cellular_PowerUpParameters_T*) parameter;
@@ -336,8 +336,8 @@ static Retcode_T CheckCellular(void* parameter, uint32_t parameterLength)
 
 static Retcode_T ShutdownCellular(void* parameter, uint32_t parameterLength)
 {
-    BCDS_UNUSED(parameter);
-    BCDS_UNUSED(parameterLength);
+    KISO_UNUSED(parameter);
+    KISO_UNUSED(parameterLength);
 
     LOG_DEBUG("Powering down Cellular.");
 
@@ -358,7 +358,7 @@ static Retcode_T ShutdownCellular(void* parameter, uint32_t parameterLength)
 
 static Retcode_T ResetCellular(void* parameter, uint32_t parameterLength)
 {
-    BCDS_UNUSED(parameterLength);
+    KISO_UNUSED(parameterLength);
     assert(NULL != parameter);
     assert(sizeof(Cellular_PowerUpParameters_T) == parameterLength);
     const Cellular_PowerUpParameters_T* powerUpParam = (const Cellular_PowerUpParameters_T*) parameter;

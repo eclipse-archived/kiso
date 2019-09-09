@@ -25,7 +25,7 @@
 #ifndef PROTECTED_GPIO_H_
 #define PROTECTED_GPIO_H_
 
-#include "BCDS_HAL.h"
+#include "Kiso_HAL.h"
 #include "stm32l4xx_hal.h"
 #include "stm32l4xx_hal_gpio.h"
 

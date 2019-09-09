@@ -19,23 +19,23 @@
  *
  */
 
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID  BCDS_UTILS_MODULE_ID_LOGGING
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_LOGGING
 
-#include "BCDS_Logging.h"
+#include "Kiso_Logging.h"
 
-#if BCDS_FEATURE_LOGGING
+#if KISO_FEATURE_LOGGING
 
-#include "BCDS_Retcode.h"
-#include "BCDS_Assert.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
 #include <stdio.h>
 
 static LogRecorder_T Logging_Recorder =
 {   .Init = NULL, .Deinit = NULL, .Write = NULL, .Wakeup = NULL, .Appender =
     {   .Init = NULL, .Write = NULL}};
 
-/*  The description of the function is available in BCDS_Logging.h */
+/*  The description of the function is available in Kiso_Logging.h */
 Retcode_T Logging_Init(const LogRecorder_T *recorder, const LogAppender_T *appender)
 {
     if (NULL == recorder || NULL == recorder->Init || NULL == recorder->Deinit
@@ -66,7 +66,7 @@ Retcode_T Logging_Init(const LogRecorder_T *recorder, const LogAppender_T *appen
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_Logging.h */
+/*  The description of the function is available in Kiso_Logging.h */
 Retcode_T Logging_Log(LogLevel_T level, uint8_t package, uint8_t module, const char *file,
         uint32_t line, const char *fmt, ...)
 {
@@ -90,4 +90,4 @@ Retcode_T Logging_Log(LogLevel_T level, uint8_t package, uint8_t module, const c
     return retcode;
 }
 
-#endif /* if BCDS_FEATURE_LOGGING */
+#endif /* if KISO_FEATURE_LOGGING */

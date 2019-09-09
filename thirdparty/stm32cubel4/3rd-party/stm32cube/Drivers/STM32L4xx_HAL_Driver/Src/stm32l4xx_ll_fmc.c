@@ -552,7 +552,7 @@ HAL_StatusTypeDef FMC_NAND_CommonSpace_Timing_Init(FMC_NAND_TypeDef *Device, FMC
   assert_param(IS_FMC_HOLD_TIME(Timing->HoldSetupTime));
   assert_param(IS_FMC_HIZ_TIME(Timing->HiZSetupTime));
   assert_param(IS_FMC_NAND_BANK(Bank));
-  BCDS_UNUSED(Bank);
+  KISO_UNUSED(Bank);
 
   /* Set FMC_NAND device timing parameters */
   /* NAND bank 3 registers configuration */
@@ -581,7 +581,7 @@ HAL_StatusTypeDef FMC_NAND_AttributeSpace_Timing_Init(FMC_NAND_TypeDef *Device, 
   assert_param(IS_FMC_HOLD_TIME(Timing->HoldSetupTime));
   assert_param(IS_FMC_HIZ_TIME(Timing->HiZSetupTime));
   assert_param(IS_FMC_NAND_BANK(Bank));
-  BCDS_UNUSED(Bank);
+  KISO_UNUSED(Bank);
 
   /* Set FMC_NAND device timing parameters */
   /* NAND bank 3 registers configuration */
@@ -608,7 +608,7 @@ HAL_StatusTypeDef FMC_NAND_DeInit(FMC_NAND_TypeDef *Device, uint32_t Bank)
 
   /* Disable the NAND Bank */
   __FMC_NAND_DISABLE(Device, Bank);
-  BCDS_UNUSED(Bank);
+  KISO_UNUSED(Bank);
 
   /* Set the FMC_NAND_BANK registers to their reset values */
   WRITE_REG(Device->PCR, 0x00000018);
@@ -651,7 +651,7 @@ HAL_StatusTypeDef FMC_NAND_ECC_Enable(FMC_NAND_TypeDef *Device, uint32_t Bank)
   /* Check the parameters */
   assert_param(IS_FMC_NAND_DEVICE(Device));
   assert_param(IS_FMC_NAND_BANK(Bank));
-  BCDS_UNUSED(Bank);
+  KISO_UNUSED(Bank);
 
   /* Enable ECC feature */
   SET_BIT(Device->PCR, FMC_PCR_ECCEN);
@@ -671,7 +671,7 @@ HAL_StatusTypeDef FMC_NAND_ECC_Disable(FMC_NAND_TypeDef *Device, uint32_t Bank)
   /* Check the parameters */
   assert_param(IS_FMC_NAND_DEVICE(Device));
   assert_param(IS_FMC_NAND_BANK(Bank));
-  BCDS_UNUSED(Bank);
+  KISO_UNUSED(Bank);
 
   /* Disable ECC feature */
   CLEAR_BIT(Device->PCR, FMC_PCR_ECCEN);
@@ -713,7 +713,7 @@ HAL_StatusTypeDef FMC_NAND_GetECC(FMC_NAND_TypeDef *Device, uint32_t *ECCval, ui
 
   /* Get the ECCR register value */
   *ECCval = (uint32_t)Device->ECCR;
-  BCDS_UNUSED(Bank);
+  KISO_UNUSED(Bank);
   return HAL_OK;
 }
 

@@ -12,15 +12,15 @@
 *
 ********************************************************************************/
 
-#include "BCDS_CellularModules.h"
-#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_UTILS
+#include "Kiso_CellularModules.h"
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_UTILS
 
 #include "AtUtils.h"
 #include "AtResponseParser.h"
 #include "AtResponseQueue.h"
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
 
 #define IPV4_ADDR_BYTE_COUNT    4
 #define LONG_INT_STR_LENGTH     11

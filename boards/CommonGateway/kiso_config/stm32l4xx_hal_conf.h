@@ -403,7 +403,7 @@
 
 /* Exported macro ------------------------------------------------------------*/
 #ifdef  USE_FULL_ASSERT
-#include "BCDS_Assert.h"
+#include "Kiso_Assert.h"
 /**
   * @brief  The assert_param macro is used for function's parameters check.
   * @param  expr: If expr is false, it calls assert_failed function

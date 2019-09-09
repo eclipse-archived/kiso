@@ -13,8 +13,8 @@
 ********************************************************************************/
  
 /* header definition ******************************************************** */
-#ifndef BCDS_BME280_TH_HH_
-#define BCDS_BME280_TH_HH_
+#ifndef KISO_BME280_TH_HH_
+#define KISO_BME280_TH_HH_
 
 
 #include "bme280.h"
@@ -55,6 +55,6 @@ FAKE_VALUE_FUNC(s16,bme280_compensate_temperature_int32_sixteen_bit_output,s32);
 FAKE_VALUE_FUNC(s32,bme280_compensate_temperature_int32,s32);
 FAKE_VALUE_FUNC(BME280_RETURN_FUNCTION_TYPE,bme280_read_uncomp_temperature,s32*);
 FAKE_VALUE_FUNC(BME280_RETURN_FUNCTION_TYPE,bme280_init,struct bme280_t *);
-#endif /* BCDS_BME280_TH_HH_ */
+#endif /* KISO_BME280_TH_HH_ */
 
 /*************************************************************************** */

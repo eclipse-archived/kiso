@@ -27,8 +27,8 @@
 #ifndef ATURC_H_
 #define ATURC_H_
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
 
 typedef Retcode_T (*CellularUrcHandler_T)(void);
 

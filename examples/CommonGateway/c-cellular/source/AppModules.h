@@ -16,8 +16,8 @@
 /**
  * @brief Enumerates application modules which are reporting error codes according to RETCODE specification.
  * @info  usage:
- *      #undef BCDS_APP_MODULE_ID
- *      #define BCDS_APP_MODULE_ID CGW_APP_MODULE_ID_xxx
+ *      #undef KISO_APP_MODULE_ID
+ *      #define KISO_APP_MODULE_ID CGW_APP_MODULE_ID_xxx
  */
 enum CGW_App_ModuleID_E
 {

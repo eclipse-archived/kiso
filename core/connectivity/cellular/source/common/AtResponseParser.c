@@ -12,14 +12,14 @@
 *
 ********************************************************************************/
 
-#include "BCDS_CellularModules.h"
-#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_ATPARSER
+#include "Kiso_CellularModules.h"
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_ATPARSER
 
 #include "AtResponseParser.h"
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
-#include "BCDS_Assert.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -243,8 +243,8 @@ static int32_t AtrpConsumeUntil(uint8_t* buffer, uint32_t len, char delimiterA, 
 
 static int32_t AtrpStateError(uint8_t* buffer, uint32_t len)
 {
-    BCDS_UNUSED(buffer);
-    BCDS_UNUSED(len);
+    KISO_UNUSED(buffer);
+    KISO_UNUSED(len);
 
     if (NULL != ATRP_ERROR_EVENT)
     {

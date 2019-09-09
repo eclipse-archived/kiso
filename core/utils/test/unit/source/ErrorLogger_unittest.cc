@@ -27,14 +27,14 @@ extern "C"
 {
 
 /* setup compile time configuration defines */
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_ERRORLOGGER
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_ERRORLOGGER
 
-#if BCDS_FEATURE_ERRORLOGGER
+#if KISO_FEATURE_ERRORLOGGER
 
 /* include faked interfaces */
-#include "BCDS_Retcode_th.hh"
+#include "Kiso_Retcode_th.hh"
 #include "FreeRTOS_th.hh"
 #include "task_th.hh"
 
@@ -65,10 +65,10 @@ Retcode_T ErrorLogger_Test_Erase(ErrorLogger_StorageMedium_T storageSelect, void
 static uint8_t testFlag = 0; //dummy variable used for masking the return type of function.
 Retcode_T ErrorLogger_Test_Read(ErrorLogger_StorageMedium_T storageSelect, void* value, uint32_t StartAddr, uint32_t numOfBytes)
 {
-    BCDS_UNUSED(storageSelect);
-    BCDS_UNUSED(StartAddr);
-    BCDS_UNUSED(numOfBytes);
-    BCDS_UNUSED(value);
+    KISO_UNUSED(storageSelect);
+    KISO_UNUSED(StartAddr);
+    KISO_UNUSED(numOfBytes);
+    KISO_UNUSED(value);
     Retcode_T retVal = RETCODE_OK;
     if(testFlag == 1)
 	{
@@ -79,10 +79,10 @@ Retcode_T ErrorLogger_Test_Read(ErrorLogger_StorageMedium_T storageSelect, void*
 
 Retcode_T ErrorLogger_Test_Write(ErrorLogger_StorageMedium_T storageSelect, void* value, uint32_t StartAddr, uint32_t numOfBytes)
 {
-    BCDS_UNUSED(storageSelect);
-    BCDS_UNUSED(StartAddr);
-	BCDS_UNUSED(numOfBytes);
-	BCDS_UNUSED(value);
+    KISO_UNUSED(storageSelect);
+    KISO_UNUSED(StartAddr);
+	KISO_UNUSED(numOfBytes);
+	KISO_UNUSED(value);
     Retcode_T retVal = RETCODE_OK;
     if(testFlag ==1)
     {
@@ -93,10 +93,10 @@ Retcode_T ErrorLogger_Test_Write(ErrorLogger_StorageMedium_T storageSelect, void
 
 Retcode_T ErrorLogger_Test_Erase(ErrorLogger_StorageMedium_T storageSelect, void* value, uint32_t StartAddr, uint32_t numOfBytes)
 {
-	BCDS_UNUSED(storageSelect);
-	BCDS_UNUSED(StartAddr);
-	BCDS_UNUSED(numOfBytes);
-	BCDS_UNUSED(value);
+	KISO_UNUSED(storageSelect);
+	KISO_UNUSED(StartAddr);
+	KISO_UNUSED(numOfBytes);
+	KISO_UNUSED(value);
     Retcode_T retVal = RETCODE_OK;
     if(testFlag == 1)
 	{
@@ -117,7 +117,7 @@ ErrorLoggerConfig_T Log_Handle =
     };
 
 
-class BCDS_ErrorLogger: public testing::Test
+class KISO_ErrorLogger: public testing::Test
 {
     /* Remember that SetUp() is run immediately before a test starts. */
     virtual void SetUp()
@@ -140,7 +140,7 @@ class BCDS_ErrorLogger: public testing::Test
  *  @testcase test case to check the ErrorLogger Init function when nvm fails.
  *
  */
-TEST_F(BCDS_ErrorLogger,ErrorLogger_Init_Fail)
+TEST_F(KISO_ErrorLogger,ErrorLogger_Init_Fail)
 {
     /* Declare and initialize local variable required only for this test case  */
    Retcode_T Retcode;
@@ -157,7 +157,7 @@ TEST_F(BCDS_ErrorLogger,ErrorLogger_Init_Fail)
  *  @testcase test case to check the ErrorLogger Init function.
  *
  */
-TEST_F(BCDS_ErrorLogger,ErrorLogger_Init_NoLogs)
+TEST_F(KISO_ErrorLogger,ErrorLogger_Init_NoLogs)
 {
     /* Declare and initialize local variable required only for this test case  */
    Retcode_T Retcode;
@@ -175,7 +175,7 @@ TEST_F(BCDS_ErrorLogger,ErrorLogger_Init_NoLogs)
  *  @testcase test case to check the ErrorLogger Init function with half logs filled.
  *
  */
-TEST_F(BCDS_ErrorLogger,ErrorLogger_Init_HalfLogsFilled)
+TEST_F(KISO_ErrorLogger,ErrorLogger_Init_HalfLogsFilled)
 {
     /* Declare and initialize local variable required only for this test case  */
    Retcode_T Retcode;
@@ -198,7 +198,7 @@ TEST_F(BCDS_ErrorLogger,ErrorLogger_Init_HalfLogsFilled)
  *  @testcase test case to check the ErrorLogger Init function with one and half logs filled.
  *
  */
-TEST_F(BCDS_ErrorLogger,ErrorLogger_Init_OneAndHalfTimesLogsFilled)
+TEST_F(KISO_ErrorLogger,ErrorLogger_Init_OneAndHalfTimesLogsFilled)
 {
     /* Declare and initialize local variable required only for this test case  */
    Retcode_T Retcode;
@@ -221,7 +221,7 @@ TEST_F(BCDS_ErrorLogger,ErrorLogger_Init_OneAndHalfTimesLogsFilled)
  *  @testcase test case to check the ErrorLogger_LogError function when error is RETCODE_OK.
  *
  */
-TEST_F(BCDS_ErrorLogger,ErrorLogger_LogError_RETCODEOK)
+TEST_F(KISO_ErrorLogger,ErrorLogger_LogError_RETCODEOK)
 {
     /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
@@ -237,7 +237,7 @@ TEST_F(BCDS_ErrorLogger,ErrorLogger_LogError_RETCODEOK)
  *  @testcase test case to check the ErrorLogger_LogError function when one error occurs.
  *
  */
-TEST_F(BCDS_ErrorLogger,ErrorLogger_LogError_ONEError)
+TEST_F(KISO_ErrorLogger,ErrorLogger_LogError_ONEError)
 {
     /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
@@ -255,7 +255,7 @@ TEST_F(BCDS_ErrorLogger,ErrorLogger_LogError_ONEError)
  *  @testcase test case to check the ErrorLogger_LogError function when flush fails.
  *
  */
-TEST_F(BCDS_ErrorLogger,ErrorLogger_LogError_FlushFail)
+TEST_F(KISO_ErrorLogger,ErrorLogger_LogError_FlushFail)
 {
     /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
@@ -272,7 +272,7 @@ TEST_F(BCDS_ErrorLogger,ErrorLogger_LogError_FlushFail)
  *  @testcase test case to check the ErrorLogger_GetLastErrorLog function when null pointer used.
  *
  */
-TEST_F(BCDS_ErrorLogger, ErrorLogger_GetLastErrorLog_NULLPTR)
+TEST_F(KISO_ErrorLogger, ErrorLogger_GetLastErrorLog_NULLPTR)
 {
     /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
@@ -286,7 +286,7 @@ TEST_F(BCDS_ErrorLogger, ErrorLogger_GetLastErrorLog_NULLPTR)
  *  @testcase test case to check the ErrorLogger_GetLastErrorLog function when no error is available.
  *
  */
-TEST_F(BCDS_ErrorLogger, ErrorLogger_GetLastErrorLog_NoError)
+TEST_F(KISO_ErrorLogger, ErrorLogger_GetLastErrorLog_NoError)
 {
     /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
@@ -302,7 +302,7 @@ TEST_F(BCDS_ErrorLogger, ErrorLogger_GetLastErrorLog_NoError)
  *  @testcase test case to check the ErrorLogger_GetLastErrorLog function when one error is available.
  *
  */
-TEST_F(BCDS_ErrorLogger, ErrorLogger_GetLastErrorLog_OneError)
+TEST_F(KISO_ErrorLogger, ErrorLogger_GetLastErrorLog_OneError)
 {
     /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
@@ -320,7 +320,7 @@ TEST_F(BCDS_ErrorLogger, ErrorLogger_GetLastErrorLog_OneError)
  *  @testcase test case to check the ErrorLogger_GetLastErrorLog function when multiple errors are available.
  *
  */
-TEST_F(BCDS_ErrorLogger, ErrorLogger_GetLastErrorLog_MultiError)
+TEST_F(KISO_ErrorLogger, ErrorLogger_GetLastErrorLog_MultiError)
 {
     /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
@@ -340,7 +340,7 @@ TEST_F(BCDS_ErrorLogger, ErrorLogger_GetLastErrorLog_MultiError)
  *  @testcase test case to check the ErrorLogger_HasError function when no errors available.
  *
  */
-TEST_F(BCDS_ErrorLogger, ErrorLogger_HasError_WithoutErrors)
+TEST_F(KISO_ErrorLogger, ErrorLogger_HasError_WithoutErrors)
 {
     /* Declare and initialize local variable required only for this test case  */
     Retcode_T retcode;
@@ -355,7 +355,7 @@ TEST_F(BCDS_ErrorLogger, ErrorLogger_HasError_WithoutErrors)
  *  @testcase test case to check the ErrorLogger_HasError function when multiple errors available.
  *
  */
-TEST_F(BCDS_ErrorLogger, ErrorLogger_HasError_WithAvailableErrors)
+TEST_F(KISO_ErrorLogger, ErrorLogger_HasError_WithAvailableErrors)
 {
     /* Declare and initialize local variable required only for this test case  */
     Retcode_T retcode;
@@ -373,7 +373,7 @@ TEST_F(BCDS_ErrorLogger, ErrorLogger_HasError_WithAvailableErrors)
  *  @testcase test case to check the ErrorLogger_GetTotalErrors function.
  *
  */
-TEST_F(BCDS_ErrorLogger, ErrorLogger_GetTotalErrors)
+TEST_F(KISO_ErrorLogger, ErrorLogger_GetTotalErrors)
 {
     EXPECT_EQ(ErrorSeqNo,ErrorLogger_GetTotalErrors());
 }
@@ -382,7 +382,7 @@ TEST_F(BCDS_ErrorLogger, ErrorLogger_GetTotalErrors)
  *  @testcase test case to check the ErrorLogger_GetCurrentErrors function when multiple errors available.
  *
  */
-TEST_F(BCDS_ErrorLogger, ErrorLogger_GetCurrentErrors_LessMaxEntries)
+TEST_F(KISO_ErrorLogger, ErrorLogger_GetCurrentErrors_LessMaxEntries)
 {
     /* Declare and initialize local variable required only for this test case  */
     uint8_t Count;
@@ -400,7 +400,7 @@ TEST_F(BCDS_ErrorLogger, ErrorLogger_GetCurrentErrors_LessMaxEntries)
  *  @testcase test case to check the ErrorLogger_GetCurrentErrors function when multiple errors available.
  *
  */
-TEST_F(BCDS_ErrorLogger, ErrorLogger_GetCurrentErrors_OneAndHalfMaxEntries)
+TEST_F(KISO_ErrorLogger, ErrorLogger_GetCurrentErrors_OneAndHalfMaxEntries)
 {
     /* Declare and initialize local variable required only for this test case  */
     uint8_t Count;
@@ -418,7 +418,7 @@ TEST_F(BCDS_ErrorLogger, ErrorLogger_GetCurrentErrors_OneAndHalfMaxEntries)
  *  @testcase test case to check the ErrorLogger_GetErrorAt function when multiple errors available.
  *
  */
-TEST_F(BCDS_ErrorLogger,ErrorLogger_GetErrorAt)
+TEST_F(KISO_ErrorLogger,ErrorLogger_GetErrorAt)
 {
     /* Declare and initialize local variable required only for this test case  */
     ErrorLogger_LogEntry_T LogEntry;
@@ -448,7 +448,7 @@ TEST_F(BCDS_ErrorLogger,ErrorLogger_GetErrorAt)
  *  @testcase test case to check the ErrorLogger_GetErrorAt function when no entry is found.
  *
  */
-TEST_F(BCDS_ErrorLogger,ErrorLogger_GetErrorAtFail)
+TEST_F(KISO_ErrorLogger,ErrorLogger_GetErrorAtFail)
 {
     /* Declare and initialize local variable required only for this test case  */
 	Retcode_T Retcode;
@@ -463,7 +463,7 @@ TEST_F(BCDS_ErrorLogger,ErrorLogger_GetErrorAtFail)
  *  @testcase test case to check the ErrorLogger_ClearAllErrorLogs function.
  *
  */
-TEST_F(BCDS_ErrorLogger,ErrorLogger_ClearAllErrorLogs)
+TEST_F(KISO_ErrorLogger,ErrorLogger_ClearAllErrorLogs)
 {
     /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
@@ -484,7 +484,7 @@ TEST_F(BCDS_ErrorLogger,ErrorLogger_ClearAllErrorLogs)
  *  @testcase test case to check the ErrorLogger_ClearAllErrorLogs function when erase operation fails.
  *
  */
-TEST_F(BCDS_ErrorLogger,ErrorLogger_ClearAllErrorLogsFail)
+TEST_F(KISO_ErrorLogger,ErrorLogger_ClearAllErrorLogsFail)
 {
     /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
@@ -503,4 +503,4 @@ TEST_F(BCDS_ErrorLogger,ErrorLogger_ClearAllErrorLogsFail)
 }
 #else
 }
-#endif /* if BCDS_FEATURE_ERRORLOGGER */
+#endif /* if KISO_FEATURE_ERRORLOGGER */

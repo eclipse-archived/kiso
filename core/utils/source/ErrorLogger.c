@@ -16,19 +16,19 @@
 /*
  * Redefine Package ID
  */
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_ERRORLOGGER
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_ERRORLOGGER
 
-#if BCDS_FEATURE_ERRORLOGGER
+#if KISO_FEATURE_ERRORLOGGER
 
-#ifdef BCDS_PACKAGE_ID
-#undef BCDS_PACKAGE_ID
-#define BCDS_PACKAGE_ID 0
+#ifdef KISO_PACKAGE_ID
+#undef KISO_PACKAGE_ID
+#define KISO_PACKAGE_ID 0
 #endif
 
 /* own header files */
-#include "BCDS_ErrorLogger.h"
+#include "Kiso_ErrorLogger.h"
 
 /* Put constant and variable definitions here */
 
@@ -57,7 +57,7 @@ static ErrorLogger_LogEntry_T (*pErrorEntries)[MAXENTRIES];
 
 ErrorLoggerConfig_T ErrorLoggerHandle;
 
-/*  The description of the function is available in BCDS_ErrorLogger.h */
+/*  The description of the function is available in Kiso_ErrorLogger.h */
 Retcode_T ErrorLogger_Init(ErrorLoggerConfig_T LoggerData)
 {
     Retcode_T nvmRetCode = RETCODE_OK;
@@ -96,7 +96,7 @@ Retcode_T ErrorLogger_Init(ErrorLoggerConfig_T LoggerData)
     }
 }
 
-/*  The description of the function is available in BCDS_ErrorLogger.h */
+/*  The description of the function is available in Kiso_ErrorLogger.h */
 Retcode_T ErrorLogger_LogError(Retcode_T Error)
 {
     Retcode_T nvmRet = RETCODE_OK;
@@ -131,7 +131,7 @@ Retcode_T ErrorLogger_LogError(Retcode_T Error)
     return nvmRet;
 }
 
-/*  The description of the function is available in BCDS_ErrorLogger.h */
+/*  The description of the function is available in Kiso_ErrorLogger.h */
 Retcode_T ErrorLogger_GetLastErrorLog(ErrorLogger_LogEntry_T *LogEntry)
 {
     if (LogEntry)
@@ -163,7 +163,7 @@ Retcode_T ErrorLogger_GetLastErrorLog(ErrorLogger_LogEntry_T *LogEntry)
     }
 }
 
-/*  The description of the function is available in BCDS_ErrorLogger.h */
+/*  The description of the function is available in Kiso_ErrorLogger.h */
 Retcode_T ErrorLogger_HasError(Retcode_T Error)
 {
     /* Loop through the logged errors and search the error code passed */
@@ -182,13 +182,13 @@ Retcode_T ErrorLogger_HasError(Retcode_T Error)
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_ErrorLogger.h */
+/*  The description of the function is available in Kiso_ErrorLogger.h */
 uint16_t ErrorLogger_GetTotalErrors(void)
 {
     return ErrorSeqNo;
 }
 
-/*  The description of the function is available in BCDS_ErrorLogger.h */
+/*  The description of the function is available in Kiso_ErrorLogger.h */
 uint8_t ErrorLogger_GetCurrentErrors(void)
 {
     uint8_t ErrorCount;
@@ -203,7 +203,7 @@ uint8_t ErrorLogger_GetCurrentErrors(void)
     return ErrorCount;
 }
 
-/*  The description of the function is available in BCDS_ErrorLogger.h */
+/*  The description of the function is available in Kiso_ErrorLogger.h */
 Retcode_T ErrorLogger_GetErrorAt(uint8_t index, ErrorLogger_LogEntry_T *LogEntry)
 {
     Retcode_T retcode = RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T )RETCODE_INVALID_PARAM);
@@ -223,7 +223,7 @@ Retcode_T ErrorLogger_GetErrorAt(uint8_t index, ErrorLogger_LogEntry_T *LogEntry
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_ErrorLogger.h */
+/*  The description of the function is available in Kiso_ErrorLogger.h */
 Retcode_T ErrorLogger_ClearAllErrorLogs(void)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -240,4 +240,4 @@ Retcode_T ErrorLogger_ClearAllErrorLogs(void)
     return retcode;
 }
 
-#endif /* if BCDS_FEATURE_ERRORLOGGER */
+#endif /* if KISO_FEATURE_ERRORLOGGER */

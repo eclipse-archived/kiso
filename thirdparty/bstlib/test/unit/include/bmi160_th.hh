@@ -13,8 +13,8 @@
 ********************************************************************************/
  
 /* header definition ******************************************************** */
-#ifndef BCDS_BMI160_TH_HH_
-#define BCDS_BMI160_TH_HH_
+#ifndef KISO_BMI160_TH_HH_
+#define KISO_BMI160_TH_HH_
 
 
 #include "bmi160.h"
@@ -363,6 +363,6 @@ FAKE_VALUE_FUNC(BMI160_RETURN_FUNCTION_TYPE,bmi160_bst_yas532_acquisition_comman
 FAKE_VALUE_FUNC(BMI160_RETURN_FUNCTION_TYPE,bmi160_bst_yas532_set_offset,const s8 *);
 FAKE_VALUE_FUNC(BMI160_RETURN_FUNCTION_TYPE,bmi160_bst_yas532_fifo_xyz_data,u16*,u8,s8,u16);
 
-#endif /* BCDS_BMI160_TH_HH_ */
+#endif /* KISO_BMI160_TH_HH_ */
 
 /*************************************************************************** */

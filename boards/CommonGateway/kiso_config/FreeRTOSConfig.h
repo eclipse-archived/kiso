@@ -42,19 +42,19 @@ extern "C"
 /* Ensure stdint is only used by the compiler, and not the assembler. */
 #if defined(__ICCARM__) || defined(__CC_ARM) || defined(__GNUC__)
     #include <stdint.h>
-#ifndef BCDS_MODULE_ID
-#define BCDS_MODULE_ID  1
+#ifndef KISO_MODULE_ID
+#define KISO_MODULE_ID  1
 #endif
 
-    #include "BCDS_Assert.h"
+    #include "Kiso_Assert.h"
 	#include "../kiso_config/PriorityConfig.h"
     extern uint32_t SystemCoreClock;
 #endif
 
-    /* BCDS FreeRTOS Configuration version information */
-#define BCDS_FREE_RTOS_VERSION_MAJOR             ( 10 )
-#define BCDS_FREE_RTOS_VERSION_MINOR              ( 0 )
-#define BCDS_FREE_RTOS_VERSION_BUILD              ( 1 )
+    /* KISO FreeRTOS Configuration version information */
+#define KISO_FREE_RTOS_VERSION_MAJOR             ( 10 )
+#define KISO_FREE_RTOS_VERSION_MINOR              ( 0 )
+#define KISO_FREE_RTOS_VERSION_BUILD              ( 1 )
 
     /* Modes of operations of operation system */
 #define configUSE_PREEMPTION                     ( 1 )
@@ -147,7 +147,7 @@ extern "C"
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY 	( configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS) )
 
 #ifndef NDEBUG /* valid only for debug builds */
-/* Mapping the FreeRTOS configASSERT() to BCDS assert() Function. */
+/* Mapping the FreeRTOS configASSERT() to KISO assert() Function. */
 #define configASSERT( x )						assert ( x )
 #endif
 

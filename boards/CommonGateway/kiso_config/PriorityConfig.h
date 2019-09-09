@@ -27,7 +27,7 @@
 
 #define TASK_PRIORITY_CAN                           (UINT32_C(2))
 #define TASK_PRIORITY_BLE                           (UINT32_C(4))
-#define IRQ_PRIORITY_UART_BLE                       BCDS_UART_IRQ_PRIORITY_15
+#define IRQ_PRIORITY_UART_BLE                       KISO_UART_IRQ_PRIORITY_15
 
 #define IRQ_PRIORITY_GPIO_BUTTON                    GPIO_INTERRUPT_PRIORITY_5
 

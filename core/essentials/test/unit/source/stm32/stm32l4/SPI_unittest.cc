@@ -26,10 +26,10 @@
 /* include module under test */
 extern "C"
 {
-#include "BCDS_Basics.h"
-#include "BCDS_HAL_th.hh"
+#include "Kiso_Basics.h"
+#include "Kiso_HAL_th.hh"
 
-#if BCDS_FEATURE_SPI
+#if KISO_FEATURE_SPI
 /* include faked interfaces */
 
 #include "stm32l4xx_th.hh"
@@ -48,7 +48,7 @@ public:
     {
         mTestAppCallbackCount = 0;
         // Configure DMA mode by default
-        mBSPHandleSPI.TransferMode = BCDS_HAL_TRANSFER_MODE_DMA;
+        mBSPHandleSPI.TransferMode = KISO_HAL_TRANSFER_MODE_DMA;
         SPITestContext::TestContext = this;
     }
     // A static pointer that will be set upon setup to be able to access
@@ -89,7 +89,7 @@ SPITestContext testContext;
 SPI_HandleTypeDef spiHandle;
 SPI_TypeDef spiDef;
 
-class BCDS_SPItest: public testing::Test
+class KISO_SPItest: public testing::Test
 {
 public:
 
@@ -123,7 +123,7 @@ protected:
 
 
 
-TEST_F(BCDS_SPItest, testSPI_initialize)
+TEST_F(KISO_SPItest, testSPI_initialize)
 {
     /* here we test the MCU_SPI_Initialize function */
 
@@ -136,16 +136,16 @@ TEST_F(BCDS_SPItest, testSPI_initialize)
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_INVALID_PARAM), rc);
 
     /* call initialize function with correct parameters but unsupported transfer modes */
-    testContext.mBSPHandleSPI.TransferMode = BCDS_HAL_TRANSFER_MODE_BLOCKING;
+    testContext.mBSPHandleSPI.TransferMode = KISO_HAL_TRANSFER_MODE_BLOCKING;
     rc = MCU_SPI_Initialize((SPI_T) &testContext.mBSPHandleSPI, &SPITestContext::TestAppCallback);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL,RETCODE_NOT_SUPPORTED), rc);
 
-    testContext.mBSPHandleSPI.TransferMode = BCDS_HAL_TRANSFER_MODE_DMA;
+    testContext.mBSPHandleSPI.TransferMode = KISO_HAL_TRANSFER_MODE_DMA;
     /* call initialize function with correct parameters  */
     rc = MCU_SPI_Initialize((SPI_T) &testContext.mBSPHandleSPI, &SPITestContext::TestAppCallback);
     EXPECT_EQ(RETCODE_OK, rc);
 
-    testContext.mBSPHandleSPI.TransferMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT_RX_DMA_TX;
+    testContext.mBSPHandleSPI.TransferMode = KISO_HAL_TRANSFER_MODE_INTERRUPT_RX_DMA_TX;
     /* call initialize function with correct parameters  */
     rc = MCU_SPI_Initialize((SPI_T) &testContext.mBSPHandleSPI, &SPITestContext::TestAppCallback);
     EXPECT_EQ(RETCODE_SEVERITY_WARNING, Retcode_GetSeverity(rc));
@@ -159,12 +159,12 @@ TEST_F(BCDS_SPItest, testSPI_initialize)
     /* copy object back */
     testContext = testContextBackup;
 
-    testContext.mBSPHandleSPI.TransferMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT;
+    testContext.mBSPHandleSPI.TransferMode = KISO_HAL_TRANSFER_MODE_INTERRUPT;
     /* call initialize function with correct parameters  */
     rc = MCU_SPI_Initialize((SPI_T) &testContext.mBSPHandleSPI, &SPITestContext::TestAppCallback);
     EXPECT_EQ(RETCODE_OK, rc);
 
-    testContext.mBSPHandleSPI.TransferMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT;
+    testContext.mBSPHandleSPI.TransferMode = KISO_HAL_TRANSFER_MODE_INTERRUPT;
 
     /* make copy of SPI object */
     testContextBackup = testContext;
@@ -175,14 +175,14 @@ TEST_F(BCDS_SPItest, testSPI_initialize)
     testContext = testContextBackup;
 
     /* restore initial state */
-    testContext.mBSPHandleSPI.TransferMode = BCDS_HAL_TRANSFER_MODE_DMA;
+    testContext.mBSPHandleSPI.TransferMode = KISO_HAL_TRANSFER_MODE_DMA;
     /* call initialize function with correct parameters in DMA mode for further tests  */
     rc = MCU_SPI_Initialize((SPI_T) &testContext.mBSPHandleSPI, &SPITestContext::TestAppCallback);
     EXPECT_EQ(RETCODE_OK, rc);
 
 }
 
-TEST_F(BCDS_SPItest, testSPI_Send)
+TEST_F(KISO_SPItest, testSPI_Send)
 {
     uint32_t len = 1024;
     uint8_t buffer[len];
@@ -216,7 +216,7 @@ TEST_F(BCDS_SPItest, testSPI_Send)
 
 }
 
-TEST_F(BCDS_SPItest, testSPI_Receive)
+TEST_F(KISO_SPItest, testSPI_Receive)
 {
     uint32_t len = 1024;
     uint8_t buffer[len];
@@ -251,7 +251,7 @@ TEST_F(BCDS_SPItest, testSPI_Receive)
 
 }
 
-TEST_F(BCDS_SPItest, testSPI_Transfer)
+TEST_F(KISO_SPItest, testSPI_Transfer)
 {
     uint32_t len = 1024;
     uint8_t data_in[len];
@@ -295,7 +295,7 @@ TEST_F(BCDS_SPItest, testSPI_Transfer)
 
 }
 
-TEST_F(BCDS_SPItest, testSPI_GetDataCount)
+TEST_F(KISO_SPItest, testSPI_GetDataCount)
 {
     // First try with wrong handle */
     uint32_t count = MCU_SPI_GetDataCount(0);
@@ -326,7 +326,7 @@ TEST_F(BCDS_SPItest, testSPI_GetDataCount)
  * This test is currently just used to call the SPI interrupt callback
  * and to see if it can be called without problems
  */
-TEST_F(BCDS_SPItest, testSPI_IRQHandler)
+TEST_F(KISO_SPItest, testSPI_IRQHandler)
 {
     /* First try with totally wrong parameters */
 	RESET_FAKE(HAL_SPI_IRQHandler);
@@ -342,7 +342,7 @@ TEST_F(BCDS_SPItest, testSPI_IRQHandler)
  * This test is currently just used to call the SPI DMA Rx callback
  * and to see if it can be called without problems
  */
-TEST_F(BCDS_SPItest, testSPI_DMARxHandler)
+TEST_F(KISO_SPItest, testSPI_DMARxHandler)
 {
     /* First try with totally wrong parameters */
 	RESET_FAKE(HAL_DMA_IRQHandler);
@@ -358,7 +358,7 @@ TEST_F(BCDS_SPItest, testSPI_DMARxHandler)
  * This test is currently just used to call the SPI DMA Tx callback
  * and to see if it can be called without problems
  */
-TEST_F(BCDS_SPItest, testSPI_DMATxHandler)
+TEST_F(KISO_SPItest, testSPI_DMATxHandler)
 {
     /* First try with totally wrong parameters */
 	RESET_FAKE(HAL_DMA_IRQHandler);
@@ -374,7 +374,7 @@ TEST_F(BCDS_SPItest, testSPI_DMATxHandler)
  * This test is currently just used to call the SPI error callback
  * and to see if it can be called without problems
  */
-TEST_F(BCDS_SPItest, testSPI_HAL_SPI_ErrorCallback)
+TEST_F(KISO_SPItest, testSPI_HAL_SPI_ErrorCallback)
 {
     /* struct MCU_SPI_Event_S Events = { 0, 0, 0, 0, 0, 0 }; */
 
@@ -450,7 +450,7 @@ TEST_F(BCDS_SPItest, testSPI_HAL_SPI_ErrorCallback)
  * This test is currently just used to call the SPI Tx complete callback
  * and to see if it can be called without problems
  */
-TEST_F(BCDS_SPItest, testSPI_HAL_SPI_TxCpltCallback)
+TEST_F(KISO_SPItest, testSPI_HAL_SPI_TxCpltCallback)
 {
     /* First try with totally wrong parameters */
 	testContext.mTestAppCallbackCount = 0;
@@ -466,7 +466,7 @@ TEST_F(BCDS_SPItest, testSPI_HAL_SPI_TxCpltCallback)
  * This test is currently just used to call the SPI Rx complete callback
  * and to see if it can be called without problems
  */
-TEST_F(BCDS_SPItest, testSPI_HAL_SPI_RxCpltCallback)
+TEST_F(KISO_SPItest, testSPI_HAL_SPI_RxCpltCallback)
 {
     /* First try with totally wrong parameters */
 	testContext.mTestAppCallbackCount = 0;
@@ -482,7 +482,7 @@ TEST_F(BCDS_SPItest, testSPI_HAL_SPI_RxCpltCallback)
  * This test is currently just used to call the SPI Tx/Rx complete callback
  * and to see if it can be called without problems
  */
-TEST_F(BCDS_SPItest, testSPI_HAL_SPI_TxRxCpltCallback)
+TEST_F(KISO_SPItest, testSPI_HAL_SPI_TxRxCpltCallback)
 {
     /* First try with totally wrong parameters */
 	testContext.mTestAppCallbackCount = 0;
@@ -501,7 +501,7 @@ TEST_F(BCDS_SPItest, testSPI_HAL_SPI_TxRxCpltCallback)
  * After that test it is necessary to call MCU_SPI_Initialize again if more tests
  * should be run after this one.
  */
-TEST_F(BCDS_SPItest, testSPI_DeInitializer)
+TEST_F(KISO_SPItest, testSPI_DeInitializer)
 {
     /* First try with totally wrong parameters */
     Retcode_T rc = MCU_SPI_Deinitialize(0);
@@ -524,4 +524,4 @@ TEST_F(BCDS_SPItest, testSPI_DeInitializer)
 /*****************************************************************************************/
 #else
 }
-#endif /* BCDS_FEATURE_SPI */
+#endif /* KISO_FEATURE_SPI */

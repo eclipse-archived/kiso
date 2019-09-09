@@ -6,7 +6,7 @@
     <tab type="pages" visible="yes" title="Notices" intro=""/>
 		<tab type="pageslist" visible="yes" title="Todo List" intro=""/>
 		<tab type="pageslist" visible="yes" title="Deprecated List" intro=""/>
-   <tab type="modules" visible="yes" title="CDDK-Essentials API" intro=""/>
+   <tab type="modules" visible="yes" title="KISO-Essentials API" intro=""/>
     <tab type="namespaces" visible="no" title="test3">
       <tab type="namespacelist" visible="no" title="test4" intro=""/>
       <tab type="namespacemembers" visible="no" title="test5" intro=""/>

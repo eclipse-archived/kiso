@@ -25,7 +25,7 @@
 #ifndef PROTECTED_TIME_H_
 #define PROTECTED_TIME_H_
 
-#include "BCDS_HAL.h"
+#include "Kiso_HAL.h"
 
 /**
  * Returns the microseconds elapsed since last system reset.

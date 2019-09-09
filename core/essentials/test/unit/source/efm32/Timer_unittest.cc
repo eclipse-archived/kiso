@@ -17,13 +17,13 @@
 
 extern "C"
 {
-#include "BCDS_HAL_th.hh"
+#include "Kiso_HAL_th.hh"
 #include "em_device_th.hh"
 
 /* Silence Module ID not-defined configuration */
-#define BCDS_MODULE_ID 0
+#define KISO_MODULE_ID 0
 
-#if BCDS_FEATURE_TIMER
+#if KISO_FEATURE_TIMER
 
 // TODO: These come from em_device.h - check if needed
 // #define RTC_PRESENT
@@ -35,9 +35,9 @@ extern "C"
 // #define LETIMER_PRESENT
 // #define LETIMER_COUNT 0
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode_th.hh"
-#include "BCDS_Assert_th.hh"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode_th.hh"
+#include "Kiso_Assert_th.hh"
 
 
 #include "em_cmu_th.hh"
@@ -183,7 +183,7 @@ virtual void TearDown()
 
 TEST_F(HAL_MCU_Timer_Test, RetcodeAndModuleIdIntegrity)
 {
-    ASSERT_EQ(BCDS_ESSENTIALS_MODULE_ID_TIMER, BCDS_MODULE_ID );
+    ASSERT_EQ(KISO_ESSENTIALS_MODULE_ID_TIMER, KISO_MODULE_ID );
 }
 
 
@@ -236,7 +236,7 @@ TEST_F(HAL_MCU_Timer_Test, TimerInitialize_Init_NULL)
     ASSERT_EQ( RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMER_NOINIT), rc);
 }
 
-#if (BCDS_FEATURE_EFM32_BURTC)
+#if (KISO_FEATURE_EFM32_BURTC)
 TEST_F(HAL_MCU_Timer_Test, TimerInitialize_BURTC)
 {
     Timer_T timer = (Timer_T)&BSP_BURTC_Handle;
@@ -254,9 +254,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerInitialize_BURTC)
     /* Assert that the Timer Test Callback was registered */
     ASSERT_EQ(&TimerTestCallback, BSP_BURTC_Handle.Callback);
 }
-#endif /* if (BCDS_FEATURE_EFM32_BURTC) */
+#endif /* if (KISO_FEATURE_EFM32_BURTC) */
 
-#if (BCDS_FEATURE_EFM32_RTC)
+#if (KISO_FEATURE_EFM32_RTC)
 TEST_F(HAL_MCU_Timer_Test, TimerInitialize_RTC)
 {
     Timer_T timer = (Timer_T)&BSP_Generic_Handle;
@@ -278,9 +278,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerInitialize_RTC)
     /* Assert that the Timer Test Callback was registered */
     ASSERT_EQ(&TimerTestCallback, BSP_Generic_Handle.Callback);
 }
-#endif /* if (BCDS_FEATURE_EFM32_RTC) */
+#endif /* if (KISO_FEATURE_EFM32_RTC) */
 
-#if (BCDS_FEATURE_EFM32_TIMER)
+#if (KISO_FEATURE_EFM32_TIMER)
 TEST_F(HAL_MCU_Timer_Test, TimerInitialize_TIMER)
 {
     Timer_T timer = (Timer_T)&BSP_Generic_Handle;
@@ -304,9 +304,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerInitialize_TIMER)
     /* Assert that the Timer Test Callback was not registered */
     ASSERT_EQ(NULL, BSP_Generic_Handle.Callback);
 }
-#endif /* if (BCDS_FEATURE_EFM32_TIMER) */
+#endif /* if (KISO_FEATURE_EFM32_TIMER) */
 
-#if (BCDS_FEATURE_EFM32_LETIMER)
+#if (KISO_FEATURE_EFM32_LETIMER)
 TEST_F(HAL_MCU_Timer_Test, TimerInitialize_LETIMER)
 {
     Timer_T timer = (Timer_T)&BSP_Generic_Handle;
@@ -330,7 +330,7 @@ TEST_F(HAL_MCU_Timer_Test, TimerInitialize_LETIMER)
     /* Assert that the Timer Test Callback was not registered */
     ASSERT_EQ(NULL, BSP_Generic_Handle.Callback);
 }
-#endif /* BCDS_FEATURE_EFM32_LETIMER */
+#endif /* KISO_FEATURE_EFM32_LETIMER */
 
 TEST_F(HAL_MCU_Timer_Test, TimerInitialize_INVALID_PARAM)
 {
@@ -422,7 +422,7 @@ TEST_F(HAL_MCU_Timer_Test, TimerDeInitialize_NoDeinitHandle)
     ASSERT_EQ(0, TIMER_Init_fake.call_count);
 }
 
-#if (BCDS_FEATURE_EFM32_RTC)
+#if (KISO_FEATURE_EFM32_RTC)
 TEST_F(HAL_MCU_Timer_Test, TimerDeInitialize_RTC)
 {
     Timer_T timer = (Timer_T)&BSP_Generic_Handle;
@@ -445,9 +445,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerDeInitialize_RTC)
     ASSERT_EQ(0, LETIMER_Init_fake.call_count);
     ASSERT_EQ(0, TIMER_Init_fake.call_count);
 }
-#endif /* if (BCDS_FEATURE_EFM32_RTC) */
+#endif /* if (KISO_FEATURE_EFM32_RTC) */
 
-#if (BCDS_FEATURE_EFM32_BURTC)
+#if (KISO_FEATURE_EFM32_BURTC)
 TEST_F(HAL_MCU_Timer_Test, TimerDeInitialize_BURTC)
 {
     Timer_T timer = (Timer_T)&BSP_Generic_Handle;
@@ -470,9 +470,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerDeInitialize_BURTC)
     ASSERT_EQ(0, LETIMER_Init_fake.call_count);
     ASSERT_EQ(0, TIMER_Init_fake.call_count);
 }
-#endif /* if (BCDS_FEATURE_EFM32_BURTC) */
+#endif /* if (KISO_FEATURE_EFM32_BURTC) */
 
-#if (BCDS_FEATURE_EFM32_TIMER)
+#if (KISO_FEATURE_EFM32_TIMER)
 TEST_F(HAL_MCU_Timer_Test, TimerDeInitialize_TIMER)
 {
     Timer_T timer = (Timer_T)&BSP_Generic_Handle;
@@ -495,9 +495,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerDeInitialize_TIMER)
     ASSERT_EQ(0, LETIMER_Init_fake.call_count);
     ASSERT_EQ(0, TIMER_Init_fake.call_count);
 }
-#endif /* if (BCDS_FEATURE_EFM32_TIMER) */
+#endif /* if (KISO_FEATURE_EFM32_TIMER) */
 
-#if (BCDS_FEATURE_EFM32_LETIMER)
+#if (KISO_FEATURE_EFM32_LETIMER)
 TEST_F(HAL_MCU_Timer_Test, TimerDeInitialize_LETIMER)
 {
     Timer_T timer = (Timer_T)&BSP_Generic_Handle;
@@ -520,7 +520,7 @@ TEST_F(HAL_MCU_Timer_Test, TimerDeInitialize_LETIMER)
     ASSERT_EQ(0, LETIMER_Init_fake.call_count);
     ASSERT_EQ(0, TIMER_Init_fake.call_count);
 }
-#endif /* if (BCDS_FEATURE_EFM32_LETIMER) */
+#endif /* if (KISO_FEATURE_EFM32_LETIMER) */
 
 TEST_F(HAL_MCU_Timer_Test, TimerDeInitialize_INVALID_PARAM)
 {
@@ -579,7 +579,7 @@ TEST_F(HAL_MCU_Timer_Test, TimerSetCompare_HWPOINTER)
     ASSERT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMER_NOHWHANDLE), rc);
 }
 
-#if (BCDS_FEATURE_EFM32_RTC)
+#if (KISO_FEATURE_EFM32_RTC)
 TEST_F(HAL_MCU_Timer_Test, TimerSetCompare_RTC)
 {
     Retcode_T rc;
@@ -600,9 +600,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerSetCompare_RTC)
     ASSERT_EQ(0, TIMER_CompareSet_fake.call_count);
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_RTC) */
+#endif /* if (KISO_FEATURE_EFM32_RTC) */
 
-#if (BCDS_FEATURE_EFM32_BURTC)
+#if (KISO_FEATURE_EFM32_BURTC)
 TEST_F(HAL_MCU_Timer_Test, TimerSetCompare_BURTC)
 {
     Retcode_T rc;
@@ -623,9 +623,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerSetCompare_BURTC)
     ASSERT_EQ(0, TIMER_CompareSet_fake.call_count);
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_BURTC) */
+#endif /* if (KISO_FEATURE_EFM32_BURTC) */
 
-#if (BCDS_FEATURE_EFM32_TIMER)
+#if (KISO_FEATURE_EFM32_TIMER)
 TEST_F(HAL_MCU_Timer_Test, TimerSetCompare_TIMER)
 {
     Retcode_T rc;
@@ -646,9 +646,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerSetCompare_TIMER)
     ASSERT_EQ(0, TIMER_CompareSet_fake.call_count);
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_TIMER) */
+#endif /* if (KISO_FEATURE_EFM32_TIMER) */
 
-#if (BCDS_FEATURE_EFM32_TIMER)
+#if (KISO_FEATURE_EFM32_TIMER)
 TEST_F(HAL_MCU_Timer_Test, TimerSetCompare_LETIMER)
 {
     Retcode_T rc;
@@ -669,7 +669,7 @@ TEST_F(HAL_MCU_Timer_Test, TimerSetCompare_LETIMER)
     ASSERT_EQ(0, TIMER_CompareSet_fake.call_count);
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_LETIMER) */
+#endif /* if (KISO_FEATURE_EFM32_LETIMER) */
 
 TEST_F(HAL_MCU_Timer_Test, TimerSetCompare_INVALID_TYPE)
 {
@@ -744,7 +744,7 @@ TEST_F(HAL_MCU_Timer_Test, TimerGetCompare_NULL_VALUE)
 
 }
 
-#if (BCDS_FEATURE_EFM32_RTC)
+#if (KISO_FEATURE_EFM32_RTC)
 TEST_F(HAL_MCU_Timer_Test, TimerGetCompare_RTC)
 {
     Retcode_T rc;
@@ -766,9 +766,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerGetCompare_RTC)
     ASSERT_EQ(0, TIMER_CaptureGet_fake.call_count);
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_RTC) */
+#endif /* if (KISO_FEATURE_EFM32_RTC) */
 
-#if (BCDS_FEATURE_EFM32_BURTC)
+#if (KISO_FEATURE_EFM32_BURTC)
 TEST_F(HAL_MCU_Timer_Test, TimerGetCompare_BURTC)
 {
     Retcode_T rc;
@@ -790,9 +790,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerGetCompare_BURTC)
     ASSERT_EQ(0, TIMER_CaptureGet_fake.call_count);
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_BURTC) */
+#endif /* if (KISO_FEATURE_EFM32_BURTC) */
 
-#if (BCDS_FEATURE_EFM32_TIMER)
+#if (KISO_FEATURE_EFM32_TIMER)
 TEST_F(HAL_MCU_Timer_Test, TimerGetCompare_TIMER)
 {
     Retcode_T rc;
@@ -814,9 +814,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerGetCompare_TIMER)
     ASSERT_EQ(0, TIMER_CaptureGet_fake.call_count);
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_TIMER) */
+#endif /* if (KISO_FEATURE_EFM32_TIMER) */
 
-#if (BCDS_FEATURE_EFM32_LETIMER)
+#if (KISO_FEATURE_EFM32_LETIMER)
 TEST_F(HAL_MCU_Timer_Test, TimerGetCompare_LETIMER)
 {
     Retcode_T rc;
@@ -838,7 +838,7 @@ TEST_F(HAL_MCU_Timer_Test, TimerGetCompare_LETIMER)
     ASSERT_EQ(0, TIMER_CaptureGet_fake.call_count);
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_LETIMER) */
+#endif /* if (KISO_FEATURE_EFM32_LETIMER) */
 
 
 TEST_F(HAL_MCU_Timer_Test, TimerGetCompare_INVALID_TYPE)
@@ -916,7 +916,7 @@ TEST_F(HAL_MCU_Timer_Test, TimerGetCount_NULL_VALUE)
 
 }
 
-#if (BCDS_FEATURE_EFM32_RTC)
+#if (KISO_FEATURE_EFM32_RTC)
 TEST_F(HAL_MCU_Timer_Test, TimerGetCount_RTC)
 {
     Retcode_T rc;
@@ -939,9 +939,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerGetCount_RTC)
     ASSERT_EQ(0, TIMER_CounterGet_fake.call_count);
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_RTC) */
+#endif /* if (KISO_FEATURE_EFM32_RTC) */
 
-#if (BCDS_FEATURE_EFM32_BURTC)
+#if (KISO_FEATURE_EFM32_BURTC)
 TEST_F(HAL_MCU_Timer_Test, TimerGetCount_BURTC)
 {
     Retcode_T rc;
@@ -964,9 +964,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerGetCount_BURTC)
     ASSERT_EQ(0, TIMER_CounterGet_fake.call_count);
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_BURTC) */
+#endif /* if (KISO_FEATURE_EFM32_BURTC) */
 
-#if (BCDS_FEATURE_EFM32_TIMER)
+#if (KISO_FEATURE_EFM32_TIMER)
 TEST_F(HAL_MCU_Timer_Test, TimerGetCount_TIMER)
 {
     Retcode_T rc;
@@ -989,9 +989,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerGetCount_TIMER)
     ASSERT_EQ(0, TIMER_CounterGet_fake.call_count);
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_TIMER) */
+#endif /* if (KISO_FEATURE_EFM32_TIMER) */
 
-#if (BCDS_FEATURE_EFM32_LETIMER)
+#if (KISO_FEATURE_EFM32_LETIMER)
 TEST_F(HAL_MCU_Timer_Test, TimerGetCount_LETIMER)
 {
     Retcode_T rc;
@@ -1014,7 +1014,7 @@ TEST_F(HAL_MCU_Timer_Test, TimerGetCount_LETIMER)
     ASSERT_EQ(0, TIMER_CounterGet_fake.call_count);
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_LETIMER) */
+#endif /* if (KISO_FEATURE_EFM32_LETIMER) */
 
 
 TEST_F(HAL_MCU_Timer_Test, TimerGetCount_INVALID_TYPE)
@@ -1085,7 +1085,7 @@ TEST_F(HAL_MCU_Timer_Test, TimerGetMaxCount_NULL_VALUE)
     ASSERT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), rc);
 }
 
-#if (BCDS_FEATURE_EFM32_RTC)
+#if (KISO_FEATURE_EFM32_RTC)
 TEST_F(HAL_MCU_Timer_Test, TimerGetMaxCount_RTC)
 {
     Retcode_T rc;
@@ -1105,9 +1105,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerGetMaxCount_RTC)
 
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_RTC) */
+#endif /* if (KISO_FEATURE_EFM32_RTC) */
 
-#if (BCDS_FEATURE_EFM32_BURTC)
+#if (KISO_FEATURE_EFM32_BURTC)
 TEST_F(HAL_MCU_Timer_Test, TimerGetMaxCount_BURTC)
 {
     Retcode_T rc;
@@ -1126,9 +1126,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerGetMaxCount_BURTC)
 
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_BURTC) */
+#endif /* if (KISO_FEATURE_EFM32_BURTC) */
 
-#if (BCDS_FEATURE_EFM32_TIMER)
+#if (KISO_FEATURE_EFM32_TIMER)
 TEST_F(HAL_MCU_Timer_Test, TimerGetMaxCount_TIMER)
 {
     Retcode_T rc;
@@ -1144,9 +1144,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerGetMaxCount_TIMER)
 
     ASSERT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
 }
-#endif /* if (BCDS_FEATURE_EFM32_TIMER) */
+#endif /* if (KISO_FEATURE_EFM32_TIMER) */
 
-#if (BCDS_FEATURE_EFM32_LETIMER)
+#if (KISO_FEATURE_EFM32_LETIMER)
 TEST_F(HAL_MCU_Timer_Test, TimerGetMaxCount_LETIMER)
 {
     Retcode_T rc;
@@ -1162,7 +1162,7 @@ TEST_F(HAL_MCU_Timer_Test, TimerGetMaxCount_LETIMER)
 
     ASSERT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
 }
-#endif /* if (BCDS_FEATURE_EFM32_LETIMER) */
+#endif /* if (KISO_FEATURE_EFM32_LETIMER) */
 
 
 TEST_F(HAL_MCU_Timer_Test, TimerGetMaxCount_INVALID_TYPE)
@@ -1223,7 +1223,7 @@ TEST_F(HAL_MCU_Timer_Test, TimerStart_NOHWHANDLE)
 
 }
 
-#if (BCDS_FEATURE_EFM32_RTC)
+#if (KISO_FEATURE_EFM32_RTC)
 TEST_F(HAL_MCU_Timer_Test, TimerStart_RTC)
 {
     Retcode_T rc;
@@ -1244,9 +1244,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerStart_RTC)
     ASSERT_EQ(0, TIMER_Enable_fake.call_count);
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_RTC) */
+#endif /* if (KISO_FEATURE_EFM32_RTC) */
 
-#if (BCDS_FEATURE_EFM32_BURTC)
+#if (KISO_FEATURE_EFM32_BURTC)
 TEST_F(HAL_MCU_Timer_Test, TimerStart_BURTC)
 {
     Retcode_T rc;
@@ -1266,9 +1266,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerStart_BURTC)
     ASSERT_EQ(0, LETIMER_Enable_fake.call_count);
     ASSERT_EQ(0, TIMER_Enable_fake.call_count);
 }
-#endif /* if (BCDS_FEATURE_EFM32_BURTC) */
+#endif /* if (KISO_FEATURE_EFM32_BURTC) */
 
-#if (BCDS_FEATURE_EFM32_LETIMER)
+#if (KISO_FEATURE_EFM32_LETIMER)
 TEST_F(HAL_MCU_Timer_Test, TimerStart_LETIMER)
 {
     Retcode_T rc;
@@ -1288,9 +1288,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerStart_LETIMER)
     ASSERT_EQ(0, LETIMER_Enable_fake.call_count);
     ASSERT_EQ(0, TIMER_Enable_fake.call_count);
 }
-#endif /* if (BCDS_FEATURE_EFM32_LETIMER) */
+#endif /* if (KISO_FEATURE_EFM32_LETIMER) */
 
-#if (BCDS_FEATURE_EFM32_TIMER)
+#if (KISO_FEATURE_EFM32_TIMER)
 TEST_F(HAL_MCU_Timer_Test, TimerStart_TIMER)
 {
     Retcode_T rc;
@@ -1310,7 +1310,7 @@ TEST_F(HAL_MCU_Timer_Test, TimerStart_TIMER)
     ASSERT_EQ(0, LETIMER_Enable_fake.call_count);
     ASSERT_EQ(0, TIMER_Enable_fake.call_count);
 }
-#endif /* if (BCDS_FEATURE_EFM32_TIMER) */
+#endif /* if (KISO_FEATURE_EFM32_TIMER) */
 
 TEST_F(HAL_MCU_Timer_Test, TimerStart_INVALID)
 {
@@ -1371,7 +1371,7 @@ TEST_F(HAL_MCU_Timer_Test, TimerStop_NOHWHANDLE)
 
 }
 
-#if (BCDS_FEATURE_EFM32_RTC)
+#if (KISO_FEATURE_EFM32_RTC)
 TEST_F(HAL_MCU_Timer_Test, TimerStop_RTC)
 {
     Retcode_T rc;
@@ -1392,9 +1392,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerStop_RTC)
     ASSERT_EQ(0, TIMER_Enable_fake.call_count);
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_RTC) */
+#endif /* if (KISO_FEATURE_EFM32_RTC) */
 
-#if (BCDS_FEATURE_EFM32_BURTC)
+#if (KISO_FEATURE_EFM32_BURTC)
 TEST_F(HAL_MCU_Timer_Test, TimerStop_BURTC)
 {
     Retcode_T rc;
@@ -1414,9 +1414,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerStop_BURTC)
     ASSERT_EQ(0, LETIMER_Enable_fake.call_count);
     ASSERT_EQ(0, TIMER_Enable_fake.call_count);
 }
-#endif /* if (BCDS_FEATURE_EFM32_BURTC) */
+#endif /* if (KISO_FEATURE_EFM32_BURTC) */
 
-#if (BCDS_FEATURE_EFM32_LETIMER)
+#if (KISO_FEATURE_EFM32_LETIMER)
 TEST_F(HAL_MCU_Timer_Test, TimerStop_LETIMER)
 {
     Retcode_T rc;
@@ -1436,9 +1436,9 @@ TEST_F(HAL_MCU_Timer_Test, TimerStop_LETIMER)
     ASSERT_EQ(0, LETIMER_Enable_fake.call_count);
     ASSERT_EQ(0, TIMER_Enable_fake.call_count);
 }
-#endif /* if (BCDS_FEATURE_EFM32_LETIMER) */
+#endif /* if (KISO_FEATURE_EFM32_LETIMER) */
 
-#if (BCDS_FEATURE_EFM32_TIMER)
+#if (KISO_FEATURE_EFM32_TIMER)
 TEST_F(HAL_MCU_Timer_Test, TimerStop_TIMER)
 {
     Retcode_T rc;
@@ -1458,7 +1458,7 @@ TEST_F(HAL_MCU_Timer_Test, TimerStop_TIMER)
     ASSERT_EQ(0, LETIMER_Enable_fake.call_count);
     ASSERT_EQ(0, TIMER_Enable_fake.call_count);
 }
-#endif /* if (BCDS_FEATURE_EFM32_TIMER) */
+#endif /* if (KISO_FEATURE_EFM32_TIMER) */
 
 TEST_F(HAL_MCU_Timer_Test, TimerStop_INVALID)
 {
@@ -1486,7 +1486,7 @@ TEST_F(HAL_MCU_Timer_Test, TimerStop_INVALID)
 /* ************************************************************************** */
 /* * TIMER EXTRACT FLAGS RTC ************************************************ */
 /* ************************************************************************** */
-#if (BCDS_FEATURE_EFM32_RTC)
+#if (KISO_FEATURE_EFM32_RTC)
 TEST_F(HAL_MCU_Timer_Test, TimerExtractFlagsRTC)
 {
     struct MCU_Timer_Event_S event;
@@ -1535,13 +1535,13 @@ TEST_F(HAL_MCU_Timer_Test, TimerExtractFlagsRTC)
     ASSERT_EQ(1, event.Overflow);
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_RTC) */
+#endif /* if (KISO_FEATURE_EFM32_RTC) */
 
 
 /* ************************************************************************** */
 /* * TIMER EXTRACT FLAGS BURTC ********************************************** */
 /* ************************************************************************** */
-#if (BCDS_FEATURE_EFM32_BURTC)
+#if (KISO_FEATURE_EFM32_BURTC)
 TEST_F(HAL_MCU_Timer_Test, TimerExtractFlagsBURTC)
 {
     struct MCU_Timer_Event_S event;
@@ -1588,13 +1588,13 @@ TEST_F(HAL_MCU_Timer_Test, TimerExtractFlagsBURTC)
     ASSERT_EQ(1, event.Overflow);
 
 }
-#endif /* if (BCDS_FEATURE_EFM32_BURTC) */
+#endif /* if (KISO_FEATURE_EFM32_BURTC) */
 
 
 /* ************************************************************************** */
 /* * GET TIMER EVENTS ******************************************************* */
 /* ************************************************************************** */
-#if (BCDS_FEATURE_EFM32_RTC)
+#if (KISO_FEATURE_EFM32_RTC)
 TEST_F(HAL_MCU_Timer_Test, getTimerEvent_RTC)
 {
     struct MCU_Timer_Event_S event;
@@ -1612,9 +1612,9 @@ TEST_F(HAL_MCU_Timer_Test, getTimerEvent_RTC)
     ASSERT_EQ(0, LETIMER_IntGet_fake.call_count);
     ASSERT_EQ(0, TIMER_IntGet_fake.call_count);
 }
-#endif /* if (BCDS_FEATURE_EFM32_RTC) */
+#endif /* if (KISO_FEATURE_EFM32_RTC) */
 
-#if (BCDS_FEATURE_EFM32_BURTC)
+#if (KISO_FEATURE_EFM32_BURTC)
 TEST_F(HAL_MCU_Timer_Test, getTimerEvent_BURTC)
 {
     struct MCU_Timer_Event_S event;
@@ -1632,9 +1632,9 @@ TEST_F(HAL_MCU_Timer_Test, getTimerEvent_BURTC)
     ASSERT_EQ(0, LETIMER_IntGet_fake.call_count);
     ASSERT_EQ(0, TIMER_IntGet_fake.call_count);
 }
-#endif /* if (BCDS_FEATURE_EFM32_BURTC) */
+#endif /* if (KISO_FEATURE_EFM32_BURTC) */
 
-#if (BCDS_FEATURE_EFM32_LETIMER)
+#if (KISO_FEATURE_EFM32_LETIMER)
 TEST_F(HAL_MCU_Timer_Test, getTimerEvent_LETIMER)
 {
     struct MCU_Timer_Event_S event;
@@ -1652,9 +1652,9 @@ TEST_F(HAL_MCU_Timer_Test, getTimerEvent_LETIMER)
   //  ASSERT_EQ(1, LETIMER_IntGet_fake.call_count);
     ASSERT_EQ(0, TIMER_IntGet_fake.call_count);
 }
-#endif /* if (BCDS_FEATURE_EFM32_LETIMER) */
+#endif /* if (KISO_FEATURE_EFM32_LETIMER) */
 
-#if (BCDS_FEATURE_EFM32_TIMER)
+#if (KISO_FEATURE_EFM32_TIMER)
 TEST_F(HAL_MCU_Timer_Test, getTimerEvent_TIMER)
 {
     struct MCU_Timer_Event_S event;
@@ -1672,7 +1672,7 @@ TEST_F(HAL_MCU_Timer_Test, getTimerEvent_TIMER)
     ASSERT_EQ(0, LETIMER_IntGet_fake.call_count);
   //  ASSERT_EQ(1, TIMER_IntGet_fake.call_count);
 }
-#endif /* if (BCDS_FEATURE_EFM32_TIMER) */
+#endif /* if (KISO_FEATURE_EFM32_TIMER) */
 
 
 TEST_F(HAL_MCU_Timer_Test, getTimerEvent_FAIL)

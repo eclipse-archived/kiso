@@ -19,11 +19,11 @@
  * System header (if necessary)
  * Other headers
  */
-#include "BCDS_Basics.h"
+#include "Kiso_Basics.h"
 
-#include "BCDS_Retcode_th.hh"
-#include "BCDS_Assert_th.hh"
-#include "BCDS_Queue_th.hh"
+#include "Kiso_Retcode_th.hh"
+#include "Kiso_Assert_th.hh"
+#include "Kiso_Queue_th.hh"
 
 #include "FreeRTOS_th.hh"
 #include "semphr_th.hh"
@@ -33,9 +33,9 @@
 
 #include "AtResponseParser.h"
 
-#undef BCDS_MODULE_ID
+#undef KISO_MODULE_ID
 #include "AtResponseParser.c"
-#undef BCDS_MODULE_ID
+#undef KISO_MODULE_ID
 #include "AtResponseQueue.c"
 
 #include <stdarg.h>
@@ -245,7 +245,7 @@ Retcode_T Custom_Queue_Put(Queue_T *Queue, const void *Item, uint32_t ItemSize, 
 
 Retcode_T Custom_Queue_Get(Queue_T *Queue, void **Data, uint32_t *DataSize, uint32_t Timeout)
 {
-    BCDS_UNUSED(Timeout);
+    KISO_UNUSED(Timeout);
     if (0 == Queue->Count)
     {
         /* Insure that a message is available */

@@ -7,7 +7,7 @@
 #ifndef SENSORACCELEROMETER_ACCELEROMETER_11_H
 #define SENSORACCELEROMETER_ACCELEROMETER_11_H
 
-#include <BCDS_Retcode.h>
+#include <Kiso_Retcode.h>
 #include "cgwTypes.h"
 
 

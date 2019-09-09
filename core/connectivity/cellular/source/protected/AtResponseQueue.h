@@ -58,8 +58,8 @@
 
 #include "AtResponseParser.h"
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
 
 /**
  * @brief The size of the AT response ring buffer in bytes

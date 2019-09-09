@@ -27,17 +27,17 @@
 extern "C"
 {
 /* setup compile time configuration defines */
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_LEANB2CAP
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_LEANB2CAP
 
-#if BCDS_FEATURE_LEANB2CAP
+#if KISO_FEATURE_LEANB2CAP
 
 /* include faked interfaces */
-#include "BCDS_Retcode_th.hh"
+#include "Kiso_Retcode_th.hh"
 
 #include "LeanB2CAPConfig.h"
-#include "BCDS_LeanB2CAP.h"
+#include "Kiso_LeanB2CAP.h"
 #include "LeanB2CAP.h"
 
 #undef LEAN_B2CAP_INSTANCE_COUNT
@@ -1223,4 +1223,4 @@ TEST_F(LeanB2CAP, LeanB2CAP_OverheadBuilderInvalidParam)
 }
 #else
 }
-#endif /* #if BCDS_FEATURE_LEANB2CAP */
+#endif /* #if KISO_FEATURE_LEANB2CAP */

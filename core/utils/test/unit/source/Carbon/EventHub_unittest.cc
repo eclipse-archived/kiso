@@ -19,15 +19,15 @@
 extern "C"
 {/* start of global scope symbol and fake definitions section */
 
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_EVENTHUB
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_EVENTHUB
 
-#if BCDS_FEATURE_EVENTHUB
+#if KISO_FEATURE_EVENTHUB
 
 /* include faked interfaces */
-#include "BCDS_Retcode_th.hh"
-#include "BCDS_Assert_th.hh"
+#include "Kiso_Retcode_th.hh"
+#include "Kiso_Assert_th.hh"
 
 #include "task_th.hh"
 #include "fff.h"
@@ -77,7 +77,7 @@ void TestObserver_B(TaskEvent_T event, void *data)
 
 void TestObserver_All(TaskEvent_T event, void *data)
 {
-    BCDS_UNUSED(event);
+    KISO_UNUSED(event);
     eventReceived_All = true;
     dataCorrect_All = (gTestDataPtr == data);
 }
@@ -620,4 +620,4 @@ TEST_F(eventHub, EventHubNotifySemGiveNotPass)
 }
 #else
 }
-#endif /* if BCDS_FEATURE_EVENTHUB */
+#endif /* if KISO_FEATURE_EVENTHUB */

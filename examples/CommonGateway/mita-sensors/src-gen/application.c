@@ -7,8 +7,8 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include <stdbool.h>
-#include <BCDS_Basics.h>
-#include <BCDS_Retcode.h>
+#include <Kiso_Basics.h>
+#include <Kiso_Retcode.h>
 #include "SensorEnvironment.h"
 #include "stdbool.h"
 #include "ConnectivityLEDLeds.h"
@@ -18,8 +18,8 @@
 #include "stdint.h"
 #include "application.h"
 
-#ifndef BCDS_MODULE_ID
-#define BCDS_MODULE_ID 0xCAFE
+#ifndef KISO_MODULE_ID
+#define KISO_MODULE_ID 0xCAFE
 #endif
 
 int8_t threshold = 0;
@@ -33,8 +33,8 @@ Retcode_T initGlobalVariables_application() {
 Retcode_T HandleEvery50Millisecond1(void* userParameter1, uint32_t userParameter2)
 {
 	
-	BCDS_UNUSED(userParameter1);
-	BCDS_UNUSED(userParameter2);
+	KISO_UNUSED(userParameter1);
+	KISO_UNUSED(userParameter2);
 
 	Retcode_T exception = NO_EXCEPTION;
 	
@@ -66,8 +66,8 @@ Retcode_T HandleEvery50Millisecond1(void* userParameter1, uint32_t userParameter
 Retcode_T HandleEvery1Second1(void* userParameter1, uint32_t userParameter2)
 {
 	
-	BCDS_UNUSED(userParameter1);
-	BCDS_UNUSED(userParameter2);
+	KISO_UNUSED(userParameter1);
+	KISO_UNUSED(userParameter2);
 
 	Retcode_T exception = NO_EXCEPTION;
 	

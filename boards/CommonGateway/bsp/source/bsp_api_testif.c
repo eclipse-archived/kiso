@@ -12,19 +12,19 @@
 *
 ********************************************************************************/
 
-#include "BCDS_BSP_TestInterface.h"
+#include "Kiso_BSP_TestInterface.h"
 
-#if BCDS_FEATURE_BSP_TEST_INTERFACE
+#if KISO_FEATURE_BSP_TEST_INTERFACE
 
-#include "stm32/stm32l4/BCDS_MCU_STM32L4_UART_Handle.h"
-#include "BCDS_HAL_Delay.h"
+#include "stm32/stm32l4/Kiso_MCU_STM32L4_UART_Handle.h"
+#include "Kiso_HAL_Delay.h"
 #include "BSP_CommonGateway.h"
 #include "protected/gpio.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID MODULE_BSP_API_TEST_IF
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID MODULE_BSP_API_TEST_IF
 
 #define TESTIF_UART_INT_PRIORITY              UINT32_C(10)
 #define TESTIF_UART_SUBPRIORITY               UINT32_C(0)
@@ -43,8 +43,8 @@ static uint8_t bspState = (uint8_t) BSP_STATE_INIT; /**< BSP State of the cellul
  */
 static struct MCU_UART_S testIf_UARTStruct =
         {
-                .TxMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
-                .RxMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
+                .TxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
+                .RxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
                 .Datarate = 115200U,
                 .huart.Instance = USART1,
                 .huart.Init.BaudRate = 115200U,
@@ -195,8 +195,8 @@ HWHandle_T BSP_TestInterface_GetUARTHandle(void)
  */
 Retcode_T BSP_TestInterface_Control(uint32_t command, void* arg)
 {
-    BCDS_UNUSED(command);
-    BCDS_UNUSED(arg);
+    KISO_UNUSED(command);
+    KISO_UNUSED(arg);
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
 }
 
@@ -212,4 +212,4 @@ void USART1_IRQHandler(void)
         testIf_UARTStruct.IrqCallback((UART_T) &testIf_UARTStruct);
     }
 }
-#endif /* BCDS_FEATURE_BSP_TEST_INTERFACE */
+#endif /* KISO_FEATURE_BSP_TEST_INTERFACE */

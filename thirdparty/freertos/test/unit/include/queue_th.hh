@@ -20,8 +20,8 @@
  * ****************************************************************************/
 
 /* header definition ******************************************************** */
-#ifndef BCDS_QUEUE_TH_HH_
-#define BCDS_QUEUE_TH_HH_
+#ifndef KISO_QUEUE_TH_HH_
+#define KISO_QUEUE_TH_HH_
 
 /* include system header files */
 #include <gtest.h>
@@ -93,6 +93,6 @@ FAKE_VALUE_FUNC(BaseType_t, xQueueRemoveFromSet, QueueSetMemberHandle_t, QueueSe
 FAKE_VALUE_FUNC(QueueSetMemberHandle_t, xQueueSelectFromSet, QueueSetHandle_t, TickType_t);
 FAKE_VALUE_FUNC(QueueSetMemberHandle_t, xQueueSelectFromSetFromISR, QueueSetHandle_t);
 
-#endif /* BCDS_QUEUE_TH_HH_ */
+#endif /* KISO_QUEUE_TH_HH_ */
 
 /** ************************************************************************* */

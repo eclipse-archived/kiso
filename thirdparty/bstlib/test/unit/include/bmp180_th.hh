@@ -13,8 +13,8 @@
 ********************************************************************************/
  
 /* header definition ******************************************************** */
-#ifndef BCDS_BMP180_TH_HH_
-#define BCDS_BMP180_TH_HH_
+#ifndef KISO_BMP180_TH_HH_
+#define KISO_BMP180_TH_HH_
 
 
 #include "bmp180.h"
@@ -27,6 +27,6 @@ FAKE_VALUE_FUNC(u16, bmp180_get_uncomp_temperature);
 FAKE_VALUE_FUNC(u32, bmp180_get_uncomp_pressure);
 FAKE_VALUE_FUNC(BMP180_RETURN_FUNCTION_TYPE, bmp180_get_calib_param);
 
-#endif /* BCDS_BMP180_TH_HH_ */
+#endif /* KISO_BMP180_TH_HH_ */
 
 /*************************************************************************** */

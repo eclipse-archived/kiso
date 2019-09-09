@@ -16,18 +16,18 @@
  * @file
  */
 
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_RINGBUFFER
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_RINGBUFFER
 
-#include "BCDS_RingBuffer.h"
+#include "Kiso_RingBuffer.h"
 
-#if BCDS_FEATURE_RINGBUFFER
+#if KISO_FEATURE_RINGBUFFER
 
-#include "BCDS_Basics.h"
-#include "BCDS_Assert.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Assert.h"
 
-static BCDS_INLINE void Add(RingBuffer_T * ringBuffer, uint8_t element)
+static KISO_INLINE void Add(RingBuffer_T * ringBuffer, uint8_t element)
 {
     /* load the writeIndex to avoid false intermediate values on the real write index */
     register uint32_t index = ringBuffer->WriteIndex;
@@ -40,7 +40,7 @@ static BCDS_INLINE void Add(RingBuffer_T * ringBuffer, uint8_t element)
     /* now it is safe to read from the "old" index and write to the new index */
 }
 
-static BCDS_INLINE uint8_t Get(RingBuffer_T * ringBuffer)
+static KISO_INLINE uint8_t Get(RingBuffer_T * ringBuffer)
 {
     /* use a copy of the ReadIndex to avoid false intermediate values on the real read index
      * since it is also used in the write process (add) */
@@ -55,19 +55,19 @@ static BCDS_INLINE uint8_t Get(RingBuffer_T * ringBuffer)
     return element;
 }
 
-static BCDS_INLINE bool RingBuffer_IsFull(RingBuffer_T *ringBuffer)
+static KISO_INLINE bool RingBuffer_IsFull(RingBuffer_T *ringBuffer)
 {
     /* incrementing the WriteIndex would hit the ReadIndex => full */
     return ((ringBuffer->WriteIndex + 1UL) % (ringBuffer->Size)) != ringBuffer->ReadIndex ? false : true;
 }
 
-static BCDS_INLINE bool RingBuffer_IsEmpty(RingBuffer_T *ringBuffer)
+static KISO_INLINE bool RingBuffer_IsEmpty(RingBuffer_T *ringBuffer)
 {
     /* the ReadIndex equals the WriteIndex => empty */
     return ringBuffer->ReadIndex == ringBuffer->WriteIndex ? true : false;
 }
 
-/*  The description of the function is available in BCDS_RingBuffer.h */
+/*  The description of the function is available in Kiso_RingBuffer.h */
 void RingBuffer_Initialize(RingBuffer_T * ringBuffer, uint8_t * bufferSpace, uint32_t size)
 {
     if ((NULL == ringBuffer) || (NULL == bufferSpace) || (0UL == size))
@@ -84,7 +84,7 @@ void RingBuffer_Initialize(RingBuffer_T * ringBuffer, uint8_t * bufferSpace, uin
     }
 }
 
-/*  The description of the function is available in BCDS_RingBuffer.h */
+/*  The description of the function is available in Kiso_RingBuffer.h */
 uint32_t RingBuffer_Write(RingBuffer_T * ringBuffer, uint8_t * data, uint32_t length)
 {
     uint32_t actualLength = 0UL;
@@ -99,7 +99,7 @@ uint32_t RingBuffer_Write(RingBuffer_T * ringBuffer, uint8_t * data, uint32_t le
     return actualLength;
 }
 
-/*  The description of the function is available in BCDS_RingBuffer.h */
+/*  The description of the function is available in Kiso_RingBuffer.h */
 uint32_t RingBuffer_Read(RingBuffer_T * ringBuffer, uint8_t * data, uint32_t length)
 {
     uint32_t actualLength = 0UL;
@@ -115,7 +115,7 @@ uint32_t RingBuffer_Read(RingBuffer_T * ringBuffer, uint8_t * data, uint32_t len
     return actualLength;
 }
 
-/*  The description of the function is available in BCDS_RingBuffer.h */
+/*  The description of the function is available in Kiso_RingBuffer.h */
 void RingBuffer_Reset(RingBuffer_T *ringBuffer)
 {
     if (NULL != ringBuffer)
@@ -131,4 +131,4 @@ void RingBuffer_Reset(RingBuffer_T *ringBuffer)
     }
 }
 
-#endif /* if BCDS_FEATURE_RINGBUFFER */
+#endif /* if KISO_FEATURE_RINGBUFFER */

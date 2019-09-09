@@ -20,8 +20,8 @@
  * ****************************************************************************/
 
 /* header definition ******************************************************** */
-#ifndef CDDK_STREAM_BUFFER_TH_HH_
-#define CDDK_STREAM_BUFFER_TH_HH_
+#ifndef KISO_STREAM_BUFFER_TH_HH_
+#define KISO_STREAM_BUFFER_TH_HH_
 
 /* include system header files */
 #include <gtest.h>
@@ -55,6 +55,6 @@ FAKE_VALUE_FUNC(StreamBufferHandle_t, xStreamBufferGenericCreate, size_t, size_t
 FAKE_VALUE_FUNC(StreamBufferHandle_t, xStreamBufferGenericCreateStatic, size_t, size_t, BaseType_t, uint8_t *, StaticStreamBuffer_t *);
 
 
-#endif /* CDDK_STREAM_BUFFER_TH_HH_ */
+#endif /* KISO_STREAM_BUFFER_TH_HH_ */
 
 /** ************************************************************************* */

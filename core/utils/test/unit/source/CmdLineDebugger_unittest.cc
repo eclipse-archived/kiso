@@ -18,14 +18,14 @@
 extern "C"
 {
 
-#define BCDS_MODULE_ID 0
+#define KISO_MODULE_ID 0
 
-#include "BCDS_Utils.h"
-#if BCDS_FEATURE_CMDLINEDEBUGGER
+#include "Kiso_Utils.h"
+#if KISO_FEATURE_CMDLINEDEBUGGER
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode_th.hh"
-#include "BCDS_Assert_th.hh"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode_th.hh"
+#include "Kiso_Assert_th.hh"
 
 /* Module under Test */
 #include "CmdLineDebugger.c"
@@ -463,4 +463,4 @@ TEST_F(CommandLineInterface, CmdLine_Parse_NOARC)
 }
 #else
 }
-#endif /* if BCDS_FEATURE_CMDLINEDEBUGGER */
+#endif /* if KISO_FEATURE_CMDLINEDEBUGGER */

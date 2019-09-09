@@ -19,21 +19,21 @@
  * @brief Implements various URC handling routines.
  */
 
-#include "BCDS_CellularModules.h"
-#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_URC
+#include "Kiso_CellularModules.h"
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_URC
 
 #include "AtUrc.h"
 
-#include "BCDS_Cellular.h"
+#include "Kiso_Cellular.h"
 #include "AtResponseQueue.h"
 #include "At3Gpp27007.h"
 #include "AT_UBlox.h"
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
-#include "BCDS_Assert.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
 
-#include "BCDS_Logging.h"
+#include "Kiso_Logging.h"
 
 /**
  * @brief The maximum number of subsequent URC handler chain executions. If this number

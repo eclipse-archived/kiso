@@ -19,10 +19,10 @@
 #ifndef UBLOXUTILS_H_
 #define UBLOXUTILS_H_
 
-#include "BCDS_Cellular.h"
+#include "Kiso_Cellular.h"
 #include "AT_UBlox.h"
 
-#include "BCDS_Retcode.h"
+#include "Kiso_Retcode.h"
 
 /**
  * @brief Translate #Cellular_IpAddress_T to #AT_UBlox_Address_T.

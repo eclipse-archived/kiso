@@ -7,9 +7,9 @@
 #ifndef PLATFORMCGW_CGW_13_H
 #define PLATFORMCGW_CGW_13_H
 
-#include <BCDS_Retcode.h>
-#include "BCDS_I2CTransceiver.h"
-#include "BCDS_MCU_I2C.h"
+#include <Kiso_Retcode.h>
+#include "Kiso_I2CTransceiver.h"
+#include "Kiso_MCU_I2C.h"
 
 
 /**

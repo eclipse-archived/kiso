@@ -6,7 +6,7 @@
  *             \image html Kiso-logo.png
  * 
  *
- * @section    BCDS_REFBOARDS_LICENCE License
+ * @section    KISO_REFBOARDS_LICENCE License
  *
  * @note       This program and the accompanying materials are made available under the
  *             terms of the Eclipse Public License 2.0 which is available at
@@ -32,7 +32,7 @@
  *     * A **bsp** (board support package) abstracting Essentials.
  *     * A **kiso_config** containing the Kiso module specific configurations.
  * * **core** contains the different Kiso components. The following modules are today existing:
- *     * **Essentials** contains the hardware abstraction from the board and MCU. It also contains "essentials" modules such as error-handling. See \ref BCDS_ESSENTIALS
+ *     * **Essentials** contains the hardware abstraction from the board and MCU. It also contains "essentials" modules such as error-handling. See \ref KISO_ESSENTIALS
  *     * **Utils** contains RTOS abstractions modules, but also logging, circular-buffers, etc... See \ref UTILS
  *     * **connectivity/Cellular** contains the driver that allows us to communicate with u-blox SARA via CAT-M1 or NB-IoT. See \ref CELLULAR
  * * **docs** contains the documentation.

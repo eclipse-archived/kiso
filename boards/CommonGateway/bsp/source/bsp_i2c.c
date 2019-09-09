@@ -12,19 +12,19 @@
 *
 ********************************************************************************/
 
-#include "BCDS_HAL.h"
+#include "Kiso_HAL.h"
 
-#if BCDS_FEATURE_I2C
+#if KISO_FEATURE_I2C
 
-#include "stm32/stm32l4/BCDS_MCU_STM32L4_I2C_Handle.h"
+#include "stm32/stm32l4/Kiso_MCU_STM32L4_I2C_Handle.h"
 #include "BSP_CommonGateway.h"
 #include "protected/i2c.h"
 #include "protected/gpio.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID MODULE_BSP_I2C
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID MODULE_BSP_I2C
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
@@ -39,7 +39,7 @@ void I2C3_ER_IRQHandler(void);
  */
 struct MCU_I2C_S sensorsI2CStruct =
         {
-                .TransferMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
+                .TransferMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
                 .hi2c.Instance = I2C3,
                 .hi2c.Init.Timing = 0x10b0153d, // 400kHz; 200ns rise time 50ns fall time
                 .hi2c.Init.OwnAddress1 = 0,

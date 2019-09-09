@@ -19,20 +19,20 @@
 
 #include "AppInfo.h"
 #include "blinky_led.h"
-#include "BCDS_BSP_LED.h"
-#include "BCDS_BSP_Board.h"
+#include "Kiso_BSP_LED.h"
+#include "Kiso_BSP_Board.h"
 #include <stdio.h>
 
-#include "BCDS_Basics.h"
-#include "BCDS_Assert.h"
-#include "BCDS_CmdProcessor.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Assert.h"
+#include "Kiso_CmdProcessor.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "BSP_CommonGateway.h"
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID  /* Module ID define before including Basics package*/
-#define BCDS_MODULE_ID APP_MODULE_ID_MAIN
+#undef KISO_MODULE_ID  /* Module ID define before including Basics package*/
+#define KISO_MODULE_ID APP_MODULE_ID_MAIN
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 

@@ -12,12 +12,12 @@
 *
 ********************************************************************************/
 
-#include "BCDS_BSP_Cellular_SaraR4N4.h"
+#include "Kiso_BSP_Cellular_SaraR4N4.h"
 
-#if BCDS_FEATURE_BSP_CELLULAR_SARAR4N4
+#if KISO_FEATURE_BSP_CELLULAR_SARAR4N4
 
-#include "BCDS_HAL_Delay.h"
-#include "stm32/stm32l4/BCDS_MCU_STM32L4_UART_Handle.h"
+#include "Kiso_HAL_Delay.h"
+#include "stm32/stm32l4/Kiso_MCU_STM32L4_UART_Handle.h"
 
 #include "BSP_CommonGateway.h"
 #include "protected/power_supply.h"
@@ -25,8 +25,8 @@
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID MODULE_BSP_API_SARAR4N4
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID MODULE_BSP_API_SARAR4N4
 
 #define SARAR4N4_DELAY_1_MS                     UINT32_C(1)
 #define SARAR4N4_LVL_SHIFT_VCCA_SET_DELAY_MS    SARAR4N4_DELAY_1_MS
@@ -55,8 +55,8 @@ static uint8_t bspState = (uint8_t) BSP_STATE_INIT;
  */
 static struct MCU_UART_S SaraR4N4_UARTStruct =
         {
-                .TxMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
-                .RxMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
+                .TxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
+                .RxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
                 .Datarate = 115200,
                 .huart.Instance = USART2,
                 .huart.Init.BaudRate = 115200,
@@ -320,8 +320,8 @@ Retcode_T BSP_Cellular_SaraR4N4_Reset(void)
 
 Retcode_T BSP_Cellular_SaraR4N4_Control(uint32_t command, void* arg)
 {
-    BCDS_UNUSED(command);
-    BCDS_UNUSED(arg);
+    KISO_UNUSED(command);
+    KISO_UNUSED(arg);
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
 }
 /**
@@ -366,4 +366,4 @@ void USART2_IRQHandler(void)
     }
 }
 
-#endif /* BCDS_FEATURE_BSP_CELLULAR_SARAR4N4 */
+#endif /* KISO_FEATURE_BSP_CELLULAR_SARAR4N4 */

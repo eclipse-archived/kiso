@@ -14,17 +14,17 @@
 
 #include "BSP_BLE_CC2640.h"
 
-#if BCDS_FEATURE_BSP_BLE_CC2640
+#if KISO_FEATURE_BSP_BLE_CC2640
 
 #include "BSP_CommonGateway.h"
 #include "protected/gpio.h"
 #include "protected/power_supply.h"
-#include "stm32/stm32l4/BCDS_MCU_STM32L4_UART_Handle.h"
+#include "stm32/stm32l4/Kiso_MCU_STM32L4_UART_Handle.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID MODULE_BSP_API_BLE_CC2640
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID MODULE_BSP_API_BLE_CC2640
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 /**
@@ -45,8 +45,8 @@ static uint8_t bspState = (uint8_t) BSP_STATE_INIT;
  */
 static struct MCU_UART_S CC2640_UartHandle =
         {
-                .TxMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
-                .RxMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
+                .TxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
+                .RxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
                 .Datarate = 115200,
                 .huart.Instance = USART3,
                 .huart.Init.BaudRate = 115200,
@@ -228,5 +228,5 @@ void USART3_IRQHandler(void)
     }
 }
 
-#endif/* if (BCDS_FEATURE_BSP_BLE_CC2640) */
+#endif/* if (KISO_FEATURE_BSP_BLE_CC2640) */
 

@@ -13,8 +13,8 @@
 ********************************************************************************/
  
 /* header definition ******************************************************** */
-#ifndef BCDS_BMA2X2_TH_HH_
-#define BCDS_BMA2X2_TH_HH_
+#ifndef KISO_BMA2X2_TH_HH_
+#define KISO_BMA2X2_TH_HH_
 
 
 /* wrap the real bma2x2.h interface header */
@@ -163,6 +163,6 @@ FAKE_VALUE_FUNC(BMA2x2_RETURN_FUNCTION_TYPE,bma2x2_read_temp,s8 *);
 FAKE_VALUE_FUNC(BMA2x2_RETURN_FUNCTION_TYPE,bma2x2_read_accel_xyzt,struct bma2x2_accel_data_temp*);
 FAKE_VALUE_FUNC(BMA2x2_RETURN_FUNCTION_TYPE,bma2x2_read_accel_eight_resolution_xyzt,struct bma2x2_accel_eight_resolution_temp*);
 
-#endif /* BCDS_BMA2X2_TH_HH_ */
+#endif /* KISO_BMA2X2_TH_HH_ */
 
 /** ************************************************************************* */

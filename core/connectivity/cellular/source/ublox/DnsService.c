@@ -12,17 +12,17 @@
 *
 ********************************************************************************/
 
-#include "BCDS_CellularDnsService.h"
-#include "BCDS_Cellular.h"
-#include "BCDS_CellularConfig.h"
+#include "Kiso_CellularDnsService.h"
+#include "Kiso_Cellular.h"
+#include "Kiso_CellularConfig.h"
 #include "UBloxUtils.h"
 
 #include "Engine.h"
 #include "AT_UBlox.h"
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
-#include "BCDS_Assert.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
 
 #define CELLULAR_DNS_SHORT_ENQUEUE_TIMEOUT   (UINT32_C(1000))
 
@@ -50,7 +50,7 @@ static Retcode_T ResolveDomain(void* param, uint32_t paramLen);
 
 static Retcode_T ResolveDomain(void* param, uint32_t paramLen)
 {
-    BCDS_UNUSED(paramLen);
+    KISO_UNUSED(paramLen);
     assert(NULL != param);
     assert(sizeof(struct CellularDns_ResolveDomainParam_S) == paramLen);
 

@@ -25,7 +25,7 @@
 #ifndef PROTECTED_POWER_SUPPLY_H_
 #define PROTECTED_POWER_SUPPLY_H_
 
-#include "BCDS_HAL.h"
+#include "Kiso_HAL.h"
 
 enum PowerSupply_Retcode_E
 {

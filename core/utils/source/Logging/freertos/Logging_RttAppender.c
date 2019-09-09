@@ -20,18 +20,18 @@
  */
 
 /* Include utils to have access to the defined module and error IDs */
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID  BCDS_UTILS_MODULE_ID_LOGGING_APPENDER_RTT
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_LOGGING_APPENDER_RTT
 
 /* Include the Logging header, which include the configuration that enable and define macros for this module */
-#include "BCDS_Logging.h"
+#include "Kiso_Logging.h"
 
 /* Enable/Disable macro for the feature */
-#if BCDS_FEATURE_LOGGING && BCDS_RTT_APPENDER
+#if KISO_FEATURE_LOGGING && KISO_RTT_APPENDER
 
 /* Include needed headers */
-#include "BCDS_Retcode.h"
+#include "Kiso_Retcode.h"
 #include "SEGGER_RTT.h"
 
 /**
@@ -91,4 +91,4 @@ static const LogAppender_T RttAppender =
 };
 const LogAppender_T *Logging_RttAppender = &RttAppender;
 
-#endif /* if BCDS_FEATURE_LOGGING && BCDS_RTT_APPENDER */
+#endif /* if KISO_FEATURE_LOGGING && KISO_RTT_APPENDER */

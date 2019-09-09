@@ -10,20 +10,20 @@
  *     Robert Bosch GmbH - initial contribution
  */
 #include "AppModules.h"
-#define BCDS_MODULE_ID CGW_APP_MODULE_APP
+#define KISO_MODULE_ID CGW_APP_MODULE_APP
 
 #include "App.h"
 #include "AppConfig.h"
 #include "AppRetcodes.h"
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
-#include "BCDS_Cellular.h"
-#include "BCDS_CellularDnsService.h"
-#include "BCDS_CellularSocketService.h"
-#include "BCDS_CellularHttpService.h"
-#include "BCDS_CmdProcessor.h"
-#include "BCDS_Logging.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Cellular.h"
+#include "Kiso_CellularDnsService.h"
+#include "Kiso_CellularSocketService.h"
+#include "Kiso_CellularHttpService.h"
+#include "Kiso_CmdProcessor.h"
+#include "Kiso_Logging.h"
 
 #include "FreeRTOS.h"
 #include "semphr.h"
@@ -107,9 +107,9 @@ static uint32_t NumCurrentAttempt = 0;
 
 static void HandleStateChanged(Cellular_State_T oldState, Cellular_State_T newState, void *param, uint32_t len)
 {
-    BCDS_UNUSED(oldState);
-    BCDS_UNUSED(param);
-    BCDS_UNUSED(len);
+    KISO_UNUSED(oldState);
+    KISO_UNUSED(param);
+    KISO_UNUSED(len);
 
     CurrentCellularState = newState;
 
@@ -118,7 +118,7 @@ static void HandleStateChanged(Cellular_State_T oldState, Cellular_State_T newSt
 
 static void HandleSocketClosed(CellularSocket_Handle_T closedSocket)
 {
-    BCDS_UNUSED(closedSocket);
+    KISO_UNUSED(closedSocket);
     LOG_INFO("Socket closed: %u", (unsigned int)closedSocket);
 
     (void)xSemaphoreGive(SocketStateChangedSignal);
@@ -126,13 +126,13 @@ static void HandleSocketClosed(CellularSocket_Handle_T closedSocket)
 
 static void HandleSocketDataReady(CellularSocket_Handle_T socket, uint32_t numBytesAvailable)
 {
-    BCDS_UNUSED(socket);
-    BCDS_UNUSED(numBytesAvailable);
+    KISO_UNUSED(socket);
+    KISO_UNUSED(numBytesAvailable);
     LOG_INFO("Received %u bytes on socket %u", (unsigned int)numBytesAvailable, (unsigned int)socket);
 
     (void)xSemaphoreGive(SocketStateChangedSignal);
 }
-#ifdef BCDS_LOGGING
+#ifdef KISO_LOGGING
 static const char *HttpMethodToStr(CellularHttp_Method_T method)
 {
     switch (method)
@@ -151,8 +151,8 @@ static const char *HttpMethodToStr(CellularHttp_Method_T method)
 
 static void HandleHttpResultAvailable(CellularHttp_Method_T method, CellularHttp_Result_T result)
 {
-    BCDS_UNUSED(method);
-    BCDS_UNUSED(result);
+    KISO_UNUSED(method);
+    KISO_UNUSED(result);
 
     LOG_INFO("Received HTTP-%s with result %u", HttpMethodToStr(method), (unsigned int)result);
 }
@@ -513,7 +513,7 @@ static Retcode_T PowerOffCellular(void)
 
 static void RunAppTask(void *param)
 {
-    BCDS_UNUSED(param);
+    KISO_UNUSED(param);
 
     for (;;)
     {
@@ -574,7 +574,7 @@ void App_InitSystem(void *param, uint32_t len)
 {
     LOG_DEBUG("Initializing app...");
 
-    BCDS_UNUSED(len);
+    KISO_UNUSED(len);
     assert(NULL != param);
     AppCmdProcessor = (CmdProcessor_T *)param;
 

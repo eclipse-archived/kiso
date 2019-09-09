@@ -21,19 +21,19 @@
 #include "accel_sensor.h"
 
 #include "../../../../boards/CommonGateway/bsp/include/BSP_CommonGateway.h"
-#include "BCDS_BSP_BMA280.h"
-#include "BCDS_BSP_Board.h"
-#include "BCDS_I2CTransceiver.h"
+#include "Kiso_BSP_BMA280.h"
+#include "Kiso_BSP_Board.h"
+#include "Kiso_I2CTransceiver.h"
 
-#include "BCDS_CmdProcessor.h"
-#include "BCDS_Assert.h"
+#include "Kiso_CmdProcessor.h"
+#include "Kiso_Assert.h"
 #include "FreeRTOS.h"
 #include "timers.h"
 #include "bma2x2.h"
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID CGW_APP_MODULE_ACCEL_SENSOR
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID CGW_APP_MODULE_ACCEL_SENSOR
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 

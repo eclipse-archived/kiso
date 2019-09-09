@@ -12,15 +12,15 @@
 *
 ********************************************************************************/
 
-#include "BCDS_CellularModules.h"
-#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_INIT
+#include "Kiso_CellularModules.h"
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_INIT
 
-#include "BCDS_Cellular.h"
+#include "Kiso_Cellular.h"
 
 #include "Engine.h"
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
 
 Retcode_T Cellular_Initialize(Cellular_StateChanged_T onStateChanged)
 {

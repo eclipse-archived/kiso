@@ -2,10 +2,10 @@
 FROM debian:10
 
 # Set the working directory to /app
-WORKDIR /cddk-project
+WORKDIR /kiso-project
 
 # Define environment variable
-ENV NAME cddk-container
+ENV NAME kiso-container
 
 # Update package management
 RUN apt-get update

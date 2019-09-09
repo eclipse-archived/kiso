@@ -12,9 +12,9 @@
 *
 ********************************************************************************/
 
-#include "BCDS_BSP_Board.h"
+#include "Kiso_BSP_Board.h"
 
-#include "BCDS_HAL_Delay.h"
+#include "Kiso_HAL_Delay.h"
 #include <string.h>
 
 #include "protected/board.h"
@@ -26,8 +26,8 @@
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID MODULE_BSP_API_BOARD
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID MODULE_BSP_API_BOARD
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
@@ -74,8 +74,8 @@ static BSP_Systick_Callback_T postTickHandler = NULL; /**< function to be execut
  */
 Retcode_T BSP_Board_Initialize(uint32_t param1, void* param2)
 {
-    BCDS_UNUSED(param1);
-    BCDS_UNUSED(param2);
+    KISO_UNUSED(param1);
+    KISO_UNUSED(param2);
 
     Retcode_T retcode = RETCODE_OK;
 

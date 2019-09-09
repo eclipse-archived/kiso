@@ -21,19 +21,19 @@
 #include "env_sensor.h"
 
 #include "BSP_CommonGateway.h"
-#include "BCDS_BSP_BME280.h"
-#include "BCDS_BSP_Board.h"
-#include "BCDS_I2CTransceiver.h"
+#include "Kiso_BSP_BME280.h"
+#include "Kiso_BSP_Board.h"
+#include "Kiso_I2CTransceiver.h"
 
-#include "BCDS_CmdProcessor.h"
-#include "BCDS_Assert.h"
+#include "Kiso_CmdProcessor.h"
+#include "Kiso_Assert.h"
 #include "FreeRTOS.h"
 #include "timers.h"
 #include "bme280.h"
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID CGW_APP_MODULE_ENV_SENSOR
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID CGW_APP_MODULE_ENV_SENSOR
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 

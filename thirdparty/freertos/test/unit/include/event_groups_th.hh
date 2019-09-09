@@ -20,8 +20,8 @@
  * ****************************************************************************/
 
 /* header definition ******************************************************** */
-#ifndef BCDS_EVENT_GROUPS_TH_HH_
-#define BCDS_EVENT_GROUPS_TH_HH_
+#ifndef KISO_EVENT_GROUPS_TH_HH_
+#define KISO_EVENT_GROUPS_TH_HH_
 
 /* include system header files */
 #include <gtest.h>
@@ -39,6 +39,6 @@ FAKE_VOID_FUNC(vEventGroupSetBitsCallback, void*, uint32_t);
 FAKE_VALUE_FUNC(BaseType_t, xTimerPendFunctionCallFromISR, PendedFunction_t, void*, uint32_t, BaseType_t*);
 FAKE_VALUE_FUNC(EventBits_t, xEventGroupWaitBits, EventGroupHandle_t, EventBits_t, BaseType_t, BaseType_t, TickType_t)
 
-#endif /* BCDS_EVENT_GROUPS_TH_HH_ */
+#endif /* KISO_EVENT_GROUPS_TH_HH_ */
 
 /** ************************************************************************* */

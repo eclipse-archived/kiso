@@ -11,9 +11,9 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
- 
-#ifndef BCDS_portmacro_th_HH
-#define BCDS_portmacro_th_HH
+
+#ifndef KISO_PORTMACRO_TH_HH
+#define KISO_PORTMACRO_TH_HH
 
 /* ban or wrap the real interface header */
 #include"portmacro.h"
@@ -26,4 +26,4 @@
 
 /* Mock-ups for the provided interfaces */
 
-#endif /* BCDS_portmacro_th_HH */
+#endif /* KISO_PORTMACRO_TH_HH */

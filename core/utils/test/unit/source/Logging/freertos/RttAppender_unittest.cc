@@ -20,15 +20,15 @@
 extern "C"
 {
 /* setup compile time configuration defines */
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_LOGGING_APPENDER_RTT
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_LOGGING_APPENDER_RTT
 
-#if BCDS_FEATURE_LOGGING
+#if KISO_FEATURE_LOGGING
 
 /* include faked interfaces */
 #include "SEGGER_RTT_th.hh"
-#include "BCDS_Retcode_th.hh"
+#include "Kiso_Retcode_th.hh"
 
 /* include module under test */
 #include "Logging_RttAppender.c"
@@ -84,4 +84,4 @@ TEST_F(RttAppender, RttAppenderWrite)
 }
 #else
 }
-#endif /* if BCDS_FEATURE_LOGGING */
+#endif /* if KISO_FEATURE_LOGGING */

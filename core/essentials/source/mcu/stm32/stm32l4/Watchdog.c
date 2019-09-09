@@ -17,16 +17,16 @@
  * @brief Contains the realization of the MCU watchdog interface for STM32
  */
 
-#include "BCDS_MCU_Watchdog.h"
+#include "Kiso_MCU_Watchdog.h"
 
-#if BCDS_FEATURE_WATCHDOG
+#if KISO_FEATURE_WATCHDOG
 
 #include "stm32l4xx.h"
 #include "stm32l4xx_hal_iwdg.h"
 #include "stm32l4xx_hal_rcc.h"
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_ESSENTIALS_MODULE_ID_WATCHDOG
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_WATCHDOG
 
 static IWDG_HandleTypeDef* WdgHandle_ptr = NULL;
 
@@ -132,5 +132,5 @@ bool MCU_Watchdog_IsResetCausedByWatchdog(void)
     return retcode;
 }
 
-#endif //-- BCDS_FEATURE_WATCHDOG
+#endif //-- KISO_FEATURE_WATCHDOG
 

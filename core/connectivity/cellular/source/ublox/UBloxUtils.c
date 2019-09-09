@@ -12,15 +12,15 @@
 *
 ********************************************************************************/
 
-#include "BCDS_CellularModules.h"
-#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_UBLOXUTILS
+#include "Kiso_CellularModules.h"
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_UBLOXUTILS
 
 #include "UBloxUtils.h"
-#include "BCDS_Cellular.h"
+#include "Kiso_Cellular.h"
 #include "AT_UBlox.h"
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
 
 Retcode_T CelToUbloxAddr(const Cellular_IpAddress_T* from, AT_UBlox_Address_T* to)
 {

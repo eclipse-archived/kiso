@@ -14,18 +14,18 @@
 
 
 /* module includes ********************************************************** */
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_CMDPROCESSOR
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_CMDPROCESSOR
 
-#include "BCDS_CmdProcessor.h"
+#include "Kiso_CmdProcessor.h"
 
-#if BCDS_FEATURE_CMDPROCESSOR
+#if KISO_FEATURE_CMDPROCESSOR
 
-/* BCDS basics header files*/
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
-#include "BCDS_Assert.h"
+/* KISO basics header files*/
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
 
 /* FreeRTOS header files */
 #include "FreeRTOS.h"
@@ -50,7 +50,7 @@ static void Run(void *pvParameters);
 
 static void Dequeue(CmdProcessor_T * cmdProcessor);
 
-/* The description of the function is available in BCDS_CmdProcessor.h*/
+/* The description of the function is available in Kiso_CmdProcessor.h*/
 Retcode_T CmdProcessor_Initialize(
         CmdProcessor_T *cmdProcessor, char *name,
         uint32_t taskPriority, uint32_t taskStackDepth, uint32_t queueSize)
@@ -94,7 +94,7 @@ Retcode_T CmdProcessor_Initialize(
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_CmdProcessor.h */
+/*  The description of the function is available in Kiso_CmdProcessor.h */
 Retcode_T CmdProcessor_Enqueue(CmdProcessor_T *cmdProcessor, CmdProcessor_Func_T func, void *param1, uint32_t param2)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -130,7 +130,7 @@ Retcode_T CmdProcessor_Enqueue(CmdProcessor_T *cmdProcessor, CmdProcessor_Func_T
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_CmdProcessor.h */
+/*  The description of the function is available in Kiso_CmdProcessor.h */
 Retcode_T CmdProcessor_EnqueueFromIsr(CmdProcessor_T *cmdProcessor, CmdProcessor_Func_T func, void *param1, uint32_t param2)
 {
     int32_t rc = pdPASS;
@@ -167,7 +167,7 @@ Retcode_T CmdProcessor_EnqueueFromIsr(CmdProcessor_T *cmdProcessor, CmdProcessor
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_CmdProcessor.h */
+/*  The description of the function is available in Kiso_CmdProcessor.h */
 void CmdProcessor_Suspend(CmdProcessor_T *cmdProcessor)
 {
     if ((NULL != cmdProcessor) && (NULL != cmdProcessor->task))
@@ -180,7 +180,7 @@ void CmdProcessor_Suspend(CmdProcessor_T *cmdProcessor)
     }
 }
 
-/*  The description of the function is available in BCDS_CmdProcessor.h */
+/*  The description of the function is available in Kiso_CmdProcessor.h */
 void CmdProcessor_Resume(CmdProcessor_T *cmdProcessor)
 {
     if ((NULL != cmdProcessor) && (NULL != cmdProcessor->task))
@@ -205,7 +205,7 @@ static void Run(void *pvParameters)
     Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, (uint32_t) RETCODE_FAILURE));
 }
 
-/*  The description of the function is available in BCDS_CmdProcessor.h */
+/*  The description of the function is available in Kiso_CmdProcessor.h */
 static void Dequeue(CmdProcessor_T * cmdProcessor)
 {
     if ((NULL != cmdProcessor) && (NULL != cmdProcessor->queue))
@@ -238,4 +238,4 @@ static void Dequeue(CmdProcessor_T * cmdProcessor)
     }
 }
 
-#endif /* if BCDS_FEATURE_CMDPROCESSOR */
+#endif /* if KISO_FEATURE_CMDPROCESSOR */

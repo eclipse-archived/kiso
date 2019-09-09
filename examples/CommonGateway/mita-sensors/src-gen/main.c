@@ -4,11 +4,11 @@
  */
 
 
-#include <BCDS_Basics.h>
+#include <Kiso_Basics.h>
 #include <FreeRTOS.h>
-#include <BCDS_Retcode.h>
+#include <Kiso_Retcode.h>
 #include <stdio.h>
-#include <BCDS_CmdProcessor.h>
+#include <Kiso_CmdProcessor.h>
 #include <timers.h>
 #include "../../../../boards/CommonGateway/bsp/include/BSP_CommonGateway.h"
 #include "application.h"
@@ -163,8 +163,8 @@ int main(void)
 
 Retcode_T Mita_initialize(void* userParameter1, uint32_t userParameter2)
 {
-	BCDS_UNUSED(userParameter1);
-	BCDS_UNUSED(userParameter2);
+	KISO_UNUSED(userParameter1);
+	KISO_UNUSED(userParameter2);
 	Retcode_T exception = NO_EXCEPTION;
 	
 
@@ -220,8 +220,8 @@ Retcode_T Mita_initialize(void* userParameter1, uint32_t userParameter2)
 
 Retcode_T Mita_goLive(void* userParameter1, uint32_t userParameter2)
 {
-	BCDS_UNUSED(userParameter1);
-	BCDS_UNUSED(userParameter2);
+	KISO_UNUSED(userParameter1);
+	KISO_UNUSED(userParameter2);
 	Retcode_T exception = NO_EXCEPTION;
 	
 

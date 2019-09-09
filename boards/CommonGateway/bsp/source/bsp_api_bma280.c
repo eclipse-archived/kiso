@@ -12,21 +12,21 @@
 *
 ********************************************************************************/
 
-#include "BCDS_BSP_BMA280.h"
+#include "Kiso_BSP_BMA280.h"
 
-#if BCDS_FEATURE_BSP_BMA280
+#if KISO_FEATURE_BSP_BMA280
 
-#include "BCDS_HAL_Delay.h"
+#include "Kiso_HAL_Delay.h"
 #include "BSP_CommonGateway.h"
 #include "protected/power_supply.h"
 #include "protected/gpio.h"
 #include "protected/i2c.h"
-#include "stm32/stm32l4/BCDS_MCU_STM32L4_I2C_Handle.h"
+#include "stm32/stm32l4/Kiso_MCU_STM32L4_I2C_Handle.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID MODULE_BSP_API_BMA280
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID MODULE_BSP_API_BMA280
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 /*---------------------- VARIABLES DECLARATIONS ---------------------------------------------------------------------*/
@@ -42,7 +42,7 @@ static uint8_t bspState = (uint8_t) BSP_STATE_INIT; /**< BSP State of the sensor
  */
 Retcode_T BSP_BMA280_Connect(int32_t deviceId)
 {
-    BCDS_UNUSED(deviceId);
+    KISO_UNUSED(deviceId);
     Retcode_T retcode = RETCODE_OK;
 
     if (!(bspState & (uint8_t) BSP_STATE_TO_CONNECTED))
@@ -76,7 +76,7 @@ Retcode_T BSP_BMA280_Connect(int32_t deviceId)
  */
 Retcode_T BSP_BMA280_Enable(int32_t deviceId)
 {
-    BCDS_UNUSED(deviceId);
+    KISO_UNUSED(deviceId);
     Retcode_T retcode = RETCODE_OK;
 
     if (!(bspState & (uint8_t) BSP_STATE_TO_ENABLED))
@@ -105,7 +105,7 @@ Retcode_T BSP_BMA280_Enable(int32_t deviceId)
  */
 Retcode_T BSP_BMA280_Disable(int32_t deviceId)
 {
-    BCDS_UNUSED(deviceId);
+    KISO_UNUSED(deviceId);
     Retcode_T retcode = RETCODE_OK;
 
     if (!(bspState & (uint8_t) BSP_STATE_TO_DISABLED))
@@ -134,7 +134,7 @@ Retcode_T BSP_BMA280_Disable(int32_t deviceId)
  */
 Retcode_T BSP_BMA280_Disconnect(int32_t deviceId)
 {
-    BCDS_UNUSED(deviceId);
+    KISO_UNUSED(deviceId);
     Retcode_T retcode = RETCODE_OK;
     if (!(bspState & (uint8_t) BSP_STATE_TO_DISCONNECTED))
     {
@@ -162,7 +162,7 @@ Retcode_T BSP_BMA280_Disconnect(int32_t deviceId)
  */
 HWHandle_T BSP_BMA280_GetHandle(int32_t deviceId)
 {
-    BCDS_UNUSED(deviceId);
+    KISO_UNUSED(deviceId);
     return (HWHandle_T) &sensorsI2CStruct;
 }
 
@@ -172,8 +172,8 @@ HWHandle_T BSP_BMA280_GetHandle(int32_t deviceId)
  */
 Retcode_T BSP_BMA280_Control(uint32_t command, void* arg)
 {
-    BCDS_UNUSED(command);
-    BCDS_UNUSED(arg);
+    KISO_UNUSED(command);
+    KISO_UNUSED(arg);
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
 }
 
@@ -183,8 +183,8 @@ Retcode_T BSP_BMA280_Control(uint32_t command, void* arg)
  */
 Retcode_T BSP_BMA280_Int1Enable(int32_t deviceId, BSP_BMA280_InterruptCallback_T callback)
 {
-    BCDS_UNUSED(deviceId);
-    BCDS_UNUSED(callback);
+    KISO_UNUSED(deviceId);
+    KISO_UNUSED(callback);
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
 }
 
@@ -194,7 +194,7 @@ Retcode_T BSP_BMA280_Int1Enable(int32_t deviceId, BSP_BMA280_InterruptCallback_T
  */
 Retcode_T BSP_BMA280_Int1Disable(int32_t deviceId)
 {
-    BCDS_UNUSED(deviceId);
+    KISO_UNUSED(deviceId);
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
 }
 
@@ -204,8 +204,8 @@ Retcode_T BSP_BMA280_Int1Disable(int32_t deviceId)
  */
 Retcode_T BSP_BMA280_Int2Enable(int32_t deviceId, BSP_BMA280_InterruptCallback_T callback)
 {
-    BCDS_UNUSED(deviceId);
-    BCDS_UNUSED(callback);
+    KISO_UNUSED(deviceId);
+    KISO_UNUSED(callback);
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
 }
 
@@ -215,7 +215,7 @@ Retcode_T BSP_BMA280_Int2Enable(int32_t deviceId, BSP_BMA280_InterruptCallback_T
  */
 Retcode_T BSP_BMA280_Int2Disable(int32_t deviceId)
 {
-    BCDS_UNUSED(deviceId);
+    KISO_UNUSED(deviceId);
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
 }
 
@@ -225,7 +225,7 @@ Retcode_T BSP_BMA280_Int2Disable(int32_t deviceId)
  */
 Retcode_T BSP_BMA280_SetCSHigh(int32_t deviceId)
 {
-    BCDS_UNUSED(deviceId);
+    KISO_UNUSED(deviceId);
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
 }
 
@@ -235,10 +235,10 @@ Retcode_T BSP_BMA280_SetCSHigh(int32_t deviceId)
  */
 Retcode_T BSP_BMA280_SetCSLow(int32_t deviceId)
 {
-    BCDS_UNUSED(deviceId);
+    KISO_UNUSED(deviceId);
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
 }
 
 /*---------------------- LOCAL FUNCTIONS IMPLEMENTATION -------------------------------------------------------------*/
 
-#endif /* BCDS_FEATURE_BSP_BMA280 */
+#endif /* KISO_FEATURE_BSP_BMA280 */

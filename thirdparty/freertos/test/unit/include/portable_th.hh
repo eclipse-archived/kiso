@@ -20,8 +20,8 @@
  * ****************************************************************************/
  
 /* header definition ******************************************************** */
-#ifndef BCDS_PORTABLE_TH_HH_
-#define BCDS_PORTABLE_TH_HH_
+#ifndef KISO_PORTABLE_TH_HH_
+#define KISO_PORTABLE_TH_HH_
 
 /* include system header files */
 #include "projdefs.h"
@@ -52,6 +52,6 @@ FAKE_VOID_FUNC(xPortSysTickHandler);
 FAKE_VALUE_FUNC(BaseType_t, xPortStartScheduler);
 FAKE_VOID_FUNC(vPortEndScheduler);
 
-#endif /* BCDS_PORTABLE_TH_HH_ */
+#endif /* KISO_PORTABLE_TH_HH_ */
 
 /** ************************************************************************* */

@@ -19,13 +19,13 @@
  *
  */
 
-#include "BCDS_Essentials.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_HAL_MODULE_ID_CRITICALSECTION
+#include "Kiso_Essentials.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_HAL_MODULE_ID_CRITICALSECTION
 
 
 /* additional interface header files */
-#include "BCDS_HAL.h"
+#include "Kiso_HAL.h"
 #include "Cmsis.h"
 
 #ifdef __GNUC__

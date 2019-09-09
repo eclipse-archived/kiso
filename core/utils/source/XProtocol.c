@@ -13,19 +13,19 @@
 ********************************************************************************/
 
 /* own header files */
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_XPROTOCOL
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_XPROTOCOL
 
-#include "BCDS_XProtocol.h"
+#include "Kiso_XProtocol.h"
 
-#if BCDS_FEATURE_XPROTOCOL
+#if KISO_FEATURE_XPROTOCOL
 
 /* system header files */
-#include "BCDS_Retcode.h"
+#include "Kiso_Retcode.h"
 
 /* additional interface header files */
-#include "BCDS_CRC.h"
+#include "Kiso_CRC.h"
 
 #define XPROTOCOL_CRC_CCITT_POLY	0x1021U /**< Polynom for function crc16 */
 #define XPROTOCOL_SD			0xC0	/**< Start delimitter */
@@ -97,13 +97,13 @@ static void UnEscape_SpecialCharacters(const uint8_t *frame, uint32_t indicator,
     }
 }
 
-/*  The description of the function is available in BCDS_XProtocol.h */
+/*  The description of the function is available in Kiso_XProtocol.h */
 Retcode_T XProtocol_Init(void)
 {
     return RETCODE_OK;
 }
 
-/*  The description of the function is available in BCDS_XProtocol.h */
+/*  The description of the function is available in Kiso_XProtocol.h */
 Retcode_T XProtocol_EncodeFrame(const uint8_t *data, uint32_t dataLength,
         uint32_t maxFrameLength, uint8_t *frame, uint32_t *frameLength)
 {
@@ -200,7 +200,7 @@ Retcode_T XProtocol_EncodeFrame(const uint8_t *data, uint32_t dataLength,
     return RETCODE_OK;
 }
 
-/*  The description of the function is available in BCDS_XProtocol.h */
+/*  The description of the function is available in Kiso_XProtocol.h */
 Retcode_T XProtocol_GetPayloadLength(const uint8_t *frame, uint32_t frameLength,
         uint32_t *payloadLength)
 {
@@ -234,7 +234,7 @@ Retcode_T XProtocol_GetPayloadLength(const uint8_t *frame, uint32_t frameLength,
     return RETCODE_OK;
 }
 
-/*  The description of the function is available in BCDS_XProtocol.h */
+/*  The description of the function is available in Kiso_XProtocol.h */
 Retcode_T XProtocol_DecodeFrame(const uint8_t *frame, uint32_t frameLength,
         uint32_t maxDataLength, uint8_t *data, uint32_t *dataLength)
 {
@@ -331,7 +331,7 @@ Retcode_T XProtocol_DecodeFrame(const uint8_t *frame, uint32_t frameLength,
     return RETCODE_OK;
 }
 
-/*  The description of the function is available in BCDS_XProtocol.h */
+/*  The description of the function is available in Kiso_XProtocol.h */
 Retcode_T XProtocol_IsCompleteFrame(const uint8_t *frame, uint32_t frameLength,
         const uint8_t **lastCheckPosition)
 {
@@ -360,4 +360,4 @@ Retcode_T XProtocol_IsCompleteFrame(const uint8_t *frame, uint32_t frameLength,
     return RETCODE_OK;
 }
 
-#endif /* if BCDS_FEATURE_XPROTOCOL */
+#endif /* if KISO_FEATURE_XPROTOCOL */

@@ -19,24 +19,24 @@
  *
  */
 
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID  BCDS_UTILS_MODULE_ID_QUEUE
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_QUEUE
 
-#include "BCDS_Queue.h"
+#include "Kiso_Queue.h"
 
-#if BCDS_FEATURE_QUEUE
+#if KISO_FEATURE_QUEUE
 
 #include <string.h>
-#include "BCDS_Basics.h"
-#include "BCDS_Assert.h"
-#include "BCDS_Retcode.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Assert.h"
+#include "Kiso_Retcode.h"
 #include "FreeRTOS.h"
 #include "portmacro.h"
 #include "semphr.h"
 #include "task.h"
 
-/*  The description of the function is available in BCDS_Queue.h */
+/*  The description of the function is available in Kiso_Queue.h */
 Retcode_T Queue_Create(Queue_T *Queue, uint8_t *Buffer, uint32_t BufferSize)
 {
     if (NULL == Queue || NULL == Buffer || 0 == BufferSize)
@@ -66,7 +66,7 @@ Retcode_T Queue_Create(Queue_T *Queue, uint8_t *Buffer, uint32_t BufferSize)
     return RETCODE_OK;
 }
 
-/*  The description of the function is available in BCDS_Queue.h */
+/*  The description of the function is available in Kiso_Queue.h */
 Retcode_T Queue_Delete(Queue_T *Queue)
 {
     if (NULL == Queue)
@@ -82,7 +82,7 @@ Retcode_T Queue_Delete(Queue_T *Queue)
     return RETCODE_OK;
 }
 
-/*  The description of the function is available in BCDS_Queue.h */
+/*  The description of the function is available in Kiso_Queue.h */
 Retcode_T Queue_Put(Queue_T *Queue, const void *Item, uint32_t ItemSize, const void *payload, uint32_t PayloadSize)
 {
     assert(NULL != Queue && NULL != Item && 0 != ItemSize);
@@ -156,7 +156,7 @@ Retcode_T Queue_Put(Queue_T *Queue, const void *Item, uint32_t ItemSize, const v
     return RETCODE_OK;
 }
 
-/*  The description of the function is available in BCDS_Queue.h */
+/*  The description of the function is available in Kiso_Queue.h */
 Retcode_T Queue_Get(Queue_T *Queue, void **Data, uint32_t *DataSize, uint32_t Timeout)
 {
     assert(NULL != Queue && NULL != Data);
@@ -193,7 +193,7 @@ Retcode_T Queue_Get(Queue_T *Queue, void **Data, uint32_t *DataSize, uint32_t Ti
     return RETCODE_OK;
 }
 
-/*  The description of the function is available in BCDS_Queue.h */
+/*  The description of the function is available in Kiso_Queue.h */
 Retcode_T Queue_Purge(Queue_T *Queue)
 {
     assert(NULL != Queue);
@@ -219,14 +219,14 @@ Retcode_T Queue_Purge(Queue_T *Queue)
     return RETCODE_OK;
 }
 
-/*  The description of the function is available in BCDS_Queue.h */
+/*  The description of the function is available in Kiso_Queue.h */
 uint32_t Queue_Count(const Queue_T *Queue)
 {
     assert(NULL != Queue);
     return Queue->Count;
 }
 
-/*  The description of the function is available in BCDS_Queue.h */
+/*  The description of the function is available in Kiso_Queue.h */
 void Queue_Clear(Queue_T *Queue)
 {
     assert(NULL != Queue);
@@ -237,4 +237,4 @@ void Queue_Clear(Queue_T *Queue)
     (void) xSemaphoreGive(Queue->Lock);
 }
 
-#endif /* if BCDS_FEATURE_QUEUE */
+#endif /* if KISO_FEATURE_QUEUE */

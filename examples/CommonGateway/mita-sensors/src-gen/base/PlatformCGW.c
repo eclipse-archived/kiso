@@ -4,11 +4,11 @@
  */
 
 
-#include <BCDS_Retcode.h>
-#include "BCDS_I2CTransceiver.h"
-#include "BCDS_MCU_I2C.h"
-#include "BCDS_BSP_BME280.h"
-#include "BCDS_BSP_BMA280.h"
+#include <Kiso_Retcode.h>
+#include "Kiso_I2CTransceiver.h"
+#include "Kiso_MCU_I2C.h"
+#include "Kiso_BSP_BME280.h"
+#include "Kiso_BSP_BMA280.h"
 #include "MitaExceptions.h"
 #include "PlatformCGW.h"
 

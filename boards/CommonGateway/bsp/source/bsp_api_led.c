@@ -12,9 +12,9 @@
 *
 ********************************************************************************/
 
-#include "BCDS_BSP_LED.h"
+#include "Kiso_BSP_LED.h"
 
-#if BCDS_FEATURE_BSP_LED
+#if KISO_FEATURE_BSP_LED
 
 #include "BSP_CommonGateway.h"
 #include "protected/gpio.h"
@@ -22,8 +22,8 @@
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID MODULE_BSP_API_LED
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID MODULE_BSP_API_LED
 
 #define PIN_LED_ALL     (PIND_LED_R | PIND_LED_G | PIND_LED_B)
 
@@ -73,7 +73,7 @@ Retcode_T BSP_LED_Connect(void)
  */
 Retcode_T BSP_LED_Enable(uint32_t id)
 {
-    BCDS_UNUSED(id);
+    KISO_UNUSED(id);
     Retcode_T retcode = RETCODE_OK;
     if (!(bspState & (uint8_t) BSP_STATE_TO_ENABLED))
     {
@@ -97,7 +97,7 @@ Retcode_T BSP_LED_Enable(uint32_t id)
  */
 Retcode_T BSP_LED_Disable(uint32_t id)
 {
-    BCDS_UNUSED(id);
+    KISO_UNUSED(id);
     Retcode_T retcode = RETCODE_OK;
     if (!(bspState & (uint8_t) BSP_STATE_TO_DISABLED))
     {
@@ -267,4 +267,4 @@ static Retcode_T LED_Toggle(uint32_t id)
     return retcode;
 }
 
-#endif /* BCDS_FEATURE_BSP_LED */
+#endif /* KISO_FEATURE_BSP_LED */

@@ -13,7 +13,7 @@ menu:
 
 # How is CMake Organized
 
-The KISO project consists of subprojects, all managed by the `CMakeLists.txt` file from the root directory:
+The Kiso project consists of subprojects, all managed by the `CMakeLists.txt` file from the root directory:
 
 - `core`</br>
     Main project components and utilities as libraries
@@ -73,7 +73,7 @@ cmake <project_root>
 is enough to configure a working build tree with a supported generator.
 
 ## Cross-compilation Toolchain
-So for all of the boards this project supports use ARM-based MCUs so an ARM compiler is required for building an application with KISO. In order to configure CMake for cross-compilation,
+So for all of the boards this project supports use ARM-based MCUs so an ARM compiler is required for building an application with Kiso. In order to configure CMake for cross-compilation,
 a toolchain file must be provided before the first `project()` call in any CMakeLists. This can happen either externally by calling
 ```bash
 cmake <project_root> -DCMAKE_TOOLCHAIN_FILE=PATH:/path/to/toolchain.cmake
@@ -146,12 +146,12 @@ Currently only `MCU_FAMILY` and `MCU_SERIES` are required so not all boards defi
 Make sure to use lowercase letters for directory naming where possible to avoid problems in case-sensitive filesystems.
 
 Tests and mockup test headers go into the `test` subdirectory of each library.
-For information on how testing is organized in KISO, please check the [Unit Testing Guide]({{< relref "unit_testing_guide" >}}).
+For information on how testing is organized in Kiso, please check the [Unit Testing Guide]({{< relref "unit_testing_guide" >}}).
 
 ### Third Party
-Some third party libraries are shipped with KISO and are ready to compile and use out of the box. There are also libraries that cannot be integrated due to licensing terms.
-Each thirdparty library that KISO uses or ships with is under it's own directory in the `/thirdparty` tree. It's important that the directory name and CMake target name for the library match so that CMake is able to build only what's necessary instead of every library in the subtree.
-For thirdparty libraries that do not support CMake out of the box, we make sure to create a basic `CMakeLists.txt` file to enable integration of that library with KISO.
+Some third party libraries are shipped with Kiso and are ready to compile and use out of the box. There are also libraries that cannot be integrated due to licensing terms.
+Each thirdparty library that Kiso uses or ships with is under it's own directory in the `/thirdparty` tree. It's important that the directory name and CMake target name for the library match so that CMake is able to build only what's necessary instead of every library in the subtree.
+For thirdparty libraries that do not support CMake out of the box, we make sure to create a basic `CMakeLists.txt` file to enable integration of that library with Kiso.
 
 In addition to the `CMakeLists.txt`, each library's subdirectory also contains:
 
@@ -163,7 +163,7 @@ In addition to the `CMakeLists.txt`, each library's subdirectory also contains:
 **TODO: TBD: How do we do versioning of 3rd-party libraries?**
 
 ### Examples
-Examples are small applications that use the KISO infrastructure (essentials/utils), BSP and MCU interfaces and show a basic concept for working with the APIs. They are used to demonstrate how the devices on the board are interfaced with, how to setup peripherals, how to read sensor values, etc. Their `CMakeLists.txt` is very simple and almost identical for all example applications. This is the only CMake file that defines building actual executables - one that can be used with a debugger and one that can be directly flashed to the target board.
+Examples are small applications that use the Kiso infrastructure (essentials/utils), BSP and MCU interfaces and show a basic concept for working with the APIs. They are used to demonstrate how the devices on the board are interfaced with, how to setup peripherals, how to read sensor values, etc. Their `CMakeLists.txt` is very simple and almost identical for all example applications. This is the only CMake file that defines building actual executables - one that can be used with a debugger and one that can be directly flashed to the target board.
 
 Choosing which application to build when configuring CMake is done by the `KISO_EXAMPLE` variable and defaults currently to `c-leds`. Possible values for this variable are all the directory names under the `/examples` subdirectory.
 

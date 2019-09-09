@@ -31,8 +31,8 @@
 #ifndef UBLOX_NETWORK_H
 #define UBLOX_NETWORK_H
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
 
 #define CELLULAR_NETWORK_SMALL_BUFFER_SIZE     (UINT32_C(32))
 #define CELLULAR_NETWORK_BUFFER_SIZE           (UINT32_C(256))

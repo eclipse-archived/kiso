@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------------*/
 /*
  * Copyright (C) Bosch Connected Devices and Solutions GmbH.
- * 
+ *
  * All Rights Reserved. Confidential.
  *
  * Distribution only to people who need to know this information in
@@ -21,19 +21,19 @@
 FFF_DEFINITION_BLOCK_START
 
 /* setup compile time configuration defines */
-//-- instead of BCDS_BSP_BoardConfig.h mock
+//-- instead of Kiso_BSP_BoardConfig.h mock
 /* include faked interfaces */
 extern "C"
 {
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_CMDPROCESSOR
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_CMDPROCESSOR
 
-#if BCDS_FEATURE_CMDPROCESSOR
+#if KISO_FEATURE_CMDPROCESSOR
 
 /* include faked interfaces */
-#include "BCDS_Retcode_th.hh"
-#include "BCDS_Assert_th.hh"
+#include "Kiso_Retcode_th.hh"
+#include "Kiso_Assert_th.hh"
 
 #include "task_th.hh"
 #include "queue_th.hh"
@@ -62,7 +62,7 @@ void fake_fn(void *, uint32_t)
 
 signed long myXQueueReceive(QueueHandle_t xQueue, void * pvBuffer, TickType_t xTicksToWait)
 {
-    BCDS_UNUSED(xQueue);
+    KISO_UNUSED(xQueue);
 
     EXPECT_EQ(portMAX_DELAY, xTicksToWait);
 
@@ -72,7 +72,7 @@ signed long myXQueueReceive(QueueHandle_t xQueue, void * pvBuffer, TickType_t xT
 }
 
 BaseType_t xTaskCreate_fake_null_task(TaskFunction_t,
-                       const char * const, 
+                       const char * const,
                        const configSTACK_DEPTH_TYPE,
                        void * const,
                        UBaseType_t,

@@ -23,12 +23,12 @@
 
 extern "C"
 {
-#include "BCDS_Basics.h"
-#include "BCDS_HAL_th.hh"
+#include "Kiso_Basics.h"
+#include "Kiso_HAL_th.hh"
 
-#if BCDS_FEATURE_FLASH_INTERN
+#if KISO_FEATURE_FLASH_INTERN
 /* include faked interface */
-#include "BCDS_RetCode_th.hh"
+#include "Kiso_RetCode_th.hh"
 #include "stm32l4xx_hal_th.hh"
 #include "stm32l4xx_hal_flash_th.hh"
 #include "stm32l4xx_hal_flash_ex_th.hh"
@@ -589,4 +589,4 @@ TEST_F( MCU_FlashIntern, MCU_FlashIntern_Write8)
 }
 #else
 }
-#endif /* BCDS_FEATURE_FLASH_INTERN */
+#endif /* KISO_FEATURE_FLASH_INTERN */

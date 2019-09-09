@@ -24,14 +24,14 @@
 /* start of global scope symbol and fake definitions section */
 extern "C"
 {
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_XPROTOCOL
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_XPROTOCOL
 
-#if BCDS_FEATURE_XPROTOCOL
+#if KISO_FEATURE_XPROTOCOL
 
 /* include faked interfaces */
-#include "BCDS_CRC_th.hh"
+#include "Kiso_CRC_th.hh"
 /* include module under test */
 #include "XProtocol.c"
 /* end of global scope symbol and fake definitions section */
@@ -48,9 +48,9 @@ static uint16_t CrcChecksum;
 static Retcode_T CRC_16_custom_fake(uint16_t poly, uint16_t *shifter,
         uint8_t *data_p, uint16_t len)
 {
-    BCDS_UNUSED(poly);
-    BCDS_UNUSED(data_p);
-    BCDS_UNUSED(len);
+    KISO_UNUSED(poly);
+    KISO_UNUSED(data_p);
+    KISO_UNUSED(len);
     *shifter = CrcChecksum;
 
     return RETCODE_OK;
@@ -680,4 +680,4 @@ TEST_F(XProtocolRoutines, testIsCompleteFrame)
 }
 #else
 }
-#endif /* if BCDS_FEATURE_XPROTOCOL */
+#endif /* if KISO_FEATURE_XPROTOCOL */

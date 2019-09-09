@@ -15,7 +15,7 @@
 /**
  *  @file
  *
- *  @brief Module test specification for the BCDS_Assert module.
+ *  @brief Module test specification for the KISO_Assert module.
  *
  **/
 
@@ -32,11 +32,11 @@ extern "C"
 #define for(X)	while(0)
 #define STATIC_ASSERT_FLAG	UINT8_C(0)
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_ESSENTIALS_MODULE_ID_ASSERT
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_ASSERT
 
 /* include faked interfaces */
-#include "BCDS_Retcode_th.hh"
+#include "Kiso_Retcode_th.hh"
 
 /* include module under test */
 #include "Assert.c"
@@ -106,8 +106,8 @@ TEST_F(Assert, Assert_Initialize)
 	Retcode_T retcode = Assert_Initialize(NULL);
 	EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
 	EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
-	EXPECT_EQ((uint32_t)BCDS_PACKAGE_ID, Retcode_GetPackage(retcode));
-	EXPECT_EQ(BCDS_ESSENTIALS_MODULE_ID_ASSERT, Retcode_GetModuleId(retcode));
+	EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
+	EXPECT_EQ(KISO_ESSENTIALS_MODULE_ID_ASSERT, Retcode_GetModuleId(retcode));
 
 	retcode = Assert_Initialize(assertCallbackFn);
 	EXPECT_EQ(RETCODE_OK, retcode);

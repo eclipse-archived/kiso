@@ -20,7 +20,7 @@
 #ifndef HARDWARE_H_
 #define HARDWARE_H_
 
-#include "BCDS_MCU_UART.h"
+#include "Kiso_MCU_UART.h"
 
 /**
  * @brief Initializes this module by calling the variant related BSP-connect

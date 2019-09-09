@@ -19,8 +19,8 @@
  * System header (if necessary)
  * Other headers
  */
-#include "BCDS_CellularModules.h"
-#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_AT_3GPP_27007
+#include "Kiso_CellularModules.h"
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_AT_3GPP_27007
 
 #include "At3Gpp27007.h"
 
@@ -28,8 +28,8 @@
 #include "AtResponseQueue.h"
 #include "AtUtils.h"
 
-#include "BCDS_Basics.h"
-#include "BCDS_Logging.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Logging.h"
 
 #include <inttypes.h>
 #include <stdint.h>
@@ -597,7 +597,7 @@ Retcode_T At_Get_CREG(AT_CREG_Param_T* param)
             {
                 retcodeOpt = Handle_Get_CXREG_AcT(&param->AcT);
                 /* Some modems don't report AcT every time. Will be ignored. */
-                BCDS_UNUSED(retcodeOpt);
+                KISO_UNUSED(retcodeOpt);
             }
             break;
         default:

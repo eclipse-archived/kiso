@@ -22,7 +22,7 @@ set(EMLIB_INCLUDE_USB 1)
 ## Board definitions
 # Compile definitions for all subprojects after this call
 add_definitions(
-   -DBCDS_PACKAGE_ID=0
+   -DKISO_PACKAGE_ID=0
    -D${KISO_MCU_TYPE}
    -D${KISO_MCU_FAMILY}
    -D${KISO_MCU_DEVICE}

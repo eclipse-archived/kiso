@@ -21,7 +21,7 @@
 #ifndef CGW_APPINFO_H_
 #define CGW_APPINFO_H_
 
-#include "BCDS_Retcode.h"
+#include "Kiso_Retcode.h"
 
 #define TASK_PRIO_MAIN_CMD_PROCESSOR                (UINT32_C(1))
 #define TASK_STACK_SIZE_MAIN_CMD_PROCESSOR          (UINT16_C(700))
@@ -30,8 +30,8 @@
 /**
  * @brief Enumerates application modules which are reporting error codes according to RETCODE specification.
  * @info  usage:
- *      #undef BCDS_APP_MODULE_ID
- *      #define BCDS_APP_MODULE_ID CGW_APP_MODULE_ID_xxx
+ *      #undef KISO_APP_MODULE_ID
+ *      #define KISO_APP_MODULE_ID CGW_APP_MODULE_ID_xxx
  */
 enum CGW_App_ModuleID_E
 {

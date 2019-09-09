@@ -21,15 +21,15 @@ extern "C"
 {
 
 /* setup compile time configuration defines */
-#include "BCDS_Cellular.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_AT_3GPP_27007
+#include "Kiso_Cellular.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_AT_3GPP_27007
 #define GTEST
 
 /* include faked interfaces */
-#include "BCDS_Assert_th.hh"
-#include "BCDS_Retcode_th.hh"
-#include "BCDS_Logging_th.hh"
+#include "Kiso_Assert_th.hh"
+#include "Kiso_Retcode_th.hh"
+#include "Kiso_Logging_th.hh"
 #include "FreeRTOS_th.hh"
 #include "task_th.hh"
 
@@ -37,9 +37,9 @@ extern "C"
 
 /* include module under test */
 #include "ModemEmulator.cc"
-#undef BCDS_MODULE_ID
+#undef KISO_MODULE_ID
 #include "AtUtils.c"
-#undef BCDS_MODULE_ID
+#undef KISO_MODULE_ID
 #include "At3Gpp27007.c"
 
 }

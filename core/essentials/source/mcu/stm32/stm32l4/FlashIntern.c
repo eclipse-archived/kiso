@@ -17,11 +17,11 @@
  * @brief Contains an implementation of a non-volatile memory interface for STM32l4.
  */
 
-#include "BCDS_MCU_FlashIntern.h"
+#include "Kiso_MCU_FlashIntern.h"
 
-#if BCDS_FEATURE_FLASH_INTERN
+#if KISO_FEATURE_FLASH_INTERN
 
-#include "BCDS_Retcode.h"
+#include "Kiso_Retcode.h"
 
 #include "stm32l4xx.h"
 
@@ -29,8 +29,8 @@
 
 #include "stm32l4xx_hal_flash.h"
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_ESSENTIALS_MODULE_ID_FLASH_INTERN
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_FLASH_INTERN
 
 /**
  *@details Macro to configure the minimum read/write-able size of FlashIntern.
@@ -129,7 +129,7 @@ static void ClearFlashFlag(uint32_t FlashFlagToClear)
 /* API documentation is in the interface header. */
 Retcode_T MCU_FlashIntern_Initialize(MCU_FlashIntern_T flashInternInitStruct)
 {
-    BCDS_UNUSED(flashInternInitStruct);
+    KISO_UNUSED(flashInternInitStruct);
 
     return RETCODE_OK;
 }
@@ -184,7 +184,7 @@ Retcode_T MCU_FlashIntern_Erase(uint32_t startAddress, uint32_t endAddress)
 
         if (HAL_OK != HAL_FLASHEx_Erase(&EraseInitStruct, &PageError))
         {
-            BCDS_UNUSED(PageError);
+            KISO_UNUSED(PageError);
 
             Ret = (RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_FLASH_INTERN_ERASE_ERROR));
         }
@@ -198,7 +198,7 @@ Retcode_T MCU_FlashIntern_Erase(uint32_t startAddress, uint32_t endAddress)
 
             if (HAL_OK != HAL_FLASHEx_Erase(&EraseInitStruct, &PageError))
             {
-                BCDS_UNUSED(PageError);
+                KISO_UNUSED(PageError);
 
                 Ret = (RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_FLASH_INTERN_ERASE_ERROR));
             }
@@ -218,7 +218,7 @@ Retcode_T MCU_FlashIntern_Erase(uint32_t startAddress, uint32_t endAddress)
 
         if (HAL_OK != HAL_FLASHEx_Erase(&EraseInitStruct, &PageError))
         {
-            BCDS_UNUSED(PageError);
+            KISO_UNUSED(PageError);
 
             Ret = (RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_FLASH_INTERN_ERASE_ERROR));
         }
@@ -330,4 +330,4 @@ uint32_t MCU_FlashIntern_GetMinRWSize(void)
 {
     return FLASH_INTERN_MIN_RW_SIZE;
 }
-#endif /* BCDS_FEATURE_FLASH_INTERN */
+#endif /* KISO_FEATURE_FLASH_INTERN */

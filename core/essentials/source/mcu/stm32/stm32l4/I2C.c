@@ -18,17 +18,17 @@
  */
 /*---------------------- INCLUDED HEADERS ---------------------------------------------------------------------------*/
 
-#include "BCDS_MCU_I2C.h"
+#include "Kiso_MCU_I2C.h"
 
-#if BCDS_FEATURE_I2C
+#if KISO_FEATURE_I2C
 
-#include "BCDS_MCU_I2C_Handle.h"
+#include "Kiso_MCU_I2C_Handle.h"
 #include "stm32l4xx_hal.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef  BCDS_MODULE_ID
-#define BCDS_MODULE_ID                  BCDS_ESSENTIALS_MODULE_ID_I2C
+#undef  KISO_MODULE_ID
+#define KISO_MODULE_ID                  KISO_ESSENTIALS_MODULE_ID_I2C
 
 #define I2C_DEFAULT_TIMEOUT_MS          UINT32_C(1000) /* Default timeout in ms */
 #define I2C_MIN_TIMEOUT_MS              UINT32_C(100) /* Minimal timeout in ms*/
@@ -98,7 +98,7 @@ Retcode_T MCU_I2C_Initialize(I2C_T i2c, MCU_I2C_Callback_T callback)
              */
             switch (pI2C->TransferMode)
             {
-                case BCDS_HAL_TRANSFER_MODE_POLLING:
+                case KISO_HAL_TRANSFER_MODE_POLLING:
                     pI2C->IRQCallback = NULL;
                     pI2C->ERRCallback = NULL;
                     pI2C->DMATxCallback = NULL;
@@ -112,7 +112,7 @@ Retcode_T MCU_I2C_Initialize(I2C_T i2c, MCU_I2C_Callback_T callback)
                     pI2C->State = I2C_STATE_READY;
                     break;
 
-                case BCDS_HAL_TRANSFER_MODE_INTERRUPT:
+                case KISO_HAL_TRANSFER_MODE_INTERRUPT:
                     if (NULL != callback)
                     {
                         pI2C->IRQCallback = I2C_EventCallback;
@@ -133,7 +133,7 @@ Retcode_T MCU_I2C_Initialize(I2C_T i2c, MCU_I2C_Callback_T callback)
                     }
                     break;
 
-                case BCDS_HAL_TRANSFER_MODE_DMA:
+                case KISO_HAL_TRANSFER_MODE_DMA:
                     if (NULL != callback)
                     {
                         pI2C->IRQCallback = I2C_EventCallback;
@@ -543,7 +543,7 @@ Retcode_T I2C_ReceivePollMode(struct MCU_I2C_S* pI2C)
  */
 static Retcode_T I2C_CancelPollMode(struct MCU_I2C_S * pi2c)
 {
-    BCDS_UNUSED(pi2c);
+    KISO_UNUSED(pi2c);
     return RETCODE_OK;
 }
 
@@ -711,7 +711,7 @@ Retcode_T I2C_ReadRegisterIntMode(struct MCU_I2C_S* pI2C)
  */
 static Retcode_T I2C_CancelIntMode(struct MCU_I2C_S * pi2c)
 {
-    BCDS_UNUSED(pi2c);
+    KISO_UNUSED(pi2c);
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
 }
 
@@ -779,7 +779,7 @@ Retcode_T I2C_ReceiveDmaMode(struct MCU_I2C_S* pI2C)
  */
 Retcode_T I2C_WriteRegisterDmaMode(struct MCU_I2C_S* pI2C)
 {
-    BCDS_UNUSED(pI2C);
+    KISO_UNUSED(pI2C);
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
 }
 
@@ -833,7 +833,7 @@ Retcode_T I2C_ReadRegisterDmaMode(struct MCU_I2C_S* pI2C)
  */
 static Retcode_T I2C_CancelDmaMode(struct MCU_I2C_S * pi2c)
 {
-    BCDS_UNUSED(pi2c);
+    KISO_UNUSED(pi2c);
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
 }
 
@@ -1091,4 +1091,4 @@ static bool I2C_IsBUSYSet(struct MCU_I2C_S * pi2c)
     return (bool)(__HAL_I2C_GET_FLAG(&pi2c->hi2c, I2C_FLAG_BUSY) == SET);
 }
 
-#endif //-- BCDS_FEATURE_I2C
+#endif //-- KISO_FEATURE_I2C

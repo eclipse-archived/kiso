@@ -23,7 +23,7 @@ set(KISO_BOARD_LIBS stm32cubel4)
 ## Board definitions
 # Compile definitions for all subprojects after this call
 add_definitions(
-   -DBCDS_PACKAGE_ID=0
+   -DKISO_PACKAGE_ID=0
    -D${KISO_MCU_FAMILY}
    -D${KISO_MCU_SERIES}
    -D${KISO_MCU_TYPE}

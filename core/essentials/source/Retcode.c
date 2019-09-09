@@ -21,13 +21,13 @@
  *
  **/
 
-#include "BCDS_Essentials.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_ESSENTIALS_MODULE_ID_RETCODE
+#include "Kiso_Essentials.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_RETCODE
 
 /* own header files */
-#include "BCDS_Retcode.h"
-#include "BCDS_Assert.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
 
 /* system header files */
 

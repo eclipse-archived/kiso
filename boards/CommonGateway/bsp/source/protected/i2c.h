@@ -21,13 +21,13 @@
  * @brief provides sharing of I2C resource between different devices.
  *
  *
- * @details 
+ * @details
  */
 #ifndef PROTECTED_I2C_H_
 #define PROTECTED_I2C_H_
 
-#include "BCDS_HAL.h"
-#include "stm32/stm32l4/BCDS_MCU_STM32L4_I2C_Handle.h"
+#include "Kiso_HAL.h"
+#include "stm32/stm32l4/Kiso_MCU_STM32L4_I2C_Handle.h"
 
 enum BSP_I2c_Devices
 {

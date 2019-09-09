@@ -20,8 +20,8 @@
  * ****************************************************************************/
 
 /* header definition ******************************************************** */
-#ifndef BCDS_SEMPHR_TH_HH_
-#define BCDS_SEMPHR_TH_HH_
+#ifndef KISO_SEMPHR_TH_HH_
+#define KISO_SEMPHR_TH_HH_
 
 /* include system header files */
 #include <gtest.h>
@@ -63,6 +63,6 @@ FAKE_VALUE_FUNC(BaseType_t, xSemaphoreTakeFromISR, SemaphoreHandle_t, BaseType_t
 
 FAKE_VALUE_FUNC(BaseType_t, xSemaphoreGetMutexHolder, SemaphoreHandle_t);
 
-#endif /* BCDS_SEMPHR_TH_HH_ */
+#endif /* KISO_SEMPHR_TH_HH_ */
 
 /** ************************************************************************* */

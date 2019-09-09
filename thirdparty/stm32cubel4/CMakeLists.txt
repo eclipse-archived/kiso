@@ -67,7 +67,7 @@ if(${CMAKE_CROSSCOMPILING})
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_fmc.c
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_sdmmc.c
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_usb.c
-      source/BCDS_stm32l4xx_hal_dma.c # DMA loockup faster then the original version
+      source/Kiso_stm32l4xx_hal_dma.c # DMA loockup faster then the original version
    )
    target_include_directories(stm32cubel4
    PUBLIC

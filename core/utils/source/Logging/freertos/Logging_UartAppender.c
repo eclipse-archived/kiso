@@ -21,28 +21,28 @@
  *
  */
 
-#include "BCDS_Utils.h"
+#include "Kiso_Utils.h"
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID  BCDS_UTILS_MODULE_ID_LOGGING_APPENDER_UART
-#include "BCDS_Logging.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_LOGGING_APPENDER_UART
+#include "Kiso_Logging.h"
 
-#if BCDS_FEATURE_LOGGING && BCDS_UART_APPENDER
+#if KISO_FEATURE_LOGGING && KISO_UART_APPENDER
 
-#include "BCDS_BSP_TestInterface.h"
-#include "BCDS_MCU_UART.h"
-#include "BCDS_UARTTransceiver.h"
+#include "Kiso_BSP_TestInterface.h"
+#include "Kiso_MCU_UART.h"
+#include "Kiso_UARTTransceiver.h"
 
-#if !BCDS_FEATURE_BSP_TEST_INTERFACE
-#error "BCDS_Logginng module needs BCDS_FEATURE_BSP_TEST_INTERFACE feature to be implemented and enabled."
+#if !KISO_FEATURE_BSP_TEST_INTERFACE
+#error "KISO_Logginng module needs KISO_FEATURE_BSP_TEST_INTERFACE feature to be implemented and enabled."
 #endif
 
-#if !BCDS_FEATURE_UART
-#error "BCDS_Logginng module needs BCDS_FEATURE_UART feature to be implemented and enabled."
+#if !KISO_FEATURE_UART
+#error "KISO_Logginng module needs KISO_FEATURE_UART feature to be implemented and enabled."
 #endif
 
-#if !BCDS_FEATURE_UARTTRANSCEIVER
-#error "BCDS_Logginng module needs BCDS_FEATURE_UARTTRANSCEIVER feature to be implemented and enabled."
+#if !KISO_FEATURE_UARTTRANSCEIVER
+#error "KISO_Logginng module needs KISO_FEATURE_UARTTRANSCEIVER feature to be implemented and enabled."
 #endif
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 

@@ -12,17 +12,17 @@
 *
 ********************************************************************************/
 
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_TASKMONITOR
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_TASKMONITOR
 
 /* module includes ********************************************************** */
-#include "BCDS_TaskMonitor.h"
+#include "Kiso_TaskMonitor.h"
 
-#if BCDS_FEATURE_TASKMONITOR
+#if KISO_FEATURE_TASKMONITOR
 
-#include "BCDS_Retcode.h"
-#include "BCDS_Assert.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
 
 /* FreeRTOS header files */
 #include "FreeRTOS.h"
@@ -45,13 +45,13 @@ typedef struct TaskMonitor_TaskInfo_S TaskMonitor_TaskInfo_T;
 
 /* constant and variable definitions */
 
-TaskMonitor_TaskInfo_T TaskInfo[BCDS_TASKMONITOR_MAX_TASKS];
+TaskMonitor_TaskInfo_T TaskInfo[KISO_TASKMONITOR_MAX_TASKS];
 
-/*  The description of the function is available in BCDS_TaskMonitor.h */
+/*  The description of the function is available in Kiso_TaskMonitor.h */
 Retcode_T TaskMonitor_Initialize(void)
 {
     uint32_t loopcnt;
-    for (loopcnt = 0U; loopcnt < BCDS_TASKMONITOR_MAX_TASKS; loopcnt++)
+    for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
     {
         TaskInfo[loopcnt].IsReg = false;
         TaskInfo[loopcnt].Task = NULL;
@@ -60,14 +60,14 @@ Retcode_T TaskMonitor_Initialize(void)
     return RETCODE_OK;
 }
 
-/*  The description of the function is available in BCDS_TaskMonitor.h */
+/*  The description of the function is available in Kiso_TaskMonitor.h */
 Retcode_T TaskMonitor_Register(TaskHandle_t task, uint32_t upperLimit)
 {
     uint32_t loopcnt;
     Retcode_T ret = RETCODE_OK;
     if ((NULL != task) && (0UL != upperLimit))
     {
-        for (loopcnt = 0U; loopcnt < BCDS_TASKMONITOR_MAX_TASKS; loopcnt++)
+        for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
         {
             if (true != TaskInfo[loopcnt].IsReg)
             {
@@ -77,7 +77,7 @@ Retcode_T TaskMonitor_Register(TaskHandle_t task, uint32_t upperLimit)
                 break;
             }
         }
-        if (BCDS_TASKMONITOR_MAX_TASKS <= loopcnt)
+        if (KISO_TASKMONITOR_MAX_TASKS <= loopcnt)
         {
             ret = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_TASKMONITOR_BUFFER_FULL_ERROR);
         }
@@ -90,24 +90,24 @@ Retcode_T TaskMonitor_Register(TaskHandle_t task, uint32_t upperLimit)
 }
 
 /* The description of the function is available in header file */
-BCDS_INLINE void TaskMonitor_Update(unsigned int * taskTag, unsigned int tickCount)
+KISO_INLINE void TaskMonitor_Update(unsigned int * taskTag, unsigned int tickCount)
 {
     *taskTag = tickCount;
 }
 
 
-/*  The description of the function is available in BCDS_TaskMonitor.h */
+/*  The description of the function is available in Kiso_TaskMonitor.h */
 bool TaskMonitor_Check(void)
 {
     uint32_t loopcnt;
     uint32_t taskTickTime;
-    uint32_t taskTagValue[BCDS_TASKMONITOR_MAX_TASKS];
+    uint32_t taskTagValue[KISO_TASKMONITOR_MAX_TASKS];
     uint32_t diffTickTime;
     uint32_t TickSyncCheck;
 
     TickType_t currentTickTime;
     bool ret = false;
-    for (loopcnt = 0U; loopcnt < BCDS_TASKMONITOR_MAX_TASKS; loopcnt++)
+    for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
     {
         taskTagValue[loopcnt] = 0UL;
         if (TaskInfo[loopcnt].IsReg)
@@ -117,7 +117,7 @@ bool TaskMonitor_Check(void)
         }
     }
     currentTickTime = xTaskGetTickCount();
-    for (loopcnt = 0U; loopcnt < BCDS_TASKMONITOR_MAX_TASKS; loopcnt++)
+    for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
     {
         if (TaskInfo[loopcnt].IsReg)
         {
@@ -148,4 +148,4 @@ bool TaskMonitor_Check(void)
     return ret;
 }
 
-#endif /* if BCDS_FEATURE_TASKMONITOR */
+#endif /* if KISO_FEATURE_TASKMONITOR */

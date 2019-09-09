@@ -19,14 +19,14 @@
 extern "C"
 {/* start of global scope symbol and fake definitions section */
 
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID CDDK_UTILS_MODULE_ID_PIPEANDFILTER
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_PIPEANDFILTER
 
-#if CDDK_FEATURE_PIPEANDFILTER
+#if KISO_FEATURE_PIPEANDFILTER
 
 /* include faked interfaces */
-#include "BCDS_Retcode_th.hh"
+#include "Kiso_Retcode_th.hh"
 
 #include "task_th.hh"
 #include "message_buffer_th.hh"
@@ -615,4 +615,4 @@ TEST_F(PipeAndFilter, filterRunFailureNoFunction)
 #else
 }
 
-#endif /* if CDDK_FEATURE_PIPEANDFILTER */
+#endif /* if KISO_FEATURE_PIPEANDFILTER */

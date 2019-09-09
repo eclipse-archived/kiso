@@ -20,8 +20,8 @@
  * ****************************************************************************/
 
 /* header definition ******************************************************** */
-#ifndef BCDS_TIMERS_TH_HH_
-#define BCDS_TIMERS_TH_HH_
+#ifndef KISO_TIMERS_TH_HH_
+#define KISO_TIMERS_TH_HH_
 
 /* include system header files */
 #include <gtest.h>
@@ -58,6 +58,6 @@ FAKE_VALUE_FUNC(const char*, pcTimerGetTimerName, TimerHandle_t);
 FAKE_VALUE_FUNC(BaseType_t, xTimerCreateTimerTask);
 FAKE_VALUE_FUNC(BaseType_t, xTimerGenericCommand, TimerHandle_t, BaseType_t, TickType_t, BaseType_t*, TickType_t);
 
-#endif /* BCDS_TIMERS_TH_HH_ */
+#endif /* KISO_TIMERS_TH_HH_ */
 
 /** ************************************************************************* */

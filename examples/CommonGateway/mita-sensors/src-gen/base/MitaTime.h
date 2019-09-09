@@ -7,7 +7,7 @@
 #ifndef MITA_TIME_H
 #define MITA_TIME_H
 
-#include <BCDS_Retcode.h>
+#include <Kiso_Retcode.h>
 
 
 Retcode_T SetupTime(void);

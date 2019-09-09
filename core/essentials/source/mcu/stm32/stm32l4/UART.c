@@ -20,13 +20,13 @@
 
 /*---------------------- INCLUDED HEADERS ---------------------------------------------------------------------------*/
 
-#include "BCDS_MCU_UART.h"
-#if BCDS_FEATURE_UART
-#include "BCDS_MCU_UART_Handle.h"
+#include "Kiso_MCU_UART.h"
+#if KISO_FEATURE_UART
+#include "Kiso_MCU_UART_Handle.h"
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID                  BCDS_ESSENTIALS_MODULE_ID_UART
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID                  KISO_ESSENTIALS_MODULE_ID_UART
 
 #define UART_MIN_TIMEOUT_MS             UINT32_C(100) /* Minimal timeout in ms*/
 #define UART_SECOND_TO_MILLI_MS         UINT32_C(1000) /* Convert one second to millisecond*/
@@ -60,7 +60,7 @@ static Retcode_T MapHalRetToMcuRet(HAL_StatusTypeDef halRet);
 
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
 
-/** @brief See public interface function description in BCDS_MCU_UART.h */
+/** @brief See public interface function description in Kiso_MCU_UART.h */
 Retcode_T MCU_UART_Initialize(UART_T uart, MCU_UART_Callback_T callback)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -81,13 +81,13 @@ Retcode_T MCU_UART_Initialize(UART_T uart, MCU_UART_Callback_T callback)
     {
         switch (uart_ptr->TxMode)
         {
-            case BCDS_HAL_TRANSFER_MODE_POLLING:
+            case KISO_HAL_TRANSFER_MODE_POLLING:
                 uart_ptr->SendFunc = UART_SendPolling;
                 uart_ptr->AbortSendFunc = UART_AbortSend;
                 uart_ptr->TxState = UART_STATE_READY;
                 break;
 
-            case BCDS_HAL_TRANSFER_MODE_INTERRUPT:
+            case KISO_HAL_TRANSFER_MODE_INTERRUPT:
                 if (callback)
                 {
                     uart_ptr->AppCallback = callback;
@@ -102,7 +102,7 @@ Retcode_T MCU_UART_Initialize(UART_T uart, MCU_UART_Callback_T callback)
                 }
                 break;
 
-            case BCDS_HAL_TRANSFER_MODE_DMA:
+            case KISO_HAL_TRANSFER_MODE_DMA:
                 if (callback)
                 {
                     uart_ptr->AppCallback = callback;
@@ -126,13 +126,13 @@ Retcode_T MCU_UART_Initialize(UART_T uart, MCU_UART_Callback_T callback)
     {
         switch (uart_ptr->RxMode)
         {
-            case BCDS_HAL_TRANSFER_MODE_POLLING:
+            case KISO_HAL_TRANSFER_MODE_POLLING:
                 uart_ptr->SendFunc = UART_ReceivePolling;
                 uart_ptr->AbortSendFunc = UART_AbortReceive;
                 uart_ptr->RxState = UART_STATE_READY;
                 break;
 
-            case BCDS_HAL_TRANSFER_MODE_INTERRUPT:
+            case KISO_HAL_TRANSFER_MODE_INTERRUPT:
                 if (callback)
                 {
                     uart_ptr->AppCallback = callback;
@@ -147,7 +147,7 @@ Retcode_T MCU_UART_Initialize(UART_T uart, MCU_UART_Callback_T callback)
                 }
                 break;
 
-            case BCDS_HAL_TRANSFER_MODE_DMA:
+            case KISO_HAL_TRANSFER_MODE_DMA:
                 if (callback)
                 {
                     uart_ptr->AppCallback = callback;
@@ -170,7 +170,7 @@ Retcode_T MCU_UART_Initialize(UART_T uart, MCU_UART_Callback_T callback)
     return retcode;
 }
 
-/** @brief See public interface function description in BCDS_MCU_UART.h */
+/** @brief See public interface function description in Kiso_MCU_UART.h */
 Retcode_T MCU_UART_Deinitialize(UART_T uart)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -194,7 +194,7 @@ Retcode_T MCU_UART_Deinitialize(UART_T uart)
     return retcode;
 }
 
-/** @brief See public interface function description in BCDS_MCU_UART.h */
+/** @brief See public interface function description in Kiso_MCU_UART.h */
 Retcode_T MCU_UART_Send(UART_T uart, uint8_t * data, uint32_t len)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -241,7 +241,7 @@ Retcode_T MCU_UART_Send(UART_T uart, uint8_t * data, uint32_t len)
     return retcode;
 }
 
-/** @brief See public interface function description in BCDS_MCU_UART.h */
+/** @brief See public interface function description in Kiso_MCU_UART.h */
 Retcode_T MCU_UART_Receive(UART_T uart, uint8_t * data, uint32_t len)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -285,7 +285,7 @@ Retcode_T MCU_UART_Receive(UART_T uart, uint8_t * data, uint32_t len)
 
 /**
  * @brief       Sends Data in polling mode
- * @details     If BCDS_HAL_TRANSFER_MODE_POLLING is configured for TxMode this function will be called from
+ * @details     If KISO_HAL_TRANSFER_MODE_POLLING is configured for TxMode this function will be called from
  *              MCU_UART_Send() to process the sending in polling mode i.e. no interrupts will be enabled and the
  *              function will actively wait for status change.
  * @param[in]   uart reference to the UART control block structure.
@@ -310,7 +310,7 @@ Retcode_T UART_SendPolling(struct MCU_UART_S* uart)
 
 /**
  * @brief       Receives data in polling mode.
- * @details     If BCDS_HAL_TRANSFER_MODE_POLLING is configured for RxMode this function will be called from
+ * @details     If KISO_HAL_TRANSFER_MODE_POLLING is configured for RxMode this function will be called from
  *              MCU_UART_Receive() to process the receiving in polling mode. It will block until reaching the count of
  *              data to be received.
  * @param[in]   uart reference to the UART control block structure.
@@ -336,7 +336,7 @@ Retcode_T UART_ReceivePolling(struct MCU_UART_S* uart)
 
 /**
  * @brief       Sends data in interrupt mode.
- * @details     If BCDS_HAL_TRANSFER_MODE_INTERRUPT is configured for TxMode this function will be called from
+ * @details     If KISO_HAL_TRANSFER_MODE_INTERRUPT is configured for TxMode this function will be called from
  *              MCU_UART_Send() to process the receiving in interrupt mode. It will trigger the sending process
  *              and return, the process will then be continued in background and the application will be informed
  *              through callbacks.
@@ -355,7 +355,7 @@ Retcode_T UART_SendInt(struct MCU_UART_S* uart)
 
 /**
  * @brief       Receives data in interrupt mode.
- * @details     If BCDS_HAL_TRANSFER_MODE_INTERRUPT is configured for RxMode this function will be called from
+ * @details     If KISO_HAL_TRANSFER_MODE_INTERRUPT is configured for RxMode this function will be called from
  *              MCU_UART_Receive() to process the receiving in interrupt mode. It will trigger the reception process
  *              and return, the process will then be continued in background and the application will be informed
  *              through callbacks.
@@ -376,7 +376,7 @@ Retcode_T UART_ReceiveInt(struct MCU_UART_S* uart)
 
 /**
  * @brief       Sends data in interrupt mode.
- * @details     If BCDS_HAL_TRANSFER_MODE_DMA is configured for TxMode this function will be called from
+ * @details     If KISO_HAL_TRANSFER_MODE_DMA is configured for TxMode this function will be called from
  *              MCU_UART_Send() to process the receiving in DMA mode. It will trigger the sending process
  *              and return, the process will then be continued in background and the application will be informed
  *              through callbacks.
@@ -395,7 +395,7 @@ Retcode_T UART_SendDMA(struct MCU_UART_S* uart)
 
 /**
  * @brief       Receives data in interrupt mode.
- * @details     If BCDS_HAL_TRANSFER_MODE_DMA is configured for RxMode this function will be called from
+ * @details     If KISO_HAL_TRANSFER_MODE_DMA is configured for RxMode this function will be called from
  *              MCU_UART_Receive() to process the receiving in DMA mode. It will trigger the reception process
  *              and return, the process will then be continued in background and the application will be informed
  *              through callbacks.
@@ -560,4 +560,4 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
     uart_ptr->AppCallback((UART_T) uart_ptr, event.bitfield);
 }
 
-#endif /* BCDS_FEATURE_UART */
+#endif /* KISO_FEATURE_UART */

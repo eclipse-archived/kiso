@@ -12,21 +12,21 @@
 *
 ********************************************************************************/
 
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_EVENTHUB
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_EVENTHUB
 
-#include "BCDS_EventHub.h"
+#include "Kiso_EventHub.h"
 
-#if BCDS_FEATURE_EVENTHUB
+#if KISO_FEATURE_EVENTHUB
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
 
-/*  The description of the function is available in BCDS_EventHub.h */
+/*  The description of the function is available in Kiso_EventHub.h */
 Retcode_T EventHub_Initialize(EventHub_T *hub)
 {
     if (NULL == hub)
@@ -45,7 +45,7 @@ Retcode_T EventHub_Initialize(EventHub_T *hub)
     return RETCODE_OK;
 }
 
-/*  The description of the function is available in BCDS_EventHub.h */
+/*  The description of the function is available in Kiso_EventHub.h */
 Retcode_T EventHub_Observe(EventHub_T *hub, EventHandler_T handler, TaskEvent_T event)
 {
     Retcode_T retval = RETCODE_OK;
@@ -86,7 +86,7 @@ Retcode_T EventHub_Observe(EventHub_T *hub, EventHandler_T handler, TaskEvent_T 
     return retval;
 }
 
-/*  The description of the function is available in BCDS_EventHub.h */
+/*  The description of the function is available in Kiso_EventHub.h */
 Retcode_T EventHub_ObserveAll(EventHub_T *hub, EventHandler_T handler)
 {
     Retcode_T retval = RETCODE_OK;
@@ -126,7 +126,7 @@ Retcode_T EventHub_ObserveAll(EventHub_T *hub, EventHandler_T handler)
     return retval;
 }
 
-/*  The description of the function is available in BCDS_EventHub.h */
+/*  The description of the function is available in Kiso_EventHub.h */
 Retcode_T EventHub_Notify(EventHub_T *hub, TaskEvent_T event, void *data)
 {
     if (NULL == hub)
@@ -164,4 +164,4 @@ Retcode_T EventHub_Notify(EventHub_T *hub, TaskEvent_T event, void *data)
     return RETCODE_OK;
 }
 
-#endif /* if BCDS_FEATURE_EVENTHUB */
+#endif /* if KISO_FEATURE_EVENTHUB */

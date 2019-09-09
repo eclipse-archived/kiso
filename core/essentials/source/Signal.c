@@ -19,17 +19,17 @@
  *
  * @note
  */
-#include "BCDS_Essentials.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_ESSENTIALS_MODULE_ID_SIGNAL
+#include "Kiso_Essentials.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_SIGNAL
 
 /* additional interface header files */
-#include "BCDS_Basics.h"
+#include "Kiso_Basics.h"
 
 #ifdef __GNUC__
 
 /* own header files */
-#include "BCDS_HAL_Signal.h"
+#include "Kiso_HAL_Signal.h"
 #include "Cmsis.h"
 
 static Retcode_T NoOs_Signal_Wait(HAL_SignalHandle_T *handle, uint32_t timeout);

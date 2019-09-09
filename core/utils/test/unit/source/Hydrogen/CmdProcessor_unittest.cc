@@ -28,14 +28,14 @@ FFF_DEFINITION_BLOCK_START /* start of global scope symbol and fake definitions 
 /* setup compile time configuration defines */
 extern "C"
 {
-#include "BCDS_Utils.h"
-#if BCDS_FEATURE_CMDPROCESSOR
+#include "Kiso_Utils.h"
+#if KISO_FEATURE_CMDPROCESSOR
 
 /* include faked interfaces */
 #include "Task_th.hh"
 #include "ICall_th.hh"
 #include "util_th.hh"
-#include "BCDS_Retcode_th.hh"
+#include "Kiso_Retcode_th.hh"
 
 #define CMD_PROCESSOR_TASK_LOOP_CONDITION   false
 
@@ -67,8 +67,8 @@ FAKE_VALUE_FUNC(xdc_Bool, ti_sysbios_knl_Mailbox_pend__E, Mailbox_Object *, Ptr 
 
 xdc_Bool TestMailboxPend(Mailbox_Object * obj, Ptr msg, xdc_UInt32 timeout)
 {
-    BCDS_UNUSED(obj);
-    BCDS_UNUSED(timeout);
+    KISO_UNUSED(obj);
+    KISO_UNUSED(timeout);
 
     if(NULL != msg)
     {
@@ -802,4 +802,4 @@ TEST_F(CmdProcessor, RunFailure)
 /*****************************************************************************************/
 #else
 }
-#endif /* if BCDS_FEATURE_CMDPROCESSOR */
+#endif /* if KISO_FEATURE_CMDPROCESSOR */

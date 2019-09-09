@@ -12,20 +12,20 @@
 *
 ********************************************************************************/
 
-#include "BCDS_BSP_GNSS_MAXM8.h"
+#include "Kiso_BSP_GNSS_MAXM8.h"
 
-#if BCDS_FEATURE_BSP_GNSS_MAXM8
+#if KISO_FEATURE_BSP_GNSS_MAXM8
 
-#include "stm32/stm32l4/BCDS_MCU_STM32L4_UART_Handle.h"
-#include "BCDS_HAL_Delay.h"
+#include "stm32/stm32l4/Kiso_MCU_STM32L4_UART_Handle.h"
+#include "Kiso_HAL_Delay.h"
 #include "BSP_CommonGateway.h"
 #include "protected/power_supply.h"
 #include "protected/gpio.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID MODULE_BSP_API_MAXM8
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID MODULE_BSP_API_MAXM8
 
 #define MAXM8_DELAY_1_MS                     UINT32_C(1)
 #define MAXM8_MAX_TIME_TO_OFF_MS             UINT32_C(1000)
@@ -47,8 +47,8 @@ static uint8_t bspState = (uint8_t) BSP_STATE_INIT; /**< BSP State of the cellul
  */
 static struct MCU_UART_S MaxM8_UARTStruct =
         {
-                .TxMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
-                .RxMode = BCDS_HAL_TRANSFER_MODE_INTERRUPT,
+                .TxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
+                .RxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
                 .Datarate = 9600,
                 .huart.Instance = UART4,
                 .huart.Init.BaudRate = 9600,
@@ -233,8 +233,8 @@ Retcode_T BSP_GNSS_MAXM8_Reset(void)
  */
 Retcode_T BSP_GNSS_MAXM8_Control(uint32_t command, void* arg)
 {
-    BCDS_UNUSED(command);
-    BCDS_UNUSED(arg);
+    KISO_UNUSED(command);
+    KISO_UNUSED(arg);
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
 }
 
@@ -250,4 +250,4 @@ void UART4_IRQHandler(void)
         MaxM8_UARTStruct.IrqCallback((UART_T) &MaxM8_UARTStruct);
     }
 }
-#endif /* BCDS_FEATURE_BSP_GNSS_MAXM8 */
+#endif /* KISO_FEATURE_BSP_GNSS_MAXM8 */

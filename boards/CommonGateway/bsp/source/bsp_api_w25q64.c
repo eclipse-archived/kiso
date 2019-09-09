@@ -12,20 +12,20 @@
 *
 ********************************************************************************/
 
-#include "BCDS_BSP_Memory_W25.h"
+#include "Kiso_BSP_Memory_W25.h"
 
-#if BCDS_FEATURE_BSP_MEMORY_W25
+#if KISO_FEATURE_BSP_MEMORY_W25
 
 #include "BSP_CommonGateway.h"
 #include "protected/gpio.h"
 #include "protected/power_supply.h"
-#include "stm32/stm32l4/BCDS_MCU_STM32L4_SPI_Handle.h"
-#include "BCDS_HAL_Delay.h"
+#include "stm32/stm32l4/Kiso_MCU_STM32L4_SPI_Handle.h"
+#include "Kiso_HAL_Delay.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID MODULE_BSP_API_MEMORY_W25
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID MODULE_BSP_API_MEMORY_W25
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
@@ -45,7 +45,7 @@ static uint8_t bspState = (uint8_t) BSP_STATE_INIT;
  */
 static struct MCU_SPI_S W25_SpiHandle =
         {
-                .TransferMode = BCDS_HAL_TRANSFER_MODE_DMA,
+                .TransferMode = KISO_HAL_TRANSFER_MODE_DMA,
                 .hspi.Instance = SPI1,
                 .hspi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4,
                 .hspi.Init.Direction = SPI_DIRECTION_2LINES,
@@ -403,5 +403,5 @@ void DMA1_Channel3_IRQHandler(void)
     }
 }
 
-#endif /* BCDS_FEATURE_BSP_MEMORY_W25 */
+#endif /* KISO_FEATURE_BSP_MEMORY_W25 */
 

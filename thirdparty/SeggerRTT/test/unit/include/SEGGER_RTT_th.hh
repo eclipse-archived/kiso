@@ -20,8 +20,8 @@
  * ****************************************************************************/
 
 /* header definition ******************************************************** */
-#ifndef BCDS_SEGGER_RTT_TH_HH_
-#define BCDS_SEGGER_RTT_TH_HH_
+#ifndef KISO_SEGGER_RTT_TH_HH_
+#define KISO_SEGGER_RTT_TH_HH_
 
 /* include system header files */
 #include <gtest.h>
@@ -37,6 +37,6 @@ FAKE_VALUE_FUNC(unsigned, SEGGER_RTT_Write, unsigned , const void* , unsigned);
 
 
 
-#endif /* BCDS_SEGGER_RTT_TH_HH_ */
+#endif /* KISO_SEGGER_RTT_TH_HH_ */
 
 /** ************************************************************************* */

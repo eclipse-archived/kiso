@@ -32,14 +32,14 @@ extern "C"
 {
 
 /* setup compile time configuration defines */
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_TLV
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_TLV
 
-#if BCDS_FEATURE_TLV
+#if KISO_FEATURE_TLV
 
 /* include faked interfaces */
-#include "BCDS_Assert_th.hh"
+#include "Kiso_Assert_th.hh"
 
 /* include module under test */
 #include "TLV.c"
@@ -501,4 +501,4 @@ TEST_F(TLV,GarbageCollectGroupTest)
 /** ************************************************************************* */
 #else
 }
-#endif /* if BCDS_FEATURE_TLV */
+#endif /* if KISO_FEATURE_TLV */

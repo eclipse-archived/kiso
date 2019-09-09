@@ -13,8 +13,8 @@
 ********************************************************************************/
  
 /* header definition ******************************************************** */
-#ifndef BCDS_BMP280_TH_HH_
-#define BCDS_BMP280_TH_HH_
+#ifndef KISO_BMP280_TH_HH_
+#define KISO_BMP280_TH_HH_
 
 
 #include "bmp280.h"
@@ -54,6 +54,6 @@ FAKE_VALUE_FUNC(u32, bmp280_compensate_pressure_int64, s32 );
 #endif
 FAKE_VALUE_FUNC(BMP280_RETURN_FUNCTION_TYPE, bmp280_compute_wait_time, u8 *);
 
-#endif /* BCDS_BMP280_TH_HH_ */
+#endif /* KISO_BMP280_TH_HH_ */
 
 /*************************************************************************** */

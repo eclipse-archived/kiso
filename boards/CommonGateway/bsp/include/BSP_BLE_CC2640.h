@@ -14,8 +14,8 @@
 
 /**
  * @file
- * @defgroup    BCDS_HAL_BSP_BLE_CC2640 BLE CC2640
- * @ingroup     BCDS_HAL_BSP_IF
+ * @defgroup    KISO_HAL_BSP_BLE_CC2640 BLE CC2640
+ * @ingroup     KISO_HAL_BSP_IF
  * @{
  *
  * @brief       BSP API for CC2640 BLE module from TI.
@@ -56,7 +56,7 @@
 #define BSP_BLE_CC2640_H_
 
 /* Include all headers which are needed by this file. */
-#include "BCDS_HAL.h"
+#include "Kiso_HAL.h"
 
 /**
  * @brief       Maps the GPIO pins to their desired function.

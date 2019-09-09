@@ -14,24 +14,24 @@
 
 /*---------------------- INCLUDED HEADERS ---------------------------------------------------------------------------*/
 #include "AppInfo.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID CGW_APP_MODULE_ENV_SENSOR
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID CGW_APP_MODULE_ENV_SENSOR
 #include "sensors_common.h"
 
 #include "BSP_CommonGateway.h"
 #include "accel_sensor.h"
 #include "env_sensor.h"
-#include "BCDS_BSP_BME280.h"
-#include "BCDS_BSP_BMA280.h"
-#include "BCDS_BSP_LED.h"
-#include "BCDS_Logging.h"
+#include "Kiso_BSP_BME280.h"
+#include "Kiso_BSP_BMA280.h"
+#include "Kiso_BSP_LED.h"
+#include "Kiso_Logging.h"
 
-#include "BCDS_I2CTransceiver.h"
+#include "Kiso_I2CTransceiver.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID CGW_APP_MODULE_ENV_SENSOR
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID CGW_APP_MODULE_ENV_SENSOR
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 

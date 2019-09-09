@@ -7,10 +7,10 @@
 #ifndef MITA_EXCEPTIONS_H
 #define MITA_EXCEPTIONS_H
 
-#include <BCDS_Retcode.h>
+#include <Kiso_Retcode.h>
 
-#ifndef BCDS_MODULE_ID
-#define BCDS_MODULE_ID 0xCAFE
+#ifndef KISO_MODULE_ID
+#define KISO_MODULE_ID 0xCAFE
 #endif
 
 #define NO_EXCEPTION RETCODE_OK

@@ -4,13 +4,13 @@
  */
 
 
-#include <BCDS_Retcode.h>
+#include <Kiso_Retcode.h>
 #include "cgwTypes.h"
 #include "PlatformCGW.h"
-#include "BCDS_BSP_Board.h"
+#include "Kiso_BSP_Board.h"
 #include "bme280_defs.h"
 #include "bme280.h"
-#include "BCDS_BSP_BME280.h"
+#include "Kiso_BSP_BME280.h"
 #include "MitaExceptions.h"
 #include "SensorEnvironment.h"
 

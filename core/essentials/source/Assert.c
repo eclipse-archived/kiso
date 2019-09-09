@@ -34,12 +34,12 @@
 
 #ifndef NDEBUG /* valid only for debug builds */
 
-#include "BCDS_Essentials.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_ESSENTIALS_MODULE_ID_ASSERT
+#include "Kiso_Essentials.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_ASSERT
 
 /* own headers */
-#include "BCDS_Assert.h"
+#include "Kiso_Assert.h"
 
 /* system header files */
 

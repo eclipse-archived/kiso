@@ -1062,7 +1062,7 @@ void HAL_RCC_MCOConfig( uint32_t RCC_MCOx, uint32_t RCC_MCOSource, uint32_t RCC_
   assert_param(IS_RCC_MCO(RCC_MCOx));
   assert_param(IS_RCC_MCODIV(RCC_MCODiv));
   assert_param(IS_RCC_MCO1SOURCE(RCC_MCOSource));
-  BCDS_UNUSED(RCC_MCOx);
+  KISO_UNUSED(RCC_MCOx);
   /* MCO Clock Enable */
   __MCO1_CLK_ENABLE();
 

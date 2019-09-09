@@ -134,7 +134,7 @@ Each source file must include its own header files first, before any external or
 
 3. The private header(s) of the module itself in "..."
 
-4. System headers in <...> (You should avoid directly including standard headers. But include KISO_Basics.h instead)
+4. System headers in <...> (You should avoid directly including standard headers. But include Kiso_Basics.h instead)
 
 5. Headers of other components and packages in "..."
 
@@ -153,7 +153,7 @@ MyFile.c
 
 ```
 
-Do not directly include standard c headers. Include instead "KISO_Basics.h" which is charge of including standard C lib functionality.
+Do not directly include standard c headers. Include instead "Kiso_Basics.h" which is charge of including standard C lib functionality.
 
 ## Declaration and naming conventions
 
@@ -161,7 +161,7 @@ Do not directly include standard c headers. Include instead "KISO_Basics.h" whic
 
 Use the standard integer data types with defined size. In C99 these standard data types are defined in the stdint.h system header file.
 
-You should not directly include stdint.h, but include KISO_Basics.h which will ensure that these types and macros are defined.
+You should not directly include stdint.h, but include Kiso_Basics.h which will ensure that these types and macros are defined.
 
 **Type**|**Description**|**Type conversion macros**
 --------|---------------|--------------------------
@@ -206,7 +206,7 @@ Each header file must have a guard macro.
 
 The name of the guard macro must be unique all over the project.
 
-The guard macros must have the following format **KISO_\<file base name>_H_**
+The guard macros must have the following format **Kiso_\<file base name>_H_**
 
 ### Components
 
@@ -218,13 +218,13 @@ The component name is a meaningful name for the component using the camel notati
 
 ### Files
 
-Each public header file should have the prefix "KISO_" in its name. This means that the name must have the form **KISO_\<file base name>.h**
+Each public header file should have the prefix "Kiso_" in its name. This means that the name must have the form **Kiso_\<file base name>.h**
 
-Protected and private header files must not have the prefix "KISO_" in their names.
+Protected and private header files must not have the prefix "Kiso_" in their names.
 
 The file base name of each public or protected header file should clearly reflect the component or module name, for example:
 
-* Public: **KISO_GsmDriver.h**
+* Public: **Kiso_GsmDriver.h**
 
 * Protected: **GsmDriver.h**
 
@@ -232,7 +232,7 @@ Both header and source file should be named with a meaningful name written in th
 
 Public header file:
 
-\<Root Folder>/include/KISO_MyAlgo.h
+\<Root Folder>/include/Kiso_MyAlgo.h
 
 Protected header file:
 
@@ -358,7 +358,7 @@ static uint32_t const Identifier = ...;
 static uint32 const * const Identifier = ...;
 ```
 
-It is highly recommended to use the type conversion macros from <stdint.h> (which are included in KISO_Basics.h), see </span style="color:blue"> Integral Data Types (see page 18)
+It is highly recommended to use the type conversion macros from <stdint.h> (which are included in Kiso_Basics.h), see </span style="color:blue"> Integral Data Types (see page 18)
 
 Macro values shall be enclosed within parenthesis.
 

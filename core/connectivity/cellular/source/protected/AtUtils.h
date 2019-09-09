@@ -27,8 +27,8 @@
 #ifndef ATUTILS_H_
 #define ATUTILS_H_
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
 
 #include "AtResponseParser.h"
 

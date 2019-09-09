@@ -20,21 +20,21 @@ extern "C"
 {
 
 /* setup compile time configuration defines */
-#include "BCDS_Cellular.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_AT_UBLOX
+#include "Kiso_Cellular.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_AT_UBLOX
 #define GTEST
 
 /* include faked interfaces */
 #include "SocketService_th.hh"
 #include "HttpService_th.hh"
-#include "BCDS_Logging_th.hh"
+#include "Kiso_Logging_th.hh"
 
 /* include module under test */
 #include "ModemEmulator.cc"
-#undef BCDS_MODULE_ID
+#undef KISO_MODULE_ID
 #include "AtUtils.c"
-#undef BCDS_MODULE_ID
+#undef KISO_MODULE_ID
 #include "AT_UBlox.c"
 
 #include <stdlib.h>
@@ -2251,10 +2251,10 @@ static void Custom_SocketService_NotifySocketAccepted(uint32_t createdSocketId,
     const AT_UBlox_Address_T* localIp,
     uint16_t listeningPort)
 {
-    BCDS_UNUSED(createdSocketId);
-    BCDS_UNUSED(remotePort);
-    BCDS_UNUSED(listeningSocketId);
-    BCDS_UNUSED(listeningPort);
+    KISO_UNUSED(createdSocketId);
+    KISO_UNUSED(remotePort);
+    KISO_UNUSED(listeningSocketId);
+    KISO_UNUSED(listeningPort);
 
     memcpy(&UUSOLI_RemoteIp, remoteIp, sizeof(UUSOLI_RemoteIp));
     memcpy(&UUSOLI_LocalIp, localIp, sizeof(UUSOLI_LocalIp));

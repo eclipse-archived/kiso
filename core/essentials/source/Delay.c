@@ -19,18 +19,18 @@
  *
  */
 
-#include "BCDS_Essentials.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_ESSENTIALS_MODULE_ID_DELAY
+#include "Kiso_Essentials.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_DELAY
 
 /* additional interface header files */
-#include "BCDS_Basics.h"
+#include "Kiso_Basics.h"
 
 /* own header files */
-#include "BCDS_HAL_Delay.h"
+#include "Kiso_HAL_Delay.h"
 #include "Cmsis.h"
 
-#include "BCDS_BSP_Board.h"
+#include "Kiso_BSP_Board.h"
 #ifdef __GNUC__
 
 static Retcode_T NoOs_Delay_Ms(uint32_t timeInMs);

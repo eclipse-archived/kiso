@@ -19,8 +19,8 @@
 #ifndef HTTPSERVICE_H_
 #define HTTPSERVICE_H_
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
 
 /**
  * @brief Called by the URC handler to notify that a http request is done

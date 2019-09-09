@@ -209,7 +209,7 @@ HAL_StatusTypeDef HAL_RTCEx_SetTimeStamp(RTC_HandleTypeDef *hrtc, uint32_t TimeS
   /* Check the parameters */
   assert_param(IS_TIMESTAMP_EDGE(TimeStampEdge));
   assert_param(IS_RTC_TIMESTAMP_PIN(RTC_TimeStampPin));
-  BCDS_UNUSED(RTC_TimeStampPin);
+  KISO_UNUSED(RTC_TimeStampPin);
 
   /* Process Locked */
   __HAL_LOCK(hrtc);
@@ -266,7 +266,7 @@ HAL_StatusTypeDef HAL_RTCEx_SetTimeStamp_IT(RTC_HandleTypeDef *hrtc, uint32_t Ti
   /* Check the parameters */
   assert_param(IS_TIMESTAMP_EDGE(TimeStampEdge));
   assert_param(IS_RTC_TIMESTAMP_PIN(RTC_TimeStampPin));
-  BCDS_UNUSED(RTC_TimeStampPin);
+  KISO_UNUSED(RTC_TimeStampPin);
 
   /* Process Locked */ 
   __HAL_LOCK(hrtc);

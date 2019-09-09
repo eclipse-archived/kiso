@@ -19,8 +19,8 @@
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID MODULE_BSP_TIME
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID MODULE_BSP_TIME
 
 #define TIME_PERIOD     (uint32_t) (65535)
 #define TIME_TIMEOUT    (uint32_t) (65535)

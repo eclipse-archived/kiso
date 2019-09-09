@@ -20,8 +20,8 @@
  * ****************************************************************************/
 
 /* header definition ******************************************************** */
-#ifndef BCDS_TASK_TH_HH_
-#define BCDS_TASK_TH_HH_
+#ifndef KISO_TASK_TH_HH_
+#define KISO_TASK_TH_HH_
 
 /* include system header files */
 #include <gtest.h>
@@ -224,6 +224,6 @@ FAKE_VALUE_FUNC(eSleepModeStatus, eTaskConfirmSleepModeStatus);
 
 FAKE_VALUE_FUNC(void*, pvTaskIncrementMutexHeldCount);
 
-#endif /* BCDS_TASK_TH_HH_ */
+#endif /* KISO_TASK_TH_HH_ */
 
 /** ************************************************************************* */

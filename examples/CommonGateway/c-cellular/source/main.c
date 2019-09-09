@@ -16,28 +16,28 @@
  */
 
 #include "AppModules.h"
-#define BCDS_MODULE_ID CGW_APP_MODULE_MAIN
+#define KISO_MODULE_ID CGW_APP_MODULE_MAIN
 
 #include "App.h"
 #include "AppConfig.h"
 
-#include "BCDS_Basics.h"
-#include "BCDS_Assert.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Assert.h"
 #include <stdio.h>
-#include "BCDS_CmdProcessor.h"
-#include "BCDS_Logging.h"
+#include "Kiso_CmdProcessor.h"
+#include "Kiso_Logging.h"
 #include "BSP_CommonGateway.h"
-#include "BCDS_BSP_LED.h"
-#include "BCDS_BSP_Board.h"
-#include "BCDS_HAL_Delay.h"
+#include "Kiso_BSP_LED.h"
+#include "Kiso_BSP_Board.h"
+#include "Kiso_HAL_Delay.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID /* Module ID define before including Basics package*/
-#define BCDS_MODULE_ID CGW_APP_MODULE_ID_MAIN
+#undef KISO_MODULE_ID /* Module ID define before including Basics package*/
+#define KISO_MODULE_ID CGW_APP_MODULE_ID_MAIN
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
@@ -78,9 +78,9 @@ void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer, StackT
 #endif
 #endif
 
-BCDS_UNUSED_FUNC(static void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress));
+KISO_UNUSED_FUNC(static void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress));
 
-BCDS_UNUSED_FUNC(void HardFault_Handler(void) __attribute__((naked)));
+KISO_UNUSED_FUNC(void HardFault_Handler(void) __attribute__((naked)));
 
 /*---------------------- VARIABLES DECLARATIONS ---------------------------------------------------------------------*/
 
@@ -100,16 +100,16 @@ int main(void)
     {
         /* We prefer the async recorder over the synchronous variant, and UART
          * over RTT. */
-#if (defined(BCDS_ASYNC_RECORDER) && BCDS_ASYNC_RECORDER)
-#if (defined(BCDS_UART_APPENDER) && BCDS_UART_APPENDER)
+#if (defined(KISO_ASYNC_RECORDER) && KISO_ASYNC_RECORDER)
+#if (defined(KISO_UART_APPENDER) && KISO_UART_APPENDER)
         returnValue = Logging_Init(Logging_AsyncRecorder, Logging_UARTAppender);
-#elif (defined(BCDS_RTT_APPENDER) && BCDS_RTT_APPENDER)
+#elif (defined(KISO_RTT_APPENDER) && KISO_RTT_APPENDER)
         returnValue = Logging_Init(Logging_AsyncRecorder, Logging_RttAppender);
 #endif
-#elif (defined(BCDS_SYNC_RECORDER) && BCDS_SYNC_RECORDER)
-#if (defined(BCDS_UART_APPENDER) && BCDS_UART_APPENDER)
+#elif (defined(KISO_SYNC_RECORDER) && KISO_SYNC_RECORDER)
+#if (defined(KISO_UART_APPENDER) && KISO_UART_APPENDER)
         returnValue = Logging_Init(Logging_SyncRecorder, Logging_UARTAppender);
-#elif (defined(BCDS_RTT_APPENDER) && BCDS_RTT_APPENDER)
+#elif (defined(KISO_RTT_APPENDER) && KISO_RTT_APPENDER)
         returnValue = Logging_Init(Logging_SyncRecorder, Logging_RttAppender);
 #endif
 #endif
@@ -256,8 +256,8 @@ static void SysTickPreCallback(void)
 
 static void PostOsInit(void *param, uint32_t len)
 {
-    BCDS_UNUSED(param);
-    BCDS_UNUSED(len);
+    KISO_UNUSED(param);
+    KISO_UNUSED(len);
     HAL_Delay_SetMsHook(Delay);
 }
 
@@ -270,8 +270,8 @@ static Retcode_T Delay(uint32_t delay)
 #if (configCHECK_FOR_STACK_OVERFLOW > 0)
 void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName)
 {
-    BCDS_UNUSED(xTask);
-    BCDS_UNUSED(pcTaskName);
+    KISO_UNUSED(xTask);
+    KISO_UNUSED(pcTaskName);
     assert(0);
 }
 #endif
@@ -301,14 +301,14 @@ static void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress)
     pc = pulFaultStackAddress[6];
     psr = pulFaultStackAddress[7];
 
-    BCDS_UNUSED(r0);
-    BCDS_UNUSED(r1);
-    BCDS_UNUSED(r2);
-    BCDS_UNUSED(r3);
-    BCDS_UNUSED(r12);
-    BCDS_UNUSED(lr);
-    BCDS_UNUSED(pc);
-    BCDS_UNUSED(psr);
+    KISO_UNUSED(r0);
+    KISO_UNUSED(r1);
+    KISO_UNUSED(r2);
+    KISO_UNUSED(r3);
+    KISO_UNUSED(r12);
+    KISO_UNUSED(lr);
+    KISO_UNUSED(pc);
+    KISO_UNUSED(psr);
 
     __asm__("bkpt");
 

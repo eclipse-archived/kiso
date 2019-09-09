@@ -19,35 +19,35 @@ FFF_DEFINITION_BLOCK_START
 extern "C"
 {
 
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID  BCDS_UTILS_MODULE_ID_LOGGING
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_LOGGING
 
-#if BCDS_FEATURE_LOGGING
+#if KISO_FEATURE_LOGGING
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode_th.hh"
-#include "BCDS_Assert_th.hh"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode_th.hh"
+#include "Kiso_Assert_th.hh"
 #include "FreeRTOS_th.hh"
 #include "task_th.hh"
 #include "portmacro_th.hh"
-#include "BCDS_Queue_th.hh"
+#include "Kiso_Queue_th.hh"
 #include "semphr_th.hh"
 #include "LogConfig.h"
-#define Queue_Purge(x) BCDS_UNUSED(x);break;
+#define Queue_Purge(x) KISO_UNUSED(x);break;
 
-#undef BCDS_MODULE_ID
+#undef KISO_MODULE_ID
 #include "../../../../source/Logging/freertos/Logging_AsyncRecorder.c"
-#undef BCDS_MODULE_ID
+#undef KISO_MODULE_ID
 #include "Filter.c"
-#undef BCDS_MODULE_ID
+#undef KISO_MODULE_ID
 #include "Logging.c"
 
 static Retcode_T AppenderInitFake = RETCODE_OK;
 
 static Retcode_T LogAppenderInitFake(void *wakeup)
 {
-    BCDS_UNUSED(wakeup);
+    KISO_UNUSED(wakeup);
     return AppenderInitFake;
 }
 
@@ -55,8 +55,8 @@ static Retcode_T WriteResult = RETCODE_OK;
 
 static Retcode_T LogAppenderWriteFake(const char *message, uint32_t length)
 {
-    BCDS_UNUSED(message);
-    BCDS_UNUSED(length);
+    KISO_UNUSED(message);
+    KISO_UNUSED(length);
     if (WriteResult != RETCODE_OK)
     {
         WriteResult = RETCODE_OK;
@@ -66,13 +66,13 @@ static Retcode_T LogAppenderWriteFake(const char *message, uint32_t length)
 }
 Retcode_T RecordWriteFake(LogLevel_T level, uint8_t package, uint8_t module, const char *file, uint32_t line, const char *fmt, va_list args)
 {
-    BCDS_UNUSED(level);
-    BCDS_UNUSED(package);
-    BCDS_UNUSED(file);
-    BCDS_UNUSED(line);
-    BCDS_UNUSED(fmt);
-    BCDS_UNUSED(args);
-    BCDS_UNUSED(module);
+    KISO_UNUSED(level);
+    KISO_UNUSED(package);
+    KISO_UNUSED(file);
+    KISO_UNUSED(line);
+    KISO_UNUSED(fmt);
+    KISO_UNUSED(args);
+    KISO_UNUSED(module);
     return RETCODE_OK;
 }
 static SemaphoreHandle_t FakeSemaphoreHandle = NULL;
@@ -86,10 +86,10 @@ static Retcode_T QueueGetResult = RETCODE_FAILURE;
 
 static Retcode_T Queue_GetFake(Queue_T *arg1, void **arg2, uint32_t*arg3, uint32_t arg4)
 {
-    BCDS_UNUSED(arg1);
-    BCDS_UNUSED(arg2);
-    BCDS_UNUSED(arg3);
-    BCDS_UNUSED(arg4);
+    KISO_UNUSED(arg1);
+    KISO_UNUSED(arg2);
+    KISO_UNUSED(arg3);
+    KISO_UNUSED(arg4);
     if (RETCODE_FAILURE == QueueGetResult)
     {
         QueueGetResult = RETCODE_OK;
@@ -107,12 +107,12 @@ static BaseType_t xTaskPassed = pdFAIL;
 static BaseType_t xTaskCreateFake(TaskHookFunction_t TaskFun, const char * arg1,
         unsigned short arg2, void * arg3, UBaseType_t arg4, TaskHandle_t* arg5)
 {
-    BCDS_UNUSED(TaskFun);
-    BCDS_UNUSED(arg1);
-    BCDS_UNUSED(arg2);
-    BCDS_UNUSED(arg3);
-    BCDS_UNUSED(arg4);
-    BCDS_UNUSED(arg5);
+    KISO_UNUSED(TaskFun);
+    KISO_UNUSED(arg1);
+    KISO_UNUSED(arg2);
+    KISO_UNUSED(arg3);
+    KISO_UNUSED(arg4);
+    KISO_UNUSED(arg5);
 
     return xTaskPassed;
 }
@@ -123,7 +123,7 @@ FFF_DEFINITION_BLOCK_END
 
 static Retcode_T LogAppenderInit(void *init)
 {
-    BCDS_UNUSED(init);
+    KISO_UNUSED(init);
     return RETCODE_OK;
 }
 
@@ -287,13 +287,13 @@ TEST_F(Logging, Logging_FilterPass)
 
     LogLevel_T level = LOG_LEVEL_WARNING;
     uint8_t package = 0;
-    uint8_t module = BCDS_UTILS_MODULE_ID_LOGGING;
+    uint8_t module = KISO_UTILS_MODULE_ID_LOGGING;
     const char *file = "log.txt";
     uint32_t line = 32;
     const char *fmt = "string";
     const char *arg = "error";
 
-    EXPECT_EQ(1U, LogFilter_Add(LOG_LEVEL_WARNING, 0, BCDS_UTILS_MODULE_ID_LOGGING));
+    EXPECT_EQ(1U, LogFilter_Add(LOG_LEVEL_WARNING, 0, KISO_UTILS_MODULE_ID_LOGGING));
     EXPECT_EQ(RETCODE_OK, Logging_Log(level, package, module, file, line, fmt, arg));
     EXPECT_EQ(RETCODE_OK, LogFilter_Configure(1U, LOG_LEVEL_ERROR, package, module));
     EXPECT_EQ(RETCODE_OK, LogFilter_Delete(0U));
@@ -313,7 +313,7 @@ TEST_F(Logging, Logging_FilterFail)
 
     LogLevel_T level = LOG_LEVEL_INFO;
     uint8_t package = 0;
-    uint8_t module = BCDS_UTILS_MODULE_ID_LOGGING;
+    uint8_t module = KISO_UTILS_MODULE_ID_LOGGING;
     const char *file = "log.txt";
     uint32_t line = 32;
     const char *fmt = "string";
@@ -321,7 +321,7 @@ TEST_F(Logging, Logging_FilterFail)
 
     EXPECT_EQ(RETCODE_NOT_SUPPORTED, Retcode_GetCode(Logging_Log(level, 1, module, file, line, fmt, arg)));
     EXPECT_EQ(RETCODE_NOT_SUPPORTED, Retcode_GetCode(Logging_Log(level, 2,
-            BCDS_UTILS_MODULE_ID_LOGGING_FILTER, file, line, fmt, arg)));
+            KISO_UTILS_MODULE_ID_LOGGING_FILTER, file, line, fmt, arg)));
     EXPECT_EQ(RETCODE_OK, LogFilter_Delete(0U));
     EXPECT_EQ(RETCODE_NOT_SUPPORTED, Retcode_GetCode(Logging_Log(level, package, module, file, line, fmt, arg)));
 
@@ -366,7 +366,7 @@ TEST_F(Logging, Logging_UARTefm32Appender)
      */
     LogLevel_T level = LOG_LEVEL_WARNING;
     uint8_t package = 0;
-    uint8_t module = BCDS_UTILS_MODULE_ID_LOGGING;
+    uint8_t module = KISO_UTILS_MODULE_ID_LOGGING;
     const char *file = "log.txt";
     uint32_t line = 32;
     const char *fmt = "string";
@@ -430,4 +430,4 @@ TEST_F(Logging, NULLTestinInitDeinit)
 }
 FFF_DEFINITION_BLOCK_END
 
-#endif /* if BCDS_FEATURE_LOGGING */
+#endif /* if KISO_FEATURE_LOGGING */

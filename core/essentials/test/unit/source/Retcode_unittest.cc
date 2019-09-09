@@ -26,11 +26,11 @@
 extern "C"
 {
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_ESSENTIALS_MODULE_ID_RETCODE
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_RETCODE
 
 /* Include faked interfaces */
-#include "BCDS_Assert_th.hh"
+#include "Kiso_Assert_th.hh"
 
 /* Include Module under Test */
 #include "Retcode.c"
@@ -110,8 +110,8 @@ TEST_F(Retcode, raise)
 	EXPECT_EQ(retcode, lastError);
 	EXPECT_EQ(RETCODE_RTOS_QUEUE_ERROR, Retcode_GetCode(retcode));
 	EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
-	EXPECT_EQ((uint32_t)BCDS_PACKAGE_ID, Retcode_GetPackage(retcode));
-	EXPECT_EQ(BCDS_ESSENTIALS_MODULE_ID_RETCODE, Retcode_GetModuleId(retcode));
+	EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
+	EXPECT_EQ(KISO_ESSENTIALS_MODULE_ID_RETCODE, Retcode_GetModuleId(retcode));
 	EXPECT_EQ((uint32_t)1, numErrors);
 	EXPECT_NE(true, isFromInterrupt);
 
@@ -122,8 +122,8 @@ TEST_F(Retcode, raise)
 	EXPECT_EQ(retcode, lastError);
 	EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
 	EXPECT_EQ(RETCODE_SEVERITY_WARNING, Retcode_GetSeverity(retcode));
-	EXPECT_EQ((uint32_t)BCDS_PACKAGE_ID, Retcode_GetPackage(retcode));
-	EXPECT_EQ(BCDS_ESSENTIALS_MODULE_ID_RETCODE, Retcode_GetModuleId(retcode));
+	EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
+	EXPECT_EQ(KISO_ESSENTIALS_MODULE_ID_RETCODE, Retcode_GetModuleId(retcode));
 	EXPECT_EQ((uint32_t)2, numErrors);
 	EXPECT_NE(true, isFromInterrupt);
 }
@@ -135,7 +135,7 @@ TEST_F(Retcode, retcodeOKPackageAndSeverityDropped1)
 
 	EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_SUCCESS), retcode);
 
-	EXPECT_EQ((uint32_t)BCDS_PACKAGE_ID, Retcode_GetPackage(retcode));
+	EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
 	EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
 	EXPECT_EQ(RETCODE_SUCCESS, Retcode_GetCode(retcode));
 }
@@ -169,7 +169,7 @@ TEST_F(Retcode, retcodeOKPackageAndSeverityDropped2)
 	EXPECT_NE(RETCODE_SUCCESS, retcode);
 
 
-	EXPECT_EQ((uint32_t)BCDS_PACKAGE_ID, Retcode_GetPackage(retcode));
+	EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
 	EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
 	EXPECT_EQ(RETCODE_SUCCESS, Retcode_GetCode(retcode));
 }
@@ -184,7 +184,7 @@ TEST_F(Retcode, retcodeMacro)
 	EXPECT_NE((Retcode_T)0, retcode);
 	EXPECT_NE(RETCODE_OK, retcode);
 
-	EXPECT_EQ((uint32_t)BCDS_PACKAGE_ID, Retcode_GetPackage(retcode));
+	EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
 	EXPECT_EQ(0, Retcode_GetSeverity(retcode));
 	EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -198,7 +198,7 @@ TEST_F(Retcode, composeMacro)
 	EXPECT_NE((Retcode_T)0, retcode);
 	EXPECT_NE(RETCODE_SUCCESS, retcode);
 
-	EXPECT_EQ((uint32_t)BCDS_PACKAGE_ID, Retcode_GetPackage(retcode));
+	EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
 	EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
 	EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -212,8 +212,8 @@ TEST_F(Retcode, RetcodeRaiseFromIsr)
     EXPECT_EQ(retcode, lastError);
     EXPECT_EQ(RETCODE_UNEXPECTED_BEHAVIOR, Retcode_GetCode(retcode));
     EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
-    EXPECT_EQ((uint32_t)BCDS_PACKAGE_ID, Retcode_GetPackage(retcode));
-    EXPECT_EQ(BCDS_ESSENTIALS_MODULE_ID_RETCODE, Retcode_GetModuleId(retcode));
+    EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
+    EXPECT_EQ(KISO_ESSENTIALS_MODULE_ID_RETCODE, Retcode_GetModuleId(retcode));
     EXPECT_EQ((uint32_t)1, numErrors);
     EXPECT_EQ(true, isFromInterrupt);
 }

@@ -12,20 +12,20 @@
 *
 ********************************************************************************/
 
-#include "BCDS_Utils.h"
+#include "Kiso_Utils.h"
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_I2C_TRANSCEIVER
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_I2C_TRANSCEIVER
 
-#if BCDS_FEATURE_I2CTRANSCEIVER
+#if KISO_FEATURE_I2CTRANSCEIVER
 /* Put the type and macro definitions here */
-#include "BCDS_I2CTransceiver.h"
-#if BCDS_FEATURE_I2C
+#include "Kiso_I2CTransceiver.h"
+#if KISO_FEATURE_I2C
 /* Put constant and variable definitions here */
 #define CANCEL_I2C_TRANSMISSION  UINT32_C(0)
 #define DATA_TRANSFER_TIMEOUT_MS  UINT32_C(1000)
 
-/*  The description of the function is available in BCDS_I2CTransceiver.h */
+/*  The description of the function is available in Kiso_I2CTransceiver.h */
 void I2CTransceiver_LoopCallback(I2cTranceiverHandlePtr_T i2cTransceiver, struct MCU_I2C_Event_S event)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -75,7 +75,7 @@ void I2CTransceiver_LoopCallback(I2cTranceiverHandlePtr_T i2cTransceiver, struct
     }
 }
 
-/*  The description of the function is available in BCDS_I2CTransceiver.h */
+/*  The description of the function is available in Kiso_I2CTransceiver.h */
 Retcode_T I2CTransceiver_Init(I2cTranceiverHandlePtr_T i2cTransceiver, I2C_T i2cHandle)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -120,7 +120,7 @@ Retcode_T I2CTransceiver_Init(I2cTranceiverHandlePtr_T i2cTransceiver, I2C_T i2c
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_I2CTransceiver.h */
+/*  The description of the function is available in Kiso_I2CTransceiver.h */
 Retcode_T I2CTransceiver_Read(I2cTranceiverHandlePtr_T i2cTransceiver, uint8_t I2Caddr, uint8_t Reg, uint8_t *RegData, uint8_t NbrBytesToRead)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -171,7 +171,7 @@ Retcode_T I2CTransceiver_Read(I2cTranceiverHandlePtr_T i2cTransceiver, uint8_t I
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_I2CTransceiver.h */
+/*  The description of the function is available in Kiso_I2CTransceiver.h */
 Retcode_T I2CTransceiver_Write(I2cTranceiverHandlePtr_T i2cTransceiver, uint8_t I2Caddr, uint8_t Reg, uint8_t *RegData, uint8_t NbrBytesToWrite)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -221,7 +221,7 @@ Retcode_T I2CTransceiver_Write(I2cTranceiverHandlePtr_T i2cTransceiver, uint8_t 
     return retcode;
 }
 
-/*  The description of the function is available in BCDS_I2CTransceiver.h */
+/*  The description of the function is available in Kiso_I2CTransceiver.h */
 Retcode_T I2CTransceiver_Deinit(I2cTranceiverHandlePtr_T i2cTransceiver)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -244,6 +244,6 @@ Retcode_T I2CTransceiver_Deinit(I2cTranceiverHandlePtr_T i2cTransceiver)
     return retcode;
 }
 
-#endif /* BCDS_FEATURE_I2C */
+#endif /* KISO_FEATURE_I2C */
 
-#endif /* if BCDS_FEATURE_I2CTRANSCEIVER */
+#endif /* if KISO_FEATURE_I2CTRANSCEIVER */

@@ -18,11 +18,11 @@
 /* include faked interfaces */
 extern "C"
 {
-#include "BCDS_Retcode_th.hh"
-#include "BCDS_HAL_th.hh"
+#include "Kiso_Retcode_th.hh"
+#include "Kiso_HAL_th.hh"
 
 /**
- * BCDS_HALConfig.h file which breaks the unit test implementation.
+ * Kiso_HALConfig.h file which breaks the unit test implementation.
  *
  * Below four lines hot-fix needs to be replaced by proper implementation.
  */
@@ -30,7 +30,7 @@ extern "C"
 #include "em_usart_th.hh"
 #include "em_dma_th.hh"
 
-#if BCDS_FEATURE_UART
+#if KISO_FEATURE_UART
 
 typedef HWHandle_T UART_T;
 
@@ -40,7 +40,7 @@ typedef HWHandle_T UART_T;
 }
 /* end of global scope symbol and fake definitions section */
 
-class BCDS_UARTtest: public testing::Test
+class KISO_UARTtest: public testing::Test
 {
 protected:
 
@@ -78,44 +78,44 @@ public:
     static union MCU_UART_Event_U m_event_cbf;
 };
 
-const union MCU_UART_Event_U BCDS_UARTtest::m_EventInit =
+const union MCU_UART_Event_U KISO_UARTtest::m_EventInit =
 {   .bitfield =
     {   0, 0, 0, 0, 0, 0, 0, 0, 0}
 };
 
-const union MCU_UART_Event_U BCDS_UARTtest::m_EventRxReady =
+const union MCU_UART_Event_U KISO_UARTtest::m_EventRxReady =
 {   .bitfield =
     {   1, 0, 0, 0, 0, 0, 0, 0, 0}
 };
 
-const union MCU_UART_Event_U BCDS_UARTtest::m_EventRxError =
+const union MCU_UART_Event_U KISO_UARTtest::m_EventRxError =
 {   .bitfield =
     {   0, 1, 0, 0, 0, 0, 0, 0, 0}
 };
-const union MCU_UART_Event_U BCDS_UARTtest::m_EventRxComplete =
+const union MCU_UART_Event_U KISO_UARTtest::m_EventRxComplete =
 {   .bitfield =
     {   0, 0, 1, 0, 0, 0, 0, 0, 0}
 };
-const union MCU_UART_Event_U BCDS_UARTtest::m_EventTxError =
+const union MCU_UART_Event_U KISO_UARTtest::m_EventTxError =
 {   .bitfield =
     {   0, 0, 0, 1, 0, 0, 0, 0, 0}
 };
-const union MCU_UART_Event_U BCDS_UARTtest::m_EventTxComplete =
+const union MCU_UART_Event_U KISO_UARTtest::m_EventTxComplete =
 {   .bitfield =
     {   0, 0, 0, 0, 1, 0, 0, 0, 0}
 };
 
-bool BCDS_UARTtest::m_isCalled_cbf = false;
+bool KISO_UARTtest::m_isCalled_cbf = false;
 
-union MCU_UART_Event_U BCDS_UARTtest::m_event_cbf = m_EventInit;
-uint32_t BCDS_UARTtest::m_uart_cbf = 0;
+union MCU_UART_Event_U KISO_UARTtest::m_event_cbf = m_EventInit;
+uint32_t KISO_UARTtest::m_uart_cbf = 0;
 
 //----------------------------------------------------------------------
 
 class UartDevice
 {
 public:
-    UartDevice(enum BCDS_HAL_TransferMode_E TransferMode);
+    UartDevice(enum KISO_HAL_TransferMode_E TransferMode);
     virtual ~UartDevice();
 
     uint32_t m_UartInterfaceParam; /**< user interface handle, simple integer */
@@ -124,7 +124,7 @@ public:
     uint32_t getAppInterfaceHandle();
 };
 
-UartDevice::UartDevice(enum BCDS_HAL_TransferMode_E TransferMode)
+UartDevice::UartDevice(enum KISO_HAL_TransferMode_E TransferMode)
 {
     m_Uart.TransferMode = TransferMode;
     m_Uart.Index = (0x2BAD);
@@ -158,8 +158,8 @@ uint32_t UartDevice::getAppInterfaceHandle()
  */
 void AppTestCallbackFunction(UART_T uart, struct MCU_UART_Event_S event)
 {
-    BCDS_UARTtest::m_uart_cbf = (intptr_t) uart;
-    BCDS_UARTtest::m_event_cbf.bitfield = event;
+    KISO_UARTtest::m_uart_cbf = (intptr_t) uart;
+    KISO_UARTtest::m_event_cbf.bitfield = event;
     /*
      std::cout << "     --- Hello from AppTestCallbackFunction ---" << std::endl;
      std::cout << "     --- uart: 0x" << std::hex << std::setw(8) << std::setfill('0') << (uint32_t) uart << std::endl;
@@ -172,10 +172,10 @@ void AppTestCallbackFunction(UART_T uart, struct MCU_UART_Event_S event)
      std::cout << "     --- Dcd: " << std::dec << event.Dcd << std::endl;
      std::cout << "     --- Ri: " << std::dec << event.Ri << std::endl;
      */
-    BCDS_UARTtest::m_isCalled_cbf = true;
+    KISO_UARTtest::m_isCalled_cbf = true;
 }
 
-TEST_F(BCDS_UARTtest, dummyTest)
+TEST_F(KISO_UARTtest, dummyTest)
 {
     /** @testcase{ <FIXTURE_NAME>::<TEST_NAME>: }
      *
@@ -198,15 +198,15 @@ TEST_F(BCDS_UARTtest, dummyTest)
  * @brief   Test public MCU_UART_Initialize
  * @detail  Retcode_T MCU_UART_Initialize(UART_T uart, MCU_UART_Callback_T callback)
  */
-TEST_F(BCDS_UARTtest, test_MCU_UART_Initialize_ok)
+TEST_F(KISO_UARTtest, test_MCU_UART_Initialize_ok)
 {
     Retcode_T rc;
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_INTERRUPT);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
 }
-TEST_F(BCDS_UARTtest, test_MCU_UART_Initialize_nullUart)
+TEST_F(KISO_UARTtest, test_MCU_UART_Initialize_nullUart)
 {
     Retcode_T rc;
     UART_T uart01 = 0;
@@ -215,7 +215,7 @@ TEST_F(BCDS_UARTtest, test_MCU_UART_Initialize_nullUart)
 , rc);
 }
 
-TEST_F(BCDS_UARTtest, test_MCU_UART_Initialize_nullCallbackandUart)
+TEST_F(KISO_UARTtest, test_MCU_UART_Initialize_nullCallbackandUart)
 {
     Retcode_T rc;
     UART_T uart01 = 0;
@@ -224,20 +224,20 @@ TEST_F(BCDS_UARTtest, test_MCU_UART_Initialize_nullCallbackandUart)
 , rc);
 }
 
-TEST_F(BCDS_UARTtest, test_MCU_UART_Initialize_nullCallback)
+TEST_F(KISO_UARTtest, test_MCU_UART_Initialize_nullCallback)
 {
     Retcode_T rc;
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_INTERRUPT);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Initialize(uart01, NULL);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM)
 , rc);
 }
 
-TEST_F(BCDS_UARTtest, test_MCU_UART_Initialize_wrongTransferMode)
+TEST_F(KISO_UARTtest, test_MCU_UART_Initialize_wrongTransferMode)
 {
     Retcode_T rc;
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_BLOCKING);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_BLOCKING);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED)
@@ -249,10 +249,10 @@ TEST_F(BCDS_UARTtest, test_MCU_UART_Initialize_wrongTransferMode)
  * @detail  Retcode_T MCU_UART_Deinitialize(UART_T uart)
  * Dependent on Test public MCU_UART_Initialize
  */
-TEST_F(BCDS_UARTtest, test_MCU_UART_Deinitialize_ok)
+TEST_F(KISO_UARTtest, test_MCU_UART_Deinitialize_ok)
 {
     Retcode_T rc;
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_INTERRUPT);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
@@ -261,10 +261,10 @@ TEST_F(BCDS_UARTtest, test_MCU_UART_Deinitialize_ok)
 }
 
 #if 0
-TEST_F(BCDS_UARTtest, test_MCU_UART_Deinitialize_notInitialized)
+TEST_F(KISO_UARTtest, test_MCU_UART_Deinitialize_notInitialized)
 {
     Retcode_T rc;
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_INTERRUPT);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Deinitialize(uart01);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNINITIALIZED)
@@ -272,10 +272,10 @@ TEST_F(BCDS_UARTtest, test_MCU_UART_Deinitialize_notInitialized)
 }
 #endif
 
-TEST_F(BCDS_UARTtest, test_MCU_UART_Deinitialize_nullUart)
+TEST_F(KISO_UARTtest, test_MCU_UART_Deinitialize_nullUart)
 {
     Retcode_T rc;
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_INTERRUPT);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
@@ -290,12 +290,12 @@ TEST_F(BCDS_UARTtest, test_MCU_UART_Deinitialize_nullUart)
  * Dependent on Test public MCU_UART_Initialize and public MCU_UART_Deinitialize
  */
 
-TEST_F(BCDS_UARTtest, test_MCU_UART_Send_ok)
+TEST_F(KISO_UARTtest, test_MCU_UART_Send_ok)
 {
     const uint16_t size = 10;
     Retcode_T rc;
     uint8_t buffer[ size ];
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_INTERRUPT);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
@@ -305,23 +305,23 @@ TEST_F(BCDS_UARTtest, test_MCU_UART_Send_ok)
     EXPECT_EQ(RETCODE_OK, rc);
 }
 #if 0
-TEST_F(BCDS_UARTtest, test_MCU_UART_Send_notInitialized)
+TEST_F(KISO_UARTtest, test_MCU_UART_Send_notInitialized)
 {
     const uint16_t size = 10;
     Retcode_T rc;
     uint8_t buffer[ size ];
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_INTERRUPT);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Send(uart01, buffer, size);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM)
 , rc);
 }
 
-TEST_F(BCDS_UARTtest, test_MCU_UART_Send_nullBuffer)
+TEST_F(KISO_UARTtest, test_MCU_UART_Send_nullBuffer)
 {
     const uint16_t size = 10;
     Retcode_T rc;
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_INTERRUPT);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
@@ -331,12 +331,12 @@ TEST_F(BCDS_UARTtest, test_MCU_UART_Send_nullBuffer)
 }
 #endif
 
-TEST_F(BCDS_UARTtest, test_MCU_UART_Send_sendCancel)
+TEST_F(KISO_UARTtest, test_MCU_UART_Send_sendCancel)
 {
     const uint16_t size = 10;
     Retcode_T rc;
     uint8_t buffer[ size ];
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_INTERRUPT);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
@@ -346,12 +346,12 @@ TEST_F(BCDS_UARTtest, test_MCU_UART_Send_sendCancel)
     EXPECT_EQ(RETCODE_OK, rc);
 }
 
-TEST_F(BCDS_UARTtest, test_MCU_UART_Send_wrongTransferMode)
+TEST_F(KISO_UARTtest, test_MCU_UART_Send_wrongTransferMode)
 {
     const uint16_t size = 10;
     Retcode_T rc;
     uint8_t buffer[ size ];
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_BLOCKING);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_BLOCKING);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED)
@@ -366,12 +366,12 @@ TEST_F(BCDS_UARTtest, test_MCU_UART_Send_wrongTransferMode)
  * Dependent on Test public MCU_UART_Initialize and public MCU_UART_Deinitialize
  */
 
-TEST_F(BCDS_UARTtest, test_MCU_UART_Receive_ok)
+TEST_F(KISO_UARTtest, test_MCU_UART_Receive_ok)
 {
     const uint16_t size = 10;
     Retcode_T rc;
     uint8_t buffer[ size ];
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_INTERRUPT);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
@@ -382,13 +382,13 @@ TEST_F(BCDS_UARTtest, test_MCU_UART_Receive_ok)
 }
 
 
-TEST_F(BCDS_UARTtest, test_MCU_UART_Receive_receiveCancel)
+TEST_F(KISO_UARTtest, test_MCU_UART_Receive_receiveCancel)
 {
     const uint16_t size = 1;
     const uint16_t size2 = 0;
     Retcode_T rc;
     uint8_t buffer[ size ] = {0x01};
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_INTERRUPT);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
@@ -399,11 +399,11 @@ TEST_F(BCDS_UARTtest, test_MCU_UART_Receive_receiveCancel)
 }
 #if 0
 
-TEST_F(BCDS_UARTtest, test_MCU_UART_Receive_nullBuffer)
+TEST_F(KISO_UARTtest, test_MCU_UART_Receive_nullBuffer)
 {
     const uint16_t size = 10;
     Retcode_T rc;
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_INTERRUPT);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
@@ -412,24 +412,24 @@ TEST_F(BCDS_UARTtest, test_MCU_UART_Receive_nullBuffer)
 , rc);
 }
 
-TEST_F(BCDS_UARTtest, test_MCU_UART_Receive_notInitialized)
+TEST_F(KISO_UARTtest, test_MCU_UART_Receive_notInitialized)
 {
     const uint16_t size = 10;
     Retcode_T rc;
     uint8_t buffer[ size ];
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_INTERRUPT);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Receive(uart01, buffer, size);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM)
 , rc);
 }
 #endif
-TEST_F(BCDS_UARTtest, test_MCU_UART_Receive_wrongTransferMode)
+TEST_F(KISO_UARTtest, test_MCU_UART_Receive_wrongTransferMode)
 {
     const uint16_t size = 10;
     Retcode_T rc;
     uint8_t buffer[ size ];
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_BLOCKING);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_BLOCKING);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED)
@@ -444,12 +444,12 @@ TEST_F(BCDS_UARTtest, test_MCU_UART_Receive_wrongTransferMode)
  * Dependent on Test public MCU_UART_Initialize and public MCU_UART_Deinitialize
  */
 
-TEST_F(BCDS_UARTtest, test_MCU_UART_GetRxCount_ok)
+TEST_F(KISO_UARTtest, test_MCU_UART_GetRxCount_ok)
 {
     uint32_t temp = 10;
     uint32_t * count = &temp;
     Retcode_T rc;
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_INTERRUPT);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
@@ -457,10 +457,10 @@ TEST_F(BCDS_UARTtest, test_MCU_UART_GetRxCount_ok)
     EXPECT_EQ(RETCODE_OK, rc);
 }
 
-TEST_F(BCDS_UARTtest, test_MCU_UART_GetRxCount_nullCount)
+TEST_F(KISO_UARTtest, test_MCU_UART_GetRxCount_nullCount)
 {
     Retcode_T rc;
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_INTERRUPT);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
@@ -469,24 +469,24 @@ TEST_F(BCDS_UARTtest, test_MCU_UART_GetRxCount_nullCount)
 , rc);
 }
 
-TEST_F(BCDS_UARTtest, test_MCU_UART_GetRxCount_notInitialized)
+TEST_F(KISO_UARTtest, test_MCU_UART_GetRxCount_notInitialized)
 {
     uint32_t temp = 10;
     uint32_t * count = &temp;
     Retcode_T rc;
-    UartDevice Device01(BCDS_HAL_TRANSFER_MODE_INTERRUPT);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
     rc = MCU_UART_GetRxCount(uart01, count);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM)
 , rc);
 }
 
-TEST_F(BCDS_UARTtest, test_MCU_UART_GetRxCount_wrongTransferMode)
+TEST_F(KISO_UARTtest, test_MCU_UART_GetRxCount_wrongTransferMode)
 {
 uint32_t temp = 10;
 uint32_t * count = &temp;
 Retcode_T rc;
-UartDevice Device01(BCDS_HAL_TRANSFER_MODE_BLOCKING);
+UartDevice Device01(KISO_HAL_TRANSFER_MODE_BLOCKING);
 UART_T uart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
 rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
 EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
@@ -496,4 +496,4 @@ EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
 
 #else
 }
-#endif // BCDS_FEATURE_UART
+#endif // KISO_FEATURE_UART

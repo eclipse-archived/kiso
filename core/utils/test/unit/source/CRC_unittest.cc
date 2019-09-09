@@ -14,7 +14,7 @@
 /**
  *  @file
  *
- *  Module test specification for the BcdsCRC_unittest module.
+ *  Module test specification for the KisoCRC_unittest module.
  *
  * The unit test file template follows the Four-Phase test pattern. 
  *
@@ -26,14 +26,14 @@
 /* start of global scope symbol and fake definitions section */
 extern "C"
 {
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_UTILS_MODULE_ID_CRC
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_CRC
 
-#if BCDS_FEATURE_CRC
+#if KISO_FEATURE_CRC
 
 /* include faked interfaces */
-#include "BCDS_Retcode_th.hh"
+#include "Kiso_Retcode_th.hh"
 /* include module under test */
 #include "CRC.c"
 /* end of global scope symbol and fake definitions section */
@@ -1212,4 +1212,4 @@ TEST_F(CRCRoutines,TestCRC32EathStandard)
 /*****************************************************************************************/
 #else
 }
-#endif /* if BCDS_FEATURE_CRC */
+#endif /* if KISO_FEATURE_CRC */

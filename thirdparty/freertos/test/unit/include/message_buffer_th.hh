@@ -20,8 +20,8 @@
  * ****************************************************************************/
 
 /* header definition ******************************************************** */
-#ifndef CDDK_MESSAGE_BUFFER_TH_HH_
-#define CDDK_MESSAGE_BUFFER_TH_HH_
+#ifndef KISO_MESSAGE_BUFFER_TH_HH_
+#define KISO_MESSAGE_BUFFER_TH_HH_
 
 /* include system header files */
 #include <gtest.h>
@@ -50,6 +50,6 @@ FAKE_VALUE_FUNC(BaseType_t, xMessageBufferSendCompletedFromISR, MessageBufferHan
 FAKE_VALUE_FUNC(BaseType_t, xMessageBufferReceiveCompletedFromISR, MessageBufferHandle_t, BaseType_t *);
 
 
-#endif /* CDDK_MESSAGE_BUFFER_TH_HH_ */
+#endif /* KISO_MESSAGE_BUFFER_TH_HH_ */
 
 /** ************************************************************************* */

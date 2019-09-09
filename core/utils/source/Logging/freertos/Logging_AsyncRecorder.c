@@ -27,23 +27,23 @@
  */
 
 /* Include utils to have access to the defined module and error IDs */
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID  BCDS_UTILS_MODULE_ID_LOGGING_RECORD_ASYNCHRONOUS
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_LOGGING_RECORD_ASYNCHRONOUS
 
 /* Include the Logging header, which include the configuration that enable and define macros for this module */
-#include "BCDS_Logging.h"
+#include "Kiso_Logging.h"
 
 /* Enable/Disable macro for the feature */
-#if BCDS_FEATURE_LOGGING && BCDS_ASYNC_RECORDER
+#if KISO_FEATURE_LOGGING && KISO_ASYNC_RECORDER
 
 /* Include needed headers */
 #include <stdio.h>
 #include <stdarg.h>
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
-#include "BCDS_Assert.h"
-#include "BCDS_Queue.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
+#include "Kiso_Queue.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "portmacro.h"
@@ -153,8 +153,8 @@ static Retcode_T AsyncRecorder_Deinit(void *self)
 static Retcode_T AsyncRecorder_Write(void *self, LogLevel_T level, uint8_t package, uint8_t module, const char *file, uint32_t line, const char *fmt, va_list args)
 {
     char buffer[LOG_BUFFER_SIZE];
-    BCDS_UNUSED(module);
-    BCDS_UNUSED(self);
+    KISO_UNUSED(module);
+    KISO_UNUSED(self);
 
     /* Check NULL pointers to avoid overflows or wrong addressing */
     if ( (NULL == file) || (NULL == fmt))
@@ -200,4 +200,4 @@ static const LogRecorder_T LogRecordAsyncCompact =
 };
 const LogRecorder_T* Logging_AsyncRecorder = &LogRecordAsyncCompact;
 
-#endif /* if BCDS_FEATURE_LOGGING && BCDS_ASYNC_RECORDER */
+#endif /* if KISO_FEATURE_LOGGING && KISO_ASYNC_RECORDER */

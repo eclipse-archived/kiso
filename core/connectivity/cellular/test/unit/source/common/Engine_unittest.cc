@@ -18,9 +18,9 @@ FFF_DEFINITION_BLOCK_START
 
 extern "C"
 {
-#include "BCDS_CellularModules.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_ENGINE
+#include "Kiso_CellularModules.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_ENGINE
 
 #include "AtResponseParser_th.hh"
 #include "AtResponseQueue_th.hh"
@@ -28,19 +28,19 @@ extern "C"
 #include "AtUtils_th.hh"
 #include "AtUrc_th.hh"
 #include "Hardware_th.hh"
-#include "BCDS_MCU_UART_th.hh"
+#include "Kiso_MCU_UART_th.hh"
 
-#include "BCDS_Retcode_th.hh"
-#include "BCDS_Assert_th.hh"
-#include "BCDS_RingBuffer_th.hh"
-#include "BCDS_Logging_th.hh"
+#include "Kiso_Retcode_th.hh"
+#include "Kiso_Assert_th.hh"
+#include "Kiso_RingBuffer_th.hh"
+#include "Kiso_Logging_th.hh"
 
 #include "FreeRTOS_th.hh"
 #include "task_th.hh"
 #include "semphr_th.hh"
 #include "portmacro_th.hh"
 
-#undef BCDS_MODULE_ID
+#undef KISO_MODULE_ID
 #include "Engine.c"
 }
 
@@ -664,7 +664,7 @@ TEST_F(TS_Engine_HandleEvents, Success)
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_URC_NOT_PRESENT), rc);
     EXPECT_EQ(1U, AtResponseQueue_GetEventCount_fake.call_count);
     EXPECT_EQ(1U, Urc_HandleResponses_fake.call_count);
-#if BCDS_LOGGING
+#if KISO_LOGGING
     EXPECT_EQ((AtResponseQueue_GetEventCount_fake.return_val - 1) * 2, AtResponseQueue_GetEvent_fake.call_count);
 #else
     EXPECT_EQ(AtResponseQueue_GetEventCount_fake.return_val, AtResponseQueue_GetEvent_fake.call_count);

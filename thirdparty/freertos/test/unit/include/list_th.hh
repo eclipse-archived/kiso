@@ -12,8 +12,8 @@
 *
 ********************************************************************************/
 
-#ifndef BCDS_LIST_TH_HH_
-#define BCDS_LIST_TH_HH_
+#ifndef KISO_LIST_TH_HH_
+#define KISO_LIST_TH_HH_
 
 /* ban or wrap the real interface header */
 #define LIST_H
@@ -67,4 +67,4 @@ typedef struct xLIST
 listSECOND_LIST_INTEGRITY_CHECK_VALUE /*< Set to a known value if configUSE_LIST_DATA_INTEGRITY_CHECK_BYTES is set to 1. */
 } List_t;
 
-#endif /* BCDS_LIST_TH_HH_ */
+#endif /* KISO_LIST_TH_HH_ */

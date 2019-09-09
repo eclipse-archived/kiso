@@ -20,8 +20,8 @@
  * ****************************************************************************/
  
 /* header definition ******************************************************** */
-#ifndef BCDS_FREERTOS_TH_HH_
-#define BCDS_FREERTOS_TH_HH_
+#ifndef KISO_FREERTOS_TH_HH_
+#define KISO_FREERTOS_TH_HH_
 
 /* include system header files */
 #include "FreeRTOSConfig_th.hh"
@@ -34,6 +34,6 @@
 
 /* mock-ups for the provided interfaces */
 
-#endif /* BCDS_FREERTOS_TH_HH_ */
+#endif /* KISO_FREERTOS_TH_HH_ */
 
 /** ************************************************************************* */

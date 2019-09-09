@@ -37,9 +37,9 @@
 #ifndef AT_RESPONSE_PARSER_H_
 #define AT_RESPONSE_PARSER_H_
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
-#include "BCDS_Cellular.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
+#include "Kiso_Cellular.h"
 
 /**
  * @brief Should be greater than 1024 bytes to ensure that a full network packet read

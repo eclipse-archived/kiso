@@ -19,8 +19,8 @@
 #ifndef AT_UBLOX_H_
 #define AT_UBLOX_H_
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
 
 #define UBLOX_MAX_DNS_DOMAIN_NAME_LENGTH (UINT32_C(253))
 #define UBLOX_MAX_FILE_NAME_LENGTH (UINT32_C(248))

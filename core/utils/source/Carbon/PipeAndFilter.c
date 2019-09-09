@@ -13,13 +13,13 @@
 ********************************************************************************/
 
 
-#include "BCDS_Utils.h"
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID  CDDK_UTILS_MODULE_ID_PIPEANDFILTER
+#include "Kiso_Utils.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_PIPEANDFILTER
 
-#include "CDDK_PipeAndFilter.h"
+#include "Kiso_PipeAndFilter.h"
 
-#if CDDK_FEATURE_PIPEANDFILTER
+#if KISO_FEATURE_PIPEANDFILTER
 
 #include "FreeRTOS.h"
 #include "message_buffer.h"
@@ -107,7 +107,7 @@ void RunFilter(void * pvParameters)
 	while(RUN_FILTER_ALWAYS);
 }
 
-/*  The description of the function is available in CDDK_PipeAndFilter.h */
+/*  The description of the function is available in Kiso_PipeAndFilter.h */
 Retcode_T PipeAndFilter_CreatePipe(PipeAndFilter_Pipe_T * pipeHandle)
 {
 	Retcode_T retcode = RETCODE_OK;
@@ -127,7 +127,7 @@ Retcode_T PipeAndFilter_CreatePipe(PipeAndFilter_Pipe_T * pipeHandle)
 	return retcode;
 }
 
-/*  The description of the function is available in CDDK_PipeAndFilter.h */
+/*  The description of the function is available in Kiso_PipeAndFilter.h */
 Retcode_T PipeAndFilter_CreateFilter(PipeAndFilter_FilterFunction_T filterFunction, PipeAndFilter_Pipe_T * pipeInHandle, PipeAndFilter_Pipe_T * pipeOutHandle, PipeAndFilter_Filter_T * filterHandle)
 {
 	Retcode_T retcode = RETCODE_OK;
@@ -163,7 +163,7 @@ Retcode_T PipeAndFilter_CreateFilter(PipeAndFilter_FilterFunction_T filterFuncti
 	return retcode;
 }
 
-/*  The description of the function is available in CDDK_PipeAndFilter.h */
+/*  The description of the function is available in Kiso_PipeAndFilter.h */
 Retcode_T PipeAndFilter_FillPipe(PipeAndFilter_Pipe_T pipe, uint8_t * xTxBuffer, uint32_t xToSendBytes)
 {
 	Retcode_T retcode = RETCODE_OK;
@@ -186,7 +186,7 @@ Retcode_T PipeAndFilter_FillPipe(PipeAndFilter_Pipe_T pipe, uint8_t * xTxBuffer,
 	return retcode;
 }
 
-/*  The description of the function is available in CDDK_PipeAndFilter.h */
+/*  The description of the function is available in Kiso_PipeAndFilter.h */
 Retcode_T PipeAndFilter_FillPipeFromISR(PipeAndFilter_Pipe_T pipe, uint8_t * xTxBuffer, uint32_t xToSendBytes)
 {
 	Retcode_T retcode = RETCODE_OK;
@@ -209,5 +209,5 @@ Retcode_T PipeAndFilter_FillPipeFromISR(PipeAndFilter_Pipe_T pipe, uint8_t * xTx
 	return retcode;
 }
 
-#endif /* if CDDK_FEATURE_PIPEANDFILTER */
+#endif /* if KISO_FEATURE_PIPEANDFILTER */
 

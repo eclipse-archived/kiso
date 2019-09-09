@@ -18,8 +18,8 @@
 /* include faked interfaces */
 extern "C"
 {
-#include "BCDS_Retcode_th.hh"
-#include "BCDS_HAL_th.hh"
+#include "Kiso_Retcode_th.hh"
+#include "Kiso_HAL_th.hh"
 #include "em_device_th.hh"
 #include "em_dma_th.hh"
 #include "em_int_th.hh"
@@ -27,7 +27,7 @@ extern "C"
 
 //#include "em_msc_th.hh"
 
-#if BCDS_FEATURE_FLASH
+#if KISO_FEATURE_FLASH
 
 /* include module under test */
 #include "Flash.c"
@@ -38,7 +38,7 @@ extern "C"
 
 /* end of global scope symbol and fake definitions section */
 
-class BCDS_FLASHtest: public testing::Test
+class KISO_FLASHtest: public testing::Test
 {
 protected:
 
@@ -63,7 +63,7 @@ protected:
 };
 /*************************** Flash TESTS *****************************/
 
-TEST_F(BCDS_FLASHtest, dummyTest)
+TEST_F(KISO_FLASHtest, dummyTest)
 {
 
 }
@@ -73,7 +73,7 @@ TEST_F(BCDS_FLASHtest, dummyTest)
  * @detail  uint32_t MCU_Flash_GetPageSize(void)
  */
 
-TEST_F(BCDS_FLASHtest, MCU_Flash_GetPageSize)
+TEST_F(KISO_FLASHtest, MCU_Flash_GetPageSize)
 {
     uint32_t size;
     size = MCU_Flash_GetPageSize();
@@ -86,7 +86,7 @@ TEST_F(BCDS_FLASHtest, MCU_Flash_GetPageSize)
  * Dependent on Test public MCU_Flash_GetPageSize
  */
 
-TEST_F(BCDS_FLASHtest, MCU_Flash_ErasePage_ok)
+TEST_F(KISO_FLASHtest, MCU_Flash_ErasePage_ok)
 {
     uint32_t * pageAddress = (uint32_t*) 0x20000;
     MSC_ErasePage_fake.return_val = mscReturnOk;
@@ -103,7 +103,7 @@ TEST_F(BCDS_FLASHtest, MCU_Flash_ErasePage_ok)
     EXPECT_EQ(RETCODE_OK, rc);
 }
 
-TEST_F(BCDS_FLASHtest, MCU_Flash_EraseInvalid_addr)
+TEST_F(KISO_FLASHtest, MCU_Flash_EraseInvalid_addr)
 {
     uint32_t * pageAddress = (uint32_t*) 0x20000;
     MSC_ErasePage_fake.return_val = mscReturnInvalidAddr;
@@ -121,7 +121,7 @@ TEST_F(BCDS_FLASHtest, MCU_Flash_EraseInvalid_addr)
 }
 
 
-TEST_F(BCDS_FLASHtest, MCU_Flash_EraseInvalid_addrInput)
+TEST_F(KISO_FLASHtest, MCU_Flash_EraseInvalid_addrInput)
 {
     uint32_t * pageAddress = (uint32_t*) 0x20001;
     MSC_ErasePage_fake.return_val = mscReturnInvalidAddr;
@@ -139,7 +139,7 @@ TEST_F(BCDS_FLASHtest, MCU_Flash_EraseInvalid_addrInput)
 }
 
 
-TEST_F(BCDS_FLASHtest, MCU_Flash_EraseAddr_Locked)
+TEST_F(KISO_FLASHtest, MCU_Flash_EraseAddr_Locked)
 {
     uint32_t * pageAddress = (uint32_t*) 0x20000;
     MSC_ErasePage_fake.return_val = mscReturnLocked;
@@ -156,7 +156,7 @@ TEST_F(BCDS_FLASHtest, MCU_Flash_EraseAddr_Locked)
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_HAL_FLASH_ADDRESS_LOCKED), rc);
 }
 
-TEST_F(BCDS_FLASHtest, MCU_Flash_Erase_timeout)
+TEST_F(KISO_FLASHtest, MCU_Flash_Erase_timeout)
 {
     uint32_t * pageAddress = (uint32_t*) 0x20000;
     MSC_ErasePage_fake.return_val = mscReturnTimeOut;
@@ -178,7 +178,7 @@ TEST_F(BCDS_FLASHtest, MCU_Flash_Erase_timeout)
  * Dependent on Test public MCU_Flash_GetPageSize
  */
 
-TEST_F(BCDS_FLASHtest, MCU_Flash_Erase)
+TEST_F(KISO_FLASHtest, MCU_Flash_Erase)
 {
     uint32_t * pageAddress = (uint32_t*) 0x20000;
     uint32_t numPages = 2;
@@ -197,7 +197,7 @@ TEST_F(BCDS_FLASHtest, MCU_Flash_Erase)
  * Dependent on Test public MCU_Flash_GetPageSize
  */
 
-TEST_F(BCDS_FLASHtest, MCU_Flash_Write_ok)
+TEST_F(KISO_FLASHtest, MCU_Flash_Write_ok)
 {
     uint8_t tempAddr;
     uint8_t * targetAddress = &tempAddr;
@@ -211,7 +211,7 @@ TEST_F(BCDS_FLASHtest, MCU_Flash_Write_ok)
     EXPECT_EQ(RETCODE_OK, rc);
 }
 
-TEST_F(BCDS_FLASHtest, MCU_Flash_Write_fail)
+TEST_F(KISO_FLASHtest, MCU_Flash_Write_fail)
 {
     uint8_t tempAddr;
     uint8_t * targetAddress = &tempAddr;
@@ -232,7 +232,7 @@ TEST_F(BCDS_FLASHtest, MCU_Flash_Write_fail)
  * Dependent on Test public MCU_Flash_GetPageSize
  */
 
-TEST_F(BCDS_FLASHtest, MCU_Flash_Read_ok)
+TEST_F(KISO_FLASHtest, MCU_Flash_Read_ok)
 {
     uint8_t tempAddr;
     uint8_t * targetAddress = &tempAddr;
@@ -246,7 +246,7 @@ TEST_F(BCDS_FLASHtest, MCU_Flash_Read_ok)
     EXPECT_EQ(RETCODE_OK, rc);
 }
 
-TEST_F(BCDS_FLASHtest, MCU_Flash_Read_readFromNull)
+TEST_F(KISO_FLASHtest, MCU_Flash_Read_readFromNull)
 {
     uint8_t tempAddr2;
     uint8_t * sourceAddress = &tempAddr2;
@@ -257,7 +257,7 @@ TEST_F(BCDS_FLASHtest, MCU_Flash_Read_readFromNull)
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), rc);
 }
 
-TEST_F(BCDS_FLASHtest, MCU_Flash_Read_writeToNull)
+TEST_F(KISO_FLASHtest, MCU_Flash_Read_writeToNull)
 {
     uint8_t tempAddr2;
     uint8_t * targetAddress = &tempAddr2;
@@ -270,4 +270,4 @@ TEST_F(BCDS_FLASHtest, MCU_Flash_Read_writeToNull)
 
 #else
 }
-#endif // BCDS_FEATURE_FLASH
+#endif // KISO_FEATURE_FLASH

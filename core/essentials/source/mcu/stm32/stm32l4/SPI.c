@@ -19,14 +19,14 @@
  * Handles MCU STM32 SPI driver encapsulation
  */
 /*---------------------- INCLUDED HEADERS ---------------------------------------------------------------------------*/
-#include "BCDS_MCU_SPI.h"
+#include "Kiso_MCU_SPI.h"
 
-#if BCDS_FEATURE_SPI
-#include "BCDS_MCU_SPI_Handle.h"
+#if KISO_FEATURE_SPI
+#include "Kiso_MCU_SPI_Handle.h"
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef BCDS_MODULE_ID
-#define BCDS_MODULE_ID              BCDS_ESSENTIALS_MODULE_ID_SPI
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID              KISO_ESSENTIALS_MODULE_ID_SPI
 
 #define SPI_DEFAULT_TIMEOUT_MS      UINT32_C(1000)
 #define SPI_MIN_TIMEOUT_MS          UINT32_C(1)
@@ -98,7 +98,7 @@ Retcode_T MCU_SPI_Initialize(SPI_T spi, MCU_SPI_Callback_T callback)
     {
         switch (pSPI->TransferMode)
         {
-            case BCDS_HAL_TRANSFER_MODE_POLLING:
+            case KISO_HAL_TRANSFER_MODE_POLLING:
                 pSPI->IRQCallback = NULL;
                 pSPI->DmaTxCallback = NULL;
                 pSPI->DmaRxCallback = NULL;
@@ -111,7 +111,7 @@ Retcode_T MCU_SPI_Initialize(SPI_T spi, MCU_SPI_Callback_T callback)
                 pSPI->State = SPI_STATE_READY;
                 break;
 
-            case BCDS_HAL_TRANSFER_MODE_INTERRUPT:
+            case KISO_HAL_TRANSFER_MODE_INTERRUPT:
                 if (NULL != callback)
                 {
                     pSPI->IRQCallback = SPI_IRQHandler;
@@ -131,7 +131,7 @@ Retcode_T MCU_SPI_Initialize(SPI_T spi, MCU_SPI_Callback_T callback)
                 }
                 break;
 
-            case BCDS_HAL_TRANSFER_MODE_DMA:
+            case KISO_HAL_TRANSFER_MODE_DMA:
                 if (NULL != callback)
                 {
                     pSPI->IRQCallback = SPI_IRQHandler;
@@ -756,4 +756,4 @@ void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
     }
 }
 
-#endif //-- BCDS_FEATURE_SPI
+#endif //-- KISO_FEATURE_SPI

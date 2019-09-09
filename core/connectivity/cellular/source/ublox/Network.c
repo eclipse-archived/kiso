@@ -19,19 +19,19 @@
  * @brief Provides functionality for the modem interaction with the network
  */
 
-#include "BCDS_CellularModules.h"
-#define BCDS_MODULE_ID BCDS_CELLULAR_MODULE_ID_NETWORK
+#include "Kiso_CellularModules.h"
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_NETWORK
 
-#include "BCDS_CellularConfig.h"
+#include "Kiso_CellularConfig.h"
 #include "Engine.h"
 #include "At3Gpp27007.h"
 #include "AT_UBlox.h"
 #include "Power.h"
 
-#include "BCDS_Basics.h"
-#include "BCDS_Retcode.h"
+#include "Kiso_Basics.h"
+#include "Kiso_Retcode.h"
 
-#include "BCDS_Logging.h"
+#include "Kiso_Logging.h"
 
 #include <limits.h>
 
@@ -306,7 +306,7 @@ static Retcode_T TranslateToUbloxAcT(const Cellular_NetworkParameters_T* netPara
 
 static Retcode_T RegisterOnNetwork(void* param, uint32_t len)
 {
-    BCDS_UNUSED(len);
+    KISO_UNUSED(len);
     assert(NULL != param);
     assert(sizeof(Cellular_NetworkParameters_T) == len);
 
@@ -359,7 +359,7 @@ static Retcode_T RegisterOnNetwork(void* param, uint32_t len)
 
 static Retcode_T ConfigureDataContext(void* param, uint32_t len)
 {
-    BCDS_UNUSED(len);
+    KISO_UNUSED(len);
     assert(sizeof(struct CellularNetwork_CfgDataCtxParam_S) == len);
     assert(NULL != param);
 
@@ -386,7 +386,7 @@ static Retcode_T ConfigureDataContext(void* param, uint32_t len)
 
 static Retcode_T ActivateDataContext(void* param, uint32_t len)
 {
-    BCDS_UNUSED(len);
+    KISO_UNUSED(len);
     assert(NULL != param);
     assert(sizeof(struct CellularNetwork_ActDataCtxParam_S) == len);
 
@@ -445,7 +445,7 @@ static Retcode_T ActivateDataContext(void* param, uint32_t len)
 
 static Retcode_T DeactivateDataContext(void* param, uint32_t len)
 {
-    BCDS_UNUSED(len);
+    KISO_UNUSED(len);
     assert(NULL != param);
     assert(sizeof(uint8_t) == len);
 
@@ -473,7 +473,7 @@ static Retcode_T DeactivateDataContext(void* param, uint32_t len)
 
 static Retcode_T QueryIccid(void* param, uint32_t paramLen)
 {
-    BCDS_UNUSED(paramLen);
+    KISO_UNUSED(paramLen);
 
     assert(NULL != param);
     assert(sizeof(struct CellularNetwork_QueryIccidParam_S) == paramLen);
@@ -506,8 +506,8 @@ static Retcode_T QueryIccid(void* param, uint32_t paramLen)
 
 static Retcode_T DeregisterFromNetwork(void* param, uint32_t len)
 {
-    BCDS_UNUSED(param);
-    BCDS_UNUSED(len);
+    KISO_UNUSED(param);
+    KISO_UNUSED(len);
 
     LOG_DEBUG("Disabling network registration and deregistering.");
 
@@ -602,7 +602,7 @@ Retcode_T Cellular_QueryIccid(char* iccid, uint32_t* iccidLen)
 
 Retcode_T Cellular_QueryNetworkInfo(Cellular_NetworkInfo_T* networkInfo)
 {
-	BCDS_UNUSED(networkInfo);
+	KISO_UNUSED(networkInfo);
     Retcode_T retcode = RETCODE_OK;
 
     retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
@@ -617,7 +617,7 @@ Retcode_T Cellular_DisconnectFromNetwork(void)
 
 Retcode_T Cellular_SetAirPlaneMode(bool airPlanModeOn)
 {
-    BCDS_UNUSED(airPlanModeOn);
+    KISO_UNUSED(airPlanModeOn);
     /* Currently not supported, sorry! ... maybe your first PR? :) */
     /** @todo Implement 3GPP 27.007 commands for AT+CFUN=4 (disable rx/tx) and
      * AT+CFUN=1 (enable rx/tx). */

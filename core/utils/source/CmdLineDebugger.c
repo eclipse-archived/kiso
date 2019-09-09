@@ -25,25 +25,25 @@
  * @{
  */
 
-#include "BCDS_Utils.h"
-#ifdef BCDS_MODULE_ID
-#undef BCDS_MODULE_ID
+#include "Kiso_Utils.h"
+#ifdef KISO_MODULE_ID
+#undef KISO_MODULE_ID
 #endif
 
-#define BCDS_MODULE_ID  BCDS_UTILS_MODULE_ID_CMD_LINE_DEBUGGER
+#define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_CMD_LINE_DEBUGGER
 
-#include "BCDS_CmdLineDebugger.h"
+#include "Kiso_CmdLineDebugger.h"
 
-#if BCDS_FEATURE_CMDLINEDEBUGGER
+#if KISO_FEATURE_CMDLINEDEBUGGER
 
 /* Default Configuration options */
-#ifndef BCDS_COMMAND_LINE_CUSTOM_OPTIONS
-#define BCDS_COMMAND_LINE_CUSTOM_OPTIONS 0
+#ifndef KISO_COMMAND_LINE_CUSTOM_OPTIONS
+#define KISO_COMMAND_LINE_CUSTOM_OPTIONS 0
 #endif
 
-#if(0 == BCDS_COMMAND_LINE_CUSTOM_OPTIONS)
-#define BCDS_COMMAND_LINE_SEPARATOR_TOKENS  " " /**< Default Separator Token */
-#define BCDS_COMMAND_LINE_MAX_PARAMETERS      16
+#if(0 == KISO_COMMAND_LINE_CUSTOM_OPTIONS)
+#define KISO_COMMAND_LINE_SEPARATOR_TOKENS  " " /**< Default Separator Token */
+#define KISO_COMMAND_LINE_MAX_PARAMETERS      16
 #endif
 
 /**
@@ -88,13 +88,13 @@ static Retcode_T CmdLine_ExecuteCmd(struct CmdLineDbg_Element_S * command, const
 /**
  * Global Variable containing separator
  */
-static const char CmdLine_separator[] = BCDS_COMMAND_LINE_SEPARATOR_TOKENS;
+static const char CmdLine_separator[] = KISO_COMMAND_LINE_SEPARATOR_TOKENS;
 
 /* ************************************************************************** */
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-/*  The description of the function is available in BCDS_CmdLineDebugger.h */
+/*  The description of the function is available in Kiso_CmdLineDebugger.h */
 Retcode_T CmdLineDbg_RegisterCmd(struct CmdLineDbg_Element_S * list, struct CmdLineDbg_Element_S * cmd)
 {
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
@@ -123,7 +123,7 @@ Retcode_T CmdLineDbg_RegisterCmd(struct CmdLineDbg_Element_S * list, struct CmdL
     return rc;
 }
 
-/*  The description of the function is available in BCDS_CmdLineDebugger.h */
+/*  The description of the function is available in Kiso_CmdLineDebugger.h */
 Retcode_T CmdLineDbg_RegisterCmdArray(struct CmdLineDbg_Element_S * list, size_t nElements)
 {
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
@@ -154,12 +154,12 @@ Retcode_T CmdLineDbg_RegisterCmdArray(struct CmdLineDbg_Element_S * list, size_t
     return rc;
 }
 
-/*  The description of the function is available in BCDS_CmdLineDebugger.h */
+/*  The description of the function is available in Kiso_CmdLineDebugger.h */
 Retcode_T CmdLineDbg_Parse(struct CmdLineDbg_Element_S * list, char * input)
 {
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
 
-    char * argv[BCDS_COMMAND_LINE_MAX_PARAMETERS];
+    char * argv[KISO_COMMAND_LINE_MAX_PARAMETERS];
     size_t argc = 0;
 
     struct CmdLineDbg_Element_S * result = NULL;
@@ -261,5 +261,5 @@ static Retcode_T CmdLine_ExecuteCmd(struct CmdLineDbg_Element_S * command, const
     return rc;
 }
 
-#endif /* BCDS_FEATURE_CMDLINEDEBUGGER */
+#endif /* KISO_FEATURE_CMDLINEDEBUGGER */
 /** @}*/
