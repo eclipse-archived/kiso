@@ -31,10 +31,19 @@ set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
 
 ## Needs to be in project scope before board is loaded
 if(${ENABLE_TESTING})
-   enable_testing()
+   enable_language(CXX)
+   set(CMAKE_BUILD_TYPE Debug)
+   # Add more warnings in unit tests
+   add_compile_options(-Wall -Wextra) #TODO: -Wpedantic -Werror
 
-   # Add some warnings and debug symbols in unit tests
-   add_compile_options(-O0 -g -Wall -Wextra) #-Wpedantic -fprofile-arcs -ftest-coverage --coverage
+   enable_testing()
+   include(cmake/CodeCoverage.cmake)
+
+   APPEND_COVERAGE_COMPILER_FLAGS() # From CodeCoverage module
+   # Do not include coverage information for system headers and thirdparty libs
+   set(COVERAGE_LCOV_EXCLUDES "'/usr/include/*'" "'/usr/local/include/*'" "'${CMAKE_SOURCE_DIR}/thirdparty/*'")
+
+   add_custom_target(coverage)
 endif()
 
 ## Check for valid board and include the configuration

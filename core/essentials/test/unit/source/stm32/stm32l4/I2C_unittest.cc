@@ -272,6 +272,13 @@ TEST_F(KISO_I2CTest, MCU_I2C_Initialize_Fail_DoppleInit)
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
 }
 
+TEST_F(KISO_I2CTest, MCU_I2C_Deinitialize_Null)
+{
+    Retcode_T rc;
+    rc = MCU_I2C_Deinitialize(NULL);
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(rc));
+}
+
 TEST_F(KISO_I2CTest, MCU_I2C_Deinitialize_Success)
 {
     Retcode_T rc;

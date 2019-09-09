@@ -46,8 +46,18 @@ add_custom_target(essentials_tests)
 ## Add it to a custom target for all essentials tests
 ## Register as test for ctest
 foreach(unittest_file ${TEST_CODE})
-   get_filename_component(unit_name ${unittest_file} NAME_WE) # Name without extension or directory
+   get_filename_component(unit_name ${unittest_file} NAME_WE)
    add_executable(essentials_${unit_name} ${unittest_file})
    add_dependencies(essentials_tests essentials_${unit_name})
    add_test(${unit_name} essentials_${unit_name})
 endforeach(unittest_file ${TEST_CODE})
+
+# From CodeCoverage module
+SETUP_TARGET_FOR_COVERAGE_LCOV(
+   NAME essentials_cov
+   EXECUTABLE ${CMAKE_CTEST_COMMAND}
+   DEPENDENCIES essentials_tests
+   LCOV_ARGS --rc lcov_branch_coverage=1
+   GENHTML_ARGS --branch-coverage
+)
+add_dependencies(coverage essentials_cov)

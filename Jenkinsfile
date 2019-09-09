@@ -30,7 +30,7 @@ pipeline
                 script // Run build
                 {
                     echo "Build the application"
-                    sh 'cmake . -Bbuilddir-debug -G"Ninja" -DKISO_BOARD_NAME=CommonGateway'
+                    sh 'cmake . -Bbuilddir-debug -G"Ninja"'
                     sh 'cmake --build builddir-debug'
                 }
             }
@@ -58,9 +58,10 @@ pipeline
                         script // Run unittests
                         {
                             echo "run unit-tests"
-                            sh 'cmake . -Bbuilddir-unittests -G"Ninja" -DKISO_BOARD_NAME=CommonGateway -DENABLE_TESTING=1'
-                            sh 'cmake --build builddir-unittests' // For later:  && ninja coverage-html'
-                            sh 'cd builddir-unittests && ctest -T test --no-compress-output'
+                            sh 'cmake . -Bbuilddir-unittests -G"Ninja" -DENABLE_TESTING=1'
+                            sh 'cmake --build builddir-unittests'
+                            sh 'cd builddir-unittests && ctest -T test --no-compress-output' // Produce test results xml
+                            sh 'cmake --build builddir-unittests --target coverage -- -j1' // Produce coverage output (single-threaded because of ninja)
                         }
                     }
                 }
@@ -105,7 +106,7 @@ pipeline
         success
         {
             archiveArtifacts (
-                artifacts: 'builddir-debug/docs/doxygen/**',
+                artifacts: 'builddir-debug/docs/doxygen/**, builddir-unittests/*_cov/**',
                 fingerprint: true
             )
         }
