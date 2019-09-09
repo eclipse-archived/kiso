@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Feature
-Bundle-SymbolicName: org.eclipse.kiso.cgw.thirdparty.feature
-Bundle-Version: 0.1.0.qualifier
-Automatic-Module-Name: org.eclipse.kiso.cgw.thirdparty.feature

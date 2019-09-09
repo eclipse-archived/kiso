@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Workbench
-Bundle-SymbolicName: org.eclipse.kiso.cgw.workbench;singleton:=true
-Bundle-Version: 0.1.0.qualifier
-Bundle-Vendor: Robert Bosch GmbH
-Automatic-Module-Name: org.eclipse.kiso.cgw.workbench
-Require-Bundle: org.eclipse.equinox.app
