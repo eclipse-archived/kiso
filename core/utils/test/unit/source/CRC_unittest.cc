@@ -67,11 +67,10 @@ TEST_F(CRCRoutines,testNullpointerAsMsg)
      * CRC_8 API is called to check the Null condition
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t * msg = NULL;
     uint8_t crc8_calculated = UINT8_C(0xaa);
     Retcode_T retVal;
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated, msg, (uint16_t)(sizeof(msg)/sizeof(msg[0])));
+    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated, NULL, 5);
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), retVal);
 }
@@ -269,11 +268,10 @@ TEST_F(CRCRoutines, testCRC16NullAsMsg)
        * CRC_16 API is called to check the Null condition for the message buffer
        */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t *msg = NULL;
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
     Retcode_T retVal;
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg,(uint16_t)(sizeof(msg)/sizeof(msg[0])));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, NULL, 5);
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), retVal);
 }
@@ -1200,7 +1198,11 @@ TEST_F(CRCRoutines,TestCRC32EathStandard)
     uint32_t crc32_Utils;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
+    // TODO: Are we sure about this?
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Woverflow"
     CRC32_EATH_STD_INIT(crc32_Utils);
+#pragma GCC diagnostic pop
     retVal = CRC_32_Reverse(0xEDB88320, &crc32_Utils, dataBuffer, sizeof(dataBuffer) / sizeof(dataBuffer[0]));
     CRC32_INVERSE(crc32_Utils);
 

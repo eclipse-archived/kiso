@@ -65,11 +65,11 @@ typedef enum
 static AtResponseParserState_T state;
 #else
 static AtResponseParserState_T state = {
-        .EventResponseCodeCallback = (void *) NULL,
-        .EventCmdEchoCallback = (void *) NULL,
-        .EventCmdCallback = (void *) NULL,
-        .EventCmdArgCallback = (void *) NULL,
-        .EventMiscCallback = (void*) NULL,
+        .EventResponseCodeCallback = NULL,
+        .EventCmdEchoCallback = NULL,
+        .EventCmdCallback = NULL,
+        .EventCmdArgCallback = NULL,
+        .EventMiscCallback = NULL,
         .StateCallback = AtrpStateRoot
 };
 #endif /* GTEST */

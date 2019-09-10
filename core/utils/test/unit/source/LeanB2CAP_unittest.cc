@@ -84,7 +84,6 @@ void LeanB2CAPCallbackDummy(LeanB2CAP_Event_T Event, void * Info)
 }
 
 /* create test fixture initializing all variables automatically */
-LeanB2CAP_HandlePtr_T Handle;   /**< Test LeanB2CAP handle */
 
 class LeanB2CAP: public testing::Test
 {
@@ -106,11 +105,18 @@ protected:
     virtual void TearDown()
     {
     }
+
+    void InitializeHandle()
+    {
+
+    }
+
+    LeanB2CAP_HandlePtr_T m_Handle;   /**< Test LeanB2CAP handle */
 };
 
 /**
  *  Function to test Lean B2CAP initialization
- *  
+ *
  */
 TEST_F(LeanB2CAP, LeanB2CAPInitPassTest)
 {
@@ -126,14 +132,14 @@ TEST_F(LeanB2CAP, LeanB2CAPInitPassTest)
     ValidOutputDataStorageBufferInfo.FrameDataPointer = OutputDataBuffer;
     ValidOutputDataStorageBufferInfo.FrameDataSize = 200;
 
-    Return_status = LeanB2CAP_Initialize(&Handle, &ValidOutputDataStorageBufferInfo, &LeanB2CAPCallback_Ttest);
+    Return_status = LeanB2CAP_Initialize(&m_Handle, &ValidOutputDataStorageBufferInfo, &LeanB2CAPCallback_Ttest);
 
     /* Validate implementation internal details*/
     EXPECT_EQ(&LeanB2CAPCallback_Ttest, LeanB2CAPHandle[0].Callback);
     EXPECT_EQ(true, LeanB2CAPHandle[0].HandleOccupance);
     EXPECT_EQ(RETCODE_OK, Return_status);
 
-    Return_status = LeanB2CAP_Deinitialize(&Handle);
+    Return_status = LeanB2CAP_Deinitialize(&m_Handle);
     EXPECT_EQ(RETCODE_OK, Return_status);
 }
 
@@ -145,7 +151,6 @@ TEST_F(LeanB2CAP, LeanB2CAPInitFailTest)
      * LeanB2CAP handles with data.
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    LeanB2CAP_HandlePtr_T Handle;
     Retcode_T Return_status;
     uint8_t OutputDataBuffer[200];
     LeanB2CAP_FrameData_T ValidOutputDataStorageBufferInfo;
@@ -153,7 +158,7 @@ TEST_F(LeanB2CAP, LeanB2CAPInitFailTest)
     ValidOutputDataStorageBufferInfo.FrameDataPointer = OutputDataBuffer;
     ValidOutputDataStorageBufferInfo.FrameDataSize = 200;
 
-    Return_status = LeanB2CAP_Initialize(&Handle, &ValidOutputDataStorageBufferInfo, NULL);
+    Return_status = LeanB2CAP_Initialize(&m_Handle, &ValidOutputDataStorageBufferInfo, NULL);
 
     /* Validate implementation internal details*/
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), Return_status);
@@ -167,7 +172,6 @@ TEST_F(LeanB2CAP, LeanB2CAPInitToFailTest)
      * LeanB2CAP handles with data.
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    LeanB2CAP_HandlePtr_T Handle;
     Retcode_T Return_status;
     uint8_t OutputDataBuffer[200];
     LeanB2CAP_FrameData_T ValidOutputDataStorageBufferInfo;
@@ -180,7 +184,7 @@ TEST_F(LeanB2CAP, LeanB2CAPInitToFailTest)
     /* Validate implementation internal details*/
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), Return_status);
 
-    Return_status = LeanB2CAP_Initialize(&Handle, NULL, &LeanB2CAPCallback_Ttest);
+    Return_status = LeanB2CAP_Initialize(&m_Handle, NULL, &LeanB2CAPCallback_Ttest);
 
     /* Validate implementation internal details*/
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), Return_status);
@@ -210,17 +214,17 @@ TEST_F(LeanB2CAP, LeanB2CAPInitFail1Test)
     ValidOutputDataStorageBufferInfo.FrameDataPointer = OutputDataBuffer;
     ValidOutputDataStorageBufferInfo.FrameDataSize = 200;
 
-    LeanB2CAP_Initialize(&Handle, &ValidOutputDataStorageBufferInfo, &LeanB2CAPCallback_Ttest);
+    LeanB2CAP_Initialize(&m_Handle, &ValidOutputDataStorageBufferInfo, &LeanB2CAPCallback_Ttest);
     LeanB2CAP_Initialize(&Handle1, &ValidOutputDataStorageBufferInfo, &LeanB2CAPCallback_Ttest);
     LeanB2CAP_Initialize(&Handle2, &ValidOutputDataStorageBufferInfo, &LeanB2CAPCallback_Ttest);
     LeanB2CAP_Initialize(&Handle3, &ValidOutputDataStorageBufferInfo, &LeanB2CAPCallback_Ttest);
-    Return_status = LeanB2CAP_Initialize(&Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallback_Ttest);
+    Return_status = LeanB2CAP_Initialize(&m_Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallback_Ttest);
 
     /* Validate implementation internal details*/
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES), Return_status);
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_Deinitialize(&Handle);
+    Return_status = LeanB2CAP_Deinitialize(&m_Handle);
     EXPECT_EQ(RETCODE_OK, Return_status);
 
     /* call relevant production code Interface and verify implementation */
@@ -285,20 +289,20 @@ TEST_F(LeanB2CAP, LeanB2CAP_ResetRxDataProcessorPassTest)
 
     ValidOutputDataStorageBufferInfo.FrameDataPointer = OutputDataBuffer;
     ValidOutputDataStorageBufferInfo.FrameDataSize = 200;
-    
+
     /* Validating implementation with API initialization */
-    Return_status = LeanB2CAP_Initialize(&Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallback_Ttest);
+    Return_status = LeanB2CAP_Initialize(&m_Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallback_Ttest);
     EXPECT_EQ(RETCODE_OK, Return_status);
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_ResetRxDataProcessor(&Handle);
+    Return_status = LeanB2CAP_ResetRxDataProcessor(&m_Handle);
     EXPECT_EQ(RETCODE_OK, Return_status);
 
     EXPECT_EQ(0UL, LeanB2CAPHandle[0].CRC2OfRxFrameInProgress);
-    EXPECT_NE((LeanB2CAP_HandlePtr_T *)NULL, &Handle);
+    EXPECT_NE((LeanB2CAP_HandlePtr_T *)NULL, &m_Handle);
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_Deinitialize(&Handle);
+    Return_status = LeanB2CAP_Deinitialize(&m_Handle);
     EXPECT_EQ(RETCODE_OK, Return_status);
 }
 
@@ -319,7 +323,7 @@ TEST_F(LeanB2CAP, LeanB2CAP_ResetRxDataProcHandleNullTest)
     ValidOutputDataStorageBufferInfo.FrameDataSize = 200;
 
     /* Validating implementation with API initialization */
-    Return_status = LeanB2CAP_Initialize(&Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallback_Ttest);
+    Return_status = LeanB2CAP_Initialize(&m_Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallback_Ttest);
     EXPECT_EQ(RETCODE_OK, Return_status);
 
     /* call relevant production code Interface and verify implementation */
@@ -327,7 +331,7 @@ TEST_F(LeanB2CAP, LeanB2CAP_ResetRxDataProcHandleNullTest)
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), Return_status);
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_Deinitialize(&Handle);
+    Return_status = LeanB2CAP_Deinitialize(&m_Handle);
     EXPECT_EQ(RETCODE_OK, Return_status);
 }
 
@@ -349,7 +353,7 @@ TEST_F(LeanB2CAP, LeanB2CAP_ResetRxDataProcGarbageHandleTest)
     ValidOutputDataStorageBufferInfo.FrameDataSize = 200;
 
     /* Validating implementation with API initialization */
-    Return_status = LeanB2CAP_Initialize(&Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallback_Ttest);
+    Return_status = LeanB2CAP_Initialize(&m_Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallback_Ttest);
     EXPECT_EQ(RETCODE_OK, Return_status);
 
     /* call relevant production code Interface and verify implementation */
@@ -357,7 +361,7 @@ TEST_F(LeanB2CAP, LeanB2CAP_ResetRxDataProcGarbageHandleTest)
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), Return_status);
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_Deinitialize(&Handle);
+    Return_status = LeanB2CAP_Deinitialize(&m_Handle);
     EXPECT_EQ(RETCODE_OK, Return_status);
 }
 
@@ -512,11 +516,11 @@ TEST_F(LeanB2CAP, LeanB2CAP_RxDataProcPassTest)
     ValidOutputDataStorageBufferInfo.FrameDataSize = 200;
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_Initialize(&Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallback_Ttest);
+    Return_status = LeanB2CAP_Initialize(&m_Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallback_Ttest);
     EXPECT_EQ(RETCODE_OK, Return_status);
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE_OK, Return_status);
 }
 
@@ -541,11 +545,11 @@ TEST_F(LeanB2CAP, LeanB2CAP_RxDataProcZeroLengthFail)
     ValidOutputDataStorageBufferInfo.FrameDataSize = 200;
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_Initialize(&Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallback_Ttest);
+    Return_status = LeanB2CAP_Initialize(&m_Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallback_Ttest);
     EXPECT_EQ(RETCODE_OK, Return_status);
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), Return_status);
 }
 
@@ -571,16 +575,16 @@ TEST_F(LeanB2CAP, LeanB2CAP_RxDataProcMultiFrameTest)
     ValidOutputDataStorageBufferInfo.FrameDataSize = 200;
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_Initialize(&Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallbackDummy);
+    Return_status = LeanB2CAP_Initialize(&m_Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallbackDummy);
     EXPECT_EQ(RETCODE_OK, Return_status);
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE_OK, Return_status);
     EXPECT_EQ(2UL, CallBackCallCountIndex);
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_Deinitialize(&Handle);
+    Return_status = LeanB2CAP_Deinitialize(&m_Handle);
     EXPECT_EQ(RETCODE_OK, Return_status);
 }
 
@@ -605,25 +609,25 @@ TEST_F(LeanB2CAP, LeanB2CAP_RxDataProcPatchMultiFrameTest)
     ValidOutputDataStorageBufferInfo.FrameDataSize = 200;
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_Initialize(&Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallbackDummy);
+    Return_status = LeanB2CAP_Initialize(&m_Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallbackDummy);
     EXPECT_EQ(RETCODE_OK, Return_status);
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE_OK, Return_status);
 
     /* call relevant production code Interface and verify implementation */
     uint8_t TestBuff1[10] = {LEAN_B2CAP_CMD_WRITE,0xB4,0x01,0x02};
     PayLoad.FrameDataPointer = TestBuff1;
     PayLoad.FrameDataSize = 4;
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE_OK, Return_status);
 
     /* call relevant production code Interface and verify implementation */
     uint8_t TestBuff2[10] = {0x03,0x04,0x05,0xAE,0x55,6,0};
     PayLoad.FrameDataPointer = TestBuff2;
     PayLoad.FrameDataSize = 7;
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE_OK, Return_status);
     EXPECT_EQ(1UL, CallBackCallCountIndex);
 
@@ -631,7 +635,7 @@ TEST_F(LeanB2CAP, LeanB2CAP_RxDataProcPatchMultiFrameTest)
     uint8_t TestBuff3[10] = {LEAN_B2CAP_CMD_WRITE,0xC4,0x01,0x02,0x03,0xAC};
     PayLoad.FrameDataPointer = TestBuff3;
     PayLoad.FrameDataSize = 6;
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE_OK, Return_status);
     EXPECT_EQ(2UL, CallBackCallCountIndex);
 
@@ -639,11 +643,11 @@ TEST_F(LeanB2CAP, LeanB2CAP_RxDataProcPatchMultiFrameTest)
     uint8_t TestBuff4[10] = {0x55,4,0,LEAN_B2CAP_CMD_WRITE,0xD4,0x01,0x68};
     PayLoad.FrameDataPointer = TestBuff4;
     PayLoad.FrameDataSize = 6;
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE_OK, Return_status);
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_Deinitialize(&Handle);
+    Return_status = LeanB2CAP_Deinitialize(&m_Handle);
     EXPECT_EQ(RETCODE_OK, Return_status);
 }
 
@@ -670,13 +674,13 @@ TEST_F(LeanB2CAP, LeanB2CAP_RxDataProcContSendTest)
     ValidOutputDataStorageBufferInfo.FrameDataSize = 2000;
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_Initialize(&Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallbackDummy);
+    Return_status = LeanB2CAP_Initialize(&m_Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallbackDummy);
     EXPECT_EQ(RETCODE_OK, Return_status);
 
     for (SendCount = 0UL;SendCount < 10000UL;SendCount++)
     {
         /* call relevant production code Interface and verify implementation */
-        Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+        Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
         EXPECT_EQ(RETCODE_OK, Return_status);
     }
 
@@ -685,7 +689,7 @@ TEST_F(LeanB2CAP, LeanB2CAP_RxDataProcContSendTest)
     EXPECT_EQ(10000UL, CallBackPassCountIndex);
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_Deinitialize(&Handle);
+    Return_status = LeanB2CAP_Deinitialize(&m_Handle);
     EXPECT_EQ(RETCODE_OK, Return_status);
 }
 
@@ -699,7 +703,8 @@ TEST_F(LeanB2CAP, LeanB2CAP_RxDataProcFailTest)
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T Return_status;
-    uint8_t TestBuff[10] = {0x55,0x01,0x00,0x00,0x05,0x03,0x05},TestBuff1[10] = {0x22,0x05,0x00,0x57,0x05,0x03,0x05};
+    uint8_t TestBuff[10] = {0x55,0x01,0x00,0x00,0x05,0x03,0x05};
+    uint8_t TestBuff1[10] = {0x22,0x05,0x00,0x57,0x05,0x03,0x05};
     LeanB2CAP_FrameData_T PayLoad;
     PayLoad.FrameDataPointer = TestBuff;
     PayLoad.FrameDataSize = 8;
@@ -711,7 +716,7 @@ TEST_F(LeanB2CAP, LeanB2CAP_RxDataProcFailTest)
     ValidOutputDataStorageBufferInfo.FrameDataSize = 200;
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_Initialize(&Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallbackDummy);
+    Return_status = LeanB2CAP_Initialize(&m_Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallbackDummy);
     EXPECT_EQ(RETCODE_OK, Return_status);
 
     /* call relevant production code Interface and verify implementation */
@@ -719,11 +724,11 @@ TEST_F(LeanB2CAP, LeanB2CAP_RxDataProcFailTest)
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), Return_status);
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_Deinitialize(&Handle);
+    Return_status = LeanB2CAP_Deinitialize(&m_Handle);
     EXPECT_EQ(RETCODE_OK, Return_status);
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_Initialize(&Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallbackDummy);
+    Return_status = LeanB2CAP_Initialize(&m_Handle, &ValidOutputDataStorageBufferInfo,&LeanB2CAPCallbackDummy);
     EXPECT_EQ(RETCODE_OK, Return_status);
 
     /* call relevant production code Interface and verify implementation */
@@ -735,7 +740,7 @@ TEST_F(LeanB2CAP, LeanB2CAP_RxDataProcFailTest)
     RcIndex = 0;
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE_LEANB2CAP_SD_ERROR, Retcode_GetCode(RcFile[0]));
     EXPECT_EQ(RETCODE_SEVERITY_WARNING, Retcode_GetSeverity(RcFile[0]));
 
@@ -744,7 +749,7 @@ TEST_F(LeanB2CAP, LeanB2CAP_RxDataProcFailTest)
     RcIndex = 0;
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE_LEANB2CAP_LENGTH_ERROR, Retcode_GetCode(RcFile[0]));
     EXPECT_EQ(RETCODE_SEVERITY_WARNING, Retcode_GetSeverity(RcFile[0]));
 
@@ -754,7 +759,7 @@ TEST_F(LeanB2CAP, LeanB2CAP_RxDataProcFailTest)
     RcIndex = 0;
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_LEANB2CAP_CMD_TYPE_ERROR), RcFile[0]);
 
     uint8_t TestBuff6[10] = {0x55,0x04,0x00,0xFF,0x05,0x03,0x05};
@@ -763,25 +768,25 @@ TEST_F(LeanB2CAP, LeanB2CAP_RxDataProcFailTest)
     RcIndex = 0;
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_LEANB2CAP_CMD_TYPE_ERROR), RcFile[0]);
 
     PayLoad.FrameDataPointer = TestBuff2;
     PayLoad.FrameDataSize = 7;
-    Handle->FrameProcState = LEAN_B2CAP_FRMPRC_ERROR;
+    m_Handle->FrameProcState = LEAN_B2CAP_FRMPRC_ERROR;
     RcIndex = 0;
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_LEANB2CAP_CMD_TYPE_ERROR), RcFile[0]);
 
     PayLoad.FrameDataPointer = TestBuff2;
     PayLoad.FrameDataSize = 7;
-    Handle->FrameProcState = (LeanB2CAP_FrameProcStates_T )UINT8_C(13);
+    m_Handle->FrameProcState = (LeanB2CAP_FrameProcStates_T )UINT8_C(13);
     RcIndex = 0;
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_LEANB2CAP_FRAME_ERROR), RcFile[0]);
 
     uint8_t TestBuff3[10] = {0x55,6,0,LEAN_B2CAP_CMD_WRITE,0xC0,0x01,0x02,0x03,0xAC};
@@ -790,7 +795,7 @@ TEST_F(LeanB2CAP, LeanB2CAP_RxDataProcFailTest)
     RcIndex = 0;
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE_LEANB2CAP_CRC_ERROR, Retcode_GetCode(RcFile[0]));
     EXPECT_EQ(RETCODE_SEVERITY_WARNING, Retcode_GetSeverity(RcFile[0]));
 
@@ -800,28 +805,28 @@ TEST_F(LeanB2CAP, LeanB2CAP_RxDataProcFailTest)
     RcIndex = 0;
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE_LEANB2CAP_CRC_ERROR, Retcode_GetCode(RcFile[0]));
     EXPECT_EQ(RETCODE_SEVERITY_WARNING, Retcode_GetSeverity(RcFile[0]));
 
-    Handle->Callback = NULL;
+    m_Handle->Callback = NULL;
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_LEANB2CAP_INVALID_CALLBACK), Return_status);
 
     uint8_t TestBuff5[10] = {0x55,6,0,LEAN_B2CAP_CMD_WRITE,0xC4,0x01,0x02,0x03,0xAC};
     PayLoad.FrameDataPointer = TestBuff5;
     PayLoad.FrameDataSize = 9;
     LeanB2CAPHandle[1].Callback = NULL;
-    Handle->FrameProcState = LEAN_B2CAP_FRMPRC_SD;
+    m_Handle->FrameProcState = LEAN_B2CAP_FRMPRC_SD;
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, &PayLoad);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, &PayLoad);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_LEANB2CAP_INVALID_CALLBACK), Return_status);
 
     /* call relevant production code Interface and verify implementation */
-    Return_status = LeanB2CAP_RxDataProcessor(&Handle, NULL);
+    Return_status = LeanB2CAP_RxDataProcessor(&m_Handle, NULL);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), Return_status);
 }
 

@@ -28,9 +28,9 @@
 /* Mock-ups for the provided interfaces */
 #if KISO_FEATURE_RNG
 
-FAKE_VALUE_FUNC(Retcode_T, MCU_RNG_Initialize, RNG_T);
-FAKE_VALUE_FUNC(Retcode_T, MCU_RNG_Deinitialize, RNG_T);
-FAKE_VALUE_FUNC(Retcode_T, MCU_RNG_Generate, RNG_T, uint8_t*, uint32_t);
+FAKE_VALUE_FUNC(Retcode_T, MCU_RNG_Initialize, RNG_T)
+FAKE_VALUE_FUNC(Retcode_T, MCU_RNG_Deinitialize, RNG_T)
+FAKE_VALUE_FUNC(Retcode_T, MCU_RNG_Generate, RNG_T, uint8_t*, uint32_t)
 
 #endif /* if KISO_FEATURE_RNG */
 

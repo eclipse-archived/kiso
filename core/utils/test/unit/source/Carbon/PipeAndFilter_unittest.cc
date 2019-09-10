@@ -44,7 +44,7 @@ extern "C"
 #define FILTER_STACK_SIZE 500
 #define FILTER_PRIORITY 1
 
-FAKE_VALUE_FUNC(Retcode_T, functionA, uint8_t *, uint32_t, uint8_t *, uint32_t *);
+FAKE_VALUE_FUNC(Retcode_T, functionA, uint8_t *, uint32_t, uint8_t *, uint32_t *)
 
 /** Used to fake the task handle */
 TaskHandle_t taskHandleOfFakeFunction;

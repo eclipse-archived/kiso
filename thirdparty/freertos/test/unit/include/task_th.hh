@@ -108,121 +108,121 @@ typedef enum
 #define taskSCHEDULER_RUNNING       ((BaseType_t) 2)
 
 /* Fakes for portmacro defines */
-FAKE_VOID_FUNC(taskYIELD);
+FAKE_VOID_FUNC(taskYIELD)
 
-FAKE_VOID_FUNC(taskENTER_CRITICAL);
-FAKE_VOID_FUNC(taskENTER_CRITICAL_FROM_ISR);
-FAKE_VOID_FUNC(taskEXIT_CRITICAL);
-FAKE_VOID_FUNC(taskEXIT_CRITICAL_FROM_ISR);
+FAKE_VOID_FUNC(taskENTER_CRITICAL)
+FAKE_VOID_FUNC(taskENTER_CRITICAL_FROM_ISR)
+FAKE_VOID_FUNC(taskEXIT_CRITICAL)
+FAKE_VOID_FUNC(taskEXIT_CRITICAL_FROM_ISR)
 
-FAKE_VOID_FUNC(taskDISABLE_INTERRUPTS);
-FAKE_VOID_FUNC(taskENABLE_INTERRUPTS);
+FAKE_VOID_FUNC(taskDISABLE_INTERRUPTS)
+FAKE_VOID_FUNC(taskENABLE_INTERRUPTS)
 
-FAKE_VALUE_FUNC(BaseType_t, xTaskNotify, TaskHandle_t, uint32_t, eNotifyAction);
-FAKE_VALUE_FUNC(BaseType_t, xTaskNotifyAndQuery, TaskHandle_t, uint32_t, eNotifyAction, uint32_t*);
+FAKE_VALUE_FUNC(BaseType_t, xTaskNotify, TaskHandle_t, uint32_t, eNotifyAction)
+FAKE_VALUE_FUNC(BaseType_t, xTaskNotifyAndQuery, TaskHandle_t, uint32_t, eNotifyAction, uint32_t*)
 
-FAKE_VALUE_FUNC(BaseType_t, xTaskNotifyFromISR, TaskHandle_t, uint32_t, eNotifyAction, BaseType_t*);
-FAKE_VALUE_FUNC(BaseType_t, xTaskNotifyAndQueryFromISR, TaskHandle_t, uint32_t, eNotifyAction, uint32_t*, BaseType_t*);
-FAKE_VALUE_FUNC(BaseType_t, xTaskNotifyGive, TaskHandle_t);
+FAKE_VALUE_FUNC(BaseType_t, xTaskNotifyFromISR, TaskHandle_t, uint32_t, eNotifyAction, BaseType_t*)
+FAKE_VALUE_FUNC(BaseType_t, xTaskNotifyAndQueryFromISR, TaskHandle_t, uint32_t, eNotifyAction, uint32_t*, BaseType_t*)
+FAKE_VALUE_FUNC(BaseType_t, xTaskNotifyGive, TaskHandle_t)
 
 /* Fakes for functions */
-FAKE_VOID_FUNC(vTaskAllocateMPURegions, TaskHandle_t, MemoryRegion_t*);
+FAKE_VOID_FUNC(vTaskAllocateMPURegions, TaskHandle_t, MemoryRegion_t*)
 
-FAKE_VOID_FUNC(vTaskDelete, TaskHandle_t);
+FAKE_VOID_FUNC(vTaskDelete, TaskHandle_t)
 
-FAKE_VOID_FUNC(vTaskDelay, TickType_t);
-FAKE_VOID_FUNC(vTaskDelayUntil, TickType_t*, TickType_t);
+FAKE_VOID_FUNC(vTaskDelay, TickType_t)
+FAKE_VOID_FUNC(vTaskDelayUntil, TickType_t*, TickType_t)
 
-FAKE_VALUE_FUNC(UBaseType_t, uxTaskPriorityGet, TaskHandle_t);
-FAKE_VALUE_FUNC(UBaseType_t, uxTaskPriorityGetFromISR, TaskHandle_t);
+FAKE_VALUE_FUNC(UBaseType_t, uxTaskPriorityGet, TaskHandle_t)
+FAKE_VALUE_FUNC(UBaseType_t, uxTaskPriorityGetFromISR, TaskHandle_t)
 
-FAKE_VALUE_FUNC(eTaskState, eTaskGetState, TaskHandle_t);
+FAKE_VALUE_FUNC(eTaskState, eTaskGetState, TaskHandle_t)
 
-FAKE_VOID_FUNC(vTaskPrioritySet, TaskHandle_t, UBaseType_t);
+FAKE_VOID_FUNC(vTaskPrioritySet, TaskHandle_t, UBaseType_t)
 
-FAKE_VOID_FUNC(vTaskSuspend, TaskHandle_t);
-FAKE_VOID_FUNC(vTaskResume, TaskHandle_t);
-FAKE_VALUE_FUNC(BaseType_t, xTaskResumeFromISR, TaskHandle_t);
+FAKE_VOID_FUNC(vTaskSuspend, TaskHandle_t)
+FAKE_VOID_FUNC(vTaskResume, TaskHandle_t)
+FAKE_VALUE_FUNC(BaseType_t, xTaskResumeFromISR, TaskHandle_t)
 
-FAKE_VOID_FUNC(vTaskStartScheduler);
-FAKE_VOID_FUNC(vTaskEndScheduler);
+FAKE_VOID_FUNC(vTaskStartScheduler)
+FAKE_VOID_FUNC(vTaskEndScheduler)
 
-FAKE_VOID_FUNC(VTaskSuspendAll);
-FAKE_VALUE_FUNC(BaseType_t, xTaskResumeAll);
+FAKE_VOID_FUNC(VTaskSuspendAll)
+FAKE_VALUE_FUNC(BaseType_t, xTaskResumeAll)
 
-FAKE_VALUE_FUNC(TickType_t, xTaskGetTickCount);
-FAKE_VALUE_FUNC(TickType_t, xTaskGetTickCountFromISR);
+FAKE_VALUE_FUNC(TickType_t, xTaskGetTickCount)
+FAKE_VALUE_FUNC(TickType_t, xTaskGetTickCountFromISR)
 
-FAKE_VALUE_FUNC(UBaseType_t, uxTaskGetNumberOfTasks);
+FAKE_VALUE_FUNC(UBaseType_t, uxTaskGetNumberOfTasks)
 
-FAKE_VALUE_FUNC(char*, pcTaskGetTaskName, TaskHandle_t);
+FAKE_VALUE_FUNC(char*, pcTaskGetTaskName, TaskHandle_t)
 
-FAKE_VALUE_FUNC(UBaseType_t, uxTaskGetStackHighWaterMark, TaskHandle_t);
+FAKE_VALUE_FUNC(UBaseType_t, uxTaskGetStackHighWaterMark, TaskHandle_t)
 
-FAKE_VOID_FUNC(vTaskSetApplicationTaskTag, TaskHandle_t, TaskHookFunction_t);
-FAKE_VALUE_FUNC(TaskHookFunction_t, xTaskGetApplicationTaskTag, TaskHandle_t);
+FAKE_VOID_FUNC(vTaskSetApplicationTaskTag, TaskHandle_t, TaskHookFunction_t)
+FAKE_VALUE_FUNC(TaskHookFunction_t, xTaskGetApplicationTaskTag, TaskHandle_t)
 
-FAKE_VOID_FUNC(vTaskSetThreadLocalStoragePointer, TaskHandle_t, BaseType_t, void*);
-FAKE_VOID_FUNC(pvTaskGetThreadLocalStoragePointer, TaskHandle_t, BaseType_t);
+FAKE_VOID_FUNC(vTaskSetThreadLocalStoragePointer, TaskHandle_t, BaseType_t, void*)
+FAKE_VOID_FUNC(pvTaskGetThreadLocalStoragePointer, TaskHandle_t, BaseType_t)
 
-FAKE_VALUE_FUNC(BaseType_t, xTaskCallApplicationTaskHook, TaskHandle_t, void*);
+FAKE_VALUE_FUNC(BaseType_t, xTaskCallApplicationTaskHook, TaskHandle_t, void*)
 
-FAKE_VALUE_FUNC(TaskHandle_t, xTaskGetIdleTaskHandle);
+FAKE_VALUE_FUNC(TaskHandle_t, xTaskGetIdleTaskHandle)
 
-FAKE_VALUE_FUNC(UBaseType_t, uxTaskGetSystemState, TaskStatus_t*, UBaseType_t, uint32_t*);
+FAKE_VALUE_FUNC(UBaseType_t, uxTaskGetSystemState, TaskStatus_t*, UBaseType_t, uint32_t*)
 
-FAKE_VOID_FUNC(vTaskList, char*);
-FAKE_VOID_FUNC(vTaskGetRunTimeStats, char*);
+FAKE_VOID_FUNC(vTaskList, char*)
+FAKE_VOID_FUNC(vTaskGetRunTimeStats, char*)
 
-FAKE_VALUE_FUNC(BaseType_t, xTaskGenericNotify, TaskHandle_t, uint32_t, eNotifyAction, uint32_t*);
-FAKE_VALUE_FUNC(BaseType_t, xTaskGenericNotifyFromISR, TaskHandle_t, uint32_t, eNotifyAction, uint32_t*, BaseType_t*);
-FAKE_VALUE_FUNC(BaseType_t, xTaskNotifyWait, uint32_t, uint32_t, uint32_t*, TickType_t);
-FAKE_VOID_FUNC(vTaskNotifyGiveFromISR, TaskHandle_t, BaseType_t*);
-FAKE_VALUE_FUNC(uint32_t, ulTaskNotifyTake, BaseType_t, TickType_t);
+FAKE_VALUE_FUNC(BaseType_t, xTaskGenericNotify, TaskHandle_t, uint32_t, eNotifyAction, uint32_t*)
+FAKE_VALUE_FUNC(BaseType_t, xTaskGenericNotifyFromISR, TaskHandle_t, uint32_t, eNotifyAction, uint32_t*, BaseType_t*)
+FAKE_VALUE_FUNC(BaseType_t, xTaskNotifyWait, uint32_t, uint32_t, uint32_t*, TickType_t)
+FAKE_VOID_FUNC(vTaskNotifyGiveFromISR, TaskHandle_t, BaseType_t*)
+FAKE_VALUE_FUNC(uint32_t, ulTaskNotifyTake, BaseType_t, TickType_t)
 
-FAKE_VALUE_FUNC(BaseType_t, xTaskIncrementTick);
+FAKE_VALUE_FUNC(BaseType_t, xTaskIncrementTick)
 
-FAKE_VOID_FUNC(vTaskPlaceOnEventList, List_t*, TickType_t);
-FAKE_VOID_FUNC(vTaskPlaceOnUnorderedEventList, List_t*, TickType_t, TickType_t);
-FAKE_VOID_FUNC(vTaskPlaceOnEventListRestricted, List_t*, TickType_t, BaseType_t);
-FAKE_VALUE_FUNC(BaseType_t, xTaskRemoveFromEventList, List_t*);
-FAKE_VALUE_FUNC(BaseType_t, xTaskRemoveFromUnorderedEventList, ListItem_t*, TickType_t);
+FAKE_VOID_FUNC(vTaskPlaceOnEventList, List_t*, TickType_t)
+FAKE_VOID_FUNC(vTaskPlaceOnUnorderedEventList, List_t*, TickType_t, TickType_t)
+FAKE_VOID_FUNC(vTaskPlaceOnEventListRestricted, List_t*, TickType_t, BaseType_t)
+FAKE_VALUE_FUNC(BaseType_t, xTaskRemoveFromEventList, List_t*)
+FAKE_VALUE_FUNC(BaseType_t, xTaskRemoveFromUnorderedEventList, ListItem_t*, TickType_t)
 
-FAKE_VOID_FUNC(vTaskSwitchContext);
+FAKE_VOID_FUNC(vTaskSwitchContext)
 
-FAKE_VALUE_FUNC(TickType_t, uxTaskResetEventItemValue);
+FAKE_VALUE_FUNC(TickType_t, uxTaskResetEventItemValue)
 
-FAKE_VALUE_FUNC(TaskHandle_t, xTaskGetCurrentTaskHandle);
+FAKE_VALUE_FUNC(TaskHandle_t, xTaskGetCurrentTaskHandle)
 
-FAKE_VOID_FUNC(vTaskSetTimeOutState, TimeOut_t*);
-FAKE_VALUE_FUNC(BaseType_t, xTaskCheckForTimeOut, TimeOut_t*, TickType_t*);
+FAKE_VOID_FUNC(vTaskSetTimeOutState, TimeOut_t*)
+FAKE_VALUE_FUNC(BaseType_t, xTaskCheckForTimeOut, TimeOut_t*, TickType_t*)
 
-FAKE_VOID_FUNC(vTaskMissedYield);
+FAKE_VOID_FUNC(vTaskMissedYield)
 
-FAKE_VALUE_FUNC(BaseType_t, xTaskGetSchedulerState);
+FAKE_VALUE_FUNC(BaseType_t, xTaskGetSchedulerState)
 
-FAKE_VOID_FUNC(vTaskPriorityInherit, TaskHandle_t);
-FAKE_VALUE_FUNC(BaseType_t, xTaskPriorityDisinherit, TaskHandle_t);
+FAKE_VOID_FUNC(vTaskPriorityInherit, TaskHandle_t)
+FAKE_VALUE_FUNC(BaseType_t, xTaskPriorityDisinherit, TaskHandle_t)
 
 #if (configSUPPORT_STATIC_ALLOCATION == 1)
-FAKE_VALUE_FUNC(TaskHandle_t, xTaskCreateStatic, TaskFunction_t, const char *, uint32_t, void *, UBaseType_t, StackType_t *, StaticTask_t *);
-FAKE_VALUE_FUNC(BaseType_t, xTaskCreateRestrictedStatic, const TaskParameters_t *, TaskHandle_t *);
+FAKE_VALUE_FUNC(TaskHandle_t, xTaskCreateStatic, TaskFunction_t, const char *, uint32_t, void *, UBaseType_t, StackType_t *, StaticTask_t *)
+FAKE_VALUE_FUNC(BaseType_t, xTaskCreateRestrictedStatic, const TaskParameters_t *, TaskHandle_t *)
 
 #endif /* configSUPPORT_STATIC_ALLOCATION */
 
 #if (configSUPPORT_DYNAMIC_ALLOCATION == 1)
-FAKE_VALUE_FUNC(BaseType_t, xTaskCreate, TaskHookFunction_t, const char *, unsigned short, void *, UBaseType_t, TaskHandle_t*);
-FAKE_VALUE_FUNC(BaseType_t, xTaskCreateRestricted, TaskParameters_t*, TaskHandle_t*);
+FAKE_VALUE_FUNC(BaseType_t, xTaskCreate, TaskHookFunction_t, const char *, unsigned short, void *, UBaseType_t, TaskHandle_t*)
+FAKE_VALUE_FUNC(BaseType_t, xTaskCreateRestricted, TaskParameters_t*, TaskHandle_t*)
 #endif /* configSUPPORT_DYNAMIC_ALLOCATION */
 
-FAKE_VALUE_FUNC(UBaseType_t, uxTaskGetTaskNumber, TaskHandle_t);
-FAKE_VOID_FUNC(vTaskSetTaskNumber, TaskHandle_t, UBaseType_t);
+FAKE_VALUE_FUNC(UBaseType_t, uxTaskGetTaskNumber, TaskHandle_t)
+FAKE_VOID_FUNC(vTaskSetTaskNumber, TaskHandle_t, UBaseType_t)
 
-FAKE_VOID_FUNC(vTaskStepTick, TickType_t);
+FAKE_VOID_FUNC(vTaskStepTick, TickType_t)
 
-FAKE_VALUE_FUNC(eSleepModeStatus, eTaskConfirmSleepModeStatus);
+FAKE_VALUE_FUNC(eSleepModeStatus, eTaskConfirmSleepModeStatus)
 
-FAKE_VALUE_FUNC(void*, pvTaskIncrementMutexHeldCount);
+FAKE_VALUE_FUNC(void*, pvTaskIncrementMutexHeldCount)
 
 #endif /* KISO_TASK_TH_HH_ */
 

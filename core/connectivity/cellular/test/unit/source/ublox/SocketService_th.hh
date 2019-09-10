@@ -19,8 +19,8 @@
 
 #include "gtest.h"
 
-FAKE_VOID_FUNC(SocketService_NotifySocketDataReceived, uint32_t, uint32_t);
-FAKE_VOID_FUNC(SocketService_NotifySocketAccepted, uint32_t, const AT_UBlox_Address_T*, uint16_t, uint32_t, const AT_UBlox_Address_T*, uint16_t);
-FAKE_VOID_FUNC(SocketService_NotifySocketClosed, uint32_t);
+FAKE_VOID_FUNC(SocketService_NotifySocketDataReceived, uint32_t, uint32_t)
+FAKE_VOID_FUNC(SocketService_NotifySocketAccepted, uint32_t, const AT_UBlox_Address_T*, uint16_t, uint32_t, const AT_UBlox_Address_T*, uint16_t)
+FAKE_VOID_FUNC(SocketService_NotifySocketClosed, uint32_t)
 
 #endif /* SOCKETSERVICE_TH_HH_ */

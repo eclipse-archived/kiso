@@ -27,17 +27,17 @@
 
 #if KISO_FEATURE_BSP_BMM150
 
-FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_Connect, int32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_Enable, int32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_DrdyEnable, int32_t, BSP_BMM150_InterruptCallback_T);
-FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_IntEnable, int32_t, BSP_BMM150_InterruptCallback_T);
-FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_DrdyDisable, int32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_IntDisable, int32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_Disable, int32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_Disconnect, int32_t);
-FAKE_VALUE_FUNC(HAL_DeviceHandle_T, BSP_BMM150_GetHandle);
-FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_SetCSLow, int32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_SetCSHigh, int32_t);
+FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_Connect, int32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_Enable, int32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_DrdyEnable, int32_t, BSP_BMM150_InterruptCallback_T)
+FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_IntEnable, int32_t, BSP_BMM150_InterruptCallback_T)
+FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_DrdyDisable, int32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_IntDisable, int32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_Disable, int32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_Disconnect, int32_t)
+FAKE_VALUE_FUNC(HAL_DeviceHandle_T, BSP_BMM150_GetHandle)
+FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_SetCSLow, int32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_SetCSHigh, int32_t)
 
 
 #endif /* KISO_FEATURE_BSP_BMM150 */

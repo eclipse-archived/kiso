@@ -27,17 +27,17 @@
 
 #if KISO_FEATURE_BSP_ACCEL_ADXL362
 
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_Connect);
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_Enable);
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_Int1Enable, BSP_Accel_InterruptCallback_T);
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_Int2Enable, BSP_Accel_InterruptCallback_T);
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_Int1Disable);
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_Int2Disable);
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_Disable);
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_Disconnect);
-FAKE_VALUE_FUNC(HWHandle_T, BSP_Accel_ADXL362_GetSPIHandle);
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_SetCSLow);
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_SetCSHigh);
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_Connect)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_Enable)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_Int1Enable, BSP_Accel_InterruptCallback_T)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_Int2Enable, BSP_Accel_InterruptCallback_T)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_Int1Disable)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_Int2Disable)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_Disable)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_Disconnect)
+FAKE_VALUE_FUNC(HWHandle_T, BSP_Accel_ADXL362_GetSPIHandle)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_SetCSLow)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_SetCSHigh)
 
 
 #endif /* KISO_FEATURE_BSP_ACCEL_ADXL362 */

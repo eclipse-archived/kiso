@@ -43,7 +43,7 @@
  */
 enum HAL_Signal_Basic_Instance_E
 {
-    HAL_SIGNAL_NOTINIT = 0xFFFFFFFF, /**< No-OS signal not initialized */
+    HAL_SIGNAL_NOTINIT = INT32_MAX, /**< No-OS signal not initialized */
     HAL_SIGNAL_EMPTY = 0, /**< No-OS signal empty */
     HAL_SIGNAL_FULL = 1, /**< No-OS signal fulfilled */
 };

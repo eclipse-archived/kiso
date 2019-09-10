@@ -24,8 +24,8 @@
 /* Faked variables needs to be initialized by the test fixture */
 
 /* Mock-ups for the provided interfaces */
-FAKE_VALUE_FUNC(Retcode_T, HAL_Delay_SetMsHook, HAL_Delay_MsHook_T);
-FAKE_VALUE_FUNC(Retcode_T, HAL_Delay_WaitUs, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, HAL_Delay_WaitMs, uint32_t);
+FAKE_VALUE_FUNC(Retcode_T, HAL_Delay_SetMsHook, HAL_Delay_MsHook_T)
+FAKE_VALUE_FUNC(Retcode_T, HAL_Delay_WaitUs, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, HAL_Delay_WaitMs, uint32_t)
 
 #endif /* KISO_HAL_DELAY_TH_HH_ */

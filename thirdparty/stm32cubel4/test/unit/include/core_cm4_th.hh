@@ -107,25 +107,25 @@
 #include "gtest.h"
 
 /* Faked variables needs to be initialized by the test fixture */
-FAKE_VOID_FUNC(NVIC_SetPriorityGrouping, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, NVIC_GetPriorityGrouping);
-FAKE_VOID_FUNC(NVIC_EnableIRQ, IRQn_Type);
-FAKE_VOID_FUNC(NVIC_DisableIRQ, IRQn_Type);
-FAKE_VALUE_FUNC(uint32_t, NVIC_GetPendingIRQ, IRQn_Type);
-FAKE_VOID_FUNC(NVIC_SetPendingIRQ, IRQn_Type);
-FAKE_VOID_FUNC(NVIC_ClearPendingIRQ, IRQn_Type);
-FAKE_VALUE_FUNC(uint32_t, NVIC_GetActive, IRQn_Type);
-FAKE_VOID_FUNC(NVIC_SetPriority, IRQn_Type, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, NVIC_GetPriority, IRQn_Type);
-FAKE_VALUE_FUNC(uint32_t, NVIC_EncodePriority, uint32_t, uint32_t, uint32_t);
-FAKE_VOID_FUNC(NVIC_DecodePriority, uint32_t, uint32_t, uint32_t*, uint32_t*);
-FAKE_VOID_FUNC(NVIC_SystemReset);
+FAKE_VOID_FUNC(NVIC_SetPriorityGrouping, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, NVIC_GetPriorityGrouping)
+FAKE_VOID_FUNC(NVIC_EnableIRQ, IRQn_Type)
+FAKE_VOID_FUNC(NVIC_DisableIRQ, IRQn_Type)
+FAKE_VALUE_FUNC(uint32_t, NVIC_GetPendingIRQ, IRQn_Type)
+FAKE_VOID_FUNC(NVIC_SetPendingIRQ, IRQn_Type)
+FAKE_VOID_FUNC(NVIC_ClearPendingIRQ, IRQn_Type)
+FAKE_VALUE_FUNC(uint32_t, NVIC_GetActive, IRQn_Type)
+FAKE_VOID_FUNC(NVIC_SetPriority, IRQn_Type, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, NVIC_GetPriority, IRQn_Type)
+FAKE_VALUE_FUNC(uint32_t, NVIC_EncodePriority, uint32_t, uint32_t, uint32_t)
+FAKE_VOID_FUNC(NVIC_DecodePriority, uint32_t, uint32_t, uint32_t*, uint32_t*)
+FAKE_VOID_FUNC(NVIC_SystemReset)
 #if (__Vendor_SysTickConfig == 0U)
-FAKE_VALUE_FUNC(uint32_t, SysTick_Config, uint32_t);
+FAKE_VALUE_FUNC(uint32_t, SysTick_Config, uint32_t)
 #endif /* (__Vendor_SysTickConfig == 0U) */
-FAKE_VALUE_FUNC(uint32_t, ITM_SendChar, uint32_t);
-FAKE_VALUE_FUNC(int32_t, ITM_ReceiveChar);
-FAKE_VALUE_FUNC(int32_t, ITM_CheckChar);
+FAKE_VALUE_FUNC(uint32_t, ITM_SendChar, uint32_t)
+FAKE_VALUE_FUNC(int32_t, ITM_ReceiveChar)
+FAKE_VALUE_FUNC(int32_t, ITM_CheckChar)
 
 /* Mock-ups for the provided interfaces */
 

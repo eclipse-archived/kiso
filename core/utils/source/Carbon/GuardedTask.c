@@ -46,7 +46,7 @@ static void GuardedTaskExecute(GuardedTask_T* context)
     if ((NULL != context) && (NULL != context->runFunction) && (NULL != context->signal))
     {
         /* Wait for the "run"-semaphore to be signaled. */
-        int8_t osRetcode = xSemaphoreTake(context->signal, portMAX_DELAY);
+        BaseType_t osRetcode = xSemaphoreTake(context->signal, portMAX_DELAY);
         if (pdPASS != osRetcode)
         {
             Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, (uint32_t) RETCODE_GUARDEDTASK_SEMAPHORE_ERROR));
@@ -120,7 +120,7 @@ Retcode_T GuardedTask_Initialize(GuardedTask_T* handle, GuardedTask_Function_T t
 
         if (RETCODE_OK == retcode)
         {
-            if (pdPASS != xTaskCreate(GuardedTaskRunFunction, taskName, taskStackSize, handle, taskPriority, &handle->task))
+            if (pdPASS != xTaskCreate(GuardedTaskRunFunction, taskName, (uint16_t)taskStackSize, handle, taskPriority, &handle->task))
             {
                 retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t) RETCODE_OUT_OF_RESOURCES);
             }

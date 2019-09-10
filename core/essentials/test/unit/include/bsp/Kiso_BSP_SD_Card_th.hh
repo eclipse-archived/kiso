@@ -33,13 +33,13 @@
 
 #if KISO_FEATURE_BSP_SD_CARD
 
-FAKE_VALUE_FUNC(Retcode_T, BSP_SDCard_Connect);
-FAKE_VALUE_FUNC(Retcode_T, BSP_SDCard_Enable, BSP_SDCardAutoDetectCallback_T);
-FAKE_VALUE_FUNC(Retcode_T, BSP_SDCard_Disable);
-FAKE_VALUE_FUNC(Retcode_T, BSP_SDCard_Disconnect);
-FAKE_VALUE_FUNC(HWHandle_T, BSP_SDCard_GetSPIHandle);
-FAKE_VALUE_FUNC(Retcode_T, BSP_SDCard_SetCSHigh);
-FAKE_VALUE_FUNC(Retcode_T, BSP_SDCard_SetCSLow);
+FAKE_VALUE_FUNC(Retcode_T, BSP_SDCard_Connect)
+FAKE_VALUE_FUNC(Retcode_T, BSP_SDCard_Enable, BSP_SDCardAutoDetectCallback_T)
+FAKE_VALUE_FUNC(Retcode_T, BSP_SDCard_Disable)
+FAKE_VALUE_FUNC(Retcode_T, BSP_SDCard_Disconnect)
+FAKE_VALUE_FUNC(HWHandle_T, BSP_SDCard_GetSPIHandle)
+FAKE_VALUE_FUNC(Retcode_T, BSP_SDCard_SetCSHigh)
+FAKE_VALUE_FUNC(Retcode_T, BSP_SDCard_SetCSLow)
 
 #endif /* KISO_BSP_SD_Card_H */
 

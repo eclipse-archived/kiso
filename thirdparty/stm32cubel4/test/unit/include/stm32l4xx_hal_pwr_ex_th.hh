@@ -32,30 +32,30 @@
 
 /* Mock-ups for the provided interfaces */
 
-FAKE_VALUE_FUNC(uint32_t, HAL_PWREx_GetVoltageRange);
+FAKE_VALUE_FUNC(uint32_t, HAL_PWREx_GetVoltageRange)
 
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_PWREx_ControlVoltageScaling, uint32_t);
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_PWREx_ControlVoltageScaling, uint32_t)
 
-FAKE_VOID_FUNC(HAL_PWREx_EnableFlashPowerDown);
+FAKE_VOID_FUNC(HAL_PWREx_EnableFlashPowerDown)
 
-FAKE_VOID_FUNC(HAL_PWREx_DisableFlashPowerDown);
+FAKE_VOID_FUNC(HAL_PWREx_DisableFlashPowerDown)
 
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_PWREx_EnableBkUpReg);
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_PWREx_EnableBkUpReg)
 
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_PWREx_DisableBkUpReg);
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_PWREx_DisableBkUpReg)
 
-FAKE_VOID_FUNC(HAL_PWREx_EnableMainRegulatorLowVoltage);
+FAKE_VOID_FUNC(HAL_PWREx_EnableMainRegulatorLowVoltage)
 
-FAKE_VOID_FUNC(HAL_PWREx_DisableMainRegulatorLowVoltage);
+FAKE_VOID_FUNC(HAL_PWREx_DisableMainRegulatorLowVoltage)
 
-FAKE_VOID_FUNC(HAL_PWREx_EnableLowRegulatorLowVoltage);
+FAKE_VOID_FUNC(HAL_PWREx_EnableLowRegulatorLowVoltage)
 
-FAKE_VOID_FUNC(HAL_PWREx_DisableLowRegulatorLowVoltage);
+FAKE_VOID_FUNC(HAL_PWREx_DisableLowRegulatorLowVoltage)
 
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_PWREx_EnableOverDrive);
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_PWREx_EnableOverDrive)
 
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_PWREx_DisableOverDrive);
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_PWREx_DisableOverDrive)
 
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_PWREx_EnterUnderDriveSTOPMode, uint32_t, uint8_t);
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_PWREx_EnterUnderDriveSTOPMode, uint32_t, uint8_t)
 
 # endif /* STM32L4XX_HAL_PWR_EX_TH_HH */

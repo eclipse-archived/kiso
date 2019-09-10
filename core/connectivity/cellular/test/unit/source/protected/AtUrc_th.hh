@@ -19,6 +19,6 @@
 
 #include "AtUrc.h"
 
-FAKE_VALUE_FUNC(Retcode_T, Urc_HandleResponses);
+FAKE_VALUE_FUNC(Retcode_T, Urc_HandleResponses)
 
 #endif /* ATURC_TH_HH_ */

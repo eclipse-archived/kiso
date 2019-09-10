@@ -341,7 +341,7 @@ Retcode_T UARTTransceiver_ReadData(UARTTransceiver_T *transceiver, uint8_t *buff
 }
 
 /*  The description of the function is available in Kiso_UARTTransceiver.h */
-Retcode_T UARTTransceiver_WriteData(UARTTransceiver_T *transceiver, uint8_t* data, uint32_t length, uint32_t timeout_ms)
+Retcode_T UARTTransceiver_WriteData(UARTTransceiver_T *transceiver, const uint8_t* data, uint32_t length, uint32_t timeout_ms)
 {
     Retcode_T retcode = RETCODE_OK;
     if (NULL == transceiver || NULL == data || 0 == length)

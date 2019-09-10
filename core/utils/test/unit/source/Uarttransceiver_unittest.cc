@@ -71,8 +71,8 @@ static UARTTransceiver_T transceiver;
 #define UART_Receive_fake    MCU_UART_Receive_fake
 #define UART_TRANSCEIVER_UART_TYPE UART_TRANSCEIVER_UART_TYPE_UART
 #elif KISO_FEATURE_LEUART
-FAKE_VALUE_FUNC(Retcode_T, MCU_LEUART_Receive, LEUART_T, uint8_t*, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, MCU_LEUART_Send, LEUART_T, uint8_t*, uint32_t);
+FAKE_VALUE_FUNC(Retcode_T, MCU_LEUART_Receive, LEUART_T, uint8_t*, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_LEUART_Send, LEUART_T, uint8_t*, uint32_t)
 #define UART_Receive_fake    MCU_LEUART_Receive_fake
 #define UART_TRANSCEIVER_UART_TYPE UART_TRANSCEIVER_UART_TYPE_LEUART
 #endif

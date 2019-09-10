@@ -27,15 +27,15 @@
 
 #if KISO_FEATURE_BSP_ACCEL_H3LIS
 
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_H3LIS_Connect);
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_H3LIS_Enable);
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_H3LIS_IntEnable, BSP_Accel_InterruptCallback_T);
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_H3LIS_IntDisable);
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_H3LIS_Disable);
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_H3LIS_Disconnect);
-FAKE_VALUE_FUNC(HWHandle_T, BSP_Accel_H3LIS_GetSPIHandle);
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_H3LIS_SetCSLow);
-FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_H3LIS_SetCSHigh);
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_H3LIS_Connect)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_H3LIS_Enable)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_H3LIS_IntEnable, BSP_Accel_InterruptCallback_T)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_H3LIS_IntDisable)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_H3LIS_Disable)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_H3LIS_Disconnect)
+FAKE_VALUE_FUNC(HWHandle_T, BSP_Accel_H3LIS_GetSPIHandle)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_H3LIS_SetCSLow)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_H3LIS_SetCSHigh)
 
 #endif /* KISO_FEATURE_BSP_ACCEL_H3LIS */
 

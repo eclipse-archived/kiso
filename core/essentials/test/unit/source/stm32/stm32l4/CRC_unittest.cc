@@ -29,10 +29,10 @@ extern "C"
 
 // implements all the necessary fake functions
 #undef __HAL_RCC_CRC_CLK_ENABLE
-FAKE_VOID_FUNC(__HAL_RCC_CRC_CLK_ENABLE);
+FAKE_VOID_FUNC(__HAL_RCC_CRC_CLK_ENABLE)
 
 #undef __HAL_RCC_CRC_CLK_DISABLE
-FAKE_VOID_FUNC(__HAL_RCC_CRC_CLK_DISABLE);
+FAKE_VOID_FUNC(__HAL_RCC_CRC_CLK_DISABLE)
 
 /* Include unit under test */
 #include "CRC.c"

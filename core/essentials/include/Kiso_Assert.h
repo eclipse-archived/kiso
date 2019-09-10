@@ -111,7 +111,7 @@
  * @param[in]   Expression : A logical statement which can be true or false.
  */
 #define assert(expression) \
-   do{ if (!(expression)) { Assert_Dynamic((unsigned long)__LINE__,(unsigned char*)__FILE__); } } while (0)
+   do{ if (!(expression)) { Assert_Dynamic(__LINE__, (const unsigned char*)__FILE__); } } while (0)
 
 
 /**
@@ -172,8 +172,6 @@ void Assert_Dynamic(const unsigned long line, const unsigned char * const file);
  */
 #undef assert /* removing the default compiler assert function */
 #define assert(expression)                     ((void)0)
-/* @deprecated Assert_initialize function will be removed as part of PFM-659 */
-#define Assert_initialize(callback)                 ((Retcode_T)0)
 #define Assert_Initialize(callback)               ((Retcode_T)0)
 
 #endif /* NDEBUG */

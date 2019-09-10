@@ -43,9 +43,9 @@ typedef enum MCU_UART_State_E
 struct MCU_UART_Transcation_S
 {
     uint8_t* pTransmitBuffer; /**< *pTransmitBuffer Reference to the transmit buffer for the current send transaction. */
-    uint32_t TransmitSize; /**< TransmitSize Transmit size. */
+    uint16_t TransmitSize; /**< TransmitSize Transmit size. */
     uint8_t* pReceiveBuffer; /**< *pReceiveBuffer Reference to the receive buffer for the current receiver transaction. */
-    uint32_t ReceivetSize; /**< ReceivetSize Receive size. */
+    uint16_t ReceivetSize; /**< ReceivetSize Receive size. */
 };
 
 /* forward structure declaration */

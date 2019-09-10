@@ -27,12 +27,12 @@
 
 #if KISO_FEATURE_BSP_GPS_NEO7N
 
-FAKE_VALUE_FUNC(Retcode_T, BSP_GPS_Neo7n_Connect);
-FAKE_VALUE_FUNC(Retcode_T, BSP_GPS_Neo7n_Enable);
-FAKE_VALUE_FUNC(Retcode_T, BSP_GPS_Neo7n_Disable);
-FAKE_VALUE_FUNC(Retcode_T, BSP_GPS_Neo7n_Disconnect);
-FAKE_VALUE_FUNC(Retcode_T, BSP_GPS_Neo7n_Reset);
-FAKE_VALUE_FUNC(HWHandle_T, BSP_GPS_Neo7n_GetUARTHandle);
+FAKE_VALUE_FUNC(Retcode_T, BSP_GPS_Neo7n_Connect)
+FAKE_VALUE_FUNC(Retcode_T, BSP_GPS_Neo7n_Enable)
+FAKE_VALUE_FUNC(Retcode_T, BSP_GPS_Neo7n_Disable)
+FAKE_VALUE_FUNC(Retcode_T, BSP_GPS_Neo7n_Disconnect)
+FAKE_VALUE_FUNC(Retcode_T, BSP_GPS_Neo7n_Reset)
+FAKE_VALUE_FUNC(HWHandle_T, BSP_GPS_Neo7n_GetUARTHandle)
 
 #endif /* KISO_FEATURE_BSP_GPS_NEO7N */
 

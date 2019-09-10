@@ -52,7 +52,7 @@ struct MCU_SPI_Transaction_S
 {
     uint8_t *pRxDataBuffer; /**< Reference to the receive buffer used for the transaction*/
     uint8_t *pTxDataBuffer; /**< Reference to the transmit buffer used for the transcation */
-    uint32_t Size; /**< Size in bytes of the transaction */
+    uint16_t Size; /**< Size in bytes of the transaction */
 };
 
 /**

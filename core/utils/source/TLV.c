@@ -255,7 +255,7 @@ TLV_Element_T* TLV_AddElement(TLV_GroupHandle_TP const Handle, const uint16_t Ty
         {
             /* update Element in place */
             Element->DataLength = Length;
-            memcpy(Element->DataBuffer, (uint8_t*) Value, Length);
+            memcpy(Element->DataBuffer, Value, Length);
         }
         else
         {

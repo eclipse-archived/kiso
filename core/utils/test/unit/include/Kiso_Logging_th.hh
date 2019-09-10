@@ -30,10 +30,10 @@ DECLARE_FAKE_VALUE_FUNC7_VARARG(Retcode_T, Logging_Log, LogLevel_T, uint8_t, uin
         uint32_t, const char*, ...);
 DEFINE_FAKE_VALUE_FUNC7_VARARG(Retcode_T, Logging_Log, LogLevel_T, uint8_t, uint8_t, const char*,
         uint32_t, const char*, ...);
-FAKE_VALUE_FUNC(LogFilterId_T, LogFilter_Add, LogLevel_T, uint8_t, uint8_t);
-FAKE_VALUE_FUNC(Retcode_T, LogFilter_Delete, LogFilterId_T);
+FAKE_VALUE_FUNC(LogFilterId_T, LogFilter_Add, LogLevel_T, uint8_t, uint8_t)
+FAKE_VALUE_FUNC(Retcode_T, LogFilter_Delete, LogFilterId_T)
 FAKE_VALUE_FUNC(Retcode_T, LogFilter_Configure, LogFilterId_T, LogLevel_T,
         uint8_t, uint8_t);
-FAKE_VALUE_FUNC(bool, LogFilter_Apply, LogLevel_T, uint8_t, uint8_t);
+FAKE_VALUE_FUNC(bool, LogFilter_Apply, LogLevel_T, uint8_t, uint8_t)
 
 #endif /* KISO_LOGGING_TH_HH_ */

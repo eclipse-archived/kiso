@@ -37,7 +37,7 @@
   * @retval None
   */
 #undef __HAL_CRC_RESET_HANDLE_STATE
-FAKE_VOID_FUNC(__HAL_CRC_RESET_HANDLE_STATE, CRC_HandleTypeDef*);
+FAKE_VOID_FUNC(__HAL_CRC_RESET_HANDLE_STATE, CRC_HandleTypeDef*)
 
 /**
   * @brief  Reset CRC Data Register.
@@ -45,7 +45,7 @@ FAKE_VOID_FUNC(__HAL_CRC_RESET_HANDLE_STATE, CRC_HandleTypeDef*);
   * @retval None.
   */
 #undef __HAL_CRC_DR_RESET
-FAKE_VOID_FUNC(__HAL_CRC_DR_RESET, CRC_HandleTypeDef*);
+FAKE_VOID_FUNC(__HAL_CRC_DR_RESET, CRC_HandleTypeDef*)
 
 /**
   * @brief  Set CRC INIT non-default value
@@ -54,7 +54,7 @@ FAKE_VOID_FUNC(__HAL_CRC_DR_RESET, CRC_HandleTypeDef*);
   * @retval None.
   */
 #undef __HAL_CRC_INITIALCRCVALUE_CONFIG
-FAKE_VOID_FUNC(__HAL_CRC_INITIALCRCVALUE_CONFIG, CRC_HandleTypeDef*, uint32_t);
+FAKE_VOID_FUNC(__HAL_CRC_INITIALCRCVALUE_CONFIG, CRC_HandleTypeDef*, uint32_t)
 
 /**
   * @brief Stores a 8-bit data in the Independent Data(ID) register.
@@ -63,7 +63,7 @@ FAKE_VOID_FUNC(__HAL_CRC_INITIALCRCVALUE_CONFIG, CRC_HandleTypeDef*, uint32_t);
   * @retval None
   */
 #undef __HAL_CRC_SET_IDR
-FAKE_VOID_FUNC(__HAL_CRC_SET_IDR, CRC_HandleTypeDef*, uint8_t);
+FAKE_VOID_FUNC(__HAL_CRC_SET_IDR, CRC_HandleTypeDef*, uint8_t)
 
 /**
   * @brief Returns the 8-bit data stored in the Independent Data(ID) register.
@@ -71,22 +71,22 @@ FAKE_VOID_FUNC(__HAL_CRC_SET_IDR, CRC_HandleTypeDef*, uint8_t);
   * @retval 8-bit value of the ID register
   */
 #undef __HAL_CRC_GET_IDR
-FAKE_VALUE_FUNC(uint8_t, __HAL_CRC_GET_IDR, CRC_HandleTypeDef*);
+FAKE_VALUE_FUNC(uint8_t, __HAL_CRC_GET_IDR, CRC_HandleTypeDef*)
 
 /* Mock-ups for the provided interfaces */
 
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_CRC_Init, CRC_HandleTypeDef*);
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_CRC_Init, CRC_HandleTypeDef*)
 
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_CRC_DeInit, CRC_HandleTypeDef*);
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_CRC_DeInit, CRC_HandleTypeDef*)
 
-FAKE_VOID_FUNC(HAL_CRC_MspInit, CRC_HandleTypeDef*);
+FAKE_VOID_FUNC(HAL_CRC_MspInit, CRC_HandleTypeDef*)
 
-FAKE_VOID_FUNC(HAL_CRC_MspDeInit, CRC_HandleTypeDef*);
+FAKE_VOID_FUNC(HAL_CRC_MspDeInit, CRC_HandleTypeDef*)
 
-FAKE_VALUE_FUNC(uint32_t, HAL_CRC_Accumulate, CRC_HandleTypeDef*, uint32_t*, uint32_t);
+FAKE_VALUE_FUNC(uint32_t, HAL_CRC_Accumulate, CRC_HandleTypeDef*, uint32_t*, uint32_t)
 
-FAKE_VALUE_FUNC(uint32_t, HAL_CRC_Calculate, CRC_HandleTypeDef*, uint32_t*, uint32_t);
+FAKE_VALUE_FUNC(uint32_t, HAL_CRC_Calculate, CRC_HandleTypeDef*, uint32_t*, uint32_t)
 
-FAKE_VALUE_FUNC(HAL_CRC_StateTypeDef, HAL_CRC_GetState, CRC_HandleTypeDef*);
+FAKE_VALUE_FUNC(HAL_CRC_StateTypeDef, HAL_CRC_GetState, CRC_HandleTypeDef*)
 
 # endif /* STM32L4XX_HAL_CRC_TH_HH */

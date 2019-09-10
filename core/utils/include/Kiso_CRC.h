@@ -69,7 +69,7 @@
  * @retval          #RETCODE_OK when successful
  * @retval          #RETCODE_FAILURE when any of the input pointers is NULL
  */
-Retcode_T CRC_8(uint8_t poly, uint8_t * shifter, uint8_t * data_p, uint16_t len);
+Retcode_T CRC_8(uint8_t poly, uint8_t * shifter, const uint8_t * data_p, uint16_t len);
 
 /**
  * @brief           Calculates CRC16 for a given message, or data, using a a given polynomial and initial value. No frills: no bit-reversing, no final XOR.
@@ -83,7 +83,7 @@ Retcode_T CRC_8(uint8_t poly, uint8_t * shifter, uint8_t * data_p, uint16_t len)
  * @retval          #RETCODE_OK when successful
  * @retval          #RETCODE_FAILURE when any of the input pointers is NULL
  */
-Retcode_T CRC_16(uint16_t poly, uint16_t * shifter, uint8_t * data_p, uint16_t len);
+Retcode_T CRC_16(uint16_t poly, uint16_t * shifter, const uint8_t * data_p, uint16_t len);
 
 /**
  * @brief           Calculates CRC32 for a given message, or data, using a a given polynomial and initial value. No frills: no bit-reversing, no final XOR.
@@ -97,7 +97,7 @@ Retcode_T CRC_16(uint16_t poly, uint16_t * shifter, uint8_t * data_p, uint16_t l
  * @retval          #RETCODE_OK when successful
  * @retval          #RETCODE_FAILURE when any of the input pointers is NULL
  */
-Retcode_T CRC_32(uint32_t poly, uint32_t * shifter, uint8_t * data_p, uint16_t len);
+Retcode_T CRC_32(uint32_t poly, uint32_t * shifter, const uint8_t * data_p, uint16_t len);
 
 /**
  * @brief           Calculates CRC32 with reverse polynomial for a given message, or data and initial value.
@@ -115,7 +115,7 @@ Retcode_T CRC_32(uint32_t poly, uint32_t * shifter, uint8_t * data_p, uint16_t l
  *                  This api won't support final CRC32 inversion, manually to do the final CRC32 inversion in application.
  *                  Call CRC32_INVERSE(shifter) macro for invert the final CRC32 value.
  */
-Retcode_T CRC_32_Reverse(uint32_t poly, uint32_t * shifter, uint8_t * data_p, uint16_t len);
+Retcode_T CRC_32_Reverse(uint32_t poly, uint32_t * shifter, const uint8_t * data_p, uint16_t len);
 
 #endif /* if KISO_FEATURE_CRC */
 

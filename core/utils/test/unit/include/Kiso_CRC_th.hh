@@ -31,10 +31,10 @@
 /* faked variables needs to be initialized by the test fixture */
 
 /* mock-ups for the provided interfaces */
-FAKE_VALUE_FUNC(Retcode_T, CRC_8,uint8_t,uint8_t * ,uint8_t *,uint16_t);
-FAKE_VALUE_FUNC(Retcode_T, CRC_16,uint16_t,uint16_t * ,uint8_t *,uint16_t);
-FAKE_VALUE_FUNC(Retcode_T, CRC_32,uint32_t,uint32_t * ,uint8_t *,uint16_t);
-FAKE_VALUE_FUNC(Retcode_T, CRC_32_Reverse,uint32_t,uint32_t * ,uint8_t *,uint16_t);
+FAKE_VALUE_FUNC(Retcode_T, CRC_8, uint8_t, uint8_t*, const uint8_t*, uint16_t)
+FAKE_VALUE_FUNC(Retcode_T, CRC_16, uint16_t, uint16_t*, const uint8_t*, uint16_t)
+FAKE_VALUE_FUNC(Retcode_T, CRC_32, uint32_t, uint32_t*, const uint8_t*, uint16_t)
+FAKE_VALUE_FUNC(Retcode_T, CRC_32_Reverse, uint32_t, uint32_t*, const uint8_t*, uint16_t)
 
 #endif /* KISO_CRC_TH_HH_*/
 

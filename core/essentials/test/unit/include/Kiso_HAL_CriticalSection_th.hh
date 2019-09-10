@@ -24,8 +24,8 @@
 /* Faked variables needs to be initialized by the test fixture */
 
 /* Mock-ups for the provided interfaces */
-FAKE_VALUE_FUNC(Retcode_T, HAL_CriticalSection_SetHooks, HAL_CriticalSection_Hook_T, HAL_CriticalSection_Hook_T);
-FAKE_VALUE_FUNC(Retcode_T, HAL_CriticalSection_Enter, uint32_t*);
-FAKE_VALUE_FUNC(Retcode_T, HAL_CriticalSection_Leave, uint32_t*);
+FAKE_VALUE_FUNC(Retcode_T, HAL_CriticalSection_SetHooks, HAL_CriticalSection_Hook_T, HAL_CriticalSection_Hook_T)
+FAKE_VALUE_FUNC(Retcode_T, HAL_CriticalSection_Enter, uint32_t*)
+FAKE_VALUE_FUNC(Retcode_T, HAL_CriticalSection_Leave, uint32_t*)
 
 #endif /* KISO_HAL_CRITICALSECTION_TH_HH_ */

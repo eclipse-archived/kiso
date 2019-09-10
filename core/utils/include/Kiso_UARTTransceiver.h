@@ -391,7 +391,7 @@ Retcode_T UARTTransceiver_ReadData(
  */
 Retcode_T UARTTransceiver_WriteData(
         UARTTransceiver_T *transceiver,
-        uint8_t* data, uint32_t length, uint32_t timeout_ms);
+        const uint8_t* data, uint32_t length, uint32_t timeout_ms);
 
 
 

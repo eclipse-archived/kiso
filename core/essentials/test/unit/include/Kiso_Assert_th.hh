@@ -51,14 +51,14 @@ typedef void (*Assert_Callback_T)(const unsigned long line, const unsigned char 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif /* __GNUC__ */
-FAKE_VALUE_FUNC(Retcode_T,Assert_initialize,Assert_Callback_T);
-FAKE_VOID_FUNC(Assert_dynamic, unsigned long, const unsigned char *);
+FAKE_VALUE_FUNC(Retcode_T,Assert_initialize,Assert_Callback_T)
+FAKE_VOID_FUNC(Assert_dynamic, unsigned long, const unsigned char *)
 #if __GNUC__
 #pragma GCC diagnostic pop
 #endif /* __GNUC__ */
 
-FAKE_VALUE_FUNC(Retcode_T,Assert_Initialize,Assert_Callback_T);
-FAKE_VOID_FUNC(Assert_Dynamic, unsigned long, const unsigned char *);
+FAKE_VALUE_FUNC(Retcode_T,Assert_Initialize,Assert_Callback_T)
+FAKE_VOID_FUNC(Assert_Dynamic, unsigned long, const unsigned char *)
 #undef assert
 #define assert(condition)       ((void)0)
 #endif

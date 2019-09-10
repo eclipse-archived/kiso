@@ -24,9 +24,9 @@
 #include "Kiso_TaskMonitor.h"
 
 /* mock-ups for the provided interfaces */
-FAKE_VALUE_FUNC(Retcode_T, TaskMonitor_Initialize);
-FAKE_VALUE_FUNC(bool, TaskMonitor_Check);
-FAKE_VALUE_FUNC(Retcode_T, TaskMonitor_Register, TaskHandle_t, uint32_t);
+FAKE_VALUE_FUNC(Retcode_T, TaskMonitor_Initialize)
+FAKE_VALUE_FUNC(bool, TaskMonitor_Check)
+FAKE_VALUE_FUNC(Retcode_T, TaskMonitor_Register, TaskHandle_t, uint32_t)
 
 #endif /* KISO_TASKMONITOR_TH_HH_ */
 

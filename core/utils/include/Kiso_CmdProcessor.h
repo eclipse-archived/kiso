@@ -126,7 +126,7 @@ enum CmdProcessor_Retcode_E
  * @retval      #RETCODE_OK when the queue is created successfully
  * @retval      #RETCODE_NULL_POINTER when the task or queue is not created
  */
-Retcode_T CmdProcessor_Initialize(CmdProcessor_T *cmdProcessor, char *name, uint32_t taskPriority, uint32_t taskStackDepth, uint32_t queueSize);
+Retcode_T CmdProcessor_Initialize(CmdProcessor_T *cmdProcessor, const char* name, uint32_t taskPriority, uint32_t taskStackDepth, uint32_t queueSize);
 
 /**
  *  @brief       This routine is used to hand-over a function to the command processor for execution. The function is added

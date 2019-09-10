@@ -19,6 +19,6 @@
 
 #include "gtest.h"
 
-FAKE_VOID_FUNC(HttpService_NotifyResult, AT_UHTTP_ProfileId_T, AT_UHTTPC_Command_T, AT_UHTTPC_Result_T);
+FAKE_VOID_FUNC(HttpService_NotifyResult, AT_UHTTP_ProfileId_T, AT_UHTTPC_Command_T, AT_UHTTPC_Result_T)
 
 #endif /* HTTPSERVICE_TH_HH_ */

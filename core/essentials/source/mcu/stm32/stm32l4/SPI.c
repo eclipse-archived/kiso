@@ -207,7 +207,8 @@ Retcode_T MCU_SPI_Send(SPI_T spi, uint8_t * data, uint32_t len)
             if (SPI_STATE_READY == pSPI->State)
             {
                 pSPI->Transaction.pTxDataBuffer = data;
-                pSPI->Transaction.Size = len;
+                // TODO: Check for len > 0xFFFF because of the downcast
+                pSPI->Transaction.Size = (uint16_t)len;
                 retcode = pSPI->TxFunPtr(pSPI);
             }
             else
@@ -261,7 +262,8 @@ Retcode_T MCU_SPI_Receive(SPI_T spi, uint8_t * buffer, uint32_t len)
                     buffer[i] = pSPI->DefaultData;
                 }
                 pSPI->Transaction.pRxDataBuffer = buffer;
-                pSPI->Transaction.Size = len;
+                // TODO: Check for len > 0xFFFF because of the downcast
+                pSPI->Transaction.Size = (uint16_t)len;
                 retcode = pSPI->RxFunPtr(pSPI);
             }
             else
@@ -286,7 +288,7 @@ Retcode_T MCU_SPI_Receive(SPI_T spi, uint8_t * buffer, uint32_t len)
 }
 
 /** See description in the interface declaration */
-Retcode_T MCU_SPI_Transfer(SPI_T spi, uint8_t* data_out, uint8_t* data_in, uint32_t len)
+Retcode_T MCU_SPI_Transfer(SPI_T spi, uint8_t* data_out, uint8_t* data_in, uint32_t numTransfer)
 {
     Retcode_T retcode = RETCODE_OK;
     struct MCU_SPI_S* pSPI = (struct MCU_SPI_S*) spi;
@@ -297,20 +299,21 @@ Retcode_T MCU_SPI_Transfer(SPI_T spi, uint8_t* data_out, uint8_t* data_in, uint3
     }
     if (RETCODE_OK == retcode)
     {
-        if (UINT16_MAX < len)
+        if (UINT16_MAX < numTransfer)
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
         }
     }
     if (RETCODE_OK == retcode)
     {
-        if (len != 0)
+        if (numTransfer != 0)
         {
             if (SPI_STATE_READY == pSPI->State)
             {
                 pSPI->Transaction.pTxDataBuffer = data_out;
                 pSPI->Transaction.pRxDataBuffer = data_in;
-                pSPI->Transaction.Size = len;
+                // TODO: Check for len > 0xFFFF because of the downcast
+                pSPI->Transaction.Size = (uint16_t)numTransfer;
                 retcode = pSPI->TransferFunPtr(pSPI);
             }
             else

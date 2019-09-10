@@ -60,7 +60,7 @@ protected:
 
     void DeInit()
     {
-
+        m_testInstance = {};
     }
 
 public:
@@ -68,6 +68,7 @@ public:
     static bool m_isCalled_cbf;
     static uint32_t m_I2C_cbf;
     static struct MCU_I2C_Event_S m_event_cbf;
+    I2C_TypeDef m_testInstance = {};
 };
 
 
@@ -91,7 +92,6 @@ public:
     MCU_I2C_State_T getState();
 
     void setState(MCU_I2C_State_T state);
-
 
     void setSTM32Instance(I2C_TypeDef* instance);
 };
@@ -141,27 +141,25 @@ void AppTestCallbackFunction(I2C_T I2C, struct MCU_I2C_Event_S event)
     KISO_I2CTest::m_isCalled_cbf = true;
 }
 
-bool Fake___HAL_I2C_GET_FLAG(I2C_HandleTypeDef* hi2c, uint32_t flag)
+bool Fake___HAL_I2C_GET_FLAG(I2C_HandleTypeDef*, uint32_t flag)
 {
-    (void)hi2c;
     switch (flag)
     {
         case I2C_FLAG_TXIS:
-        return SET;
-        case I2C_FLAG_AF:
-        return RESET;
         case I2C_FLAG_STOPF:
-        return SET;
         case I2C_FLAG_TCR:
-        return SET;
+            return SET;
+        case I2C_FLAG_AF:
         case I2C_FLAG_BUSY:
-        return RESET;
+            return RESET;
+        default:
+            return RESET;
     }
 }
 
-HAL_I2C_StateTypeDef Fake_HAL_I2C_GetState(I2C_HandleTypeDef *hi2c)
+HAL_I2C_StateTypeDef Fake_HAL_I2C_GetState(I2C_HandleTypeDef*)
 {
-  return HAL_I2C_STATE_READY;
+    return HAL_I2C_STATE_READY;
 }
 
 uint32_t Fake_HAL_GetTick()
@@ -340,11 +338,10 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_ok_polling)
     HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
     HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
 
-    I2C_TypeDef testInstance = { 0 } ;
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -352,7 +349,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_ok_polling)
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     rc = ~RETCODE_OK;
-    Device01.setSTM32Instance(&testInstance);
+    Device01.setSTM32Instance(&m_testInstance);
     rc = MCU_I2C_Send(I2C01, addr, buffer, size);
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
@@ -363,7 +360,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_ok_Interrupt)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -380,7 +377,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_ok_DMA)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -398,11 +395,10 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_Fail_InvalidSize)
     HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
     HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
 
-    I2C_TypeDef testInstance = { 0 } ;
     uint16_t addr = 0x01234;
     const uint32_t size = UINT16_MAX+1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer;
+    uint8_t buffer;
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -410,7 +406,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_Fail_InvalidSize)
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     rc = ~RETCODE_OK;
-    Device01.setSTM32Instance(&testInstance);
+    Device01.setSTM32Instance(&m_testInstance);
 
     rc = MCU_I2C_Send(I2C01, addr, &buffer, size);
 
@@ -424,11 +420,10 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_Fail_InvalidHandle)
     HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
     HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
 
-    I2C_TypeDef testInstance = { 0 } ;
     uint16_t addr = 0x01234;
     const uint32_t size = UINT16_MAX+1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -436,7 +431,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_Fail_InvalidHandle)
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     rc = ~RETCODE_OK;
-    Device01.setSTM32Instance(&testInstance);
+    Device01.setSTM32Instance(&m_testInstance);
 
     rc = MCU_I2C_Send(NULL, addr, buffer, size);
 
@@ -450,11 +445,9 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_Fail_InvalidBuffer)
     HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
     HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
 
-    I2C_TypeDef testInstance = { 0 } ;
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -462,7 +455,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_Fail_InvalidBuffer)
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     rc = ~RETCODE_OK;
-    Device01.setSTM32Instance(&testInstance);
+    Device01.setSTM32Instance(&m_testInstance);
 
     rc = MCU_I2C_Send(I2C01, addr, NULL, size);
 
@@ -476,16 +469,15 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_Fail_Not_Initialized)
     HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
     HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
 
-    I2C_TypeDef testInstance = { 0 } ;
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
     rc = ~RETCODE_OK;
-    Device01.setSTM32Instance(&testInstance);
+    Device01.setSTM32Instance(&m_testInstance);
 
     rc = MCU_I2C_Send(I2C01, addr, buffer, size);
 
@@ -498,7 +490,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_Fail_State_Sending)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -520,7 +512,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_Interrupt_Fail_HAL_Failure)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -540,7 +532,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_DMA_Fail_HAL_Failure)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -561,7 +553,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_Polling_Success)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x00 };
+    uint8_t buffer[size] = { 0x00 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -583,7 +575,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_Interrupt_Success)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x00 };
+    uint8_t buffer[size] = { 0x00 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -604,7 +596,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_DMA_Success)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x00 };
+    uint8_t buffer[size] = { 0x00 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -625,7 +617,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_Fail_InvalidHandle)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x00 };
+    uint8_t buffer[size] = { 0x00 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -647,7 +639,6 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_Fail_InvalidBuffer)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x00 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -669,7 +660,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_Fail_InvalidLength)
     uint16_t addr = 0x01234;
     const uint32_t size = UINT16_MAX +1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x00 };
+    uint8_t buffer[size] = { 0x00 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -691,7 +682,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_Fail_Not_Initialized)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x00 };
+    uint8_t buffer[size] = { 0x00 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -710,7 +701,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_Fail_State_Receiveing)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x00 };
+    uint8_t buffer[size] = { 0x00 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -736,7 +727,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_Polling_Fail_HAL_Failure)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x00 };
+    uint8_t buffer[size] = { 0x00 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -758,7 +749,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_Interrupt_Fail_HAL_Failure)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x00 };
+    uint8_t buffer[size] = { 0x00 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -778,7 +769,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_DMA_Fail_HAL_Failure)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x00 };
+    uint8_t buffer[size] = { 0x00 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -799,11 +790,11 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_ok_polling)
     HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
     HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
 
-    I2C_TypeDef testInstance = { 0 } ;
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t reg = 0;
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -811,7 +802,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_ok_polling)
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     rc = ~RETCODE_OK;
-    Device01.setSTM32Instance(&testInstance);
+    Device01.setSTM32Instance(&m_testInstance);
     rc = MCU_I2C_WriteRegister(I2C01, addr, reg, buffer, size);
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
@@ -822,7 +813,8 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_ok_Interrupt)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t reg = 0;
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -839,7 +831,8 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_ok_DMA)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t reg = 0;
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -860,11 +853,11 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Fail_InvalidSize)
     HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
     HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
 
-    I2C_TypeDef testInstance = { 0 } ;
     uint16_t addr = 0x01234;
     const uint32_t size = UINT16_MAX+1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer;
+    uint8_t reg = 0;
+    uint8_t buffer;
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -872,7 +865,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Fail_InvalidSize)
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     rc = ~RETCODE_OK;
-    Device01.setSTM32Instance(&testInstance);
+    Device01.setSTM32Instance(&m_testInstance);
 
     rc = MCU_I2C_WriteRegister(I2C01, addr, reg, &buffer, size);
 
@@ -886,11 +879,11 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Fail_InvalidHandle)
     HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
     HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
 
-    I2C_TypeDef testInstance = { 0 } ;
     uint16_t addr = 0x01234;
     const uint32_t size = UINT16_MAX+1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t reg = 0;
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -898,7 +891,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Fail_InvalidHandle)
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     rc = ~RETCODE_OK;
-    Device01.setSTM32Instance(&testInstance);
+    Device01.setSTM32Instance(&m_testInstance);
 
     rc = MCU_I2C_WriteRegister(NULL, addr, reg, buffer, size);
 
@@ -912,11 +905,10 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Fail_InvalidBuffer)
     HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
     HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
 
-    I2C_TypeDef testInstance = { 0 } ;
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t reg = 0;
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -924,7 +916,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Fail_InvalidBuffer)
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     rc = ~RETCODE_OK;
-    Device01.setSTM32Instance(&testInstance);
+    Device01.setSTM32Instance(&m_testInstance);
 
     rc = MCU_I2C_WriteRegister(I2C01, addr, reg, NULL, size);
 
@@ -938,16 +930,16 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Fail_Not_Initialized)
     HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
     HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
 
-    I2C_TypeDef testInstance = { 0 } ;
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t reg = 0;
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
     rc = ~RETCODE_OK;
-    Device01.setSTM32Instance(&testInstance);
+    Device01.setSTM32Instance(&m_testInstance);
 
     rc = MCU_I2C_WriteRegister(I2C01, addr, reg, buffer, size);
 
@@ -960,7 +952,8 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Fail_State_Sending)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t reg = 0;
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -982,7 +975,8 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Interrupt_Fail_HAL_Failure)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t reg = 0;
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -1003,11 +997,11 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_ok_polling)
     HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
     HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
 
-    I2C_TypeDef testInstance = { 0 } ;
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t reg = 0;
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -1015,7 +1009,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_ok_polling)
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     rc = ~RETCODE_OK;
-    Device01.setSTM32Instance(&testInstance);
+    Device01.setSTM32Instance(&m_testInstance);
     HAL_I2C_Master_Transmit_fake.return_val = HAL_OK;
     HAL_I2C_Master_Receive_fake.return_val = HAL_OK;
     rc = MCU_I2C_ReadRegister(I2C01, addr, reg, buffer, size);
@@ -1028,7 +1022,8 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_ok_Interrupt)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t reg = 0;
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -1046,7 +1041,8 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_ok_DMA)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t reg = 0;
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -1069,11 +1065,11 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Fail_InvalidSize)
     HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
     HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
 
-    I2C_TypeDef testInstance = { 0 } ;
     uint16_t addr = 0x01234;
     const uint32_t size = UINT16_MAX+1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer;
+    uint8_t reg = 0;
+    uint8_t buffer;
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -1081,7 +1077,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Fail_InvalidSize)
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     rc = ~RETCODE_OK;
-    Device01.setSTM32Instance(&testInstance);
+    Device01.setSTM32Instance(&m_testInstance);
 
     rc = MCU_I2C_ReadRegister(I2C01, addr, reg, &buffer, size);
 
@@ -1095,11 +1091,11 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Fail_InvalidHandle)
     HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
     HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
 
-    I2C_TypeDef testInstance = { 0 } ;
     uint16_t addr = 0x01234;
     const uint32_t size = UINT16_MAX+1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t reg = 0;
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -1107,7 +1103,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Fail_InvalidHandle)
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     rc = ~RETCODE_OK;
-    Device01.setSTM32Instance(&testInstance);
+    Device01.setSTM32Instance(&m_testInstance);
 
     rc = MCU_I2C_ReadRegister(NULL, addr, reg, buffer, size);
 
@@ -1120,11 +1116,11 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Fail_InvalidBuffer)
     __HAL_I2C_GET_FLAG_fake.custom_fake = Fake___HAL_I2C_GET_FLAG;
     HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
     HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
-    I2C_TypeDef testInstance = { 0 } ;
+
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t reg = 0;
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -1132,7 +1128,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Fail_InvalidBuffer)
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     rc = ~RETCODE_OK;
-    Device01.setSTM32Instance(&testInstance);
+    Device01.setSTM32Instance(&m_testInstance);
 
     rc = MCU_I2C_ReadRegister(I2C01, addr, reg, NULL, size);
 
@@ -1145,16 +1141,17 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Fail_Not_Initialized)
     __HAL_I2C_GET_FLAG_fake.custom_fake = Fake___HAL_I2C_GET_FLAG;
     HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
     HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
-    I2C_TypeDef testInstance = { 0 } ;
+
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t reg = 0;
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
     rc = ~RETCODE_OK;
-    Device01.setSTM32Instance(&testInstance);
+    Device01.setSTM32Instance(&m_testInstance);
 
     rc = MCU_I2C_ReadRegister(I2C01, addr, reg, buffer, size);
 
@@ -1167,7 +1164,8 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Fail_State_Receiving)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t reg = 0;
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();
@@ -1192,7 +1190,8 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Interrupt_Fail_HAL_Failure)
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t reg = 0, buffer[size] = { 0x01 };
+    uint8_t reg = 0;
+    uint8_t buffer[size] = { 0x01 };
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T) Device01.BSP_Device_GetHandle();

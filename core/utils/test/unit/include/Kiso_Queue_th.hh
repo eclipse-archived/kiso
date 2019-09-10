@@ -22,12 +22,12 @@
 #include "semphr_th.hh"
 #include "Kiso_Queue.h"
 
-FAKE_VALUE_FUNC(Retcode_T, Queue_Create, Queue_T *, uint8_t*, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, Queue_Put, Queue_T *, const void *, uint32_t, const void *, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, Queue_Get, Queue_T *, void **, uint32_t*, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, Queue_Purge, Queue_T *);
-FAKE_VALUE_FUNC(uint32_t, Queue_Count, const Queue_T *);
-FAKE_VOID_FUNC(Queue_Clear, Queue_T *);
-FAKE_VALUE_FUNC(Retcode_T, Queue_Delete, Queue_T *);
+FAKE_VALUE_FUNC(Retcode_T, Queue_Create, Queue_T *, uint8_t*, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, Queue_Put, Queue_T *, const void *, uint32_t, const void *, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, Queue_Get, Queue_T *, void **, uint32_t*, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, Queue_Purge, Queue_T *)
+FAKE_VALUE_FUNC(uint32_t, Queue_Count, const Queue_T *)
+FAKE_VOID_FUNC(Queue_Clear, Queue_T *)
+FAKE_VALUE_FUNC(Retcode_T, Queue_Delete, Queue_T *)
 
 #endif /* KISO_QUEUE_TH_HH */

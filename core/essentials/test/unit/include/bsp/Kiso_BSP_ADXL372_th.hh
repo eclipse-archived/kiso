@@ -27,17 +27,17 @@
 
 #if KISO_FEATURE_BSP_ADXL372
 
-FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_Connect, int32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_Enable, int32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_Int1Enable, int32_t, BSP_ADXL372_InterruptCallback_T);
-FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_Int2Enable, int32_t, BSP_ADXL372_InterruptCallback_T);
-FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_Int1Disable, int32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_Int2Disable, int32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_Disable, int32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_Disconnect, int32_t);
-FAKE_VALUE_FUNC(HAL_DeviceHandle_T, BSP_ADXL372_GetHandle);
-FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_SetCSLow, int32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_SetCSHigh, int32_t);
+FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_Connect, int32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_Enable, int32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_Int1Enable, int32_t, BSP_ADXL372_InterruptCallback_T)
+FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_Int2Enable, int32_t, BSP_ADXL372_InterruptCallback_T)
+FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_Int1Disable, int32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_Int2Disable, int32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_Disable, int32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_Disconnect, int32_t)
+FAKE_VALUE_FUNC(HAL_DeviceHandle_T, BSP_ADXL372_GetHandle)
+FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_SetCSLow, int32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_ADXL372_SetCSHigh, int32_t)
 
 
 #endif /* KISO_FEATURE_BSP_ADXL372 */

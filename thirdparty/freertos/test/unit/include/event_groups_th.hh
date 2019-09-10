@@ -32,11 +32,11 @@
 /* faked variables needs to be initialized by the test fixture */
 
 /* mock-ups for the provided interfaces */
-FAKE_VALUE_FUNC(EventGroupHandle_t, xEventGroupCreate);
-FAKE_VALUE_FUNC(EventBits_t, xEventGroupClearBits, EventGroupHandle_t, EventBits_t);
-FAKE_VALUE_FUNC(EventBits_t, xEventGroupSetBits, EventGroupHandle_t, EventBits_t);
-FAKE_VOID_FUNC(vEventGroupSetBitsCallback, void*, uint32_t);
-FAKE_VALUE_FUNC(BaseType_t, xTimerPendFunctionCallFromISR, PendedFunction_t, void*, uint32_t, BaseType_t*);
+FAKE_VALUE_FUNC(EventGroupHandle_t, xEventGroupCreate)
+FAKE_VALUE_FUNC(EventBits_t, xEventGroupClearBits, EventGroupHandle_t, EventBits_t)
+FAKE_VALUE_FUNC(EventBits_t, xEventGroupSetBits, EventGroupHandle_t, EventBits_t)
+FAKE_VOID_FUNC(vEventGroupSetBitsCallback, void*, uint32_t)
+FAKE_VALUE_FUNC(BaseType_t, xTimerPendFunctionCallFromISR, PendedFunction_t, void*, uint32_t, BaseType_t*)
 FAKE_VALUE_FUNC(EventBits_t, xEventGroupWaitBits, EventGroupHandle_t, EventBits_t, BaseType_t, BaseType_t, TickType_t)
 
 #endif /* KISO_EVENT_GROUPS_TH_HH_ */

@@ -332,15 +332,17 @@ Retcode_T LeanB2CAP_Builder(LeanB2CAP_FrameData_T * LeanB2CAPBuildOuput, LeanB2C
                     Rc = CRC_8(LEANB2CAP_CRC_POLYNOMIAL,&LeanB2CAPBuildOuput->FrameDataPointer[Index++],
                             &LeanB2CAPBuildOuput->FrameDataPointer[LEANB2CAP_SD_INDEX_4_RAW_DATA], LEANB2CAP_SD_LEN_CS1_OVERHEAD);
 
-                    for (CopyIndex = LEANB2CAP_UNSIGNED_LONG_ZERO; CopyIndex < RawDataInput->DataSize; CopyIndex++)
-                    {
-                        LeanB2CAPBuildOuput->FrameDataPointer[Index++] = RawDataInput->DataPointer[CopyIndex];
-                    }
+                    if (RETCODE_OK == Rc) {
+                        for (CopyIndex = LEANB2CAP_UNSIGNED_LONG_ZERO; CopyIndex < RawDataInput->DataSize; CopyIndex++)
+                        {
+                            LeanB2CAPBuildOuput->FrameDataPointer[Index++] = RawDataInput->DataPointer[CopyIndex];
+                        }
 
-                    LeanB2CAPBuildOuput->FrameDataPointer[Index] = LEANB2CAP_UNSIGNED_LONG_ZERO;
-                    Rc = CRC_8(LEANB2CAP_CRC_POLYNOMIAL,&LeanB2CAPBuildOuput->FrameDataPointer[Index],
-                            &LeanB2CAPBuildOuput->FrameDataPointer[LEANB2CAP_CS1_INDEX_4_RAW_DATA], RawDataInput->DataSize + LEANB2CAP_CS1_OVERHEAD);
-                    LeanB2CAPBuildOuput->FrameDataSize = RawDataInput->DataSize + LEANB2CAP_PROTOCOL_OVERHEAD;
+                        LeanB2CAPBuildOuput->FrameDataPointer[Index] = LEANB2CAP_UNSIGNED_LONG_ZERO;
+                        Rc = CRC_8(LEANB2CAP_CRC_POLYNOMIAL,&LeanB2CAPBuildOuput->FrameDataPointer[Index],
+                                &LeanB2CAPBuildOuput->FrameDataPointer[LEANB2CAP_CS1_INDEX_4_RAW_DATA], RawDataInput->DataSize + LEANB2CAP_CS1_OVERHEAD);
+                        LeanB2CAPBuildOuput->FrameDataSize = RawDataInput->DataSize + LEANB2CAP_PROTOCOL_OVERHEAD;
+                    }
                 }
                 else
                 {
@@ -384,12 +386,13 @@ Retcode_T LeanB2CAP_OverheadBuilder(LeanB2CAP_Overhead_T * OutputOverhead, LeanB
                 OutputOverhead->HeaderPointer[Index] = LEANB2CAP_UNSIGNED_LONG_ZERO;
                 Rc = CRC_8(LEANB2CAP_CRC_POLYNOMIAL, &OutputOverhead->HeaderPointer[Index],
                         &OutputOverhead->HeaderPointer[LEANB2CAP_SD_INDEX_4_RAW_DATA], LEANB2CAP_SD_LEN_CS1_OVERHEAD);
+                if (RETCODE_OK == Rc) {
+                    OutputOverhead->HeaderLength = LEANB2CAP_HEADER_OVERHEAD;
 
-                OutputOverhead->HeaderLength = LEANB2CAP_HEADER_OVERHEAD;
-
-                OutputOverhead->FooterPointer[LEANB2CAP_UNSIGNED_LONG_ZERO] = LEANB2CAP_UNSIGNED_LONG_ZERO;
-                Rc = CRC_8(LEANB2CAP_CRC_POLYNOMIAL, &OutputOverhead->FooterPointer[LEANB2CAP_UNSIGNED_LONG_ZERO],
-                        &OutputOverhead->HeaderPointer[Index], LEANB2CAP_CS1_OVERHEAD);
+                    OutputOverhead->FooterPointer[LEANB2CAP_UNSIGNED_LONG_ZERO] = LEANB2CAP_UNSIGNED_LONG_ZERO;
+                    Rc = CRC_8(LEANB2CAP_CRC_POLYNOMIAL, &OutputOverhead->FooterPointer[LEANB2CAP_UNSIGNED_LONG_ZERO],
+                            &OutputOverhead->HeaderPointer[Index], LEANB2CAP_CS1_OVERHEAD);
+                }
 
                 if (RETCODE_OK == Rc)
                 {

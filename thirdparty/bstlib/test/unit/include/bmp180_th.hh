@@ -20,12 +20,12 @@
 #include "bmp180.h"
 
 /* mock-ups for the provided interfaces */
-FAKE_VALUE_FUNC(BMP180_RETURN_FUNCTION_TYPE, bmp180_init, struct bmp180_t *);
-FAKE_VALUE_FUNC(s16, bmp180_get_temperature, u32);
-FAKE_VALUE_FUNC(s32, bmp180_get_pressure, u32);
-FAKE_VALUE_FUNC(u16, bmp180_get_uncomp_temperature);
-FAKE_VALUE_FUNC(u32, bmp180_get_uncomp_pressure);
-FAKE_VALUE_FUNC(BMP180_RETURN_FUNCTION_TYPE, bmp180_get_calib_param);
+FAKE_VALUE_FUNC(BMP180_RETURN_FUNCTION_TYPE, bmp180_init, struct bmp180_t *)
+FAKE_VALUE_FUNC(s16, bmp180_get_temperature, u32)
+FAKE_VALUE_FUNC(s32, bmp180_get_pressure, u32)
+FAKE_VALUE_FUNC(u16, bmp180_get_uncomp_temperature)
+FAKE_VALUE_FUNC(u32, bmp180_get_uncomp_pressure)
+FAKE_VALUE_FUNC(BMP180_RETURN_FUNCTION_TYPE, bmp180_get_calib_param)
 
 #endif /* KISO_BMP180_TH_HH_ */
 

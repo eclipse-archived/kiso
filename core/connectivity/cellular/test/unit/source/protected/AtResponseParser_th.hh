@@ -19,13 +19,13 @@
 
 #include "AtResponseParser.h"
 
-FAKE_VOID_FUNC(AtResponseParser_RegisterResponseCodeCallback, AtrpEventWithResponseCodeCallback_T);
-FAKE_VOID_FUNC(AtResponseParser_RegisterErrorCallback, AtrpEventCallback_T);
-FAKE_VOID_FUNC(AtResponseParser_RegisterCmdEchoCallback, AtrpEventWithDataCallback_T);
-FAKE_VOID_FUNC(AtResponseParser_RegisterCmdCallback, AtrpEventWithDataCallback_T);
-FAKE_VOID_FUNC(AtResponseParser_RegisterCmdArgCallback, AtrpEventWithDataCallback_T);
-FAKE_VOID_FUNC(AtResponseParser_RegisterMiscCallback, AtrpEventWithDataCallback_T);
-FAKE_VOID_FUNC(AtResponseParser_Reset);
-FAKE_VALUE_FUNC(Retcode_T, AtResponseParser_Parse, uint8_t*, uint32_t);
+FAKE_VOID_FUNC(AtResponseParser_RegisterResponseCodeCallback, AtrpEventWithResponseCodeCallback_T)
+FAKE_VOID_FUNC(AtResponseParser_RegisterErrorCallback, AtrpEventCallback_T)
+FAKE_VOID_FUNC(AtResponseParser_RegisterCmdEchoCallback, AtrpEventWithDataCallback_T)
+FAKE_VOID_FUNC(AtResponseParser_RegisterCmdCallback, AtrpEventWithDataCallback_T)
+FAKE_VOID_FUNC(AtResponseParser_RegisterCmdArgCallback, AtrpEventWithDataCallback_T)
+FAKE_VOID_FUNC(AtResponseParser_RegisterMiscCallback, AtrpEventWithDataCallback_T)
+FAKE_VOID_FUNC(AtResponseParser_Reset)
+FAKE_VALUE_FUNC(Retcode_T, AtResponseParser_Parse, uint8_t*, uint32_t)
 
 #endif /* ATRESPONSEPARSER_TH_HH_ */

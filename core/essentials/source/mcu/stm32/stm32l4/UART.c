@@ -195,7 +195,7 @@ Retcode_T MCU_UART_Deinitialize(UART_T uart)
 }
 
 /** @brief See public interface function description in Kiso_MCU_UART.h */
-Retcode_T MCU_UART_Send(UART_T uart, uint8_t * data, uint32_t len)
+Retcode_T MCU_UART_Send(UART_T uart, const uint8_t * data, uint32_t len)
 {
     Retcode_T retcode = RETCODE_OK;
     struct MCU_UART_S* uart_ptr = (struct MCU_UART_S*) uart;
@@ -217,8 +217,13 @@ Retcode_T MCU_UART_Send(UART_T uart, uint8_t * data, uint32_t len)
         {
             if (uart_ptr->TxState == UART_STATE_READY)
             {
-                uart_ptr->Transaction.pTransmitBuffer = data;
-                uart_ptr->Transaction.TransmitSize = len;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdiscarded-qualifiers"
+#pragma GCC diagnostic ignored "-Wcast-qual"
+                // This eventually reaches the driver and adding const here doesn't help to clean it up
+                uart_ptr->Transaction.pTransmitBuffer = (uint8_t*) data;
+#pragma GCC diagnostic pop
+                uart_ptr->Transaction.TransmitSize = (uint16_t)len;
                 retcode = uart_ptr->SendFunc(uart_ptr);
             }
             else
@@ -242,23 +247,23 @@ Retcode_T MCU_UART_Send(UART_T uart, uint8_t * data, uint32_t len)
 }
 
 /** @brief See public interface function description in Kiso_MCU_UART.h */
-Retcode_T MCU_UART_Receive(UART_T uart, uint8_t * data, uint32_t len)
+Retcode_T MCU_UART_Receive(UART_T uart, uint8_t * buffer, uint32_t size)
 {
     Retcode_T retcode = RETCODE_OK;
     struct MCU_UART_S* uart_ptr = (struct MCU_UART_S*) uart;
 
-    if (NULL == uart_ptr || NULL == data || len > UINT16_MAX)
+    if (NULL == uart_ptr || NULL == buffer || size > UINT16_MAX)
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
     if (RETCODE_OK == retcode)
     {
-        if (len > 0)
+        if (size > 0)
         {
             if (uart_ptr->RxState == UART_STATE_READY)
             {
-                uart_ptr->Transaction.pReceiveBuffer = data;
-                uart_ptr->Transaction.ReceivetSize = len;
+                uart_ptr->Transaction.pReceiveBuffer = buffer;
+                uart_ptr->Transaction.ReceivetSize = (uint16_t)size;
                 retcode = uart_ptr->ReceiveFunc(uart_ptr);
             }
             else

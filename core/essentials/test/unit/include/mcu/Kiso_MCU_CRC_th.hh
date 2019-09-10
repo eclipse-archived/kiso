@@ -29,9 +29,9 @@
 
 #if KISO_FEATURE_MCU_CRC
 
-FAKE_VALUE_FUNC(Retcode_T, MCU_CRC8, struct MCU_CRC8_S *, uint8_t*, uint32_t ,uint8_t *);
-FAKE_VALUE_FUNC(Retcode_T, MCU_CRC16, struct MCU_CRC16_S *, uint16_t*, uint32_t ,uint16_t *);
-FAKE_VALUE_FUNC(Retcode_T, MCU_CRC32, struct MCU_CRC32_S *, uint32_t*, uint32_t ,uint32_t *);
+FAKE_VALUE_FUNC(Retcode_T, MCU_CRC8, struct MCU_CRC8_S *, uint8_t*, uint32_t ,uint8_t *)
+FAKE_VALUE_FUNC(Retcode_T, MCU_CRC16, struct MCU_CRC16_S *, uint16_t*, uint32_t ,uint16_t *)
+FAKE_VALUE_FUNC(Retcode_T, MCU_CRC32, struct MCU_CRC32_S *, uint32_t*, uint32_t ,uint32_t *)
 
 #endif /* KISO_FEATURE_MCU_CRC */
 #endif /* KISO_MCU_CRC_TH_HH_*/

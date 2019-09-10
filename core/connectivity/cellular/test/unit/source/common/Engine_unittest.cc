@@ -348,8 +348,9 @@ TEST_F(TS_Engine_SendAtCommand, TimeoutAfterSend_Failure)
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
     uint8_t buffer[128];
 
-    std::array<BaseType_t, 2> takeRetVals = {pdFAIL, pdFAIL};
-    SET_RETURN_SEQ(xSemaphoreTake, takeRetVals.data(), takeRetVals.size());
+    // TODO: Use takeRetVals in the fixture
+    std::array<BaseType_t, 2> retVals = {pdFAIL, pdFAIL};
+    SET_RETURN_SEQ(xSemaphoreTake, retVals.data(), retVals.size());
 
     rc = Engine_SendAtCommand(buffer, sizeof(buffer));
 
@@ -462,7 +463,7 @@ TEST_F(TS_Engine_SendAtCommandWaitEcho, EchoDisabled_Success)
     EXPECT_EQ(0U, AtResponseQueue_WaitForNamedCmdEcho_fake.call_count);
 }
 
-FAKE_VOID_FUNC(TS_Engine_NotifyNewState_DummyCallback, Cellular_State_T, Cellular_State_T, void *, uint32_t);
+FAKE_VOID_FUNC(TS_Engine_NotifyNewState_DummyCallback, Cellular_State_T, Cellular_State_T, void *, uint32_t)
 
 class TS_Engine_NotifyNewState : public testing::Test
 {
@@ -505,7 +506,7 @@ TEST_F(TS_Engine_NotifyNewState, SameState_Success)
     EXPECT_EQ(expState, State);
 }
 
-FAKE_VALUE_FUNC(Retcode_T, TS_Engine_Dispatch_DummyCallback, void *, uint32_t);
+FAKE_VALUE_FUNC(Retcode_T, TS_Engine_Dispatch_DummyCallback, void *, uint32_t)
 
 class TS_Engine_Dispatch : public testing::Test
 {

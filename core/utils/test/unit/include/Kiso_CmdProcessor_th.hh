@@ -31,23 +31,13 @@
 /* faked variables needs to be initialized by the test fixture */
 typedef void (*CmdProcessor_Func_T)(void *param1, uint32_t param2);
 
-/**
- * mock-ups for the provided interfaces
- * Deprecated functions will be removed as part of PFM-659
- * Deprecated since vXXX (TODO: replace XXX with next version)
- */
-FAKE_VOID_FUNC(CmdProcessor_suspend , CmdProcessor_T *);
-FAKE_VOID_FUNC(CmdProcessor_resume , CmdProcessor_T *);
-FAKE_VALUE_FUNC(Retcode_T,CmdProcessor_initialize,CmdProcessor_T *,char *,uint32_t,uint32_t,uint32_t);
-FAKE_VALUE_FUNC(Retcode_T,CmdProcessor_enqueue,CmdProcessor_T *,CmdProcessor_Func_T,void *,uint32_t);
-FAKE_VALUE_FUNC(Retcode_T,CmdProcessor_enqueueFromIsr,CmdProcessor_T *,CmdProcessor_Func_T,void *,uint32_t);
-
 /* mock-ups for the provided interfaces */
-FAKE_VOID_FUNC(CmdProcessor_Suspend , CmdProcessor_T *);
-FAKE_VOID_FUNC(CmdProcessor_Resume , CmdProcessor_T *);
-FAKE_VALUE_FUNC(Retcode_T,CmdProcessor_Initialize,CmdProcessor_T *,char *,uint32_t,uint32_t,uint32_t);
-FAKE_VALUE_FUNC(Retcode_T,CmdProcessor_Enqueue,CmdProcessor_T *,CmdProcessor_Func_T,void *,uint32_t);
-FAKE_VALUE_FUNC(Retcode_T,CmdProcessor_EnqueueFromIsr,CmdProcessor_T *,CmdProcessor_Func_T,void *,uint32_t);
+
+FAKE_VOID_FUNC(CmdProcessor_Suspend, CmdProcessor_T*)
+FAKE_VOID_FUNC(CmdProcessor_Resume, CmdProcessor_T*)
+FAKE_VALUE_FUNC(Retcode_T, CmdProcessor_Initialize, CmdProcessor_T*, const char*, uint32_t, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, CmdProcessor_Enqueue, CmdProcessor_T*, CmdProcessor_Func_T, void*, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, CmdProcessor_EnqueueFromIsr, CmdProcessor_T*, CmdProcessor_Func_T, void*, uint32_t)
 
 #endif /* KISO_CMDPROCESSOR_TH_HH_ */
 

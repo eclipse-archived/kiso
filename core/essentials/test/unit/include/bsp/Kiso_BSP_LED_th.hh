@@ -25,13 +25,13 @@
 
 /* Mock-ups for the provided interfaces */
 
-FAKE_VALUE_FUNC(Retcode_T, BSP_LED_Connect);
-FAKE_VALUE_FUNC(Retcode_T, BSP_LED_Enable, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_LED_EnableAll);
-FAKE_VALUE_FUNC(Retcode_T, BSP_LED_Switch, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_LED_SwitchAll, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_LED_Disable, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_LED_DisableAll);
-FAKE_VALUE_FUNC(Retcode_T, BSP_LED_Disconnect);
+FAKE_VALUE_FUNC(Retcode_T, BSP_LED_Connect)
+FAKE_VALUE_FUNC(Retcode_T, BSP_LED_Enable, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_LED_EnableAll)
+FAKE_VALUE_FUNC(Retcode_T, BSP_LED_Switch, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_LED_SwitchAll, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_LED_Disable, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_LED_DisableAll)
+FAKE_VALUE_FUNC(Retcode_T, BSP_LED_Disconnect)
 
 #endif /* KISO_BSP_LED_TH_HH */

@@ -18,20 +18,20 @@
 #include <gtest.h>
 #include "Kiso_Cellular.h"
 
-FAKE_VALUE_FUNC(Retcode_T, Cellular_Initialize, Cellular_StateChanged_T);
-FAKE_VALUE_FUNC(Retcode_T, Cellular_PowerOn, const Cellular_PowerUpParameters_T*);
-FAKE_VALUE_FUNC(Retcode_T, Cellular_Reset, const Cellular_PowerUpParameters_T*);
-FAKE_VALUE_FUNC(Retcode_T, Cellular_RegisterOnNetwork, const Cellular_NetworkParameters_T*);
-FAKE_VALUE_FUNC(Retcode_T, Cellular_DisconnectFromNetwork);
-FAKE_VALUE_FUNC(Retcode_T, Cellular_SetAirPlaneMode, bool);
-FAKE_VALUE_FUNC(Retcode_T, Cellular_QueryIccid, char*, uint32_t*);
-FAKE_VALUE_FUNC(Retcode_T, Cellular_QueryNetworkInfo, Cellular_NetworkInfo_T*);
-FAKE_VALUE_FUNC(Retcode_T, Cellular_ConfigureDataContext, uint32_t, const Cellular_DataContextParameters_T*);
-FAKE_VALUE_FUNC(Retcode_T, Cellular_ActivateDataContext, uint32_t, const Cellular_DataContext_T**);
-FAKE_VALUE_FUNC(Retcode_T, Cellular_DeactivateDataContext, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, Cellular_PowerOff);
-FAKE_VALUE_FUNC(Retcode_T, Cellular_IsPoweredOn, bool*);
-FAKE_VALUE_FUNC(Retcode_T, Cellular_Deinitialize);
-FAKE_VALUE_FUNC(Cellular_State_T, Cellular_GetState);
+FAKE_VALUE_FUNC(Retcode_T, Cellular_Initialize, Cellular_StateChanged_T)
+FAKE_VALUE_FUNC(Retcode_T, Cellular_PowerOn, const Cellular_PowerUpParameters_T*)
+FAKE_VALUE_FUNC(Retcode_T, Cellular_Reset, const Cellular_PowerUpParameters_T*)
+FAKE_VALUE_FUNC(Retcode_T, Cellular_RegisterOnNetwork, const Cellular_NetworkParameters_T*)
+FAKE_VALUE_FUNC(Retcode_T, Cellular_DisconnectFromNetwork)
+FAKE_VALUE_FUNC(Retcode_T, Cellular_SetAirPlaneMode, bool)
+FAKE_VALUE_FUNC(Retcode_T, Cellular_QueryIccid, char*, uint32_t*)
+FAKE_VALUE_FUNC(Retcode_T, Cellular_QueryNetworkInfo, Cellular_NetworkInfo_T*)
+FAKE_VALUE_FUNC(Retcode_T, Cellular_ConfigureDataContext, uint32_t, const Cellular_DataContextParameters_T*)
+FAKE_VALUE_FUNC(Retcode_T, Cellular_ActivateDataContext, uint32_t, const Cellular_DataContext_T**)
+FAKE_VALUE_FUNC(Retcode_T, Cellular_DeactivateDataContext, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, Cellular_PowerOff)
+FAKE_VALUE_FUNC(Retcode_T, Cellular_IsPoweredOn, bool*)
+FAKE_VALUE_FUNC(Retcode_T, Cellular_Deinitialize)
+FAKE_VALUE_FUNC(Cellular_State_T, Cellular_GetState)
 
 #endif /* KISO_CELLULAR_TH_HH_ */

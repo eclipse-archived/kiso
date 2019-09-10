@@ -52,7 +52,7 @@ static void Dequeue(CmdProcessor_T * cmdProcessor);
 
 /* The description of the function is available in Kiso_CmdProcessor.h*/
 Retcode_T CmdProcessor_Initialize(
-        CmdProcessor_T *cmdProcessor, char *name,
+        CmdProcessor_T *cmdProcessor, const char *name,
         uint32_t taskPriority, uint32_t taskStackDepth, uint32_t queueSize)
 {
     uint32_t nameLen;
@@ -97,8 +97,8 @@ Retcode_T CmdProcessor_Initialize(
 /*  The description of the function is available in Kiso_CmdProcessor.h */
 Retcode_T CmdProcessor_Enqueue(CmdProcessor_T *cmdProcessor, CmdProcessor_Func_T func, void *param1, uint32_t param2)
 {
-    Retcode_T retcode = RETCODE_OK;
-    uint32_t rc;
+    BaseType_t rc;
+    Retcode_T retcode;
 
     /* Null checking */
     assert(func);
@@ -212,7 +212,7 @@ static void Dequeue(CmdProcessor_T * cmdProcessor)
     {
         CmdProcessor_Cmd_T cmd;
         cmdProcessorQueueHandle_t cmdQueue;
-        int8_t rc;
+        BaseType_t rc;
 
         cmdQueue = cmdProcessor->queue;
         rc = xQueueReceive(cmdQueue, &cmd, portMAX_DELAY);

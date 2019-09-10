@@ -16,6 +16,8 @@ if(${ENABLE_STATIC_CHECKS})
       set(CMAKE_C_CLANG_TIDY clang-tidy --extra-arg=--target=arm-none-eabi --extra-arg=--sysroot=/usr/lib/arm-none-eabi   -checks=-*,readability-*,clang-analyzer-*,-clang-analyzer-cplusplus*)
       set(CMAKE_CXX_CLANG_TIDY clang-tidy --extra-arg=--target=arm-none-eabi --extra-arg=--sysroot=/usr/lib/arm-none-eabi -checks=-*,readability-*,clang-analyzer-*,-clang-analyzer-cplusplus*)
 endif()
+# TODO: Reenable warnings when module and tests are fixed
+add_compile_options(-Wno-cast-qual)
 
 ## Make sure we are only compiling them with the proper toolchain
 if(${CMAKE_CROSSCOMPILING})

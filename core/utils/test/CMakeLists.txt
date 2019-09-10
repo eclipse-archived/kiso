@@ -45,13 +45,14 @@ foreach(unittest_file ${TEST_CODE})
    add_test(${unit_name} utils_${unit_name})
 endforeach(unittest_file ${TEST_CODE})
 
-# From CodeCoverage module
-SETUP_TARGET_FOR_COVERAGE_LCOV(
-   NAME utils_cov
-   EXECUTABLE ${CMAKE_CTEST_COMMAND}
-   DEPENDENCIES utils_tests
-   LCOV_ARGS --rc lcov_branch_coverage=1
-   GENHTML_ARGS --branch-coverage
-)
-add_dependencies(coverage utils_cov)
-
+if(${ENABLE_COVERAGE})
+   # From CodeCoverage module
+   SETUP_TARGET_FOR_COVERAGE_LCOV(
+      NAME utils_cov
+      EXECUTABLE ${CMAKE_CTEST_COMMAND}
+      DEPENDENCIES utils_tests
+      LCOV_ARGS --rc lcov_branch_coverage=1
+      GENHTML_ARGS --branch-coverage
+   )
+   add_dependencies(coverage utils_cov)
+endif()

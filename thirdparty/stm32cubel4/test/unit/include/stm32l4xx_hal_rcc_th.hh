@@ -23,23 +23,23 @@
 
 /* Faked variables needs to be initialized by the test fixture */
 #undef __HAL_RCC_GET_FLAG
-FAKE_VOID_FUNC(__HAL_RCC_GET_FLAG, uint32_t);
+FAKE_VOID_FUNC(__HAL_RCC_GET_FLAG, uint32_t)
 #undef __HAL_RCC_CLEAR_RESET_FLAGS
-FAKE_VOID_FUNC(__HAL_RCC_CLEAR_RESET_FLAGS);
+FAKE_VOID_FUNC(__HAL_RCC_CLEAR_RESET_FLAGS)
 
 /* Mock-ups for the provided interfaces */
-FAKE_VOID_FUNC(HAL_RCC_DeInit);
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_RCC_OscConfig, RCC_OscInitTypeDef*);
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_RCC_ClockConfig, RCC_ClkInitTypeDef*, uint32_t);
+FAKE_VOID_FUNC(HAL_RCC_DeInit)
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_RCC_OscConfig, RCC_OscInitTypeDef*)
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_RCC_ClockConfig, RCC_ClkInitTypeDef*, uint32_t)
 
-FAKE_VOID_FUNC(HAL_RCC_MCOConfig, uint32_t, uint32_t, uint32_t);
-FAKE_VOID_FUNC(HAL_RCC_EnableCSS);
-FAKE_VALUE_FUNC(uint32_t, HAL_RCC_GetSysClockFreq);
-FAKE_VALUE_FUNC(uint32_t, HAL_RCC_GetHCLKFreq);
-FAKE_VALUE_FUNC(uint32_t, HAL_RCC_GetPCLK1Freq);
-FAKE_VALUE_FUNC(uint32_t, HAL_RCC_GetPCLK2Freq);
-FAKE_VOID_FUNC(HAL_RCC_GetOscConfig, RCC_OscInitTypeDef*);
-FAKE_VOID_FUNC(HAL_RCC_GetClockConfig, RCC_ClkInitTypeDef*, uint32_t*);
-FAKE_VOID_FUNC(HAL_RCC_NMI_IRQHandler);
+FAKE_VOID_FUNC(HAL_RCC_MCOConfig, uint32_t, uint32_t, uint32_t)
+FAKE_VOID_FUNC(HAL_RCC_EnableCSS)
+FAKE_VALUE_FUNC(uint32_t, HAL_RCC_GetSysClockFreq)
+FAKE_VALUE_FUNC(uint32_t, HAL_RCC_GetHCLKFreq)
+FAKE_VALUE_FUNC(uint32_t, HAL_RCC_GetPCLK1Freq)
+FAKE_VALUE_FUNC(uint32_t, HAL_RCC_GetPCLK2Freq)
+FAKE_VOID_FUNC(HAL_RCC_GetOscConfig, RCC_OscInitTypeDef*)
+FAKE_VOID_FUNC(HAL_RCC_GetClockConfig, RCC_ClkInitTypeDef*, uint32_t*)
+FAKE_VOID_FUNC(HAL_RCC_NMI_IRQHandler)
 
 #endif /* STM32L4XX_HAL_RCC_TH_HH_ */

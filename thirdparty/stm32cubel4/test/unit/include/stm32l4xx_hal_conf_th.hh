@@ -23,7 +23,7 @@
 
 /* Faked variables needs to be initialized by the test fixture */
 #ifdef USE_FULL_ASSERT
-FAKE_VOID_FUNC(assert_failed, uint8_t*, uint32_t);
+FAKE_VOID_FUNC(assert_failed, uint8_t*, uint32_t)
 #else
 #define assert_param(expr) ((void)0U)
 #endif /* USE_FULL_ASSERT */

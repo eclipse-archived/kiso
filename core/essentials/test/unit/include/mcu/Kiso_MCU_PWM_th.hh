@@ -37,15 +37,15 @@
 
 #if KISO_FEATURE_PWM
 
-FAKE_VALUE_FUNC(Retcode_T, MCU_PWM_TimerInitialize, TIM_TypeDef*);
-FAKE_VALUE_FUNC(Retcode_T, MCU_PWM_TimerChannelInitialize, TIM_TypeDef*, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, MCU_PWM_GetFrequency_Hz, TIM_TypeDef*);
-FAKE_VALUE_FUNC(Retcode_T, MCU_PWM_SetFrequency_Hz, TIM_TypeDef*, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, MCU_PWM_SetFrequency_ScaleChannels, TIM_TypeDef*, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, MCU_PWM_SetDutyCycle, TIM_TypeDef*, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, MCU_PWM_StartChannel, TIM_TypeDef*, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, MCU_PWM_StopChannel, TIM_TypeDef*, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, MCU_PWM_GetDutyCycle, TIM_TypeDef*, uint32_t);
+FAKE_VALUE_FUNC(Retcode_T, MCU_PWM_TimerInitialize, TIM_TypeDef*)
+FAKE_VALUE_FUNC(Retcode_T, MCU_PWM_TimerChannelInitialize, TIM_TypeDef*, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, MCU_PWM_GetFrequency_Hz, TIM_TypeDef*)
+FAKE_VALUE_FUNC(Retcode_T, MCU_PWM_SetFrequency_Hz, TIM_TypeDef*, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_PWM_SetFrequency_ScaleChannels, TIM_TypeDef*, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_PWM_SetDutyCycle, TIM_TypeDef*, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_PWM_StartChannel, TIM_TypeDef*, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_PWM_StopChannel, TIM_TypeDef*, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, MCU_PWM_GetDutyCycle, TIM_TypeDef*, uint32_t)
 
 #endif /* KISO_FEATURE_PWM */
 #endif /* KISO_MCU_PWM_TH_HH */

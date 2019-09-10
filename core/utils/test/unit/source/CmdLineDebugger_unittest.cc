@@ -35,7 +35,7 @@ extern "C"
 extern "C"
 {
 
-FAKE_VALUE_FUNC(Retcode_T, testCallback, uint32_t, const char **);
+FAKE_VALUE_FUNC(Retcode_T, testCallback, uint32_t, const char* const*)
 
 
 
@@ -46,7 +46,7 @@ struct CmdLineDbg_Element_S testCommand = {
 };
 
 struct CmdLineDbg_Element_S testCommandNull = {
-NULL,
+        NULL,
         (const char *) "TestCommandNull",
         NULL
 };
@@ -272,27 +272,27 @@ TEST_F(CommandLineInterface, FindCommandByString)
     CmdLineDbg_RegisterCmdArray(testList, testListElements);
 
     /* Find first command in list */
-    result = CmdLine_FindCmd(testList, (char *)"TestCommand");
+    result = CmdLine_FindCmd(testList, "TestCommand");
     ASSERT_EQ(&testList[0], result);
 
     /* Find second command in list */
-    result = CmdLine_FindCmd(testList, (char *)"Test1");
+    result = CmdLine_FindCmd(testList, "Test1");
     ASSERT_EQ(&testList[1], result);
 
     /* Find third command in list */
-    result = CmdLine_FindCmd(testList, (char *)"Test2");
+    result = CmdLine_FindCmd(testList, "Test2");
     ASSERT_EQ(&testList[2], result);
 
     /* Find fourth command in list */
-    result = CmdLine_FindCmd(testList, (char *)"sudo");
+    result = CmdLine_FindCmd(testList, "sudo");
     ASSERT_EQ(&testList[3], result);
 
     /* Find fifth command in list */
-    result = CmdLine_FindCmd(testList, (char *)"Help");
+    result = CmdLine_FindCmd(testList, "Help");
     ASSERT_EQ(&testList[4], result);
 
     /* Find sixth command in list */
-    result = CmdLine_FindCmd(testList, (char *)"unknown");
+    result = CmdLine_FindCmd(testList, "unknown");
     ASSERT_EQ(NULL, result); /* Command was not found */
 
 }
@@ -308,12 +308,12 @@ TEST_F(CommandLineInterface, FindSoloCommand)
 
     /* Linked list is not initialized! The Command line interface only sees one command in the list */
     /* This fixes a bug where the FindCmd function was jumping directly to the second element of the list */
-    result = CmdLine_FindCmd(testList, (char *) "TestCommand");
+    result = CmdLine_FindCmd(testList, "TestCommand");
 
     ASSERT_EQ(&testList[0], result);
     ASSERT_STREQ(testList[0].commandString, "TestCommand");
 
-    result = CmdLine_FindCmd(testList, (char *)"unknown");
+    result = CmdLine_FindCmd(testList, "unknown");
     ASSERT_EQ(NULL, result); /* Command was not found */
 
 }
@@ -384,10 +384,10 @@ TEST_F(CommandLineInterface, TokenizeString2)
 TEST_F(CommandLineInterface,CmdLine_ExecuteCmd)
 {
   const char * argv[] = {
-        (char *)"TestBuffer",
-        (char *)"param1",
-        (char *)"param2",
-        (char *)"param3",
+        "TestBuffer",
+        "param1",
+        "param2",
+        "param3",
   };
 
   size_t argc = sizeof(argv)/sizeof(argv[0]);

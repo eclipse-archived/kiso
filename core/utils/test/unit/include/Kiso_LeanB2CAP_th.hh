@@ -29,12 +29,12 @@
 #include "Kiso_LeanB2CAP.h"
 
 /* fakes for assertion related macros */
-FAKE_VALUE_FUNC(Retcode_T, LeanB2CAP_Initialize, LeanB2CAP_HandlePtr_T * , LeanB2CAP_FrameData_T * , LeanB2CAPCallback );
-FAKE_VALUE_FUNC(Retcode_T, LeanB2CAP_RxDataProcessor, LeanB2CAP_HandlePtr_T * , LeanB2CAP_FrameData_T * );
-FAKE_VALUE_FUNC(Retcode_T, LeanB2CAP_Builder, LeanB2CAP_FrameData_T * , LeanB2CAP_RawData_T * );
-FAKE_VALUE_FUNC(Retcode_T, LeanB2CAP_OverheadBuilder, LeanB2CAP_Overhead_T * ,LeanB2CAP_RawData_T *);
-FAKE_VALUE_FUNC(Retcode_T, LeanB2CAP_ResetRxDataProcessor, LeanB2CAP_HandlePtr_T * );
-FAKE_VALUE_FUNC(Retcode_T, LeanB2CAP_Deinitialize, LeanB2CAP_HandlePtr_T * );
+FAKE_VALUE_FUNC(Retcode_T, LeanB2CAP_Initialize, LeanB2CAP_HandlePtr_T * , LeanB2CAP_FrameData_T * , LeanB2CAPCallback )
+FAKE_VALUE_FUNC(Retcode_T, LeanB2CAP_RxDataProcessor, LeanB2CAP_HandlePtr_T * , LeanB2CAP_FrameData_T * )
+FAKE_VALUE_FUNC(Retcode_T, LeanB2CAP_Builder, LeanB2CAP_FrameData_T * , LeanB2CAP_RawData_T * )
+FAKE_VALUE_FUNC(Retcode_T, LeanB2CAP_OverheadBuilder, LeanB2CAP_Overhead_T * ,LeanB2CAP_RawData_T *)
+FAKE_VALUE_FUNC(Retcode_T, LeanB2CAP_ResetRxDataProcessor, LeanB2CAP_HandlePtr_T * )
+FAKE_VALUE_FUNC(Retcode_T, LeanB2CAP_Deinitialize, LeanB2CAP_HandlePtr_T * )
 
 #endif /* KISO_LEANB2CAP_TH_HH_ */
 

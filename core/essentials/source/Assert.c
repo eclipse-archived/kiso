@@ -53,20 +53,20 @@
 static Assert_Callback_T assertCallback = NULL; /*< Variable to store the callback function pointer */
 
 /* Static assert to test the compiler capabilities */
-static_assert((1 != 0), "Testing static assert");
+static_assert((1 != 0), "Testing static assert")
 
 /* global functions ********************************************************* */
 
 /* The description of the function is available in header file */
 Retcode_T Assert_Initialize(Assert_Callback_T callback)
 {
-	Retcode_T retcode = RETCODE_OK;
+    Retcode_T retcode = RETCODE_OK;
 
-	assertCallback = callback;
+    assertCallback = callback;
 
     if (NULL == assertCallback)
     {
-    	retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM);
+        retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM);
     }
 
     return (retcode);
@@ -77,7 +77,7 @@ void Assert_Dynamic(const unsigned long line, const unsigned char * const file)
 {
     if (NULL != assertCallback)
     {
-    	assertCallback(line , file);
+        assertCallback(line , file);
     }
 #if defined(ASSERT_USE_STD_EXIT)
     /* exit application */

@@ -38,10 +38,10 @@ void __DSB(void);
 void __DMB(void);
 void __NOP(void);
 
-FAKE_VOID_FUNC(__ISB);
-FAKE_VOID_FUNC(__DSB);
-FAKE_VOID_FUNC(__DMB);
-FAKE_VOID_FUNC(__NOP);
+FAKE_VOID_FUNC(__ISB)
+FAKE_VOID_FUNC(__DSB)
+FAKE_VOID_FUNC(__DMB)
+FAKE_VOID_FUNC(__NOP)
 
 #include "Sleep.c"
 

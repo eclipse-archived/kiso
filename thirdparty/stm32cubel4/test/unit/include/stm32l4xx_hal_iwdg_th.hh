@@ -27,15 +27,15 @@
 /* Mock-ups for the provided macros */
 
 #undef __HAL_IWDG_START
-FAKE_VOID_FUNC(__HAL_IWDG_START, IWDG_HandleTypeDef*);
+FAKE_VOID_FUNC(__HAL_IWDG_START, IWDG_HandleTypeDef*)
 
 #undef __HAL_IWDG_RELOAD_COUNTER
-FAKE_VOID_FUNC(__HAL_IWDG_RELOAD_COUNTER, IWDG_HandleTypeDef*);
+FAKE_VOID_FUNC(__HAL_IWDG_RELOAD_COUNTER, IWDG_HandleTypeDef*)
 
 /* Mock-ups for the provided interfaces */
 
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_IWDG_Init, IWDG_HandleTypeDef*);
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_IWDG_Init, IWDG_HandleTypeDef*)
 
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_IWDG_Refresh, IWDG_HandleTypeDef*);
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_IWDG_Refresh, IWDG_HandleTypeDef*)
 
 #endif /* STM32L4XX_HAL_DMA_TH_HH_ */

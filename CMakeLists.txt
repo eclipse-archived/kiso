@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.6)
 ## Command line parameter for build variant
 option(ENABLE_TESTING "Configure a build tree for testing instead of normal application mode" OFF)
 option(ENABLE_STATIC_CHECKS "Configure a build tree for static code analysis" OFF)
+option(ENABLE_COVERAGE "Build unit tests with coverage information to use with GCOV and LCOV" ON)
 
 ## Include config file if it exists
 include(default_config.cmake OPTIONAL)
@@ -15,10 +16,11 @@ endif()
 
 message("------------- KISO CONFIG -------------")
 message("Building Kiso tests:   ${ENABLE_TESTING}")
-message("Building Kiso board:   ${KISO_BOARD_NAME}")
-message("Building Kiso type:    ${KISO_TYPE}")
-message("Building Kiso OS:      ${KISO_OS_LIB}")
-message("Building Kiso Example: ${KISO_EXAMPLE}")
+message("  ... with coverage:   ${ENABLE_COVERAGE}")
+message("Selected Kiso board:   ${KISO_BOARD_NAME}")
+message("Selected Kiso type:    ${KISO_TYPE}")
+message("Selected Kiso OS:      ${KISO_OS_LIB}")
+message("Selected Kiso Example: ${KISO_EXAMPLE}")
 message("------------- KISO CONFIG -------------")
 
 project (Kiso C)
@@ -26,25 +28,31 @@ project (Kiso C)
 ## Set basic project compile options
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_EXTENSIONS false)
-set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
+add_compile_options(-Werror -Wall -Wextra -Wpedantic -pedantic -pedantic-errors -Wdouble-promotion
+                    -Wformat=2 -Winit-self -Wunused -Wunused-const-variable -Wnull-dereference
+                    -Wuninitialized -fstrict-overflow -Wstrict-overflow=4 -Wshadow -Wcast-qual)
 
 ## Needs to be in project scope before board is loaded
 if(${ENABLE_TESTING})
    enable_language(CXX)
+   set(CMAKE_CXX_STANDARD 11)
    set(CMAKE_BUILD_TYPE Debug)
-   # Add more warnings in unit tests
-   add_compile_options(-Wall -Wextra) #TODO: -Wpedantic -Werror
+
+   # In the gtest lib there are problems with these warnings - disable them
+   add_compile_options(-Wno-unused-const-variable -Wno-missing-field-initializers -Wno-pedantic)
 
    enable_testing()
-   include(cmake/CodeCoverage.cmake)
+   if(${ENABLE_COVERAGE})
+      include(cmake/CodeCoverage.cmake)
 
-   APPEND_COVERAGE_COMPILER_FLAGS() # From CodeCoverage module
-   # Do not include coverage information for system headers and thirdparty libs
-   set(COVERAGE_LCOV_EXCLUDES "'/usr/include/*'" "'/usr/local/include/*'" "'${CMAKE_SOURCE_DIR}/thirdparty/*'")
+      APPEND_COVERAGE_COMPILER_FLAGS() # From CodeCoverage module
+      # Do not include coverage information for system headers and thirdparty libs
+      set(COVERAGE_LCOV_EXCLUDES "'/usr/include/*'" "'/usr/local/include/*'" "'${CMAKE_SOURCE_DIR}/thirdparty/*'")
 
-   add_custom_target(coverage)
-endif()
+      add_custom_target(coverage)
+   endif(${ENABLE_COVERAGE})
+endif(${ENABLE_TESTING})
 
 ## Check for valid board and include the configuration
 if(NOT DEFINED KISO_BOARD_NAME)

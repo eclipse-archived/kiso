@@ -27,9 +27,9 @@
 
 #if KISO_FEATURE_BSP_EXTENSION_GPIO
 
-FAKE_VALUE_FUNC(Retcode_T, BSP_Extension_Gpio_Connect,uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_Extension_Gpio_Disconnect, uint32_t);
-FAKE_VALUE_FUNC(GPIO_T, BSP_Extension_Gpio_GetGpioById, uint32_t);
+FAKE_VALUE_FUNC(Retcode_T, BSP_Extension_Gpio_Connect,uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Extension_Gpio_Disconnect, uint32_t)
+FAKE_VALUE_FUNC(GPIO_T, BSP_Extension_Gpio_GetGpioById, uint32_t)
 
 #endif /* KISO_FEATURE_BSP_EXTENSION_GPIO */
 #endif /* KISO_BSP_EXTENSION_GPIO_TH_HH */

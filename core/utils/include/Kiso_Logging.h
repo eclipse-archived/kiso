@@ -72,7 +72,7 @@
 #include "LogConfig.h"
 
 #define LOG_LEVEL_VAR(a)        LOG_LEVEL_COMPOSE(__log_level_, a)
-#define LOG_LEVEL_COMPOSE(a, b) (a ## b)
+#define LOG_LEVEL_COMPOSE(a, b) a ## b
 
 #ifndef MIN
     #define MIN(a, b)           (((a) < (b)) ? (a) : (b))

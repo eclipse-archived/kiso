@@ -63,7 +63,7 @@ BURTC_TypeDef * BURTC = &BURTC_HW;
  */
 #include "Timer.c"
 
-FAKE_VOID_FUNC(TimerTestCallback, Timer_T, struct MCU_Timer_Event_S);
+FAKE_VOID_FUNC(TimerTestCallback, Timer_T, struct MCU_Timer_Event_S)
 
 /* ************************************************************************** */
 /* * BURTC DRIVER *********************************************************** */

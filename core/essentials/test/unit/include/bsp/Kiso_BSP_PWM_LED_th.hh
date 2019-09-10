@@ -27,14 +27,14 @@
 
 #if KISO_FEATURE_BSP_PWM_LED
 
-FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_LED_Connect );
-FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_LED_Enable, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_LED_EnableAll );
-FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_LED_Switch, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_LED_SwitchAll, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_LED_Disable, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_LED_DisableAll );
-FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_LED_Disconnect );
+FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_LED_Connect )
+FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_LED_Enable, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_LED_EnableAll )
+FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_LED_Switch, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_LED_SwitchAll, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_LED_Disable, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_LED_DisableAll )
+FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_LED_Disconnect )
 
 #endif /* KISO_FEATURE_BSP_PWM_LED */
 #endif /* KISO_BSP_PWM_LED_TH_HH */

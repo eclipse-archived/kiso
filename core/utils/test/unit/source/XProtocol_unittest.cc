@@ -46,7 +46,7 @@ static uint16_t CrcChecksum;
 
 /* CRC_16_custom_fake function locally defined */
 static Retcode_T CRC_16_custom_fake(uint16_t poly, uint16_t *shifter,
-        uint8_t *data_p, uint16_t len)
+        const uint8_t *data_p, uint16_t len)
 {
     KISO_UNUSED(poly);
     KISO_UNUSED(data_p);

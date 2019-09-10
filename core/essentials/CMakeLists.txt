@@ -18,8 +18,9 @@ target_link_libraries(essentials_int INTERFACE kiso_config)
 ## Enable static code analysis
 #  the checks will be executed as it would be on the desired compile step
 if(${ENABLE_STATIC_CHECKS})
-      set(CMAKE_C_CLANG_TIDY clang-tidy --extra-arg=--target=arm-none-eabi --extra-arg=--sysroot=/usr/lib/arm-none-eabi   -checks=-*,readability-*,clang-analyzer-*,-clang-analyzer-cplusplus*)
-      set(CMAKE_CXX_CLANG_TIDY clang-tidy --extra-arg=--target=arm-none-eabi --extra-arg=--sysroot=/usr/lib/arm-none-eabi -checks=-*,readability-*,clang-analyzer-*,-clang-analyzer-cplusplus*)
+      # '-extra-arg=-Wno-unknown-warning-option' because clang-tidy doesn't recognize "-Wdiscarded-qualifiers"
+      set(CMAKE_C_CLANG_TIDY clang-tidy --extra-arg=--target=arm-none-eabi --extra-arg=--sysroot=/usr/lib/arm-none-eabi -extra-arg=-Wno-unknown-warning-option   -checks=-*,readability-*,clang-analyzer-*,-clang-analyzer-cplusplus*)
+      set(CMAKE_CXX_CLANG_TIDY clang-tidy --extra-arg=--target=arm-none-eabi --extra-arg=--sysroot=/usr/lib/arm-none-eabi -extra-arg=-Wno-unknown-warning-option -checks=-*,readability-*,clang-analyzer-*,-clang-analyzer-cplusplus*)
 endif()
 
 ## Define static library to be compiled

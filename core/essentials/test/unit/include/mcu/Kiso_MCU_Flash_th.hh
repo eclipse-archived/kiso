@@ -35,11 +35,11 @@ uint8_t sourceAddress = 0x01;
 const uint8_t *targetAddress_ptr = &targetAddress;
 const uint8_t *sourceAddress_ptr = &sourceAddress;
 
-FAKE_VALUE_FUNC(Retcode_T, MCU_Flash_Write, const uint8_t*, const uint8_t*, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, MCU_Flash_GetPageSize );
-FAKE_VALUE_FUNC(Retcode_T, MCU_Flash_ErasePage, uint32_t*);
-FAKE_VALUE_FUNC(Retcode_T, MCU_Flash_Erase, uint32_t*, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, MCU_Flash_Read, uint8_t*, uint8_t*, uint32_t);
+FAKE_VALUE_FUNC(Retcode_T, MCU_Flash_Write, const uint8_t*, const uint8_t*, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, MCU_Flash_GetPageSize )
+FAKE_VALUE_FUNC(Retcode_T, MCU_Flash_ErasePage, uint32_t*)
+FAKE_VALUE_FUNC(Retcode_T, MCU_Flash_Erase, uint32_t*, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_Flash_Read, uint8_t*, uint8_t*, uint32_t)
 
 
 #endif /* KISO_FEATURE_FLASH */

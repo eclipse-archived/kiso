@@ -26,11 +26,11 @@
 /* Mock-ups for the provided interfaces */
 #if KISO_FEATURE_BSP_RNG
 
-FAKE_VALUE_FUNC(Retcode_T, BSP_RNG_Connect);
-FAKE_VALUE_FUNC(Retcode_T, BSP_RNG_Enable);
-FAKE_VALUE_FUNC(Retcode_T, BSP_RNG_Disable);
-FAKE_VALUE_FUNC(Retcode_T, BSP_RNG_Disconnect);
-FAKE_VALUE_FUNC(HWHandle_T, BSP_RNG_GetHandle);
+FAKE_VALUE_FUNC(Retcode_T, BSP_RNG_Connect)
+FAKE_VALUE_FUNC(Retcode_T, BSP_RNG_Enable)
+FAKE_VALUE_FUNC(Retcode_T, BSP_RNG_Disable)
+FAKE_VALUE_FUNC(Retcode_T, BSP_RNG_Disconnect)
+FAKE_VALUE_FUNC(HWHandle_T, BSP_RNG_GetHandle)
 
 #endif /* KISO_FEATURE_BSP_RNG */
 

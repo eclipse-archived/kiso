@@ -27,11 +27,11 @@
 
 #if KISO_FEATURE_BSP_PWM_BUZZER
 
-FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_Buzzer_Connect );
-FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_Buzzer_Enable ,uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_Buzzer_Switch, uint32_t, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_Buzzer_Disable ,uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_Buzzer_Disconnect );
+FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_Buzzer_Connect )
+FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_Buzzer_Enable ,uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_Buzzer_Switch, uint32_t, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_Buzzer_Disable ,uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_PWM_Buzzer_Disconnect )
 
 #endif /* KISO_FEATURE_BSP_PWM_BUZZER*/
 #endif /* KISO_BSP_PWM_BUZZER_TH_HH */

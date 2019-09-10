@@ -356,8 +356,10 @@ static Retcode_T Set_CXREG(const char* fmt, AT_CXREG_N_T n)
     Retcode_T retcode = RETCODE_OK;
 
     assert(NULL != fmt);
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
     int32_t len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), fmt, (int) n);
+#pragma GCC diagnostic pop
     if ((size_t) len > sizeof(Engine_AtSendBuffer) || len < 0)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
@@ -1097,7 +1099,7 @@ Retcode_T At_Set_CFUN(const AT_CFUN_Param_T* param)
     case AT_CFUN_FUN_INVALID:
         default:
         if (AT_CFUN_FUN_RESERVEDSTART > param->Fun
-                && AT_CFUN_FUN_RESERVEDEND < param->Fun)
+                || AT_CFUN_FUN_RESERVEDEND < param->Fun)
         {
             return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
         }

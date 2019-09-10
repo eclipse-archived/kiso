@@ -27,13 +27,13 @@
 /* additional interface header files */
 #include "Kiso_CRC.h"
 
-#define XPROTOCOL_CRC_CCITT_POLY	0x1021U /**< Polynom for function crc16 */
-#define XPROTOCOL_SD			0xC0	/**< Start delimitter */
-#define XPROTOCOL_ED			0xC9	/**< End delimitter */
-#define XPROTOCOL_ESC			0xDB	/**< Escape character */
-#define XPROTOCOL_ESCAPED_SD		0xDC	/**< Escaped SD */
-#define XPROTOCOL_ESCAPED_ED		0xDE	/**< Escaped ED */
-#define XPROTOCOL_ESCAPED_ESC		0xDD	/**< Escaped ESC */
+#define XPROTOCOL_CRC_CCITT_POLY   0x1021U /**< Polynom for function crc16 */
+#define XPROTOCOL_SD               0xC0    /**< Start delimitter */
+#define XPROTOCOL_ED               0xC9    /**< End delimitter */
+#define XPROTOCOL_ESC              0xDB    /**< Escape character */
+#define XPROTOCOL_ESCAPED_SD       0xDC    /**< Escaped SD */
+#define XPROTOCOL_ESCAPED_ED       0xDE    /**< Escaped ED */
+#define XPROTOCOL_ESCAPED_ESC      0xDD    /**< Escaped ESC */
 
 
 static Retcode_T Escape_SpecialCharacters(uint8_t *frame, uint32_t *indicator, uint32_t maxFrameLength)
@@ -121,8 +121,8 @@ Retcode_T XProtocol_EncodeFrame(const uint8_t *data, uint32_t dataLength,
      * always returning RETCODE_OK because we check for NULL pointers
      * ourselves.
      */
-    (void) CRC_16(XPROTOCOL_CRC_CCITT_POLY, &checksum, (uint8_t*) data,
-            (uint16_t) dataLength);
+    // TODO: Check for dataLength >= 0xFFFF because of the downcast
+    (void) CRC_16(XPROTOCOL_CRC_CCITT_POLY, &checksum, data, (uint16_t) dataLength);
 
     /* create encoded frame byte per byte */
     /* set start delimiter */

@@ -44,7 +44,7 @@ extern "C"
 }
 
 /* Creating a test callback fake */
-FAKE_VOID_FUNC(TestCallbackFunc, void *, uint32_t);
+FAKE_VOID_FUNC(TestCallbackFunc, void *, uint32_t)
 
 /* Default objects for existing and valid pointers */
 CmdProcessor_Cmd_T cmd;
@@ -53,17 +53,17 @@ uint32_t defaultQueueObject;
 uint32_t defaultTaskObject;
 uint32_t defaultMallocObject;
 
-FAKE_VALUE_FUNC(xdc_UInt, ti_sysbios_knl_Swi_disable__E);
-FAKE_VOID_FUNC(ti_sysbios_knl_Swi_restore__E, xdc_UInt);
-FAKE_VALUE_FUNC(xdc_UInt, ti_sysbios_hal_Hwi_HwiProxy_disable__E);
-FAKE_VOID_FUNC(ti_sysbios_hal_Hwi_HwiProxy_restore__E, xdc_UInt);
+FAKE_VALUE_FUNC(xdc_UInt, ti_sysbios_knl_Swi_disable__E)
+FAKE_VOID_FUNC(ti_sysbios_knl_Swi_restore__E, xdc_UInt)
+FAKE_VALUE_FUNC(xdc_UInt, ti_sysbios_hal_Hwi_HwiProxy_disable__E)
+FAKE_VOID_FUNC(ti_sysbios_hal_Hwi_HwiProxy_restore__E, xdc_UInt)
 
-FAKE_VOID_FUNC(ti_sysbios_knl_Mailbox_Params__init__S, xdc_Ptr, const xdc_Void *, xdc_SizeT, xdc_SizeT);
+FAKE_VOID_FUNC(ti_sysbios_knl_Mailbox_Params__init__S, xdc_Ptr, const xdc_Void *, xdc_SizeT, xdc_SizeT)
 
-FAKE_VALUE_FUNC(ti_sysbios_knl_Mailbox_Handle, ti_sysbios_knl_Mailbox_create, xdc_SizeT, xdc_UInt, const ti_sysbios_knl_Mailbox_Params *, xdc_runtime_Error_Block *);
+FAKE_VALUE_FUNC(ti_sysbios_knl_Mailbox_Handle, ti_sysbios_knl_Mailbox_create, xdc_SizeT, xdc_UInt, const ti_sysbios_knl_Mailbox_Params *, xdc_runtime_Error_Block *)
 
-FAKE_VALUE_FUNC(xdc_Bool, ti_sysbios_knl_Mailbox_post__E, Mailbox_Object *, Ptr , xdc_UInt32);
-FAKE_VALUE_FUNC(xdc_Bool, ti_sysbios_knl_Mailbox_pend__E, Mailbox_Object *, Ptr , xdc_UInt32);
+FAKE_VALUE_FUNC(xdc_Bool, ti_sysbios_knl_Mailbox_post__E, Mailbox_Object *, Ptr , xdc_UInt32)
+FAKE_VALUE_FUNC(xdc_Bool, ti_sysbios_knl_Mailbox_pend__E, Mailbox_Object *, Ptr , xdc_UInt32)
 
 xdc_Bool TestMailboxPend(Mailbox_Object * obj, Ptr msg, xdc_UInt32 timeout)
 {

@@ -63,7 +63,7 @@ static const LogAppender_T UartAppender =
  */
 const LogAppender_T *Logging_UARTAppender = &UartAppender;
 
-HWHandle_T uartHandle;
+// HWHandle_T uartHandle;
 
 UARTTransceiver_T LogTransceiver;
 
@@ -100,7 +100,7 @@ static Retcode_T UartAppenderInit(void *init)
 
 static Retcode_T UartAppenderWrite(const char *message, uint32_t length)
 {
-    return UARTTransceiver_WriteData(&LogTransceiver, (uint8_t *)message, length, LOG_APPENDER_TIMEOUT);
+    return UARTTransceiver_WriteData(&LogTransceiver, (const uint8_t *)message, length, LOG_APPENDER_TIMEOUT);
 }
 
 static void UartCallback(UART_T uart, struct MCU_UART_Event_S event)

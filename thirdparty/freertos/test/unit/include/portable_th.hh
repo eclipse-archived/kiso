@@ -41,16 +41,16 @@ typedef struct HeapRegion
 /* faked variables needs to be initialized by the test fixture */
 
 /* mock-ups for the provided interfaces */
-FAKE_VOID_FUNC(vPortDefineHeapRegions, const HeapRegion_t *);
-FAKE_VALUE_FUNC(void*, pvPortMalloc, size_t);
-FAKE_VOID_FUNC(vPortFree, void*);
-FAKE_VOID_FUNC(vPortInitialiseBlocks);
-FAKE_VALUE_FUNC(size_t, xPortGetFreeHeapSize);
-FAKE_VALUE_FUNC(size_t, xPortGetMinimumEverFreeHeapSize);
+FAKE_VOID_FUNC(vPortDefineHeapRegions, const HeapRegion_t *)
+FAKE_VALUE_FUNC(void*, pvPortMalloc, size_t)
+FAKE_VOID_FUNC(vPortFree, void*)
+FAKE_VOID_FUNC(vPortInitialiseBlocks)
+FAKE_VALUE_FUNC(size_t, xPortGetFreeHeapSize)
+FAKE_VALUE_FUNC(size_t, xPortGetMinimumEverFreeHeapSize)
 
-FAKE_VOID_FUNC(xPortSysTickHandler);
-FAKE_VALUE_FUNC(BaseType_t, xPortStartScheduler);
-FAKE_VOID_FUNC(vPortEndScheduler);
+FAKE_VOID_FUNC(xPortSysTickHandler)
+FAKE_VALUE_FUNC(BaseType_t, xPortStartScheduler)
+FAKE_VOID_FUNC(vPortEndScheduler)
 
 #endif /* KISO_PORTABLE_TH_HH_ */
 

@@ -29,11 +29,11 @@
 
 #if KISO_FEATURE_SLEEP
 
-FAKE_VALUE_FUNC(Retcode_T, MCU_Sleep_Initialize);
-FAKE_VALUE_FUNC(Retcode_T, MCU_Sleep_BlockSleepMode, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, MCU_Sleep_UnblockSleepMode, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, MCU_Sleep_GetLowestSleepMode);
-FAKE_VOID_FUNC(MCU_Sleep_EnterSleep, uint32_t);
+FAKE_VALUE_FUNC(Retcode_T, MCU_Sleep_Initialize)
+FAKE_VALUE_FUNC(Retcode_T, MCU_Sleep_BlockSleepMode, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_Sleep_UnblockSleepMode, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, MCU_Sleep_GetLowestSleepMode)
+FAKE_VOID_FUNC(MCU_Sleep_EnterSleep, uint32_t)
 
 #endif /* KISO_FEATURE_SLEEP */
 #endif /* KISO_MCU_SLEEP_TH_HH */

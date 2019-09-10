@@ -83,7 +83,7 @@ static struct CmdLineDbg_Element_S * CmdLine_FindCmd(struct CmdLineDbg_Element_S
  * @return RETCODE_OK : Command was executed correctly
  *
  */
-static Retcode_T CmdLine_ExecuteCmd(struct CmdLineDbg_Element_S * command, const char ** paramPtr, size_t paramLen);
+static Retcode_T CmdLine_ExecuteCmd(struct CmdLineDbg_Element_S * command, const char * const* paramPtr, size_t paramLen);
 
 /**
  * Global Variable containing separator
@@ -187,7 +187,7 @@ Retcode_T CmdLineDbg_Parse(struct CmdLineDbg_Element_S * list, char * input)
 
     if (NULL != result) /* Command */
     {
-        rc = CmdLine_ExecuteCmd(result, (const char **) argv, argc);
+        rc = CmdLine_ExecuteCmd(result, (const char * const*) argv, argc);
     }
     else
     {
@@ -241,7 +241,7 @@ static size_t CmdLine_ExtractTokensFromString(char ** argv, char * input)
 }
 
 /* Execute the command */
-static Retcode_T CmdLine_ExecuteCmd(struct CmdLineDbg_Element_S * command, const char ** paramPtr, size_t paramLen)
+static Retcode_T CmdLine_ExecuteCmd(struct CmdLineDbg_Element_S * command, const char * const* paramPtr, size_t paramLen)
 {
     Retcode_T rc;
 

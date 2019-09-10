@@ -24,12 +24,12 @@
 /* Faked variables needs to be initialized by the test fixture */
 
 /* Mock-ups for the provided interfaces */
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_RS485Ex_Init, UART_HandleTypeDef*, uint32_t, uint32_t, uint32_t);
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_RS485Ex_Init, UART_HandleTypeDef*, uint32_t, uint32_t, uint32_t)
 
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_UARTEx_StopModeWakeUpSourceConfig, UART_HandleTypeDef*, UART_WakeUpTypeDef);
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_UARTEx_EnableStopMode, UART_HandleTypeDef*);
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_UARTEx_DisableStopMode, UART_HandleTypeDef*);
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_MultiProcessorEx_AddressLength_Set, UART_HandleTypeDef*, uint32_t);
-FAKE_VOID_FUNC(HAL_UARTEx_WakeupCallback, UART_HandleTypeDef*);
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_UARTEx_StopModeWakeUpSourceConfig, UART_HandleTypeDef*, UART_WakeUpTypeDef)
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_UARTEx_EnableStopMode, UART_HandleTypeDef*)
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_UARTEx_DisableStopMode, UART_HandleTypeDef*)
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_MultiProcessorEx_AddressLength_Set, UART_HandleTypeDef*, uint32_t)
+FAKE_VOID_FUNC(HAL_UARTEx_WakeupCallback, UART_HandleTypeDef*)
 
 #endif /* STM32L4XX_HAL_UART_EX_TH_HH_ */

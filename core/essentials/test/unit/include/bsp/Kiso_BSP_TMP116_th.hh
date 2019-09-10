@@ -27,13 +27,13 @@
 
 #if KISO_FEATURE_BSP_TMP116
 
-FAKE_VALUE_FUNC(Retcode_T, BSP_TMP116_Connect, int32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_TMP116_Enable, int32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_TMP116_AlertEnable, int32_t, BSP_TMP116_InterruptCallback_T);
-FAKE_VALUE_FUNC(Retcode_T, BSP_TMP116_AlertDisable, int32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_TMP116_Disable, int32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_TMP116_Disconnect, int32_t);
-FAKE_VALUE_FUNC(HWHandle_T, BSP_TMP116_GetHandle, int32_t);
+FAKE_VALUE_FUNC(Retcode_T, BSP_TMP116_Connect, int32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_TMP116_Enable, int32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_TMP116_AlertEnable, int32_t, BSP_TMP116_InterruptCallback_T)
+FAKE_VALUE_FUNC(Retcode_T, BSP_TMP116_AlertDisable, int32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_TMP116_Disable, int32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_TMP116_Disconnect, int32_t)
+FAKE_VALUE_FUNC(HWHandle_T, BSP_TMP116_GetHandle, int32_t)
 
 #endif /* KISO_FEATURE_BSP_TMP116 */
 

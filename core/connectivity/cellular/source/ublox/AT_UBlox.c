@@ -558,7 +558,7 @@ static Retcode_T ParseIPv6RightToLeft(const uint8_t *addressBuff, uint32_t addre
         {
             /* We found a hex number, add it to our current group. */
             uint32_t pow = 1;
-            for (uint32_t i = 0; i < positionInCurrentGroup; ++i)
+            for (uint32_t j = 0; j < positionInCurrentGroup; ++j)
             {
                 pow *= 16;
             }

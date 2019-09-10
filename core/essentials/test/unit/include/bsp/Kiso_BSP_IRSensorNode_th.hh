@@ -27,11 +27,11 @@
 
 #if KISO_FEATURE_BSP_IRSENSOR_NODE
 
-FAKE_VALUE_FUNC(Retcode_T, BSP_IRSensorNode_Connect );
-FAKE_VALUE_FUNC(Retcode_T, BSP_IRSensorNode_Enable);
-FAKE_VALUE_FUNC(Retcode_T, BSP_IRSensorNode_Disable);
-FAKE_VALUE_FUNC(Retcode_T, BSP_IRSensorNode_Disconnect );
-FAKE_VALUE_FUNC(HWHandle_T, BSP_IRSensorNode_GetI2CHandle );
+FAKE_VALUE_FUNC(Retcode_T, BSP_IRSensorNode_Connect )
+FAKE_VALUE_FUNC(Retcode_T, BSP_IRSensorNode_Enable)
+FAKE_VALUE_FUNC(Retcode_T, BSP_IRSensorNode_Disable)
+FAKE_VALUE_FUNC(Retcode_T, BSP_IRSensorNode_Disconnect )
+FAKE_VALUE_FUNC(HWHandle_T, BSP_IRSensorNode_GetI2CHandle )
 
 #endif /* KISO_FEATURE_BSP_IRSENSOR_NODE */
 #endif /* KISO_BSP_IRSENSORNODE_TH_HH */

@@ -81,7 +81,7 @@ Retcode_T HAL_Signal_Notify(HAL_SignalHandle_T * handle)
  */
 static Retcode_T NoOs_Signal_Wait(HAL_SignalHandle_T *handle, uint32_t timeout)
 {
-    int status = 0;
+    uint32_t status = 0;
 
     if (0 != timeout)
     {

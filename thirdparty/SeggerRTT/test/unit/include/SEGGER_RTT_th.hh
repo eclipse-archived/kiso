@@ -30,9 +30,9 @@
 #include "SEGGER_RTT.h"
 
 /* mock-ups for the provided interfaces */
-FAKE_VOID_FUNC(SEGGER_RTT_Init);
-FAKE_VALUE_FUNC(unsigned, SEGGER_RTT_Read, unsigned , void* , unsigned);
-FAKE_VALUE_FUNC(unsigned, SEGGER_RTT_Write, unsigned , const void* , unsigned);
+FAKE_VOID_FUNC(SEGGER_RTT_Init)
+FAKE_VALUE_FUNC(unsigned, SEGGER_RTT_Read, unsigned , void* , unsigned)
+FAKE_VALUE_FUNC(unsigned, SEGGER_RTT_Write, unsigned , const void* , unsigned)
 /* @todo: add missing headers */
 
 

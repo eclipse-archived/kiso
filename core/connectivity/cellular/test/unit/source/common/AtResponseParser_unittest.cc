@@ -16,7 +16,7 @@
 
 FFF_DEFINITION_BLOCK_START
 
-FAKE_VOID_FUNC(CallbackError);
+FAKE_VOID_FUNC(CallbackError)
 
 extern "C"
 {
@@ -52,11 +52,11 @@ static void AtrpTestErrorHandler()
 
 }
 
-FAKE_VOID_FUNC(CallbackResponseCode, AtResponseCode_T);
-FAKE_VOID_FUNC(CallbackCmdEcho, uint8_t*, uint32_t);
+FAKE_VOID_FUNC(CallbackResponseCode, AtResponseCode_T)
+FAKE_VOID_FUNC(CallbackCmdEcho, uint8_t*, uint32_t)
 FAKE_VOID_FUNC(CallbackCmd, uint8_t*, uint32_t)
-FAKE_VOID_FUNC(CallbackCmdArg, uint8_t*, uint32_t);
-FAKE_VOID_FUNC(CallbackMisc, uint8_t*, uint32_t);
+FAKE_VOID_FUNC(CallbackCmdArg, uint8_t*, uint32_t)
+FAKE_VOID_FUNC(CallbackMisc, uint8_t*, uint32_t)
 
 FFF_DEFINITION_BLOCK_END
 

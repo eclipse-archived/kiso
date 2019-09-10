@@ -112,8 +112,8 @@ bool TaskMonitor_Check(void)
         taskTagValue[loopcnt] = 0UL;
         if (TaskInfo[loopcnt].IsReg)
         {
-            taskTagValue[loopcnt] = (uint32_t)xTaskGetApplicationTaskTag(
-                    TaskInfo[loopcnt].Task);
+            const TaskHookFunction_t taskTag = xTaskGetApplicationTaskTag(TaskInfo[loopcnt].Task);
+            taskTagValue[loopcnt] = (uint32_t) taskTag;
         }
     }
     currentTickTime = xTaskGetTickCount();
@@ -136,8 +136,8 @@ bool TaskMonitor_Check(void)
                 }
             }
             diffTickTime =
-            (currentTickTime >= taskTickTime) ?
-            (currentTickTime - taskTickTime) : ((UINT32_MAX - taskTickTime) + currentTickTime);
+                (currentTickTime >= taskTickTime) ?
+                (currentTickTime - taskTickTime) : ((UINT32_MAX - taskTickTime) + currentTickTime);
             if (diffTickTime > TaskInfo[loopcnt].UpperLimitTickTime)
             {
                 ret = true;

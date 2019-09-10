@@ -38,16 +38,16 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #endif /* __GNUC__ */
-FAKE_VALUE_FUNC(Retcode_T, Retcode_initialize, Retcode_ErrorHandlingFunc_T);
-FAKE_VOID_FUNC(Retcode_raiseError, Retcode_T);
-FAKE_VOID_FUNC(Retcode_raiseErrorFromIsr, Retcode_T);
+FAKE_VALUE_FUNC(Retcode_T, Retcode_initialize, Retcode_ErrorHandlingFunc_T)
+FAKE_VOID_FUNC(Retcode_raiseError, Retcode_T)
+FAKE_VOID_FUNC(Retcode_raiseErrorFromIsr, Retcode_T)
 #if __GNUC__
 #pragma GCC diagnostic pop
 #endif /* __GNUC__ */
 
-FAKE_VALUE_FUNC(Retcode_T, Retcode_Initialize, Retcode_ErrorHandlingFunc_T);
-FAKE_VOID_FUNC(Retcode_RaiseError, Retcode_T);
-FAKE_VOID_FUNC(Retcode_RaiseErrorFromIsr, Retcode_T);
+FAKE_VALUE_FUNC(Retcode_T, Retcode_Initialize, Retcode_ErrorHandlingFunc_T)
+FAKE_VOID_FUNC(Retcode_RaiseError, Retcode_T)
+FAKE_VOID_FUNC(Retcode_RaiseErrorFromIsr, Retcode_T)
 
 #endif /* KISO_RETCODE_HH_ */
 

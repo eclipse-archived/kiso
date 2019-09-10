@@ -46,19 +46,19 @@ extern "C"
 FFF_DEFINITION_BLOCK_END
 
 /* setup compile time configuration defines */
-#define TASK_PRIORITY                   UINT32_C(1)     /**< Task Priority should be less then timer task priority */
-#define STACK_SIZE                      UINT32_C(256)   /**< stack size of the task */
-#define QUEUE_SIZE                      UINT32_C(3)     /**< size of the queue.Holds command processor command structure variables */
-#define INIT_VAL                        UINT32_C(2)     /**< Used as an initial value to variables */
-#define QUEUE_CREATED                   UINT32_C(1)     /**< Used as a return value for successful queue creation */
+#define TASK_PRIORITY     UINT32_C(1)     /**< Task Priority should be less then timer task priority */
+#define STACK_SIZE        UINT32_C(256)   /**< stack size of the task */
+#define QUEUE_SIZE        UINT32_C(3)     /**< size of the queue.Holds command processor command structure variables */
+#define INIT_VAL          UINT32_C(2)     /**< Used as an initial value to variables */
+#define QUEUE_CREATED     UINT32_C(1)     /**< Used as a return value for successful queue creation */
 
-static CmdProcessor_Cmd_T cmd;
-
-/* Fake function created to pass as a argument to the  cmd_Enqueue function*/
+/* Fake function created to pass as a argument to the  cmdProcessor_Enqueue function */
 void fake_fn(void *, uint32_t)
 {
     ;
 }
+
+static CmdProcessor_Cmd_T cmd;
 
 signed long myXQueueReceive(QueueHandle_t xQueue, void * pvBuffer, TickType_t xTicksToWait)
 {
@@ -71,18 +71,16 @@ signed long myXQueueReceive(QueueHandle_t xQueue, void * pvBuffer, TickType_t xT
     return pdPASS;
 }
 
-BaseType_t xTaskCreate_fake_null_task(TaskFunction_t,
-                       const char * const,
-                       const configSTACK_DEPTH_TYPE,
-                       void * const,
-                       UBaseType_t,
-                       TaskHandle_t * const pxCreatedTask)
+BaseType_t xTaskCreate_fake_success(TaskFunction_t, const char * const,
+                                    const configSTACK_DEPTH_TYPE,
+                                    void * const, UBaseType_t,
+                                    TaskHandle_t * const pxCreatedTask)
 {
-    *pxCreatedTask = NULL;
-    return pdFAIL;
+    *pxCreatedTask = (TaskHandle_t) 0x123;
+    return pdTRUE;
 }
 
-class cmdProcessor: public testing::Test
+class CmdProcessor: public testing::Test
 {
 protected:
 
@@ -99,8 +97,19 @@ protected:
 
         memset(&cmd, 0, sizeof(CmdProcessor_Cmd_T));
 
+        xTaskCreate_fake.custom_fake = xTaskCreate_fake_success;
+        xQueueCreate_fake.return_val = (QueueHandle_t) QUEUE_CREATED;
+
+        Retcode_T retVal = CmdProcessor_Initialize(&cmdProcessor, "abc", TASK_PRIORITY, STACK_SIZE, QUEUE_SIZE);
+        EXPECT_EQ(RETCODE_OK, retVal);
+
+        RESET_FAKE(xTaskCreate);
+        RESET_FAKE(xQueueCreate);
+
         FFF_RESET_HISTORY();
     }
+
+    CmdProcessor_T cmdProcessor = {0};
 };
 
 /* specify test cases ******************************************************* */
@@ -109,497 +118,271 @@ protected:
  *  Module is used to execute the function from the queue and it is provided by the apis.
  *  It contains the overall test cases to test the queue creation and task creation by the defined apis in C module
  */
-typedef cmdProcessor cmdProcessor_deathtest;
 
-TEST_F(cmdProcessor, cmdProcessorIntializationQueueFail)
+TEST_F(CmdProcessor, cmdProcessorIntializationQueueFail)
 {
-    /** @testcase{ cmdProcessor::cmdProcessorIntializationQueueFail: }
-     * if the queue is not created then it returns an error. On successful creation of queue  it creates a task.
-     * API is used to check the queue creation.
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    CmdProcessor_T cmdProcessor;
-    uint32_t taskPriority = TASK_PRIORITY;
-    uint32_t taskStackDepth = STACK_SIZE;
-    uint32_t queueSize = QUEUE_SIZE;
+    CmdProcessor_T cmdProcessorInstance;
     Retcode_T retVal = RETCODE_OK;
     xQueueCreate_fake.return_val = NULL;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CmdProcessor_Initialize(&cmdProcessor, (char*) "abc", taskPriority, taskStackDepth, queueSize);
+    retVal = CmdProcessor_Initialize(&cmdProcessorInstance, "abc", TASK_PRIORITY, STACK_SIZE, QUEUE_SIZE);
 
-    /* VERIFY : Compare the expected with actual */
-    EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
-    EXPECT_EQ(UINT32_C(0), xTaskCreate_fake.call_count);
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retVal));
     EXPECT_EQ(UINT32_C(1), xQueueCreate_fake.call_count);
-    EXPECT_EQ(NULL, xQueueCreate_fake.return_val);
+    EXPECT_EQ(UINT32_C(0), xTaskCreate_fake.call_count);
 }
 
-TEST_F(cmdProcessor, cmdProcessorIntializationTaskFail)
+TEST_F(CmdProcessor, cmdProcessorIntializationTaskFail)
 {
-    /** @testcase{ cmdProcessor::cmdProcessorIntializationTaskFail: }
-     * API is used to check the task creation failure part in the initialization function
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    CmdProcessor_T cmdProcessor;
-    uint32_t taskPriority = TASK_PRIORITY;
-    uint32_t taskStackDepth = STACK_SIZE;
-    uint32_t queueSize = QUEUE_SIZE;
+    CmdProcessor_T cmdProcessorInstance;
     Retcode_T retVal = RETCODE_OK;
-    xQueueCreate_fake.return_val = (void *) QUEUE_CREATED;
+    xQueueCreate_fake.return_val = (QueueHandle_t) QUEUE_CREATED;
     xTaskCreate_fake.return_val = errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CmdProcessor_Initialize(&cmdProcessor, (char *) "abc", taskPriority, taskStackDepth, queueSize);
+    retVal = CmdProcessor_Initialize(&cmdProcessorInstance, "abc", TASK_PRIORITY, STACK_SIZE, QUEUE_SIZE);
 
-    /* VERIFY : Compare the expected with actual */
-    EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
-    EXPECT_EQ(UINT32_C(1), xTaskCreate_fake.call_count);
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retVal));
     EXPECT_EQ(UINT32_C(1), xQueueCreate_fake.call_count);
+    EXPECT_EQ(UINT32_C(1), xTaskCreate_fake.call_count);
 }
 
-TEST_F(cmdProcessor, cmdProcessorIntializationTaskSuccess)
+TEST_F(CmdProcessor, cmdProcessorIntializationTaskSuccess)
 {
-    /** @testcase{ cmdProcessor::cmdProcessorIntializationTaskSuccess: }
-     * API is used to check the task and queue creation in the initialization function
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    CmdProcessor_T cmdProcessor;
-    uint32_t taskPriority = TASK_PRIORITY;
-    uint32_t taskStackDepth = STACK_SIZE;
-    uint32_t queueSize = QUEUE_SIZE;
+    CmdProcessor_T cmdProcessorInstance;
     Retcode_T retVal = RETCODE_FAILURE;
     xTaskCreate_fake.return_val = pdTRUE;
-    xQueueCreate_fake.return_val = (void *) QUEUE_CREATED;
+    xQueueCreate_fake.return_val = (QueueHandle_t) QUEUE_CREATED;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CmdProcessor_Initialize(&cmdProcessor, (char *) "abc", taskPriority, taskStackDepth, queueSize);
+    retVal = CmdProcessor_Initialize(&cmdProcessorInstance, "abc", TASK_PRIORITY, STACK_SIZE, QUEUE_SIZE);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_EQ(UINT32_C(1), xTaskCreate_fake.call_count);
     EXPECT_EQ(UINT32_C(1), xQueueCreate_fake.call_count);
 }
 
-TEST_F(cmdProcessor, cmdProcessorIntializationNullParam)
+TEST_F(CmdProcessor, cmdProcessorIntializationNullParam)
 {
-    /** @testcase{ cmdProcessor::cmdProcessorIntializationNullParam: }
-     * API is used to check the parameter checking in the initialization function
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    uint32_t taskPriority = TASK_PRIORITY;
-    uint32_t taskStackDepth = STACK_SIZE;
-    uint32_t queueSize = QUEUE_SIZE;
     Retcode_T retVal = RETCODE_FAILURE;
-    xTaskCreate_fake.return_val = pdTRUE;
-    xQueueCreate_fake.return_val = (void *) QUEUE_CREATED;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CmdProcessor_Initialize(NULL, (char *) "abc", taskPriority, taskStackDepth, queueSize);
+    retVal = CmdProcessor_Initialize(NULL, "abc", TASK_PRIORITY, STACK_SIZE, QUEUE_SIZE);
 
-    /* VERIFY : Compare the expected with actual */
-    EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
     EXPECT_EQ(UINT32_C(0), xTaskCreate_fake.call_count);
     EXPECT_EQ(UINT32_C(0), xQueueCreate_fake.call_count);
 }
 
-TEST_F(cmdProcessor, cmdProcessorTaskNameExceedsLength)
+TEST_F(CmdProcessor, cmdProcessorTaskNameExceedsLength)
 {
-    /** @testcase{ cmdProcessor::cmdProcessorTaskNameExceedsLength: }
-     * API is used to check task name length
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    CmdProcessor_T cmdProcessor;
-    uint32_t taskPriority = TASK_PRIORITY;
-    uint32_t taskStackDepth = STACK_SIZE;
-    uint32_t queueSize = QUEUE_SIZE;
+    CmdProcessor_T cmdProcessorInstance;
     char taskName[] = "abcdefghijklmnopqrstuvwxya123456789";
     char truncatedTaskName[] = "abcdefghijklmnopqrstuvwxya12345";
     Retcode_T retVal = RETCODE_FAILURE;
+    xQueueCreate_fake.return_val = (QueueHandle_t) QUEUE_CREATED;
     xTaskCreate_fake.return_val = pdTRUE;
-    xQueueCreate_fake.return_val = (void *) QUEUE_CREATED;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CmdProcessor_Initialize(&cmdProcessor, taskName, taskPriority, taskStackDepth, queueSize);
+    retVal = CmdProcessor_Initialize(&cmdProcessorInstance, taskName, TASK_PRIORITY, STACK_SIZE, QUEUE_SIZE);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, Retcode_GetCode(retVal));
-    ASSERT_EQ(INT32_C(0), strcmp((char * )xTaskCreate_fake.arg1_val, truncatedTaskName));
+    ASSERT_EQ(INT32_C(0), strcmp(xTaskCreate_fake.arg1_val, truncatedTaskName));
     EXPECT_EQ(UINT32_C(1), xTaskCreate_fake.call_count);
     EXPECT_EQ(UINT32_C(1), xQueueCreate_fake.call_count);
 }
 
-
-TEST_F(cmdProcessor, CmdProcessorEnqueueError)
+TEST_F(CmdProcessor, CmdProcessorEnqueueCmdProcessorNull)
 {
-    /** @testcase{ cmdProcessor::CmdProcessorEnqueueError: }
-     * API is used to check the Command processor enqueue fail condition
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    CmdProcessor_T cmdProcessor;
-    uint32_t param2 = INIT_VAL;
-    uint32_t taskPriority = TASK_PRIORITY;
-    uint32_t taskStackDepth = STACK_SIZE;
-    uint32_t queueSize = QUEUE_SIZE;
     Retcode_T retVal = RETCODE_OK;
-    CmdProcessor_Func_T fun = fake_fn;
-    xTaskCreate_fake.return_val = pdTRUE;
-    xQueueCreate_fake.return_val = (void *) QUEUE_CREATED;
+    retVal = CmdProcessor_Enqueue(NULL, fake_fn, NULL, INIT_VAL);
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CmdProcessor_Initialize(&cmdProcessor, (char*)"abc", taskPriority, taskStackDepth, queueSize);
-    retVal = CmdProcessor_Enqueue(&cmdProcessor, fun, NULL, param2);
-
-    /* VERIFY : Compare the expected with actual */
-    EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
-    EXPECT_EQ(UINT32_C(1), xQueueSend_fake.call_count);
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
 }
 
-TEST_F(cmdProcessor, CmdProcessorEnqueueSuccess)
+TEST_F(CmdProcessor, CmdProcessorEnqueueCmdProcessorQueueNull)
 {
-    /** @testcase{ cmdProcessor::CmdProcessorEnqueueSuccess: }
-     * API is used to check the Command processor enqueue success condition
-     */
+    Retcode_T retVal = RETCODE_OK;
+    cmdProcessor.queue = NULL;
+    retVal = CmdProcessor_Enqueue(&cmdProcessor, fake_fn, NULL, INIT_VAL);
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    CmdProcessor_T cmdProcessor;
-    uint32_t taskPriority = TASK_PRIORITY;
-    uint32_t taskStackDepth = STACK_SIZE;
-    uint32_t queueSize = QUEUE_SIZE;
-    Retcode_T retVal = RETCODE_FAILURE;
-    xTaskCreate_fake.return_val = pdTRUE;
-    xQueueCreate_fake.return_val = (void *) QUEUE_CREATED;
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
+}
 
-    CmdProcessor_Func_T fun = fake_fn;
-    uint32_t param2 = INIT_VAL;
+TEST_F(CmdProcessor, CmdProcessorEnqueueQueueFull)
+{
+    Retcode_T retVal = RETCODE_OK;
+    xQueueSend_fake.return_val = errQUEUE_FULL;
+    retVal = CmdProcessor_Enqueue(&cmdProcessor, fake_fn, NULL, INIT_VAL);
+
+    EXPECT_EQ(UINT32_C(1), xQueueSend_fake.call_count);
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retVal));
+}
+
+TEST_F(CmdProcessor, CmdProcessorEnqueueSuccess)
+{
+    Retcode_T retVal = RETCODE_OK;
     xQueueSend_fake.return_val = pdPASS;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CmdProcessor_Initialize(&cmdProcessor, (char *) "abc", taskPriority, taskStackDepth, queueSize);
-    retVal = CmdProcessor_Enqueue(&cmdProcessor, fun, NULL, param2);
+    retVal = CmdProcessor_Enqueue(&cmdProcessor, fake_fn, NULL, INIT_VAL);
 
-    /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_OK, Retcode_GetCode(retVal));
-    EXPECT_NE(RETCODE_FAILURE, Retcode_GetCode(retVal));
-    EXPECT_NE(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
     EXPECT_EQ(UINT32_C(1), xQueueSend_fake.call_count);
+    EXPECT_EQ(RETCODE_OK, Retcode_GetCode(retVal));
 }
 
-TEST_F(cmdProcessor, CmdProcessorEnqueueFail)
+TEST_F(CmdProcessor, CmdProcessorEnqueueFromISRSuccess)
 {
-    /** @testcase{ cmdProcessor::CmdProcessorEnqueueNullParam: }
-     * API is used to check the Command processor enqueue parameter checking
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    uint32_t param2 = INIT_VAL;
-    Retcode_T retVal = RETCODE_OK;
-    CmdProcessor_Func_T fun = fake_fn;
-    xQueueSend_fake.return_val = errQUEUE_FULL;
-
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CmdProcessor_Enqueue(NULL, fun, NULL, param2);
-
-    /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
-    EXPECT_EQ(UINT32_C(0), xQueueSend_fake.call_count);
-}
-
-TEST_F(cmdProcessor, CmdProcessorEnqueueFromISRSuccess)
-{
-    /** @testcase{ cmdProcessor::CmdProcessorEnqueueFromISRSuccess: }
-     * API is used to check the Command processor enqueue from ISR success condition
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    CmdProcessor_T cmdProcessor;
-    uint32_t taskPriority = TASK_PRIORITY;
-    uint32_t taskStackDepth = STACK_SIZE;
-    uint32_t queueSize = QUEUE_SIZE;
     Retcode_T retVal = RETCODE_FAILURE;
-    xTaskCreate_fake.return_val = pdTRUE;
-    xQueueCreate_fake.return_val = (void *) QUEUE_CREATED;
-
-    CmdProcessor_Func_T fun = fake_fn;
-    uint32_t param2 = INIT_VAL;
     xQueueSendFromISR_fake.return_val = pdPASS;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CmdProcessor_Initialize(&cmdProcessor, (char *) "abc", taskPriority, taskStackDepth, queueSize);
-    retVal = CmdProcessor_EnqueueFromIsr(&cmdProcessor, fun, NULL, param2);
+    retVal = CmdProcessor_EnqueueFromIsr(&cmdProcessor, fake_fn, NULL, INIT_VAL);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, Retcode_GetCode(retVal));
-    EXPECT_NE(RETCODE_FAILURE, Retcode_GetCode(retVal));
-    EXPECT_NE(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
     EXPECT_EQ(UINT32_C(1), xQueueSendFromISR_fake.call_count);
 }
 
-TEST_F(cmdProcessor, CmdProcessorEnqueueFromISRFail)
+TEST_F(CmdProcessor, CmdProcessorEnqueueFromISRQueueFull)
 {
-    /** @testcase{ cmdProcessor::CmdProcessorEnqueueFromISRFail: }
-     * API is used to check the Command processor enqueue from ISR fail because of parameter NULL
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    uint32_t param2 = INIT_VAL;
     Retcode_T retVal = RETCODE_FAILURE;
-    CmdProcessor_Func_T fun = fake_fn;
     xQueueSendFromISR_fake.return_val = errQUEUE_FULL;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CmdProcessor_EnqueueFromIsr(NULL, fun, NULL, param2);
+    retVal = CmdProcessor_EnqueueFromIsr(&cmdProcessor, fake_fn, NULL, INIT_VAL);
 
-    /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
-    EXPECT_EQ(UINT32_C(0), xQueueSendFromISR_fake.call_count);
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retVal));
+    EXPECT_EQ(UINT32_C(1), xQueueSendFromISR_fake.call_count);
 }
 
-TEST_F(cmdProcessor, CmdProcessorSuspendNullParam)
+TEST_F(CmdProcessor, CmdProcessorEnqueueFromISRCmdProcessorNull)
 {
-    /** @testcase{ cmdProcessor::CmdProcessorResume: }
-     * API used to check param checking in the Command processor suspend function
-     */
+    Retcode_T retVal = RETCODE_OK;
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
+    retVal = CmdProcessor_EnqueueFromIsr(NULL, fake_fn, NULL, INIT_VAL);
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
+}
+
+TEST_F(CmdProcessor, CmdProcessorEnqueueFromISRQueueNull)
+{
+    Retcode_T retVal = RETCODE_OK;
+    cmdProcessor.queue = NULL;
+
+    retVal = CmdProcessor_EnqueueFromIsr(&cmdProcessor, fake_fn, NULL, INIT_VAL);
+
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
+}
+
+TEST_F(CmdProcessor, CmdProcessorSuspendCmdProcessorNull)
+{
     CmdProcessor_Suspend(NULL);
 
-    /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(UINT32_C(0), vTaskResume_fake.call_count);
-    EXPECT_EQ(UINT32_C(1), Retcode_RaiseError_fake.call_count);
-}
-
-TEST_F(cmdProcessor, CmdProcessorSuspendNotNullParamTask)
-{
-    /** @testcase{ cmdProcessor::CmdProcessorSuspend: }
-     * API is used to check the Command processor suspend function
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    CmdProcessor_T cmdProcessor;
-    uint32_t taskPriority = TASK_PRIORITY;
-    uint32_t taskStackDepth = STACK_SIZE;
-    uint32_t queueSize = QUEUE_SIZE;
-    Retcode_T retVal = RETCODE_FAILURE;
-    xTaskCreate_fake.return_val = pdTRUE;
-    xQueueCreate_fake.return_val = (void *) QUEUE_CREATED;
-
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CmdProcessor_Initialize(&cmdProcessor, (char*)"abc", taskPriority, taskStackDepth, queueSize);
-
-    CmdProcessor_Suspend(&cmdProcessor);
-
-    /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(RETCODE_OK, Retcode_GetCode(retVal));
-    EXPECT_EQ(UINT32_C(1), vTaskSuspend_fake.call_count);
-}
-
-TEST_F(cmdProcessor, CmdProcessorSuspendNullParamTask)
-{
-    /** @testcase{ cmdProcessor::CmdProcessorSuspend: }
-     * API is used to check the Command processor suspend function
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    CmdProcessor_T cmdProcessor;
-    uint32_t taskPriority = TASK_PRIORITY;
-    uint32_t taskStackDepth = STACK_SIZE;
-    uint32_t queueSize = QUEUE_SIZE;
-    Retcode_T retVal = RETCODE_OK;
-    xQueueCreate_fake.return_val = (void *) QUEUE_CREATED;
-    xTaskCreate_fake.custom_fake = xTaskCreate_fake_null_task;
-
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CmdProcessor_Initialize(&cmdProcessor, (char *) "abc", taskPriority, taskStackDepth, queueSize);
-
-    CmdProcessor_Suspend(&cmdProcessor);
-
-    /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(1u, xQueueCreate_fake.call_count);
-    EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_EQ(UINT32_C(0), vTaskSuspend_fake.call_count);
     EXPECT_EQ(UINT32_C(1), Retcode_RaiseError_fake.call_count);
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(Retcode_RaiseError_fake.arg0_val));
 }
 
-TEST_F(cmdProcessor, CmdProcessorResumeNullParam)
+TEST_F(CmdProcessor, CmdProcessorSuspendSuccess)
 {
-    /** @testcase{ cmdProcessor::CmdProcessorResume: }
-     * API used to check param checking in the Command processor resume function
-     */
+    CmdProcessor_Suspend(&cmdProcessor);
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
+    EXPECT_EQ(UINT32_C(1), vTaskSuspend_fake.call_count);
+    EXPECT_EQ(UINT32_C(0), Retcode_RaiseError_fake.call_count);
+}
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
+TEST_F(CmdProcessor, CmdProcessorSuspendTaskNull)
+{
+    cmdProcessor.task = NULL;
+
+    CmdProcessor_Suspend(&cmdProcessor);
+
+    EXPECT_EQ(UINT32_C(0), vTaskSuspend_fake.call_count);
+    EXPECT_EQ(UINT32_C(1), Retcode_RaiseError_fake.call_count);
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(Retcode_RaiseError_fake.arg0_val));
+}
+
+TEST_F(CmdProcessor, CmdProcessorResumeNullParam)
+{
     CmdProcessor_Resume(NULL);
 
-    /* VERIFY : Compare the expected with actual */
+
     EXPECT_EQ(UINT32_C(0), vTaskResume_fake.call_count);
     EXPECT_EQ(UINT32_C(1), Retcode_RaiseError_fake.call_count);
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(Retcode_RaiseError_fake.arg0_val));
 }
 
-TEST_F(cmdProcessor, CmdProcessorResumeNotNullParamTask)
+TEST_F(CmdProcessor, CmdProcessorResumeSuccess)
 {
-    /** @testcase{ cmdProcessor::CmdProcessorResume: }
-     * API used to check the Command processor resume function
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    CmdProcessor_T cmdProcessor;
-    Retcode_T retVal = RETCODE_OK;
-    uint32_t taskPriority = TASK_PRIORITY;
-    uint32_t taskStackDepth = STACK_SIZE;
-    uint32_t queueSize = QUEUE_SIZE;
-    xTaskCreate_fake.return_val = pdTRUE;
-    xQueueCreate_fake.return_val = (void *) QUEUE_CREATED;
-
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CmdProcessor_Initialize(&cmdProcessor, (char*)"abc", taskPriority, taskStackDepth, queueSize);
-
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     CmdProcessor_Resume(&cmdProcessor);
 
-    /* VERIFY : Compare the expected with actual */
+
     EXPECT_EQ(UINT32_C(1), vTaskResume_fake.call_count);
     EXPECT_EQ(UINT32_C(0), Retcode_RaiseError_fake.call_count);
 }
 
-TEST_F(cmdProcessor, CmdProcessorResumeNullParamTask)
+TEST_F(CmdProcessor, CmdProcessorResumeTaskNull)
 {
-    /** @testcase{ cmdProcessor::CmdProcessorSuspend: }
-     * API is used to check the Command processor resume function
-     */
+    cmdProcessor.task = NULL;
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    CmdProcessor_T cmdProcessor;
-    uint32_t taskPriority = TASK_PRIORITY;
-    uint32_t taskStackDepth = STACK_SIZE;
-    uint32_t queueSize = QUEUE_SIZE;
-    Retcode_T retVal = RETCODE_OK;
-    xQueueCreate_fake.return_val = (void *) QUEUE_CREATED;
-    xTaskCreate_fake.custom_fake = xTaskCreate_fake_null_task;
+    CmdProcessor_Resume(&cmdProcessor);
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CmdProcessor_Initialize(&cmdProcessor, (char *) "abc", taskPriority, taskStackDepth, queueSize);
-    CmdProcessor_Suspend(&cmdProcessor);
-
-    /* VERIFY : Compare the expected with actual */
-    EXPECT_EQ(1u, xQueueCreate_fake.call_count);
-    EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
-    EXPECT_NE(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
     EXPECT_EQ(UINT32_C(0), vTaskResume_fake.call_count);
     EXPECT_EQ(UINT32_C(1), Retcode_RaiseError_fake.call_count);
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(Retcode_RaiseError_fake.arg0_val));
 }
 
-TEST_F(cmdProcessor, CmdProcessorDequeueSuccess)
+TEST_F(CmdProcessor, CmdProcessorDequeueSuccess)
 {
-    /** @testcase{ cmdProcessor::CmdProcessorDequeueSuccess: }
-     * API used to check the Command processor dequeue function
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    CmdProcessor_T cmdProcessor;
     xQueueReceive_fake.custom_fake = &myXQueueReceive;
     cmd.func = &fake_fn;
     cmd.param1 = NULL;
     cmd.param2 = UINT32_C(0);
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     Dequeue(&cmdProcessor);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(UINT32_C(1), xQueueReceive_fake.call_count);
     EXPECT_EQ(UINT32_C(0), Retcode_RaiseError_fake.call_count);
 }
 
-TEST_F(cmdProcessor, CmdProcessorDequeueFail)
+TEST_F(CmdProcessor, CmdProcessorDequeueFail)
 {
-    /** @testcase{ cmdProcessor::CmdProcessorDequeueSuccess: }
-     * API used to check the Command processor dequeue function
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    CmdProcessor_T cmdProcessor;
     xQueueReceive_fake.custom_fake = &myXQueueReceive;
     cmd.func = NULL;
     cmd.param1 = NULL;
     cmd.param2 = UINT32_C(0);
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     Dequeue(&cmdProcessor);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(UINT32_C(1), xQueueReceive_fake.call_count);
     EXPECT_EQ(UINT32_C(1), Retcode_RaiseError_fake.call_count);
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(Retcode_RaiseError_fake.arg0_val));
+
 }
 
-TEST_F(cmdProcessor, CmdProcessorDequeueReceiveFail)
+TEST_F(CmdProcessor, CmdProcessorDequeueReceiveFail)
 {
-    /** @testcase{ cmdProcessor::CmdProcessorDequeueReceiveFail: }
-     * API used to check the Command processor dequeue function
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    CmdProcessor_T cmdProcessor;
     xQueueReceive_fake.return_val = pdFAIL;
-    cmd.func = NULL;
-    cmd.param1 = NULL;
-    cmd.param2 = UINT32_C(0);
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     Dequeue(&cmdProcessor);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(UINT32_C(1), xQueueReceive_fake.call_count);
     EXPECT_EQ(UINT32_C(1), Retcode_RaiseError_fake.call_count);
+    EXPECT_EQ(RETCODE_CMDPROCESSOR_QUEUE_ERROR, Retcode_GetCode(Retcode_RaiseError_fake.arg0_val));
 }
 
-TEST_F(cmdProcessor, CmdProcessorDequeueCmdPrcsrFail)
+TEST_F(CmdProcessor, CmdProcessorDequeueCmdPrcsrFail)
 {
-    /** @testcase{ cmdProcessor::CmdProcessorDequeueCmdPrcsrFail: }
-     * API used to check the Command processor dequeue function
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    cmd.func = NULL;
-    cmd.param1 = NULL;
-    cmd.param2 = UINT32_C(0);
-
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     Dequeue(NULL);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(UINT32_C(0), xQueueReceive_fake.call_count);
     EXPECT_EQ(UINT32_C(1), Retcode_RaiseError_fake.call_count);
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(Retcode_RaiseError_fake.arg0_val));
 }
 
 
-TEST_F(cmdProcessor, CmdProcessorDequeueCmdPrcsrQueueFail)
+TEST_F(CmdProcessor, CmdProcessorDequeueCmdPrcsrQueueFail)
 {
-    /** @testcase{ cmdProcessor::CmdProcessorDequeueCmdPrcsrQueueFail: }
-     * API used to check the Command processor dequeue function
-     */
+    cmdProcessor.queue = NULL;
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
-    CmdProcessor_T cmdProcessor = {NULL,NULL, 0};
-    cmd.func = NULL;
-    cmd.param1 = NULL;
-    cmd.param2 = UINT32_C(0);
-
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     Dequeue(&cmdProcessor);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(UINT32_C(0), xQueueReceive_fake.call_count);
     EXPECT_EQ(UINT32_C(1), Retcode_RaiseError_fake.call_count);
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(Retcode_RaiseError_fake.arg0_val));
 }
 #else
 }

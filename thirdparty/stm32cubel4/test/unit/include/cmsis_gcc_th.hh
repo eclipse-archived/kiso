@@ -474,131 +474,131 @@
 #include "gtest.h"
 
 /* Faked variables needs to be initialized by the test fixture */
-FAKE_VOID_FUNC(__enable_irq);
-FAKE_VOID_FUNC(__disable_irq);
-FAKE_VALUE_FUNC(uint32_t, __get_CONTROL);
-FAKE_VOID_FUNC(__set_CONTROL, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __get_IPSR);
-FAKE_VALUE_FUNC(uint32_t, __get_APSR);
-FAKE_VALUE_FUNC(uint32_t, __get_xPSR);
-FAKE_VALUE_FUNC(uint32_t, __get_PSP);
-FAKE_VOID_FUNC(__set_PSP, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __get_MSP);
-FAKE_VOID_FUNC(__set_MSP, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __get_PRIMASK);
-FAKE_VOID_FUNC(__set_PRIMASK, uint32_t);
+FAKE_VOID_FUNC(__enable_irq)
+FAKE_VOID_FUNC(__disable_irq)
+FAKE_VALUE_FUNC(uint32_t, __get_CONTROL)
+FAKE_VOID_FUNC(__set_CONTROL, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __get_IPSR)
+FAKE_VALUE_FUNC(uint32_t, __get_APSR)
+FAKE_VALUE_FUNC(uint32_t, __get_xPSR)
+FAKE_VALUE_FUNC(uint32_t, __get_PSP)
+FAKE_VOID_FUNC(__set_PSP, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __get_MSP)
+FAKE_VOID_FUNC(__set_MSP, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __get_PRIMASK)
+FAKE_VOID_FUNC(__set_PRIMASK, uint32_t)
 #if (__CORTEX_M >= 0x03U)
-FAKE_VOID_FUNC(__enable_fault_irq);
-FAKE_VOID_FUNC(__disable_fault_irq);
-FAKE_VALUE_FUNC(uint32_t, __get_BASEPRI);
-FAKE_VOID_FUNC(__set_BASEPRI, uint32_t);
-FAKE_VOID_FUNC(__set_BASEPRI_MAX, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __get_FAULTMASK);
-FAKE_VOID_FUNC(__set_FAULTMASK, uint32_t);
+FAKE_VOID_FUNC(__enable_fault_irq)
+FAKE_VOID_FUNC(__disable_fault_irq)
+FAKE_VALUE_FUNC(uint32_t, __get_BASEPRI)
+FAKE_VOID_FUNC(__set_BASEPRI, uint32_t)
+FAKE_VOID_FUNC(__set_BASEPRI_MAX, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __get_FAULTMASK)
+FAKE_VOID_FUNC(__set_FAULTMASK, uint32_t)
 #endif /* (__CORTEX_M >= 0x03U) */
 #if (__CORTEX_M == 0x04U) || (__CORTEX_M == 0x07U)
-FAKE_VALUE_FUNC(uint32_t, __get_FPSCR);
-FAKE_VOID_FUNC(__set_FPSCR, uint32_t);
+FAKE_VALUE_FUNC(uint32_t, __get_FPSCR)
+FAKE_VOID_FUNC(__set_FPSCR, uint32_t)
 #endif /* (__CORTEX_M == 0x04U) || (__CORTEX_M == 0x07U) */
-FAKE_VOID_FUNC(__NOP);
-FAKE_VOID_FUNC(__WFI);
-FAKE_VOID_FUNC(__WFE);
-FAKE_VOID_FUNC(__SEV);
-FAKE_VOID_FUNC(__ISB);
-FAKE_VOID_FUNC(__DSB);
-FAKE_VOID_FUNC(__DMB);
-FAKE_VALUE_FUNC(uint32_t, __REV, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __REV16, uint32_t);
-FAKE_VALUE_FUNC(int32_t, __REVSH, int32_t);
-FAKE_VALUE_FUNC(uint32_t, __ROR, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __RBIT, uint32_t);
+FAKE_VOID_FUNC(__NOP)
+FAKE_VOID_FUNC(__WFI)
+FAKE_VOID_FUNC(__WFE)
+FAKE_VOID_FUNC(__SEV)
+FAKE_VOID_FUNC(__ISB)
+FAKE_VOID_FUNC(__DSB)
+FAKE_VOID_FUNC(__DMB)
+FAKE_VALUE_FUNC(uint32_t, __REV, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __REV16, uint32_t)
+FAKE_VALUE_FUNC(int32_t, __REVSH, int32_t)
+FAKE_VALUE_FUNC(uint32_t, __ROR, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __RBIT, uint32_t)
 #if (__CORTEX_M >= 0x03U) || (__CORTEX_SC >= 300U)
-FAKE_VALUE_FUNC(uint8_t, __LDREXB, volatile uint8_t*);
-FAKE_VALUE_FUNC(uint16_t, __LDREXH, volatile uint16_t*);
-FAKE_VALUE_FUNC(uint32_t, __LDREXW, volatile uint32_t*);
-FAKE_VALUE_FUNC(uint32_t, __STREXB, uint8_t, volatile uint8_t*);
-FAKE_VALUE_FUNC(uint32_t, __STREXH, uint16_t, volatile uint8_t*);
-FAKE_VALUE_FUNC(uint32_t, __STREXW, uint32_t, volatile uint32_t*);
-FAKE_VOID_FUNC(__CLREX);
+FAKE_VALUE_FUNC(uint8_t, __LDREXB, volatile uint8_t*)
+FAKE_VALUE_FUNC(uint16_t, __LDREXH, volatile uint16_t*)
+FAKE_VALUE_FUNC(uint32_t, __LDREXW, volatile uint32_t*)
+FAKE_VALUE_FUNC(uint32_t, __STREXB, uint8_t, volatile uint8_t*)
+FAKE_VALUE_FUNC(uint32_t, __STREXH, uint16_t, volatile uint8_t*)
+FAKE_VALUE_FUNC(uint32_t, __STREXW, uint32_t, volatile uint32_t*)
+FAKE_VOID_FUNC(__CLREX)
 #undef __SSAT
-FAKE_VALUE_FUNC(uint32_t, __SSAT, int32_t, int32_t);
+FAKE_VALUE_FUNC(uint32_t, __SSAT, int32_t, int32_t)
 #undef __USAT
-FAKE_VALUE_FUNC(uint32_t, __USAT, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __RRX, uint32_t);
-FAKE_VALUE_FUNC(uint8_t, __LDRBT, volatile uint8_t*);
-FAKE_VALUE_FUNC(uint16_t, __LDRHT, volatile uint16_t*);
-FAKE_VALUE_FUNC(uint32_t, __LDRT, volatile uint32_t*);
-FAKE_VOID_FUNC(__STRBT, uint8_t, volatile uint8_t*);
-FAKE_VOID_FUNC(__STRHT, uint16_t, volatile uint16_t*);
-FAKE_VOID_FUNC(__STRT, uint32_t, volatile uint32_t*);
+FAKE_VALUE_FUNC(uint32_t, __USAT, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __RRX, uint32_t)
+FAKE_VALUE_FUNC(uint8_t, __LDRBT, volatile uint8_t*)
+FAKE_VALUE_FUNC(uint16_t, __LDRHT, volatile uint16_t*)
+FAKE_VALUE_FUNC(uint32_t, __LDRT, volatile uint32_t*)
+FAKE_VOID_FUNC(__STRBT, uint8_t, volatile uint8_t*)
+FAKE_VOID_FUNC(__STRHT, uint16_t, volatile uint16_t*)
+FAKE_VOID_FUNC(__STRT, uint32_t, volatile uint32_t*)
 #endif /* (__CORTEX_M >= 0x03U) || (__CORTEX_SC >= 300U) */
 #if (__CORTEX_M >= 0x04U)  /* only for Cortex-M4 and above */
-FAKE_VALUE_FUNC(uint32_t, __SADD8, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __QADD8, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SHADD8, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __UADD8, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __UQADD8, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __UHADD8, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SSUB8, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __QSUB8, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SHSUB8, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __USUB8, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __UQSUB8, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __UHSUB8, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SADD16, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __QADD16, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SHADD16, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __UADD16, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __UQADD16, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __UHADD16, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SSUB16, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __QSUB16, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SHSUB16, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __USUB16, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __UQSUB16, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __UHSUB16, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SASX, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __QASX, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SHASX, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __UASX, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __UQASX, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __UHASX, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SSAX, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __QSAX, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SHSAX, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __USAX, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __UQSAX, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __UHSAX, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __USAD8, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __USADA8, uint32_t, uint32_t, uint32_t);
+FAKE_VALUE_FUNC(uint32_t, __SADD8, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __QADD8, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SHADD8, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __UADD8, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __UQADD8, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __UHADD8, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SSUB8, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __QSUB8, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SHSUB8, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __USUB8, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __UQSUB8, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __UHSUB8, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SADD16, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __QADD16, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SHADD16, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __UADD16, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __UQADD16, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __UHADD16, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SSUB16, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __QSUB16, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SHSUB16, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __USUB16, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __UQSUB16, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __UHSUB16, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SASX, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __QASX, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SHASX, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __UASX, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __UQASX, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __UHASX, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SSAX, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __QSAX, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SHSAX, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __USAX, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __UQSAX, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __UHSAX, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __USAD8, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __USADA8, uint32_t, uint32_t, uint32_t)
 #undef __SSAT16
-FAKE_VALUE_FUNC(int32_t, __SSAT16, int32_t, int32_t);
+FAKE_VALUE_FUNC(int32_t, __SSAT16, int32_t, int32_t)
 #undef __USAT16
-FAKE_VALUE_FUNC(uint32_t, __USAT16, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __UXTB16, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __UXTAB16, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SXTB16, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SXTAB16, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SMUAD, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SMUADX, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SMLAD, uint32_t, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SMLADX, uint32_t, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SMLALD, uint32_t, uint32_t, uint64_t);
-FAKE_VALUE_FUNC(uint32_t, __SMLALDX, uint32_t, uint32_t, uint64_t);
-FAKE_VALUE_FUNC(uint32_t, __SMUSD, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SMUSDX, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SMLSD, uint32_t, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SMLSDX, uint32_t, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SMLSLD, uint32_t, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SMLSLDX, uint32_t, uint32_t, uint64_t);
-FAKE_VALUE_FUNC(uint32_t, __SEL, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(int32_t, __QADD, int32_t, int32_t);
-FAKE_VALUE_FUNC(int32_t, __QSUB, int32_t, int32_t);
+FAKE_VALUE_FUNC(uint32_t, __USAT16, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __UXTB16, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __UXTAB16, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SXTB16, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SXTAB16, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SMUAD, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SMUADX, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SMLAD, uint32_t, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SMLADX, uint32_t, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SMLALD, uint32_t, uint32_t, uint64_t)
+FAKE_VALUE_FUNC(uint32_t, __SMLALDX, uint32_t, uint32_t, uint64_t)
+FAKE_VALUE_FUNC(uint32_t, __SMUSD, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SMUSDX, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SMLSD, uint32_t, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SMLSDX, uint32_t, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SMLSLD, uint32_t, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SMLSLDX, uint32_t, uint32_t, uint64_t)
+FAKE_VALUE_FUNC(uint32_t, __SEL, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(int32_t, __QADD, int32_t, int32_t)
+FAKE_VALUE_FUNC(int32_t, __QSUB, int32_t, int32_t)
 #undef __PKHBT
-FAKE_VALUE_FUNC(uint32_t, __PKHBT, uint32_t, uint32_t);
+FAKE_VALUE_FUNC(uint32_t, __PKHBT, uint32_t, uint32_t)
 #undef __PKHTB
-FAKE_VALUE_FUNC(uint32_t, __PKHTB, uint32_t, uint32_t);
-FAKE_VALUE_FUNC(uint32_t, __SMMLA, int32_t, int32_t, int32_t);
+FAKE_VALUE_FUNC(uint32_t, __PKHTB, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(uint32_t, __SMMLA, int32_t, int32_t, int32_t)
 #endif /* (__CORTEX_M >= 0x04) */
 
 /* Mock-ups for the provided interfaces */

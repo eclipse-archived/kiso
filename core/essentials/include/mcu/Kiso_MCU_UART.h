@@ -172,7 +172,7 @@ Retcode_T MCU_UART_Deinitialize(UART_T uart);
  *
  * @return      RETCODE_OK in case of success, error code otherwise.
  */
-Retcode_T MCU_UART_Send(UART_T uart, uint8_t * data, uint32_t len);
+Retcode_T MCU_UART_Send(UART_T uart, const uint8_t * data, uint32_t len);
 
 /**
  * @brief       Receiving data from the UART.

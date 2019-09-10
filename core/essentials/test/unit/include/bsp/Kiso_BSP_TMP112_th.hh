@@ -24,13 +24,13 @@
 #if KISO_FEATURE_BSP_TMP112
 
 /* mock-ups for the provided interfaces */
-FAKE_VALUE_FUNC(Retcode_T, BSP_TMP112_Connect, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_TMP112_Enable, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_TMP112_Disable, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_TMP112_Disconnect, uint32_t);
-FAKE_VALUE_FUNC(Retcode_T, BSP_TMP112_InterruptEnable, uint32_t, BSP_TMP112_InterruptCallback_T);
-FAKE_VALUE_FUNC(Retcode_T, BSP_TMP112_InterruptDisable, uint32_t);
-FAKE_VALUE_FUNC(HWHandle_T, BSP_TMP112_GetHandle);
+FAKE_VALUE_FUNC(Retcode_T, BSP_TMP112_Connect, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_TMP112_Enable, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_TMP112_Disable, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_TMP112_Disconnect, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_TMP112_InterruptEnable, uint32_t, BSP_TMP112_InterruptCallback_T)
+FAKE_VALUE_FUNC(Retcode_T, BSP_TMP112_InterruptDisable, uint32_t)
+FAKE_VALUE_FUNC(HWHandle_T, BSP_TMP112_GetHandle)
 
 #endif /* KISO_FEATURE_TMP112DRIVER */
 

@@ -111,7 +111,7 @@
  * @param[in] argc : Argument count. The amount of parameters inside the argument vector
  * @param[in] argv : Argument vector
  */
-typedef Retcode_T (*CmdLineDbg_Callback_T)(uint32_t argc, const char ** argv);
+typedef Retcode_T (*CmdLineDbg_Callback_T)(uint32_t argc, const char * const* argv);
 
 /**
  * @brief Command Line List Element

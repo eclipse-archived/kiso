@@ -58,35 +58,35 @@ class Assert : public testing::Test
 
 protected:
 
-	static void assertCallbackFn(const unsigned long line, const unsigned char * const file)
-	{
-		/* @testcase{ Assert::assert: }
-		 *
-		 * The following expectations are tested here :
-		 * - Valid Filename.
-		 * - Valid Line Number.
-		 */
+   static void assertCallbackFn(const unsigned long line, const unsigned char * const file)
+   {
+      /* @testcase{ Assert::assert: }
+       *
+       * The following expectations are tested here :
+       * - Valid Filename.
+       * - Valid Line Number.
+       */
 
-		const char assertFileName[] = __FILE__;
+      const char assertFileName[] = __FILE__;
 
-		assertHitFlag = UINT8_C(1);
-		EXPECT_EQ(UINT8_C(0), strncmp((const char*)assertFileName, (const char*)file, sizeof(assertFileName)));
+      assertHitFlag = UINT8_C(1);
+      EXPECT_EQ(UINT8_C(0), strncmp((const char*)assertFileName, (const char*)file, sizeof(assertFileName)));
 
-		EXPECT_EQ(assertHitLineNumber,line);
-	}
+      EXPECT_EQ(assertHitLineNumber,line);
+   }
 
-	virtual void SetUp()
-	{
-		assertHitFlag = UINT8_C(0);
+   virtual void SetUp()
+   {
+      assertHitFlag = UINT8_C(0);
 
-		FFF_RESET_HISTORY()
-	}
+      FFF_RESET_HISTORY()
+   }
 
-	/* TearDown() is invoked immediately after a test finishes. */
-	virtual void TearDown()
-	{
-		; /* nothing to do if clean up is not required */
-	}
+   /* TearDown() is invoked immediately after a test finishes. */
+   virtual void TearDown()
+   {
+      ; /* nothing to do if clean up is not required */
+   }
 };
 
 /* specify test cases ******************************************************* */
@@ -96,21 +96,21 @@ protected:
  */
 TEST_F(Assert, Assert_Initialize)
 {
-	/** @testcase{ Assert::Assert_initialize: }
-	 *
-	 * The following expectations are tested here :
-	 * - Invalid Function registration.
-	 * - Valid Function registration.
-	 */
+   /** @testcase{ Assert::Assert_initialize: }
+    *
+    * The following expectations are tested here :
+    * - Invalid Function registration.
+    * - Valid Function registration.
+    */
 
-	Retcode_T retcode = Assert_Initialize(NULL);
-	EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
-	EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
-	EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
-	EXPECT_EQ(KISO_ESSENTIALS_MODULE_ID_ASSERT, Retcode_GetModuleId(retcode));
+   Retcode_T retcode = Assert_Initialize(NULL);
+   EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
+   EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
+   EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
+   EXPECT_EQ(KISO_ESSENTIALS_MODULE_ID_ASSERT, Retcode_GetModuleId(retcode));
 
-	retcode = Assert_Initialize(assertCallbackFn);
-	EXPECT_EQ(RETCODE_OK, retcode);
+   retcode = Assert_Initialize(assertCallbackFn);
+   EXPECT_EQ(RETCODE_OK, retcode);
 }
 
 /**
@@ -118,24 +118,24 @@ TEST_F(Assert, Assert_Initialize)
  */
 TEST_F(Assert, assert)
 {
-	/** @testcase{ Assert::assert: }
-	 *
-	 * The following expectations are tested here :
-	 * - Failing Assertion.
-	 * - Passing Assertion with valid callback.
-	 * - Passing Assertion with invalid callback.
-	 */
+   /** @testcase{ Assert::assert: }
+    *
+    * The following expectations are tested here :
+    * - Failing Assertion.
+    * - Passing Assertion with valid callback.
+    * - Passing Assertion with invalid callback.
+    */
 
-	assert(UINT8_C(1));
-	EXPECT_EQ(UINT8_C(0),assertHitFlag);
+   assert(UINT8_C(1));
+   EXPECT_EQ(UINT8_C(0),assertHitFlag);
 
-	assertHitLineNumber = (uint32_t)__LINE__ + UINT32_C(1);
-	assert(UINT8_C(0));
-	EXPECT_EQ(UINT8_C(1),assertHitFlag);
+   assertHitLineNumber = (uint32_t)__LINE__ + UINT32_C(1);
+   assert(UINT8_C(0));
+   EXPECT_EQ(UINT8_C(1),assertHitFlag);
 
-	assertCallback = NULL;
-	assertHitFlag = UINT8_C(0);
-	assert(UINT8_C(0));
-	EXPECT_EQ(UINT8_C(0),assertHitFlag);
+   assertCallback = NULL;
+   assertHitFlag = UINT8_C(0);
+   assert(UINT8_C(0));
+   EXPECT_EQ(UINT8_C(0),assertHitFlag);
 }
 
