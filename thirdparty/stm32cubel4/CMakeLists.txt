@@ -6,8 +6,6 @@ set(STM32CUBEL4_DIR 3rd-party/stm32cube)
 
 # Make sure we are only compiling with the proper toolchain
 if(${CMAKE_CROSSCOMPILING})
-   # Disable external (also false-positive) error in stm library
-   add_compile_options(-Wno-error=duplicated-branches)
    add_library(stm32cubel4 STATIC
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_adc_ex.c
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_adc.c
