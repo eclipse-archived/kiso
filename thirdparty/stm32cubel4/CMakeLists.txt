@@ -69,6 +69,16 @@ if(${CMAKE_CROSSCOMPILING})
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_usb.c
       source/Kiso_stm32l4xx_hal_dma.c # DMA loockup faster then the original version
    )
+   # Newer arm-gcc versions have these enabled by default
+   include(CheckCCompilerFlag)
+   check_c_compiler_flag(-Wno-error=tautological-compare has_no_tautological_compare)
+   if(${has_no_tautological_compare})
+      target_compile_options(stm32cubel4 PRIVATE -Wno-error=tautological-compare)
+   endif()
+   check_c_compiler_flag(-Wno-error=attributes has_no_attributes)
+   if(${has_no_attributes})
+      target_compile_options(stm32cubel4 PRIVATE -Wno-error=attributes)
+   endif()
    target_include_directories(stm32cubel4
    PUBLIC
       include
