@@ -12,20 +12,18 @@
 *
 ********************************************************************************/
 
- /**
+/**
  * @file
  *
  * @brief Implements the interface for message queue with variable size of elements.
  *
  */
 
-#include "Kiso_Utils.h"
+#include "Kiso_CellularModules.h"
 #undef KISO_MODULE_ID
-#define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_QUEUE
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_QUEUE
 
-#include "Kiso_Queue.h"
-
-#if KISO_FEATURE_QUEUE
+#include "Queue.h"
 
 #include <string.h>
 #include "Kiso_Basics.h"
@@ -77,7 +75,7 @@ Retcode_T Queue_Delete(Queue_T *Queue)
     assert(NULL != Queue->Lock && NULL != Queue->Wakeup);
     vSemaphoreDelete(Queue->Lock);
     vSemaphoreDelete(Queue->Wakeup);
-    Queue->Lock = Queue->Wakeup = (xSemaphoreHandle) NULL;
+    Queue->Lock = Queue->Wakeup = (xSemaphoreHandle)NULL;
 
     return RETCODE_OK;
 }
@@ -86,7 +84,7 @@ Retcode_T Queue_Delete(Queue_T *Queue)
 Retcode_T Queue_Put(Queue_T *Queue, const void *Item, uint32_t ItemSize, const void *payload, uint32_t PayloadSize)
 {
     assert(NULL != Queue && NULL != Item && 0 != ItemSize);
-    (void) xSemaphoreTake(Queue->Lock, portMAX_DELAY);
+    (void)xSemaphoreTake(Queue->Lock, portMAX_DELAY);
 
     QueueItem_T m;
     m.Next = NULL;
@@ -97,29 +95,29 @@ Retcode_T Queue_Put(Queue_T *Queue, const void *Item, uint32_t ItemSize, const v
 
     if ((Queue->PosWrite > Queue->PosRead) || 0 == Queue->Count)
     {
-        if (TotalSize <= (Queue->BufferSize - (uint32_t) (Queue->PosWrite - Queue->Buffer)))
+        if (TotalSize <= (Queue->BufferSize - (uint32_t)(Queue->PosWrite - Queue->Buffer)))
         {
             /* Write to back */
             pos = Queue->PosWrite;
         }
-        else if (TotalSize <= (uint32_t) (Queue->PosRead - Queue->Buffer))
+        else if (TotalSize <= (uint32_t)(Queue->PosRead - Queue->Buffer))
         {
             /* Write in front */
             pos = Queue->Buffer;
         }
         else
         {
-            (void) xSemaphoreGive(Queue->Lock);
+            (void)xSemaphoreGive(Queue->Lock);
             return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
         }
     }
-    else if (Queue->PosWrite < Queue->PosRead && TotalSize <= (uint32_t) (Queue->PosRead - Queue->PosWrite))
+    else if (Queue->PosWrite < Queue->PosRead && TotalSize <= (uint32_t)(Queue->PosRead - Queue->PosWrite))
     {
         pos = Queue->PosWrite;
     }
     else
     {
-        (void) xSemaphoreGive(Queue->Lock);
+        (void)xSemaphoreGive(Queue->Lock);
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
     }
 
@@ -129,7 +127,7 @@ Retcode_T Queue_Put(Queue_T *Queue, const void *Item, uint32_t ItemSize, const v
         Queue->Last->Next = pos;
     }
 
-    Queue->Last = (QueueItem_T*) pos;
+    Queue->Last = (QueueItem_T *)pos;
 
     /* Add a message to queue */
     memcpy(pos, &m, sizeof(QueueItem_T));
@@ -149,10 +147,10 @@ Retcode_T Queue_Put(Queue_T *Queue, const void *Item, uint32_t ItemSize, const v
     if (1 == Queue->Count)
     {
         /* Notify any waiting task */
-        (void) xSemaphoreGive(Queue->Wakeup);
+        (void)xSemaphoreGive(Queue->Wakeup);
     }
 
-    (void) xSemaphoreGive(Queue->Lock);
+    (void)xSemaphoreGive(Queue->Lock);
     return RETCODE_OK;
 }
 
@@ -161,35 +159,35 @@ Retcode_T Queue_Get(Queue_T *Queue, void **Data, uint32_t *DataSize, uint32_t Ti
 {
     assert(NULL != Queue && NULL != Data);
 
-    (void) xSemaphoreTake(Queue->Lock, portMAX_DELAY);
+    (void)xSemaphoreTake(Queue->Lock, portMAX_DELAY);
     if (0 == Queue->Count)
     {
         /* reset the wakeup */
-        (void) xSemaphoreTake(Queue->Wakeup, 0);
-        (void) xSemaphoreGive(Queue->Lock);
+        (void)xSemaphoreTake(Queue->Wakeup, 0);
+        (void)xSemaphoreGive(Queue->Lock);
         /* wait for a message */
         if (pdPASS != xSemaphoreTake(Queue->Wakeup, Timeout))
         {
             return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_SEMAPHORE_ERROR);
         }
-        (void) xSemaphoreTake(Queue->Lock, portMAX_DELAY);
-        (void) xSemaphoreGive(Queue->Wakeup);
+        (void)xSemaphoreTake(Queue->Lock, portMAX_DELAY);
+        (void)xSemaphoreGive(Queue->Wakeup);
         /* Insure that a message is available */
         if (0 == Queue->Count)
         {
-            (void) xSemaphoreGive(Queue->Lock);
+            (void)xSemaphoreGive(Queue->Lock);
             return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNEXPECTED_BEHAVIOR);
         }
     }
 
-    QueueItem_T *m = (QueueItem_T*) Queue->PosRead;
+    QueueItem_T *m = (QueueItem_T *)Queue->PosRead;
     *Data = Queue->PosRead + sizeof(QueueItem_T);
     if (DataSize)
     {
         *DataSize = m->Size;
     }
 
-    (void) xSemaphoreGive(Queue->Lock);
+    (void)xSemaphoreGive(Queue->Lock);
     return RETCODE_OK;
 }
 
@@ -197,15 +195,15 @@ Retcode_T Queue_Get(Queue_T *Queue, void **Data, uint32_t *DataSize, uint32_t Ti
 Retcode_T Queue_Purge(Queue_T *Queue)
 {
     assert(NULL != Queue);
-    (void) xSemaphoreTake(Queue->Lock, portMAX_DELAY);
+    (void)xSemaphoreTake(Queue->Lock, portMAX_DELAY);
 
     if (0 == Queue->Count)
     {
-        (void) xSemaphoreGive(Queue->Lock);
+        (void)xSemaphoreGive(Queue->Lock);
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
     }
 
-    QueueItem_T *m = (QueueItem_T*) Queue->PosRead;
+    QueueItem_T *m = (QueueItem_T *)Queue->PosRead;
     Queue->PosRead = m->Next;
     Queue->Count--;
 
@@ -215,7 +213,7 @@ Retcode_T Queue_Purge(Queue_T *Queue)
         Queue->Last = NULL;
     }
 
-    (void) xSemaphoreGive(Queue->Lock);
+    (void)xSemaphoreGive(Queue->Lock);
     return RETCODE_OK;
 }
 
@@ -230,11 +228,9 @@ uint32_t Queue_Count(const Queue_T *Queue)
 void Queue_Clear(Queue_T *Queue)
 {
     assert(NULL != Queue);
-    (void) xSemaphoreTake(Queue->Lock, portMAX_DELAY);
+    (void)xSemaphoreTake(Queue->Lock, portMAX_DELAY);
     Queue->PosRead = Queue->PosWrite = Queue->Buffer;
     Queue->Count = 0;
     Queue->Last = NULL;
-    (void) xSemaphoreGive(Queue->Lock);
+    (void)xSemaphoreGive(Queue->Lock);
 }
-
-#endif /* if KISO_FEATURE_QUEUE */

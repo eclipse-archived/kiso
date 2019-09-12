@@ -62,11 +62,6 @@
 #define KISO_FEATURE_LOGGING            1
 #endif
 
-#ifndef KISO_FEATURE_QUEUE
-/** @brief Enable (1) or disable (0) the Queue feature. */
-#define KISO_FEATURE_QUEUE              1
-#endif
-
 #ifndef KISO_FEATURE_RINGBUFFER
 /** @brief Enable (1) or disable (0) the RingBuffer feature. */
 #define KISO_FEATURE_RINGBUFFER         1

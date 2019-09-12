@@ -20,7 +20,7 @@
 #include "Kiso_Retcode_th.hh"
 #include "FreeRTOS_th.hh"
 #include "semphr_th.hh"
-#include "Kiso_Queue.h"
+#include "Queue.h"
 
 FAKE_VALUE_FUNC(Retcode_T, Queue_Create, Queue_T *, uint8_t*, uint32_t)
 FAKE_VALUE_FUNC(Retcode_T, Queue_Put, Queue_T *, const void *, uint32_t, const void *, uint32_t)

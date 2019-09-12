@@ -13,7 +13,7 @@
 ********************************************************************************/
 
 /**
- * @ingroup UTILS
+ * @ingroup CELLULAR
  *
  * @defgroup QUEUE Queue
  * @{
@@ -94,15 +94,14 @@
  * @file
  **/
 
-#ifndef KISO_QUEUE_H
-#define KISO_QUEUE_H
+#ifndef QUEUE_H_
+#define QUEUE_H_
 
-#include "Kiso_Utils.h"
-
-#if KISO_FEATURE_QUEUE
+#include "Kiso_Cellular.h"
 
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
+
 #include "FreeRTOS.h"
 #include "semphr.h"
 
@@ -127,8 +126,8 @@ typedef struct
     uint8_t *PosWrite;
     uint32_t Count;
     QueueItem_T *Last;
-    xSemaphoreHandle Lock;
-    xSemaphoreHandle Wakeup;
+    SemaphoreHandle_t Lock;
+    SemaphoreHandle_t Wakeup;
 } Queue_T;
 
 /**
@@ -208,7 +207,5 @@ uint32_t Queue_Count(const Queue_T *Queue);
  */
 void Queue_Clear(Queue_T *Queue);
 
-#endif /* if KISO_FEATURE_QUEUE */
-
-#endif /* KISO_QUEUE_H */
+#endif /* QUEUE_H_ */
 /** @} */
