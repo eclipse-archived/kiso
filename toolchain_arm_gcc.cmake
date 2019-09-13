@@ -19,6 +19,13 @@ if(NOT ARM_TOOLCHAIN_DIR)
         OUTPUT_VARIABLE FOUND_GCC_PATH
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+    if(CMAKE_HOST_WIN32)
+        # 'where' on windows returns all found - choose the first one in case there are multiples
+        string(FIND ${FOUND_GCC_PATH} "\n" NLPOS)
+        if(NOT ${NLPOS} EQUAL -1)
+            string(SUBSTRING ${FOUND_GCC_PATH} 0 ${NLPOS} FOUND_GCC_PATH)
+        endif()
+    endif()
     get_filename_component(ARM_TOOLCHAIN_DIR ${FOUND_GCC_PATH} DIRECTORY)
 endif()
 
