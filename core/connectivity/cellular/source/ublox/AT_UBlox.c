@@ -1827,7 +1827,7 @@ Retcode_T At_Set_USOWR(const AT_USOWR_Param_T *param, AT_USOWR_Resp_T *resp)
             break;
         case AT_UBLOX_PAYLOADENCODING_BINARY:
             /* Currently not supported, sorry! ... maybe your first PR? :) */
-            /** @todo u-blox out-of-AT sender mode (initiated by '@' during sending)
+            /** \todo: u-blox out-of-AT sender mode (initiated by '@' during sending)
              * needs to be implemented. One idea would be to introduce a new
              * AT-parser state which triggers on the '@' char. Other vendors rely
              * this out-of-AT mode (e.g. Quectel) to send data over sockets. */
@@ -1923,7 +1923,7 @@ Retcode_T At_Set_USOST(const AT_USOST_Param_T *param, AT_USOST_Resp_T *resp)
             break;
         case AT_UBLOX_PAYLOADENCODING_BINARY:
             /* Currently not supported, sorry! ... maybe your first PR? :) */
-            /** @todo u-blox out-of-AT sender mode (initiated by '@' during sending)
+            /** \todo: u-blox out-of-AT sender mode (initiated by '@' during sending)
              * needs to be implemented. One idea would be to introduce a new
              * AT-parser state which triggers on the '@' char. Other vendors rely
              * this out-of-AT mode (e.g. Quectel) to send data over sockets. */
@@ -1999,7 +1999,7 @@ Retcode_T At_Set_USORD(const AT_USORD_Param_T *param, AT_USORD_Resp_T *resp)
         break;
     case AT_UBLOX_PAYLOADENCODING_BINARY:
         /* Currently not supported, sorry! ... maybe your first PR? :) */
-        /** @todo The current parser does not support arbitrary ASCII
+        /** \todo: The current parser does not support arbitrary ASCII
          * characters [0x00,0xFF]. */
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
         break;
@@ -2029,7 +2029,7 @@ Retcode_T At_Set_USORF(const AT_USORF_Param_T *param, AT_USORF_Resp_T *resp)
         break;
     case AT_UBLOX_PAYLOADENCODING_BINARY:
         /* Currently not supported, sorry! ... maybe your first PR? :) */
-        /** @todo The current parser does not support arbitrary ASCII
+        /** \todo: The current parser does not support arbitrary ASCII
          * characters [0x00,0xFF]. */
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
         break;

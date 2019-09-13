@@ -232,7 +232,7 @@ static Retcode_T TranslateToUbloxAcT(const Cellular_NetworkParameters_T* netPara
 
     Retcode_T retcode = RETCODE_OK;
 
-    /** @todo Maybe revisit the PreferredAcT and SecondPreferredAcT choices.
+    /** \todo: Maybe revisit the PreferredAcT and SecondPreferredAcT choices.
      * Currently best-guess values, but an application may want to chose the
      * metrics instead. */
 
@@ -335,7 +335,7 @@ static Retcode_T RegisterOnNetwork(void* param, uint32_t len)
         }
     }
 
-    /** @todo Check current CREG, CGREG and CEREG values before initiating a
+    /** \todo: Check current CREG, CGREG and CEREG values before initiating a
      * new join. We might already be connected, in which case we just need to
      * update the state-machine. */
 
@@ -378,7 +378,7 @@ static Retcode_T ConfigureDataContext(void* param, uint32_t len)
 
     AT_CGDCONT_Param_T cgdcont;
     cgdcont.Cid = cfg->Cid;
-    /** @todo Make PDP_Type configurable. */
+    /** \todo: Make PDP_Type configurable. */
     cgdcont.PdpType = AT_CGDCONT_PDPTYPE_IP;
     cgdcont.Apn = cfg->Parameters->ApnSettings.ApnName;
     return At_Set_CGDCONT(&cgdcont);
@@ -430,7 +430,7 @@ static Retcode_T ActivateDataContext(void* param, uint32_t len)
             ctx->IpAddress.Type = CELLULAR_IPADDRESSTYPE_IPV6;
             break;
         case AT_CGPADDR_ADDRESSTYPE_INVALID:
-            /** @todo Consider throwing an error if we find the PDP-address
+            /** \todo: Consider throwing an error if we find the PDP-address
              * being invalid. */
             memset(ctx->IpAddress.Address.IPv6, 0, sizeof(ctx->IpAddress.Address.IPv4));
             ctx->IpAddress.Type = CELLULAR_IPADDRESSTYPE_MAX;
@@ -619,7 +619,7 @@ Retcode_T Cellular_SetAirPlaneMode(bool airPlanModeOn)
 {
     KISO_UNUSED(airPlanModeOn);
     /* Currently not supported, sorry! ... maybe your first PR? :) */
-    /** @todo Implement 3GPP 27.007 commands for AT+CFUN=4 (disable rx/tx) and
+    /** \todo: Implement 3GPP 27.007 commands for AT+CFUN=4 (disable rx/tx) and
      * AT+CFUN=1 (enable rx/tx). */
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
 }

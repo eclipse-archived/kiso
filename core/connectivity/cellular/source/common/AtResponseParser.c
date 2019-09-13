@@ -12,6 +12,12 @@
 *
 ********************************************************************************/
 
+/**
+ * @file AtResponseParser.c
+ *
+ * @brief Implements AT Response Parser.
+ */
+
 #include "Kiso_CellularModules.h"
 #define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_ATPARSER
 
@@ -345,7 +351,7 @@ static int32_t AtrpStateCmd(uint8_t* buffer, uint32_t len)
 }
 
 /**
- * @todo: the current implementation of the OK parsing uses a look-ahead of 1.
+ * \todo: the current implementation of the OK parsing uses a look-ahead of 1.
  * This clashes with Misc. Content which starts with an upper-case O.
  * Our implementation is according to spec, where OK has a higher priority than
  * misc content, yet this is a source of problems/errors.
@@ -422,7 +428,7 @@ static int32_t AtrpStateResponseCode(uint8_t* buffer, uint32_t len)
 }
 
 /**
- * @todo: if the buffer overflows within one MISC message, we go to the error
+ * \todo: if the buffer overflows within one MISC message, we go to the error
  * state. Instead, we should trigger the MISC event and reset the buffer.
  */
 static int32_t AtrpStateMiscContent(uint8_t* buffer, uint32_t len)

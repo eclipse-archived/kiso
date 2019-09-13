@@ -24,7 +24,7 @@
  *
  * @note        It is possible to disable the entire flash feature in the HAL-BSP configuration file. I.e. the Flash
  * code will only be compiled and linked if the feature <b>KISO_FEATURE_FLASH</b> is set to 1 in the configuration file.
- * @todo        Deprecate this API as it does not fulfill microcontroller portability criteria use
+ * \todo:        Deprecate this API as it does not fulfill microcontroller portability criteria use
  * Kiso_MCU_FlashIntern.h instead.
  */
 

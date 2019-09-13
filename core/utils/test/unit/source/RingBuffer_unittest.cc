@@ -404,7 +404,7 @@ TEST_F(UartRingBuffer_InitTest, RingBuffer_Reset)
 
 }
 
-#if 0 // TODO: provide pthread capabilities
+#if 0 /** \todo: provide pthread capabilities */
 
 static void* consume(void* arg)
 {

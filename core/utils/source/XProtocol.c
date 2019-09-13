@@ -121,7 +121,7 @@ Retcode_T XProtocol_EncodeFrame(const uint8_t *data, uint32_t dataLength,
      * always returning RETCODE_OK because we check for NULL pointers
      * ourselves.
      */
-    // TODO: Check for dataLength >= 0xFFFF because of the downcast
+    /** \todo: Check for dataLength >= 0xFFFF because of the downcast */
     (void) CRC_16(XPROTOCOL_CRC_CCITT_POLY, &checksum, data, (uint16_t) dataLength);
 
     /* create encoded frame byte per byte */

@@ -55,7 +55,8 @@ uint64_t Time_GetTimeStamp(void)
 {
     uint32_t temp1 = LPTIM1->CNT; /* Read LPTIM counter*/
     uint64_t temp2 = overflow << 16; /* Read overflow counter*/
-    return (temp2 + (temp1 + offset)); /* combine time value todo check if the result is correct because of multiple types addition*/
+    /** \todo Check if the result is correct because of multiple types addition */
+    return (temp2 + (temp1 + offset)); /* Combine time value */
 }
 
 /**

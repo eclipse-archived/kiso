@@ -1198,7 +1198,7 @@ TEST_F(CRCRoutines,TestCRC32EathStandard)
     uint32_t crc32_Utils;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    // TODO: Are we sure about this?
+    /** \todo: Are we sure about this? */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Woverflow"
     CRC32_EATH_STD_INIT(crc32_Utils);

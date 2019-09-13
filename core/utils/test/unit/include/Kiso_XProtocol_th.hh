@@ -28,7 +28,7 @@
 /**
  * mock-ups for the provided interfaces
  * Deprecated functions will be removed as part of PFM-659
- * Deprecated since vXXX (TODO: replace XXX with next version)
+ * Deprecated since vXXX (\todo: replace XXX with next version)
  */
 FAKE_VALUE_FUNC(Retcode_T, xProtocol_Init)
 FAKE_VALUE_FUNC(Retcode_T, xProtocol_EncodeFrame, const uint8_t *, uint32_t,

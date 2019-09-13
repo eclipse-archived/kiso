@@ -587,7 +587,7 @@ Retcode_T At_Get_CREG(AT_CREG_Param_T* param)
             break;
         case AT_CXREG_N_URC_LOC:
             case AT_CXREG_N_URC_LOC_CAUSE:
-            /* TODO: cause_type and reject_cause not supported! */
+            /** \todo: cause_type and reject_cause not supported! */
             retcode = Handle_Get_CXREG_Lac(&param->Lac);
 
             if (RETCODE_OK == retcode)
@@ -648,7 +648,7 @@ Retcode_T At_Get_CGREG(AT_CGREG_Param_T* param)
             case AT_CXREG_N_URC_LOC_CAUSE:
             case AT_CXREG_N_URC_LOC_PSM:
             case AT_CXREG_N_URC_LOC_PSM_CAUSE:
-            /* TODO: cause_type, reject_cause, Active-Time, Periodic-RAU,
+            /** \todo: cause_type, reject_cause, Active-Time, Periodic-RAU,
              * GPRS-READY-timer not supported! */
             retcode = Handle_Get_CXREG_Lac(&param->Lac);
 
@@ -713,7 +713,7 @@ Retcode_T At_Get_CEREG(AT_CEREG_Param_T* param)
             case AT_CXREG_N_URC_LOC_CAUSE:
             case AT_CXREG_N_URC_LOC_PSM:
             case AT_CXREG_N_URC_LOC_PSM_CAUSE:
-            /* TODO: cause_type, reject_cause, Active-Time, Periodic-TAU not
+            /** \todo: cause_type, reject_cause, Active-Time, Periodic-TAU not
              * supported! */
             retcode = Handle_Get_CEREG_Tac(&param->Tac);
 
@@ -759,7 +759,7 @@ Retcode_T At_Set_COPS(const AT_COPS_Param_T* param)
         case AT_COPS_MODE_SET_FORMAT_ONLY:
         case AT_COPS_MODE_MANUAL_THEN_AUTOMATIC:
         /* Currently not supported, sorry! ... maybe your first PR? :) */
-        /** @todo Implement remaining 3GPP 27.007 command modes for AT+COPS
+        /** \todo Implement remaining 3GPP 27.007 command modes for AT+COPS
          * setter. */
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
         break;
@@ -1213,7 +1213,7 @@ Retcode_T At_HandleUrc_CREG(void)
                 case AT_CXREG_STAT_CSFB_NOT_PREF_HOME:
                 case AT_CXREG_STAT_CSFB_NOT_PREF_ROAMING:
                 /* set device status and notify event */
-                /** @todo Propagate type of CxREG to client-callback via
+                /** \todo Propagate type of CxREG to client-callback via
                  * param. */
                 Engine_NotifyNewState(CELLULAR_STATE_REGISTERED, NULL, 0);
                 break;
@@ -1335,7 +1335,7 @@ Retcode_T At_HandleUrc_CGREG(void)
                 case AT_CXREG_STAT_CSFB_NOT_PREF_HOME:
                 case AT_CXREG_STAT_CSFB_NOT_PREF_ROAMING:
                 /* set device status and notify event */
-                /** @todo Propagate type of CxREG to client-callback via
+                /** \todo Propagate type of CxREG to client-callback via
                  * param. */
                 Engine_NotifyNewState(CELLULAR_STATE_REGISTERED, NULL, 0);
                 break;
@@ -1469,8 +1469,7 @@ Retcode_T At_HandleUrc_CEREG(void)
                 case AT_CXREG_STAT_CSFB_NOT_PREF_HOME:
                 case AT_CXREG_STAT_CSFB_NOT_PREF_ROAMING:
                 /* set device status and notify event */
-                /** @todo Propagate type of CxREG to client-callback via
-                 * param. */
+                /** \todo Propagate type of CxREG to client-callback via param. */
                 Engine_NotifyNewState(CELLULAR_STATE_REGISTERED, NULL, 0);
                 break;
             case AT_CXREG_STAT_NOT:

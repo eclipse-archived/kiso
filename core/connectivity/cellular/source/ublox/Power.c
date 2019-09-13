@@ -107,7 +107,7 @@ Retcode_T Power_SetupModem(void)
             LOG_ERROR("Unable to unlock SIM with PIN '%s'.", Pin);
         }
 
-        /** @todo Of course a better way would be to check if the SIM has been
+        /** \todo: Of course a better way would be to check if the SIM has been
          * unlocked instead of just relying on an arbitrary delay. Perhaps use
          * AT+CPIN? to wait for SIM-READY code. */
         /* Give the modem some time to unlock the SIM card. CPIN appears to be

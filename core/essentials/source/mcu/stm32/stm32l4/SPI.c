@@ -207,7 +207,7 @@ Retcode_T MCU_SPI_Send(SPI_T spi, uint8_t * data, uint32_t len)
             if (SPI_STATE_READY == pSPI->State)
             {
                 pSPI->Transaction.pTxDataBuffer = data;
-                // TODO: Check for len > 0xFFFF because of the downcast
+                /** \todo: Check for len > 0xFFFF because of the downcast */
                 pSPI->Transaction.Size = (uint16_t)len;
                 retcode = pSPI->TxFunPtr(pSPI);
             }
@@ -262,7 +262,7 @@ Retcode_T MCU_SPI_Receive(SPI_T spi, uint8_t * buffer, uint32_t len)
                     buffer[i] = pSPI->DefaultData;
                 }
                 pSPI->Transaction.pRxDataBuffer = buffer;
-                // TODO: Check for len > 0xFFFF because of the downcast
+                /** \todo: Check for len > 0xFFFF because of the downcast */
                 pSPI->Transaction.Size = (uint16_t)len;
                 retcode = pSPI->RxFunPtr(pSPI);
             }
@@ -312,7 +312,7 @@ Retcode_T MCU_SPI_Transfer(SPI_T spi, uint8_t* data_out, uint8_t* data_in, uint3
             {
                 pSPI->Transaction.pTxDataBuffer = data_out;
                 pSPI->Transaction.pRxDataBuffer = data_in;
-                // TODO: Check for len > 0xFFFF because of the downcast
+                /** \todo: Check for len > 0xFFFF because of the downcast */
                 pSPI->Transaction.Size = (uint16_t)numTransfer;
                 retcode = pSPI->TransferFunPtr(pSPI);
             }

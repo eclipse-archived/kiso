@@ -186,7 +186,7 @@ static uint16_t GetAvailableMemorySize(TLV_GroupHandle_TP const Handle)
 
     if (Element != (TLV_Element_T*) NULL)
     {
-        // TODO: Take a closer look if there is a better way - -Wpointer-to-int-cast
+        /** \todo: Take a closer look if there is a better way - -Wpointer-to-int-cast */
         AvailableMemory = (unsigned long)Element->DataBuffer - ((unsigned long)Element + sizeof(TLV_Element_T));
     }
     else

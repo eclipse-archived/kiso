@@ -25,7 +25,7 @@ extern "C"
 
 #if KISO_FEATURE_TIMER
 
-// TODO: These come from em_device.h - check if needed
+/** \todo: These come from em_device.h - check if needed */
 // #define RTC_PRESENT
 // #define RTC_COUNT 1
 

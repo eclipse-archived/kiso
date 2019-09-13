@@ -19,7 +19,7 @@
  * @{
  *
  * @brief       BSP API for Infra Red sensor
- * @todo deprecate this API
+ * \todo: deprecate this API
  *
  * @details
  * After reset, the microcontroller GPIOs are mostly tristated. Once the device is requested a call to

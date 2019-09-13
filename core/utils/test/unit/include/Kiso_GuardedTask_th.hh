@@ -12,13 +12,13 @@
 *
 ********************************************************************************/
 /**
- * @file 
+ * @file Kiso_GuardedTask_th.hh
  *
  *
- *  Mockup implementation for the GuardedTask_th module.
+ *  Mockup implementation for the GuardedTask module.
  *
  * ****************************************************************************/
- 
+
 /* header definition ******************************************************** */
 #ifndef KISO_GUARDEDTASK_TH_HH_
 #define KISO_GUARDEDTASK_TH_HH_
@@ -41,7 +41,7 @@ typedef void (*GuardedTask_Function_T)(void);
 /**
  * mock-ups for the provided interfaces
  * Deprecated functions will be removed as part of PFM-659
- * Deprecated since vXXX (TODO: replace XXX with next version)
+ * Deprecated since vXXX (\todo: replace XXX with next version)
  */
 FAKE_VALUE_FUNC(Retcode_T, GuardedTask_initialize, GuardedTask_T*, GuardedTask_Function_T, const char*, uint32_t, uint32_t)
 FAKE_VALUE_FUNC(Retcode_T, GuardedTask_deinitialize, GuardedTask_T*)

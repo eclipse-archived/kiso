@@ -26,7 +26,7 @@
 /**
  * mock-ups for the provided interfaces
  * Deprecated functions will be removed as part of PFM-659
- * Deprecated since vXXX (TODO: replace XXX with next version)
+ * Deprecated since vXXX (\todo: replace XXX with next version)
  */
 FAKE_VALUE_FUNC(Retcode_T, PipeAndFilter_CreatePipe, PipeAndFilter_Pipe_T *)
 FAKE_VALUE_FUNC(Retcode_T, PipeAndFilter_CreateFilter, PipeAndFilter_FilterFunction_T, PipeAndFilter_Pipe_T *, PipeAndFilter_Pipe_T *, PipeAndFilter_Filter_T *)

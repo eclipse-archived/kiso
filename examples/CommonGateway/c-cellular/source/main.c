@@ -150,7 +150,7 @@ void ErrorHandler(Retcode_T error, bool isfromIsr)
 {
     if (false == isfromIsr)
     {
-        /** @TODO ERROR HANDLING SHOULD BE DONE FOR THE ERRORS RAISED FROM PLATFORM */
+        /** \todo: ERROR HANDLING SHOULD BE DONE FOR THE ERRORS RAISED FROM PLATFORM */
         uint32_t PackageID = Retcode_GetPackage(error);
         uint32_t ErrorCode = Retcode_GetCode(error);
         uint32_t ModuleID = Retcode_GetModuleId(error);
