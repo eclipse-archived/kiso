@@ -63,6 +63,12 @@ else()
    include(boards/${KISO_BOARD_NAME}/board_config.cmake)
 endif()
 
+if(${ENABLE_STATIC_CHECKS})
+   find_program(CLANG_TIDY clang-tidy
+      NAMES clang-tidy-10 clang-tidy-9 clang-tidy-8 clang-tidy-7)
+      message(STATUS "Looking for clang-tidy: ${CLANG_TIDY}")
+endif()
+
 ## Add board and core libs
 add_subdirectory(boards)
 add_subdirectory(core/essentials)

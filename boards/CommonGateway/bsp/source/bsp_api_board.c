@@ -123,10 +123,10 @@ Retcode_T BSP_Board_Initialize(uint32_t param1, void* param2)
 /**
  * See API interface for function documentation
  */
-void BSP_Board_Delay(uint32_t delayMs)
+void BSP_Board_Delay(uint32_t delayInMs)
 {
     uint64_t timeStart = Time_GetTimeStamp();
-    while ((Time_GetTimeStamp() - timeStart) < delayMs * 1000)
+    while ((Time_GetTimeStamp() - timeStart) < delayInMs * 1000)
     {
     }
 }
@@ -134,10 +134,10 @@ void BSP_Board_Delay(uint32_t delayMs)
 /**
  * See API interface for function documentation
  */
-void BSP_Board_DelayUs(uint32_t delayUs)
+void BSP_Board_DelayUs(uint32_t delayInUs)
 {
     uint64_t timeStart = Time_GetTimeStamp();
-    while ((Time_GetTimeStamp() - timeStart) < delayUs)
+    while ((Time_GetTimeStamp() - timeStart) < delayInUs)
     {
     }
 }
@@ -397,7 +397,10 @@ Retcode_T Board_GPIOInit(void)
 
 void Error_Handler(void)
 {
-    for(;;);
+    for(;;)
+    {
+       /*endless loop*/
+    }
 }
 
 /**

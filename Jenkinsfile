@@ -48,6 +48,7 @@ pipeline
                             echo "run static analysis"
                             sh 'cmake . -Bbuilddir-static -G"Unix Makefiles" -DKISO_BOARD_NAME=CommonGateway -DENABLE_STATIC_CHECKS=1 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON'
                             sh 'cmake --build builddir-static 2> builddir-static/clang-report.txt'
+                            sh 'cat builddir-static/clang-report.txt | python ci/thirdparty/clangTidyToJunit/clang-tidy-to-junit.py `pwd` > builddir-static/clang-report.xml'
                         }
                     }
                 }
@@ -98,9 +99,13 @@ pipeline
                 artifacts: 'builddir-unittests/Testing/**/*.xml',
                 fingerprint: true
             )
-             archiveArtifacts (
+            archiveArtifacts (
                 artifacts: 'builddir-static/clang-report.txt',
                 fingerprint: true
+            )
+            junit (
+                allowEmptyResults: true,
+                testResults: 'builddir-static/clang-report.xml'
             )
         }
         success

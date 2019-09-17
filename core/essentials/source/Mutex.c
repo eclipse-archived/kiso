@@ -51,11 +51,7 @@ Retcode_T HAL_Mutex_SetHooks(HAL_Mutex_Hook_T lockHook, HAL_Mutex_Hook_T unlockH
 
 		return RETCODE_OK;
 	}
-	else
-	{
 		return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NULL_POINTER);
-	}
-
 }
 
 

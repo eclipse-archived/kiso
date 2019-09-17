@@ -62,7 +62,6 @@ void RunFilter(void * pvParameters)
 		retcode = RETCODE_OK;
 		xReceivedBytes = 0;
 		xToSendBytes = 0;
-		xSendBytes = 0;
 
 		// Get input if exist
 		if(filterContext->pipeInHandle != NULL)

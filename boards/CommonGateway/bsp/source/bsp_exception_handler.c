@@ -44,7 +44,7 @@
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
-void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress);
+void prvGetRegistersFromStack(const uint32_t *pulFaultStackAddress);
 void UsageFault_Handler(void);
 void BusFault_Handler(void);
 void MemManage_Handler(void);
@@ -60,7 +60,7 @@ void HardFault_Handler(void);
  *
  * @param pulFaultStackAddress Pointer to the saved fault stack.
  */
-void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress)
+void prvGetRegistersFromStack(const uint32_t *pulFaultStackAddress)
 {
     /* variables must be volatile to prevent the optimizer removing them */
     volatile uint32_t KISO_UNUSED_FUNC(r0);
@@ -83,7 +83,10 @@ void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress)
 
     /* when the following line is hit, the variables contain the register values */
     for (;;)
-        ;
+    {
+       /* endless loop */
+    }
+        
 
 }
 
@@ -91,21 +94,29 @@ void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress)
 __attribute__((weak, noreturn)) void UsageFault_Handler(void)
 {
     for (;;)
-        ;
+    {
+       /* endless loop */
+    }
 }
 
 /** BUS Fault exception handler */
 __attribute__((weak, noreturn)) void BusFault_Handler(void)
 {
     for (;;)
-        ;
+    {
+        /* endless loop */
+    }
+        
 }
 
 /** Memory Manager Fault exception handler */
 __attribute__((weak, noreturn)) void MemManage_Handler(void)
 {
     for (;;)
-        ;
+    {
+        /* endless loop */
+    }
+        
 }
 
 /** Hard Fault exception handler */
@@ -126,7 +137,9 @@ __attribute__((naked, noreturn)) void HardFault_Handler(void)
 }
 #else
 void HardFault_Handler(void)
-{};
+{
+   /* intentionally left empty */
+}
 #endif
 
 /** ************************************************************************* */

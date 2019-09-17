@@ -209,28 +209,28 @@ Retcode_T XProtocol_GetPayloadLength(const uint8_t *frame, uint32_t frameLength,
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
     }
+    
+    
+    /* check the number of checksum and payload bytes of frame after decoding */
+    for (uint32_t x = UINT32_C(0); x < frameLength; x++)
+    {
+        if (XPROTOCOL_ESC == frame[x])
+        {
+            x++;
+        }
+        counter++;
+    }
+    /* we decrease the counter by 4 (the bytes of SD, ED and the 2
+        * bytes of checksum. Result: we get only the number of payload's bytes) */
+    if (UINT32_C(4) < counter)
+    {
+        *payloadLength = counter - 4;
+    }
     else
     {
-        /* check the number of checksum and payload bytes of frame after decoding */
-        for (uint32_t x = UINT32_C(0); x < frameLength; x++)
-        {
-            if (XPROTOCOL_ESC == frame[x])
-            {
-                x++;
-            }
-            counter++;
-        }
-        /* we decrease the counter by 4 (the bytes of SD, ED and the 2
-         * bytes of checksum. Result: we get only the number of payload's bytes) */
-        if (UINT32_C(4) < counter)
-        {
-            *payloadLength = counter - 4;
-        }
-        else
-        {
-            return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_XPROTOCOL_INTEGRITY_FAILED);
-        }
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_XPROTOCOL_INTEGRITY_FAILED);
     }
+    
     return RETCODE_OK;
 }
 

@@ -33,28 +33,28 @@ static uint16_t gpioE = 0x0000; /**< Each bit corresponds to a GPIOE pin. Disabl
 /**
  * See API interface for function documentation
  */
-void GPIO_OpenClockGate(enum GPIO_Ports_E port, uint16_t pins)
+void GPIO_OpenClockGate(enum GPIO_Ports_E port, uint16_t pinNames)
 {
     switch (port)
     {
         case GPIO_PORT_A:
-            gpioA |= pins;
+            gpioA |= pinNames;
             BITBAND_GPIOAEN_BIT = 1;
             break;
         case GPIO_PORT_B:
-            gpioB |= pins;
+            gpioB |= pinNames;
             BITBAND_GPIOBEN_BIT = 1;
             break;
         case GPIO_PORT_C:
-            gpioC |= pins;
+            gpioC |= pinNames;
             BITBAND_GPIOCEN_BIT = 1;
             break;
         case GPIO_PORT_D:
-            gpioD |= pins;
+            gpioD |= pinNames;
             BITBAND_GPIODEN_BIT = 1;
             break;
         case GPIO_PORT_E:
-            gpioB |= pins;
+            gpioB |= pinNames;
             BITBAND_GPIOEEN_BIT = 1;
             break;
         default:
@@ -65,34 +65,45 @@ void GPIO_OpenClockGate(enum GPIO_Ports_E port, uint16_t pins)
 /**
  * See API interface for function documentation
  */
-void GPIO_CloseClockGate(enum GPIO_Ports_E port, uint16_t pins)
+void GPIO_CloseClockGate(enum GPIO_Ports_E port, uint16_t pinNames)
 {
     switch (port)
     {
         case GPIO_PORT_A:
-            gpioA &= ~pins;
+            gpioA &= ~pinNames;
             if (!gpioA)
+            {
                 BITBAND_GPIOAEN_BIT = 0;
+            }
             break;
         case GPIO_PORT_B:
-            gpioB &= ~pins;
+            gpioB &= ~pinNames;
             if (!gpioB)
+            {
                 BITBAND_GPIOBEN_BIT = 0;
+            }
+            
             break;
         case GPIO_PORT_C:
-            gpioC &= ~pins;
-            if (!gpioC)
+            gpioC &= ~pinNames;
+            if (!gpioC) 
+            {
                 BITBAND_GPIOCEN_BIT = 0;
+            }
             break;
         case GPIO_PORT_D:
-            gpioD &= ~pins;
+            gpioD &= ~pinNames;
             if (!gpioD)
+            {
                 BITBAND_GPIODEN_BIT = 0;
+            }
             break;
         case GPIO_PORT_E:
-            gpioE &= ~pins;
+            gpioE &= ~pinNames;
             if (!gpioE)
+            {
                 BITBAND_GPIOEEN_BIT = 0;
+            }
             break;
         default:
             break;

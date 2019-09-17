@@ -48,10 +48,7 @@ Retcode_T HAL_Signal_SetHooks(HAL_Signal_WaitHook_T waitHook, HAL_Signal_NotifyH
 
         return RETCODE_OK;
     }
-    else
-    {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
-    }
 }
 
 Retcode_T HAL_Signal_Wait(HAL_SignalHandle_T *handle, uint32_t timeoutInMs)
@@ -101,7 +98,10 @@ static Retcode_T NoOs_Signal_Wait(HAL_SignalHandle_T *handle, uint32_t timeout)
 
     do
     {
-        while (__LDREXW(&(handle->_Basic)) != (uint32_t) HAL_SIGNAL_FULL); /* Wait until Lock_Variable is free */
+        while (__LDREXW(&(handle->_Basic)) != (uint32_t) HAL_SIGNAL_FULL)
+        {
+            /* Wait until Lock_Variable is free */
+        }     
         status = __STREXW((uint32_t) HAL_SIGNAL_EMPTY, &(handle->_Basic)); /* Try to set Lock_Variable */
     } while (status != 0); /*retry until lock successfully*/
     /* Do not start any other memory access/ until memory barrier is completed*/

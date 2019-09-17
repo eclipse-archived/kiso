@@ -168,15 +168,12 @@ Retcode_T CmdLineDbg_Parse(struct CmdLineDbg_Element_S * list, char * input)
     {
         return rc;
     }
-    else if (NULL == input)
+    
+    if (NULL == input)
     {
         return rc;
     }
-    else
-    {
-        rc = RETCODE_OK;
-    }
-
+   
     /* Tokenize the string */
     argc = CmdLine_ExtractTokensFromString(argv, input);
 
@@ -214,11 +211,8 @@ static struct CmdLineDbg_Element_S * CmdLine_FindCmd(struct CmdLineDbg_Element_S
             command = list;
             break; /* Command was found */
         }
-        else
-        {
-            /* 2 - Continue to next element */
-            list = list->next;
-        }
+        /* 2 - Continue to next element */
+        list = list->next;
     }
 
     return command;

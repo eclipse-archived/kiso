@@ -48,10 +48,7 @@ Retcode_T HAL_Delay_SetMsHook( HAL_Delay_MsHook_T msHook){
 		_Delay_MsHook = msHook;
 		return RETCODE_OK;
 	}
-	else
-	{
-		return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NULL_POINTER);
-	}
+	return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NULL_POINTER);
 }
 
 

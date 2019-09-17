@@ -45,7 +45,7 @@ typedef struct TLV_Group_S TLV_group_t;
 
 /* local function prototype declarations */
 
-static uint16_t GetAvailableMemorySize(TLV_GroupHandle_TP const Handle);
+static uint16_t GetAvailableMemorySize(TLV_GroupHandle_TP Handle);
 
 /* static assertion tests *************************************************** */
 static_assert((sizeof(TLV_Element_T) % sizeof(uint32_t)) == 0,
@@ -169,11 +169,8 @@ static TLV_Element_T* GetLastElement(TLV_GroupHandle_TP const Handle)
             Result = Element;
             break;
         }
-        else
-        {
-            /* the last Element had been invalidated, decrease Elements table Size */
-            Handle->Elements--;
-        }
+        /* the last Element had been invalidated, decrease Elements table Size */
+        Handle->Elements--;
     }
 
     return (Result);

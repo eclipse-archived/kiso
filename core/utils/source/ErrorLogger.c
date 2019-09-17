@@ -58,10 +58,10 @@ static ErrorLogger_LogEntry_T (*pErrorEntries)[MAXENTRIES];
 ErrorLoggerConfig_T ErrorLoggerHandle;
 
 /*  The description of the function is available in Kiso_ErrorLogger.h */
-Retcode_T ErrorLogger_Init(ErrorLoggerConfig_T LoggerData)
+Retcode_T ErrorLogger_Init(ErrorLoggerConfig_T storageAgentHandle)
 {
     Retcode_T nvmRetCode = RETCODE_OK;
-    ErrorLoggerHandle = LoggerData;
+    ErrorLoggerHandle = storageAgentHandle;
 
     /* A pointer on an array of log entries */
     pErrorEntries = (ErrorLogger_LogEntry_T (*)[MAXENTRIES]) DataFromUserPage; /* Point on first entry */
@@ -90,10 +90,8 @@ Retcode_T ErrorLogger_Init(ErrorLoggerConfig_T LoggerData)
         NextIndexToWriteOn = ErrorSeqNo % MAXENTRIES;
         return RETCODE_OK;
     }
-    else
-    {
-        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T )RETCODE_FAILURE);
-    }
+    
+    return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
 }
 
 /*  The description of the function is available in Kiso_ErrorLogger.h */
@@ -122,12 +120,9 @@ Retcode_T ErrorLogger_LogError(Retcode_T Error)
         NextIndexToWriteOn = ErrorSeqNo % MAXENTRIES;
         return RETCODE_OK;
     }
-    else
-    {
-    	/* Userpage write is not success. So error is not updated to Userpage. */
-
-        ErrorSeqNo -= 1;
-    }
+  	/* Userpage write is not success. So error is not updated to Userpage. */
+    ErrorSeqNo -= 1;
+  
     return nvmRet;
 }
 
@@ -151,16 +146,10 @@ Retcode_T ErrorLogger_GetLastErrorLog(ErrorLogger_LogEntry_T *LogEntry)
             *LogEntry = (*pErrorEntries)[LastIndexWritten];
             return RETCODE_OK;
         }
-        else
-        {
-            /*No Error is occured */
-            return RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T )RETCODE_OUT_OF_RESOURCES);
-        }
+        /*No Error is occured */
+        return RETCODE(RETCODE_SEVERITY_INFO, RETCODE_OUT_OF_RESOURCES);
     }
-    else
-    {
-        return RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T )RETCODE_INVALID_PARAM);
-    }
+    return RETCODE(RETCODE_SEVERITY_INFO, RETCODE_INVALID_PARAM);
 }
 
 /*  The description of the function is available in Kiso_ErrorLogger.h */

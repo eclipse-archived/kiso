@@ -55,16 +55,18 @@ static HAL_CriticalSection_Hook_T _CriticalSectionLeaveHook = 	NoOs_CriticalSect
 
 Retcode_T HAL_CriticalSection_SetHooks( HAL_CriticalSection_Hook_T enterHook,HAL_CriticalSection_Hook_T leaveHook)
 {
+    Retcode_T retcode=RETCODE_OK;
 	if(NULL != enterHook && NULL != leaveHook)
 	{
 		_CriticalSectionEnterHook = enterHook;
 		_CriticalSectionLeaveHook = leaveHook;
-		return RETCODE_OK;
+		retcode = RETCODE_OK;
 	}
 	else
 	{
-		return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NULL_POINTER);
+		retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NULL_POINTER);
 	}
+    return retcode;
 }
 
 
@@ -74,7 +76,6 @@ Retcode_T HAL_CriticalSection_Enter(uint32_t * count ){
 		{
 			return( _CriticalSectionEnterHook(count));
 		}
-
 
 	return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NULL_POINTER);
 }
@@ -103,14 +104,9 @@ static Retcode_T NoOs_CriticalSection_Enter(uint32_t * count)
         return RETCODE_OK;
 
     }
-    else
-    {
-    	*count = UINT32_MAX;
-    	return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_OUT_OF_RESOURCES);
-    }
-
-
-
+    *count = UINT32_MAX;
+    return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_OUT_OF_RESOURCES);
+    
 }
 
 
@@ -131,12 +127,8 @@ static Retcode_T NoOs_CriticalSection_Leave(uint32_t * count)
         *count = lockLevel;
         return RETCODE_OK;
     }
-    else
-    {
-    	*count = UINT32_MAX;
-    	 return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_OUT_OF_RESOURCES);
-    }
-
+    *count = UINT32_MAX;
+     return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_OUT_OF_RESOURCES);
 }
 
 
