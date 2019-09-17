@@ -32,7 +32,6 @@ if(${CMAKE_CROSSCOMPILING})
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_iwdg.c
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_lcd.c
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_lptim.c
-      ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_msp_template.c
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_nand.c
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_nor.c
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_opamp_ex.c
@@ -80,11 +79,9 @@ if(${CMAKE_CROSSCOMPILING})
       target_compile_options(stm32cubel4 PRIVATE -Wno-error=attributes)
    endif()
    target_compile_options(stm32cubel4 PRIVATE
-				-Wno-error=pedantic
-				-Wno-error=unused-parameter
-				-Wno-error=missing-prototypes
-				-Wno-error=strict-prototypes
-					)
+      -Wno-unused-parameter
+      -Wno-int-to-pointer-cast
+   )
    target_include_directories(stm32cubel4
    PUBLIC
       include
@@ -106,5 +103,8 @@ if(${CMAKE_TESTING_ENABLED})
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Inc
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy
       test/unit/include
+   )
+   target_compile_options(stm32cubel4_test_int INTERFACE
+      -Wno-int-to-pointer-cast
    )
 endif(${CMAKE_TESTING_ENABLED})
