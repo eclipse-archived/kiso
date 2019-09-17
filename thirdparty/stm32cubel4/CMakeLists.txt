@@ -79,6 +79,12 @@ if(${CMAKE_CROSSCOMPILING})
    if(${has_no_attributes})
       target_compile_options(stm32cubel4 PRIVATE -Wno-error=attributes)
    endif()
+   target_compile_options(stm32cubel4 PRIVATE
+				-Wno-error=pedantic
+				-Wno-error=unused-parameter
+				-Wno-error=missing-prototypes
+				-Wno-error=strict-prototypes
+					)
    target_include_directories(stm32cubel4
    PUBLIC
       include

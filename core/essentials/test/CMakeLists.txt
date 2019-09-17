@@ -17,6 +17,11 @@ file(GLOB TEST_CODE
    unit/source/${KISO_MCU_FAMILY}/${KISO_MCU_SERIES}/*.cc
 )
 
+# this is a workaround of not treat int-to-pointer-caster as an error
+# essential unit test might rethink about a better way to do this
+add_compile_options(
+		-Wno-error=int-to-pointer-cast)
+
 # TODO: Enable later - not working for now
 # Need little attention
 list(FILTER TEST_CODE EXCLUDE REGEX ".*SPI_unittest.cc$")

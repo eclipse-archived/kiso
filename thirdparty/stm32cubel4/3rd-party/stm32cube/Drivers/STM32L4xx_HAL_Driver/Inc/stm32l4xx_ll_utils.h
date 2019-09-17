@@ -2,8 +2,6 @@
   ******************************************************************************
   * @file    stm32l4xx_ll_utils.h
   * @author  MCD Application Team
-  * @version V1.5.2
-  * @date    12-September-2016
   * @brief   Header file of UTILS LL module.
   @verbatim
   ==============================================================================
@@ -20,29 +18,13 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
+  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -75,7 +57,7 @@ extern "C" {
   */
 
 /* Max delay can be used in LL_mDelay */
-#define LL_MAX_DELAY                  (uint32_t)0xFFFFFFFFU
+#define LL_MAX_DELAY                  0xFFFFFFFFU
 
 /**
  * @brief Unique device ID register base address
@@ -168,8 +150,8 @@ typedef struct
 /** @defgroup UTILS_EC_HSE_BYPASS HSE Bypass activation
   * @{
   */
-#define LL_UTILS_HSEBYPASS_OFF        (uint32_t)0x00000000U       /*!< HSE Bypass is not enabled                */
-#define LL_UTILS_HSEBYPASS_ON         (uint32_t)0x00000001U       /*!< HSE Bypass is enabled                    */
+#define LL_UTILS_HSEBYPASS_OFF        0x00000000U       /*!< HSE Bypass is not enabled                */
+#define LL_UTILS_HSEBYPASS_ON         0x00000001U       /*!< HSE Bypass is enabled                    */
 /**
   * @}
   */
@@ -177,17 +159,23 @@ typedef struct
 /** @defgroup UTILS_EC_PACKAGETYPE PACKAGE TYPE
   * @{
   */
-#define LL_UTILS_PACKAGETYPE_LQFP64         (uint32_t)0x00000000U /*!< LQFP64 package type                      */
-#define LL_UTILS_PACKAGETYPE_WLCSP64        (uint32_t)0x00000001U /*!< WLCSP64 package type                     */
-#define LL_UTILS_PACKAGETYPE_LQFP100        (uint32_t)0x00000002U /*!< LQFP100 package type                     */
-#define LL_UTILS_PACKAGETYPE_BGA132         (uint32_t)0x00000003U /*!< BGA132 package type                      */
-#define LL_UTILS_PACKAGETYPE_LQFP144_CSP72  (uint32_t)0x00000004U /*!< LQFP144, WLCSP81 or WLCSP72 package type */
-#define LL_UTILS_PACKAGETYPE_UFQFPN32       (uint32_t)0x00000008U /*!< UFQFPN32 package type                    */
-#define LL_UTILS_PACKAGETYPE_UFQFPN48       (uint32_t)0x0000000AU /*!< UFQFPN48 package type                    */
-#define LL_UTILS_PACKAGETYPE_LQFP48         (uint32_t)0x0000000BU /*!< LQFP48 package type                      */
-#define LL_UTILS_PACKAGETYPE_WLCSP49        (uint32_t)0x0000000CU /*!< WLCSP49 package type                     */
-#define LL_UTILS_PACKAGETYPE_UFBGA64        (uint32_t)0x0000000DU /*!< UFBGA64 package type                     */
-#define LL_UTILS_PACKAGETYPE_UFBGA100       (uint32_t)0x0000000EU /*!< UFBGA100 package type                    */
+#define LL_UTILS_PACKAGETYPE_LQFP64         0x00000000U /*!< LQFP64 package type                      */
+#define LL_UTILS_PACKAGETYPE_WLCSP64        0x00000001U /*!< WLCSP64 package type                     */
+#define LL_UTILS_PACKAGETYPE_LQFP100        0x00000002U /*!< LQFP100 package type                     */
+#define LL_UTILS_PACKAGETYPE_BGA132         0x00000003U /*!< BGA132 package type                      */
+#define LL_UTILS_PACKAGETYPE_LQFP144_CSP72  0x00000004U /*!< LQFP144, WLCSP81 or WLCSP72 package type */
+#define LL_UTILS_PACKAGETYPE_UFQFPN32       0x00000008U /*!< UFQFPN32 package type                    */
+#define LL_UTILS_PACKAGETYPE_UFQFPN48       0x0000000AU /*!< UFQFPN48 package type                    */
+#define LL_UTILS_PACKAGETYPE_LQFP48         0x0000000BU /*!< LQFP48 package type                      */
+#define LL_UTILS_PACKAGETYPE_WLCSP49        0x0000000CU /*!< WLCSP49 package type                     */
+#define LL_UTILS_PACKAGETYPE_UFBGA64        0x0000000DU /*!< UFBGA64 package type                     */
+#define LL_UTILS_PACKAGETYPE_UFBGA100       0x0000000EU /*!< UFBGA100 package type                    */
+#define LL_UTILS_PACKAGETYPE_UFBGA169       0x00000010U /*!< UFBGA169 package type                    */
+#define LL_UTILS_PACKAGETYPE_LQFP100_DSI    0x00000012U /*!< LQFP100 with DSI package type            */
+#define LL_UTILS_PACKAGETYPE_WLCSP144_DSI   0x00000013U /*!< WLCSP144 with DSI package type           */
+#define LL_UTILS_PACKAGETYPE_UFBGA144_DSI   0x00000013U /*!< UFBGA144 with DSI package type           */
+#define LL_UTILS_PACKAGETYPE_UFBGA169_DSI   0x00000014U /*!< UFBGA169 with DSI package type           */
+#define LL_UTILS_PACKAGETYPE_LQFP144_DSI    0x00000015U /*!< LQFP144 with DSI package type            */
 /**
   * @}
   */
@@ -242,7 +230,7 @@ __STATIC_INLINE uint32_t LL_GetUID_Word2(void)
   */
 __STATIC_INLINE uint32_t LL_GetFlashSize(void)
 {
-  return (uint16_t)(READ_REG(*((uint32_t *)FLASHSIZE_BASE_ADDRESS)));
+  return (uint32_t)(READ_REG(*((uint32_t *)FLASHSIZE_BASE_ADDRESS)) & 0xFFFFU);
 }
 
 /**
@@ -258,12 +246,18 @@ __STATIC_INLINE uint32_t LL_GetFlashSize(void)
   *         @arg @ref LL_UTILS_PACKAGETYPE_WLCSP49 (*)
   *         @arg @ref LL_UTILS_PACKAGETYPE_UFBGA64 (*)
   *         @arg @ref LL_UTILS_PACKAGETYPE_UFBGA100 (*)
+  *         @arg @ref LL_UTILS_PACKAGETYPE_UFBGA169 (*)
+  *         @arg @ref LL_UTILS_PACKAGETYPE_LQFP100_DSI (*)
+  *         @arg @ref LL_UTILS_PACKAGETYPE_WLCSP144_DSI (*)
+  *         @arg @ref LL_UTILS_PACKAGETYPE_UFBGA144_DSI (*)
+  *         @arg @ref LL_UTILS_PACKAGETYPE_UFBGA169_DSI (*)
+  *         @arg @ref LL_UTILS_PACKAGETYPE_LQFP144_DSI (*)
   *
   *         (*) value not defined in all devices.
   */
 __STATIC_INLINE uint32_t LL_GetPackageType(void)
 {
-  return (uint8_t)(READ_REG(*((uint32_t *)PACKAGE_BASE_ADDRESS)) & (uint32_t)0x1FU);
+  return (uint32_t)(READ_REG(*((uint32_t *)PACKAGE_BASE_ADDRESS)) & 0x1FU);
 }
 
 /**
@@ -277,7 +271,7 @@ __STATIC_INLINE uint32_t LL_GetPackageType(void)
 /**
   * @brief  This function configures the Cortex-M SysTick source of the time base.
   * @param  HCLKFrequency HCLK frequency in Hz (can be calculated thanks to RCC helper macro)
-  * @note   When a RTOS is used, it is recommended to avoid changing the SysTick 
+  * @note   When a RTOS is used, it is recommended to avoid changing the SysTick
   *         configuration by calling this function, for a delay use rather osDelay RTOS service.
   * @param  Ticks Number of ticks
   * @retval None

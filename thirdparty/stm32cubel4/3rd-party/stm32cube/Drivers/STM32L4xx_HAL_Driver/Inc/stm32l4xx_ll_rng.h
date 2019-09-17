@@ -2,35 +2,17 @@
   ******************************************************************************
   * @file    stm32l4xx_ll_rng.h
   * @author  MCD Application Team
-  * @version V1.5.2
-  * @date    12-September-2016
   * @brief   Header file of RNG LL module.
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
+  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -62,11 +44,47 @@ extern "C" {
 /* Private macros ------------------------------------------------------------*/
 
 /* Exported types ------------------------------------------------------------*/
+#if defined(USE_FULL_LL_DRIVER)
+/** @defgroup RNG_LL_ES_Init_Struct RNG Exported Init structures
+  * @{
+  */
+  
+
+#if defined(RNG_CR_CED)
+/**
+  * @brief LL RNG Init Structure Definition
+  */
+typedef struct
+{
+  uint32_t         ClockErrorDetection; /*!< Clock error detection.
+                                      This parameter can be one value of @ref RNG_LL_CED.
+                                      
+                                      This parameter can be modified using unitary functions @ref LL_RNG_EnableClkErrorDetect(). */
+}LL_RNG_InitTypeDef;
+#endif /* defined(RNG_CR_CED) */
+
+/**
+  * @}
+  */
+#endif /* USE_FULL_LL_DRIVER */
+  
 /* Exported constants --------------------------------------------------------*/
 /** @defgroup RNG_LL_Exported_Constants RNG Exported Constants
   * @{
   */
+  
+#if defined(RNG_CR_CED)
+/** @defgroup RNG_LL_CED Clock Error Detection
+  * @{
+  */
+#define LL_RNG_CED_ENABLE         0x00000000U              /*!< Clock error detection enabled  */
+#define LL_RNG_CED_DISABLE        RNG_CR_CED               /*!< Clock error detection disabled */
+/**
+  * @}
+  */
+#endif /* defined(RNG_CR_CED) */
 
+  
 /** @defgroup RNG_LL_EC_GET_FLAG Get Flags Defines
   * @brief    Flags defines which can be used with LL_RNG_ReadReg function
   * @{
@@ -167,6 +185,42 @@ __STATIC_INLINE uint32_t LL_RNG_IsEnabled(RNG_TypeDef *RNGx)
 {
   return (READ_BIT(RNGx->CR, RNG_CR_RNGEN) == (RNG_CR_RNGEN));
 }
+
+#if defined(RNG_CR_CED)
+/**
+  * @brief  Enable RNG Clock Error Detection
+  * @rmtoll CR           CED         LL_RNG_EnableClkErrorDetect
+  * @param  RNGx RNG Instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_RNG_EnableClkErrorDetect(RNG_TypeDef *RNGx)
+{
+  CLEAR_BIT(RNGx->CR, RNG_CR_CED);
+}
+
+/**
+  * @brief  Disable RNG Clock Error Detection
+  * @rmtoll CR           CED         LL_RNG_DisableClkErrorDetect
+  * @param  RNGx RNG Instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_RNG_DisableClkErrorDetect(RNG_TypeDef *RNGx)
+{
+  SET_BIT(RNGx->CR, RNG_CR_CED);
+}
+
+/**
+  * @brief  Check if RNG Clock Error Detection is enabled
+  * @rmtoll CR           CED         LL_RNG_IsEnabledClkErrorDetect
+  * @param  RNGx RNG Instance
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_RNG_IsEnabledClkErrorDetect(RNG_TypeDef *RNGx)
+{
+  return (!(READ_BIT(RNGx->CR, RNG_CR_CED) == (RNG_CR_CED)));
+}
+#endif /* defined(RNG_CR_CED) */
+
 
 /**
   * @}
@@ -324,7 +378,10 @@ __STATIC_INLINE uint32_t LL_RNG_ReadRandData32(RNG_TypeDef *RNGx)
 /** @defgroup RNG_LL_EF_Init Initialization and de-initialization functions
   * @{
   */
-
+#if defined(RNG_CR_CED)
+ErrorStatus LL_RNG_Init(RNG_TypeDef *RNGx, LL_RNG_InitTypeDef *RNG_InitStruct);
+void LL_RNG_StructInit(LL_RNG_InitTypeDef *RNG_InitStruct);
+#endif /* defined(RNG_CR_CED) */
 ErrorStatus LL_RNG_DeInit(RNG_TypeDef *RNGx);
 
 /**

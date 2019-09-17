@@ -2,35 +2,17 @@
   ******************************************************************************
   * @file    stm32l4xx_ll_comp.c
   * @author  MCD Application Team
-  * @version V1.5.2
-  * @date    12-September-2016
   * @brief   COMP LL module driver
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
+  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
   */
@@ -40,9 +22,9 @@
 #include "stm32l4xx_ll_comp.h"
 
 #ifdef  USE_FULL_ASSERT
-  #include "stm32_assert.h"
+#include "stm32_assert.h"
 #else
-  #define assert_param(expr) ((void)0U)
+#define assert_param(expr) ((void)0U)
 #endif
 
 /** @addtogroup STM32L4xx_LL_Driver
@@ -133,16 +115,55 @@
    || ((__POLARITY__) == LL_COMP_OUTPUTPOL_INVERTED)                           \
   )
 
-#define IS_LL_COMP_OUTPUT_BLANKING_SOURCE(__OUTPUT_BLANKING_SOURCE__)          \
-  (   ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_NONE)               \
-   || ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_TIM1_OC5_COMP1)     \
-   || ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_TIM2_OC3_COMP1)     \
-   || ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_TIM3_OC3_COMP1)     \
-   || ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_TIM3_OC4_COMP2)     \
-   || ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_TIM8_OC5_COMP2)     \
-   || ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_TIM15_OC1_COMP2)    \
+#if defined(COMP2)
+#define IS_LL_COMP_OUTPUT_BLANKING_SOURCE(__COMP_INSTANCE__, __OUTPUT_BLANKING_SOURCE__)       \
+  (((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_NONE)                                  \
+    ? (                                                                                        \
+       (1UL)                                                                                   \
+      )                                                                                        \
+      :                                                                                        \
+      (((__COMP_INSTANCE__) == COMP1)                                                          \
+        ? (                                                                                    \
+              ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_TIM1_OC5_COMP1)             \
+           || ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_TIM2_OC3_COMP1)             \
+           || ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_TIM3_OC3_COMP1)             \
+          )                                                                                    \
+          :                                                                                    \
+          (                                                                                    \
+              ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_TIM3_OC4_COMP2)             \
+           || ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_TIM8_OC5_COMP2)             \
+           || ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_TIM15_OC1_COMP2)            \
+          )                                                                                    \
+      )                                                                                        \
   )
-
+#else
+#if defined(TIM3)
+#define IS_LL_COMP_OUTPUT_BLANKING_SOURCE(__COMP_INSTANCE__, __OUTPUT_BLANKING_SOURCE__)       \
+  (((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_NONE)                                  \
+    ? (                                                                                        \
+       (1UL)                                                                                   \
+      )                                                                                        \
+      :                                                                                        \
+      (                                                                                        \
+           ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_TIM1_OC5_COMP1)                \
+        || ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_TIM2_OC3_COMP1)                \
+        || ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_TIM3_OC3_COMP1)                \
+      )                                                                                        \
+  )
+#else
+#define IS_LL_COMP_OUTPUT_BLANKING_SOURCE(__COMP_INSTANCE__, __OUTPUT_BLANKING_SOURCE__)       \
+  (((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_NONE)                                  \
+    ? (                                                                                        \
+       (1UL)                                                                                   \
+      )                                                                                        \
+      :                                                                                        \
+      (                                                                                        \
+           ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_TIM1_OC5_COMP1)                \
+        || ((__OUTPUT_BLANKING_SOURCE__) == LL_COMP_BLANKINGSRC_TIM2_OC3_COMP1)                \
+      )                                                                                        \
+  )
+#endif /* TIM3 */
+#endif /* COMP2 */
 /**
   * @}
   */
@@ -173,15 +194,15 @@
 ErrorStatus LL_COMP_DeInit(COMP_TypeDef *COMPx)
 {
   ErrorStatus status = SUCCESS;
-  
+
   /* Check the parameters */
   assert_param(IS_COMP_ALL_INSTANCE(COMPx));
-  
+
   /* Note: Hardware constraint (refer to description of this function):       */
   /*       COMP instance must not be locked.                                  */
-  if(LL_COMP_IsLocked(COMPx) == 0U)
+  if (LL_COMP_IsLocked(COMPx) == 0UL)
   {
-    LL_COMP_WriteReg(COMPx, CSR, 0x00000000U);
+    LL_COMP_WriteReg(COMPx, CSR, 0x00000000UL);
 
   }
   else
@@ -191,7 +212,7 @@ ErrorStatus LL_COMP_DeInit(COMP_TypeDef *COMPx)
     /* The only way to unlock the comparator is a device hardware reset.       */
     status = ERROR;
   }
-  
+
   return status;
 }
 
@@ -210,7 +231,7 @@ ErrorStatus LL_COMP_DeInit(COMP_TypeDef *COMPx)
 ErrorStatus LL_COMP_Init(COMP_TypeDef *COMPx, LL_COMP_InitTypeDef *COMP_InitStruct)
 {
   ErrorStatus status = SUCCESS;
-  
+
   /* Check the parameters */
   assert_param(IS_COMP_ALL_INSTANCE(COMPx));
   assert_param(IS_LL_COMP_POWER_MODE(COMP_InitStruct->PowerMode));
@@ -218,11 +239,11 @@ ErrorStatus LL_COMP_Init(COMP_TypeDef *COMPx, LL_COMP_InitTypeDef *COMP_InitStru
   assert_param(IS_LL_COMP_INPUT_MINUS(COMPx, COMP_InitStruct->InputMinus));
   assert_param(IS_LL_COMP_INPUT_HYSTERESIS(COMP_InitStruct->InputHysteresis));
   assert_param(IS_LL_COMP_OUTPUT_POLARITY(COMP_InitStruct->OutputPolarity));
-  assert_param(IS_LL_COMP_OUTPUT_BLANKING_SOURCE(COMP_InitStruct->OutputBlankingSource));
-  
+  assert_param(IS_LL_COMP_OUTPUT_BLANKING_SOURCE(COMPx, COMP_InitStruct->OutputBlankingSource));
+
   /* Note: Hardware constraint (refer to description of this function)        */
   /*       COMP instance must not be locked.                                  */
-  if(LL_COMP_IsLocked(COMPx) == 0U)
+  if (LL_COMP_IsLocked(COMPx) == 0UL)
   {
     /* Configuration of comparator instance :                                 */
     /*  - PowerMode                                                           */
@@ -233,7 +254,7 @@ ErrorStatus LL_COMP_Init(COMP_TypeDef *COMPx, LL_COMP_InitTypeDef *COMP_InitStru
     /*  - OutputBlankingSource                                                */
 #if defined(COMP_CSR_INMESEL_1)
     MODIFY_REG(COMPx->CSR,
-                 COMP_CSR_PWRMODE
+               COMP_CSR_PWRMODE
                | COMP_CSR_INPSEL
                | COMP_CSR_SCALEN
                | COMP_CSR_BRGEN
@@ -242,8 +263,8 @@ ErrorStatus LL_COMP_Init(COMP_TypeDef *COMPx, LL_COMP_InitTypeDef *COMP_InitStru
                | COMP_CSR_HYST
                | COMP_CSR_POLARITY
                | COMP_CSR_BLANKING
-              ,
-                 COMP_InitStruct->PowerMode
+               ,
+               COMP_InitStruct->PowerMode
                | COMP_InitStruct->InputPlus
                | COMP_InitStruct->InputMinus
                | COMP_InitStruct->InputHysteresis
@@ -252,7 +273,7 @@ ErrorStatus LL_COMP_Init(COMP_TypeDef *COMPx, LL_COMP_InitTypeDef *COMP_InitStru
               );
 #else
     MODIFY_REG(COMPx->CSR,
-                 COMP_CSR_PWRMODE
+               COMP_CSR_PWRMODE
                | COMP_CSR_INPSEL
                | COMP_CSR_SCALEN
                | COMP_CSR_BRGEN
@@ -260,8 +281,8 @@ ErrorStatus LL_COMP_Init(COMP_TypeDef *COMPx, LL_COMP_InitTypeDef *COMP_InitStru
                | COMP_CSR_HYST
                | COMP_CSR_POLARITY
                | COMP_CSR_BLANKING
-              ,
-                 COMP_InitStruct->PowerMode
+               ,
+               COMP_InitStruct->PowerMode
                | COMP_InitStruct->InputPlus
                | COMP_InitStruct->InputMinus
                | COMP_InitStruct->InputHysteresis
@@ -276,14 +297,14 @@ ErrorStatus LL_COMP_Init(COMP_TypeDef *COMPx, LL_COMP_InitTypeDef *COMP_InitStru
     /* Initialization error: COMP instance is locked.                         */
     status = ERROR;
   }
-  
+
   return status;
 }
 
 /**
   * @brief Set each @ref LL_COMP_InitTypeDef field to default value.
-  * @param COMP_InitStruct: pointer to a @ref LL_COMP_InitTypeDef structure
-  *                         whose fields will be set to default values.
+  * @param COMP_InitStruct Pointer to a @ref LL_COMP_InitTypeDef structure
+  *                        whose fields will be set to default values.
   * @retval None
   */
 void LL_COMP_StructInit(LL_COMP_InitTypeDef *COMP_InitStruct)

@@ -56,7 +56,7 @@ FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_DMA_Start, DMA_HandleTypeDef*, uint32_t, 
 FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_DMA_Start_IT, DMA_HandleTypeDef*, uint32_t, uint32_t, uint32_t)
 FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_DMA_Abort, DMA_HandleTypeDef*)
 FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_DMA_Abort_IT, DMA_HandleTypeDef*)
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_DMA_PollForTransfer, DMA_HandleTypeDef*, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_DMA_PollForTransfer, DMA_HandleTypeDef*, HAL_DMA_LevelCompleteTypeDef, uint32_t)
 FAKE_VOID_FUNC(HAL_DMA_IRQHandler, DMA_HandleTypeDef*)
 FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_DMA_UnRegisterCallback, DMA_HandleTypeDef*, HAL_DMA_CallbackIDTypeDef)
 

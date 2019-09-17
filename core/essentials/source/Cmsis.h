@@ -29,14 +29,12 @@
         #error "The STM32 family is not defined or not supported."
     #endif
 
-    #include "core_cmInstr.h"
-    #include "core_cmFunc.h"
+    #include "cmsis_compiler.h"
 
 #elif defined (efm32)
 #include "em_device.h"
 #include "core_cm3.h"
-#include "core_cmInstr.h"
-#include "core_cmFunc.h"
+#include "cmsis_compiler.h"
 
 
 #elif defined (ti_cc26xx)

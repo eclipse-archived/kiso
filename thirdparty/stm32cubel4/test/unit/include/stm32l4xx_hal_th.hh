@@ -15,6 +15,10 @@
 #ifndef STM32L4XX_HAL_TH_HH_
 #define STM32L4XX_HAL_TH_HH_
 
+/* this is a workaround to not include low level adc header */
+/* essential unit test might rethink about a better way to do this */
+#define STM32L4xx_LL_ADC_H
+
 /* include or ban the real interface header */
 #include "stm32l4xx_hal.h"
 

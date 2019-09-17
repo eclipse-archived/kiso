@@ -29,7 +29,7 @@ project (Kiso C)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_EXTENSIONS false)
 set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
-add_compile_options(-Werror -Wall -Wextra -Wpedantic -pedantic -pedantic-errors -Wdouble-promotion
+add_compile_options(-Werror -Wall -Wextra -Wdouble-promotion
                     -Wformat=2 -Winit-self -Wunused -Wunused-const-variable -Wnull-dereference
                     -Wuninitialized -fstrict-overflow -Wstrict-overflow=4 -Wshadow -Wcast-qual)
 
