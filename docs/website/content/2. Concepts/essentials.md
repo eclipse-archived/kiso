@@ -92,19 +92,19 @@ After the copyright section you have to adjust the file documentation which will
 
 ~~~~
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*----------------------------------------------------------------------------*/
-/*
- * Copyright (C) Robert Bosch GmbH.
- * All Rights Reserved. Confidential.
-
- * Distribution only to people who need to know this information in
- * order to do their job.(Need-to-know principle).
- * Distribution to persons outside the company, only if these persons
- * signed a non-disclosure agreement.
- * Electronic transmission, e.g. via electronic mail, must be made in
- * encrypted form.
- */
-/*----------------------------------------------------------------------------*/
+/********************************************************************************
+* Copyright (c) 2010-2019 Robert Bosch GmbH
+*
+* This program and the accompanying materials are made available under the
+* terms of the Eclipse Public License 2.0 which is available at
+* http://www.eclipse.org/legal/epl-2.0.
+*
+* SPDX-License-Identifier: EPL-2.0
+*
+* Contributors:
+*    Robert Bosch GmbH - initial contribution
+*
+********************************************************************************/
 /**
 
  *  @defgroup   KISO_HAL_BSP_Template Template
@@ -284,19 +284,19 @@ As said before, the BSP implementation should mirror you circuit diagram (though
   * include/BSP_Compass.h is the interface between your bsp specific implementation and the application it enumerates the board components and tells your BSP specific functions parameters.
 
 ~~~~
-    /*----------------------------------------------------------------------------*/
-    /*
-     * Copyright (C) Bosch Connected Devices and Solutions GmbH.
-     * All Rights Reserved. Confidential.
-     *
-     * Distribution only to people who need to know this information in
-     * order to do their job.(Need-to-know principle).
-     * Distribution to persons outside the company, only if these persons
-     * signed a non-disclosure agreement.
-     * Electronic transmission, e.g. via electronic mail, must be made in
-     * encrypted form.
-     */
-    /*----------------------------------------------------------------------------*/
+/********************************************************************************
+* Copyright (c) 2010-2019 Robert Bosch GmbH
+*
+* This program and the accompanying materials are made available under the
+* terms of the Eclipse Public License 2.0 which is available at
+* http://www.eclipse.org/legal/epl-2.0.
+*
+* SPDX-License-Identifier: EPL-2.0
+*
+* Contributors:
+*    Robert Bosch GmbH - initial contribution
+*
+********************************************************************************/
 
     /**
      * @defgroup BSP_COMPASS  COMPASS BSP
@@ -374,19 +374,19 @@ As said before, the BSP implementation should mirror you circuit diagram (though
   * include/BSP_CompassRetcodes.h enumerates the bsp modules (.c files) and the specific return codes from your bsp implementation.
 ~~~~
 
-    /*----------------------------------------------------------------------------*/
-    /*
-     * Copyright (C) Robert Bosch GmbH.
-     * All Rights Reserved. Confidential.
-
-     * Distribution only to people who need to know this information in
-     * order to do their job.(Need-to-know principle).
-     * Distribution to persons outside the company, only if these persons
-     * signed a non-disclosure agreement.
-     * Electronic transmission, e.g. via electronic mail, must be made in
-     * encrypted form.
-     */
-    /*----------------------------------------------------------------------------*/
+    /********************************************************************************
+    * Copyright (c) 2010-2019 Robert Bosch GmbH
+    *
+    * This program and the accompanying materials are made available under the
+    * terms of the Eclipse Public License 2.0 which is available at
+    * http://www.eclipse.org/legal/epl-2.0.
+    *
+    * SPDX-License-Identifier: EPL-2.0
+    *
+    * Contributors:
+    *    Robert Bosch GmbH - initial contribution
+    *
+    ********************************************************************************/
     /**
      * @file
      * @brief Contains Retcode Module Ids and BSP's implementation specific return codes
@@ -422,19 +422,19 @@ As said before, the BSP implementation should mirror you circuit diagram (though
 
 ~~~~
 
-    /*----------------------------------------------------------------------------*/
-    /*
-     * Copyright (C) Bosch Connected Devices and Solutions GmbH.
-     * All Rights Reserved. Confidential.
-     *
-     * Distribution only to people who need to know this information in
-     * order to do their job.(Need-to-know principle).
-     * Distribution to persons outside the company, only if these persons
-     * signed a non-disclosure agreement.
-     * Electronic transmission, e.g. via electronic mail, must be made in
-     * encrypted form.
-     */
-    /*----------------------------------------------------------------------------*/
+    /********************************************************************************
+    * Copyright (c) 2010-2019 Robert Bosch GmbH
+    *
+    * This program and the accompanying materials are made available under the
+    * terms of the Eclipse Public License 2.0 which is available at
+    * http://www.eclipse.org/legal/epl-2.0.
+    *
+    * SPDX-License-Identifier: EPL-2.0
+    *
+    * Contributors:
+    *    Robert Bosch GmbH - initial contribution
+    *
+    ********************************************************************************/
 
     /**
      * @file
@@ -491,19 +491,19 @@ The source folder is where this translation from circuit diagram to code takes p
   * source/protected/BSP_Settings.h is where your board settings are defined (e.g pin mapping, pin attributes) and the circuit diagram translated into defines which will be later used in the implementation. Below is the settings file for our Project Compass
 
 ~~~~
-    /*----------------------------------------------------------------------------*/
-    /*
-     * Copyright (C) Bosch Connected Devices and Solutions GmbH.
-     * All Rights Reserved. Confidential.
-     *
-     * Distribution only to people who need to know this information in
-     * order to do their job.(Need-to-know principle).
-     * Distribution to persons outside the company, only if these persons
-     * signed a non-disclosure agreement.
-     * Electronic transmission, e.g. via electronic mail, must be made in
-     * encrypted form.
-     */
-    /*----------------------------------------------------------------------------*/
+    /********************************************************************************
+    * Copyright (c) 2010-2019 Robert Bosch GmbH
+    *
+    * This program and the accompanying materials are made available under the
+    * terms of the Eclipse Public License 2.0 which is available at
+    * http://www.eclipse.org/legal/epl-2.0.
+    *
+    * SPDX-License-Identifier: EPL-2.0
+    *
+    * Contributors:
+    *    Robert Bosch GmbH - initial contribution
+    *
+    ********************************************************************************/
 
     /**
      * @defgroup BSP_COMPASS_BOARD_SETTINGS     COMPASS Board Settings
