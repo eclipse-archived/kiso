@@ -21,6 +21,7 @@
 #include "protected/gpio.h"
 #include "protected/time.h"
 #include "BSP_CommonGateway.h"
+#include "stm32l4xx_hal.h"
 #include "core_cm4.h"
 #include "stdio.h"
 
@@ -30,6 +31,8 @@
 #define KISO_MODULE_ID MODULE_BSP_API_BOARD
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
+
+static Retcode_T Board_TickInit(void);
 
 static Retcode_T Board_InterruptsInit(void);
 
@@ -51,7 +54,6 @@ void SysTick_Handler(void);
 
 void Error_Handler(void);
 
-
 /*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/
 
 static bool initDone = false; /**< board initialization status */
@@ -72,15 +74,19 @@ static BSP_Systick_Callback_T postTickHandler = NULL; /**< function to be execut
  * @retval RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_TIME_INIT_FAILED) in case time-stamp init failed
  * @retval RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_TIME_INIT_FAILED) in case time-stamp starting failed
  */
-Retcode_T BSP_Board_Initialize(uint32_t param1, void* param2)
+Retcode_T BSP_Board_Initialize(uint32_t param1, void *param2)
 {
     KISO_UNUSED(param1);
     KISO_UNUSED(param2);
 
     Retcode_T retcode = RETCODE_OK;
 
-    retcode = Board_InterruptsInit();
+    retcode = Board_TickInit();
 
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Board_InterruptsInit();
+    }
     if (RETCODE_OK == retcode)
     {
         retcode = Board_CacheInit();
@@ -168,11 +174,20 @@ bool Board_IsInitDone(void)
 
 /*---------------------- LOCAL FUNCTIONS IMPLEMENTATION -------------------------------------------------------------*/
 
+static Retcode_T Board_TickInit(void)
+{
+    if (HAL_InitTick(TICK_INT_PRIORITY) != HAL_OK)
+    {
+        return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_FAILURE);
+    }
+    return RETCODE_OK;
+}
+
 /**
  * Initializes the NVIC priority grouping and enables general interrupts.
  * @retval RETCODE_OK
  */
-Retcode_T Board_InterruptsInit(void)
+static Retcode_T Board_InterruptsInit(void)
 {
     HAL_NVIC_SetPriorityGrouping(NVIC_PRIORITYGROUP_4);
     __enable_irq();
@@ -184,7 +199,7 @@ Retcode_T Board_InterruptsInit(void)
  * Initializes internal flash memory data and instruction caching and instruction prefetching.
  * @retval RETCODE_OK
  */
-Retcode_T Board_CacheInit(void)
+static Retcode_T Board_CacheInit(void)
 {
     /* caching instructions enabled */
     __HAL_FLASH_INSTRUCTION_CACHE_ENABLE();
@@ -201,7 +216,7 @@ Retcode_T Board_CacheInit(void)
  * @retval RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_BOARD_PWR_VOLTAGE_SCALING_FAILED) in case failure
  *
  */
-Retcode_T Board_PowerInit(void)
+static Retcode_T Board_PowerInit(void)
 {
     Retcode_T retcode = RETCODE_OK;
     __HAL_RCC_SYSCFG_CLK_ENABLE();
@@ -220,16 +235,15 @@ Retcode_T Board_PowerInit(void)
  * @retval RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_BOARD_OSCILLATORS_INIT_FAILED) In case of failure
  *
  */
-Retcode_T Board_OscillatorsInit(void)
+static Retcode_T Board_OscillatorsInit(void)
 {
     Retcode_T retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_BOARD_OSCILLATORS_INIT_FAILED);
 
-    RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
+    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     HAL_PWR_EnableBkUpAccess();
     __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
 
-    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE | RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_HSI
-            | RCC_OSCILLATORTYPE_MSI;
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE | RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_MSI;
     RCC_OscInitStruct.LSEState = RCC_LSE_ON;
     RCC_OscInitStruct.LSIState = RCC_LSI_OFF;
     RCC_OscInitStruct.MSIState = RCC_MSI_ON;
@@ -258,14 +272,13 @@ Retcode_T Board_OscillatorsInit(void)
  * @retval RETCODE_OK In case of success.
  * @retval RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_BOARD_OSCILLATORS_INIT_FAILED) In case of failure
  */
-Retcode_T Board_AMBAClockInit(void)
+static Retcode_T Board_AMBAClockInit(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
+    RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
-    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1
-            | RCC_CLOCKTYPE_PCLK2;
+    RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
     RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
     RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
     RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
@@ -282,13 +295,11 @@ Retcode_T Board_AMBAClockInit(void)
  * @retval RETCODE_OK in case of success
  * @retval RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_BOARD_PERIPHERALS_CLOCK_INIT_FAILED) in case of failure.
  */
-Retcode_T Board_PeripheralsClockInit(void)
+static Retcode_T Board_PeripheralsClockInit(void)
 {
     Retcode_T retcode = RETCODE_OK;
-    RCC_PeriphCLKInitTypeDef PeriphClkInit = { 0 };
-    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_USART1 | RCC_PERIPHCLK_USART2
-            | RCC_PERIPHCLK_USART3 | RCC_PERIPHCLK_UART4 | RCC_PERIPHCLK_I2C3 | RCC_PERIPHCLK_ADC
-            | RCC_PERIPHCLK_LPTIM1 | RCC_PERIPHCLK_USB;
+    RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_USART1 | RCC_PERIPHCLK_USART2 | RCC_PERIPHCLK_USART3 | RCC_PERIPHCLK_UART4 | RCC_PERIPHCLK_I2C3 | RCC_PERIPHCLK_ADC | RCC_PERIPHCLK_LPTIM1 | RCC_PERIPHCLK_USB;
     PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
     PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
     PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
@@ -316,7 +327,7 @@ Retcode_T Board_PeripheralsClockInit(void)
  * Initializes the CPU core SysTick source
  * @retval RETCODE_OK
  */
-Retcode_T Board_SysTickInit(void)
+static Retcode_T Board_SysTickInit(void)
 {
     HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
     HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
@@ -329,7 +340,7 @@ Retcode_T Board_SysTickInit(void)
  * Initializes the Board GPIOs
  * @retval
  */
-Retcode_T Board_GPIOInit(void)
+static Retcode_T Board_GPIOInit(void)
 {
     GPIO_InitTypeDef BSP_GPIOInitStruct;
     memset(&BSP_GPIOInitStruct, 0, sizeof(GPIO_InitTypeDef));
@@ -397,9 +408,9 @@ Retcode_T Board_GPIOInit(void)
 
 void Error_Handler(void)
 {
-    for(;;)
+    for (;;)
     {
-       /*endless loop*/
+        /*endless loop*/
     }
 }
 
