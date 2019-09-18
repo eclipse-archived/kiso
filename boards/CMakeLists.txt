@@ -2,16 +2,16 @@ cmake_minimum_required(VERSION 3.6)
 
 project ("Kiso Board" C ASM)
 
-## Interface for kiso config - used by almost everything
-add_library(kiso_config INTERFACE)
-target_include_directories(kiso_config
-INTERFACE
-   ${KISO_BOARD_NAME}/kiso_config
-   ${KISO_BOARD_NAME}/kiso_config/Essentials
-   ${KISO_BOARD_NAME}/kiso_config/Utils
-   ${KISO_BOARD_NAME}/kiso_config/Cellular
-)
+set(BOARD_CONFIG_DIR ${CMAKE_CURRENT_LIST_DIR}/${KISO_BOARD_NAME}/config)
+set(CURRENT_CONFIG_DIR ${CMAKE_CURRENT_BINARY_DIR}/config)
 
+## Interface for board config - used by almost everything
+add_library(board_config INTERFACE)
+target_include_directories(board_config
+INTERFACE
+   ${CURRENT_CONFIG_DIR}
+   ${CURRENT_CONFIG_DIR}/Essentials
+)
 
 ## Enable static code analysis
 #  the checks will be executed as it would be on the desired compile step
@@ -44,3 +44,8 @@ endif(${CMAKE_CROSSCOMPILING})
 if(${CMAKE_TESTING_ENABLED})
    #add_subdirectory(bsp/test)
 endif()
+
+# Generate/copy board-scope middleware and vendor lib config files from
+# configuration repository
+include(${BOARD_CONFIG_DIR}/Essentials/Kiso_HALConfig.cmake)
+configure_file(${KISO_CENTRAL_CONFIG_DIR}/stm32l4xx_hal_conf.h ${CURRENT_CONFIG_DIR}/stm32l4xx_hal_conf.h COPYONLY)

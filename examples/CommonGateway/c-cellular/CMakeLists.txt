@@ -6,13 +6,26 @@ if (NOT DEFINED APP_APN_NAME)
    message(WARNING "APP_APN_NAME is a required parameter! Use cmake <...> -DAPP_APN_NAME=... to specify.")
 endif()
 
+set(APP_CONFIG_DIR ${CMAKE_CURRENT_LIST_DIR}/config)
+set(CURRENT_CONFIG_DIR ${CMAKE_CURRENT_BINARY_DIR}/config)
+
+## Interface for app config - used by almost everything
+add_library(app_config INTERFACE)
+target_include_directories(app_config
+INTERFACE
+   ${CURRENT_CONFIG_DIR}
+   ${CURRENT_CONFIG_DIR}/Cellular
+   ${CURRENT_CONFIG_DIR}/SeggerRTT
+   ${CURRENT_CONFIG_DIR}/Utils
+)
+
 if(${CMAKE_CROSSCOMPILING})
    add_executable(application
       source/main.c
       source/App.c
    )
-   target_include_directories(application PRIVATE source generated)
-   target_link_libraries(application bsp essentials utils cellular ${KISO_OS_LIB} ${KISO_BOARD_LIBS})
+   target_include_directories(application PRIVATE source)
+   target_link_libraries(application app_config bsp essentials utils cellular ${KISO_OS_LIB} ${KISO_BOARD_LIBS})
 
    add_custom_target(application.bin ALL
       COMMAND ${CMAKE_OBJCOPY} -O binary -R .usrpg application application.bin
@@ -21,28 +34,13 @@ if(${CMAKE_CROSSCOMPILING})
    add_dependencies(application.bin application)
 endif()
 
-# App Confiuration
-set(APP_CMDPROCESSOR_MAIN_PRIORITY 1 CACHE STRING "Main CmdProcessor task priority")
-set(APP_CMDPROCESSOR_MAIN_STACKSIZE 1024 CACHE STRING "Main CmdProcessor stack-size")
-set(APP_CMDPROCESSOR_MAIN_QLEN 10 CACHE STRING "Main CmdProcessor queue length")
+# Generate/copy app-scope middleware config files from configuration repository
+configure_file(${KISO_CENTRAL_CONFIG_DIR}/Cellular/Kiso_CellularConfig.h ${CURRENT_CONFIG_DIR}/Cellular/Kiso_CellularConfig.h COPYONLY)
+include(${APP_CONFIG_DIR}/Utils/Kiso_UtilsConfig.cmake)
+configure_file(${KISO_CENTRAL_CONFIG_DIR}/Utils/LeanB2CAPConfig.h ${CURRENT_CONFIG_DIR}/Utils/LeanB2CAPConfig.h COPYONLY)
+configure_file(${KISO_CENTRAL_CONFIG_DIR}/Utils/LogConfig.h ${CURRENT_CONFIG_DIR}/Utils/LogConfig.h COPYONLY)
+configure_file(${KISO_CENTRAL_CONFIG_DIR}/Utils/PipeAndFilterConfig.h ${CURRENT_CONFIG_DIR}/Utils/PipeAndFilterConfig.h COPYONLY)
+configure_file(${KISO_CENTRAL_CONFIG_DIR}/FreeRTOSConfig.h ${CURRENT_CONFIG_DIR}/FreeRTOSConfig.h COPYONLY)
 
-set(APP_TASK_APP_PRIORITY 2 CACHE STRING "App task priority")
-set(APP_TASK_APP_STACKSIZE 1024 CACHE STRING "App stack-size")
-
-set(APP_NUMBER_OF_RETRIES 3 CACHE STRING "App number of retries")
-set(APP_SIM_PIN NULL CACHE STRING "App SIM PIN")
-set(APP_RAT CELLULAR_RAT_LTE_CAT_M1 CACHE STRING "App Radio Access Technology")
-set(APP_APN_NAME ${APP_APN_NAME} CACHE STRING "App APN name")
-set(APP_DNS_TEST_FQDN echo.u-blox.com CACHE STRING "App DNS test FQDN (currently not supported)")
-set(APP_UDP_TEST_FQDN dummy CACHE STRING "App UDP test FQDN (currently not supported)")
-unset(APP_UDP_TEST_FQDN CACHE)
-set(APP_UDP_TEST_IP "(Cellular_IpAddress_T){.Type = CELLULAR_IPADDRESSTYPE_IPV4, .Address.IPv4[3] = 195, .Address.IPv4[2] = 34, .Address.IPv4[1] = 89, .Address.IPv4[0] = 241}" CACHE STRING "App UDP test IP")
-set(APP_UDP_TEST_PORT 7 CACHE STRING "App UDP test port")
-set(APP_UDP_TEST_DATA "HELLO WORLD!" CACHE STRING "App UDP test data")
-set(APP_TCP_TEST_FQDN dummy CACHE STRING "App TCP test FQDN (currently not supported)")
-unset(APP_TCP_TEST_FQDN CACHE)
-set(APP_TCP_TEST_IP "(Cellular_IpAddress_T){.Type = CELLULAR_IPADDRESSTYPE_IPV4, .Address.IPv4[3] = 195, .Address.IPv4[2] = 34, .Address.IPv4[1] = 89, .Address.IPv4[0] = 241}" CACHE STRING "App TCP test IP")
-set(APP_TCP_TEST_PORT 7 CACHE STRING "App TCP test port")
-set(APP_TCP_TEST_DATA "HELLO WORLD!" CACHE STRING "App TCP test data")
-
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config/AppConfig.h.in ${CMAKE_CURRENT_SOURCE_DIR}/generated/AppConfig_gen.h)
+# Generate/copy app-specific config
+include(${APP_CONFIG_DIR}/AppConfig.cmake)

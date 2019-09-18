@@ -90,7 +90,7 @@ if(${CMAKE_CROSSCOMPILING})
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Inc
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy
    )
-   target_link_libraries(stm32cubel4 kiso_config essentials_int)
+   target_link_libraries(stm32cubel4 board_config essentials_int)
 endif(${CMAKE_CROSSCOMPILING})
 
 if(${CMAKE_TESTING_ENABLED})

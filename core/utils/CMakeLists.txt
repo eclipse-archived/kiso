@@ -8,7 +8,7 @@ target_include_directories(utils_int
 INTERFACE
    include
 )
-target_link_libraries(utils_int INTERFACE kiso_config)
+target_link_libraries(utils_int INTERFACE board_config app_config)
 
 ## Enable static code analysis
 #  the checks will be executed as it would be on the desired compile step

@@ -29,183 +29,177 @@
 #define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_CRC
 
 /** See description in the interface declaration */
-Retcode_T MCU_CRC8(struct MCU_CRC8_S *initParms, uint8_t * data_in, uint32_t dataLength, uint8_t * crc)
+Retcode_T MCU_CRC8(struct MCU_CRC8_S *initParms, uint8_t *data_in, uint32_t dataLength, uint8_t *crc)
 {
-	Retcode_T retcode = RETCODE_OK;
+    Retcode_T retcode = RETCODE_OK;
 
-	if((NULL==initParms) || (NULL==data_in) || (NULL==crc))
-	{
-		return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
-	}
+    if ((NULL == initParms) || (NULL == data_in) || (NULL == crc))
+    {
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
+    }
 
-	else
-	{
+    CRC_HandleTypeDef handle;
 
-		CRC_HandleTypeDef handle;
+    handle.Instance = CRC;
+    handle.Init.DefaultPolynomialUse = DEFAULT_POLYNOMIAL_DISABLE;
+    handle.Init.DefaultInitValueUse = DEFAULT_INIT_VALUE_DISABLE;
+    handle.Init.InputDataInversionMode = CRC_INPUTDATA_INVERSION_NONE;
+    handle.Init.OutputDataInversionMode = CRC_OUTPUTDATA_INVERSION_DISABLE;
+    handle.InputDataFormat = CRC_INPUTDATA_FORMAT_BYTES;
+    handle.Init.CRCLength = CRC_POLYLENGTH_8B;
 
-		handle.Instance = CRC;
-		handle.Init.DefaultPolynomialUse    = DEFAULT_POLYNOMIAL_DISABLE;
-		handle.Init.DefaultInitValueUse     = DEFAULT_INIT_VALUE_DISABLE;
-		handle.Init.InputDataInversionMode  = CRC_INPUTDATA_INVERSION_NONE;
-		handle.Init.OutputDataInversionMode = CRC_OUTPUTDATA_INVERSION_DISABLE;
-		handle.InputDataFormat              = CRC_INPUTDATA_FORMAT_BYTES;
-		handle.Init.CRCLength               = CRC_POLYLENGTH_8B;
+    handle.Init.GeneratingPolynomial = (uint32_t)initParms->GeneratePolynomial;
+    handle.Init.InitValue = (uint32_t)initParms->InitVal;
 
-		handle.Init.GeneratingPolynomial    = (uint32_t)initParms->GeneratePolynomial;
-		handle.Init.InitValue               = (uint32_t)initParms->InitVal;
+    __HAL_RCC_CRC_CLK_ENABLE();
 
-		__HAL_RCC_CRC_CLK_ENABLE();
+    /* CRC module initialization by passing the populated CRC handle */
+    if (HAL_OK != HAL_CRC_Init(&handle))
+    {
+        /* TODO: Use a more meaningful error code */
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    }
 
-		/* CRC module initialization by passing the populated CRC handle */
-		if (HAL_OK != HAL_CRC_Init(&handle))
-		{
-			retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CRC_HAL_INIT_FAIL);
-		}
+    if (RETCODE_OK == retcode)
+    {
+        *crc = HAL_CRC_Calculate(&handle, (uint32_t *)data_in, dataLength);
 
-		if(RETCODE_OK == retcode)
-		{
-			*crc = HAL_CRC_Calculate(&handle,(uint32_t *)data_in,dataLength);
+        if (HAL_OK != HAL_CRC_DeInit(&handle))
+        {
+            /* TODO: Use a more meaningful error code */
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+        }
+    }
 
-			if(HAL_OK != HAL_CRC_DeInit(&handle))
-			{
-				retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CRC_HAL_DEINIT_FAIL);
-			}
+    __HAL_RCC_CRC_CLK_DISABLE();
 
-		}
-
-		__HAL_RCC_CRC_CLK_DISABLE();
-	}
-
-
-	return retcode;
+    return retcode;
 }
 
-Retcode_T MCU_CRC16(struct MCU_CRC16_S *initParms, uint16_t * data_in, uint32_t dataLength, uint16_t * crc)
+Retcode_T MCU_CRC16(struct MCU_CRC16_S *initParms, uint16_t *data_in, uint32_t dataLength, uint16_t *crc)
 {
-	Retcode_T retcode = RETCODE_OK;
+    Retcode_T retcode = RETCODE_OK;
 
-	if((NULL == initParms) || (NULL == data_in) || (NULL == crc))
-	{
-		return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
-	}
-	else
-	{
-		CRC_HandleTypeDef handle;
+    if ((NULL == initParms) || (NULL == data_in) || (NULL == crc))
+    {
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
+    }
 
-		handle.Instance = CRC;
-		handle.Init.DefaultPolynomialUse    = DEFAULT_POLYNOMIAL_DISABLE;
-		handle.Init.DefaultInitValueUse     = DEFAULT_INIT_VALUE_DISABLE;
-		handle.Init.InputDataInversionMode  = CRC_INPUTDATA_INVERSION_NONE;
-		handle.Init.OutputDataInversionMode = CRC_OUTPUTDATA_INVERSION_DISABLE;
-		handle.InputDataFormat              = CRC_INPUTDATA_FORMAT_HALFWORDS;
-		handle.Init.CRCLength               = CRC_POLYLENGTH_16B;
+    CRC_HandleTypeDef handle;
 
-		handle.Init.GeneratingPolynomial    = (uint32_t)initParms->GeneratePolynomial;
-		handle.Init.InitValue               = (uint32_t)initParms->InitVal;
+    handle.Instance = CRC;
+    handle.Init.DefaultPolynomialUse = DEFAULT_POLYNOMIAL_DISABLE;
+    handle.Init.DefaultInitValueUse = DEFAULT_INIT_VALUE_DISABLE;
+    handle.Init.InputDataInversionMode = CRC_INPUTDATA_INVERSION_NONE;
+    handle.Init.OutputDataInversionMode = CRC_OUTPUTDATA_INVERSION_DISABLE;
+    handle.InputDataFormat = CRC_INPUTDATA_FORMAT_HALFWORDS;
+    handle.Init.CRCLength = CRC_POLYLENGTH_16B;
 
-		__HAL_RCC_CRC_CLK_ENABLE();
+    handle.Init.GeneratingPolynomial = (uint32_t)initParms->GeneratePolynomial;
+    handle.Init.InitValue = (uint32_t)initParms->InitVal;
 
-		/* CRC module initialization by passing the populated CRC handle */
-		if (HAL_OK != HAL_CRC_Init(&handle))
-		{
-			retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CRC_HAL_INIT_FAIL);
-		}
+    __HAL_RCC_CRC_CLK_ENABLE();
 
-		if(RETCODE_OK == retcode)
-		{
-			*crc = HAL_CRC_Calculate(&handle,(uint32_t *)data_in,dataLength);
+    /* CRC module initialization by passing the populated CRC handle */
+    if (HAL_OK != HAL_CRC_Init(&handle))
+    {
+        /* TODO: Use a more meaningful error code */
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    }
 
-			if(HAL_OK != HAL_CRC_DeInit(&handle))
-			{
-				retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CRC_HAL_DEINIT_FAIL);
-			}
+    if (RETCODE_OK == retcode)
+    {
+        *crc = HAL_CRC_Calculate(&handle, (uint32_t *)data_in, dataLength);
 
-		}
+        if (HAL_OK != HAL_CRC_DeInit(&handle))
+        {
+            /* TODO: Use a more meaningful error code */
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+        }
+    }
 
-		__HAL_RCC_CRC_CLK_DISABLE();
-	}
+    __HAL_RCC_CRC_CLK_DISABLE();
 
-	return retcode;
+    return retcode;
 }
 
 /** See description in the interface declaration */
-Retcode_T MCU_CRC32(struct MCU_CRC32_S *initParms, uint32_t * data_in, uint32_t dataLength, uint32_t * crc)
+Retcode_T MCU_CRC32(struct MCU_CRC32_S *initParms, uint32_t *data_in, uint32_t dataLength, uint32_t *crc)
 {
-	Retcode_T retcode = RETCODE_OK;
+    Retcode_T retcode = RETCODE_OK;
 
-	if((NULL == initParms) || (NULL == data_in) || (NULL == crc))
-	{
-		return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
-	}
-	else
-	{
-		CRC_HandleTypeDef handle;
+    if ((NULL == initParms) || (NULL == data_in) || (NULL == crc))
+    {
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
+    }
 
-		handle.Instance = CRC;
-		handle.Init.InputDataInversionMode  = CRC_INPUTDATA_INVERSION_NONE;
-		handle.Init.OutputDataInversionMode = CRC_OUTPUTDATA_INVERSION_DISABLE;
-		handle.Init.CRCLength               = CRC_POLYLENGTH_32B;
+    CRC_HandleTypeDef handle;
 
-		if(MCU_CRC32_POLY_ETHERNET == initParms->GeneratePolynomial)
-		{
-			handle.Init.DefaultPolynomialUse = DEFAULT_POLYNOMIAL_ENABLE;
-		}
-		else
-		{
-			handle.Init.DefaultPolynomialUse = DEFAULT_POLYNOMIAL_DISABLE;
-			handle.Init.GeneratingPolynomial = initParms->GeneratePolynomial;
-		}
-		if(MCU_CRC32_INIT_VALUE_DEFAULT == initParms->InitVal)
-		{
-			handle.Init.DefaultInitValueUse = DEFAULT_INIT_VALUE_ENABLE;
-		}
-		else
-		{
-			handle.Init.DefaultInitValueUse     = DEFAULT_INIT_VALUE_DISABLE;
-			handle.Init.InitValue               = initParms->InitVal;
-		}
+    handle.Instance = CRC;
+    handle.Init.InputDataInversionMode = CRC_INPUTDATA_INVERSION_NONE;
+    handle.Init.OutputDataInversionMode = CRC_OUTPUTDATA_INVERSION_DISABLE;
+    handle.Init.CRCLength = CRC_POLYLENGTH_32B;
 
-		switch(initParms->DataFormat)
-		{
-		case MCU_CRC_DATA_8BIT:
-			handle.InputDataFormat = CRC_INPUTDATA_FORMAT_BYTES;
-			break;
+    if (MCU_CRC32_POLY_ETHERNET == initParms->GeneratePolynomial)
+    {
+        handle.Init.DefaultPolynomialUse = DEFAULT_POLYNOMIAL_ENABLE;
+    }
+    else
+    {
+        handle.Init.DefaultPolynomialUse = DEFAULT_POLYNOMIAL_DISABLE;
+        handle.Init.GeneratingPolynomial = initParms->GeneratePolynomial;
+    }
+    if (MCU_CRC32_INIT_VALUE_DEFAULT == initParms->InitVal)
+    {
+        handle.Init.DefaultInitValueUse = DEFAULT_INIT_VALUE_ENABLE;
+    }
+    else
+    {
+        handle.Init.DefaultInitValueUse = DEFAULT_INIT_VALUE_DISABLE;
+        handle.Init.InitValue = initParms->InitVal;
+    }
 
-		case MCU_CRC_DATA_16BIT:
-			handle.InputDataFormat = CRC_INPUTDATA_FORMAT_HALFWORDS;
-			break;
+    switch (initParms->DataFormat)
+    {
+    case MCU_CRC_DATA_8BIT:
+        handle.InputDataFormat = CRC_INPUTDATA_FORMAT_BYTES;
+        break;
 
-		case MCU_CRC_DATA_32BIT:
-			handle.InputDataFormat = CRC_INPUTDATA_FORMAT_WORDS;
-			break;
+    case MCU_CRC_DATA_16BIT:
+        handle.InputDataFormat = CRC_INPUTDATA_FORMAT_HALFWORDS;
+        break;
 
-		default:
-			return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-		}
+    case MCU_CRC_DATA_32BIT:
+        handle.InputDataFormat = CRC_INPUTDATA_FORMAT_WORDS;
+        break;
 
-		__HAL_RCC_CRC_CLK_ENABLE();
+    default:
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+    }
 
-		/* CRC module initialization by passing the populated CRC handle */
-		if (HAL_OK != HAL_CRC_Init(&handle))
-		{
-			retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CRC_HAL_INIT_FAIL);
-		}
+    __HAL_RCC_CRC_CLK_ENABLE();
 
-		if(RETCODE_OK == retcode)
-		{
-			*crc = HAL_CRC_Calculate(&handle,data_in,dataLength);
+    /* CRC module initialization by passing the populated CRC handle */
+    if (HAL_OK != HAL_CRC_Init(&handle))
+    {
+            /* TODO: Use a more meaningful error code */
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    }
 
-			if(HAL_OK != HAL_CRC_DeInit(&handle))
-			{
-				retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CRC_HAL_DEINIT_FAIL);
-			}
-		}
+    if (RETCODE_OK == retcode)
+    {
+        *crc = HAL_CRC_Calculate(&handle, data_in, dataLength);
 
-		__HAL_RCC_CRC_CLK_DISABLE();
+        if (HAL_OK != HAL_CRC_DeInit(&handle))
+        {
+            /* TODO: Use a more meaningful error code */
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+        }
+    }
 
-	}
+    __HAL_RCC_CRC_CLK_DISABLE();
 
-	return retcode;
+    return retcode;
 }
 
 #endif /* KISO_FEATURE_MCU_CRC */

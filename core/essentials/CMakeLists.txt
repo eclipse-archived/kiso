@@ -12,7 +12,7 @@ INTERFACE
    include/mcu/${KISO_MCU_FAMILY}
    include/mcu/${KISO_MCU_FAMILY}/${KISO_MCU_SERIES}
 )
-target_link_libraries(essentials_int INTERFACE kiso_config)
+target_link_libraries(essentials_int INTERFACE board_config)
 
 
 ## Enable static code analysis

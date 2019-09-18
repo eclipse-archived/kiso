@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.6)
 option(ENABLE_TESTING "Configure a build tree for testing instead of normal application mode" OFF)
 option(ENABLE_STATIC_CHECKS "Configure a build tree for static code analysis" OFF)
 option(ENABLE_COVERAGE "Build unit tests with coverage information to use with GCOV and LCOV" ON)
+option(ENABLE_ALL_FEATURES "Configure a build tree in which all optional Kiso features are 'forced-ON'. Useful for static code analysis and test coverage reports. " OFF)
 
 ## Include config file if it exists
 include(default_config.cmake OPTIONAL)
@@ -32,6 +33,8 @@ set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
 add_compile_options(-Werror -Wall -Wextra -Wdouble-promotion
                     -Wformat=2 -Winit-self -Wunused -Wunused-const-variable -Wnull-dereference
                     -Wuninitialized -fstrict-overflow -Wstrict-overflow=4 -Wshadow -Wcast-qual)
+
+set(KISO_CENTRAL_CONFIG_DIR ${CMAKE_CURRENT_LIST_DIR}/config)
 
 ## Needs to be in project scope before board is loaded
 if(${ENABLE_TESTING})
@@ -69,6 +72,9 @@ if(${ENABLE_STATIC_CHECKS})
       message(STATUS "Looking for clang-tidy: ${CLANG_TIDY}")
 endif()
 
+## Add main application code
+add_subdirectory(examples/${KISO_BOARD_NAME}/${KISO_EXAMPLE})
+
 ## Add board and core libs
 add_subdirectory(boards)
 add_subdirectory(core/essentials)
@@ -77,9 +83,6 @@ add_subdirectory(core/connectivity)
 
 ## Add thirdparty libs
 add_subdirectory(thirdparty)
-
-## Add main application code
-add_subdirectory(examples/${KISO_BOARD_NAME}/${KISO_EXAMPLE})
 
 ## Add the documentation (not built by default target)
 add_subdirectory(docs)

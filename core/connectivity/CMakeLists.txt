@@ -8,7 +8,7 @@ target_include_directories(cellular_int
 INTERFACE
    cellular/include
 )
-target_link_libraries(cellular_int INTERFACE essentials_int)
+target_link_libraries(cellular_int INTERFACE essentials_int board_config app_config)
 
 ## Enable static code analysis
 #  the checks will be executed as it would be on the desired compile step
@@ -34,7 +34,7 @@ if(${CMAKE_CROSSCOMPILING})
       cellular/source/protected
       cellular/source/ublox
    )
-   target_link_libraries(cellular cellular_int kiso_config essentials utils ${KISO_OS_LIB})
+   target_link_libraries(cellular cellular_int essentials utils ${KISO_OS_LIB})
 
 endif(${CMAKE_CROSSCOMPILING})
 

@@ -21,7 +21,7 @@ target_include_directories(freertos_int INTERFACE
    ${FREERTOS_DIR}/include
    ${PORT_C_LOCATION}
 )
-target_link_libraries(freertos_int INTERFACE kiso_config essentials_int)
+target_link_libraries(freertos_int INTERFACE essentials_int app_config)
 
 if(${CMAKE_CROSSCOMPILING})
    add_library(freertos STATIC

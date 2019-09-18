@@ -182,7 +182,7 @@ TEST_F(KISO_CRCtest, Crc8RetcodeFailure)
 	EXPECT_EQ(0U, HAL_CRC_DeInit_fake.call_count);
 	EXPECT_EQ(0U, HAL_CRC_Calculate_fake.call_count);
     EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
-    EXPECT_EQ(RETCODE_CRC_HAL_INIT_FAIL, Retcode_GetCode(retcode));
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 
 	/* testcase for HAL_CRC_DeInit failure */
 
@@ -200,7 +200,7 @@ TEST_F(KISO_CRCtest, Crc8RetcodeFailure)
 	EXPECT_EQ(1U, HAL_CRC_DeInit_fake.call_count);
 	EXPECT_EQ(1U, HAL_CRC_Calculate_fake.call_count);
     EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
-    EXPECT_EQ(RETCODE_CRC_HAL_DEINIT_FAIL, Retcode_GetCode(retcode));
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 
 }
 
@@ -325,7 +325,7 @@ TEST_F(KISO_CRCtest, Crc16RetcodeFailure)
 	EXPECT_EQ(0U, HAL_CRC_DeInit_fake.call_count);
 	EXPECT_EQ(0U, HAL_CRC_Calculate_fake.call_count);
     EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
-    EXPECT_EQ(RETCODE_CRC_HAL_INIT_FAIL, Retcode_GetCode(retcode));
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 
 	/* testcase for HAL_CRC_DeInit failure */
 
@@ -343,7 +343,7 @@ TEST_F(KISO_CRCtest, Crc16RetcodeFailure)
 	EXPECT_EQ(1U, HAL_CRC_DeInit_fake.call_count);
 	EXPECT_EQ(1U, HAL_CRC_Calculate_fake.call_count);
     EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
-    EXPECT_EQ(RETCODE_CRC_HAL_DEINIT_FAIL, Retcode_GetCode(retcode));
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 
 }
 
@@ -486,7 +486,7 @@ TEST_F(KISO_CRCtest, Crc32RetcodeFailure)
 	EXPECT_EQ(0U, HAL_CRC_DeInit_fake.call_count);
 	EXPECT_EQ(0U, HAL_CRC_Calculate_fake.call_count);
     EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
-    EXPECT_EQ(RETCODE_CRC_HAL_INIT_FAIL, Retcode_GetCode(retcode));
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 
 	/* SETUP: Declare and initialize the test condition required by this test case. */
 	initParms.GeneratePolynomial    = UINT32_C(0);
@@ -503,7 +503,7 @@ TEST_F(KISO_CRCtest, Crc32RetcodeFailure)
 	EXPECT_EQ(1U, HAL_CRC_DeInit_fake.call_count);
 	EXPECT_EQ(1U, HAL_CRC_Calculate_fake.call_count);
     EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
-    EXPECT_EQ(RETCODE_CRC_HAL_DEINIT_FAIL, Retcode_GetCode(retcode));
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
 #else
 }

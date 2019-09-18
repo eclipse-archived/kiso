@@ -47,7 +47,6 @@ extern "C"
 #endif
 
     #include "Kiso_Assert.h"
-	#include "../kiso_config/PriorityConfig.h"
     extern uint32_t SystemCoreClock;
 #endif
 
@@ -91,7 +90,7 @@ extern "C"
 
 /* Software timer related definitions. */
 #define configUSE_TIMERS                         ( 1 )
-#define configTIMER_TASK_PRIORITY                ( TASK_PRIORITY_TIMER )
+#define configTIMER_TASK_PRIORITY                ( 5 )
 #define configTIMER_QUEUE_LENGTH                 ( 40 )
 #define configTIMER_TASK_STACK_DEPTH             ( configMINIMAL_STACK_SIZE + 160 )
 
