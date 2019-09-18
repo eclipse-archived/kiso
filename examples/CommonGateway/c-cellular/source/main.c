@@ -98,19 +98,14 @@ int main(void)
     }
     if (RETCODE_OK == returnValue)
     {
-        /* We prefer the async recorder over the synchronous variant, and UART
-         * over RTT. */
+        /* Preferable approach is  the async recorder over the synchronous variant */
 #if (defined(KISO_ASYNC_RECORDER) && KISO_ASYNC_RECORDER)
 #if (defined(KISO_UART_APPENDER) && KISO_UART_APPENDER)
         returnValue = Logging_Init(Logging_AsyncRecorder, Logging_UARTAppender);
-#elif (defined(KISO_RTT_APPENDER) && KISO_RTT_APPENDER)
-        returnValue = Logging_Init(Logging_AsyncRecorder, Logging_RttAppender);
 #endif
 #elif (defined(KISO_SYNC_RECORDER) && KISO_SYNC_RECORDER)
 #if (defined(KISO_UART_APPENDER) && KISO_UART_APPENDER)
         returnValue = Logging_Init(Logging_SyncRecorder, Logging_UARTAppender);
-#elif (defined(KISO_RTT_APPENDER) && KISO_RTT_APPENDER)
-        returnValue = Logging_Init(Logging_SyncRecorder, Logging_RttAppender);
 #endif
 #endif
     }

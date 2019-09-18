@@ -27,7 +27,7 @@ include_directories(
    ../source/Logging
    ../source/Logging/${KISO_OS_LIB}
 )
-link_libraries(utils_test_int gtest ${KISO_OS_LIB}_test_int essentials_test_int seggerrtt_test_int)
+link_libraries(utils_test_int gtest ${KISO_OS_LIB}_test_int essentials_test_int)
 foreach(lib ${KISO_BOARD_LIBS})
    link_libraries(${lib}_test_int)
 endforeach(lib ${KISO_BOARD_LIBS})

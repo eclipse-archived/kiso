@@ -9,7 +9,6 @@ INTERFACE
    ${KISO_BOARD_NAME}/kiso_config
    ${KISO_BOARD_NAME}/kiso_config/Essentials
    ${KISO_BOARD_NAME}/kiso_config/Utils
-   ${KISO_BOARD_NAME}/kiso_config/SeggerRTT
    ${KISO_BOARD_NAME}/kiso_config/Cellular
 )
 

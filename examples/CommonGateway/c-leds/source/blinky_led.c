@@ -41,7 +41,6 @@
 #include "FreeRTOS.h"
 #include "timers.h"
 #include "Kiso_Logging.h"
-#include "SEGGER_RTT.h"
 
 void blink_led(void* param1, uint32_t param2);
 

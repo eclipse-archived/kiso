@@ -30,7 +30,6 @@
 #define KISO_ASYNC_RECORDER 0
 
 /* Enable /Disable appenders */
-#define KISO_RTT_APPENDER   1
 #define KISO_UART_APPENDER  1
 
 /* Filter configuration */

@@ -34,7 +34,7 @@ if(${CMAKE_CROSSCOMPILING})
       cellular/source/protected
       cellular/source/ublox
    )
-   target_link_libraries(cellular cellular_int kiso_config essentials utils ${KISO_OS_LIB} seggerrtt)
+   target_link_libraries(cellular cellular_int kiso_config essentials utils ${KISO_OS_LIB})
 
 endif(${CMAKE_CROSSCOMPILING})
 

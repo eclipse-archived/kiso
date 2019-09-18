@@ -8,9 +8,6 @@ foreach(lib ${KISO_BOARD_LIBS})
    add_subdirectory(${lib})
 endforeach(lib ${KISO_BOARD_LIBS})
 
-# SeggerRTT is needed by utils so include it explicitly
-add_subdirectory(SeggerRTT)
-
 # Add testing lib if needed
 if(${CMAKE_TESTING_ENABLED})
    add_subdirectory(Gtest)

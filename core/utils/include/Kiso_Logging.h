@@ -273,10 +273,6 @@ extern const LogRecorder_T *Logging_SyncRecorder;
  * @brief External reference to log UART appender.
  */
 extern const LogAppender_T *Logging_UARTAppender;
-/**
- * @brief External reference to log RTT appender.
- */
-extern const LogAppender_T *Logging_RttAppender;
 
 /**
  * @brief External reference to log external flash appender.
