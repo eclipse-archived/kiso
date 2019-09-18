@@ -51,7 +51,7 @@ if(${ENABLE_TESTING})
 
       APPEND_COVERAGE_COMPILER_FLAGS() # From CodeCoverage module
       # Do not include coverage information for system headers and thirdparty libs
-      set(COVERAGE_LCOV_EXCLUDES "'/usr/include/*'" "'/usr/local/include/*'" "'${CMAKE_SOURCE_DIR}/thirdparty/*'")
+      set(COVERAGE_LCOV_EXCLUDES "'/usr/include/*'" "'/usr/local/include/*'" "'${CMAKE_SOURCE_DIR}/thirdparty/*'" "*_unittest.cc" "*_th.hh")
 
       add_custom_target(coverage)
    endif(${ENABLE_COVERAGE})
