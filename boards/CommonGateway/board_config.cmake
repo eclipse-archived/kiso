@@ -72,7 +72,7 @@ if(${CMAKE_CROSSCOMPILING} AND "${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
       set(BOARD_LINKER_FLAGS
       ${BOARD_COMMON_OPTIONS}
       --specs=nosys.specs
-      -T${CMAKE_CURRENT_LIST_DIR}/Application_STM32L4xx_FLASH.ld
+      -T${CMAKE_CURRENT_LIST_DIR}/Application_STM32L486VGT.ld
       -Xlinker
       -Map=out.map
       -Wl,--gc-sections
