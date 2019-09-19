@@ -52,7 +52,7 @@ Retcode_T CRC_8(uint8_t poly, uint8_t * shifter, const uint8_t * data_p, uint16_
     uint8_t dataStrmOctt;
     uint8_t octetMsk;
     uint8_t dataStrmBit;
-    Retcode_T retVal;
+    Retcode_T retVal = RETCODE_OK;
 
     if ((NULL == shifter) || (NULL == data_p))
     {
@@ -105,7 +105,7 @@ Retcode_T CRC_16(uint16_t poly, uint16_t * shifter, const uint8_t * data_p, uint
     uint8_t dataStrmOctt;
     uint8_t octetMsk;
     uint8_t dataStrmBit;
-    Retcode_T retVal;
+    Retcode_T retVal = RETCODE_OK;
 
     if ((NULL == shifter) || (NULL == data_p))
     {
@@ -124,7 +124,6 @@ Retcode_T CRC_16(uint16_t poly, uint16_t * shifter, const uint8_t * data_p, uint
             {
                 /* Leftmost bit in shifter*/
                 lftmstShftrBit = *shifter & CRC16_MASK_VAL;
-
                 octetMsk = (CRC_SHIFT_VAL << bitIdx);
                 /* Bit in data stream */
                 dataStrmBit = dataStrmOctt & octetMsk;
@@ -157,7 +156,7 @@ Retcode_T CRC_32(uint32_t poly, uint32_t * shifter, const uint8_t * data_p, uint
     uint8_t dataStrmOctt;
     uint8_t octetMsk;
     uint8_t dataStrmBit;
-    Retcode_T retVal;
+    Retcode_T retVal = RETCODE_OK;
 
     if ((NULL == shifter) || (NULL == data_p))
     {
@@ -210,7 +209,7 @@ Retcode_T CRC_32_Reverse(uint32_t poly, uint32_t * shifter, const uint8_t * data
     uint8_t dataStrmOctt;
     uint8_t octetMsk;
     uint8_t dataStrmBit;
-    Retcode_T retVal;
+    Retcode_T retVal = RETCODE_OK;
 
     if ((NULL == shifter) || (NULL == data_p))
     {
@@ -230,6 +229,7 @@ Retcode_T CRC_32_Reverse(uint32_t poly, uint32_t * shifter, const uint8_t * data
                 /* Leftmost bit in shifter */
                 lftmstShftrBit = *shifter & CRC32_ETHERNET_MASK_VAL;
 
+                /* Bit in data stream */
                 octetMsk = (CRC_SHIFT_VAL << bitIdx);
                 /* Bit in data stream */
                 dataStrmBit = dataStrmOctt & octetMsk;
@@ -248,6 +248,7 @@ Retcode_T CRC_32_Reverse(uint32_t poly, uint32_t * shifter, const uint8_t * data
             octetIdx++;
         }
 
+        /* Result in shifter */
         retVal = RETCODE_OK;
     }
     /* Result in shifter */

@@ -40,6 +40,8 @@
 
 #if KISO_FEATURE_CMDLINEDEBUGGER
 
+#include "Kiso_Basics.h"
+
 /* Default Configuration options */
 #ifndef KISO_COMMAND_LINE_CUSTOM_OPTIONS
 #define KISO_COMMAND_LINE_CUSTOM_OPTIONS 0

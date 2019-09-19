@@ -11,7 +11,7 @@ target_link_libraries(utils_test_int INTERFACE utils_int)
 
 file(GLOB TEST_CODE
    unit/source/*.cc
-   unit/source/${KISO_TYPE}/*.cc
+   unit/source/${KISO_OS_LIB}/*.cc
    unit/source/Logging/*.cc
    unit/source/Logging/${KISO_OS_LIB}/*.cc
 )
@@ -23,7 +23,7 @@ list(FILTER TEST_CODE EXCLUDE REGEX ".*Logging_unittest.cc$")
 
 include_directories(
    ../source
-   ../source/${KISO_TYPE}
+   ../source/${KISO_OS_LIB}
    ../source/Logging
    ../source/Logging/${KISO_OS_LIB}
 )

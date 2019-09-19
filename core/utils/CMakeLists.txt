@@ -22,7 +22,7 @@ endif()
 if(${CMAKE_CROSSCOMPILING})
    file(GLOB UTILS_SOURCES
       source/*.c
-      source/${KISO_TYPE}/*.c
+      source/${KISO_OS_LIB}/*.c
       source/Logging/*.c
       source/Logging/${KISO_OS_LIB}/*.c
    )

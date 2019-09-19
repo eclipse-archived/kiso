@@ -28,11 +28,6 @@ if(NOT KISO_BOARD_NAME)
    set(KISO_BOARD_NAME CommonGateway)
 endif()
 
-## Kiso variant
-if(NOT KISO_TYPE)
-   set(KISO_TYPE Carbon)
-endif()
-
 ## OS to use (only option is freertos for now)
 if(NOT KISO_OS_LIB)
    set(KISO_OS_LIB freertos)

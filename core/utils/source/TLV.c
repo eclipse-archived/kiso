@@ -362,13 +362,11 @@ TLV_Element_T* TLV_GetElement(TLV_GroupHandle_TP const Handle, const uint16_t Ty
 
 void TLV_RemoveElement(TLV_GroupHandle_TP const Handle, const uint16_t Type)
 {
-    TLV_Element_T* Element;
+    TLV_Element_T* Element = TLV_GetElement(Handle, Type);
 
     /* Check whether requested Element exists
      * TLV_GetElement() performs plausibility check on the passed Handle
      */
-    Element = TLV_GetElement(Handle, Type);
-
     if (Element)
     {
         memset(Element, 0, sizeof(TLV_Element_T));

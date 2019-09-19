@@ -35,6 +35,8 @@
 /* Include Kiso_RingBuffer interface header */
 #include "Kiso_RingBuffer.h"
 
+#include "Kiso_Basics.h"
+
 #if KISO_FEATURE_RINGBUFFER
 
 /* KISO basics header files */

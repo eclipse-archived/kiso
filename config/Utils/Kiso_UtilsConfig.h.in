@@ -92,12 +92,6 @@
 // clang-format on
 #endif
 
-#ifndef KISO_FEATURE_LEANB2CAP
-/** @brief Enable (1) or disable (0) the LeanB2Cap feature. */
-// clang-format off
-#define KISO_FEATURE_LEANB2CAP (${CFG_KISO_FEATURE_LEANB2CAP})
-// clang-format on
-#endif
 
 #ifndef KISO_FEATURE_ERRORLOGGER
 /** @brief Enable (1) or disable (0) the ErrorLogger feature. */

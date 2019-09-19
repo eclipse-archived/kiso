@@ -175,6 +175,7 @@ Retcode_T ErrorLogger_HasError(Retcode_T Error)
 {
     /* Loop through the logged errors and search the error code passed */
     Retcode_T retcode = RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T )RETCODE_FAILURE);
+    
     if (ErrorSeqNo)
     {
         for (uint32_t i = 0; i < MAXENTRIES; i++)
@@ -182,7 +183,7 @@ Retcode_T ErrorLogger_HasError(Retcode_T Error)
             if ((*pErrorEntries)[i].ErrorCode == Error)
             {
                 retcode = RETCODE_OK;
-                break; /* LEAVES THE LOOP */
+                break;  /* LEAVES THE LOOP */
             }
         }
     }
@@ -236,8 +237,10 @@ Retcode_T ErrorLogger_ClearAllErrorLogs(void)
     Retcode_T retcode = RETCODE_OK;
     /* Clear log */
     memset(DataFromUserPage, 0, ErrorLoggerHandle.length);
+
     /* Write entire error cleared log to flash */
     retcode = ErrorLoggerHandle.EraseLogs(ErrorLoggerHandle.StorageMedium, (void *) pErrorEntries, ErrorLoggerHandle.position, ErrorLoggerHandle.length);                                            //write activity here
+    
     if (RETCODE_OK == retcode)
     {
         /* Re-initialize stuff as all errors are cleared now*/
