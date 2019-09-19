@@ -35,4 +35,4 @@ Please take a look at [doxygen documentation](doxygen_documentation_link_anker)
 * Add BSP for CommonGateway
 * Cleanup modules to optimize UX for BCX
 * Improve documentation
-* Add build-possibilities with Makefiles & meson
+* Add build-possibilities with Makefiles
