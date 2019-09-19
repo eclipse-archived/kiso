@@ -12,15 +12,27 @@
 *
 ********************************************************************************/
 
-/* system header files */
+/**
+ *
+ * @brief
+ *      CRC Interface Implementation
+ *
+ * @details
+ *      This source file implements following features:
+ *      - CRC_8()
+ *      - CRC_16()
+ *      - CRC_32()
+ *      - CRC_32_Reverse()
+ * 
+ * @file
+ **/
 
-/* additional interface header files */
-
-/* own header files */
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_CRC
 
+/* Include Kiso_CRC interface header */
 #include "Kiso_CRC.h"
 
 #if KISO_FEATURE_CRC
@@ -47,22 +59,22 @@ Retcode_T CRC_8(uint8_t poly, uint8_t * shifter, const uint8_t * data_p, uint16_
         retVal = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t)RETCODE_FAILURE);
     }
 
-    /* as long as there are bit in data stream: check every octet */
+    /* As long as there are bit in data stream: check every octet */
     else
     {
         while (len--)
         {
-            /* get next octet from data stream */
+            /* Get next octet from data stream */
             dataStrmOctt = *(data_p + octetIdx);
 
-            /*next bit in data stream */
+            /* Next bit in data stream */
             for (bitIdx = INT8_C(7); bitIdx >= INT8_C(0); bitIdx--)
             {
-                /* leftmost bit in shifter */
+                /* Leftmost bit in shifter */
                 lftmstShftrBit = *shifter & CRC8_MASK_VAL;
                 octetMsk = (CRC_SHIFT_VAL << bitIdx);
 
-                /*bit in datastream */
+                /* Bit in datastream */
                 dataStrmBit = dataStrmOctt & octetMsk;
 
                 if ((lftmstShftrBit != UINT8_C(0)) != (dataStrmBit != UINT8_C(0)))
@@ -75,7 +87,7 @@ Retcode_T CRC_8(uint8_t poly, uint8_t * shifter, const uint8_t * data_p, uint16_
                 }
             }
 
-            /* next byte in datastream */
+            /* Next byte in datastream */
             octetIdx++;
         }
 
@@ -101,20 +113,20 @@ Retcode_T CRC_16(uint16_t poly, uint16_t * shifter, const uint8_t * data_p, uint
     }
     else
     {
-        /* as long as there are bit in data stream: check every octet */
+        /* As long as there are bit in data stream: check every octet */
         while (len--)
         {
-            /* get next octet from data stream */
+            /* Get next octet from data stream */
             dataStrmOctt = *(data_p + octetIdx);
 
-            /* next bit in data stream */
+            /* Next bit in data stream */
             for (bitIdx = INT8_C(7); bitIdx >= INT8_C(0); bitIdx--)
             {
-                /*leftmost bit in shifter*/
+                /* Leftmost bit in shifter*/
                 lftmstShftrBit = *shifter & CRC16_MASK_VAL;
 
                 octetMsk = (CRC_SHIFT_VAL << bitIdx);
-                /*bit in data stream */
+                /* Bit in data stream */
                 dataStrmBit = dataStrmOctt & octetMsk;
 
                 if ((lftmstShftrBit != UINT16_C(0)) != (dataStrmBit != UINT8_C(0)))
@@ -127,7 +139,7 @@ Retcode_T CRC_16(uint16_t poly, uint16_t * shifter, const uint8_t * data_p, uint
                 }
             }
 
-            /* next byte in data stream */
+            /* Next byte in data stream */
             octetIdx++;
         }
 
@@ -153,20 +165,20 @@ Retcode_T CRC_32(uint32_t poly, uint32_t * shifter, const uint8_t * data_p, uint
     }
     else
     {
-        /*as long as there are bit in data stream: check every octet */
+        /* As long as there are bit in data stream: check every octet */
         while (len--)
         {
-            /* get next octet from data stream */
+            /* Get next octet from data stream */
             dataStrmOctt = *(data_p + octetIdx);
 
-            /* next bit in data stream */
+            /* Next bit in data stream */
             for (bitIdx = INT8_C(7); bitIdx >= INT8_C(0); bitIdx--)
             {
-                /* leftmost bit in shifter */
+                /* Leftmost bit in shifter */
                 lftmstShftrBit = *shifter & CRC32_MASK_VAL;
 
                 octetMsk = (CRC_SHIFT_VAL << bitIdx);
-                /* bit in data stream */
+                /* Bit in data stream */
                 dataStrmBit = dataStrmOctt & octetMsk;
 
                 if ((lftmstShftrBit != UINT32_C(0)) != (dataStrmBit != UINT8_C(0)))
@@ -179,13 +191,13 @@ Retcode_T CRC_32(uint32_t poly, uint32_t * shifter, const uint8_t * data_p, uint
                 }
             }
 
-            /* next byte in data stream */
+            /* Next byte in data stream */
             octetIdx++;
         }
 
         retVal = RETCODE_OK;
     }
-    /* result in shifter */
+    /* Result in shifter */
     return (retVal);
 }
 
@@ -206,20 +218,20 @@ Retcode_T CRC_32_Reverse(uint32_t poly, uint32_t * shifter, const uint8_t * data
     }
     else
     {
-        /*as long as there are bit in data stream: check every octet */
+        /* As long as there are bit in data stream: check every octet */
         while (len--)
         {
-            /* get next octet from data stream */
+            /* Get next octet from data stream */
             dataStrmOctt = *(data_p + octetIdx);
 
-            /* next bit in data stream */
+            /* Next bit in data stream */
             for (bitIdx = INT8_C(0); bitIdx <= INT8_C(7); bitIdx++)
             {
-                /* leftmost bit in shifter */
+                /* Leftmost bit in shifter */
                 lftmstShftrBit = *shifter & CRC32_ETHERNET_MASK_VAL;
 
                 octetMsk = (CRC_SHIFT_VAL << bitIdx);
-                /* bit in data stream */
+                /* Bit in data stream */
                 dataStrmBit = dataStrmOctt & octetMsk;
 
                 if ((lftmstShftrBit != UINT32_C(0)) != (dataStrmBit != UINT8_C(0)))
@@ -232,13 +244,13 @@ Retcode_T CRC_32_Reverse(uint32_t poly, uint32_t * shifter, const uint8_t * data
                 }
             }
 
-            /* next byte in data stream */
+            /* Next byte in data stream */
             octetIdx++;
         }
 
         retVal = RETCODE_OK;
     }
-    /* result in shifter */
+    /* Result in shifter */
     return (retVal);
 }
 

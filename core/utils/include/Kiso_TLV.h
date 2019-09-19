@@ -18,18 +18,19 @@
  * @defgroup TLV TLV
  * @{
  *
- * @brief TLV data handler
+ * @brief
+ *      TLV data handler
  *
  * @details
  *
  * @file
  **/
 
-/* header definition ******************************************************** */
+/* Header definition ******************************************************** */
 #ifndef KISO_TLV_H_
 #define KISO_TLV_H_
 
-/* public interface declaration ********************************************* */
+/* Public interface declaration ********************************************* */
 
 #include "Kiso_Utils.h"
 
@@ -37,7 +38,7 @@
 
 #include "Kiso_Basics.h"
 
-/* public Type and macro definitions */
+/* Public Type and macro definitions */
 
 struct TLV_Element_S
 {
@@ -50,7 +51,7 @@ typedef struct TLV_Element_S TLV_Element_T;
 
 typedef struct TLV_Group_S * TLV_GroupHandle_TP;
 
-/* public function prototype declarations */
+/* Public function prototype declarations */
 
 TLV_GroupHandle_TP TLV_AddGroup(void* const Buffer, const uint16_t Size);
 
@@ -62,9 +63,9 @@ TLV_Element_T* TLV_GetElement(TLV_GroupHandle_TP const Handle, const uint16_t Ty
 
 void TLV_RemoveElement(TLV_GroupHandle_TP const Handle, const uint16_t Type);
 
-/* public global variable declarations */
+/* Public global variable declarations */
 
-/* inline function definitions */
+/* Inline function definitions */
 
 #endif /* if KISO_FEATURE_TLV */
 

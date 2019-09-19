@@ -12,19 +12,31 @@
 *
 ********************************************************************************/
 
-/* include gtest interface */
+/**
+ *
+ * @brief
+ * 		Module test specification for the PipeAndFilter_unittest.cc module.
+ *
+ * @detail
+ * 		The unit test file template follows the Four-Phase test pattern.
+ * 
+ * @file
+ **/
+
+/* Include gtest interface */
 #include <gtest.h>
 
+/* Start of global scope symbol and fake definitions section */
 extern "C"
 {/* start of global scope symbol and fake definitions section */
-
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_PIPEANDFILTER
 
 #if KISO_FEATURE_PIPEANDFILTER
 
-/* include faked interfaces */
+/* Include faked interfaces */
 #include "Kiso_Retcode_th.hh"
 
 #include "task_th.hh"
@@ -33,12 +45,14 @@ extern "C"
 
 /* Ensure the filter-task will not run anymore */
 #define RUN_FILTER_ALWAYS 0
-/* include module under test */
+
+/* Include module under test */
 #include "PipeAndFilter.c"
 
-} /* end of global scope symbol and fake definitions section */
+ /* End of global scope symbol and fake definitions section */
+}
 
-/* setup compile time configuration defines */
+/* Setup compile time configuration defines */
 #define PIPE_SIZE 100
 #define FILTER_STACK_SIZE 500
 #define FILTER_PRIORITY 1
@@ -96,7 +110,7 @@ public:
 		}
 };
 
-/* specify test cases ******************************************************* */
+/* Specify test cases ******************************************************* */
 
 TEST_F(PipeAndFilter, InitializePipeSuccess)
 {
@@ -202,7 +216,6 @@ TEST_F(PipeAndFilter, InitializeFilterNullPointer)
 	PipeAndFilter_Pipe_T pipeHandleOut;
 	PipeAndFilter_Filter_T * filter1 = NULL;
 	taskHandleOfFakeFunction = NULL;
-
 	xTaskCreate_fake.custom_fake = &xTaskCreateCustom;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */

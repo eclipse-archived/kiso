@@ -18,13 +18,15 @@
  * @defgroup EVENTHUB EventHub
  * @{
  *
- * @brief A framework for distributing events in a system
+ * @brief
+ *      A framework for distributing events in a system
  *
- * @details A module can register a callback to be called when another module informs
- *          the system that an event has occurred. This can be used for detecting
- *          connection to or disconnection from a network, updated LWM2M resources and
- *          so on. By default, the module allows for up to 16 observers per event hub
- *          but this can be overridden by changing the CONFIG_EVENTHUB_MAX_OBSERVERS flag.
+ * @details
+ *      A module can register a callback to be called when another module informs
+ *      the system that an event has occurred. This can be used for detecting
+ *      connection to or disconnection from a network, updated LWM2M resources and
+ *      so on. By default, the module allows for up to 16 observers per event hub
+ *      but this can be overridden by changing the CONFIG_EVENTHUB_MAX_OBSERVERS flag.
  *
  * @file
  **/
@@ -36,6 +38,8 @@
 
 #if KISO_FEATURE_EVENTHUB
 
+
+/* KISO interface header files */
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
 
@@ -65,58 +69,90 @@ struct EventHub_S
 typedef struct EventHub_S EventHub_T;
 
 /**
- * @brief This function initializes a given event hub handle.
+ * @brief
+ *      This function initializes a given event hub handle.
  *
- * @param[in,out] hub - A pointer to an EventHub structure
+ * @param[in,out] hub
+ *      A pointer to an EventHub structure
  *
- * @retval #RETCODE_OK when the event hub is initialized successfully
- * @retval #RETCODE_NULL_POINTER when the hub parameter pointer is NULL
- * @retval #RETCODE_SEMAPHORE_ERROR when the associated lock is not created successfully
+ * @retval #RETCODE_OK
+ *      When the event hub is initialized successfully
+ * @retval #RETCODE_NULL_POINTER
+ *      When the hub parameter pointer is NULL
+ * @retval #RETCODE_SEMAPHORE_ERROR
+ *      When the associated lock is not created successfully
+ * 
  */
 Retcode_T EventHub_Initialize(EventHub_T *hub);
 
 /**
- * @brief This function adds an observe of a given event to a hub
+ * @brief
+ *      This function adds an observe of a given event to a hub
  *
- * @param[in] hub      - A pointer to an EventHub structure
- * @param[in] handler  - A function pointer to the user-code run function that
- *                       should be called when the event is signaled
- * @param[in] event    - The event that should be observed
+ * @param[in] hub
+ *      A pointer to an EventHub structure
+ * @param[in] handler
+ *      A function pointer to the user-code run function that
+ *      should be called when the event is signaled
+ * @param[in] event
+ *      The event that should be observed
  *
- * @retval #RETCODE_OK               when the observation is added successfully
- * @retval #RETCODE_NULL_POINTER     when the hub parameter pointer is NULL
- * @retval #RETCODE_UNINITIALIZED    when the hub has not been initialized previously
- * @retval #RETCODE_SEMAPHORE_ERROR  when the hub lock can't be taken or released successfully
- * @retval #RETCODE_OUT_OF_RESOURCES when the maximum number of observation is already reached
- *                                  (see #CONFIG_EVENTHUB_MAX_OBSERVERS)
+ * @retval #RETCODE_OK
+ *      When the observation is added successfully
+ * @retval #RETCODE_NULL_POINTER
+ *      When the hub parameter pointer is NULL
+ * @retval #RETCODE_UNINITIALIZED
+ *      When the hub has not been initialized previously
+ * @retval #RETCODE_SEMAPHORE_ERROR
+ *      When the hub lock can't be taken or released successfully
+ * @retval #RETCODE_OUT_OF_RESOURCES
+ *      When the maximum number of observation is already reached
+ *      (see #CONFIG_EVENTHUB_MAX_OBSERVERS)
+ * 
  */
 Retcode_T EventHub_Observe(EventHub_T *hub, EventHandler_T handler, TaskEvent_T event);
 
 /**
- * @brief This function adds an observe of all events to a hub
+ * @brief
+ *      This function adds an observe of all events to a hub
  *
- * @param[in] hub:      - A pointer to an EventHub structure
- * @param[in] handler:  - A function pointer to the user-code run function that
- *                        should be called when the event is signaled
+ * @param[in] hub
+ *      A pointer to an EventHub structure
+ * @param[in] handler
+ *      A function pointer to the user-code run function that
+ *      should be called when the event is signaled
  *
- * @retval #RETCODE_OK when observations for all event are added successfully
- * @retval #RETCODE_NULL_POINTER when hub or handler pointer is NULL
+ * @retval #RETCODE_OK
+ *      When observations for all event are added successfully
+ * @retval #RETCODE_NULL_POINTER
+ *      When hub or handler pointer is NULL
+ * 
  */
 Retcode_T EventHub_ObserveAll(EventHub_T *hub, EventHandler_T handler);
 
 /**
- * @brief This function informs the hub that a given event has occurred
+ * @brief
+ *      This function informs the hub that a given event has occurred
  *
- * @param[in] hub   - A pointer to an EventHub structure
- * @param[in] event - The event that occurred
- * @param[in] data  - Additional data to hand to the observer
+ * @param[in] hub
+ *      A pointer to an EventHub structure
+ * @param[in] event
+ *      The event that occurred
+ * @param[in] data
+ *      Additional data to hand to the observer
  *
- * @Note Event notifications from interrupt context is not supported.
+ * @note
+ *      Event notifications from interrupt context is not supported.
  *
- * @retval #RETCODE_OK when all observers have been notified successfully
- * @retval #RETCODE_NULL_POINTER when the hub pointer is NULL
- * @retval #RETCODE_UNINITIALIZED when the hub has not been initialized previously
- * @retval #RETCODE_SEMAPHORE_ERROR when the hub lock can't be taken or released successfully
+ * @retval #RETCODE_OK
+ *      When all observers have been notified successfully
+ * @retval #RETCODE_NULL_POINTER
+ *      When the hub pointer is NULL
+ * @retval #RETCODE_UNINITIALIZED
+ *      When the hub has not been initialized previously
+ * @retval #RETCODE_SEMAPHORE_ERROR
+ *      When the hub lock can't be taken or released successfully
+ * 
  */
 Retcode_T EventHub_Notify(EventHub_T *hub, TaskEvent_T Event, void *data);
 

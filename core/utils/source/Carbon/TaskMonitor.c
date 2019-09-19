@@ -12,15 +12,32 @@
 *
 ********************************************************************************/
 
+/**
+ *
+ * @brief
+ *      Task Monitor Interface Implementation
+ *
+ * @details
+ *      This source file implements following features:
+ *      - TaskMonitor_Initialize()
+ *      - TaskMonitor_Register()
+ *      - TaskMonitor_Update()
+ *      - TaskMonitor_Check()
+ * 
+ * @file
+ **/
+
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_TASKMONITOR
 
-/* module includes ********************************************************** */
+/* Include Kiso_TaskMonitor interface header */
 #include "Kiso_TaskMonitor.h"
 
 #if KISO_FEATURE_TASKMONITOR
 
+/* KISO basics header files */
 #include "Kiso_Retcode.h"
 #include "Kiso_Assert.h"
 
@@ -123,7 +140,7 @@ bool TaskMonitor_Check(void)
         {
             taskTickTime = taskTagValue[loopcnt];
             /* Note :
-             * some times xTaskGetTickCount() is Providing the value less than updated time
+             * Some times xTaskGetTickCount() is Providing the value less than updated time
              * of xTickCount due to task synchronization.
              * Hence count ticket count is updated to taskTag value.
              */

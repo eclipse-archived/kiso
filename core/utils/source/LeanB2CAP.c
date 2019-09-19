@@ -12,19 +12,38 @@
 *
 ********************************************************************************/
 
+/**
+ *
+ * @brief
+ *      LeanB2CAP Interface Implementation
+ *
+ * @details
+ *      This source file implements following features:
+ *      - LeanB2CAP_Initialize()
+ *      - LeanB2CAP_RxDataProcessor()
+ *      - LeanB2CAP_Builder()
+ *      - LeanB2CAP_OverheadBuilder()
+ *      - LeanB2CAP_ResetRxDataProcessor()
+ *      - LeanB2CAP_Deinitialize()
+ * 
+ * @file
+ **/
 
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_LEANB2CAP
 
+/* Include Kiso_LeanB2CAP interface header */
 #include "Kiso_LeanB2CAP.h"
 
 #if KISO_FEATURE_LEANB2CAP
 
+/* KISO interface header files */
 #include "LeanB2CAPConfig.h"
 #include "LeanB2CAP.h"
 
-#include "Kiso_Utils.h"
+/* Include Kiso_CRC interface header */
 #include "Kiso_CRC.h"
 
 /* Instances for LeanB2CAP. The total count is configurable and must be at-least of size 1UL. */

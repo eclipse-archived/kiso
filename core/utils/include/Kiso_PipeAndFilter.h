@@ -57,6 +57,7 @@
  * @return
  *     RETCODE_OK - If everything was fine \n
  *     OTHER - Needs to be define by the user \n
+ * 
  */
 typedef Retcode_T (*PipeAndFilter_FilterFunction_T) (uint8_t * bufferIn, uint32_t bufferInSize, uint8_t * bufferOut, uint32_t * bufferOutSize);
 
@@ -183,6 +184,7 @@ Retcode_T PipeAndFilter_CreatePipe(PipeAndFilter_Pipe_T * pipeHandle);
  *        return retcode;
  *    }
  * @endcode
+ * 
  */
 Retcode_T PipeAndFilter_CreateFilter(PipeAndFilter_FilterFunction_T filterFunction, PipeAndFilter_Pipe_T * pipeInHandle, PipeAndFilter_Pipe_T * pipeOutHandle, PipeAndFilter_Filter_T * filterHandle);
 
@@ -210,6 +212,7 @@ Retcode_T PipeAndFilter_CreateFilter(PipeAndFilter_FilterFunction_T filterFuncti
  *         (void)PipeAndFilter_FillPipe(pipe1, buffer, 10);
  *     }
  * @endcode
+ * 
  */
 Retcode_T PipeAndFilter_FillPipe(PipeAndFilter_Pipe_T pipe, uint8_t * xTxBuffer, uint32_t xToSendBytes);
 
@@ -236,6 +239,7 @@ Retcode_T PipeAndFilter_FillPipe(PipeAndFilter_Pipe_T pipe, uint8_t * xTxBuffer,
  *         (void)PipeAndFilter_FillPipeFromISR(pipe1, buffer, 10);
  *     }
  * @endcode
+ * 
  */
 Retcode_T PipeAndFilter_FillPipeFromISR(PipeAndFilter_Pipe_T pipe, uint8_t * xTxBuffer, uint32_t xToSendBytes);
 

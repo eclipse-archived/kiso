@@ -1,4 +1,4 @@
-/**********************************************************************************************************************
+/********************************************************************************
 * Copyright (c) 2010-2019 Robert Bosch GmbH
 *
 * This program and the accompanying materials are made available under the
@@ -10,25 +10,31 @@
 * Contributors:
 *    Robert Bosch GmbH - initial contribution
 *
-**********************************************************************************************************************/
+********************************************************************************/
 
 /*---------------------- INCLUDED HEADERS ---------------------------------------------------------------------------*/
 
 /**
+ *
+ * @brief
+ *      Implements log appender over Rtt Jlink for stm32 target.
+ * 
+ * @details
+ * 
  * @file
- *
- * @brief Implements log appender over Rtt Jlink for stm32 target.
- *
- */
+ **/
 
+/* Module includes */
 #include "Kiso_Utils.h"
-
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_LOGGING_APPENDER_UART
+
+/* Include the real interface header */
 #include "Kiso_Logging.h"
 
 #if KISO_FEATURE_LOGGING && KISO_UART_APPENDER
 
+/* Additional interface header files */
 #include "Kiso_BSP_TestInterface.h"
 #include "Kiso_MCU_UART.h"
 #include "Kiso_UARTTransceiver.h"

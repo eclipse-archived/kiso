@@ -11,14 +11,33 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
+
+/**
+ * @ingroup UTILS
+ *
+ * @defgroup EVENTHUB EventHub
+ * @{
+ *
+ * @brief
+ *      Mockup implementation for the Kiso_EventHub_th.hh module
+ *
+ * @details
+ *
+ * @file
+ **/
+
+/* Header definition */
 #ifndef KISO_EVENTHUB_TH_HH_
 #define KISO_EVENTHUB_TH_HH_
 
+/* Include gtest header file */
 #include "gtest.h"
 
+/* KISO header files */
 #include "Kiso_Retcode_th.hh"
 #include "Kiso_EventHub.h"
 
+/* Mock-ups for the provided interfaces */
 FAKE_VALUE_FUNC(Retcode_T, EventHub_Initialize, EventHub_T*)
 FAKE_VALUE_FUNC(Retcode_T, EventHub_Observe, EventHub_T*, EventHandler_T, TaskEvent_T)
 FAKE_VALUE_FUNC(Retcode_T, EventHub_ObserveAll, EventHub_T*, EventHandler_T)

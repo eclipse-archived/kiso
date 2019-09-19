@@ -12,16 +12,36 @@
 *
 ********************************************************************************/
 
+/**
+ *
+ * @brief
+ *      Event Hub Interface Implementation
+ *
+ * @details
+ *      This source file implements following features:
+ *      - EventHub_Initialize()
+ *      - EventHub_Observe()
+ *      - EventHub_ObserveAll()
+ *      - EventHub_Notify()
+ * 
+ * @file
+ **/
+
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_EVENTHUB
 
+/* Include Kiso_EventHub interface header */
 #include "Kiso_EventHub.h"
 
 #if KISO_FEATURE_EVENTHUB
 
+/* KISO basics header files */
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
+
+/* FreeRTOS header files */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"

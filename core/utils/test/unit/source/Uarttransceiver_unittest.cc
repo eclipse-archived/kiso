@@ -11,32 +11,36 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
+
 /**
- *  @file       UARTTransceiver_unittest.cc
- *  @author      Mohamed Ali Khalifi, <external.mohamedali.khalifi@bosch.com>
  *
- *
- *  Module unit test for uart transceiver
- *
- * ****************************************************************************/
+ * @brief
+ *      Module unit test for Uarttransceiver__unittest.cc module.
+ * 
+ * @details
+ *      The unit test file template follows the Four-Phase test pattern.
+ * 
+ * @file
+ **/
 
-/* setup testing framework ************************************************** */
+/* Setup testing framework ************************************************** */
 
-/* include gtest */
+/* Include gtest interface */
 #include <gtest.h>
 #include <string.h>
 #include <unistd.h>
 
+/* Start of global scope symbol and fake definitions section */
 extern "C"
 {
-/* setup compile time configuration defines */
+/* Setup compile time configuration defines */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_UART_TRANSCEIVER
 
 #if KISO_FEATURE_UARTTRANSCEIVER
 
-/* include faked interfaces */
+/* Include faked interfaces */
 #include "Kiso_Assert_th.hh"
 #include "Kiso_Retcode_th.hh"
 #include "Kiso_RingBuffer_th.hh"
@@ -45,7 +49,7 @@ extern "C"
 #include "semphr_th.hh"
 #include "task_th.hh"
 
-/* include module under test */
+/* Include module under test */
 #include "UartTransceiver.c"
 
 static bool frameEndCheckFunc_FAKE(uint8_t value)
@@ -65,6 +69,7 @@ static void frameEndNotifyFunc_FAKE(struct MCU_LEUART_Event_S event)
 }
 static UARTTransceiver_T transceiver;
 
+/* End of global scope symbol and fake definitions section */
 }
 
 #if KISO_FEATURE_UART
@@ -77,7 +82,7 @@ FAKE_VALUE_FUNC(Retcode_T, MCU_LEUART_Send, LEUART_T, uint8_t*, uint32_t)
 #define UART_TRANSCEIVER_UART_TYPE UART_TRANSCEIVER_UART_TYPE_LEUART
 #endif
 
-/* create test fixture initializing all variables automatically */
+/* Create test fixture initializing all variables automatically */
 
 class UARTTransceiverTest: public testing::Test
 {
@@ -120,6 +125,7 @@ protected:
     /* TearDown() is invoked immediately after a test finishes. */
     virtual void TearDown()
     {
+        ; /* Nothing to do if clean up is not required */
     }
 };
 bool EndOfFrameCheckFlag = TRUE;
@@ -139,6 +145,9 @@ void UartCallback(struct MCU_UART_Event_S event)
 {
     KISO_UNUSED(event);
 }
+
+/* Specify test cases ******************************************************* */
+
 /**
  *  @brief
  *   

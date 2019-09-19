@@ -11,24 +11,32 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
+
 /**
+ * @ingroup UTILS
+ *
+ * @defgroup LEANB2CAP LeanB2CAP
+ * @{
+ *
+ * @brief
+ *      Mockup implementation for the Kiso_LeanB2CAP_th.hh module
+ *
+ * @details
+ *
  * @file
- *
- *
- *  Mockup implementation for the Lean B2CAP module.
- *
- * ****************************************************************************/
- 
-/* header definition ******************************************************** */
+ **/
+
+/* Header definition */
 #ifndef KISO_LEANB2CAP_TH_HH_
 #define KISO_LEANB2CAP_TH_HH_
 
+/* Include gtest header file */
 #include "gtest.h"
 
-/* wrap the real KISO_LeanB2CAP.h interface header */
+/* Wrap Kiso_LeanB2CAP.h interface header */
 #include "Kiso_LeanB2CAP.h"
 
-/* fakes for assertion related macros */
+/* Fakes for assertion related macros */
 FAKE_VALUE_FUNC(Retcode_T, LeanB2CAP_Initialize, LeanB2CAP_HandlePtr_T * , LeanB2CAP_FrameData_T * , LeanB2CAPCallback )
 FAKE_VALUE_FUNC(Retcode_T, LeanB2CAP_RxDataProcessor, LeanB2CAP_HandlePtr_T * , LeanB2CAP_FrameData_T * )
 FAKE_VALUE_FUNC(Retcode_T, LeanB2CAP_Builder, LeanB2CAP_FrameData_T * , LeanB2CAP_RawData_T * )

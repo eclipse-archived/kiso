@@ -14,80 +14,84 @@
 
 /**
  * @ingroup UTILS
+ * 
  * @defgroup CMDLINEDEBUGGER CmdLineDebugger
  * @{
  *
- * @brief Command Line Debug Interface Header
+ * @brief 
+ *      Command Line Debug Interface Header
  *
- * @details Declaration of a command ```"example"``` and its corresponding callback:
+ * @details 
+ *      Declaration of a command ```"example"``` and its corresponding callback:
+ * 
  * @code{c}
  *
- * Retcode_T ExampleCommand(const char ** argv, uint32_t argc);
+ *      Retcode_T ExampleCommand(const char ** argv, uint32_t argc);
  *
  *
- * struct CmdLineDbg_Element_S help = {
- *      .callback = ExampleCommand,
- *      .commandString = (char *)"example",
- *      .next = NULL
- *      };
+ *      struct CmdLineDbg_Element_S help = {
+ *          .callback = ExampleCommand,
+ *          .commandString = (char *)"example",
+ *          .next = NULL
+ *          };
  *
  *
  *
- *   // ExampleCommand Callback implementation
- * Retcode_T ExampleCommand(const char ** argv, uint32_t argc)
- * {
- *      Retcode_T rc = RETCODE_OK;
+ *      // ExampleCommand Callback implementation
+ *      Retcode_T ExampleCommand(const char ** argv, uint32_t argc)
+ *      {
+ *          Retcode_T rc = RETCODE_OK;
  *
- *      // ... //
+ *          // ... //
  *
- *      return rc;
- * }
+ *          return rc;
+ *      }
  * @endcode
  *
  * Parser invocation:
  *
  * @code{c}
  *
- * struct CmdLineDbg_Element_S testList[] =
- *       {
- *               {
- *                       testCallback,
- *                       "TestCommand",
- *                       NULL
- *               },
- *               {
- *                      sudoCallback,
- *                      "sudo",
- *                      NULL
- *               },
- *              {
- *                      helpCallback,
- *                      "help",
- *                      NULL
- *              }
- *      };
+ *      struct CmdLineDbg_Element_S testList[] =
+ *          {
+ *                  {
+ *                          testCallback,
+ *                          "TestCommand",
+ *                          NULL
+ *                  },
+ *                  {
+ *                          sudoCallback,
+ *                          "sudo",
+ *                          NULL
+ *                  },
+ *                  {
+ *                          helpCallback,
+ *                          "help",
+ *                          NULL
+ *                  }
+ *          };
  *
  *
- * void Loop(void)
- * {
- *      Retcode_T rc = RETCODE_OK;
- *
- *      // Initialize Command Array
- *      // We already know that there are only three elements in the array
- *      rc = CmdLineDbg_RegisterCmdArray(testList, 3);
- *
- *      char inputBuffer[80]; // Example character buffer
- *      size_t inputStrLen;
- *
- *      while(RETCODE_OK == rc)
+ *      void Loop(void)
  *      {
- *         // GetStringFromPeripheral(inputBuffer, 80);
+ *          Retcode_T rc = RETCODE_OK;
  *
- *          rc = CmdLineDbg_Parse(testList, inputBuffer);
+ *          // Initialize Command Array
+ *          // We already know that there are only three elements in the array
+ *          rc = CmdLineDbg_RegisterCmdArray(testList, 3);
+ *
+ *          char inputBuffer[80]; // Example character buffer
+ *          size_t inputStrLen;
+ *
+ *          while(RETCODE_OK == rc)
+ *          {
+ *              // GetStringFromPeripheral(inputBuffer, 80);
+ *
+ *              rc = CmdLineDbg_Parse(testList, inputBuffer);
+ *          }
+ *
+ *
  *      }
- *
- *
- * }
  *
  * @endcode
  *
@@ -142,6 +146,7 @@ struct CmdLineDbg_Element_S
  * @retval #RETCODE_OK when successful
  * @retval #RETCODE_NULL_POINTER when any of the input parameter is NULL
  * @retval #RETCODE_CMDLINE_DEBUGGER_COMMAND_NOT_FOUND when the command is not found
+ * 
  */
 Retcode_T CmdLineDbg_Parse(struct CmdLineDbg_Element_S * list, char * input);
 
@@ -155,6 +160,7 @@ Retcode_T CmdLineDbg_Parse(struct CmdLineDbg_Element_S * list, char * input);
  *
  * @retval #RETCODE_OK when successful
  * @retval #RETCODE_NULL_POINTER when any of the input parameter is NULL
+ * 
  */
 Retcode_T CmdLineDbg_RegisterCmd(struct CmdLineDbg_Element_S * list, struct CmdLineDbg_Element_S * cmd);
 
@@ -170,6 +176,7 @@ Retcode_T CmdLineDbg_RegisterCmd(struct CmdLineDbg_Element_S * list, struct CmdL
  * @retval #RETCODE_OK when successful
  * @retval #RETCODE_NULL_POINTER when the list pointer is NULL
  * @retval #RETCODE_INVALID_PARAM when the amount of elements is equal to 0
+ * 
  */
 Retcode_T CmdLineDbg_RegisterCmdArray(struct CmdLineDbg_Element_S * list, size_t nElements);
 

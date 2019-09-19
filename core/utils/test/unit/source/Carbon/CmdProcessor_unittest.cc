@@ -11,17 +11,27 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
+/**
+ *
+ * @brief
+ *      Module test specification for the CmdProcessor_unittest.cc module.
+ *
+ * @details
+ *      The unit test file template follows the Four-Phase test pattern.
+ *
+ * @file
+ **/
 
-/* include gtest interface */
+/* Include gtest interface */
 #include <gtest.h>
 
-/* start of global scope symbol and fake definitions section */
+/* Start of global scope symbol and fake definitions section */
 
 FFF_DEFINITION_BLOCK_START
 
-/* setup compile time configuration defines */
+/* Setup compile time configuration defines */
 //-- instead of Kiso_BSP_BoardConfig.h mock
-/* include faked interfaces */
+/* Include faked interfaces */
 extern "C"
 {
 #include "Kiso_Utils.h"
@@ -30,21 +40,21 @@ extern "C"
 
 #if KISO_FEATURE_CMDPROCESSOR
 
-/* include faked interfaces */
+/* Include faked interfaces */
 #include "Kiso_Retcode_th.hh"
 #include "Kiso_Assert_th.hh"
 
 #include "task_th.hh"
 #include "queue_th.hh"
 
-/* include module under test */
+/* Include module under test */
 #include "CmdProcessor.c"
 
 }
-/* end of global scope symbol and fake definitions section */
+/* End of global scope symbol and fake definitions section */
 FFF_DEFINITION_BLOCK_END
 
-/* setup compile time configuration defines */
+/* Setup compile time configuration defines */
 #define TASK_PRIORITY     UINT32_C(1)     /**< Task Priority should be less then timer task priority */
 #define STACK_SIZE        UINT32_C(256)   /**< stack size of the task */
 #define QUEUE_SIZE        UINT32_C(3)     /**< size of the queue.Holds command processor command structure variables */
@@ -111,7 +121,7 @@ protected:
     CmdProcessor_T cmdProcessor = {0};
 };
 
-/* specify test cases ******************************************************* */
+/* Specify test cases ******************************************************* */
 
 /**
  *  Module is used to execute the function from the queue and it is provided by the apis.

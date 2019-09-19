@@ -12,10 +12,30 @@
 *
 ********************************************************************************/
 
+/**
+ *
+ * @brief
+ *      Error Logger Interface Implementation
+ *
+ * @details
+ *      This source file implements following features:
+ *      - ErrorLogger_Init()
+ *      - ErrorLogger_LogError()
+ *      - ErrorLogger_GetLastErrorLog()
+ *      - ErrorLogger_HasError()
+ *      - ErrorLogger_GetTotalErrors()
+ *      - ErrorLogger_GetCurrentErrors()
+ *      - ErrorLogger_GetErrorAt()
+ *      - ErrorLogger_ClearAllErrorLogs()
+ * 
+ * @file
+ **/
 
 /*
  * Redefine Package ID
  */
+
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_ERRORLOGGER
@@ -27,10 +47,8 @@
 #define KISO_PACKAGE_ID 0
 #endif
 
-/* own header files */
+/* Include Kiso_ErrorLogger interface header */
 #include "Kiso_ErrorLogger.h"
-
-/* Put constant and variable definitions here */
 
 /** @brief Actual consecutive sequence number
  * @details The sequence number is stored with the error entry in the log.
@@ -216,7 +234,7 @@ Retcode_T ErrorLogger_GetErrorAt(uint8_t index, ErrorLogger_LogEntry_T *LogEntry
 Retcode_T ErrorLogger_ClearAllErrorLogs(void)
 {
     Retcode_T retcode = RETCODE_OK;
-    /* clear log */
+    /* Clear log */
     memset(DataFromUserPage, 0, ErrorLoggerHandle.length);
     /* Write entire error cleared log to flash */
     retcode = ErrorLoggerHandle.EraseLogs(ErrorLoggerHandle.StorageMedium, (void *) pErrorEntries, ErrorLoggerHandle.position, ErrorLoggerHandle.length);                                            //write activity here

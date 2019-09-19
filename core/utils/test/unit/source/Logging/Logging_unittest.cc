@@ -12,13 +12,26 @@
 *
 ********************************************************************************/
 
+/**
+ *
+ * @brief
+ *      Module test specification for the Logging_unittest.cc module.
+ * 
+ * @detail
+ *      The unit test file template follows the Four-Phase test pattern.
+ * 
+ * @file
+ **/
+
+/* Include gtest interface */
 #include <gtest.h>
 
 FFF_DEFINITION_BLOCK_START
 
+/* Start of global scope symbol and fake definitions section */
 extern "C"
 {
-
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_LOGGING
@@ -117,7 +130,8 @@ static BaseType_t xTaskCreateFake(TaskHookFunction_t TaskFun, const char * arg1,
     return xTaskPassed;
 }
 
-} //-- extern "C"
+ /* End of global scope symbol and fake definitions section */
+}
 
 FFF_DEFINITION_BLOCK_END
 
@@ -177,8 +191,10 @@ protected:
         QueueGetResult = RETCODE_FAILURE;
     }
 
+    /* TearDown() is invoked immediately after a test finishes. */
     virtual void TearDown()
     {
+        ; /* Nothing to do if clean up is not required */
     }
 };
 

@@ -11,29 +11,34 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
+
 /**
+ *
+ * @brief
+ *      Module test specification for the LeanB2CAP_unittest.cc module.
+ * 
+ * @details
+ *      The unit test file template follows the Four-Phase test pattern.
+ * 
  * @file
- *
- *
- *  Module test specification for the Lean B2CAP module.
- *
- * ****************************************************************************/
+ **/
 
-/* setup testing framework ************************************************** */
+/* Setup testing framework ************************************************** */
 
-/* include gtest */
+/* Include gtest interface */
 #include <gtest.h>
 
+/* Start of global scope symbol and fake definitions section */
 extern "C"
 {
-/* setup compile time configuration defines */
+/* Setup compile time configuration defines */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_LEANB2CAP
 
 #if KISO_FEATURE_LEANB2CAP
 
-/* include faked interfaces */
+/* Include faked interfaces */
 #include "Kiso_Retcode_th.hh"
 
 #include "LeanB2CAPConfig.h"
@@ -43,12 +48,16 @@ extern "C"
 #undef LEAN_B2CAP_INSTANCE_COUNT
 #define LEAN_B2CAP_INSTANCE_COUNT				UINT8_C(4)
 
+
 #include "CRC.c"
-/* include module under test */
+
+/* Include module under test */
 #include "LeanB2CAP.c"
+
+ /* End of global scope symbol and fake definitions section */
 }
 
-/* define a fake call-back function for the frame processor related tests */
+/* Define a fake call-back function for the frame processor related tests */
 void LeanB2CAPCallback_Ttest (LeanB2CAP_Event_T Event, void * Data)
 {
     (void) Event;
@@ -83,7 +92,7 @@ void LeanB2CAPCallbackDummy(LeanB2CAP_Event_T Event, void * Info)
     }
 }
 
-/* create test fixture initializing all variables automatically */
+/* Create test fixture initializing all variables automatically */
 
 class LeanB2CAP: public testing::Test
 {
@@ -104,6 +113,7 @@ protected:
     /* TearDown() is invoked immediately after a test finishes. */
     virtual void TearDown()
     {
+        /* Nothing to do if clean up is not required */
     }
 
     void InitializeHandle()
@@ -113,6 +123,8 @@ protected:
 
     LeanB2CAP_HandlePtr_T m_Handle;   /**< Test LeanB2CAP handle */
 };
+
+/* Specify test cases ******************************************************* */
 
 /**
  *  Function to test Lean B2CAP initialization
@@ -437,7 +449,6 @@ TEST_F(LeanB2CAP, LeanB2CAPBuilderInputDataBuffNullTest)
     /* call relevant production code Interface and verify implementation */
     Return_status = LeanB2CAP_Builder(&TestLeanB2CAPBuildOuput,NULL);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), Return_status);
-
 }
 
 TEST_F(LeanB2CAP, LeanB2CAPBuilderOutputDataNullTest)

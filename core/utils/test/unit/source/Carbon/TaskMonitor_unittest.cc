@@ -12,9 +12,21 @@
 *
 ********************************************************************************/
 
-/* include gtest interface */
+/**
+ *
+ * @brief
+ * 		Module test specification for the TaskMonitor_unittest.cc module.
+ * 
+ * @detail
+ * 		The unit test file template follows the Four-Phase test pattern.
+ * 
+ * @file
+ **/
+
+/* Include gtest interface */
 #include <gtest.h>
 
+/* Start of global scope symbol and fake definitions section */
 extern "C"
 {
 #include "Kiso_Utils.h"
@@ -23,19 +35,17 @@ extern "C"
 
 #if KISO_FEATURE_TASKMONITOR
 
-/* start of global scope symbol and fake definitions section */
-
-/* include faked interfaces */
+/* Include faked interfaces */
 #include "Kiso_Retcode_th.hh"
 #include "Kiso_Assert_th.hh"
 
 #include "task_th.hh"
 
-
-/* include module under test */
+/* Include module under test */
 #include "TaskMonitor.c"
 
-} /* end of global scope symbol and fake definitions section */
+ /* End of global scope symbol and fake definitions section */
+}
 
 TaskHandle_t Tasklist[KISO_TASKMONITOR_MAX_TASKS];
 uint32_t TaskTag[KISO_TASKMONITOR_MAX_TASKS];
@@ -70,10 +80,14 @@ protected:
 	}
 };
 
-/* specify test cases ******************************************************* */
+/* Specify test cases ******************************************************* */
 
 TEST_F(TaskMonitor, TaskMonitor_InitializeTest)
 {
+    /** @testcase{ TaskMonitor::TaskMonitor_InitializeTest: }
+     * Successful initialization
+     */
+
     /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal;
 	TaskMonitor_TaskInfo_S taskMonitor;
@@ -92,6 +106,10 @@ TEST_F(TaskMonitor, TaskMonitor_InitializeTest)
 
 TEST_F(TaskMonitor, TaskMonitor_UpdateTest)
 {
+    /** @testcase{ TaskMonitor::TaskMonitor_InitializeTest: }
+     * Successful initialization
+     */
+
     /* SETUP: Declare and initialize local variables required only by this test case */
     uint32_t *taskPtr;
     uint32_t data;
@@ -105,6 +123,9 @@ TEST_F(TaskMonitor, TaskMonitor_UpdateTest)
 
 TEST_F(TaskMonitor, TaskMonitor_RegisterTest)
 {
+    /** @testcase{ TaskMonitor::TaskMonitor_RegisterTest: }
+     * Test TaskMonitor register failures
+     */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal;
@@ -121,7 +142,7 @@ TEST_F(TaskMonitor, TaskMonitor_RegisterTest)
        /* VERIFY : Compare the expected with actual */
        EXPECT_EQ(RETCODE_OK, retVal);
     }
-    /* failure test case */
+    /* Failure test case */
     retVal = TaskMonitor_Register(task, (loopcnt+1));
     EXPECT_NE(RETCODE_OK, retVal);
 
@@ -133,19 +154,21 @@ TEST_F(TaskMonitor, TaskMonitor_RegisterTest)
 
     retVal = TaskMonitor_Register(NULL, 0UL);
     EXPECT_NE(RETCODE_OK, retVal);
-    /* reset the task monitor */
+    /* Reset the task monitor */
     retVal = TaskMonitor_Initialize();
     EXPECT_EQ(RETCODE_OK, retVal);
 }
 
 TEST_F(TaskMonitor, TaskMonitor_CheckTest)
 {
+    /** @testcase{ TaskMonitor::TaskMonitor_CheckTest: }
+     */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal;
     bool monitorCheck;
     uint32_t loopcnt;
-    /* reset the task monitor */
+    /* Reset the task monitor */
 
     retVal = TaskMonitor_Initialize();
 	EXPECT_EQ(RETCODE_OK, retVal);
@@ -206,7 +229,7 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
 	}
 	EXPECT_EQ(RETCODE_OK, retVal);
 
-	/* task 6 is not executed with in 1 second */
+	/* Task 6 is not executed with in 1 second */
 	xTaskGetTickCount_fake.return_val = 5000UL;
 	/* update all tasks execution time */
 	for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
@@ -320,7 +343,7 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
 	EXPECT_NE(RETCODE_OK, retVal);
 
 
-	/* test : check the behavior if no tasks are registered to monitor */
+	/* Test : check the behavior if no tasks are registered to monitor */
 	retVal = TaskMonitor_Initialize();
 	EXPECT_EQ(RETCODE_OK, retVal);
 	monitorCheck = TaskMonitor_Check();
@@ -333,7 +356,6 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
 		retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
 	}
 	EXPECT_EQ(RETCODE_OK, retVal);
-
 }
 #else
 }

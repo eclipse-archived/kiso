@@ -12,12 +12,24 @@
 *
 ********************************************************************************/
 
+/**
+ *
+ * @brief
+ *      Module test specification for the EventHub_unittest.cc module.
+ *
+ * @details
+ *      The unit test file template follows the Four-Phase test pattern.
+ *
+ * @file
+ **/
+
 /* include gtest interface */
 #include <gtest.h>
 
+/* Start of global scope symbol and fake definitions section */
 extern "C"
-{/* start of global scope symbol and fake definitions section */
-
+{
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_EVENTHUB
@@ -34,10 +46,10 @@ extern "C"
 #include "queue_th.hh"
 #include "semphr_th.hh"
 
-/* include module under test */
+/* Include module under test */
 #include "EventHub.c"
 
-} /* end of global scope symbol and fake definitions section */
+} /* End of global scope symbol and fake definitions section */
 
 #if (CONFIG_EVENTHUB_MAX_OBSERVERS <= 0)
 #error "CONFIG_EVENTHUB_MAX_OBSERVERS must not be less or equal to 0"
@@ -330,6 +342,8 @@ TEST_F(eventHub, EventHubObserveAllSuccess)
     EXPECT_NE(RETCODE_OUT_OF_RESOURCES, Retcode_GetCode(retVal));
     EXPECT_EQ(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_EQ((uint32_t)1, eventHub.observerCount);
+
+    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(eventHub, EventHubObserverAllHubNull)
@@ -480,6 +494,8 @@ TEST_F(eventHub, EventHub_Notify_Success)
     /** @testcase{ eventHub::EventHub_Notify_Success: }
      * Test EventHub notify success
      */
+
+    /* SETUP: Declare local variables required only by this test case */
     EventHub_T eventHub;
     Retcode_T rc;
     uint32_t expectedObservers = 0;
@@ -496,7 +512,7 @@ TEST_F(eventHub, EventHub_Notify_Success)
     (void)EventHub_Initialize(&eventHub);
     (void)EventHub_Observe(&eventHub, TestObserver_A, (TaskEvent_T) gTestEvent);
     expectedObservers++;
-    /* depending on the config, we might not have enough slots for another observe */
+    /* Depending on the config, we might not have enough slots for another observe */
 #if (CONFIG_EVENTHUB_MAX_OBSERVERS >= 2)
     (void)EventHub_Observe(&eventHub, TestObserver_B, (TaskEvent_T) gTestEvent);
     expectedObservers++;
@@ -518,6 +534,8 @@ TEST_F(eventHub, EventHub_Notify_Success)
     EXPECT_EQ(true, eventReceived_All);
     EXPECT_EQ(true, dataCorrect_All);
 #endif
+
+    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(eventHub, EventHubNotifyHubNull)

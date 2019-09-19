@@ -11,35 +11,45 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
-/**
- * @file Kiso_GuardedTask_th.hh
- *
- *
- *  Mockup implementation for the GuardedTask module.
- *
- * ****************************************************************************/
 
-/* header definition ******************************************************** */
+/**
+ * @ingroup UTILS
+ *
+ * @defgroup GUARDEDTASK GuardedTask
+ * @{
+ *
+ * @brief
+ *      Mockup implementation for the Kiso_GuardedTask_th.hh module
+ *
+ * @details
+ *
+ * @file
+ **/
+
+/* Header definition */
 #ifndef KISO_GUARDEDTASK_TH_HH_
 #define KISO_GUARDEDTASK_TH_HH_
 
-/* include system header files */
+/* Include gtest file */
 #include <gtest.h>
+
+/* Include system header files */
 #include <stdlib.h>
 #include <stdint.h>
 
+/* FreeRTOS header files */
 #include "FreeRTOS_th.hh"
 #include "task_th.hh"
 #include "semphr_th.hh"
 
-/* wrap the real interface header */
+/* Wrap Kiso_GuardedTask interface header */
 #include "Kiso_GuardedTask.h"
 
-/* faked variables needs to be initialized by the test fixture */
+/* Faked variables needs to be initialized by the test fixture */
 typedef void (*GuardedTask_Function_T)(void);
 
 /**
- * mock-ups for the provided interfaces
+ * Mock-ups for the provided interfaces
  * Deprecated functions will be removed as part of PFM-659
  * Deprecated since vXXX (\todo: replace XXX with next version)
  */
@@ -48,7 +58,7 @@ FAKE_VALUE_FUNC(Retcode_T, GuardedTask_deinitialize, GuardedTask_T*)
 FAKE_VALUE_FUNC(Retcode_T, GuardedTask_signal, GuardedTask_T*)
 FAKE_VALUE_FUNC(Retcode_T, GuardedTask_signalFromIsr, GuardedTask_T*)
 
-/* mock-ups for the provided interfaces */
+/* Mock-ups for the provided interfaces */
 FAKE_VALUE_FUNC(Retcode_T, GuardedTask_Initialize, GuardedTask_T*, GuardedTask_Function_T, const char*, uint32_t, uint32_t)
 FAKE_VALUE_FUNC(Retcode_T, GuardedTask_Deinitialize, GuardedTask_T*)
 FAKE_VALUE_FUNC(Retcode_T, GuardedTask_Signal, GuardedTask_T*)

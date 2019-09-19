@@ -11,38 +11,44 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
-/**
- *  @file
- *
- *  Module test specification for the CmdProcessor_cc_unittest module.
- * this test case will test the command processor initialize and enqueue functions
- * The unit test file template follows the Four-Phase test pattern. 
- *
- * ****************************************************************************/
 
-/* include gtest interface */
+/**
+ *
+ * @brief
+ *      Module test specification for the GuardedTask_unittest.cc module.
+ * 
+ * @detail
+ *      This test case will test the command processor initialize and enqueue functions
+ *      The unit test file template follows the Four-Phase test pattern.
+ * 
+ * @file
+ **/
+
+/* Include gtest interface */
 #include <gtest.h>
 
-FFF_DEFINITION_BLOCK_START /* start of global scope symbol and fake definitions section */
+FFF_DEFINITION_BLOCK_START /* Start of global scope symbol and fake definitions section */
 
 
-/* setup compile time configuration defines */
+/* Setup compile time configuration defines */
+
 extern "C"
 {
+/* Module includes */
 #include "Kiso_Utils.h"
 #if KISO_FEATURE_GUARDEDTASK
 
-/* include faked interfaces */
+/* Include faked interfaces */
 #include "Task_th.hh"
 #include "Semaphore_th.hh"
 #include "ICall_th.hh"
 #include "util_th.hh"
 #include "Kiso_Retcode_th.hh"
 
-/* include module under test */
 #undef while
 #define while(N)
 
+/* Include module under test */
 #include "GuardedTask.c"
 
 }
@@ -78,7 +84,7 @@ Retcode_T Retcode_compose_customFake(uint32_t package, Retcode_Severity_T severi
     return (retcode);
 }
 
-FFF_DEFINITION_BLOCK_END /* end of global scope symbol and fake definitions section */
+FFF_DEFINITION_BLOCK_END /* End of global scope symbol and fake definitions section */
 
 class GuardedTask: public testing::Test
 {
@@ -97,13 +103,15 @@ protected:
 
     }
 
+    /* TearDown() is invoked immediately after a test finishes. */
     virtual void TearDown()
     {
-
-        ; /* nothing to do if clean up is not required */
+        ; /* Nothing to do if clean up is not required */
     }
 };
- 
+
+/* Specify test cases ******************************************************* */
+
 TEST_F(GuardedTask,GuardedTaskinitializeFail)
 {
     /** @testcase{ GuardedTask::GuardedTaskinitialize: }

@@ -11,20 +11,30 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
-/**
- * @file
- *
- *  Mockup implementation for the Kiso TLV module.
- *
- * ****************************************************************************/
 
+/**
+ * @ingroup UTILS
+ *
+ * @defgroup TLV TLV
+ * @{
+ *
+ * @brief
+ *      Mockup implementation for the Kiso_TLV_th.hh module
+ *
+ * @details
+ *
+ * @file
+ **/
+
+
+/* Header definition */
 #ifndef KISO_TLV_TH_HH_
 #define KISO_TLV_TH_HH_
 
-/* include system header files */
+/* Include gtest header file */
 #include "gtest.h"
 
-/* ban the real Kiso_TLV.h interface header */
+/* Wrap Kiso_TLV.h interface header */
 #define KISO_TLV_H_
 
 struct TLV_Element_S
@@ -38,7 +48,7 @@ typedef struct TLV_Element_S TLV_Element_T;
 
 typedef struct TLV_Group_S * TLV_GroupHandle_TP;
 
-/* mock-ups for the provided interfaces */
+/* Mock-ups for the provided interfaces */
 FAKE_VALUE_FUNC(TLV_GroupHandle_TP,TLV_AddGroup,void*,uint16_t)
 FAKE_VOID_FUNC(TLV_RemoveGroup ,TLV_GroupHandle_TP)
 FAKE_VALUE_FUNC(TLV_Element_T* ,TLV_AddElement,TLV_GroupHandle_TP , uint16_t, uint16_t , void * )

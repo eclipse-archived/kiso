@@ -12,18 +12,31 @@
 *
 ********************************************************************************/
 
- 
-/* header definition ******************************************************** */
+/**
+ * @ingroup UTILS
+ *
+ * @defgroup TASKMONITOR TaskMonitor
+ * @{
+ *
+ * @brief
+ *      Mockup implementation for the Kiso_TaskMonitor_th.hh module
+ *
+ * @details
+ *
+ * @file
+ **/
+
+/* Header definition */
 #ifndef KISO_TASKMONITOR_TH_HH_
 #define KISO_TASKMONITOR_TH_HH_
 
-/* include system header files */
+/* Include gtest header file */
 #include "gtest.h"
 
-/* wrap the real  interface header */
+/* Wrap Kiso_TaskMonitor interface header */
 #include "Kiso_TaskMonitor.h"
 
-/* mock-ups for the provided interfaces */
+/* Mock-ups for the provided interfaces */
 FAKE_VALUE_FUNC(Retcode_T, TaskMonitor_Initialize)
 FAKE_VALUE_FUNC(bool, TaskMonitor_Check)
 FAKE_VALUE_FUNC(Retcode_T, TaskMonitor_Register, TaskHandle_t, uint32_t)

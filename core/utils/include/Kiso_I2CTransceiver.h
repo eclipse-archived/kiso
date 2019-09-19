@@ -18,7 +18,8 @@
  * @defgroup I2CTRANSCEIVER I2CTransceiver
  * @{
  *
- * @brief Advanced API functions for sending and receiving via I2C
+ * @brief
+ *      Advanced API functions for sending and receiving via I2C
  *
  * @file
  */
@@ -28,14 +29,15 @@
 #include "Kiso_Utils.h"
 
 #if KISO_FEATURE_I2CTRANSCEIVER
-/* Include all headers which are needed by this file. */
+/* Include KISO header files */
 #include "Kiso_Retcode.h"
 #include "Kiso_HAL.h"
 #if KISO_FEATURE_I2C
 #include "Kiso_MCU_I2C.h"
+
+/* FreeRTOS header files */
 #include "FreeRTOS.h"
 #include "semphr.h"
-/* Put the type and macro definitions here */
 
 /** Struct holding the I2C related configuration */
 struct I2cTranceiverHandle_S
@@ -52,105 +54,133 @@ struct I2cTranceiverHandle_S
 
 };
 typedef struct I2cTranceiverHandle_S I2cTranceiverHandle_T,*I2cTranceiverHandlePtr_T;
-/* Put the function declarations here */
+
 /**
- * @brief Initializes the transceiver for the use with the passed I2C handle.
+ * @brief
+ *      Initializes the transceiver for the use with the passed I2C handle.
  *
  * @param [in] i2cTransceiver
- * a pointer to be initialized for I2C transceiver context structure to be initialized.
+ *      A pointer to be initialized for I2C transceiver context structure to be initialized.
  *
  * @param [in] i2cHandle
- * The handle of the I2C to be used by the transceiver. The handle
- * must be initialized before passing it here.
+ *      The handle of the I2C to be used by the transceiver. The handle
+ *      must be initialized before passing it here.
  *
- * @retval #RETCODE_OK                       if successfully initialized.
- * @retval #RETCODE_NULL_POINTER             if any of the parameter is NULL.
- * @retval #RETCODE_SEMAPHORE_ERROR          if the semaphores are not created (see #I2cTranceiverHandle_T.I2CBusSync
- *                                           and #I2cTranceiverHandle_T.I2CMutexLock).
- * @retval #RETCODE_DOPPLE_INITIALIZATION    if you are trying to initialize the transceiver again.
+ * @retval #RETCODE_OK
+ *      If successfully initialized.
+ * @retval #RETCODE_NULL_POINTER
+ *      If any of the parameter is NULL.
+ * @retval #RETCODE_SEMAPHORE_ERROR
+ *      If the semaphores are not created (see #I2cTranceiverHandle_T.I2CBusSync
+ *      and #I2cTranceiverHandle_T.I2CMutexLock).
+ * @retval #RETCODE_DOPPLE_INITIALIZATION
+ *      If you are trying to initialize the transceiver again.
+ * 
  */
 Retcode_T I2CTransceiver_Init(I2cTranceiverHandlePtr_T i2cTransceiver, I2C_T i2cHandle);
 
 /**
- * @brief Function to read a register of a device connected to I2C
+ * @brief
+ *      Function to read a register of a device connected to I2C
  *
  * @param[in]   i2cTransceiver
- * a pointer to the transceiver.
+ *      A pointer to the transceiver.
  *
  * @param [in]  i2cAddr
- * I2C address of the connected device from read has to happen.
+ *      I2C address of the connected device from read has to happen.
  *
  * @param [in]  regAddr
- * Register address of the device to read.
+ *      Register address of the device to read.
  *
  * @param [out] buffer
- * Buffer in which the values will be stored.
+ *      Buffer in which the values will be stored.
  *
  * @param [in]  bytesToRead
- * Number of bytes to be read.
+ *      Number of bytes to be read.
  *
- * @retval #RETCODE_OK                   if successfully read the register.
- * @retval #RETCODE_UNINITIALIZED        if called without initializing.
- * @retval #RETCODE_NULL_POINTER         if any of the parameter is NULL.
- * @retval #RETCODE_SEMAPHORE_ERROR      if semaphore could not be taken within given time.
- * @retval #RETCODE_FAILURE              if I2C transfer is not successful.
+ * @retval #RETCODE_OK
+ *      If successfully read the register.
+ * @retval #RETCODE_UNINITIALIZED
+ *      If called without initializing.
+ * @retval #RETCODE_NULL_POINTER
+ *      If any of the parameter is NULL.
+ * @retval #RETCODE_SEMAPHORE_ERROR
+ *      If semaphore could not be taken within given time.
+ * @retval #RETCODE_FAILURE
+ *      If I2C transfer is not successful.
+ * 
  */
 Retcode_T I2CTransceiver_Read(I2cTranceiverHandlePtr_T i2cTransceiver,uint8_t i2cAddr,uint8_t regAddr,uint8_t *buffer,uint8_t bytesToRead );
 
 /**
- * @brief Function to write a register of a device connected to I2C
+ * @brief
+ *      Function to write a register of a device connected to I2C
  *
  * @param[in]   i2cTransceiver
- * a pointer to the transceiver.
+ *      A pointer to the transceiver.
  *
  * @param [in]  i2cAddr
- * I2C address of the connected device to which write has to happen.
+ *      I2C address of the connected device to which write has to happen.
  *
  * @param [in]  regAddr
- * Register address of the device to write.
+ *      Register address of the device to write.
  *
  * @param [in] buffer
- * Buffer in which the values to be written are stored.
+ *      Buffer in which the values to be written are stored.
  *
  * @param [in]  bytesToWrite
- * Number of bytes to be written.
+ *      Number of bytes to be written.
  *
- * @retval #RETCODE_OK                   if successfully written to the register.
- * @retval #RETCODE_UNINITIALIZED        if called without initializing.
- * @retval #RETCODE_NULL_POINTER         if any of the parameter is NULL.
- * @retval #RETCODE_SEMAPHORE_ERROR      if semaphore could not be taken within given time.
- * @retval #RETCODE_FAILURE              if I2C transfer is not successful.
+ * @retval #RETCODE_OK
+ *      If successfully written to the register.
+ * @retval #RETCODE_UNINITIALIZED
+ *      If called without initializing.
+ * @retval #RETCODE_NULL_POINTER
+ *      If any of the parameter is NULL.
+ * @retval #RETCODE_SEMAPHORE_ERROR
+ *      If semaphore could not be taken within given time.
+ * @retval #RETCODE_FAILURE
+ *      If I2C transfer is not successful.
+ * 
  */
 
 Retcode_T I2CTransceiver_Write(I2cTranceiverHandlePtr_T i2cTransceiver,uint8_t i2cAddr,uint8_t regAddr,uint8_t *buffer,uint8_t bytesToWrite);
 
 /**
- * @brief Function to loop the I2C callback.
+ * @brief
+ *      Function to loop the I2C callback.
  *
- * @details It is necessary for the I2CTransceiver to loop the I2Ccallback.
- * This means, the middle-layer driver which uses I2C and I2CTransceiver
- * must initialize I2C with a callback function which invokes
- * this function in order to loop the callback from I2C to the
- * transceiver.
+ * @details
+ *      It is necessary for the I2CTransceiver to loop the I2Ccallback.
+ *      This means, the middle-layer driver which uses I2C and I2CTransceiver
+ *      must initialize I2C with a callback function which invokes
+ *      this function in order to loop the callback from I2C to the
+ *      transceiver.
  *
  * @param[in] transceiver
- * a pointer to the transceiver.
+ *      A pointer to the transceiver.
  *
  * @param[in] event
- * The event which is notified by the callback
+ *      The event which is notified by the callback
+ * 
  */
 void I2CTransceiver_LoopCallback(I2cTranceiverHandlePtr_T transceiver,struct MCU_I2C_Event_S event);
 
 /**
- * @brief De-initializes the transceiver.
+ * @brief
+ *      De-initializes the transceiver.
  *
- * The transceiver must not be used after calling this function.
+ * @details
+ *      The transceiver must not be used after calling this function.
  *
  * @param[in] transceiver
- * a pointer to the transceiver context structure to be de-initialized
+ *      A pointer to the transceiver context structure to be de-initialized
  *
- * @retval #RETCODE_OK              if successfully de-initialized
- * @retval #RETCODE_INVALID_PARAM   if the transceiver pointer parameter is NULL
+ * @retval #RETCODE_OK
+ *      If successfully de-initialized
+ * @retval #RETCODE_INVALID_PARAM
+ *      If the transceiver pointer parameter is NULL
+ * 
  */
 Retcode_T I2CTransceiver_Deinit(I2cTranceiverHandlePtr_T transceiver);
 #endif /* KISO_FEATURE_I2C */

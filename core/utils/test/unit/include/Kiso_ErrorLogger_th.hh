@@ -11,24 +11,32 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
-/**
- * @file
- *
- *  Mockup implementation for the KISO_ErrorLogger module.
- *
- * ****************************************************************************/
 
-/* header definition ******************************************************** */
+/**
+ * @ingroup UTILS
+ *
+ * @defgroup ERRORLOGGER ErrorLogger
+ * @{
+ *
+ * @brief
+ *      Mockup implementation for the Kiso_ErrorLogger_th.hh module
+ *
+ * @details
+ *
+ * @file
+ **/
+
+/* Header definition */
 #ifndef KISO_ERRORLOGGER_HH_
 #define KISO_ERRORLOGGER_HH_
 
-/* include system header files */
+/* Include gtest header file */
 #include "gtest.h"
 
-/* wrap the real interface header */
+/* Wrap Kiso_ErrorLogger interface header */
 #include "Kiso_ErrorLogger.h"
 
-/* mock-ups for the provided interfaces */
+/* Mock-ups for the provided interfaces */
 FAKE_VALUE_FUNC(Retcode_T,ErrorLogger_Init , ErrorLoggerConfig_T )
 FAKE_VALUE_FUNC(Retcode_T,ErrorLogger_LogError,Retcode_T)
 FAKE_VALUE_FUNC(Retcode_T,ErrorLogger_GetLastErrorLog,ErrorLogger_LogEntry_T *)

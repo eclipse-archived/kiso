@@ -12,21 +12,36 @@
 *
 ********************************************************************************/
 
-/* header definition ******************************************************** */
+/**
+ * @ingroup UTILS
+ *
+ * @defgroup XPROTOCOL XProtocol
+ * @{
+ *
+ * @brief
+ *      Mockup implementation for the Kiso_XProtocol_th.hh module
+ *
+ * @details
+ *
+ * @file
+ **/
+
+/* Header definition */
 #ifndef KISO_XPROTOCOL_TH_HH_
 #define KISO_XPROTOCOL_TH_HH_
 
-/* include system header files */
+/* Include KISO basics header files */
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
 
+/* Include gtest header file */
 #include "gtest.h"
 
-/* wrap the real Kiso_XProtocol.h interface header */
+/* Wrap Kiso_XProtocol interface header */
 #include "Kiso_XProtocol.h"
 
 /**
- * mock-ups for the provided interfaces
+ * Mock-ups for the provided interfaces
  * Deprecated functions will be removed as part of PFM-659
  * Deprecated since vXXX (\todo: replace XXX with next version)
  */
@@ -40,7 +55,7 @@ FAKE_VALUE_FUNC(Retcode_T, xProtocol_IsCompleteFrame, const uint8_t *, uint32_t,
 FAKE_VALUE_FUNC(Retcode_T, xProtocol_GetPayloadLength, const uint8_t *, uint32_t,
         uint32_t *);
 
-/* faked variables needs to be initialized by the test fixture */
+/* Faked variables needs to be initialized by the test fixture */
 FAKE_VALUE_FUNC(Retcode_T, XProtocol_Init)
 FAKE_VALUE_FUNC(Retcode_T, XProtocol_EncodeFrame, const uint8_t *, uint32_t,
         uint32_t, uint8_t *, uint32_t *);

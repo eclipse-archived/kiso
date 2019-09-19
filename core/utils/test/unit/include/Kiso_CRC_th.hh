@@ -11,26 +11,32 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
-/**
- * @file
- *
- *
- *  Mockup implementation for the Kiso CRC module.
- *
- * ****************************************************************************/
 
-/* header definition ******************************************************** */
+/**
+ * @ingroup UTILS
+ *
+ * @defgroup CRC CRC
+ * @{
+ *
+ * @brief
+ *      Mockup implementation for the Kiso_CRC_th.hh module
+ *
+ * @details
+ *
+ * @file
+ **/
+ 
+/* Header definition */
 #ifndef KISO_CRC_TH_HH_
 #define KISO_CRC_TH_HH_
 
-/* include system header files */
+/* Include gtest header file */
 #include "gtest.h"
-/*wrap the real Kiso_CRC.h interface header */
+
+/* Wrap Kiso_CRC interface header */
 #include "Kiso_CRC.h"
 
-/* faked variables needs to be initialized by the test fixture */
-
-/* mock-ups for the provided interfaces */
+/* Mock-ups for the provided interfaces */
 FAKE_VALUE_FUNC(Retcode_T, CRC_8, uint8_t, uint8_t*, const uint8_t*, uint16_t)
 FAKE_VALUE_FUNC(Retcode_T, CRC_16, uint16_t, uint16_t*, const uint8_t*, uint16_t)
 FAKE_VALUE_FUNC(Retcode_T, CRC_32, uint32_t, uint32_t*, const uint8_t*, uint16_t)

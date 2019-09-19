@@ -11,17 +11,30 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
- 
+
+/**
+ * @ingroup UTILS
+ *
+ * @defgroup LOGGING Logging
+ * @{
+ *
+ * @brief
+ *      Mockup implementation for the Kiso_Logging_th.hh module
+ *
+ * @details
+ *
+ * @file
+ **/
+
+/* Header definition */
 #ifndef KISO_LOGGING_TH_HH_
 #define KISO_LOGGING_TH_HH_
 
-/* ban or wrap the real interface header */
+/* Wrap Kiso_Logging interface header */
 #include "Kiso_Logging.h"
 
-/* Include the needed headers */
+/* Include gtest header file */
 #include "gtest.h"
-
-/* Faked variables needs to be initialized by the test fixture */
 
 /* Mock-ups for the provided interfaces */
 FAKE_VALUE_FUNC(Retcode_T, Logging_Init, const LogRecorder_T*,

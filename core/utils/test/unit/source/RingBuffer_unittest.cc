@@ -11,49 +11,56 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
+
 /**
- *  @file       RB_ringBuffer_unittest.cc
- *  @author      Satish B Srikanta, <satish.bsrikanta@in.bosch.com>
  *
- *
- *  Module test specification for the Ring Buffer .
- *
- * ****************************************************************************/
+ * @brief
+ *      Module test specification for the RingBuffer_unittest.cc module.
+ * 
+ * @details
+ *      The unit test file template follows the Four-Phase test pattern.
+ * 
+ * @file
+ **/
 
-/* setup testing framework ************************************************** */
+/* Setup testing framework ************************************************** */
 
-/* include gtest */
+/* Include gtest interface */
 #include <gtest.h>
+
 #include <string.h>
 #include <unistd.h>
 
+/* Start of global scope symbol and fake definitions section */
 extern "C"
 {
-/* setup compile time configuration defines */
+/* Setup compile time configuration defines */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_RINGBUFFER
 
 #if KISO_FEATURE_RINGBUFFER
 
-/* include faked interfaces */
+/* Include faked interfaces */
 #include "Kiso_Assert_th.hh"
 #include "Kiso_Retcode_th.hh"
 
-/* include module under test */
+/* Include module under test */
 #define inline
 #include "RingBuffer.c"
 #undef inline
+
+ /* End of global scope symbol and fake definitions section */
 }
 
-/* define a fake call-back function for the frame processor related tests */
+/* Define a fake call-back function for the frame processor related tests */
 Retcode_T RunTimeError = RETCODE_OK;
 static void Retcode_CustomRaiseError(Retcode_T error)
 {
     RunTimeError = error;
 }
 
-/* create test fixture initializing all variables automatically */
+/* Create test fixture initializing all variables automatically */
 
 #define TEST_LOW_BUFFER_SIZE                (15U)
 #define TEST_TOTAL_DATA_TO_BE_READ_WRITTEN  (100U)
@@ -78,8 +85,11 @@ protected:
     /* TearDown() is invoked immediately after a test finishes. */
     virtual void TearDown()
     {
+        ; /* Nothing to do if clean up is not required */
     }
 };
+
+/* Specify test cases ******************************************************* */
 
 /**
  *  @brief

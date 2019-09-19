@@ -12,23 +12,41 @@
 *
 ********************************************************************************/
 
+/**
+ *
+ * @brief
+ *      Module test specification for the EventHub_unittest.cc module.
+ * 
+ * @detail
+ *      The unit test file template follows the Four-Phase test pattern.
+ * 
+ * @file
+ **/
+
+/* Include gtest interface */
 #include <gtest.h>
 
+/* Start of global scope symbol and fake definitions section */
 extern "C"
 {
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_EVENTHUB
 
 #if KISO_FEATURE_EVENTHUB
 
+/* Include faked interfaces */
 #include "Kiso_Retcode_th.hh"
 #include "Kiso_Assert_th.hh"
 #include "fff.h"
 #include "Semaphore_th.hh"
 #include "ICall_th.hh"
 
+/* Include module under test */
 #include "EventHub.c"
+
+ /* End of global scope symbol and fake definitions section */
 }
 
 #if (CONFIG_EVENTHUB_MAX_OBSERVERS <= 0)
@@ -82,9 +100,11 @@ protected:
     /* TearDown() is invoked immediately after a test finishes. */
     virtual void TearDown()
     {
-        ; /* nothing to do if clean up is not required */
+        ; /* Nothing to do if clean up is not required */
     }
 };
+
+/* Specify test cases ******************************************************* */
 
 TEST_F(eventHub, EventHub_Initialize_Success)
 {
@@ -242,7 +262,7 @@ TEST_F(eventHub, EventHub_Notify_Success)
     (void)EventHub_Initialize(&eventHub);
     (void)EventHub_Observe(&eventHub, TestObserver_A, (TaskEvent_T) TEST_EVENT);
     expectedObservers++;
-    /* depending on the config, we might not have enough slots for another observe */
+    /* Depending on the config, we might not have enough slots for another observe */
 #if (CONFIG_EVENTHUB_MAX_OBSERVERS >= 2)
     (void)EventHub_Observe(&eventHub, TestObserver_B, (TaskEvent_T) TEST_EVENT);
     expectedObservers++;

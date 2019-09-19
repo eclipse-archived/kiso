@@ -12,29 +12,45 @@
 *
 ********************************************************************************/
 
-/* include gtest interface */
+/**
+ *
+ * @brief
+ *      Module test specification for the I2CTranseiver_unittest.cc module.
+ * 
+ * @detail
+ *      The unit test file template follows the Four-Phase test pattern.
+ * 
+ * @file
+ */
+
+/* Include gtest interface */
 #include <gtest.h>
 
+/* Start of global scope symbol and fake definitions section */
 extern "C"
 {
-/* setup compile time configuration defines */
+/* Setup compile time configuration defines */
 
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_I2C_TRANSCEIVER
 
 #if KISO_FEATURE_I2CTRANSCEIVER
-/* include faked interfaces */
+/* Include faked interfaces */
 #include "Kiso_Retcode_th.hh"
 #include "Kiso_MCU_I2C_th.hh"
 #include "FreeRTOS_th.hh"
 #include "semphr_th.hh"
+
 uint32_t tempI2CHandle = 0x55;
 I2C_T I2CHandle = (I2C_T)&tempI2CHandle;
-/* include module under test */
+
+/* Include module under test */
 #include "I2CTransceiver.c"
+
+ /* End of global scope symbol and fake definitions section */
 }
-/* create test fixture initializing all variables automatically */
+/* Create test fixture initializing all variables automatically */
 class I2CTransceiver: public testing::Test
 {
 public:
@@ -64,7 +80,7 @@ public:
     }
 };
 
-/* specify test cases ******************************************************* */
+/* Specify test cases ******************************************************* */
 
 TEST_F(I2CTransceiver, I2CTransceiverInitSuccess)
 {
@@ -1074,7 +1090,6 @@ TEST_F(I2CTransceiver, I2CTransceiverLoopCallbackNullError)
     EXPECT_EQ(UINT32_C(0), xSemaphoreGiveFromISR_fake.call_count);
     EXPECT_EQ(UINT32_C(1), Retcode_RaiseErrorFromIsr_fake.call_count);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), Retcode_RaiseErrorFromIsr_fake.arg0_val);
-
 }
 
 TEST_F(I2CTransceiver, I2CTransceiverLoopCallbackUninitialized)

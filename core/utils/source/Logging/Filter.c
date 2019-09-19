@@ -13,21 +13,33 @@
 ********************************************************************************/
 
 /**
+ *
+ * @brief
+ *      Filter Interface Implementation
+ *
+ * @details
+ *      Implements log generic filter.
+ *      This source file implements following features:
+ *      - LogFilter_Add()
+ *      - LogFilter_Delete()
+ *      - LogFilter_Configure()
+ *      - LogFilter_Apply()
+ * 
  * @file
- *
- * @brief Implements log generic filter.
- *
- */
+ **/
 #include "LogConfig.h"
 
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_LOGGING_FILTER
 
 #if KISO_FEATURE_LOGGING
 
+/* Include Kiso_Logging interface header */
 #include "Kiso_Logging.h"
 
+/* KISO header files */
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
 

@@ -11,44 +11,46 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
+
 /**
+ *
+ * @brief
+ *      Module test specification for the TLV_unittest.cc module.
+ * 
+ * @details
+ *      The unit test file template follows the Four-Phase test pattern.
+ * 
  * @file
- *
- *
- *  Module test specification for the TLV data handler module.
- *
- * ****************************************************************************/
+ **/
 
-/* setup testing framework ************************************************** */
+/* Setup testing framework ************************************************** */
 
-/* include system headers */
+/* Include system headers */
 #include <string.h>
 
-/* include gtest */
+/* Include gtest interface */
 #include <gtest.h>
 
-/* start of global scope symbol and fake definitions section */
+/* Start of global scope symbol and fake definitions section */
 extern "C"
 {
-
-/* setup compile time configuration defines */
+/* Setup compile time configuration defines */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_TLV
 
 #if KISO_FEATURE_TLV
 
-/* include faked interfaces */
+/* Include faked interfaces */
 #include "Kiso_Assert_th.hh"
 
-/* include module under test */
+/* Include module under test */
 #include "TLV.c"
 
+/* End of global scope symbol and fake definitions section */
 }
 
-/* end of global scope symbol and fake definitions section */
-
-/* create test fixture initializing all variables automatically */
+/* Create test fixture initializing all variables automatically */
 
 typedef enum tlvTestTypes_e
 {
@@ -106,7 +108,7 @@ protected:
     /* Remember that SetUp() is run immediately before a test starts. */
     virtual void SetUp()
     {
-        /* initialize execution environment */
+        /* Initialize execution environment */
         FFF_RESET_HISTORY()
 
         dataBufferSize = 256;
@@ -128,7 +130,7 @@ protected:
 
         if (Element)
         {
-            /* calculate group Handle Size based on the base address of the application Buffer
+            /* Calculate group Handle Size based on the base address of the application Buffer
              * and the address of the created first Element
              */
             groupHandleSize = (uint64_t) Element - (uint64_t) DataBuffer;
@@ -146,7 +148,7 @@ protected:
     uint16_t dataBufferSize;
 };
 
-/* specify test cases ******************************************************* */
+/* Specify test cases ******************************************************* */
 
 /** The TLV data handler module must implement a Type-Length-Value database
  *  management API set.

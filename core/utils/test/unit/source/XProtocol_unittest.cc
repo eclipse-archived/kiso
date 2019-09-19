@@ -12,32 +12,41 @@
 *
 ********************************************************************************/
 
-/**
- * @file
- *
- * Module test specification for the X-Protocol module.
- */
 
-/* include gtest interface */
+/**
+ *
+ * @brief
+ *      Module test specification for the XProtocol_unittest.cc module.
+ * 
+ * @details
+ *      The unit test file template follows the Four-Phase test pattern.
+ * 
+ * @file
+ **/
+
+/* Include gtest interface */
 #include <gtest.h>
 
-/* start of global scope symbol and fake definitions section */
+/* Start of global scope symbol and fake definitions section */
 extern "C"
 {
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_XPROTOCOL
 
 #if KISO_FEATURE_XPROTOCOL
 
-/* include faked interfaces */
+/* Include faked interfaces */
 #include "Kiso_CRC_th.hh"
-/* include module under test */
+
+/* Include module under test */
 #include "XProtocol.c"
-/* end of global scope symbol and fake definitions section */
+
+/* End of global scope symbol and fake definitions section */
 }
 
-#define TEST_DATA_SIZE            6U    /**< size of buffer */
+#define TEST_DATA_SIZE            6U    /**< Size of buffer */
 #define MAX_FRAME_SIZE            1000U /**< MAX size of buffer */
 #define MIN_FRAME_SIZE            1U    /**< MIN size of buffer */
 #define MAX_DATA_LENGTH           1000U /**< MIN size of buffer */
@@ -69,7 +78,7 @@ Retcode_T Retcode_compose(uint32_t package,
     return (retcode);
 }
 
-/* create test fixture initializing all variables automatically */
+/* Create test fixture initializing all variables automatically */
 class XProtocolRoutines: public testing::Test
 {
 protected:
@@ -82,7 +91,7 @@ protected:
     /* TearDown() is invoked immediately after a test finishes. */
     virtual void TearDown()
     {
-        ; /* nothing to do */
+        ; /* Nothing to do if clean up is not required */
     }
 };
 
@@ -90,7 +99,7 @@ protected:
  * Module test cases to test X-Protocol
  */
 
-/* specify test cases ******************************************************* */
+/* Specify test cases ******************************************************* */
 
 TEST_F(XProtocolRoutines, testXprotocolInit)
 {

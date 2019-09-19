@@ -12,20 +12,50 @@
 *
 ********************************************************************************/
 
+/**
+ *
+ * @brief
+ *      UART Transceiver Interface Implementation
+ *
+ * @details
+ *      This source file implements following features:
+ *      - UARTTransceiver_Initialize()
+ *      - UARTTransceiver_Deinitialize()
+ *      - UARTTransceiver_Start()
+ *      - UARTTransceiver_StartInAsyncMode()
+ *      - UARTTransceiver_Stop()
+ *      - UARTTransceiver_Suspend()
+ *      - UARTTransceiver_Resume()
+ *      - UARTTransceiver_ReadData()
+ *      - UARTTransceiver_WriteData()
+ *      - UARTTransceiver_LoopCallback()
+ *      - UARTTransceiver_LoopCallbackLE()
+ * 
+ * @file
+ **/
+
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_UART_TRANSCEIVER
 
+/* Include the real interface header */
 #include "Kiso_UARTTransceiver.h"
 
 #if KISO_FEATURE_UARTTRANSCEIVER
 
+/* System header file */
+#include <stdlib.h>
+
+/* KISO basics header files */
 #include "Kiso_Retcode.h"
 #include "Kiso_Assert.h"
+
 #include "Kiso_RingBuffer.h"
 #include "Kiso_MCU_UART.h"
 #include "Kiso_MCU_LEUART.h"
-#include <stdlib.h>
+
+/* FreeRTOS header files */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
@@ -367,13 +397,13 @@ Retcode_T UARTTransceiver_WriteData(UARTTransceiver_T *transceiver, const uint8_
             {
                 if (transceiver->Mode == UART_TRANSCEIVER_MODE_ASYNCH)
                 {
-                    //do nothing here
+                    //Do nothing here
                 }
                 else
                 {
                     if (pdFAIL == xSemaphoreTake(transceiver->TxSemaphore, (timeout_ms / portTICK_RATE_MS)))
                     {
-                        /* see Event TxComplete in uartEvents_HAL (HAL ISR user callback) */
+                        /* See Event TxComplete in uartEvents_HAL (HAL ISR user callback) */
                         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_SEMAPHORE_ERROR);
                     }
                     else
@@ -420,7 +450,7 @@ void UARTTransceiver_LoopCallback(UARTTransceiver_T *transceiver, struct MCU_UAR
             }
         }
     }
-    if (event.TxComplete) /* data has been sent */
+    if (event.TxComplete) /* Data has been sent */
     {
         if (transceiver->Mode == UART_TRANSCEIVER_MODE_ASYNCH)
         {
@@ -486,7 +516,7 @@ void UARTTransceiver_LoopCallbackLE(UARTTransceiver_T *transceiver, struct MCU_L
             }
         }
     }
-    if (event.TxComplete) /* data has been sent */
+    if (event.TxComplete) /* Data has been sent */
     {
         if (transceiver->Mode == UART_TRANSCEIVER_MODE_ASYNCH)
         {

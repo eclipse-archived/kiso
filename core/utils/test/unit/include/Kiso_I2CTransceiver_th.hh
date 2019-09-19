@@ -12,16 +12,29 @@
 *
 ********************************************************************************/
 
+/**
+ * @ingroup UTILS
+ *
+ * @defgroup I2CTRANCEIVER I2cTranceiver
+ * @{
+ *
+ * @brief
+ *      Mockup implementation for the Kiso_I2CTransceiver_th.hh module
+ *
+ * @details
+ *
+ * @file
+ **/
+
+/* Header definition */
 #ifndef KISO_I2CTRANSCEIVER_TH_HH_
 #define KISO_I2CTRANSCEIVER_TH_HH_
 
-/* Include the real interface header */
+/* Include Kiso_I2CTransceiver interface header */
 #include "Kiso_I2CTransceiver.h"
 
-/* Include the needed headers */
+/* Include gtest header file */
 #include "gtest.h"
-
-/* Faked variables needs to be initialized by the test fixture */
 
 /* Mock-ups for the provided interfaces */
 FAKE_VALUE_FUNC(Retcode_T, I2CTransceiver_Init,I2cTranceiverHandlePtr_T,I2C_T)

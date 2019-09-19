@@ -83,7 +83,7 @@
  * @param[in]   message : A string about the test case - note that it is not compiled into the code.
  */
 #define static_assert(expression, message) \
-   enum { ASSERT_CONCAT(ASSERT_LINE_, __LINE__) = 1/(!!(expression)) };
+   enum { ASSERT_CONCAT(ASSERT_LINE_, __LINE__) = 1/(!!(expression)) }
 #else
 
 /* Expand the C11 Keyword _Static_assert if not included already by the compiler */

@@ -1,3 +1,4 @@
+
 /********************************************************************************
 * Copyright (c) 2010-2019 Robert Bosch GmbH
 *
@@ -12,17 +13,34 @@
 *
 ********************************************************************************/
 
+/**
+ *
+ * @brief
+ *      Command Processor Interface Implementation
+ *
+ * @details
+ *      This source file implements following features:
+ *      - CmdProcessor_Initialize()
+ *      - CmdProcessor_Enqueue()
+ *      - CmdProcessor_EnqueueFromIsr()
+ *      - CmdProcessor_Suspend()
+ *      - CmdProcessor_Resume()
+ *
+ * @file
+ **/
 
-/* module includes ********************************************************** */
+
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_CMDPROCESSOR
 
+/* Include Kiso_CmdProcessor interface header */
 #include "Kiso_CmdProcessor.h"
 
 #if KISO_FEATURE_CMDPROCESSOR
 
-/* KISO basics header files*/
+/* KISO basics header files */
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
 #include "Kiso_Assert.h"
@@ -34,7 +52,7 @@
 #include "portmacro.h"
 #include "projdefs.h"
 
-/* Structure saving the data of the function handles enqueued*/
+/* Structure saving the data of the function handles enqueued */
 struct CmdProcessor_Cmd_S
 {
     CmdProcessor_Func_T func;

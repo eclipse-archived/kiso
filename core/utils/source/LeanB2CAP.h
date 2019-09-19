@@ -12,6 +12,19 @@
 *
 ********************************************************************************/
 
+/**
+ * @ingroup UTILS
+ *
+ * @defgroup LEANB2CAP LeanB2CAP
+ * @{
+ *
+ * @brief
+ *      LeanB2CAP module
+ *
+ * @details
+ *
+ * @file
+ **/
 
 #ifndef LEANB2CAP_H_
 #define LEANB2CAP_H_
@@ -84,3 +97,4 @@ typedef struct LeanB2CAP_HandleDescriptor_S LeanB2CAP_HandleDescriptor_T;
 static Retcode_T LeanB2CAPIsCommandTypeValid(LeanB2CAP_CommandType_T Type);
 
 #endif /* LEANB2CAP_H_ */
+/** @} */

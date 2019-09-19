@@ -13,25 +13,29 @@
 ********************************************************************************/
 
 /**
+ *
+ * @brief
+ *      Command Line Debugger Interface Implementation
+ *
+ * @details
+ *      This source file implements following features:
+ *      - CmdLineDbg_RegisterCmd()
+ *      - CmdLineDbg_RegisterCmdArray()
+ *      - CmdLineDbg_Parse()
+ * 
  * @file
- * @brief Command Line Debugger Interface Implementation
- *
- * This source file implements following features:
- * - CmdLineDbg_Parse()
- * - CmdLineDbg_RegisterCmd()
- * - CmdLineDbg_RegisterCmdArray()
- *
- * @ingroup CMDLINE
- * @{
- */
+ **/
 
+/* Module includes */
 #include "Kiso_Utils.h"
 #ifdef KISO_MODULE_ID
 #undef KISO_MODULE_ID
+
 #endif
 
 #define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_CMD_LINE_DEBUGGER
 
+/* Include Kiso_CmdLineDebugger interface header */
 #include "Kiso_CmdLineDebugger.h"
 
 #if KISO_FEATURE_CMDLINEDEBUGGER

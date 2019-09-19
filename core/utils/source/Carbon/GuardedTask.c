@@ -12,35 +12,51 @@
 *
 ********************************************************************************/
 
+/**
+ *
+ * @brief
+ *      Guarded Task Interface Implementation
+ *
+ * @details
+ *      This source file implements following features:
+ *      - GuardedTask_Deinitialize()
+ *      - GuardedTask_Initialize()
+ *      - GuardedTask_Signal()
+ *      - GuardedTask_SignalFromIsr()
+ * 
+ * @file
+ **/
 
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_GUARDEDTASK
 
-/* own header files */
+/* Include Kiso_GuardedTask interface header */
 #include "Kiso_GuardedTask.h"
 
 #if KISO_FEATURE_GUARDEDTASK
 
-/* additional interface header files */
+/* KISO basics header files */
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
 #include "Kiso_Assert.h"
 
+/* FreeRTOS header files */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
 
-/* prototypes */
+/* Prototypes */
 static void GuardedTaskExecute(GuardedTask_T* context);
 
 static void GuardedTaskRunFunction(void* param);
 
-/* local variable */
+/* Local variable */
 
-/* global variables */
+/* Global variables */
 
-/* local functions */
+/* Local functions */
 static void GuardedTaskExecute(GuardedTask_T* context)
 {
     if ((NULL != context) && (NULL != context->runFunction) && (NULL != context->signal))

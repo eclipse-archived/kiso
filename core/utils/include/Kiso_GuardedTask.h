@@ -18,7 +18,8 @@
  * @defgroup GUARDEDTASK GuardedTask
  * @{
  *
- * @brief Guarded Task interface
+ * @brief
+ *      Guarded Task interface
  *
  * @details
  *
@@ -54,53 +55,82 @@ typedef struct GuardedTask_S GuardedTask_T;
 
 /* public function prototype declarations */
 
-/** @brief   This function initializes a given GuardedTask handle.
+/** @brief
+ *      This function initializes a given GuardedTask handle.
  *
- * @param[in] handle            -   A pointer to an empty GuardedTask structure
- * @param[in] taskRunFunction   -   A function pointer to the user-code run function that should be called by the task
- * @param[in] taskName          -   A cstring representing the name of the task
- * @param[in] taskPriority      -   The task priority
- * @param[in] taskStackSize     -   The task stack size
+ * @param[in] handle
+ *      A pointer to an empty GuardedTask structure
+ * @param[in] taskRunFunction
+ *      A function pointer to the user-code run function that should be called by the task
+ * @param[in] taskName
+ *      A cstring representing the name of the task
+ * @param[in] taskPriority
+ *      The task priority
+ * @param[in] taskStackSize
+ *      The task stack size
  *
- * @retval  #RETCODE_OK                  -   Guarded Task has been initialized successfully
- * @retval  #RETCODE_INVALID_PARAM       -   One of the parameters was invalid
- * @retval  #RETCODE_OUT_OF_RESOURCES    -   Unable to allocate resources for task or semaphore
+ * @retval  #RETCODE_OK
+ *      Guarded Task has been initialized successfully
+ * @retval  #RETCODE_INVALID_PARAM
+ *      One of the parameters was invalid
+ * @retval  #RETCODE_OUT_OF_RESOURCES
+ *      Unable to allocate resources for task or semaphore
+ * 
  */
 Retcode_T GuardedTask_Initialize(GuardedTask_T* handle, GuardedTask_Function_T taskRunFunction, const char* taskName, uint32_t taskPriority, uint32_t taskStackSize);
 
-/**  @brief  This function deinitializes a given GuardTask handle and sets all attributes to NULL.
+/**  @brief
+ *      This function deinitializes a given GuardTask handle and sets all attributes to NULL.
  *
- *  @param[in] handle   -   A pointer to an initialized GuardTask structure.
+ *  @param[in] handle
+ *      A pointer to an initialized GuardTask structure.
  *
- *  @retval #RETCODE_OK              -   Guarded Task has been deinitialized successfully
- *  @retval #RETCODE_INVALID_PARAM   -   handle pointer is NULL
+ *  @retval #RETCODE_OK
+ *      Guarded Task has been deinitialized successfully
+ *  @retval #RETCODE_INVALID_PARAM
+ *      handle pointer is NULL
+ * 
  */
 Retcode_T GuardedTask_Deinitialize(GuardedTask_T* handle);
 
-/**  @brief  This function signals the GuardTask-task to execute its user run function
+/**  @brief
+ *      This function signals the GuardTask-task to execute its user run function
  *
- *  @param[in] handle   -   A pointer to an initialized GuardTask structure
+ *  @param[in] handle
+ *      A pointer to an initialized GuardTask structure
  *
- *  @note This function may ONLY be called from NON-ISR context!
+ *  @note
+ *      This function may ONLY be called from NON-ISR context!
  *
- *  @retval #RETCODE_OK                                  -   Task has been signaled properly
- *  @retval #RETCODE_GUARDEDTASK_SEMAPHORE_ALREADY_GIVEN -   Indicates that the semaphore was already in a given state.
- *                                                           This implicitly means that the encapsulated task is still in execution
- *  @retval #RETCODE_INVALID_PARAM                       -   Given parameter was invalid
+ *  @retval #RETCODE_OK
+ *      Task has been signaled properly
+ *  @retval #RETCODE_GUARDEDTASK_SEMAPHORE_ALREADY_GIVEN
+ *      Indicates that the semaphore was already in a given state.
+ *      This implicitly means that the encapsulated task is still in execution
+ *  @retval #RETCODE_INVALID_PARAM
+ *      Given parameter was invalid
+ * 
  */
 Retcode_T GuardedTask_Signal(GuardedTask_T* handle);
 
-/**  @brief  This function signals the GuardTask-task to execute its user run function
+/**  @brief
+ *      This function signals the GuardTask-task to execute its user run function
  *
- *  @param[in] handle   -   A pointer to an initialized GuardTask structure
+ *  @param[in] handle
+ *      A pointer to an initialized GuardTask structure
  *
- *  @note This function may ONLY be called from ISR context!
+ *  @note
+ *      This function may ONLY be called from ISR context!
  *
  *
- *  @retval #RETCODE_OK                                  -   Task has been signaled properly
- *  @retval #RETCODE_GUARDEDTASK_SEMAPHORE_ALREADY_GIVEN -   Indicates that the semaphore was already in a given state.
- *                                                          This implicitly means that the encapsulated task is still in execution
- *  @retval #RETCODE_INVALID_PARAM                       -   Given parameter was invalid
+ *  @retval #RETCODE_OK
+ *      Task has been signaled properly
+ *  @retval #RETCODE_GUARDEDTASK_SEMAPHORE_ALREADY_GIVEN
+ *      Indicates that the semaphore was already in a given state.
+ *      This implicitly means that the encapsulated task is still in execution
+ *  @retval #RETCODE_INVALID_PARAM
+ *      Given parameter was invalid
+ * 
  */
 Retcode_T GuardedTask_SignalFromIsr(GuardedTask_T* handle);
 

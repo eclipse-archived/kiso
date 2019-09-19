@@ -12,32 +12,45 @@
 *
 ********************************************************************************/
 
-/* include gtest interface */
+/**
+ *
+ * @brief
+ *      Module test specification for the CmdLineDebugger_unittest.cc module.
+ *
+ * @details
+ *      The unit test file template follows the Four-Phase test pattern.
+ * 
+ * @file
+ **/
+
+/* Include gtest interface */
 #include <gtest.h>
 
+/* Start of global scope symbol and fake definitions section */
 extern "C"
 {
-
+/* Module includes */
 #define KISO_MODULE_ID 0
-
 #include "Kiso_Utils.h"
 #if KISO_FEATURE_CMDLINEDEBUGGER
 
 #include "Kiso_Basics.h"
+
+/* Include faked interfaces */
 #include "Kiso_Retcode_th.hh"
 #include "Kiso_Assert_th.hh"
 
 /* Module under Test */
 #include "CmdLineDebugger.c"
 
-} /* End of extern-C */
+/* End of global scope symbol and fake definitions section */
+}
 
+/* Start of global scope symbol and fake definitions section */
 extern "C"
 {
 
 FAKE_VALUE_FUNC(Retcode_T, testCallback, uint32_t, const char* const*)
-
-
 
 struct CmdLineDbg_Element_S testCommand = {
         testCallback, /* Callback */
@@ -86,13 +99,14 @@ size_t const testListElements = sizeof(testList) / sizeof(testList[0]);
 const char * testStrings[] =
         {
                 (const char*) "TestCommand", /* 0 */
-                (const char *) "Test1", /* 1�*/
+                (const char *) "Test1", /* 1 */
                 (const char *) "Test2", /* 2 */
                 (const char *) "sudo", /* 3 */
                 (const char *) "Help", /* 4 */
                 (const char *) "unknown" /* 5 */
         };
 
+/* End of global scope symbol and fake definitions section */
 }
 
 class CommandLineInterface: public testing::Test
@@ -114,17 +128,16 @@ protected:
 
     }
 
+    /* TearDown() is invoked immediately after a test finishes. */
     virtual void TearDown()
     {
         /* Restore Test Element from memory */
         memcpy((void *) testList, (void *) testListCpy, sizeof(testList));
         free(testListCpy);
-
     }
 };
 
 /* Tests for the Public part */
-
 
 /* Tests for the Command Register Method */
 TEST_F(CommandLineInterface, RegisterCommand)

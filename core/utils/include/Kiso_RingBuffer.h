@@ -18,7 +18,8 @@
  * @defgroup RINGBUFFER Ring Buffer
  * @{
  *
- * @brief Ring Buffer Interface
+ * @brief
+ *      Ring Buffer Interface
  *
  * @details
  *
@@ -75,6 +76,7 @@ typedef struct RingBuffer_S
  *      inside the descriptor.
  *      MUST BE > 1
  *      NOTE: the actual number of bytes that can be stored is size -1
+ * 
  */
 void RingBuffer_Initialize(RingBuffer_T * ringBuffer, uint8_t * bufferSpace, uint32_t size);
 
@@ -102,6 +104,7 @@ void RingBuffer_Initialize(RingBuffer_T * ringBuffer, uint8_t * bufferSpace, uin
  *
  *  @return
  *      actual number of bytes written
+ * 
  */
 uint32_t RingBuffer_Write(RingBuffer_T * ringBuffer, uint8_t * data, uint32_t length);
 

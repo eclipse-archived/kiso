@@ -11,18 +11,26 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
+
 /**
+ * @ingroup UTILS
+ *
+ * @defgroup RINGBUFFER RingBuffer
+ * @{
+ *
+ * @brief
+ *      Mockup implementation for the Kiso_RingBuffer_th.hh module
+ *
+ * @details
+ *
  * @file
- *
- *  Mockup implementation for the KISO_RingBuffer module.
- *
- * ****************************************************************************/
+ **/
  
-/* header definition ******************************************************** */
+/* Header definition */
 #ifndef KISO_RINGBUFFER_TH_HH_
 #define KISO_RINGBUFFER_TH_HH_
 
-/* include system header files */
+/* Include gtest header file */
 #include "gtest.h"
 
 #define KISO_RINGBUFFER_H

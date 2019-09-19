@@ -11,27 +11,32 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
-/**
- *  @file
- *
- *  Module test specification for the CmdProcessor_cc_unittest module.
- * this test case will test the command processor initialize and enqueue functions
- * The unit test file template follows the Four-Phase test pattern. 
- *
- * ****************************************************************************/
 
-/* include gtest interface */
+/**
+ *
+ * @brief
+ *      Module test specification for the CmdProcessor_unittest.cc module.
+ * 
+ * @detail
+ *      This test case will test the command processor initialize and enqueue functions
+ *      The unit test file template follows the Four-Phase test pattern.
+ * 
+ * @file
+ **/
+
+/* Include gtest interface */
 #include <gtest.h>
 
-FFF_DEFINITION_BLOCK_START /* start of global scope symbol and fake definitions section */
+FFF_DEFINITION_BLOCK_START /* Start of global scope symbol and fake definitions section */
 
-/* setup compile time configuration defines */
+/* Setup compile time configuration defines */
 extern "C"
 {
+/* Module includes */
 #include "Kiso_Utils.h"
 #if KISO_FEATURE_CMDPROCESSOR
 
-/* include faked interfaces */
+/* Include faked interfaces */
 #include "Task_th.hh"
 #include "ICall_th.hh"
 #include "util_th.hh"
@@ -39,8 +44,8 @@ extern "C"
 
 #define CMD_PROCESSOR_TASK_LOOP_CONDITION   false
 
+/* Include module under test */
 #include "CmdProcessor.c"
-
 }
 
 /* Creating a test callback fake */
@@ -79,7 +84,7 @@ xdc_Bool TestMailboxPend(Mailbox_Object * obj, Ptr msg, xdc_UInt32 timeout)
 }
 
 
-FFF_DEFINITION_BLOCK_END /* end of global scope symbol and fake definitions section */
+FFF_DEFINITION_BLOCK_END /* End of global scope symbol and fake definitions section */
 
 class CmdProcessor: public testing::Test
 {
@@ -126,12 +131,14 @@ protected:
 
     }
 
+    /* TearDown() is invoked immediately after a test finishes. */
     virtual void TearDown()
     {
-
-        ; /* nothing to do if clean up is not required */
+        ; /* Nothing to do if clean up is not required */
     }
 };
+
+/* Specify test cases ******************************************************* */
  
 TEST_F(CmdProcessor,InitializeSuccess)
 {
@@ -409,7 +416,6 @@ TEST_F(CmdProcessor, EnqueueSuccess)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-
     Retcode_T  rc = RETCODE_FAILURE;
 
     void * param1 = NULL;
@@ -434,7 +440,6 @@ TEST_F(CmdProcessor, EnqueueInputFailure_1)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-
     Retcode_T  rc = RETCODE_FAILURE;
 
     void * param1 = NULL;
@@ -459,7 +464,6 @@ TEST_F(CmdProcessor, EnqueueInputFailure_2)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-
     Retcode_T  rc = RETCODE_FAILURE;
 
     void * param1 = NULL;
@@ -483,7 +487,6 @@ TEST_F(CmdProcessor, EnqueueQueueNull)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-
     Retcode_T  rc = RETCODE_FAILURE;
 
     void * param1 = NULL;
@@ -511,7 +514,6 @@ TEST_F(CmdProcessor, EnqueueFailure)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-
     Retcode_T  rc = RETCODE_FAILURE;
 
     void * param1 = NULL;
@@ -537,7 +539,6 @@ TEST_F(CmdProcessor, EnqueueFromIsrSuccess)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-
     Retcode_T  rc = RETCODE_FAILURE;
 
     void * param1 = NULL;
@@ -562,7 +563,6 @@ TEST_F(CmdProcessor, EnqueueFromIsrInputFailure_1)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-
     Retcode_T  rc = RETCODE_FAILURE;
 
     void * param1 = NULL;
@@ -588,7 +588,6 @@ TEST_F(CmdProcessor, EnqueueFromIsrInputFailure_2)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-
     Retcode_T  rc = RETCODE_FAILURE;
 
     void * param1 = NULL;
@@ -612,7 +611,6 @@ TEST_F(CmdProcessor, EnqueueFromIsrQueueNull)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-
     Retcode_T  rc = RETCODE_FAILURE;
 
     void * param1 = NULL;
@@ -640,7 +638,6 @@ TEST_F(CmdProcessor, EnqueueFromIsrFailure)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-
     Retcode_T  rc = RETCODE_FAILURE;
 
     void * param1 = NULL;
@@ -668,7 +665,6 @@ TEST_F(CmdProcessor, DequeueAndExecute)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-
     Retcode_T  rc = RETCODE_FAILURE;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
@@ -689,7 +685,6 @@ TEST_F(CmdProcessor, DequeueAndExecuteInputFail_1)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-
     Retcode_T  rc = RETCODE_FAILURE;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
@@ -710,7 +705,6 @@ TEST_F(CmdProcessor, DequeueAndExecuteInputFail_2)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-
     Retcode_T  rc = RETCODE_FAILURE;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
@@ -735,7 +729,6 @@ TEST_F(CmdProcessor, DequeueAndExecuteDequeueFailure)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-
     Retcode_T  rc = RETCODE_FAILURE;
 
     ti_sysbios_knl_Mailbox_pend__E_fake.return_val = FALSE;
@@ -756,9 +749,7 @@ TEST_F(CmdProcessor, DequeueAndExecuteExecutionFailure)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-
     Retcode_T  rc = RETCODE_FAILURE;
-
     cmd.func = NULL;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */

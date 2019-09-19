@@ -55,4 +55,5 @@ if(${ENABLE_COVERAGE})
       GENHTML_ARGS --branch-coverage
    )
    add_dependencies(coverage cellular_cov)
-endif()
+endif(${ENABLE_COVERAGE})
+

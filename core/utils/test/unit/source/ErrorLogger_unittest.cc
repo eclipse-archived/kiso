@@ -11,34 +11,40 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
-/**
- * @file
- *
- *  Module test specification for the ErrorLogger module.
- *
- *  The unit test file template follows the Four-Phase test pattern. ...
- *
- * ****************************************************************************/
 
-/* include gtest interface */
+/**
+ *
+ * @breif
+ *      Module test specification for the ErrorLogger_unittest.cc module.
+ *
+ * @detail
+ *      The unit test file template follows the Four-Phase test pattern.
+ * 
+ * @file
+ **/
+
+/* Include gtest interface */
 #include <gtest.h>
 
+/* Start of global scope symbol and fake definitions section */
 extern "C"
 {
-
-/* setup compile time configuration defines */
+/* Setup compile time configuration defines */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_ERRORLOGGER
 
 #if KISO_FEATURE_ERRORLOGGER
 
-/* include faked interfaces */
+/* Include faked interfaces */
 #include "Kiso_Retcode_th.hh"
 #include "FreeRTOS_th.hh"
 #include "task_th.hh"
 
+/* Include module under test */
 #include "ErrorLogger.c"
+
+/* End of global scope symbol and fake definitions section */
 }
 
 /* Retcode function locally defined */
@@ -58,11 +64,10 @@ Retcode_T ErrorLogger_Test_Write(ErrorLogger_StorageMedium_T storageSelect, void
 Retcode_T ErrorLogger_Test_Read(ErrorLogger_StorageMedium_T storageSelect, void* value, uint32_t StartAddr, uint32_t numOfBytes);
 Retcode_T ErrorLogger_Test_Erase(ErrorLogger_StorageMedium_T storageSelect, void* value, uint32_t StartAddr, uint32_t numOfBytes);
 
-/* global variables ********************************************************* */
-
-
+/* Global variables ********************************************************* */
 
 static uint8_t testFlag = 0; //dummy variable used for masking the return type of function.
+
 Retcode_T ErrorLogger_Test_Read(ErrorLogger_StorageMedium_T storageSelect, void* value, uint32_t StartAddr, uint32_t numOfBytes)
 {
     KISO_UNUSED(storageSelect);
@@ -132,9 +137,11 @@ class KISO_ErrorLogger: public testing::Test
     /* TearDown() is invoked immediately after a test finishes. */
     virtual void TearDown()
     {
-        /* nothing to do if clean up is not required */
+        /* Nothing to do if clean up is not required */
     }
 };
+
+/* Specify test cases ******************************************************* */
 
 /**
  *  @testcase test case to check the ErrorLogger Init function when nvm fails.
@@ -260,8 +267,10 @@ TEST_F(KISO_ErrorLogger,ErrorLogger_LogError_FlushFail)
     /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
     testFlag = 1;
+
     /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_LogError( (Retcode_T) 250);
+
     /* Verify : Compare the expected with actual    */
     EXPECT_EQ(RETCODE_FAILURE,Retcode);
     EXPECT_EQ(UINT32_C(0),ErrorSeqNo);
@@ -276,8 +285,10 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetLastErrorLog_NULLPTR)
 {
     /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
+
     /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_GetLastErrorLog(NULL);
+
     /* Verify : Compare the expected with actual    */
     EXPECT_EQ(Retcode, RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T )RETCODE_INVALID_PARAM));
 }
@@ -294,6 +305,7 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetLastErrorLog_NoError)
 
     /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_GetLastErrorLog(&LogEntry);
+
     /* Verify : Compare the expected with actual    */
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T )RETCODE_OUT_OF_RESOURCES),Retcode);
 }
@@ -308,6 +320,7 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetLastErrorLog_OneError)
     Retcode_T Retcode;
     ErrorLogger_LogEntry_T LogEntry;
     ErrorLogger_LogError((Retcode_T) 250);
+
     /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_GetLastErrorLog(&LogEntry);
 
@@ -344,11 +357,12 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_HasError_WithoutErrors)
 {
     /* Declare and initialize local variable required only for this test case  */
     Retcode_T retcode;
+
     /* Exercise: call relevant production code Interface with appropriate test inputs  */
     retcode = ErrorLogger_HasError(332);
+
     /* Verify : Compare the expected with actual    */
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T )RETCODE_FAILURE),retcode );
-
 }
 
 /**
@@ -375,6 +389,7 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_HasError_WithAvailableErrors)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_GetTotalErrors)
 {
+    /* Verify : Compare the expected with actual    */
     EXPECT_EQ(ErrorSeqNo,ErrorLogger_GetTotalErrors());
 }
 
@@ -390,8 +405,10 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetCurrentErrors_LessMaxEntries)
     {
        (void)ErrorLogger_LogError((Retcode_T) 500+i);
     }
+
     /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Count = ErrorLogger_GetCurrentErrors();
+
     /* Verify : Compare the expected with actual    */
     EXPECT_EQ(MAXENTRIES/2,Count);
 }
@@ -441,7 +458,6 @@ TEST_F(KISO_ErrorLogger,ErrorLogger_GetErrorAt)
     Retcode = ErrorLogger_GetErrorAt(MAXENTRIES+2, &LogEntry);
 
         EXPECT_EQ(RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T )RETCODE_INVALID_PARAM),Retcode);
-
 }
 
 /**
@@ -474,6 +490,7 @@ TEST_F(KISO_ErrorLogger,ErrorLogger_ClearAllErrorLogs)
 
     /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_ClearAllErrorLogs();
+
     /* Verify : Compare the expected with actual    */
     EXPECT_EQ(Retcode,RETCODE_SUCCESS);
     EXPECT_EQ(NextIndexToWriteOn,(uint32_t)0);
@@ -496,6 +513,7 @@ TEST_F(KISO_ErrorLogger,ErrorLogger_ClearAllErrorLogsFail)
 
     /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_ClearAllErrorLogs();
+    
     /* Verify : Compare the expected with actual    */
     EXPECT_EQ(Retcode,RETCODE_FAILURE);
     EXPECT_EQ(NextIndexToWriteOn,(uint32_t)0);

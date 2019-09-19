@@ -53,7 +53,7 @@
 static Assert_Callback_T assertCallback = NULL; /*< Variable to store the callback function pointer */
 
 /* Static assert to test the compiler capabilities */
-static_assert((1 != 0), "Testing static assert")
+static_assert((1 != 0), "Testing static assert");
 
 /* global functions ********************************************************* */
 

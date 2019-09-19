@@ -12,19 +12,35 @@
 *
 ********************************************************************************/
 
+/**
+ * @ingroup UTILS
+ *
+ * @defgroup PIPEANDFILTER PipeAndFilter
+ * @{
+ *
+ * @brief
+ *      Mockup implementation for the Kiso_PipeAndFilter_th.hh module
+ *
+ * @details
+ *
+ * @file
+ **/
+
+/* Header definition */
 #ifndef TEST_UNIT_INCLUDE_KISO_PIPEANDFILTER_TH_HH_
 #define TEST_UNIT_INCLUDE_KISO_PIPEANDFILTER_TH_HH_
 
+/* Include gtest header file */
 #include "gtest.h"
 
-/* header definition ******************************************************** */
+/* Include Kiso_Retcode header file */
 #include "Kiso_Retcode.h"
 
-/* wrap the real interface header */
+/* Wrap Kiso_PipeAndFilter interface header */
 #include "Kiso_PipeAndFilter.h"
 
 /**
- * mock-ups for the provided interfaces
+ * Mock-ups for the provided interfaces
  * Deprecated functions will be removed as part of PFM-659
  * Deprecated since vXXX (\todo: replace XXX with next version)
  */

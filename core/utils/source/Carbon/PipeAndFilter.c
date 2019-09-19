@@ -12,15 +12,33 @@
 *
 ********************************************************************************/
 
+/**
+ *
+ * @brief
+ * 		Pipe and filter Interface Implementation
+ *
+ * @details
+ * 		This source file implements following features:
+ * 		- RunFilter()
+ * 		- PipeAndFilter_CreatePipe()
+ * 		- PipeAndFilter_CreateFilter()
+ * 		- PipeAndFilter_FillPipe()
+ * 		- PipeAndFilter_FillPipeFromISR()
+ * 
+ * @file
+ **/
 
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_PIPEANDFILTER
 
+/* Include Kiso_PipeAndFilter interface header */
 #include "Kiso_PipeAndFilter.h"
 
 #if KISO_FEATURE_PIPEANDFILTER
 
+/* FreeRTOS header files */
 #include "FreeRTOS.h"
 #include "message_buffer.h"
 #include "task.h"
@@ -29,6 +47,7 @@
 #ifndef RUN_FILTER_ALWAYS
 #define RUN_FILTER_ALWAYS 1
 #endif
+
 /**
  * @brief
  * 		function that will be used as parameter for a freeRTOS task.

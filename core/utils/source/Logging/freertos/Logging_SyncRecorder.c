@@ -13,11 +13,14 @@
 ********************************************************************************/
 
 /**
+ *
+ * @brief
+ *      Implementation of compact synchronous log record.
+ * 
+ * @details
+ * 
  * @file
- *
- * @brief Implementation of compact synchronous log record.
- *
- */
+ **/
 
 /* Include utils to have access to the defined module and error IDs */
 #include "Kiso_Utils.h"

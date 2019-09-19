@@ -12,19 +12,34 @@
 *
 ********************************************************************************/
 
-/* own header files */
+/**
+ *
+ * @brief
+ *      XProtocol Interface Implementation
+ *
+ * @details
+ *      This source file implements following features:
+ *      - XProtocol_Init()
+ *      - XProtocol_EncodeFrame()
+ *      - XProtocol_GetPayloadLength()
+ *      - XProtocol_DecodeFrame()
+ *      - XProtocol_IsCompleteFrame()
+ * 
+ * @file
+ **/
+
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_XPROTOCOL
 
+/* Include Kiso_XProtocol interface header */
 #include "Kiso_XProtocol.h"
 
 #if KISO_FEATURE_XPROTOCOL
 
-/* system header files */
+/* KISO interface header files */
 #include "Kiso_Retcode.h"
-
-/* additional interface header files */
 #include "Kiso_CRC.h"
 
 #define XPROTOCOL_CRC_CCITT_POLY   0x1021U /**< Polynom for function crc16 */
@@ -34,7 +49,6 @@
 #define XPROTOCOL_ESCAPED_SD       0xDC    /**< Escaped SD */
 #define XPROTOCOL_ESCAPED_ED       0xDE    /**< Escaped ED */
 #define XPROTOCOL_ESCAPED_ESC      0xDD    /**< Escaped ESC */
-
 
 static Retcode_T Escape_SpecialCharacters(uint8_t *frame, uint32_t *indicator, uint32_t maxFrameLength)
 {
@@ -77,7 +91,7 @@ static void UnEscape_SpecialCharacters(const uint8_t *frame, uint32_t indicator,
 {
     if (XPROTOCOL_ESC == frame[indicator])
     {
-        /* check the byte after escape letter */
+        /* Check the byte after escape letter */
         if (XPROTOCOL_ESCAPED_SD == frame[indicator + 1])
         {
             data[counter] = XPROTOCOL_SD;
@@ -124,8 +138,8 @@ Retcode_T XProtocol_EncodeFrame(const uint8_t *data, uint32_t dataLength,
     /** \todo: Check for dataLength >= 0xFFFF because of the downcast */
     (void) CRC_16(XPROTOCOL_CRC_CCITT_POLY, &checksum, data, (uint16_t) dataLength);
 
-    /* create encoded frame byte per byte */
-    /* set start delimiter */
+    /* Create encoded frame byte per byte */
+    /* Set start delimiter */
     if (maxFrameLength > indicator)
     {
         frame[indicator] = XPROTOCOL_SD;
@@ -136,7 +150,7 @@ Retcode_T XProtocol_EncodeFrame(const uint8_t *data, uint32_t dataLength,
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_XPROTOCOL_FRAME_BUFFER_TOO_SMALL);
     }
 
-    /* set 1st byte of checksum (Network Byte Order) */
+    /* Set 1st byte of checksum (Network Byte Order) */
     if (maxFrameLength > indicator)
     {
         frame[indicator] = (uint8_t)(checksum >> 8);
@@ -146,14 +160,14 @@ Retcode_T XProtocol_EncodeFrame(const uint8_t *data, uint32_t dataLength,
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_XPROTOCOL_FRAME_BUFFER_TOO_SMALL);
     }
 
-    /* escape special character of 1st byte of checksum if exists */
+    /* Escape special character of 1st byte of checksum if exists */
     retcode = Escape_SpecialCharacters(frame, &indicator, maxFrameLength);
     if (RETCODE_OK != retcode)
     {
         return retcode;
     }
 
-    /* set 2nd byte of checksum (Network Byte Order) */
+    /* Set 2nd byte of checksum (Network Byte Order) */
     if (maxFrameLength > indicator)
     {
         frame[indicator] = (uint8_t)(checksum & 0xFF);
@@ -163,7 +177,7 @@ Retcode_T XProtocol_EncodeFrame(const uint8_t *data, uint32_t dataLength,
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_XPROTOCOL_FRAME_BUFFER_TOO_SMALL);
     }
 
-    /* escape special character of 2nd byte of checksum if exists */
+    /* Escape special character of 2nd byte of checksum if exists */
     retcode = Escape_SpecialCharacters(frame, &indicator, maxFrameLength);
     if (RETCODE_OK != retcode)
     {
@@ -180,7 +194,7 @@ Retcode_T XProtocol_EncodeFrame(const uint8_t *data, uint32_t dataLength,
         {
             return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_XPROTOCOL_FRAME_BUFFER_TOO_SMALL);
         }
-        /* escape special character of payload byte if exists */
+        /* Escape special character of payload byte if exists */
         retcode = Escape_SpecialCharacters(frame, &indicator, maxFrameLength);
         if (RETCODE_OK != retcode)
         {
@@ -252,23 +266,23 @@ Retcode_T XProtocol_DecodeFrame(const uint8_t *frame, uint32_t frameLength,
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_XPROTOCOL_FRAME_BUFFER_TOO_SMALL);
     }
 
-    /* check for missing start delimiter */
+    /* Check for missing start delimiter */
     if (XPROTOCOL_SD != frame[0])
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_XPROTOCOL_START_DELIMITER_MISSING);
     }
 
-    /* check for missing end delimiter */
+    /* Check for missing end delimiter */
     if (XPROTOCOL_ED != frame[frameLength - 1])
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_XPROTOCOL_END_DELIMITER_MISSING);
     }
 
-    /* number of checksum bytes */
+    /* Number of checksum bytes */
     uint32_t checksumbytes = UINT32_C(2);
 
     uint32_t counter = UINT32_C(0);
-    /* separate checksum bytes to a 2bytes buffer (Network Byte Order) */
+    /* Separate checksum bytes to a 2bytes buffer (Network Byte Order) */
     for (uint32_t x = UINT32_C(1); x <= checksumbytes; x++)
     {
         /* counter < 2 is always true */
@@ -289,7 +303,7 @@ Retcode_T XProtocol_DecodeFrame(const uint8_t *frame, uint32_t frameLength,
     }
     counter = UINT32_C(0);
 
-    /* decode the frame's payload */
+    /* Decode the frame's payload */
     for (uint32_t x = checksumbytes + 1; x < frameLength - 1; x++)
     {
         if (maxDataLength <= counter)
@@ -311,7 +325,7 @@ Retcode_T XProtocol_DecodeFrame(const uint8_t *frame, uint32_t frameLength,
         }
     }
 
-    /* retrieve frame's checksum */
+    /* Retrieve frame's checksum */
     uint16_t cs = ((uint16_t) chksmbuff[0] << 8) | chksmbuff[1];
 
     /* Calculate payload's checksum based on CRC-CCITT (XModem)
@@ -321,7 +335,7 @@ Retcode_T XProtocol_DecodeFrame(const uint8_t *frame, uint32_t frameLength,
      */
     (void) CRC_16(XPROTOCOL_CRC_CCITT_POLY, &checksum, data, (uint16_t)(counter));
 
-    /* check if calculated checksum is the same with retrieved (Network Byte Order) */
+    /* Check if calculated checksum is the same with retrieved (Network Byte Order) */
     if (checksum != cs)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_XPROTOCOL_INTEGRITY_FAILED);

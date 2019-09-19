@@ -13,18 +13,20 @@
 ********************************************************************************/
 
 /**
+ *
+ * @brief
+ *      Implementation of compact asynchronous log record.
+ *
+ * @details
+ *      It supports multibyte format messages and is thread safe.
+ *      There is no ISR API extension, so it should not be used from interrupts.
+ *      A message with a size of LOG_BUFFER_SIZE is first allocated on the caller stack
+ *      and then copied to a message queue.
+ *      The message is read out by log record task and is sent over dedicated appender asynchronously,
+ *      so the caller task is not blocked.
+ * 
  * @file
- *
- * @brief Implementation of compact asynchronous log record.
- *
- * @detail It supports multibyte format messages and is thread safe.
- *  There is no ISR API extension, so it should not be used from interrupts.
- *  A message with a size of LOG_BUFFER_SIZE is first allocated on the caller stack
- *  and then copied to a message queue.
- *  The message is read out by log record task and is sent over dedicated appender asynchronously,
- *  so the caller task is not blocked.
- *
- */
+ **/
 
 /* Include utils to have access to the defined module and error IDs */
 #include "Kiso_Utils.h"
@@ -166,7 +168,6 @@ static Retcode_T AsyncRecorder_Write(void *self, LogLevel_T level, uint8_t packa
     int32_t size = snprintf(buffer, sizeof(buffer), LOG_LINE_FMT,
             (uint32_t) xTaskGetTickCount(), LOG_LEVEL_STR[level], (uint32_t) package,
             configMAX_TASK_NAME_LEN, pcTaskGetTaskName(NULL), file, (uint32_t) line);
-
     /* Parse and add the message sent via the log function */
     if (size > 0 && (uint32_t) size < sizeof(buffer))
     {

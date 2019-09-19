@@ -18,50 +18,54 @@
  * @defgroup UARTTRANSCEIVER UARTTransceiver
  * @{
  *
- * @brief Advanced API functions for sending and reveiving via UART and LEUART
+ * @brief
+ *      Advanced API functions for sending and reveiving via UART and LEUART
  *
- * @details The UARTTransceiver encapsulates the handling of buffers
- *          and the control flow.
+ * @details
+ *      The UARTTransceiver encapsulates the handling of buffers
+ *      and the control flow.
  *
- *          The typical use of the UARTTransceiver starts with initializing it.
+ *      The typical use of the UARTTransceiver starts with initializing it.
  *
- *          The transceiver supports two operation modes: synchronous mode and
- *          asynchronous mode.The transceiver is started in the synchronous mode
- *          by calling the function UARTTransceiver_Start().
- *          In order to operate the transceiver in the asynchronous mode, the function
- *          UARTTransceiver_StartInAsyncMode() should be used instead.
- *          After the start, the transceiver starts to receive
- *          bytes, in the ISR context, and store them internally into a ring buffer.
- *          While receiving the transceiver applies the end-of-frame check function to
- *          every received byte. If it returns true, then the transceiver will perform
- *          one of the following action depending on its operation mode:
- *              1. In the asynchronous mode, the registered callback is invoked to notify
- *              the upper-layer. The upper-layer will fetch the data from the transceiver's
- *              buffer using the function UARTTransceiver_ReadData().
- *              2. In the synchronous mode, the upper-layer is expected to call
- *              UARTTransceiver_ReadData(). The call is blocking. When the end-of-frame check
- *              function returns true, the semaphore is released such that the call
- *              of UARTTransceiver_ReadData() returns, where
- *              the frame is copied into the buffer which was passed as a parameter.
+ *      The transceiver supports two operation modes: synchronous mode and
+ *      asynchronous mode.The transceiver is started in the synchronous mode
+ *      by calling the function UARTTransceiver_Start().
+ *      In order to operate the transceiver in the asynchronous mode, the function
+ *      UARTTransceiver_StartInAsyncMode() should be used instead.
+ *      After the start, the transceiver starts to receive
+ *      bytes, in the ISR context, and store them internally into a ring buffer.
+ *      While receiving the transceiver applies the end-of-frame check function to
+ *      every received byte. If it returns true, then the transceiver will perform
+ *      one of the following action depending on its operation mode:
+ *           1. In the asynchronous mode, the registered callback is invoked to notify
+ *           the upper-layer. The upper-layer will fetch the data from the transceiver's
+ *           buffer using the function UARTTransceiver_ReadData().
+ *           2. In the synchronous mode, the upper-layer is expected to call
+ *           UARTTransceiver_ReadData(). The call is blocking. When the end-of-frame check
+ *           function returns true, the semaphore is released such that the call
+ *           of UARTTransceiver_ReadData() returns, where
+ *           the frame is copied into the buffer which was passed as a parameter.
  *
- *          The function UARTTransceiver_WriteData() sends data via the under-laying UART
- *          or LEUART. In the asynchronous mode, the write operation triggers the
- *          sending and returns. A callback follows to inform the upper-layer about
- *          the success or failure of the operation.
- *          In the synchronous mode, the write operation blocks until all bytes are sent. No
- *          callback will follow.
+ *      The function UARTTransceiver_WriteData() sends data via the under-laying UART
+ *      or LEUART. In the asynchronous mode, the write operation triggers the
+ *      sending and returns. A callback follows to inform the upper-layer about
+ *      the success or failure of the operation.
+ *      In the synchronous mode, the write operation blocks until all bytes are sent. No
+ *      callback will follow.
  *
- *          UARTTransceiver provides also the functions UARTTransceiver_Suspend(),
- *          UARTTransceiver_Resume(), UARTTransceiver_Stop() to control the activity
- *          of the transceiver, in particular the receiving activity in the background.
+ *      UARTTransceiver provides also the functions UARTTransceiver_Suspend(),
+ *      UARTTransceiver_Resume(), UARTTransceiver_Stop() to control the activity
+ *      of the transceiver, in particular the receiving activity in the background.
  *
- * @note    UARTTransceiver is a passive component without an own task. It is driven
- *          by the caller task and the interrupts coming form UART or LEUART.
+ * @note
+ *      UARTTransceiver is a passive component without an own task. It is driven
+ *      by the caller task and the interrupts coming form UART or LEUART.
  *
- * @note    UARTTransceiver maintains its context in a struct which makes it ready
- *          for multiple-instance use. This means, multiple UARTTransceiver
- *          instances may co-exist in the same application. However, they must operate on
- *          different UART or LEUART ports.
+ * @note
+ *      UARTTransceiver maintains its context in a struct which makes it ready
+ *      for multiple-instance use. This means, multiple UARTTransceiver
+ *      instances may co-exist in the same application. However, they must operate on
+ *      different UART or LEUART ports.
  *
  * @file
  */
@@ -73,6 +77,7 @@
 
 #if KISO_FEATURE_UARTTRANSCEIVER
 
+/* Include KISO header files */
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
 #include "Kiso_HAL.h"
@@ -168,32 +173,38 @@ struct _UARTTransceiver_S
 typedef struct _UARTTransceiver_S UARTTransceiver_T;
 
 /**
- * @brief Initializes the transceiver for the use with the passed UART or
- * LEUART handle
+ * @brief
+ *      Initializes the transceiver for the use with the passed UART or
+ *      LEUART handle
  *
  * @param[in] transceiver
- * a pointer to the transceiver context structure to be initialized
+ *      A pointer to the transceiver context structure to be initialized
  *
  * @param[in] handle
- * the handle of the UART or LEUART to be used by the transceiver. The handle
- * must be initialized before passing it here.
+ *      The handle of the UART or LEUART to be used by the transceiver. The handle
+ *      must be initialized before passing it here.
  *
  * @param[in] mode
- * The mode in which the transceiver will operate, i.e. synchronous or
- * asynchronous.
+ *      The mode in which the transceiver will operate, i.e. synchronous or
+ *      asynchronous.
  *
  * @ rawRxBuffer
- * The buffer which will be used by the transceiver internally to save
- * the received bytes. It must not be NULL.
+ *      The buffer which will be used by the transceiver internally to save
+ *      the received bytes. It must not be NULL.
  *
  * @param[in] rawRxBufferSize
- * The size of the rawRxBuffer. It must be larger than zero.
+ *      The size of the rawRxBuffer. It must be larger than zero.
  *
- * @retval #RETCODE_OK                       if successfully initialized
- * @retval #RETCODE_INVALID_PARAM            if any of the parameter is NULL
- * @retval #RETCODE_SEMAPHORE_ERROR          if the semaphores are not created (see #UARTTransceiver_T.TxSemaphore
- *                                           and #UARTTransceiver_T.RxSemaphore)
- * @retval #RETCODE_DOPPLE_INITIALIZATION    if you are trying to initialized the transceiver again
+ * @retval #RETCODE_OK
+ *      If successfully initialized
+ * @retval #RETCODE_INVALID_PARAM
+ *      If any of the parameter is NULL
+ * @retval #RETCODE_SEMAPHORE_ERROR
+ *      If the semaphores are not created (see #UARTTransceiver_T.TxSemaphore
+ *      and #UARTTransceiver_T.RxSemaphore)
+ * @retval #RETCODE_DOPPLE_INITIALIZATION
+ *      If you are trying to initialized the transceiver again
+ * 
  */
 Retcode_T UARTTransceiver_Initialize(
         UARTTransceiver_T *transceiver,
@@ -202,61 +213,77 @@ Retcode_T UARTTransceiver_Initialize(
 );
 
 /**
- * @brief De-initializes the transceiver.
+ * @brief
+ *      De-initializes the transceiver.
  *
- * The transceiver must not be used after calling this function.
+ * @details
+ *      The transceiver must not be used after calling this function.
  *
  * @param[in] transceiver
- * a pointer to the transceiver context structure to be de-initialized
+ *      A pointer to the transceiver context structure to be de-initialized
  *
- * @retval #RETCODE_OK if successfully deinitialize
- * @retval #RETCODE_INVALID_PARAM if the transceiver pointer parameter is NULL
+ * @retval #RETCODE_OK
+ *      If successfully deinitialize
+ * @retval #RETCODE_INVALID_PARAM
+ *      If the transceiver pointer parameter is NULL
+ * 
  */
 Retcode_T UARTTransceiver_Deinitialize(UARTTransceiver_T *transceiver);
 
 /**
- * @brief It activates the transceiver to start receiving and sending
- * in the synchronous operation mode.
+ * @brief
+ *      It activates the transceiver to start receiving and sending
+ *      in the synchronous operation mode.
  *
  *
  * @param[in] transceiver
- * a pointer to the transceiver to be started.
+ *      A pointer to the transceiver to be started.
  *
  * @param[in] frameEndCheckFunc
- * A function pointer which is used by the transceiver to detect the
- * end of the frame in order to invoke the callback.
+ *      A function pointer which is used by the transceiver to detect the
+ *      end of the frame in order to invoke the callback.
  *
- * @retval #RETCODE_OK                  if successfully started
- * @retval #RETCODE_INVALID_PARAM       if transceiver pointer parameter is NULL
- * @retval #RETCODE_INCONSITENT_STATE   if the transceiver is not in an initialized
- *                                      state (see #UARTTransceiver_State_E)
+ * @retval #RETCODE_OK
+ *      If successfully started
+ * @retval #RETCODE_INVALID_PARAM
+ *      If transceiver pointer parameter is NULL
+ * @retval #RETCODE_INCONSITENT_STATE
+ *       If the transceiver is not in an initialized
+ *       state (see #UARTTransceiver_State_E)
+ * 
  */
 Retcode_T UARTTransceiver_Start(
         UARTTransceiver_T *transceiver,
         UARTTransceiver_EndofFrameCheckFunc_T frameEndCheckFunc);
 
 /**
- * @brief It activates the transceiver to start receiving and sending
- * in the asynchronous operation mode.
+ * @brief
+ *      It activates the transceiver to start receiving and sending
+ *      in the asynchronous operation mode.
  *
- * @note Beside the operation mode, this function does the same as
- * the function UARTTransceiver_Start().
+ * @note
+ *      Beside the operation mode, this function does the same as
+ *      the function UARTTransceiver_Start().
  *
  * @param[in] transceiver
- * a pointer to the transceiver to be started.
+ *      A pointer to the transceiver to be started.
  *
  * @param[in] frameEndCheckFunc
- * A function pointer which is used by the transceiver to detect the
- * end of the frame in order to invoke the callback.
+ *      A function pointer which is used by the transceiver to detect the
+ *      end of the frame in order to invoke the callback.
  *
  * @param[in] callback
- * A callback function which will be invoked on RX and TX events, e.g.
- * errors or operation completeness in the asynchronous mode.
+ *      A callback function which will be invoked on RX and TX events, e.g.
+ *      errors or operation completeness in the asynchronous mode.
  *
- * @retval #RETCODE_OK                  if successfully started
- * @retval #RETCODE_INVALID_PARAM       if transceiver pointer parameter is NULL
- * @retval #RETCODE_INCONSITENT_STATE   if the transceiver is not in an initialized
- *                                      state (see #UARTTransceiver_State_E)
+ * @retval #RETCODE_OK
+ *      If successfully started
+ * @retval #RETCODE_INVALID_PARAM
+ *      If transceiver pointer parameter is NULL
+ * @retval #RETCODE_INCONSITENT_STATE
+ *      If the transceiver is not in an initialized
+ *      state (see #UARTTransceiver_State_E)
+ * 
  */
 Retcode_T UARTTransceiver_StartInAsyncMode(
         UARTTransceiver_T *transceiver,
@@ -264,130 +291,158 @@ Retcode_T UARTTransceiver_StartInAsyncMode(
         UARTransceiver_Callback_T callback);
 
 /**
- * @brief It suspends the transceiver.
+ * @brief
+ *      It suspends the transceiver.
  *
- * @details The transceiver must be started when calling this function.
- *          When the transceiver
- *          is suspended read or write operations are not permitted.
+ * @details
+ *      The transceiver must be started when calling this function.
+ *      When the transceiver is suspended read or write operations are not permitted.
  *
  * @param[in] transceiver
- * a pointer to the transceiver to be suspended.
+ *      A pointer to the transceiver to be suspended.
  *
- * @retval #RETCODE_OK                  if successfully started
- * @retval #RETCODE_INVALID_PARAM       if transceiver pointer parameter is NULL
- * @retval #RETCODE_INCONSITENT_STATE   if the transceiver is not in an active
- *                                      state (see #UARTTransceiver_State_E)
+ * @retval #RETCODE_OK
+ *      If successfully started
+ * @retval #RETCODE_INVALID_PARAM
+ *      If transceiver pointer parameter is NULL
+ * @retval #RETCODE_INCONSITENT_STATE
+ *      If the transceiver is not in an active
+ *      state (see #UARTTransceiver_State_E)
+ * 
  */
 Retcode_T UARTTransceiver_Suspend(UARTTransceiver_T *transceiver);
 
 /**
- * @brief It resumes the transceiver after it has been suspended.
+ * @brief
+ *      It resumes the transceiver after it has been suspended.
  *
- * @details The transceiver must be suspended when calling this function.
+ * @details
+ *      The transceiver must be suspended when calling this function.
  *
  * @param[in] transceiver
- * a pointer to the transceiver to be resumed.
+ *      A pointer to the transceiver to be resumed.
  *
- * @retval #RETCODE_OK                  if successfully started
- * @retval #RETCODE_INVALID_PARAM       if transceiver pointer parameter is NULL
- * @retval #RETCODE_INCONSITENT_STATE   if the transceiver is not in an suspended
- *                                      state (see #UARTTransceiver_State_E)
+ * @retval #RETCODE_OK
+ *      If successfully started
+ * @retval #RETCODE_INVALID_PARAM
+ *      If transceiver pointer parameter is NULL
+ * @retval #RETCODE_INCONSITENT_STATE
+ *      If the transceiver is not in an suspended
+ *      state (see #UARTTransceiver_State_E)
+ * 
  */
 Retcode_T UARTTransceiver_Resume(UARTTransceiver_T *transceiver);
 
 /**
- * @brief It stops the transceiver.
+ * @brief
+ *      It stops the transceiver.
  *
- * The transceiver must be started when calling this function.
- * When the transceiver
- * is stopped, read or write operations are not permitted. Resuming
- * the transceiver after stopping it is not possible. It must be
- * started using the UARTTransceiver_Start() function.
+ *      The transceiver must be started when calling this function.
+ *      When the transceiver
+ *      is stopped, read or write operations are not permitted. Resuming
+ *      the transceiver after stopping it is not possible. It must be
+ *      started using the UARTTransceiver_Start() function.
  *
  * @param[in] transceiver
- * a pointer to the transceiver to be suspended.
+ *      A pointer to the transceiver to be suspended.
  *
- * @retval #RETCODE_OK                  if successfully started
- * @retval #RETCODE_INVALID_PARAM       if transceiver pointer parameter is NULL
- * @retval #RETCODE_INCONSITENT_STATE   if the transceiver is not in an active or
- *                                      already suspended state (see #UARTTransceiver_State_E)
+ * @retval #RETCODE_OK
+ *      If successfully started
+ * @retval #RETCODE_INVALID_PARAM
+ *      If transceiver pointer parameter is NULL
+ * @retval #RETCODE_INCONSITENT_STATE
+ *      If the transceiver is not in an active or
+ *      already suspended state (see #UARTTransceiver_State_E)
+ * 
  */
 Retcode_T UARTTransceiver_Stop(UARTTransceiver_T *transceiver);
 
 /**
- * @brief It reads the data received by the transceiver.
+ * @brief
+ *      It reads the data received by the transceiver.
  *
- * The transceiver must be started and not suspended when calling
- * this function.
+ *      The transceiver must be started and not suspended when calling
+ *      this function.
  *
- * In the synchronous mode, this call will return only after the End-of-Frame
- * check function which is used by the transceiver returns true. This holds even
- * if the number of the received bytes exceeds the given buffer size.
- * In the asynchronous mode, the function
- * copies the bytes which have been already received an returns immediately.
- * In both cases, the number bytes saved to the given buffer never exceeds
- * the given buffer size. If more bytes are available in the transceiver internal
- * buffer, they will reside there.
+ *      In the synchronous mode, this call will return only after the End-of-Frame
+ *      check function which is used by the transceiver returns true. This holds even
+ *      if the number of the received bytes exceeds the given buffer size.
+ *      In the asynchronous mode, the function
+ *      copies the bytes which have been already received an returns immediately.
+ *      In both cases, the number bytes saved to the given buffer never exceeds
+ *      the given buffer size. If more bytes are available in the transceiver internal
+ *      buffer, they will reside there.
  *
  *
  * @param[in] transceiver
- * a pointer to the transceiver
+ *      A pointer to the transceiver
  *
  * @param[in] buffer
- * The buffer which the bytes are copied to.
+ *      The buffer which the bytes are copied to.
  *
  * @param[in] size
- * The buffer size. Independent of the number of the bytes which the
- * transceiver has received, no more bytes are saved to the given buffer
- * than the given size.
+ *      The buffer size. Independent of the number of the bytes which the
+ *      transceiver has received, no more bytes are saved to the given buffer
+ *      than the given size.
  *
  * @param[out] length
- * The number of received bytes which were saved to the given buffer.
+ *      The number of received bytes which were saved to the given buffer.
  *
  * @param[in] timeout_ms
- * in synchronous modeThe function will return with an error if this time elapsed
- * before receiving the end of frame character
+ *      In synchronous modeThe function will return with an error if this time elapsed
+ *      before receiving the end of frame character
  *
- * @retval #RETCODE_OK                  if successfully started
- * @retval #RETCODE_INVALID_PARAM       if any parameter is NULL
- * @retval #RETCODE_INCONSITENT_STATE   if the transceiver is not in an active
- *                                      state (see #UARTTransceiver_State_E)
- * @retval #RETCODE_SEMAPHORE_ERROR     if semaphore could not be taken with given timeout
- *                                      (see #UARTTransceiver_T.RxSemaphore)
+ * @retval #RETCODE_OK
+ *      If successfully started
+ * @retval #RETCODE_INVALID_PARAM
+ *      If any parameter is NULL
+ * @retval #RETCODE_INCONSITENT_STATE
+ *      If the transceiver is not in an active
+ *      state (see #UARTTransceiver_State_E)
+ * @retval #RETCODE_SEMAPHORE_ERROR
+ *      If semaphore could not be taken with given timeout
+ *      (see #UARTTransceiver_T.RxSemaphore)
+ * 
  */
 Retcode_T UARTTransceiver_ReadData(
         UARTTransceiver_T *transceiver,
         uint8_t *buffer, uint32_t size, uint32_t *length, uint32_t timeout_ms);
 
 /**
- * @brief It writes the data for sending.
+ * @brief
+ *      It writes the data for sending.
  *
- * The transceiver must be started and not suspended when calling
- * this function.
+ *      The transceiver must be started and not suspended when calling
+ *      this function.
  *
- * In the synchronous mode, this call will return only after the passed
- * bytes have been send over UART/LEUART. In the asynchronous mode, the function
- * triggers the sending and returns immediately. A callback follows to inform
- * about the success or failure of the send operation.
+ *      In the synchronous mode, this call will return only after the passed
+ *      bytes have been send over UART/LEUART. In the asynchronous mode, the function
+ *      triggers the sending and returns immediately. A callback follows to inform
+ *      about the success or failure of the send operation.
  *
  * @param[in] transceiver
- * a pointer to the transceiver
+ *      A pointer to the transceiver
  *
  * @param[in] buffer
- * The buffer which the bytes are copied to.
+ *      The buffer which the bytes are copied to.
  *
  * @param[in] length
- * The buffer length and the number of bytes to be copied.
+ *      The buffer length and the number of bytes to be copied.
  * @param[in] timeout_ms
- * The time afterwhich if the function does not succeed for any reason it will
- * return an semaphore error.
+ *      The time afterwhich if the function does not succeed for any reason it will
+ *      return an semaphore error.
  *
- * @retval #RETCODE_OK                  if successfully started
- * @retval #RETCODE_INVALID_PARAM       if any parameter is NULL
- * @retval #RETCODE_INCONSITENT_STATE   if the transceiver is not in an active
- *                                      state (see #UARTTransceiver_State_E)
- * @retval #RETCODE_SEMAPHORE_ERROR     if semaphore could not be taken with given timeout
- *                                      (see #UARTTransceiver_T.TxSemaphore)
+ * @retval #RETCODE_OK
+ *      If successfully started
+ * @retval #RETCODE_INVALID_PARAM
+ *      If any parameter is NULL
+ * @retval #RETCODE_INCONSITENT_STATE
+ *      If the transceiver is not in an active
+ *      state (see #UARTTransceiver_State_E)
+ * @retval #RETCODE_SEMAPHORE_ERROR
+ *      If semaphore could not be taken with given timeout
+ *      (see #UARTTransceiver_T.TxSemaphore)
+ * 
  */
 Retcode_T UARTTransceiver_WriteData(
         UARTTransceiver_T *transceiver,
@@ -397,40 +452,45 @@ Retcode_T UARTTransceiver_WriteData(
 
 #if KISO_FEATURE_UART
 /**
- * @brief Function to loop the UART/LEUART callback.
+ * @brief
+ *      Function to loop the UART/LEUART callback.
  *
- * @details It is necessary for the UARTTransceiver to loop the UART/LEUART callback.
- * This means, the middle-layer driver which uses UART/LEUART and UARTTransceiver
- * must initialize UART/LEUART with a callback function which invokes
- * this function in order to loop the callbacks from UART/LEUART to the
- * transceiver.
+ * @details
+ *      It is necessary for the UARTTransceiver to loop the UART/LEUART callback.
+ *      This means, the middle-layer driver which uses UART/LEUART and UARTTransceiver
+ *      must initialize UART/LEUART with a callback function which invokes
+ *      this function in order to loop the callbacks from UART/LEUART to the
+ *      transceiver.
  *
- * The middle-layer driver may use the macro
- * UART_TRANSCEIVER_DECLARE_LOOP_CALLBACK can be used to generate
- * such a callback.
+ *      The middle-layer driver may use the macro
+ *      UART_TRANSCEIVER_DECLARE_LOOP_CALLBACK can be used to generate
+ *      such a callback.
  *
  * @param[in] transceiver
- * The transceiver
- *
+ *      The transceiver
  *
  * @param[in] event
- * The event which is notified by the callback
+ *      The event which is notified by the callback
+ * 
  */
 void UARTTransceiver_LoopCallback(
         UARTTransceiver_T *transceiver,
         struct MCU_UART_Event_S event);
 /**
- * @brief Generates a UART loop callback.
+ * @brief
+ *      Generates a UART loop callback.
  *
- * @details The middle-layer driver, which uses UART/LEUART and UARTTransceiver,
- * may use this macro in oder to generate a callback function
- * to initialize UART/LEUART with it. The generated function
- * loops the callback to the transceiver by calling the function
- * UARTTransceiver_LoopCallback().
+ * @details
+ *      The middle-layer driver, which uses UART/LEUART and UARTTransceiver,
+ *      may use this macro in oder to generate a callback function
+ *      to initialize UART/LEUART with it. The generated function
+ *      loops the callback to the transceiver by calling the function
+ *      UARTTransceiver_LoopCallback().
  *
  * @param[in] transceiver
- * The variable name of the transceiver. It must be a pointer to
- * the context structure but the context structure itself.
+ *      The variable name of the transceiver. It must be a pointer to
+ *      the context structure but the context structure itself.
+ * 
  */
 #define UART_TRANSCEIVER_DECLARE_LOOP_CALLBACK(transceiver) \
 static KISO_ALWAYS_INLINE void UARTTransceiverLoopCallback(UART_T uart, struct MCU_UART_Event_S event) \
@@ -441,39 +501,45 @@ static KISO_ALWAYS_INLINE void UARTTransceiverLoopCallback(UART_T uart, struct M
 #elif KISO_FEATURE_LEUART
 
 /**
- * @brief Function to loop the UART/LEUART callback.
+ * @brief
+ *      Function to loop the UART/LEUART callback.
  *
- * @details It is necessary for the UARTTransceiver to loop the UART/LEUART callback.
- * This means, the middle-layer driver which uses UART/LEUART and UARTTransceiver
- * must initialize UART/LEUART with a callback function which invokes
- * this function in order to loop the callbacks from UART/LEUART to the
- * transceiver.
+ * @details
+ *      It is necessary for the UARTTransceiver to loop the UART/LEUART callback.
+ *      This means, the middle-layer driver which uses UART/LEUART and UARTTransceiver
+ *      must initialize UART/LEUART with a callback function which invokes
+ *      this function in order to loop the callbacks from UART/LEUART to the
+ *      transceiver.
  *
- * The middle-layer driver may use the macro
- * UART_TRANSCEIVER_DECLARE_LOOP_CALLBACK can be used to generate
- * such a callback.
+ *      The middle-layer driver may use the macro
+ *      UART_TRANSCEIVER_DECLARE_LOOP_CALLBACK can be used to generate
+ *      such a callback.
  *
  * @param[in] transceiver
- * The transceiver
+ *      The transceiver
  *
  * @param[in] event
- * The event which is notified by the callback
+ *      The event which is notified by the callback
+ * 
  */
 void UARTTransceiver_LoopCallbackLE(
         UARTTransceiver_T *transceiver,
         struct MCU_LEUART_Event_S event);
 /**
- * @brief Generates a LEUART loop callback.
+ * @brief
+ *      Generates a LEUART loop callback.
  *
- * @details The middle-layer driver, which uses UART/LEUART and UARTTransceiver,
- * may use this macro in oder to generate a callback function
- * to initialize UART/LEUART with it. The generated function
- * loops the callback to the transceiver by calling the function
- * UARTTransceiver_LoopCallback().
+ * @details
+ *      The middle-layer driver, which uses UART/LEUART and UARTTransceiver,
+ *      may use this macro in oder to generate a callback function
+ *      to initialize UART/LEUART with it. The generated function
+ *      loops the callback to the transceiver by calling the function
+ *      UARTTransceiver_LoopCallback().
  *
  * @param[in] transceiver
- * The variable name of the transceiver. It must be a pointer to
- * the context structure but the context structure itself.
+ *      The variable name of the transceiver. It must be a pointer to
+ *      the context structure but the context structure itself.
+ * 
  */
 #define UART_TRANSCEIVER_DECLARE_LOOP_CALLBACK_LE(transceiver) \
 static KISO_ALWAYS_INLINE void UARTTransceiverLoopCallbackLE(LEUART_T leuart, struct MCU_LEUART_Event_S event) \

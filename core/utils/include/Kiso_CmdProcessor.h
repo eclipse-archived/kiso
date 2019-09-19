@@ -18,34 +18,35 @@
  * @defgroup CMDPROCESSOR CmdProcessor
  * @{
  *
- * @brief Handles the execution of enqueued commands
+ * @brief
+ *      Handles the execution of enqueued commands
  *
- * @details Command processor module has a task, to executes the next
- * function from the queue. This function is enqueued by the application
- * using the command enqueue function
+ * @details
+ *      Command processor module has a task, to executes the next
+ *      function from the queue. This function is enqueued by the application
+ *      using the command enqueue function
  *
- * Example usage:
  * @code
  *
- * // function to load in queue
- * void AppFunc(void * , uint32_t param)
- * {
- *     // do some functionality
- * }
+ *      // function to load in queue
+ *      void AppFunc(void * , uint32_t param)
+ *      {
+ *          // do some functionality
+ *      }
  *
- * int main(void)
- * {
- *     // Intialize the command processor
- *     CmdProcessor_Initialize(&cmdprocessor,"<taskname>",priority, stack_size,queue_size);
- *     //create a timer task
- *     OS_timerCreate(timer, 10,pdTRUE ,NULL, vTimerCallback);
- * }
+ *      int main(void)
+ *      {
+ *          // Intialize the command processor
+ *          CmdProcessor_Initialize(&cmdprocessor,"<taskname>",priority, stack_size,queue_size);
+ *          //create a timer task
+ *          OS_timerCreate(timer, 10,pdTRUE ,NULL, vTimerCallback);
+ *      }
  *
- * // Timer call back function to load application function in queue
- * void vTimerCallback( OS_timerHandle_tp pxTimer )
- * {
- *     CmdProcessor_enqueue(&CmdProcessor,&AppFunc, NULL, NULL);
- * }
+ *      // Timer call back function to load application function in queue
+ *      void vTimerCallback( OS_timerHandle_tp pxTimer )
+ *      {
+ *          CmdProcessor_enqueue(&CmdProcessor,&AppFunc, NULL, NULL);
+ *      }
  *
  * @endcode
  *
@@ -67,13 +68,18 @@
 #define CMDPROCESSOR_MAX_NAME_LEN        UINT32_C(32)   /**< Maximum length of command processor task name including 0 termination char */
 
 /**
- * @brief        This data type represents a function pointer for the functions which can be handled by
- *               the command processor.
+ * @brief
+ *      This data type represents a function pointer for the functions which can be handled by
+ *      the command processor.
  *
- * @note         The return value of the command processor function is void. Exceptions must be handled within the function itself.
+ * @note
+ *      The return value of the command processor function is void. Exceptions must be handled within the function itself.
  *
- * @param [in]  *param1 - a generic pointer to any context data structure which will be passed to the function when it is invoked by the command processor.
- * @param [in]   param2 - a generic 32 bit value  which will be passed to the function when it is invoked by the command processor..
+ * @param [in]  *param1
+ *      A generic pointer to any context data structure which will be passed to the function when it is invoked by the command processor.
+ * @param [in]   param2
+ *      A generic 32 bit value  which will be passed to the function when it is invoked by the command processor..
+ * 
  */
 typedef void (*CmdProcessor_Func_T)(void *param1, uint32_t param2);
 
@@ -104,72 +110,106 @@ enum CmdProcessor_Retcode_E
 };
 
 /**
- * @brief        This function initializes the command processor instance. It creates a queue which
- *               will carry the command functions and a task which
- *               will process the queue.
+ * @brief
+ *      This function initializes the command processor instance. It creates a queue which
+ *      will carry the command functions and a task which
+ *      will process the queue.
  *
- * @details      @code{.c}
- *                CmdProcessor_T *cmdProcessor = CmdProcessor_getSingleton();
- *                CmdProcessor_Initialize(&cmdProcessor, "AppCmdProcessor", ...);
- *               @endcode
+ * @details
+ * 
+ * @code{.c}
+ *      CmdProcessor_T *cmdProcessor = CmdProcessor_getSingleton();
+ *      CmdProcessor_Initialize(&cmdProcessor, "AppCmdProcessor", ...);
+ *@endcode
  *
- * @note         Please take care while assigning the priority to command processor task, it should be less than scheduler timer task priority.
- *               Command processor does not support the delegation from ISR because it falls under the application tasks and application task should be
- *               operated at least priority compare to  ISR and RTOS(timer service).
+ * @note
+ *      Please take care while assigning the priority to command processor task, it should be less than scheduler timer task priority.
+ *      Command processor does not support the delegation from ISR because it falls under the application tasks and application task should be
+ *      operated at least priority compare to  ISR and RTOS(timer service).
  *
- * @param[in]   cmdProcessor    - contains the queue and task handles
- * @param[in]   name            - represents the task name
- * @param[in]   taskPriority    - represents the task priority
- * @param[in]   taskStackDepth  - Represents the stack Size for the task
- * @param[in]   queueSize       - Represents the queue Size
+ * @param[in]   cmdProcessor
+ *      Contains the queue and task handles
+ * @param[in]   name
+ *      Represents the task name
+ * @param[in]   taskPriority
+ *      Represents the task priority
+ * @param[in]   taskStackDepth
+ *      Represents the stack Size for the task
+ * @param[in]   queueSize
+ *      Represents the queue Size
  *
- * @retval      #RETCODE_OK when the queue is created successfully
- * @retval      #RETCODE_NULL_POINTER when the task or queue is not created
+ * @retval      #RETCODE_OK
+ *      When the queue is created successfully
+ * @retval      #RETCODE_NULL_POINTER
+ *      When the task or queue is not created
+ * 
  */
 Retcode_T CmdProcessor_Initialize(CmdProcessor_T *cmdProcessor, const char* name, uint32_t taskPriority, uint32_t taskStackDepth, uint32_t queueSize);
 
 /**
- *  @brief       This routine is used to hand-over a function to the command processor for execution. The function is added
- *               to the queue which is processed in a FIFO manner.
+ *  @brief
+ *      This routine is used to hand-over a function to the command processor for execution. The function is added
+ *      to the queue which is processed in a FIFO manner.
  *
- *  @warning     This routine should be called after cmdprocessor_intitialize function.
- *               Hand-over Function prototype should be same as cmdprocess_fun_t
+ *  @warning
+ *      This routine should be called after cmdprocessor_intitialize function.
+ *      Hand-over Function prototype should be same as cmdprocess_fun_t
  *
- *  @param[in]  cmdProcessor    - contains the queue handle
- *  @param[in]  func            - represents the function
- *  @param[in]  param1          - a generic pointer to an arbitrary context data structure which will be passed to the function when it is invoked by the command processor.
- *  @param[in]  param2          - second argument of the function
+ *  @param[in]  cmdProcessor
+ *      Contains the queue handle
+ *  @param[in]  func
+ *      Represents the function
+ *  @param[in]  param1
+ *      A generic pointer to an arbitrary context data structure which will be passed to the function when it is invoked by the command processor.
+ *  @param[in]  param2
+ *      Second argument of the function
  *
- *  @retval     #RETCODE_OK when the function is pushed successfully into the queue
- *  @retval     #RETCODE_INVALID_PARAM when cmdProcessor or function pointers is NULL
- *  @retval     #RETCODE_FAILURE when the queue is full
+ *  @retval     #RETCODE_OK
+ *      When the function is pushed successfully into the queue
+ *  @retval     #RETCODE_INVALID_PARAM
+ *      When cmdProcessor or function pointers is NULL
+ *  @retval     #RETCODE_FAILURE
+ *      When the queue is full
+ * 
  */
 Retcode_T CmdProcessor_Enqueue(CmdProcessor_T *cmdProcessor, CmdProcessor_Func_T func, void *param1, uint32_t param2);
 
 /**
- *  @brief       This routine is used to hand-over a function to the command processor from ISR context. The function is added
- *               to the queue which is processed in a FIFO manner.
+ *  @brief
+ *      This routine is used to hand-over a function to the command processor from ISR context. The function is added
+ *      to the queue which is processed in a FIFO manner.
  *
- *  @warning     This routine should be called after cmdprocessor_intitialize function.
- *               Hand-over Function prototype should be same as cmdprocess_fun_t
+ *  @warning
+ *      This routine should be called after cmdprocessor_intitialize function.
+ *      Hand-over Function prototype should be same as cmdprocess_fun_t
  *
- *  @param[in]  cmdProcessor    - contains the queue handle
- *  @param[in]  func            - represents the function
- *  @param[in]  param1          - a generic pointer to an arbitrary context data structure which will be passed to the function when it is invoked by the command processor.
- *  @param[in]  param2          - second argument of the function
+ *  @param[in]  cmdProcessor
+ *      Contains the queue handle
+ *  @param[in]  func
+ *      Represents the function
+ *  @param[in]  param1
+ *      A generic pointer to an arbitrary context data structure which will be passed to the function when it is invoked by the command processor.
+ *  @param[in]  param2
+ *      Second argument of the function
  *
- *  @retval     #RETCODE_OK when the function is pushed successfully into the queue
- *  @retval     #RETCODE_INVALID_PARAM when cmdProcessor or function pointers is NULL
- *  @retval     #RETCODE_FAILURE when the queue is full
+ *  @retval     #RETCODE_OK
+ *      When the function is pushed successfully into the queue
+ *  @retval     #RETCODE_INVALID_PARAM
+ *      When cmdProcessor or function pointers is NULL
+ *  @retval     #RETCODE_FAILURE
+ *      When the queue is full
+ * 
  */
 Retcode_T CmdProcessor_EnqueueFromIsr(CmdProcessor_T *cmdProcessor, CmdProcessor_Func_T func, void *param1, uint32_t param2);
 
 
 /**
- * @brief        The API suspends the command processor service.
- *               It is used to stop the execution of the command processor task functionality.
+ * @brief
+ *      The API suspends the command processor service.
+ *      It is used to stop the execution of the command processor task functionality.
  *
- * @param[in]   cmdProcessor    - Holds the command processor task handle
+ * @param[in]   cmdProcessor
+ *      Holds the command processor task handle
  *
  */
 void CmdProcessor_Suspend(CmdProcessor_T *cmdProcessor);

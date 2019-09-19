@@ -11,23 +11,33 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
-/**
- * @file
- *
- *  Mockup implementation for the UartTransceiver module.
- *
- * ****************************************************************************/
 
+/**
+ * @ingroup UTILS
+ *
+ * @defgroup UARTTRANSCEIVER UartTransceiver
+ * @{
+ *
+ * @brief
+ *      Mockup implementation for the Kiso_TaskMonitor_th.hh module
+ *
+ * @details
+ *
+ * @file
+ **/
+
+
+/* Header definition */
 #ifndef KISO_UARTTransceiver_TH_HH_
 #define KISO_UARTTransceiver_TH_HH_
 
-/* include system header files */
+/* Include gtest header file */
 #include "gtest.h"
 
-/* wrap the real UartTransceiver.h interface header */
+/* Wrap Kiso_UARTTransceiver interface header */
 #include "Kiso_UARTTransceiver.h"
 
-/* mock-ups for the provided interfaces */
+/* Mock-ups for the provided interfaces */
 FAKE_VALUE_FUNC(Retcode_T, UARTTransceiver_Initialize, UARTTransceiver_T*, HWHandle_T, uint8_t*, uint32_t, enum UARTTransceiver_UartType_E)
 FAKE_VALUE_FUNC(Retcode_T, UARTTransceiver_Deinitialize, UARTTransceiver_T*)
 FAKE_VALUE_FUNC(Retcode_T, UARTTransceiver_Start, UARTTransceiver_T*, UARTTransceiver_EndofFrameCheckFunc_T)

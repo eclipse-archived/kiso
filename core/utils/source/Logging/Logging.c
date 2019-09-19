@@ -13,22 +13,34 @@
 ********************************************************************************/
 
 /**
+ *
+ * @brief
+ *      Logging Interface Implementation.
+ *
+ * @details
+ *      Implements log engine interface.
+ *      This source file implements following features:
+ *      - Logging_Init()
+ *      - Logging_Log()
+ * 
  * @file
- *
- * @brief Implements log engine interface.
- *
- */
+ **/
 
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_LOGGING
 
+/* Include Kiso_Logging interface header */
 #include "Kiso_Logging.h"
 
 #if KISO_FEATURE_LOGGING
 
+/* KISO basics header files */
 #include "Kiso_Retcode.h"
 #include "Kiso_Assert.h"
+
+/* System header file */
 #include <stdio.h>
 
 static LogRecorder_T Logging_Recorder =

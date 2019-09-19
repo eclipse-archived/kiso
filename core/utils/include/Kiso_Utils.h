@@ -17,12 +17,13 @@
  * @defgroup UTILS Utils
  * @{
  *
- * @brief Utility module
+ * @brief
+ *      Utility module
  *
  * @details
  *
  * @file
- **/
+ */
 
 #ifndef KISO_UTILS_H_
 #define KISO_UTILS_H_
@@ -32,7 +33,8 @@
 #include "Kiso_Retcode.h"
 
 /**
- * @brief Enumeration to represent the return codes of Utils module.
+ * @brief
+ *      Enumeration to represent the return codes of Utils module.
  */
 enum Utils_Retcode_E
 {
@@ -68,14 +70,18 @@ enum Utils_Retcode_E
     RETCODE_MAX_ERROR,
 };
 
-/* Put the type and macro definitions here */
 /**
- * @brief KISO_MODULE_ID for each Utils C module
- * @details Usage:
+ * @brief
+ *      KISO_MODULE_ID for each Utils C module
+ * 
+ * @details
+ *      Usage:
+ * 
  * @code{.c}
- * #undef KISO_MODULE_ID
- * #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_xxx
+ *      #undef KISO_MODULE_ID
+ *      #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_xxx
  * @endcode
+ * 
  */
 enum KISO_UTILS_ModuleID_E
 {

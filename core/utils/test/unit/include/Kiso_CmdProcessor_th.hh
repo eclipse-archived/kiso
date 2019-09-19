@@ -11,27 +11,36 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
+
 /**
- * @file        CmdProcessor_th.hh
+ * @ingroup UTILS
  *
- *  Mockup implementation for the CmdProcessor module.
+ * @defgroup CMDPROCESSOR CmdProcessor
+ * @{
  *
- * ****************************************************************************/
+ * @brief
+ *      Mockup implementation for the Kiso_CmdProcessor_th.hh module
+ *
+ * @details
+ *
+ * @file
+ **/
  
-/* header definition ******************************************************** */
+/* Header definition */
 #ifndef KISO_CMDPROCESSOR_TH_HH_
 #define KISO_CMDPROCESSOR_TH_HH_
 
-/* include system header files */
+/* Include gtest header file */
 #include "gtest.h"
-/* wrap the real  interface header */
+
+/* Wrap KISO interface headers */
 #include "Kiso_CmdProcessor.h"
 #include "Kiso_Retcode.h"
 
-/* faked variables needs to be initialized by the test fixture */
+/* Faked variables needs to be initialized by the test fixture */
 typedef void (*CmdProcessor_Func_T)(void *param1, uint32_t param2);
 
-/* mock-ups for the provided interfaces */
+/* Mock-ups for the provided interfaces */
 
 FAKE_VOID_FUNC(CmdProcessor_Suspend, CmdProcessor_T*)
 FAKE_VOID_FUNC(CmdProcessor_Resume, CmdProcessor_T*)

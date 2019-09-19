@@ -12,16 +12,34 @@
 *
 ********************************************************************************/
 
-#include "Kiso_Utils.h"
+/**
+ *
+ * @brief
+ *      I2C Transciever Interface Implementation
+ *
+ * @details
+ *      This source file implements following features:
+ *      - I2CTransceiver_LoopCallback()
+ *      - I2CTransceiver_Init()
+ *      - I2CTransceiver_Read()
+ *      - I2CTransceiver_Write()
+ *      - I2CTransceiver_Deinit()
+ * 
+ * @file
+ **/
 
+/* Module includes */
+#include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_I2C_TRANSCEIVER
 
 #if KISO_FEATURE_I2CTRANSCEIVER
-/* Put the type and macro definitions here */
+
+/* Include Kiso_I2CTransceiver interface header */
 #include "Kiso_I2CTransceiver.h"
+
 #if KISO_FEATURE_I2C
-/* Put constant and variable definitions here */
+
 #define CANCEL_I2C_TRANSMISSION  UINT32_C(0)
 #define DATA_TRANSFER_TIMEOUT_MS  UINT32_C(1000)
 
@@ -66,7 +84,7 @@ void I2CTransceiver_LoopCallback(I2cTranceiverHandlePtr_T i2cTransceiver, struct
         }
         else
         {
-            /* ignore... semaphore has already been given */
+            /* Ignore... semaphore has already been given */
         }
     }
     if (RETCODE_OK != retcode)

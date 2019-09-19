@@ -11,21 +11,31 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
+/**
+ *
+ * @brief
+ *      Module test specification for the GuardedTask_unittest.cc module.
+ *
+ * @detail
+ *      The unit test file template follows the Four-Phase test pattern.
+ * 
+ * @file
+ **/
 
-/* include gtest interface */
+/* Include gtest interface */
 #include <gtest.h>
 
+/* Start of global scope symbol and fake definitions section */
 extern "C"
-{/* start of global scope symbol and fake definitions section */
-
-/* setup compile time configuration defines */
+{
+/* Setup compile time configuration defines */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_GUARDEDTASK
 
 #if KISO_FEATURE_GUARDEDTASK
 
-/* include faked interfaces */
+/* Include faked interfaces */
 #include "Kiso_Retcode_th.hh"
 #include "Kiso_Assert_th.hh"
 
@@ -34,10 +44,11 @@ extern "C"
 #include "queue_th.hh"
 #include "task_th.hh"
 
-/* include module under test */
+/* Include module under test */
 #include "GuardedTask.c"
 
-} /* end of global scope symbol and fake definitions section */
+ /* End of global scope symbol and fake definitions section */
+}
 
 static bool runFunctionCalled = false;
 

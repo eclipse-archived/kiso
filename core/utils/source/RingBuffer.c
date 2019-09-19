@@ -13,57 +13,71 @@
 ********************************************************************************/
 
 /**
+ *
+ * @brief
+ *      Ring Buffer Interface Implementation
+ *
+ * @details
+ *      This source file implements following features:
+ *      - RingBuffer_Initialize()
+ *      - RingBuffer_Write()
+ *      - RingBuffer_Read()
+ *      - RingBuffer_Reset()
+ * 
  * @file
- */
+ **/
 
+/* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_RINGBUFFER
 
+/* Include Kiso_RingBuffer interface header */
 #include "Kiso_RingBuffer.h"
 
 #if KISO_FEATURE_RINGBUFFER
 
+/* KISO basics header files */
 #include "Kiso_Basics.h"
 #include "Kiso_Assert.h"
 
 static KISO_INLINE void Add(RingBuffer_T * ringBuffer, uint8_t element)
 {
-    /* load the writeIndex to avoid false intermediate values on the real write index */
+    /* Load the writeIndex to avoid false intermediate values on the real write index */
     register uint32_t index = ringBuffer->WriteIndex;
 
-    /* write the element and increment the index */
+    /* Write the element and increment the index */
     ringBuffer->Base[index++] = element;
 
-    /* update the index */
+    /* Update the index */
     ringBuffer->WriteIndex = (ringBuffer->Size != index) ? index : 0UL;
-    /* now it is safe to read from the "old" index and write to the new index */
+    /* Now it is safe to read from the "old" index and write to the new index */
 }
 
 static KISO_INLINE uint8_t Get(RingBuffer_T * ringBuffer)
 {
-    /* use a copy of the ReadIndex to avoid false intermediate values on the real read index
+    /* Use a copy of the ReadIndex to avoid false intermediate values on the real read index
      * since it is also used in the write process (add) */
     register uint32_t index = ringBuffer->ReadIndex;
 
-    /* read the data from the buffer and increment the index */
+    /* Read the data from the buffer and increment the index */
     uint8_t element = ringBuffer->Base[index++];
 
-    /*update the index */
+    /* Update the index */
     ringBuffer->ReadIndex = (ringBuffer->Size != index) ? index : 0UL;
-    /* now it is safe to write to this index again */
+    /* Now it is safe to write to this index again */
     return element;
 }
 
 static KISO_INLINE bool RingBuffer_IsFull(RingBuffer_T *ringBuffer)
 {
-    /* incrementing the WriteIndex would hit the ReadIndex => full */
+    /* Incrementing the WriteIndex would hit the ReadIndex => full */
     return ((ringBuffer->WriteIndex + 1UL) % (ringBuffer->Size)) != ringBuffer->ReadIndex ? false : true;
 }
 
 static KISO_INLINE bool RingBuffer_IsEmpty(RingBuffer_T *ringBuffer)
 {
-    /* the ReadIndex equals the WriteIndex => empty */
+    /* The ReadIndex equals the WriteIndex => empty */
     return ringBuffer->ReadIndex == ringBuffer->WriteIndex ? true : false;
 }
 
@@ -76,7 +90,7 @@ void RingBuffer_Initialize(RingBuffer_T * ringBuffer, uint8_t * bufferSpace, uin
     }
     else
     {
-        /* initialize the ring-buffer structure:buffer, index r/w, buffer size */
+        /* Initialize the ring-buffer structure:buffer, index r/w, buffer size */
         ringBuffer->Base = bufferSpace;
         ringBuffer->ReadIndex = 0;
         ringBuffer->WriteIndex = 0;
@@ -105,13 +119,13 @@ uint32_t RingBuffer_Read(RingBuffer_T * ringBuffer, uint8_t * data, uint32_t len
     uint32_t actualLength = 0UL;
     if ((NULL != ringBuffer) && (NULL != data))
     {
-        /* read data while the buffer is not empty for the amount of requested data */
+        /* Read data while the buffer is not empty for the amount of requested data */
         while (!RingBuffer_IsEmpty(ringBuffer) && length--)
         {
             data[actualLength++] = Get(ringBuffer);
         }
     }
-    /* report the number of bytes read */
+    /* Report the number of bytes read */
     return actualLength;
 }
 
@@ -120,7 +134,7 @@ void RingBuffer_Reset(RingBuffer_T *ringBuffer)
 {
     if (NULL != ringBuffer)
     {
-        /* reset the ring-buffer structure:buffer, index r/w */
+        /* Reset the ring-buffer structure:buffer, index r/w */
         ringBuffer->ReadIndex = 0;
         ringBuffer->WriteIndex = 0;
         (void) memset(ringBuffer->Base, 0x00, ringBuffer->Size);
