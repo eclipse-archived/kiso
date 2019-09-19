@@ -84,7 +84,7 @@ Retcode_T TaskMonitor_Register(TaskHandle_t task, uint32_t upperLimit);
  *      This function is called at every task exit. Hence execution time should be very minimal.
  *		Usage #define traceTASK_SWITCHED_OUT()	TaskMonitor_Update(&pxCurrentTCB->pxTaskTag, xTickCount)
  *
- *		Data types is added as �unsigned int� to avoid compilation warning in FreeRTOSConfig.h file
+ *			Data types is added as "unsigned int" to avoid compilation warning in FreeRTOSConfig.h file
  *
  * @param[out] taskTag
  * 	    Current Tasks's task tag pointer to update the tickcount

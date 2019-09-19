@@ -16,14 +16,13 @@
  * @section OVERVIEW Overview
  * 
  * Eclipse Kiso was designed from scratch as a software development kit for IoT devices and has already been used 
- * and verified on a handful of existing products in the market. Eclipse Kiso’s reusability, robustness and portability 
- * is a key factor which enables fast development and quick time to market for almost all kinds of IoT “Things” product 
+ * and verified on a handful of existing products in the market. Eclipse Kiso's reusability, robustness and portability 
+ * is a key factor which enables fast development and quick time to market for almost all kinds of IoT "Things" product 
  * development. \n
  * Kiso can be represented with the following architecture overview: \n
  * \image html Kiso-overview.png
  * \image html legend.png
  * 
- * \note For a simple usage of Kiso for the BCX,  we are generating code via Mita. \see https://www.eclipse.org/mita/
  * 
  * @section FOLDER_STRUCT Folder Structure
  * 
