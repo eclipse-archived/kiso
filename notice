@@ -1,155 +1,74 @@
-Eclipse Kiso and 3rd-party components License agreement
 
+# Notices for Kiso
 
+## Project home
 
-Eclipse Kiso
+https://projects.eclipse.org/projects/iot.kiso
 
-Copyright (c) 2010-2019 Robert Bosch GmbH
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
+## Source Code
+
+The project maintains the following source code repositories:
+
+ * https://github.com/eclipse/kiso
+
+## Copyright
+
+Except third-party content specified below, copyright of all content belongs to
+Robert Bosch GmbH.
+
+## Declared Project Licenses
+
+This project and the accompanying materials, except third-party content as
+mentioned below, are made available under the terms of the Eclipse Public
+License v. 2.0 which is available at http://www.eclipse.org/legal/epl-v20.html.
+
 SPDX-License-Identifier: EPL-2.0
-Contributors:
-Robert Bosch GmbH - initial contribution
 
+## Third-party Content
 
-Note: Eclipse Kiso was first developed by Bosch Connected Devices and Solutions
-GmbH (BCDS can be still seen in the code). It has been carried over
-by Robert Bosch GmbH for further development.
-
-
+All third-party content is under 'thirdparty' folder in the project source code.
 
 BST Sensor Drivers
 
-Copyright (C) 2013 - 2014 Bosch Sensortec GmbH
-License:
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
+ * License: BSD-3-Clause
 
-- Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
+freeRTOS 10.0.1
 
-- Redistributions in binary form must reproduce the above copyright notice, this
-  list of conditions and the following disclaimer in the documentation and/or
-  other materials provided with the distribution.
+ * License: MIT
 
-- Neither the name of the copyright holder nor the names of the contributors may
-  be used to endorse or promote products derived from this software without
-  specific prior written permission.
+CMSIS Device 1.14.0
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE
+ * License: Apache License 2.0
 
-The information provided is believed to be accurate and reliable. The copyright
-holder assumes no responsibility for the consequences of use of such
-information nor for any infringement of patents or other rights of third
-parties which may result from its use. No license is granted by implication or
-otherwise under any patent or patent rights of the copyright holder.
+STM32L4 HAL 1.14.0
 
+ * License: BSD-3-Clause
 
+Gtest 2.0.0
 
-CMSIS
+ * License: BSD-3-Clause
 
-Copyright (C) 2010-2014 ARM Limited. All rights reserved.
+MbedTLS 2.12.0
 
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
+ * License: Apache License 2.0
 
-- Redistributions of source code must retain the above copyright notice, this
-  list of conditions and the following disclaimer.
+CMSIS SVD files
 
-- Redistributions in binary form must reproduce the above copyright notice, this
-  list of conditions and the following disclaimer in the documentation and/or
-  other materials provided with the distribution.
+ * License: Apache License 2.0
+ 
+ CMake CodeCoverage utility
+ 
+ * License: BSD-3-Clause
+ 
+ ClangTidyToJunit pyhton script
+ 
+ * License: MIT
 
-- Neither the name of ARM LIMITED nor the names of its contributors may be used
-  to endorse or promote products derived from this software without specific
-  prior written permission.
+## Cryptography
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
-
-freeRTOS
-
-The FreeRTOS kernel is released under the MIT open source license, the text of
-which is provided below.
-This license covers the FreeRTOS kernel source files, which are located in the
-/FreeRTOS/Source directory of the official FreeRTOS kernel download. It also
-covers most of the source files in the demo application projects, which are
-located in the /FreeRTOS/Demo directory of the official FreeRTOS download. The
-demo projects may also include third party software that is not part of FreeRTOS
-and is licensed separately to FreeRTOS. Examples of third party software
-includes header files provided by chip or tools vendors, linker scripts,
-peripheral drivers, etc. All the software in subdirectories of the /FreeRTOS
-directory is either open source or distributed with permission, and is free for
-use. For the avoidance of doubt, refer to the comments at the top of each source
-file.
-
-License text:
--------------
-Copyright (C) 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-the Software, and to permit persons to whom the Software is furnished to do so,
-subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
-
-STM32cubel4
-
-COPYRIGHT(c) 2016 STMicroelectronics
-
-Redistribution and use in source and binary forms, with or without modification,
-are permitted provided that the following conditions are met:
-
-  1. Redistributions of source code must retain the above copyright notice,
-     this list of conditions and the following disclaimer.
-
-  2. Redistributions in binary form must reproduce the above copyright notice,
-     this list of conditions and the following disclaimer in the documentation
-     and/or other materials provided with the distribution.
-
-  3. Neither the name of STMicroelectronics nor the names of its contributors
-     may be used to endorse or promote products derived from this software
-     without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-
+Content may contain encryption software. The country in which you are currently
+may have restrictions on the import, possession, and use, and/or re-export to
+another country, of encryption software. BEFORE using any encryption software,
+please check the country's laws, regulations and policies concerning the import,
+possession, or use, and re-export of encryption software, to see if this is
+permitted.

@@ -68,16 +68,6 @@ After issuing push command, you will see compare & pull request button, click on
 Kiso project maintainers will review your work, and normally request for changes. There are a few rounds of review/rework, then your work would be potentially accepted and merged to kiso code base.  
 **Note: sometimes, one review takes 1 – 2 weeks, therefore be patient. You can parallel work on other topics (in separate branch) while waiting.**
 
-## Commit message checklist
-- Each commit should contains only changes closely related.   
-Eg. you do not commit BSP changes and APP changes at the same time. 
-- Subject line is less than 80 characters, followed by a blank line.
-- A clear but short description about:
-  - what is in the commit
-  - why you implement it this way
-  - how you verify it
-- To sign the commit, use command:
-~~~~
-git commit -s
-~~~~
-- In case the work is related to an issue, indicate number, eg. "fix issue #101 ..."
+## Commit message format
+In General, follow eclipse foundation's rule regarding the format of git commit message:
+https://www.eclipse.org/projects/handbook/#resources-commit
