@@ -25,11 +25,6 @@
 
 #include "Kiso_Logging.h"
 
-#include "FreeRTOS.h"
-#include "portmacro.h"
-#include "queue.h"
-#include "task.h"
-
 /* Response event queue with dedicated buffer */
 static Queue_T EventQueue;
 static uint8_t EventQueueBuffer[AT_RESPONSE_QUEUE_BUFFER_SIZE];

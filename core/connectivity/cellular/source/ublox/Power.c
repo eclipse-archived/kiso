@@ -26,6 +26,7 @@
 
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
 
 #include "Kiso_Logging.h"
 
@@ -204,13 +205,13 @@ Retcode_T Power_SoftReset(void)
 
     if (RETCODE_OK == retcode)
     {
-        uint32_t try = 0;
+        uint32_t attempt = 0;
         do
         {
             retcode = ProbeForResponsiveness();
             vTaskDelay(pdMS_TO_TICKS(CELLULAR_POWER_STARTUP_RETRY_PERIOD));
         }
-        while (RETCODE_OK != retcode && try++ < CELLULAR_POWER_STARTUP_MAX_RETRY_COUNT);
+        while (RETCODE_OK != retcode && attempt++ < CELLULAR_POWER_STARTUP_MAX_RETRY_COUNT);
     }
 
     if (RETCODE_OK == retcode)
@@ -315,6 +316,7 @@ static Retcode_T StartupCellular(void *parameter, uint32_t parameterLength)
 
 static Retcode_T CheckCellular(void* parameter, uint32_t parameterLength)
 {
+    KISO_UNUSED(parameterLength);
     assert(sizeof(bool*) == parameterLength);
     assert(NULL != parameter);
     bool* isPoweredOn = (bool*) parameter;

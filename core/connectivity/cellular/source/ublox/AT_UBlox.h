@@ -138,7 +138,7 @@ struct AT_UHTTPC_Param_S
     uint8_t *data;
     uint32_t DataLength;
     uint32_t NumericParam;
-    AT_UHTTPC_Command_T ContentType;
+    AT_UHTTPC_Content_T ContentType;
 };
 typedef struct AT_UHTTPC_Param_S AT_UHTTPC_Param_T;
 

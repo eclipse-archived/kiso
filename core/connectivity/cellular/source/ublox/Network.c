@@ -30,6 +30,7 @@
 
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
+#include "Kiso_Assert.h"
 
 #include "Kiso_Logging.h"
 

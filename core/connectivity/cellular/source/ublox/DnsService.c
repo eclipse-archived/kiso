@@ -12,6 +12,9 @@
 *
 ********************************************************************************/
 
+#include "Kiso_CellularModules.h"
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_DNS_SERVICE
+
 #include "Kiso_CellularDnsService.h"
 #include "Kiso_Cellular.h"
 #include "Kiso_CellularConfig.h"

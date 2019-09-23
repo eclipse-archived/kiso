@@ -22,6 +22,8 @@
 #include "Kiso_Retcode.h"
 #include "Kiso_Assert.h"
 
+#include "Kiso_MCU_UART.h"
+
 static bool Initialized = false;
 static HWHandle_T UartHandle;
 static uint8_t* UartByte;
