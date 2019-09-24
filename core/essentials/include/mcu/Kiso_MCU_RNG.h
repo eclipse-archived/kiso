@@ -76,7 +76,7 @@ Retcode_T MCU_RNG_Deinitialize(RNG_T rng);
  *
  * @retval RETCODE_OK on success, or an error code otherwise.
  */
-Retcode_T MCU_RNG_Generate(RNG_T rng, uint8_t* buffer, uint32_t length);
+Retcode_T MCU_RNG_Generate(RNG_T rng, uint8_t *buffer, uint32_t length);
 
 #endif /* KISO_FEATURE_RNG */
 #endif /* KISO_MCU_RNG_H_ */

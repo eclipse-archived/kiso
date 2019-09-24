@@ -29,7 +29,7 @@
 /* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
-#define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_LOGGING
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_LOGGING
 
 /* Include Kiso_Logging interface header */
 #include "Kiso_Logging.h"
@@ -44,15 +44,12 @@
 #include <stdio.h>
 
 static LogRecorder_T Logging_Recorder =
-{   .Init = NULL, .Deinit = NULL, .Write = NULL, .Wakeup = NULL, .Appender =
-    {   .Init = NULL, .Write = NULL}};
+    {.Init = NULL, .Deinit = NULL, .Write = NULL, .Wakeup = NULL, .Appender = {.Init = NULL, .Write = NULL}};
 
 /*  The description of the function is available in Kiso_Logging.h */
 Retcode_T Logging_Init(const LogRecorder_T *recorder, const LogAppender_T *appender)
 {
-    if (NULL == recorder || NULL == recorder->Init || NULL == recorder->Deinit
-            || NULL == recorder->Write || NULL == appender || NULL == appender->Init
-            || NULL == appender->Write)
+    if (NULL == recorder || NULL == recorder->Init || NULL == recorder->Deinit || NULL == recorder->Write || NULL == appender || NULL == appender->Init || NULL == appender->Write)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
@@ -72,7 +69,7 @@ Retcode_T Logging_Init(const LogRecorder_T *recorder, const LogAppender_T *appen
     retcode = Logging_Recorder.Appender.Init(Logging_Recorder.Wakeup);
     if (RETCODE_OK != retcode)
     {
-        (void) Logging_Recorder.Deinit(&Logging_Recorder);
+        (void)Logging_Recorder.Deinit(&Logging_Recorder);
     }
 
     return retcode;
@@ -80,7 +77,7 @@ Retcode_T Logging_Init(const LogRecorder_T *recorder, const LogAppender_T *appen
 
 /*  The description of the function is available in Kiso_Logging.h */
 Retcode_T Logging_Log(LogLevel_T level, uint8_t package, uint8_t module, const char *file,
-        uint32_t line, const char *fmt, ...)
+                      uint32_t line, const char *fmt, ...)
 {
     if (NULL == Logging_Recorder.Write)
     {

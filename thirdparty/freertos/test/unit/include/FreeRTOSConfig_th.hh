@@ -18,7 +18,7 @@
  *  Mockup implementation for the FreeRTOSConfig file.
  *
  * ****************************************************************************/
- 
+
 /* header definition ******************************************************** */
 #ifndef KISO_FREERTOS_CONFIG_TH_HH_
 #define KISO_FREERTOS_CONFIG_TH_HH_
@@ -29,7 +29,11 @@
 #include "FreeRTOSConfig.h"
 
 #undef configASSERT
-#define configASSERT(expression) if (!(expression)) {assert(pdFAIL); }
+#define configASSERT(expression) \
+    if (!(expression))           \
+    {                            \
+        assert(pdFAIL);          \
+    }
 
 /* faked variables needs to be initialized by the test fixture */
 

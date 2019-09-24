@@ -49,17 +49,16 @@ extern "C"
 
 /* Include module under test */
 #include "CmdProcessor.c"
-
 }
 /* End of global scope symbol and fake definitions section */
 FFF_DEFINITION_BLOCK_END
 
 /* Setup compile time configuration defines */
-#define TASK_PRIORITY     UINT32_C(1)     /**< Task Priority should be less then timer task priority */
-#define STACK_SIZE        UINT32_C(256)   /**< stack size of the task */
-#define QUEUE_SIZE        UINT32_C(3)     /**< size of the queue.Holds command processor command structure variables */
-#define INIT_VAL          UINT32_C(2)     /**< Used as an initial value to variables */
-#define QUEUE_CREATED     UINT32_C(1)     /**< Used as a return value for successful queue creation */
+#define TASK_PRIORITY UINT32_C(1) /**< Task Priority should be less then timer task priority */
+#define STACK_SIZE UINT32_C(256)  /**< stack size of the task */
+#define QUEUE_SIZE UINT32_C(3)    /**< size of the queue.Holds command processor command structure variables */
+#define INIT_VAL UINT32_C(2)      /**< Used as an initial value to variables */
+#define QUEUE_CREATED UINT32_C(1) /**< Used as a return value for successful queue creation */
 
 /* Fake function created to pass as a argument to the  cmdProcessor_Enqueue function */
 void fake_fn(void *, uint32_t)
@@ -69,30 +68,29 @@ void fake_fn(void *, uint32_t)
 
 static CmdProcessor_Cmd_T cmd;
 
-signed long myXQueueReceive(QueueHandle_t xQueue, void * pvBuffer, TickType_t xTicksToWait)
+signed long myXQueueReceive(QueueHandle_t xQueue, void *pvBuffer, TickType_t xTicksToWait)
 {
     KISO_UNUSED(xQueue);
 
     EXPECT_EQ(portMAX_DELAY, xTicksToWait);
 
-    *((CmdProcessor_Cmd_T*)pvBuffer) = cmd;
+    *((CmdProcessor_Cmd_T *)pvBuffer) = cmd;
 
     return pdPASS;
 }
 
-BaseType_t xTaskCreate_fake_success(TaskFunction_t, const char * const,
+BaseType_t xTaskCreate_fake_success(TaskFunction_t, const char *const,
                                     const configSTACK_DEPTH_TYPE,
-                                    void * const, UBaseType_t,
-                                    TaskHandle_t * const pxCreatedTask)
+                                    void *const, UBaseType_t,
+                                    TaskHandle_t *const pxCreatedTask)
 {
-    *pxCreatedTask = (TaskHandle_t) 0x123;
+    *pxCreatedTask = (TaskHandle_t)0x123;
     return pdTRUE;
 }
 
-class CmdProcessor: public testing::Test
+class CmdProcessor : public testing::Test
 {
 protected:
-
     virtual void SetUp()
     {
         RESET_FAKE(xTaskCreate);
@@ -107,7 +105,7 @@ protected:
         memset(&cmd, 0, sizeof(CmdProcessor_Cmd_T));
 
         xTaskCreate_fake.custom_fake = xTaskCreate_fake_success;
-        xQueueCreate_fake.return_val = (QueueHandle_t) QUEUE_CREATED;
+        xQueueCreate_fake.return_val = (QueueHandle_t)QUEUE_CREATED;
 
         Retcode_T retVal = CmdProcessor_Initialize(&cmdProcessor, "abc", TASK_PRIORITY, STACK_SIZE, QUEUE_SIZE);
         EXPECT_EQ(RETCODE_OK, retVal);
@@ -145,7 +143,7 @@ TEST_F(CmdProcessor, cmdProcessorIntializationTaskFail)
 {
     CmdProcessor_T cmdProcessorInstance;
     Retcode_T retVal = RETCODE_OK;
-    xQueueCreate_fake.return_val = (QueueHandle_t) QUEUE_CREATED;
+    xQueueCreate_fake.return_val = (QueueHandle_t)QUEUE_CREATED;
     xTaskCreate_fake.return_val = errCOULD_NOT_ALLOCATE_REQUIRED_MEMORY;
 
     retVal = CmdProcessor_Initialize(&cmdProcessorInstance, "abc", TASK_PRIORITY, STACK_SIZE, QUEUE_SIZE);
@@ -160,7 +158,7 @@ TEST_F(CmdProcessor, cmdProcessorIntializationTaskSuccess)
     CmdProcessor_T cmdProcessorInstance;
     Retcode_T retVal = RETCODE_FAILURE;
     xTaskCreate_fake.return_val = pdTRUE;
-    xQueueCreate_fake.return_val = (QueueHandle_t) QUEUE_CREATED;
+    xQueueCreate_fake.return_val = (QueueHandle_t)QUEUE_CREATED;
 
     retVal = CmdProcessor_Initialize(&cmdProcessorInstance, "abc", TASK_PRIORITY, STACK_SIZE, QUEUE_SIZE);
 
@@ -186,7 +184,7 @@ TEST_F(CmdProcessor, cmdProcessorTaskNameExceedsLength)
     char taskName[] = "abcdefghijklmnopqrstuvwxya123456789";
     char truncatedTaskName[] = "abcdefghijklmnopqrstuvwxya12345";
     Retcode_T retVal = RETCODE_FAILURE;
-    xQueueCreate_fake.return_val = (QueueHandle_t) QUEUE_CREATED;
+    xQueueCreate_fake.return_val = (QueueHandle_t)QUEUE_CREATED;
     xTaskCreate_fake.return_val = pdTRUE;
 
     retVal = CmdProcessor_Initialize(&cmdProcessorInstance, taskName, TASK_PRIORITY, STACK_SIZE, QUEUE_SIZE);
@@ -308,7 +306,6 @@ TEST_F(CmdProcessor, CmdProcessorResumeNullParam)
 {
     CmdProcessor_Resume(NULL);
 
-
     EXPECT_EQ(UINT32_C(0), vTaskResume_fake.call_count);
     EXPECT_EQ(UINT32_C(1), Retcode_RaiseError_fake.call_count);
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(Retcode_RaiseError_fake.arg0_val));
@@ -317,7 +314,6 @@ TEST_F(CmdProcessor, CmdProcessorResumeNullParam)
 TEST_F(CmdProcessor, CmdProcessorResumeSuccess)
 {
     CmdProcessor_Resume(&cmdProcessor);
-
 
     EXPECT_EQ(UINT32_C(1), vTaskResume_fake.call_count);
     EXPECT_EQ(UINT32_C(0), Retcode_RaiseError_fake.call_count);
@@ -359,7 +355,6 @@ TEST_F(CmdProcessor, CmdProcessorDequeueFail)
     EXPECT_EQ(UINT32_C(1), xQueueReceive_fake.call_count);
     EXPECT_EQ(UINT32_C(1), Retcode_RaiseError_fake.call_count);
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(Retcode_RaiseError_fake.arg0_val));
-
 }
 
 TEST_F(CmdProcessor, CmdProcessorDequeueReceiveFail)
@@ -381,7 +376,6 @@ TEST_F(CmdProcessor, CmdProcessorDequeueCmdPrcsrFail)
     EXPECT_EQ(UINT32_C(1), Retcode_RaiseError_fake.call_count);
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(Retcode_RaiseError_fake.arg0_val));
 }
-
 
 TEST_F(CmdProcessor, CmdProcessorDequeueCmdPrcsrQueueFail)
 {

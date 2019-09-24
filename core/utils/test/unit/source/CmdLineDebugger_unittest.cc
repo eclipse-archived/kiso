@@ -43,78 +43,64 @@ extern "C"
 /* Module under Test */
 #include "CmdLineDebugger.c"
 
-/* End of global scope symbol and fake definitions section */
+    /* End of global scope symbol and fake definitions section */
 }
 
 /* Start of global scope symbol and fake definitions section */
 extern "C"
 {
 
-FAKE_VALUE_FUNC(Retcode_T, testCallback, uint32_t, const char* const*)
+    FAKE_VALUE_FUNC(Retcode_T, testCallback, uint32_t, const char *const *)
 
-struct CmdLineDbg_Element_S testCommand = {
-        testCallback, /* Callback */
-        (const char *) "TestCommand", /* commandString*/
-        NULL
-};
+    struct CmdLineDbg_Element_S testCommand = {
+        testCallback,                /* Callback */
+        (const char *)"TestCommand", /* commandString*/
+        NULL};
 
-struct CmdLineDbg_Element_S testCommandNull = {
+    struct CmdLineDbg_Element_S testCommandNull = {
         NULL,
-        (const char *) "TestCommandNull",
-        NULL
-};
+        (const char *)"TestCommandNull",
+        NULL};
 
-/* Global variable containing the Test List */
-struct CmdLineDbg_Element_S testList[] =
+    /* Global variable containing the Test List */
+    struct CmdLineDbg_Element_S testList[] =
         {
-                {
-                        testCallback, /* Callback */
-                        (const char *) "TestCommand", /* commandString*/
-                        NULL
-                },
-                {
-                        testCallback, /* Callback */
-                        (const char *) "Test1", /* commandString*/
-                        NULL
-                },
-                {
-                        testCallback, /* Callback */
-                        (const char *) "Test2", /* commandString*/
-                        NULL
-                },
-                {
-                        testCallback, /* Callback */
-                        (const char *) "sudo", /* commandString*/
-                        NULL
-                },
-                {
-                        testCallback, /* Callback */
-                        (const char *) "Help", /* commandString*/
-                        NULL
-                }
-        };
+            {testCallback,                /* Callback */
+             (const char *)"TestCommand", /* commandString*/
+             NULL},
+            {testCallback,          /* Callback */
+             (const char *)"Test1", /* commandString*/
+             NULL},
+            {testCallback,          /* Callback */
+             (const char *)"Test2", /* commandString*/
+             NULL},
+            {testCallback,         /* Callback */
+             (const char *)"sudo", /* commandString*/
+             NULL},
+            {testCallback,         /* Callback */
+             (const char *)"Help", /* commandString*/
+             NULL}};
 
-size_t const testListElements = sizeof(testList) / sizeof(testList[0]);
+    size_t const testListElements = sizeof(testList) / sizeof(testList[0]);
 
-const char * testStrings[] =
+    const char *testStrings[] =
         {
-                (const char*) "TestCommand", /* 0 */
-                (const char *) "Test1", /* 1 */
-                (const char *) "Test2", /* 2 */
-                (const char *) "sudo", /* 3 */
-                (const char *) "Help", /* 4 */
-                (const char *) "unknown" /* 5 */
-        };
+            (const char *)"TestCommand", /* 0 */
+            (const char *)"Test1",       /* 1 */
+            (const char *)"Test2",       /* 2 */
+            (const char *)"sudo",        /* 3 */
+            (const char *)"Help",        /* 4 */
+            (const char *)"unknown"      /* 5 */
+    };
 
-/* End of global scope symbol and fake definitions section */
+    /* End of global scope symbol and fake definitions section */
 }
 
-class CommandLineInterface: public testing::Test
+class CommandLineInterface : public testing::Test
 {
 protected:
-
     /* Copy of the Test List object */
-    struct CmdLineDbg_Element_S * testListCpy;
+    struct CmdLineDbg_Element_S *testListCpy;
 
     virtual void SetUp()
     {
@@ -123,16 +109,15 @@ protected:
         RESET_FAKE(testCallback);
 
         /* Make a copy of the test object */
-        testListCpy = (struct CmdLineDbg_Element_S *) malloc(sizeof(testList));
-        memcpy((void *) testListCpy, (void *) testList, sizeof(testList));
-
+        testListCpy = (struct CmdLineDbg_Element_S *)malloc(sizeof(testList));
+        memcpy((void *)testListCpy, (void *)testList, sizeof(testList));
     }
 
     /* TearDown() is invoked immediately after a test finishes. */
     virtual void TearDown()
     {
         /* Restore Test Element from memory */
-        memcpy((void *) testList, (void *) testListCpy, sizeof(testList));
+        memcpy((void *)testList, (void *)testListCpy, sizeof(testList));
         free(testListCpy);
     }
 };
@@ -230,7 +215,6 @@ TEST_F(CommandLineInterface, RegisterArray)
     ASSERT_EQ(NULL, testList[4].next);
 
     ASSERT_EQ(RETCODE_OK, rc);
-
 }
 
 /**
@@ -263,17 +247,14 @@ TEST_F(CommandLineInterface, ConvertArrayToLinkedList_Complex)
     ASSERT_EQ(&testList[3], testList[2].next);
     ASSERT_EQ(&testList[4], testList[3].next);
     ASSERT_EQ(NULL, testList[4].next);
-
 }
-
-
 
 /* ************************************************************************** */
 /* COMMAND FINDER TESTS ***************************************************** */
 /* ************************************************************************** */
 TEST_F(CommandLineInterface, FindCommandByString)
 {
-    struct CmdLineDbg_Element_S * result;
+    struct CmdLineDbg_Element_S *result;
 
     ASSERT_STREQ(testList[0].commandString, "TestCommand");
     ASSERT_STREQ(testList[1].commandString, "Test1");
@@ -307,12 +288,11 @@ TEST_F(CommandLineInterface, FindCommandByString)
     /* Find sixth command in list */
     result = CmdLine_FindCmd(testList, "unknown");
     ASSERT_EQ(NULL, result); /* Command was not found */
-
 }
 
 TEST_F(CommandLineInterface, FindSoloCommand)
 {
-    struct CmdLineDbg_Element_S * result;
+    struct CmdLineDbg_Element_S *result;
 
     ASSERT_STREQ(testList[0].commandString, testStrings[0]);
     ASSERT_STREQ(testList[1].commandString, testStrings[1]);
@@ -328,10 +308,7 @@ TEST_F(CommandLineInterface, FindSoloCommand)
 
     result = CmdLine_FindCmd(testList, "unknown");
     ASSERT_EQ(NULL, result); /* Command was not found */
-
 }
-
-
 
 /* ************************************************************************** */
 /* TOKEN EXTRACTOR TESTS **************************************************** */
@@ -343,11 +320,10 @@ TEST_F(CommandLineInterface, TokenizeString1)
     char parserTest2[] = "Test1";
     char parserTest3[] = "Test1 param1";
 
-
-    char * argv[16];
+    char *argv[16];
 
     size_t i = CmdLine_ExtractTokensFromString(argv, parserTest); /* Split elements by inserting string-terminators */
-    EXPECT_EQ((size_t)5,i); /* 5-Arguments found */
+    EXPECT_EQ((size_t)5, i);                                      /* 5-Arguments found */
     ASSERT_STREQ("Test1", argv[0]);
     ASSERT_STREQ("param1", argv[1]);
     ASSERT_STREQ("param2", argv[2]);
@@ -355,16 +331,16 @@ TEST_F(CommandLineInterface, TokenizeString1)
     ASSERT_STREQ("param4", argv[4]);
 
     i = CmdLine_ExtractTokensFromString(argv, parserTest1);
-    EXPECT_EQ((size_t)0,i); /* 0-Arguments found */
+    EXPECT_EQ((size_t)0, i); /* 0-Arguments found */
     ASSERT_EQ(NULL, argv[0]);
 
     i = CmdLine_ExtractTokensFromString(argv, parserTest2);
-    EXPECT_EQ((size_t)1,i); /* 1 Argument found */
+    EXPECT_EQ((size_t)1, i); /* 1 Argument found */
     ASSERT_STREQ("Test1", argv[0]);
     ASSERT_EQ(NULL, argv[1]);
 
     i = CmdLine_ExtractTokensFromString(argv, parserTest3);
-    EXPECT_EQ((size_t)2,i); /* 2 Arguments found */
+    EXPECT_EQ((size_t)2, i); /* 2 Arguments found */
     ASSERT_STREQ("Test1", argv[0]);
     ASSERT_STREQ("param1", argv[1]);
     ASSERT_EQ(NULL, argv[2]);
@@ -374,7 +350,7 @@ TEST_F(CommandLineInterface, TokenizeString2)
 {
     char inputString[] = "git add file1 file2 file3";
 
-    char * GitParameters[16];
+    char *GitParameters[16];
     size_t i;
 
     i = CmdLine_ExtractTokensFromString(GitParameters, inputString);
@@ -383,44 +359,41 @@ TEST_F(CommandLineInterface, TokenizeString2)
 
     EXPECT_EQ(&inputString[0], GitParameters[0]);
     EXPECT_EQ(&inputString[4], GitParameters[1]);
-    EXPECT_EQ(&inputString[4+4], GitParameters[2]);
-    EXPECT_EQ(&inputString[4+10], GitParameters[3]);
-    EXPECT_EQ(&inputString[4+16], GitParameters[4]);
+    EXPECT_EQ(&inputString[4 + 4], GitParameters[2]);
+    EXPECT_EQ(&inputString[4 + 10], GitParameters[3]);
+    EXPECT_EQ(&inputString[4 + 16], GitParameters[4]);
     EXPECT_EQ(NULL, GitParameters[5]);
 }
-
-
 
 /* ************************************************************************** */
 /* COMMAND EXECUTOR TESTS *************************************************** */
 /* ************************************************************************** */
-TEST_F(CommandLineInterface,CmdLine_ExecuteCmd)
+TEST_F(CommandLineInterface, CmdLine_ExecuteCmd)
 {
-  const char * argv[] = {
+    const char *argv[] = {
         "TestBuffer",
         "param1",
         "param2",
         "param3",
-  };
+    };
 
-  size_t argc = sizeof(argv)/sizeof(argv[0]);
+    size_t argc = sizeof(argv) / sizeof(argv[0]);
 
-  Retcode_T rc;
+    Retcode_T rc;
 
-  /* Test NULL pointer check */
-  rc = CmdLine_ExecuteCmd(NULL, argv, argc);
-  ASSERT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), rc);
+    /* Test NULL pointer check */
+    rc = CmdLine_ExecuteCmd(NULL, argv, argc);
+    ASSERT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), rc);
 
-  /* Test with invalid callback */
-  rc = CmdLine_ExecuteCmd(&testCommandNull, argv, argc);
-  ASSERT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), rc);
+    /* Test with invalid callback */
+    rc = CmdLine_ExecuteCmd(&testCommandNull, argv, argc);
+    ASSERT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), rc);
 
-  /* Execute Command and Inspect Callback Arguments*/
-  rc = CmdLine_ExecuteCmd(&testCommand, argv, argc);
-  ASSERT_EQ((const char *)argv, (const char *)testCallback_fake.arg1_val);
-  ASSERT_EQ((size_t)4, testCallback_fake.arg0_val);
-  ASSERT_EQ(RETCODE_OK, rc);
-
+    /* Execute Command and Inspect Callback Arguments*/
+    rc = CmdLine_ExecuteCmd(&testCommand, argv, argc);
+    ASSERT_EQ((const char *)argv, (const char *)testCallback_fake.arg1_val);
+    ASSERT_EQ((size_t)4, testCallback_fake.arg0_val);
+    ASSERT_EQ(RETCODE_OK, rc);
 }
 
 /* ************************************************************************** */
@@ -445,10 +418,9 @@ TEST_F(CommandLineInterface, CmdLine_Parse_VALID)
     Retcode_T rc;
 
     /*  Valid input */
-     rc = CmdLineDbg_Parse(testList, inputBuffer);
-     ASSERT_EQ(RETCODE_OK, rc);
-     ASSERT_EQ(3u, testCallback_fake.arg0_val);
-
+    rc = CmdLineDbg_Parse(testList, inputBuffer);
+    ASSERT_EQ(RETCODE_OK, rc);
+    ASSERT_EQ(3u, testCallback_fake.arg0_val);
 }
 
 TEST_F(CommandLineInterface, CmdLine_Parse_INVALID_CMD)

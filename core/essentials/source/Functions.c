@@ -23,7 +23,6 @@
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_HAL_MODULE_ID_CRITICALSECTION
 
-
 /* additional interface header files */
 #include "Kiso_HAL.h"
 #include "Cmsis.h"
@@ -38,11 +37,13 @@
 #include "intrinsics.h"
 #endif /* ti_cc26xx */
 
-bool HAL_IsInISR(void){
-	if( 0 != __get_IPSR() ){
-		return true;
-	}
-	return false;
+bool HAL_IsInISR(void)
+{
+    if (0 != __get_IPSR())
+    {
+        return true;
+    }
+    return false;
 }
 
 #endif

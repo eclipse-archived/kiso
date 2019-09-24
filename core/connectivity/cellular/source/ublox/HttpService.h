@@ -36,5 +36,4 @@
  */
 void HttpService_NotifyResult(AT_UHTTP_ProfileId_T profileId, AT_UHTTPC_Command_T command, AT_UHTTPC_Result_T result);
 
-
 #endif //HTTPSERVICE_H_

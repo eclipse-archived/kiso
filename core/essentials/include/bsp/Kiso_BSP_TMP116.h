@@ -177,7 +177,7 @@ Retcode_T BSP_TMP116_AlertEnable(int32_t deviceId, BSP_TMP116_InterruptCallback_
  */
 Retcode_T BSP_TMP116_AlertDisable(int32_t deviceId);
 
-/**@}*//* KISO_HAL_BSP_TMP116 */
+/**@}*/ /* KISO_HAL_BSP_TMP116 */
 
 #endif /*KISO_FEATURE_BSP_TMP116*/
 #endif /* KISO_BSP_TMP116_H_ */

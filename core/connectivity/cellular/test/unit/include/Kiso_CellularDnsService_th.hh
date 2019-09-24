@@ -19,6 +19,6 @@
 
 #include "gtest.h"
 
-FAKE_VALUE_FUNC(Retcode_T, CellularDns_ResolveDomain, const Cellular_DataContext_T*, const char*, Cellular_IpAddress_T*)
+FAKE_VALUE_FUNC(Retcode_T, CellularDns_ResolveDomain, const Cellular_DataContext_T *, const char *, Cellular_IpAddress_T *)
 
 #endif /* KISO_CELLULARDNSSERVICE_TH_HH_ */

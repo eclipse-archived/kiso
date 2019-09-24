@@ -31,15 +31,14 @@
 FAKE_VALUE_FUNC(Retcode_T, MCU_Timer_Initialize, Timer_T, MCU_TIMER_Callback_T)
 FAKE_VALUE_FUNC(Retcode_T, MCU_Timer_Deinitialize, Timer_T)
 FAKE_VALUE_FUNC(Retcode_T, MCU_Timer_SetCompareValue, Timer_T, uint32_t, uint32_t)
-FAKE_VALUE_FUNC(Retcode_T, MCU_Timer_GetCompareValue, Timer_T, uint32_t, uint32_t*)
-FAKE_VALUE_FUNC(Retcode_T, MCU_Timer_GetCountValue, Timer_T, uint32_t*)
-FAKE_VALUE_FUNC(Retcode_T, MCU_Timer_GetMaxCount, Timer_T, uint32_t*)
+FAKE_VALUE_FUNC(Retcode_T, MCU_Timer_GetCompareValue, Timer_T, uint32_t, uint32_t *)
+FAKE_VALUE_FUNC(Retcode_T, MCU_Timer_GetCountValue, Timer_T, uint32_t *)
+FAKE_VALUE_FUNC(Retcode_T, MCU_Timer_GetMaxCount, Timer_T, uint32_t *)
 FAKE_VALUE_FUNC(Retcode_T, MCU_Timer_Start, Timer_T)
 FAKE_VALUE_FUNC(Retcode_T, MCU_Timer_Stop, Timer_T)
 FAKE_VALUE_FUNC(MCU_Timer_Status_T, MCU_Timer_GetStatus, Timer_T)
-FAKE_VALUE_FUNC(Retcode_T, MCU_Timer_GetClockFrequency, Timer_T,uint32_t *)
+FAKE_VALUE_FUNC(Retcode_T, MCU_Timer_GetClockFrequency, Timer_T, uint32_t *)
 FAKE_VALUE_FUNC(HWHandle_T, MCU_Timer_GetRtcHandle)
 
 #endif /* #if KISO_FEATURE_TIMER  */
 #endif /* KISO_MCU_Timer_TH_HH */
-

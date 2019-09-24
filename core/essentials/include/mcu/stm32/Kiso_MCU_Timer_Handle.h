@@ -24,10 +24,10 @@
 #define KISO_MCU_TIMER_HANDLE_H_
 
 /* Include all headers which are needed by this file. */
-#if defined (stm32f7)
-    #include "stm32f7/Kiso_MCU_STM32F7_Timer_Handle.h"
+#if defined(stm32f7)
+#include "stm32f7/Kiso_MCU_STM32F7_Timer_Handle.h"
 #else
-    #error "The STM32 family is not defined or not supported."
+#error "The STM32 family is not defined or not supported."
 #endif
 /* Put the type and macro definitions here */
 

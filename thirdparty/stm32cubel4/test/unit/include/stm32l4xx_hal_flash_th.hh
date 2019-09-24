@@ -24,10 +24,10 @@
 /* Faked variables needs to be initialized by the test fixture */
 /* Overwritten because of direct memory access via hard-coded address */
 #undef FLASH_SIZE
-#if defined (STM32L486xx)
-#define FLASH_SIZE  ((uint32_t)0x100000)
-#elif defined (STM32L476xx)
-#define FLASH_SIZE  ((uint32_t)0x080000)
+#if defined(STM32L486xx)
+#define FLASH_SIZE ((uint32_t)0x100000)
+#elif defined(STM32L476xx)
+#define FLASH_SIZE ((uint32_t)0x080000)
 #else
 #error "Unknown chip family! Please add the flash size definition for your MCU."
 #endif

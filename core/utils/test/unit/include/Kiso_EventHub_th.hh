@@ -38,10 +38,10 @@
 #include "Kiso_EventHub.h"
 
 /* Mock-ups for the provided interfaces */
-FAKE_VALUE_FUNC(Retcode_T, EventHub_Initialize, EventHub_T*)
-FAKE_VALUE_FUNC(Retcode_T, EventHub_Observe, EventHub_T*, EventHandler_T, TaskEvent_T)
-FAKE_VALUE_FUNC(Retcode_T, EventHub_ObserveAll, EventHub_T*, EventHandler_T)
-FAKE_VALUE_FUNC(Retcode_T, EventHub_Notify, EventHub_T*, TaskEvent_T, void*)
+FAKE_VALUE_FUNC(Retcode_T, EventHub_Initialize, EventHub_T *)
+FAKE_VALUE_FUNC(Retcode_T, EventHub_Observe, EventHub_T *, EventHandler_T, TaskEvent_T)
+FAKE_VALUE_FUNC(Retcode_T, EventHub_ObserveAll, EventHub_T *, EventHandler_T)
+FAKE_VALUE_FUNC(Retcode_T, EventHub_Notify, EventHub_T *, TaskEvent_T, void *)
 
 #endif /* KISO_EVENTHUB_TH_HH_ */
 

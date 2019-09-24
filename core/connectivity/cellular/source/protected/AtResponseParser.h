@@ -45,23 +45,23 @@
  * @brief Should be greater than 1024 bytes to ensure that a full network packet read
  * does not overflow the AT response buffer (which would result in an error state).
  */
-#define ATRP_INTERNAL_BUFFER_LEN    (UINT32_C(1024))
+#define ATRP_INTERNAL_BUFFER_LEN (UINT32_C(1024))
 
 /**
  * @brief The default S4 character of UBlox modules is Line Feed (LF) = 10
  */
-#define AT_DEFAULT_S4_CHARACTER     ('\n')
+#define AT_DEFAULT_S4_CHARACTER ('\n')
 
 /**
  * @brief The default S3 character of UBlox modules is Carriage Return (CR) = 13
  */
-#define AT_DEFAULT_S3_CHARACTER     ('\r')
+#define AT_DEFAULT_S3_CHARACTER ('\r')
 
 /**
  * @brief The fluke character bounds
  */
-#define AT_SPACE_CHARACTER          (' ')
-#define AT_TILDE_CHARACTER          ('~')
+#define AT_SPACE_CHARACTER (' ')
+#define AT_TILDE_CHARACTER ('~')
 
 /**
  * @brief Enumeration representing the result of an AT response parser call.
@@ -112,7 +112,7 @@ typedef void (*AtrpEventWithResponseCodeCallback_T)(AtResponseCode_T code);
  *
  * @return The number of consumed characters, or -1 if there was a parser error
  */
-typedef int32_t (*AtrpStateCallback_T)(uint8_t* buffer, uint32_t len);
+typedef int32_t (*AtrpStateCallback_T)(uint8_t *buffer, uint32_t len);
 
 /**
  * @brief The AT response parser state struct
@@ -215,6 +215,6 @@ void AtResponseParser_Reset(void);
 /**
  * @brief Main interface to the AT response parser.
  */
-Retcode_T AtResponseParser_Parse(uint8_t* buffer, uint32_t len);
+Retcode_T AtResponseParser_Parse(uint8_t *buffer, uint32_t len);
 
 #endif /* AT_RESPONSE_PARSER_H_ */

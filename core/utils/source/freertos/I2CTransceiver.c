@@ -40,8 +40,8 @@
 
 #if KISO_FEATURE_I2C
 
-#define CANCEL_I2C_TRANSMISSION  UINT32_C(0)
-#define DATA_TRANSFER_TIMEOUT_MS  UINT32_C(1000)
+#define CANCEL_I2C_TRANSMISSION UINT32_C(0)
+#define DATA_TRANSFER_TIMEOUT_MS UINT32_C(1000)
 
 /*  The description of the function is available in Kiso_I2CTransceiver.h */
 void I2CTransceiver_LoopCallback(I2cTranceiverHandlePtr_T i2cTransceiver, struct MCU_I2C_Event_S event)
@@ -131,7 +131,6 @@ Retcode_T I2CTransceiver_Init(I2cTranceiverHandlePtr_T i2cTransceiver, I2C_T i2c
         else
         {
             retcode = RETCODE_OK;
-
         }
     }
 
@@ -139,7 +138,7 @@ Retcode_T I2CTransceiver_Init(I2cTranceiverHandlePtr_T i2cTransceiver, I2C_T i2c
 }
 
 /*  The description of the function is available in Kiso_I2CTransceiver.h */
-Retcode_T I2CTransceiver_Read(I2cTranceiverHandlePtr_T i2cTransceiver, uint8_t i2cAddr,uint8_t regAddr,uint8_t *buffer,uint8_t bytesToRead)
+Retcode_T I2CTransceiver_Read(I2cTranceiverHandlePtr_T i2cTransceiver, uint8_t i2cAddr, uint8_t regAddr, uint8_t *buffer, uint8_t bytesToRead)
 {
     Retcode_T retcode = RETCODE_OK;
 
@@ -157,17 +156,17 @@ Retcode_T I2CTransceiver_Read(I2cTranceiverHandlePtr_T i2cTransceiver, uint8_t i
     {
         return (RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNINITIALIZED));
     }
-    if (pdTRUE != xSemaphoreTake(i2cTransceiver->I2CMutexLock, (TickType_t) pdMS_TO_TICKS(DATA_TRANSFER_TIMEOUT_MS)))
+    if (pdTRUE != xSemaphoreTake(i2cTransceiver->I2CMutexLock, (TickType_t)pdMS_TO_TICKS(DATA_TRANSFER_TIMEOUT_MS)))
     {
         return (RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_SEMAPHORE_ERROR));
     }
-    retcode = MCU_I2C_ReadRegister(i2cTransceiver->I2CHandle, (uint16_t) i2cAddr, regAddr, buffer, bytesToRead);
+    retcode = MCU_I2C_ReadRegister(i2cTransceiver->I2CHandle, (uint16_t)i2cAddr, regAddr, buffer, bytesToRead);
     if (RETCODE_OK == retcode)
     {
-        if (pdTRUE != xSemaphoreTake(i2cTransceiver->I2CBusSync, (TickType_t) pdMS_TO_TICKS(DATA_TRANSFER_TIMEOUT_MS)))
+        if (pdTRUE != xSemaphoreTake(i2cTransceiver->I2CBusSync, (TickType_t)pdMS_TO_TICKS(DATA_TRANSFER_TIMEOUT_MS)))
         {
             /* Since the I2C transfer time out happened, Abort an ongoing I2C transmission.*/
-            retcode = MCU_I2C_Send(i2cTransceiver->I2CHandle, (uint16_t) i2cAddr, buffer, CANCEL_I2C_TRANSMISSION);
+            retcode = MCU_I2C_Send(i2cTransceiver->I2CHandle, (uint16_t)i2cAddr, buffer, CANCEL_I2C_TRANSMISSION);
             if (RETCODE_OK == retcode)
             {
                 retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMEOUT);
@@ -207,17 +206,17 @@ Retcode_T I2CTransceiver_Write(I2cTranceiverHandlePtr_T i2cTransceiver, uint8_t 
     {
         return (RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNINITIALIZED));
     }
-    if (pdTRUE != xSemaphoreTake(i2cTransceiver->I2CMutexLock, (TickType_t) pdMS_TO_TICKS(DATA_TRANSFER_TIMEOUT_MS)))
+    if (pdTRUE != xSemaphoreTake(i2cTransceiver->I2CMutexLock, (TickType_t)pdMS_TO_TICKS(DATA_TRANSFER_TIMEOUT_MS)))
     {
         return (RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_SEMAPHORE_ERROR));
     }
-    retcode = MCU_I2C_WriteRegister(i2cTransceiver->I2CHandle, (uint16_t) i2cAddr, regAddr, buffer, bytesToWrite);
+    retcode = MCU_I2C_WriteRegister(i2cTransceiver->I2CHandle, (uint16_t)i2cAddr, regAddr, buffer, bytesToWrite);
     if (RETCODE_OK == retcode)
     {
-        if (pdTRUE != xSemaphoreTake(i2cTransceiver->I2CBusSync, (TickType_t) pdMS_TO_TICKS(DATA_TRANSFER_TIMEOUT_MS)))
+        if (pdTRUE != xSemaphoreTake(i2cTransceiver->I2CBusSync, (TickType_t)pdMS_TO_TICKS(DATA_TRANSFER_TIMEOUT_MS)))
         {
             /* Since the I2C transfer time out happened, Abort an ongoing I2C transmission.*/
-            retcode = MCU_I2C_Send(i2cTransceiver->I2CHandle, (uint16_t) i2cAddr, buffer, CANCEL_I2C_TRANSMISSION);
+            retcode = MCU_I2C_Send(i2cTransceiver->I2CHandle, (uint16_t)i2cAddr, buffer, CANCEL_I2C_TRANSMISSION);
             if (RETCODE_OK == retcode)
             {
                 retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMEOUT);
@@ -253,7 +252,7 @@ Retcode_T I2CTransceiver_Deinit(I2cTranceiverHandlePtr_T i2cTransceiver)
         return (RETCODE_OK);
     }
 
-    i2cTransceiver->I2CHandle=NULL;
+    i2cTransceiver->I2CHandle = NULL;
     vSemaphoreDelete(i2cTransceiver->I2CBusSync);
     i2cTransceiver->I2CBusSync = NULL;
     vSemaphoreDelete(i2cTransceiver->I2CMutexLock);

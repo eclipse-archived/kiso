@@ -240,7 +240,7 @@ Retcode_T BSP_ADXL372_SetCSHigh(int32_t deviceId);
  */
 Retcode_T BSP_ADXL372_SetCSLow(int32_t deviceId);
 
-/**@}*//* KISO_HAL_BSP_ADXL372 */
+/**@}*/ /* KISO_HAL_BSP_ADXL372 */
 
 #endif /*KISO_FEATURE_BSP_ADXL372*/
 #endif /* KISO_BSP_ADXL372_H_ */

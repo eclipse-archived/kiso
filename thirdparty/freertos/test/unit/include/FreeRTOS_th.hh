@@ -18,7 +18,7 @@
  *  Mockup implementation for the FreeRTOS module.
  *
  * ****************************************************************************/
- 
+
 /* header definition ******************************************************** */
 #ifndef KISO_FREERTOS_TH_HH_
 #define KISO_FREERTOS_TH_HH_

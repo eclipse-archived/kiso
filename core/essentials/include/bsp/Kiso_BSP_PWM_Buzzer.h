@@ -117,7 +117,7 @@ Retcode_T BSP_PWM_Buzzer_Disconnect(void);
  *
  * @return      RETCODE_OK in the case of success or an error code otherwise.
  */
-Retcode_T BSP_PWM_Buzzer_Switch(uint32_t id, uint32_t volumePercent,uint32_t frequencyHz);
+Retcode_T BSP_PWM_Buzzer_Switch(uint32_t id, uint32_t volumePercent, uint32_t frequencyHz);
 
 #endif /* KISO_FEATURE_BSP_PWM_BUZZER*/
 

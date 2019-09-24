@@ -168,13 +168,13 @@
 #if defined(MBEDTLS_PLATFORM_MEMORY)
 
 #include <stddef.h>
-extern void* XdkMbedCalloc(size_t num, size_t size);
-extern void XdkMbedFree(void* ptr);
+extern void *XdkMbedCalloc(size_t num, size_t size);
+extern void XdkMbedFree(void *ptr);
 
 #endif /* MBEDTLS_PLATFORM_MEMORY */
 
-#define MBEDTLS_PLATFORM_FREE_MACRO     XdkMbedFree
-#define MBEDTLS_PLATFORM_CALLOC_MACRO   XdkMbedCalloc
+#define MBEDTLS_PLATFORM_FREE_MACRO XdkMbedFree
+#define MBEDTLS_PLATFORM_CALLOC_MACRO XdkMbedCalloc
 
 /**
  * \def MBEDTLS_PLATFORM_NO_STD_FUNCTIONS
@@ -526,7 +526,6 @@ extern void XdkMbedFree(void* ptr);
  */
 //#define MBEDTLS_CAMELLIA_SMALL_MEMORY
 
-
 /**
  * \def MBEDTLS_CIPHER_MODE_CBC
  *
@@ -641,8 +640,6 @@ extern void XdkMbedFree(void* ptr);
  * Uncomment this macro to remove RC4 ciphersuites by default.
  */
 //#define MBEDTLS_REMOVE_ARC4_CIPHERSUITES
-
-
 
 /**
  * \def MBEDTLS_ECP_DP_SECP192R1_ENABLED
@@ -1225,7 +1222,6 @@ extern void XdkMbedFree(void* ptr);
  *
  * Comment this macro to disable support for Encrypt-then-MAC
  */
-
 
 #define MBEDTLS_SSL_ENCRYPT_THEN_MAC
 
@@ -2652,9 +2648,7 @@ extern void XdkMbedFree(void* ptr);
  */
 #define MBEDTLS_SSL_TLS_C
 
-
 #define MBEDTLS_KEY_EXCHANGE__SOME__PSK_ENABLED
-
 
 /**
  * \def MBEDTLS_THREADING_C
@@ -2843,8 +2837,8 @@ extern void XdkMbedFree(void* ptr);
  */
 
 /* MPI / BIGNUM options */
-#define MBEDTLS_MPI_WINDOW_SIZE            1 /**< Maximum windows size used. */
-#define MBEDTLS_MPI_MAX_SIZE            512 /**< Maximum number of bytes for usable MPIs. */
+#define MBEDTLS_MPI_WINDOW_SIZE 1 /**< Maximum windows size used. */
+#define MBEDTLS_MPI_MAX_SIZE 512  /**< Maximum number of bytes for usable MPIs. */
 
 /* CTR_DRBG options */
 //#define MBEDTLS_CTR_DRBG_ENTROPY_LEN               48 /**< Amount of entropy used per seed by default (48 with SHA-512, 32 with SHA-256) */
@@ -2918,7 +2912,7 @@ extern void XdkMbedFree(void* ptr);
  * will override this length by setting maximum incoming and/or outgoing
  * fragment length, respectively.
  */
-#define MBEDTLS_SSL_MAX_CONTENT_LEN             4850 /* Used for storing and processing server certificate */
+#define MBEDTLS_SSL_MAX_CONTENT_LEN 4850 /* Used for storing and processing server certificate */
 /** \def MBEDTLS_SSL_IN_CONTENT_LEN
  *
  * Maximum incoming fragment length in bytes.
@@ -2952,7 +2946,7 @@ extern void XdkMbedFree(void* ptr);
 //#define MBEDTLS_SSL_OUT_CONTENT_LEN             16384
 
 //#define MBEDTLS_SSL_DEFAULT_TICKET_LIFETIME     86400 /**< Lifetime of session tickets (if enabled) */
-#define MBEDTLS_PSK_MAX_LEN                 65 /**< Max size of TLS pre-shared keys, in bytes (default 256 bits) */
+#define MBEDTLS_PSK_MAX_LEN 65 /**< Max size of TLS pre-shared keys, in bytes (default 256 bits) */
 //#define MBEDTLS_SSL_COOKIE_TIMEOUT        60 /**< Default expiration delay of DTLS cookies, in seconds if HAVE_TIME, or in number of cookies issued */
 
 /**

@@ -17,7 +17,7 @@
  * Mock-up implementation for the stm32l4xx_hal_pwr_ex module.
  */
 /*----------------------------------------------------------------------------*/
- 
+
 #ifndef STM32L4XX_HAL_PWR_EX_TH_HH
 #define STM32L4XX_HAL_PWR_EX_TH_HH
 
@@ -58,4 +58,4 @@ FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_PWREx_DisableOverDrive)
 
 FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_PWREx_EnterUnderDriveSTOPMode, uint32_t, uint8_t)
 
-# endif /* STM32L4XX_HAL_PWR_EX_TH_HH */
+#endif /* STM32L4XX_HAL_PWR_EX_TH_HH */

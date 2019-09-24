@@ -36,13 +36,12 @@ extern "C"
 }
 /* end of global scope symbol and fake definitions section */
 
-class TS_MCU_RNG_Initialize: public testing::Test
+class TS_MCU_RNG_Initialize : public testing::Test
 {
 protected:
     virtual void SetUp()
     {
-        FFF_RESET_HISTORY()
-        ;
+        FFF_RESET_HISTORY();
 
         RESET_FAKE(HAL_RNG_Init);
     }
@@ -55,7 +54,7 @@ protected:
 TEST_F(TS_MCU_RNG_Initialize, Success)
 {
     Retcode_T retcode = RETCODE_OK;
-    RNG_T rng = (RNG_T) 1;
+    RNG_T rng = (RNG_T)1;
 
     HAL_RNG_Init_fake.return_val = HAL_OK;
 
@@ -81,7 +80,7 @@ TEST_F(TS_MCU_RNG_Initialize, InvalidHandle_Fail)
 TEST_F(TS_MCU_RNG_Initialize, HalInit_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    RNG_T rng = (RNG_T) 1;
+    RNG_T rng = (RNG_T)1;
 
     HAL_RNG_Init_fake.return_val = HAL_ERROR;
 
@@ -91,13 +90,12 @@ TEST_F(TS_MCU_RNG_Initialize, HalInit_Fail)
     EXPECT_EQ(1U, HAL_RNG_Init_fake.call_count);
 }
 
-class TS_MCU_RNG_Deinitialize: public testing::Test
+class TS_MCU_RNG_Deinitialize : public testing::Test
 {
 protected:
     virtual void SetUp()
     {
-        FFF_RESET_HISTORY()
-        ;
+        FFF_RESET_HISTORY();
 
         RESET_FAKE(HAL_RNG_DeInit);
     }
@@ -110,7 +108,7 @@ protected:
 TEST_F(TS_MCU_RNG_Deinitialize, Success)
 {
     Retcode_T retcode = RETCODE_OK;
-    RNG_T rng = (RNG_T) 1;
+    RNG_T rng = (RNG_T)1;
 
     HAL_RNG_DeInit_fake.return_val = HAL_OK;
 
@@ -136,7 +134,7 @@ TEST_F(TS_MCU_RNG_Deinitialize, InvalidHandle_Fail)
 TEST_F(TS_MCU_RNG_Deinitialize, HalDeInit_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    RNG_T rng = (RNG_T) 1;
+    RNG_T rng = (RNG_T)1;
 
     HAL_RNG_DeInit_fake.return_val = HAL_ERROR;
 
@@ -146,18 +144,18 @@ TEST_F(TS_MCU_RNG_Deinitialize, HalDeInit_Fail)
     EXPECT_EQ(1U, HAL_RNG_DeInit_fake.call_count);
 }
 
-static uint8_t* RandomData = NULL;
+static uint8_t *RandomData = NULL;
 static uint32_t RandomDataLength = 0;
 static uint32_t RandomDataPosition = 0;
 
-HAL_StatusTypeDef Fake_HAL_RNG_GenerateRandomNumber(RNG_HandleTypeDef* rng,
-        uint32_t* random32Bits)
+HAL_StatusTypeDef Fake_HAL_RNG_GenerateRandomNumber(RNG_HandleTypeDef *rng,
+                                                    uint32_t *random32Bits)
 {
     KISO_UNUSED(rng);
 
     if (RandomDataPosition < RandomDataLength)
     {
-        *random32Bits = *((uint32_t*) &(RandomData[RandomDataPosition]));
+        *random32Bits = *((uint32_t *)&(RandomData[RandomDataPosition]));
         RandomDataPosition += sizeof(uint32_t);
         return HAL_OK;
     }
@@ -167,17 +165,16 @@ HAL_StatusTypeDef Fake_HAL_RNG_GenerateRandomNumber(RNG_HandleTypeDef* rng,
     }
 }
 
-class TS_MCU_RNG_Generate: public testing::Test
+class TS_MCU_RNG_Generate : public testing::Test
 {
 protected:
     virtual void SetUp()
     {
-        FFF_RESET_HISTORY()
-        ;
+        FFF_RESET_HISTORY();
 
         RESET_FAKE(HAL_RNG_GenerateRandomNumber);
         HAL_RNG_GenerateRandomNumber_fake.custom_fake =
-                Fake_HAL_RNG_GenerateRandomNumber;
+            Fake_HAL_RNG_GenerateRandomNumber;
 
         RandomData = NULL;
         RandomDataLength = 0;
@@ -192,7 +189,7 @@ protected:
 TEST_F(TS_MCU_RNG_Generate, Aligned_Success)
 {
     Retcode_T retcode = RETCODE_OK;
-    RNG_T rng = (RNG_T) 1;
+    RNG_T rng = (RNG_T)1;
     uint8_t buffer[512];
     uint32_t length = sizeof(buffer);
     memset(buffer, 0U, length);
@@ -200,7 +197,7 @@ TEST_F(TS_MCU_RNG_Generate, Aligned_Success)
     uint8_t expectedData[length];
     for (uint32_t i = 0; i < length; ++i)
     {
-        expectedData[i] = (uint8_t) rand();
+        expectedData[i] = (uint8_t)rand();
     }
     RandomData = expectedData;
     RandomDataLength = length;
@@ -217,7 +214,7 @@ TEST_F(TS_MCU_RNG_Generate, Aligned_Success)
 TEST_F(TS_MCU_RNG_Generate, Unaligned_Success)
 {
     Retcode_T retcode = RETCODE_OK;
-    RNG_T rng = (RNG_T) 1;
+    RNG_T rng = (RNG_T)1;
     uint8_t buffer[512 + 1];
     uint32_t length = sizeof(buffer);
     memset(buffer, 0U, sizeof(buffer));
@@ -225,7 +222,7 @@ TEST_F(TS_MCU_RNG_Generate, Unaligned_Success)
     uint8_t expectedData[length];
     for (uint32_t i = 0; i < length; ++i)
     {
-        expectedData[i] = (uint8_t) rand();
+        expectedData[i] = (uint8_t)rand();
     }
     RandomData = expectedData;
     RandomDataLength = length;
@@ -242,7 +239,7 @@ TEST_F(TS_MCU_RNG_Generate, Unaligned_Success)
 TEST_F(TS_MCU_RNG_Generate, OverflowCheckAligned_Success)
 {
     Retcode_T retcode = RETCODE_OK;
-    RNG_T rng = (RNG_T) 1;
+    RNG_T rng = (RNG_T)1;
     uint8_t buffer[512 + 16];
     uint32_t length = sizeof(buffer) - 16;
     memset(buffer, 0U, length);
@@ -250,7 +247,7 @@ TEST_F(TS_MCU_RNG_Generate, OverflowCheckAligned_Success)
     uint8_t expectedData[sizeof(buffer)];
     for (uint32_t i = 0; i < length; ++i)
     {
-        expectedData[i] = (uint8_t) rand();
+        expectedData[i] = (uint8_t)rand();
     }
     for (uint32_t i = length; i < sizeof(buffer); i++)
     {
@@ -276,7 +273,7 @@ TEST_F(TS_MCU_RNG_Generate, OverflowCheckAligned_Success)
 TEST_F(TS_MCU_RNG_Generate, OverflowCheckUnaligned_Success)
 {
     Retcode_T retcode = RETCODE_OK;
-    RNG_T rng = (RNG_T) 1;
+    RNG_T rng = (RNG_T)1;
     uint8_t buffer[512 + 10];
     uint32_t length = sizeof(buffer) - 10;
     memset(buffer, 0U, length);
@@ -284,7 +281,7 @@ TEST_F(TS_MCU_RNG_Generate, OverflowCheckUnaligned_Success)
     uint8_t expectedData[sizeof(buffer)];
     for (uint32_t i = 0; i < length; ++i)
     {
-        expectedData[i] = (uint8_t) rand();
+        expectedData[i] = (uint8_t)rand();
     }
     for (uint32_t i = length; i < sizeof(buffer); i++)
     {
@@ -322,8 +319,8 @@ TEST_F(TS_MCU_RNG_Generate, InvalidHandle_Fail)
 TEST_F(TS_MCU_RNG_Generate, InvalidBuffer_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    RNG_T rng = (RNG_T) 1;
-    uint8_t* buffer = NULL;
+    RNG_T rng = (RNG_T)1;
+    uint8_t *buffer = NULL;
     uint32_t length = 1024;
 
     retcode = MCU_RNG_Generate(rng, buffer, length);
@@ -334,11 +331,11 @@ TEST_F(TS_MCU_RNG_Generate, InvalidBuffer_Fail)
 TEST_F(TS_MCU_RNG_Generate, InvalidBuffer_errorPropagation)
 {
     Retcode_T retcode = RETCODE_OK;
-    RNG_T rng = (RNG_T) 1;
+    RNG_T rng = (RNG_T)1;
     uint8_t buffer[1024];
     uint32_t length = 1024;
 
-    RESET_FAKE (HAL_RNG_GenerateRandomNumber);
+    RESET_FAKE(HAL_RNG_GenerateRandomNumber);
     HAL_RNG_GenerateRandomNumber_fake.return_val = HAL_BUSY;
 
     /* Length is superior to a word representation. */
@@ -358,7 +355,7 @@ TEST_F(TS_MCU_RNG_Generate, InvalidBuffer_errorPropagation)
     retcode = MCU_RNG_Generate(rng, buffer, length);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), retcode);
 
-    RESET_FAKE (HAL_RNG_GenerateRandomNumber);
+    RESET_FAKE(HAL_RNG_GenerateRandomNumber);
 }
 #else
 }

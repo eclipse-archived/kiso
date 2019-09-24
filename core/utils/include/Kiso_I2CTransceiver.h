@@ -51,9 +51,8 @@ struct I2cTranceiverHandle_S
     xSemaphoreHandle I2CMutexLock;
     /* status of I2C transfer*/
     int8_t I2cTransferStatusFlag;
-
 };
-typedef struct I2cTranceiverHandle_S I2cTranceiverHandle_T,*I2cTranceiverHandlePtr_T;
+typedef struct I2cTranceiverHandle_S I2cTranceiverHandle_T, *I2cTranceiverHandlePtr_T;
 
 /**
  * @brief
@@ -110,7 +109,7 @@ Retcode_T I2CTransceiver_Init(I2cTranceiverHandlePtr_T i2cTransceiver, I2C_T i2c
  *      If I2C transfer is not successful.
  * 
  */
-Retcode_T I2CTransceiver_Read(I2cTranceiverHandlePtr_T i2cTransceiver,uint8_t i2cAddr,uint8_t regAddr,uint8_t *buffer,uint8_t bytesToRead );
+Retcode_T I2CTransceiver_Read(I2cTranceiverHandlePtr_T i2cTransceiver, uint8_t i2cAddr, uint8_t regAddr, uint8_t *buffer, uint8_t bytesToRead);
 
 /**
  * @brief
@@ -144,7 +143,7 @@ Retcode_T I2CTransceiver_Read(I2cTranceiverHandlePtr_T i2cTransceiver,uint8_t i2
  * 
  */
 
-Retcode_T I2CTransceiver_Write(I2cTranceiverHandlePtr_T i2cTransceiver,uint8_t i2cAddr,uint8_t regAddr,uint8_t *buffer,uint8_t bytesToWrite);
+Retcode_T I2CTransceiver_Write(I2cTranceiverHandlePtr_T i2cTransceiver, uint8_t i2cAddr, uint8_t regAddr, uint8_t *buffer, uint8_t bytesToWrite);
 
 /**
  * @brief
@@ -164,7 +163,7 @@ Retcode_T I2CTransceiver_Write(I2cTranceiverHandlePtr_T i2cTransceiver,uint8_t i
  *      The event which is notified by the callback
  * 
  */
-void I2CTransceiver_LoopCallback(I2cTranceiverHandlePtr_T transceiver,struct MCU_I2C_Event_S event);
+void I2CTransceiver_LoopCallback(I2cTranceiverHandlePtr_T transceiver, struct MCU_I2C_Event_S event);
 
 /**
  * @brief

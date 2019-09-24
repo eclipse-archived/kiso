@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------------------*//********************************************************************************
+/*----------------------------------------------------------------------------*/ /********************************************************************************
 * Copyright (c) 2010-2019 Robert Bosch GmbH
 *
 * This program and the accompanying materials are made available under the
@@ -27,7 +27,7 @@ extern "C"
 #include "em_device_th.hh"
 #include "em_dma_th.hh"
 
-/* Kiso_HALConfig.h file which breaks the unit test implementation.
+    /* Kiso_HALConfig.h file which breaks the unit test implementation.
  *
  * Below four lines hot-fix needs to be replaced by proper implementation.
  */
@@ -39,22 +39,19 @@ extern "C"
 /* include module under test */
 #include "SPI.c"
 
-/* Fake error handler */
-
+    /* Fake error handler */
 }
 /* end of global scope symbol and fake definitions section */
 
-class KISO_SPItest: public testing::Test
+class KISO_SPItest : public testing::Test
 {
 protected:
-
     virtual void SetUp()
     {
         DeInit();
 
         for (int i = 0; i < 10; i++)
         {
-
         }
         FFF_RESET_HISTORY()
     }
@@ -75,7 +72,7 @@ public:
     static struct MCU_SPI_Event_S m_event_cbf;
 };
 
-const struct MCU_SPI_Event_S KISO_SPItest::m_EventInit = { 0, 0, 0, 0, 0, 0 };
+const struct MCU_SPI_Event_S KISO_SPItest::m_EventInit = {0, 0, 0, 0, 0, 0};
 bool KISO_SPItest::m_isCalled_cbf = false;
 
 struct MCU_SPI_Event_S KISO_SPItest::m_event_cbf = m_EventInit;
@@ -106,7 +103,7 @@ SpiDevice::SpiDevice(enum KISO_HAL_TransferMode_E TransferMode)
     m_Spi.DmaRxCallback = NULL;
     m_Spi.DmaTxCallback = NULL;
 
-    m_SpiInterfaceParam = (intptr_t) &m_Spi;
+    m_SpiInterfaceParam = (intptr_t)&m_Spi;
 }
 
 SpiDevice::~SpiDevice()
@@ -125,7 +122,7 @@ uint32_t SpiDevice::getAppInterfaceHandle()
  */
 void AppTestCallbackFunction(SPI_T spi, struct MCU_SPI_Event_S event)
 {
-    KISO_SPItest::m_spi_cbf = (intptr_t) spi;
+    KISO_SPItest::m_spi_cbf = (intptr_t)spi;
     KISO_SPItest::m_event_cbf = event;
     /*
      std::cout << "     --- Hello from AppTestCallbackFunction ---" << std::endl;
@@ -157,7 +154,6 @@ TEST_F(KISO_SPItest, dummyTest)
     /* VERIFY : Compare the expected with actual */
 
     /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
-
 }
 
 /*************************** SPI TESTS *****************************/
@@ -169,7 +165,7 @@ TEST_F(KISO_SPItest, test_MCU_SPI_Initialize_ok)
 {
     Retcode_T rc;
     SpiDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    SPI_T spi01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    SPI_T spi01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_SPI_Initialize(spi01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
 }
@@ -196,7 +192,7 @@ TEST_F(KISO_SPItest, test_MCU_SPI_Initialize_nullCallback)
 {
     Retcode_T rc;
     SpiDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    SPI_T spi01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    SPI_T spi01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_SPI_Initialize(spi01, NULL);
     EXPECT_NE(RETCODE_OK, rc);
 }
@@ -205,7 +201,7 @@ TEST_F(KISO_SPItest, test_MCU_SPI_Initialize_wrongTransferMode)
 {
     Retcode_T rc;
     SpiDevice Device01(KISO_HAL_TRANSFER_MODE_BLOCKING);
-    SPI_T spi01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    SPI_T spi01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_SPI_Initialize(spi01, AppTestCallbackFunction);
     EXPECT_NE(RETCODE_OK, rc);
 }
@@ -219,7 +215,7 @@ TEST_F(KISO_SPItest, test_MCU_SPI_Deinitialize_ok)
 {
     Retcode_T rc;
     SpiDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    SPI_T spi01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    SPI_T spi01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_SPI_Initialize(spi01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_SPI_Deinitialize(spi01);
@@ -230,7 +226,7 @@ TEST_F(KISO_SPItest, test_MCU_SPI_Deinitialize_nullSpi)
 {
     Retcode_T rc;
     SpiDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    SPI_T spi01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    SPI_T spi01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_SPI_Initialize(spi01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_SPI_Deinitialize(0);
@@ -247,9 +243,9 @@ TEST_F(KISO_SPItest, test_MCU_SPI_Send_ok)
 {
     const uint16_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     SpiDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    SPI_T spi01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    SPI_T spi01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_SPI_Initialize(spi01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_SPI_Send(spi01, buffer, size);
@@ -263,7 +259,7 @@ TEST_F(KISO_SPItest, test_MCU_SPI_Send_nullBuffer)
     const uint16_t size = 10;
     Retcode_T rc;
     SpiDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    SPI_T spi01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    SPI_T spi01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_SPI_Initialize(spi01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_SPI_Send(spi01, NULL, size);
@@ -274,9 +270,9 @@ TEST_F(KISO_SPItest, test_MCU_SPI_Send_sendCancel)
 {
     const uint16_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     SpiDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    SPI_T spi01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    SPI_T spi01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_SPI_Initialize(spi01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_SPI_Send(spi01, buffer, 0); /* send cancel */
@@ -294,9 +290,9 @@ TEST_F(KISO_SPItest, test_MCU_SPI_Receive_ok)
 {
     const uint16_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     SpiDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    SPI_T spi01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    SPI_T spi01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_SPI_Initialize(spi01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_SPI_Receive(spi01, buffer, size);
@@ -310,7 +306,7 @@ TEST_F(KISO_SPItest, test_MCU_SPI_Receive_nullBuffer)
     const uint16_t size = 10;
     Retcode_T rc;
     SpiDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    SPI_T spi01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    SPI_T spi01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_SPI_Initialize(spi01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_SPI_Receive(spi01, 0, size);
@@ -321,9 +317,9 @@ TEST_F(KISO_SPItest, test_MCU_SPI_Receive_receiveCancel)
 {
     const uint16_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     SpiDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    SPI_T spi01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    SPI_T spi01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_SPI_Initialize(spi01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_SPI_Receive(spi01, buffer, 0); /* receive cancel */
@@ -342,25 +338,24 @@ TEST_F(KISO_SPItest, test_MCU_SPI_Transfer_ok)
 {
     const uint32_t size = 1;
     Retcode_T rc;
-    uint8_t buffer[ size ] = {0x01};
+    uint8_t buffer[size] = {0x01};
     SpiDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    SPI_T spi01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    SPI_T spi01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_SPI_Initialize(spi01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_SPI_Transfer(spi01, buffer, buffer, size);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_SPI_Deinitialize(spi01);
     EXPECT_EQ(RETCODE_OK, rc);
-
 }
 
 TEST_F(KISO_SPItest, test_MCU_SPI_Transfer_nullBufferIn)
 {
     const uint16_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     SpiDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    SPI_T spi01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    SPI_T spi01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_SPI_Initialize(spi01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_SPI_Transfer(spi01, NULL, buffer, size);
@@ -371,9 +366,9 @@ TEST_F(KISO_SPItest, test_MCU_SPI_Transfer_nullBufferOut)
 {
     const uint16_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     SpiDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    SPI_T spi01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    SPI_T spi01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_SPI_Initialize(spi01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_SPI_Transfer(spi01, buffer, NULL, size);
@@ -384,9 +379,9 @@ TEST_F(KISO_SPItest, test_MCU_SPI_Transfer_cancel)
 {
     const uint16_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     SpiDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    SPI_T spi01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    SPI_T spi01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_SPI_Initialize(spi01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_SPI_Transfer(spi01, buffer, buffer, 0);
@@ -405,11 +400,11 @@ TEST_F(KISO_SPItest, test_MCU_SPI_GetDataCount_ok)
 {
     Retcode_T rc;
     SpiDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    SPI_T spi01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    SPI_T spi01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_SPI_Initialize(spi01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
 
-    struct MCU_SPI_Handle_S* spi_ptr = (struct MCU_SPI_Handle_S*) spi01;
+    struct MCU_SPI_Handle_S *spi_ptr = (struct MCU_SPI_Handle_S *)spi01;
     spi_ptr->TxXferCount = 2;
     spi_ptr->XferSize = 10;
     uint32_t count = MCU_SPI_GetDataCount(spi01);
@@ -420,7 +415,7 @@ TEST_F(KISO_SPItest, test_MCU_SPI_GetDataCount_nullSpi)
 {
     Retcode_T rc;
     SpiDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    SPI_T spi01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    SPI_T spi01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_SPI_Initialize(spi01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     uint32_t count = MCU_SPI_GetDataCount(0);

@@ -12,7 +12,6 @@
 *
 ********************************************************************************/
 
-
 /**
  * @ingroup     BSP_COMMONGATEWAY
  * @defgroup    BSP_COMMONGATEWAY  Common Gateway BSP
@@ -83,10 +82,10 @@ enum BSP_CommonGateway_Retcodes_E
  */
 enum CommonGateway_LED_Ids_E
 {
-    COMMONGATEWAY_LED_ALL = 0, /**< Id to address All LEDs */
-    COMMONGATEWAY_LED_RED_ID, /**< Id to address Red LED */
+    COMMONGATEWAY_LED_ALL = 0,  /**< Id to address All LEDs */
+    COMMONGATEWAY_LED_RED_ID,   /**< Id to address Red LED */
     COMMONGATEWAY_LED_GREEN_ID, /**< Id to address Green LED */
-    COMMONGATEWAY_LED_BLUE_ID, /**< Id to address Blue LED */
+    COMMONGATEWAY_LED_BLUE_ID,  /**< Id to address Blue LED */
 };
 
 /**
@@ -94,8 +93,8 @@ enum CommonGateway_LED_Ids_E
  */
 enum CommonGateway_LED_Commands_E
 {
-    COMMONGATEWAY_LED_COMMAND_OFF, //!< COMMONGATEWAY_LED_COMMAND_OFF
-    COMMONGATEWAY_LED_COMMAND_ON, //!< COMMONGATEWAY_LED_COMMAND_ON
+    COMMONGATEWAY_LED_COMMAND_OFF,    //!< COMMONGATEWAY_LED_COMMAND_OFF
+    COMMONGATEWAY_LED_COMMAND_ON,     //!< COMMONGATEWAY_LED_COMMAND_ON
     COMMONGATEWAY_LED_COMMAND_TOGGLE, //!< COMMONGATEWAY_LED_COMMAND_TOGGLE
 };
 
@@ -140,13 +139,13 @@ enum CommonGateway_BME280I2CAddress_E
  */
 enum BSP_State_Transition_E
 {
-    BSP_STATE_TO_RESET = 0x01 << 0, /**< The device can transit to reset state */
-    BSP_STATE_TO_INIT = 0x01 << 1, /**< The device can transit to initialized state */
-    BSP_STATE_TO_CONNECTED = 0x01 << 2, /**< The device can transit to connected state */
-    BSP_STATE_TO_ENABLED = 0x01 << 3, /**< The device can transit to enabled state */
-    BSP_STATE_TO_DISABLED = 0x01 << 4, /**< The device can transit to disabled state */
+    BSP_STATE_TO_RESET = 0x01 << 0,        /**< The device can transit to reset state */
+    BSP_STATE_TO_INIT = 0x01 << 1,         /**< The device can transit to initialized state */
+    BSP_STATE_TO_CONNECTED = 0x01 << 2,    /**< The device can transit to connected state */
+    BSP_STATE_TO_ENABLED = 0x01 << 3,      /**< The device can transit to enabled state */
+    BSP_STATE_TO_DISABLED = 0x01 << 4,     /**< The device can transit to disabled state */
     BSP_STATE_TO_DISCONNECTED = 0x01 << 5, /**< The device can transit to disconnected state */
-    BSP_STATE_TO_ERROR = 0x01 << 6, /**< The device can transit to error state */
+    BSP_STATE_TO_ERROR = 0x01 << 6,        /**< The device can transit to error state */
 };
 
 enum BSP_State_E
@@ -154,9 +153,9 @@ enum BSP_State_E
     BSP_STATE_RESET = 0x00,
     BSP_STATE_INIT = BSP_STATE_TO_CONNECTED,
     BSP_STATE_CONNECTED = BSP_STATE_TO_ENABLED | BSP_STATE_TO_DISCONNECTED | BSP_STATE_TO_ERROR, /**< The device is connected*/
-    BSP_STATE_ENABLED = BSP_STATE_TO_DISABLED | BSP_STATE_TO_ERROR, /**< The device is enabled */
-    BSP_STATE_DISABLED = BSP_STATE_TO_ENABLED | BSP_STATE_TO_DISCONNECTED | BSP_STATE_TO_ERROR,/**< The device is at disabled state */
-    BSP_STATE_DISCONNECTED = BSP_STATE_TO_CONNECTED | BSP_STATE_TO_ERROR, /**< The device is at disconnected state */
+    BSP_STATE_ENABLED = BSP_STATE_TO_DISABLED | BSP_STATE_TO_ERROR,                              /**< The device is enabled */
+    BSP_STATE_DISABLED = BSP_STATE_TO_ENABLED | BSP_STATE_TO_DISCONNECTED | BSP_STATE_TO_ERROR,  /**< The device is at disabled state */
+    BSP_STATE_DISCONNECTED = BSP_STATE_TO_CONNECTED | BSP_STATE_TO_ERROR,                        /**< The device is at disconnected state */
     BSP_STATE_ERROR = 0xFF,
 };
 
@@ -164,12 +163,12 @@ enum BSP_State_E
  * @def BSP_BOARD_DEFAULT_PARAM1
  * Default param1 for BSP_Board_Initialize()
  */
-#define BSP_BOARD_DEFAULT_PARAM1       UINT32_C(0)
+#define BSP_BOARD_DEFAULT_PARAM1 UINT32_C(0)
 /**
  * @def BSP_BOARD_DEFAULT_PARAM2
  * Default param2 for BSP_Board_Initialize()
  */
-#define BSP_BOARD_DEFAULT_PARAM2       NULL
+#define BSP_BOARD_DEFAULT_PARAM2 NULL
 
 #endif /* BSP_COMMONGATEWAY_H_ */
 

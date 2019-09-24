@@ -51,15 +51,15 @@ Retcode_T EventHub_Initialize(EventHub_T *hub)
 {
     if (NULL == hub)
     {
-        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_NULL_POINTER);
+        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_NULL_POINTER);
     }
 
     memset(hub, 0, sizeof(EventHub_T));
 
-    hub->lock = (SemaphoreHandle_t) xSemaphoreCreateMutex();
+    hub->lock = (SemaphoreHandle_t)xSemaphoreCreateMutex();
     if (NULL == hub->lock)
     {
-        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_SEMAPHORE_ERROR);
+        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_SEMAPHORE_ERROR);
     }
 
     return RETCODE_OK;
@@ -72,22 +72,22 @@ Retcode_T EventHub_Observe(EventHub_T *hub, EventHandler_T handler, TaskEvent_T 
 
     if (NULL == hub || NULL == handler)
     {
-        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_NULL_POINTER);
+        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_NULL_POINTER);
     }
 
     if (NULL == hub->lock)
     {
-        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_UNINITIALIZED);
+        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_UNINITIALIZED);
     }
 
-    if (pdPASS != xSemaphoreTake((SemaphoreHandle_t) hub->lock, portMAX_DELAY))
+    if (pdPASS != xSemaphoreTake((SemaphoreHandle_t)hub->lock, portMAX_DELAY))
     {
-        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_SEMAPHORE_ERROR);
+        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_SEMAPHORE_ERROR);
     }
 
     if (CONFIG_EVENTHUB_MAX_OBSERVERS == hub->observerCount)
     {
-        retval = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_OUT_OF_RESOURCES);
+        retval = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_OUT_OF_RESOURCES);
     }
 
     if (retval == RETCODE_OK)
@@ -98,9 +98,9 @@ Retcode_T EventHub_Observe(EventHub_T *hub, EventHandler_T handler, TaskEvent_T 
         hub->observerCount++;
     }
 
-    if (pdPASS != xSemaphoreGive((SemaphoreHandle_t) hub->lock))
+    if (pdPASS != xSemaphoreGive((SemaphoreHandle_t)hub->lock))
     {
-        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_SEMAPHORE_ERROR);
+        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_SEMAPHORE_ERROR);
     }
 
     return retval;
@@ -113,22 +113,22 @@ Retcode_T EventHub_ObserveAll(EventHub_T *hub, EventHandler_T handler)
 
     if (NULL == hub || NULL == handler)
     {
-        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_NULL_POINTER);
+        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_NULL_POINTER);
     }
 
     if (NULL == hub->lock)
     {
-        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_UNINITIALIZED);
+        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_UNINITIALIZED);
     }
 
-    if (pdPASS != xSemaphoreTake((SemaphoreHandle_t) hub->lock, portMAX_DELAY))
+    if (pdPASS != xSemaphoreTake((SemaphoreHandle_t)hub->lock, portMAX_DELAY))
     {
-        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_SEMAPHORE_ERROR);
+        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_SEMAPHORE_ERROR);
     }
 
     if (CONFIG_EVENTHUB_MAX_OBSERVERS == hub->observerCount)
     {
-        retval = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_OUT_OF_RESOURCES);
+        retval = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_OUT_OF_RESOURCES);
     }
 
     if (retval == RETCODE_OK)
@@ -138,9 +138,9 @@ Retcode_T EventHub_ObserveAll(EventHub_T *hub, EventHandler_T handler)
         hub->observerCount++;
     }
 
-    if (pdPASS != xSemaphoreGive((SemaphoreHandle_t) hub->lock))
+    if (pdPASS != xSemaphoreGive((SemaphoreHandle_t)hub->lock))
     {
-        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_SEMAPHORE_ERROR);
+        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_SEMAPHORE_ERROR);
     }
 
     return retval;
@@ -151,17 +151,17 @@ Retcode_T EventHub_Notify(EventHub_T *hub, TaskEvent_T event, void *data)
 {
     if (NULL == hub)
     {
-        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_NULL_POINTER);
+        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_NULL_POINTER);
     }
 
     if (NULL == hub->lock)
     {
-        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_UNINITIALIZED);
+        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_UNINITIALIZED);
     }
 
-    if (pdPASS != xSemaphoreTake((SemaphoreHandle_t) hub->lock, portMAX_DELAY))
+    if (pdPASS != xSemaphoreTake((SemaphoreHandle_t)hub->lock, portMAX_DELAY))
     {
-        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_SEMAPHORE_ERROR);
+        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_SEMAPHORE_ERROR);
     }
 
     uint32_t i;
@@ -176,9 +176,9 @@ Retcode_T EventHub_Notify(EventHub_T *hub, TaskEvent_T event, void *data)
         }
     }
 
-    if (pdPASS != xSemaphoreGive((SemaphoreHandle_t) hub->lock))
+    if (pdPASS != xSemaphoreGive((SemaphoreHandle_t)hub->lock))
     {
-        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_SEMAPHORE_ERROR);
+        return RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_SEMAPHORE_ERROR);
     }
 
     return RETCODE_OK;

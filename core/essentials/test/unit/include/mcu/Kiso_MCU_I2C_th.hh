@@ -30,10 +30,10 @@
 /* Mock-ups for the provided interfaces */
 FAKE_VALUE_FUNC(Retcode_T, MCU_I2C_Initialize, I2C_T, MCU_I2C_Callback_T)
 FAKE_VALUE_FUNC(Retcode_T, MCU_I2C_Deinitialize, I2C_T)
-FAKE_VALUE_FUNC(Retcode_T, MCU_I2C_Send, I2C_T, uint16_t, uint8_t*, uint32_t)
-FAKE_VALUE_FUNC(Retcode_T, MCU_I2C_Receive, I2C_T, uint16_t, uint8_t*, uint32_t)
-FAKE_VALUE_FUNC(Retcode_T, MCU_I2C_ReadRegister, I2C_T, uint16_t, uint8_t, uint8_t*, uint32_t)
-FAKE_VALUE_FUNC(Retcode_T, MCU_I2C_WriteRegister, I2C_T, uint16_t, uint8_t, uint8_t*, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_I2C_Send, I2C_T, uint16_t, uint8_t *, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_I2C_Receive, I2C_T, uint16_t, uint8_t *, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_I2C_ReadRegister, I2C_T, uint16_t, uint8_t, uint8_t *, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_I2C_WriteRegister, I2C_T, uint16_t, uint8_t, uint8_t *, uint32_t)
 
 #endif /* KISO_FEATURE_I2C */
 #endif /* KISO_MCU_I2C_TH_HH */

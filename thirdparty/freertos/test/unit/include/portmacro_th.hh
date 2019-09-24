@@ -16,7 +16,7 @@
 #define KISO_PORTMACRO_TH_HH
 
 /* ban or wrap the real interface header */
-#include"portmacro.h"
+#include "portmacro.h"
 
 /* Include the needed headers */
 

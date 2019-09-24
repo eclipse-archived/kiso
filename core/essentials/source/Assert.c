@@ -73,11 +73,11 @@ Retcode_T Assert_Initialize(Assert_Callback_T callback)
 }
 
 /* The description of the function is available in header file */
-void Assert_Dynamic(const unsigned long line, const unsigned char * const file)
+void Assert_Dynamic(const unsigned long line, const unsigned char *const file)
 {
     if (NULL != assertCallback)
     {
-        assertCallback(line , file);
+        assertCallback(line, file);
     }
 #if defined(ASSERT_USE_STD_EXIT)
     /* exit application */
@@ -91,4 +91,3 @@ void Assert_Dynamic(const unsigned long line, const unsigned char * const file)
 }
 
 #endif /* NDEBUG */
-

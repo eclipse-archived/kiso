@@ -153,4 +153,3 @@ Retcode_T BSP_BT_EM9301_SetWULow(void);
 #endif /* KISO_BSP_BT_EM9301_H */
 
 /**  @} */
-

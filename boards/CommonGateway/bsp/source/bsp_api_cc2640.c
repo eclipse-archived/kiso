@@ -38,27 +38,27 @@ void USART3_IRQHandler(void);
 /**
  * BSP State of the BLE module
  */
-static uint8_t bspState = (uint8_t) BSP_STATE_INIT;
+static uint8_t bspState = (uint8_t)BSP_STATE_INIT;
 
 /**
  * Static structure which is used to keep the UART handle for Ble_CC2640
  */
 static struct MCU_UART_S CC2640_UartHandle =
-        {
-                .TxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
-                .RxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
-                .Datarate = 115200,
-                .huart.Instance = USART3,
-                .huart.Init.BaudRate = 115200,
-                .huart.Init.WordLength = UART_WORDLENGTH_8B,
-                .huart.Init.StopBits = UART_STOPBITS_1,
-                .huart.Init.Parity = UART_PARITY_NONE,
-                .huart.Init.Mode = UART_MODE_TX_RX,
-                .huart.Init.HwFlowCtl = UART_HWCONTROL_NONE,
-                .huart.Init.OverSampling = UART_OVERSAMPLING_16,
-                .huart.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE,
-                .huart.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT,
-        };
+    {
+        .TxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
+        .RxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
+        .Datarate = 115200,
+        .huart.Instance = USART3,
+        .huart.Init.BaudRate = 115200,
+        .huart.Init.WordLength = UART_WORDLENGTH_8B,
+        .huart.Init.StopBits = UART_STOPBITS_1,
+        .huart.Init.Parity = UART_PARITY_NONE,
+        .huart.Init.Mode = UART_MODE_TX_RX,
+        .huart.Init.HwFlowCtl = UART_HWCONTROL_NONE,
+        .huart.Init.OverSampling = UART_OVERSAMPLING_16,
+        .huart.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE,
+        .huart.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT,
+};
 
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
 
@@ -71,13 +71,13 @@ Retcode_T BSP_BLE_CC2640_Connect(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_CONNECTED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_CONNECTED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
     if (RETCODE_OK == retcode)
     {
-        GPIO_InitTypeDef BSP_GPIOInitStruct = { 0 };
+        GPIO_InitTypeDef BSP_GPIOInitStruct = {0};
 
         GPIO_OpenClockGate(GPIO_PORT_B, PINB_BLE_RESN);
         /* Configure PINB_BLE_RESN as output push pull */
@@ -96,7 +96,7 @@ Retcode_T BSP_BLE_CC2640_Connect(void)
         BSP_GPIOInitStruct.Alternate = GPIO_AF7_USART3;
         HAL_GPIO_Init(GPIOD, &BSP_GPIOInitStruct);
 
-        bspState = (uint8_t) BSP_STATE_CONNECTED;
+        bspState = (uint8_t)BSP_STATE_CONNECTED;
     }
     return retcode;
 }
@@ -110,7 +110,7 @@ Retcode_T BSP_BLE_CC2640_Enable(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_ENABLED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_ENABLED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -122,8 +122,7 @@ Retcode_T BSP_BLE_CC2640_Enable(void)
     if (RETCODE_OK == retcode)
     {
         /* Enable the UART clock */
-        __HAL_RCC_SPI1_CLK_ENABLE()
-        ;
+        __HAL_RCC_SPI1_CLK_ENABLE();
         __HAL_RCC_SPI1_FORCE_RESET();
         __HAL_RCC_SPI1_RELEASE_RESET();
         /* Configure the UART resource */
@@ -138,7 +137,7 @@ Retcode_T BSP_BLE_CC2640_Enable(void)
         HAL_NVIC_SetPriority(UART4_IRQn, 5, 0);
         HAL_NVIC_EnableIRQ(UART4_IRQn);
 
-        bspState = (uint8_t) BSP_STATE_ENABLED;
+        bspState = (uint8_t)BSP_STATE_ENABLED;
     }
     return retcode;
 }
@@ -152,7 +151,7 @@ Retcode_T BSP_BLE_CC2640_Disable(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_DISABLED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_DISABLED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -173,7 +172,7 @@ Retcode_T BSP_BLE_CC2640_Disable(void)
     }
     if (RETCODE_OK == retcode)
     {
-        bspState = (uint8_t) BSP_STATE_DISABLED;
+        bspState = (uint8_t)BSP_STATE_DISABLED;
     }
     return retcode;
 }
@@ -186,7 +185,7 @@ Retcode_T BSP_BLE_CC2640_Disable(void)
 Retcode_T BSP_BLE_CC2640_Disconnect(void)
 {
     Retcode_T retcode = RETCODE_OK;
-    if (!(bspState & (uint8_t) BSP_STATE_TO_DISCONNECTED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_DISCONNECTED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -200,7 +199,7 @@ Retcode_T BSP_BLE_CC2640_Disconnect(void)
     }
     if (RETCODE_OK == retcode)
     {
-        bspState = (uint8_t) BSP_STATE_DISCONNECTED;
+        bspState = (uint8_t)BSP_STATE_DISCONNECTED;
     }
     return retcode;
 }
@@ -212,7 +211,7 @@ Retcode_T BSP_BLE_CC2640_Disconnect(void)
 HWHandle_T BSP_BLE_CC2640_GetUARTHandle(void)
 {
     /* Giving out the corresponding handle */
-    return (HWHandle_T) &CC2640_UartHandle;
+    return (HWHandle_T)&CC2640_UartHandle;
 }
 
 /*---------------------- LOCAL FUNCTIONS IMPLEMENTATION -------------------------------------------------------------*/
@@ -224,9 +223,8 @@ void USART3_IRQHandler(void)
 {
     if (NULL != CC2640_UartHandle.IrqCallback)
     {
-        CC2640_UartHandle.IrqCallback((UART_T) &CC2640_UartHandle.huart);
+        CC2640_UartHandle.IrqCallback((UART_T)&CC2640_UartHandle.huart);
     }
 }
 
-#endif/* if (KISO_FEATURE_BSP_BLE_CC2640) */
-
+#endif /* if (KISO_FEATURE_BSP_BLE_CC2640) */

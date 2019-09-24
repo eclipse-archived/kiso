@@ -38,25 +38,29 @@
 #include <inttypes.h>
 
 #ifndef false
-#define false ((bool) 0)
+// clang-format off
+#define false ((bool)0)
+// clang-format on
 #endif
 #ifndef true
-#define true ((bool) 1)
+// clang-format off
+#define true ((bool)1)
+// clang-format on
 #endif
 
 #ifndef TRUE
-#define TRUE        ((bool) 1)
+#define TRUE ((bool)1)
 #endif
 #ifndef FALSE
-#define FALSE       ((bool) 0)
+#define FALSE ((bool)0)
 #endif
 
 #ifndef NULL
-#define NULL        ((void *) 0)
+#define NULL ((void *)0)
 #endif
 
 #ifndef null
-#define null        ((void *) 0)
+#define null ((void *)0)
 #endif
 
 /**
@@ -64,14 +68,14 @@
  *
  * @param[in]   variableName : The unused variable.
  */
-#define KISO_UNUSED(variableName)     ((void) variableName)
+#define KISO_UNUSED(variableName) ((void)variableName)
 
 /**
  * @brief       Macro to inform the compiler that a function or type is deprecated.
  *
  * @param[in]   param : function or type to deprecate.
  */
-#define KISO_DEPRECATED(param)     param __attribute__ ((deprecated))
+#define KISO_DEPRECATED(param) param __attribute__((deprecated))
 
 /**
  * @brief       Macro to inform the compiler that a function is intentionally not in use.
@@ -87,9 +91,9 @@
  * @param[in]   function : The unused function with its arguments list.
  */
 #ifdef __GNUC__
-#  define KISO_UNUSED_FUNC(function) __attribute__((__unused__)) function
+#define KISO_UNUSED_FUNC(function) __attribute__((__unused__)) function
 #else
-#  define KISO_UNUSED_FUNC(function) function
+#define KISO_UNUSED_FUNC(function) function
 #endif
 
 /**
@@ -102,9 +106,9 @@
  * @param[in]  sectionName : The section name that has been provided in the Linker file.
  */
 #ifdef __GNUC__
-#  define KISO_SECTION(sectionName) __attribute__((section(#sectionName)))
+#define KISO_SECTION(sectionName) __attribute__((section(#sectionName)))
 #else
-#  define KISO_SECTION(sectionName)
+#define KISO_SECTION(sectionName)
 #endif
 
 /**
@@ -122,9 +126,9 @@
  *              eliminate this issue, in debug builds the macro is disabled.
  */
 #if defined(__GNUC__) && defined(NDEBUG)
-#  define KISO_ALWAYS_INLINE __attribute__((always_inline))
+#define KISO_ALWAYS_INLINE __attribute__((always_inline))
 #else
-#  define KISO_ALWAYS_INLINE
+#define KISO_ALWAYS_INLINE
 #endif
 
 /**
@@ -139,9 +143,9 @@
  * @note        Inlining makes C level debugging hard as the inlined code is not aligned with the source file.
  */
 #if (__STDC_VERSION__ >= 199901L) /* check to C99 mode */
-#  define KISO_INLINE inline
+#define KISO_INLINE inline
 #else
-#  define KISO_INLINE __attribute__((__unused__))
+#define KISO_INLINE __attribute__((__unused__))
 #endif
 
 #endif /* KISO_BASICS_H_ */

@@ -17,10 +17,10 @@
 
 /* Include the needed headers */
 
-#if defined (stm32f7)
-    #include "stm32f7/Kiso_MCU_STM32F7_Timer_Handle_th.hh"
+#if defined(stm32f7)
+#include "stm32f7/Kiso_MCU_STM32F7_Timer_Handle_th.hh"
 #else
-    #error "The STM32 family is not defined or not supported."
+#error "The STM32 family is not defined or not supported."
 #endif
 
 /* wrap the real interface header */

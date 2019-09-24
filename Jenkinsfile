@@ -5,7 +5,7 @@ pipeline
         docker
         {
             label 'RT-Z0KHU'
-            image 'rb-dtr.de.bosch.com/software-campus/kiso-toolchain:v0.4.1'
+            image 'rb-dtr.de.bosch.com/software-campus/kiso-toolchain:v0.4.2'
             registryUrl 'https://rb-dtr.de.bosch.com'
             registryCredentialsId 'docker-registry'
         }
@@ -39,11 +39,26 @@ pipeline
         {
             parallel
             {
+                stage('Format Checks')
+                {
+                    steps
+                    {
+                        script
+                        {
+                            echo "enforce formatting rules"
+                            sh 'cmake . -Bbuilddir-formatting -G"Ninja" -DENABLE_FORMAT_CHECKS=1 -DSKIP_FORMAT_REPORTS=0'
+                            script {
+                                def reports = findFiles(glob: 'builddir-formatting/**/*_format.xml')
+                                sh "python3 ci/clang-format-to-junit.py ${reports.join(' ')} -o builddir-formatting/clang-format.xml -p builddir-formatting -s _format.xml"
+                            }
+                        }
+                    }
+                }
                 stage('Static Analysis')
                 {
                     steps
                     {
-                        script // Run static analysis
+                        script
                         {
                             echo "run static analysis"
                             sh 'cmake . -Bbuilddir-static -G"Unix Makefiles" -DKISO_BOARD_NAME=CommonGateway -DENABLE_STATIC_CHECKS=1 -DENABLE_ALL_FEATURES=1 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON'
@@ -52,11 +67,11 @@ pipeline
                         }
                     }
                 }
-                stage('UnitTests')
+                stage('Unit Tests')
                 {
                     steps
                     {
-                        script // Run unittests
+                        script
                         {
                             echo "run unit-tests"
                             sh 'cmake . -Bbuilddir-unittests -G"Ninja" -DENABLE_TESTING=1 -DENABLE_ALL_FEATURES=1'
@@ -66,11 +81,11 @@ pipeline
                         }
                     }
                 }
-                stage('IntegrationTests')
+                stage('Integration Tests')
                 {
                     steps
                     {
-                        script // Run unittests
+                        script
                         {
                             echo "run integration-tests placeholder"
                         }
@@ -80,9 +95,9 @@ pipeline
                 {
                     steps
                     {
-                        script // Run unittests
+                        script
                         {
-                            echo "Generate doxygen"
+                            echo "generate doxygen"
                             sh 'cmake --build builddir-debug --target docs'
                         }
                     }
@@ -103,9 +118,17 @@ pipeline
                 artifacts: 'builddir-static/clang-report.txt',
                 fingerprint: true
             )
+            archiveArtifacts (
+                artifacts: 'builddir-formatting/**/*_format.xml',
+                fingerprint: true
+            )
             junit (
                 allowEmptyResults: true,
                 testResults: 'builddir-static/clang-report.xml'
+            )
+            junit (
+                allowEmptyResults: true,
+                testResults: 'builddir-formatting/clang-format.xml'
             )
         }
         success

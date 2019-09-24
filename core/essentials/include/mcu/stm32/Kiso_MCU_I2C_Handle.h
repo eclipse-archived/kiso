@@ -22,12 +22,12 @@
 #ifndef KISO_MCU_I2C_HANDLE_H_
 #define KISO_MCU_I2C_HANDLE_H_
 
-#if defined (stm32l4)
-    #include "stm32l4/Kiso_MCU_STM32L4_I2C_Handle.h"
-#elif defined (stm32f7)
-    #include "stm32f7/Kiso_MCU_STM32F7_I2C_Handle.h"
+#if defined(stm32l4)
+#include "stm32l4/Kiso_MCU_STM32L4_I2C_Handle.h"
+#elif defined(stm32f7)
+#include "stm32f7/Kiso_MCU_STM32F7_I2C_Handle.h"
 #else
-    #error "The STM32 family is not defined or not supported."
+#error "The STM32 family is not defined or not supported."
 #endif
 
 #endif /* KISO_MCU_I2C_HANDLE_H_ */

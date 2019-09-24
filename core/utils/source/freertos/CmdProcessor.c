@@ -29,7 +29,6 @@
  * @file
  **/
 
-
 /* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
@@ -66,12 +65,12 @@ typedef struct CmdProcessor_Cmd_S CmdProcessor_Cmd_T;
 /* This function  dequeues the queue and executes the function */
 static void Run(void *pvParameters);
 
-static void Dequeue(CmdProcessor_T * cmdProcessor);
+static void Dequeue(CmdProcessor_T *cmdProcessor);
 
 /* The description of the function is available in Kiso_CmdProcessor.h*/
 Retcode_T CmdProcessor_Initialize(
-        CmdProcessor_T *cmdProcessor, const char *name,
-        uint32_t taskPriority, uint32_t taskStackDepth, uint32_t queueSize)
+    CmdProcessor_T *cmdProcessor, const char *name,
+    uint32_t taskPriority, uint32_t taskStackDepth, uint32_t queueSize)
 {
     uint32_t nameLen;
     Retcode_T retcode = RETCODE_OK;
@@ -83,20 +82,20 @@ Retcode_T CmdProcessor_Initialize(
         nameLen = (nameLen >= CMDPROCESSOR_MAX_NAME_LEN - 1) ? (CMDPROCESSOR_MAX_NAME_LEN - 1) : nameLen;
         memcpy(cmdProcessor->name, name, nameLen);
 
-        cmdProcessor->queue = (cmdProcessorQueueHandle_t) xQueueCreate(queueSize, sizeof(CmdProcessor_Cmd_T));
+        cmdProcessor->queue = (cmdProcessorQueueHandle_t)xQueueCreate(queueSize, sizeof(CmdProcessor_Cmd_T));
 
         if (NULL == cmdProcessor->queue)
         {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t) RETCODE_FAILURE);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t)RETCODE_FAILURE);
         }
         else
         {
-            if (pdPASS != xTaskCreate(Run, (const char *) cmdProcessor->name, (uint16_t) taskStackDepth,
-                            (void *) cmdProcessor, taskPriority, &cmdProcessor->task))
+            if (pdPASS != xTaskCreate(Run, (const char *)cmdProcessor->name, (uint16_t)taskStackDepth,
+                                      (void *)cmdProcessor, taskPriority, &cmdProcessor->task))
 
             {
                 /* The task was not created as there was insufficient heap memory remaining.*/
-                retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t) RETCODE_FAILURE);
+                retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t)RETCODE_FAILURE);
             }
             else
             {
@@ -106,7 +105,7 @@ Retcode_T CmdProcessor_Initialize(
     }
     else
     {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t) RETCODE_INVALID_PARAM);
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t)RETCODE_INVALID_PARAM);
     }
 
     return retcode;
@@ -137,12 +136,12 @@ Retcode_T CmdProcessor_Enqueue(CmdProcessor_T *cmdProcessor, CmdProcessor_Func_T
         }
         else
         {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t) RETCODE_FAILURE);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t)RETCODE_FAILURE);
         }
     }
     else
     {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t) RETCODE_INVALID_PARAM);
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t)RETCODE_INVALID_PARAM);
     }
 
     return retcode;
@@ -166,7 +165,7 @@ Retcode_T CmdProcessor_EnqueueFromIsr(CmdProcessor_T *cmdProcessor, CmdProcessor
     /* On success, CMDPROCESSOR_OK is returned.CMDPROCESSOR_QUEUE_FULL if the queue is full */
     if ((NULL != cmdProcessor) && (NULL != cmdProcessor->queue))
     {
-        rc = xQueueSendFromISR(cmdProcessor->queue, &cmd, (BaseType_t*) &higherPriorityTaskWoken);
+        rc = xQueueSendFromISR(cmdProcessor->queue, &cmd, (BaseType_t *)&higherPriorityTaskWoken);
         if (pdPASS == rc)
         {
             retcode = RETCODE_OK;
@@ -174,12 +173,12 @@ Retcode_T CmdProcessor_EnqueueFromIsr(CmdProcessor_T *cmdProcessor, CmdProcessor
         }
         else
         {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t) RETCODE_FAILURE);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t)RETCODE_FAILURE);
         }
     }
     else
     {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t) RETCODE_INVALID_PARAM);
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t)RETCODE_INVALID_PARAM);
     }
 
     return retcode;
@@ -190,11 +189,11 @@ void CmdProcessor_Suspend(CmdProcessor_T *cmdProcessor)
 {
     if ((NULL != cmdProcessor) && (NULL != cmdProcessor->task))
     {
-        vTaskSuspend((TaskHandle_t) cmdProcessor->task);
+        vTaskSuspend((TaskHandle_t)cmdProcessor->task);
     }
     else
     {
-        Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t) RETCODE_INVALID_PARAM));
+        Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t)RETCODE_INVALID_PARAM));
     }
 }
 
@@ -203,28 +202,28 @@ void CmdProcessor_Resume(CmdProcessor_T *cmdProcessor)
 {
     if ((NULL != cmdProcessor) && (NULL != cmdProcessor->task))
     {
-        vTaskResume((TaskHandle_t) cmdProcessor->task);
+        vTaskResume((TaskHandle_t)cmdProcessor->task);
     }
     else
     {
-        Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t) RETCODE_INVALID_PARAM));
+        Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t)RETCODE_INVALID_PARAM));
     }
 }
 
 /* This is the task function. It dequeues the queue and executes the function read from queue on successful queue receive */
 static void Run(void *pvParameters)
 {
-    CmdProcessor_T * cmdProcessor = (CmdProcessor_T *) pvParameters;
+    CmdProcessor_T *cmdProcessor = (CmdProcessor_T *)pvParameters;
 
     while (true)
     {
         Dequeue(cmdProcessor);
     }
-    Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, (uint32_t) RETCODE_FAILURE));
+    Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, (uint32_t)RETCODE_FAILURE));
 }
 
 /*  The description of the function is available in Kiso_CmdProcessor.h */
-static void Dequeue(CmdProcessor_T * cmdProcessor)
+static void Dequeue(CmdProcessor_T *cmdProcessor)
 {
     if ((NULL != cmdProcessor) && (NULL != cmdProcessor->queue))
     {
@@ -242,17 +241,17 @@ static void Dequeue(CmdProcessor_T * cmdProcessor)
             }
             else
             {
-                Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, (uint32_t) RETCODE_INVALID_PARAM));
+                Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, (uint32_t)RETCODE_INVALID_PARAM));
             }
         }
         else
         {
-            Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, (uint32_t) RETCODE_CMDPROCESSOR_QUEUE_ERROR));
+            Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, (uint32_t)RETCODE_CMDPROCESSOR_QUEUE_ERROR));
         }
     }
     else
     {
-        Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, (uint32_t) RETCODE_INVALID_PARAM));
+        Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, (uint32_t)RETCODE_INVALID_PARAM));
     }
 }
 

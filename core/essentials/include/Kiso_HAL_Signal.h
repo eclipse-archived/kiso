@@ -44,14 +44,17 @@
 enum HAL_Signal_Basic_Instance_E
 {
     HAL_SIGNAL_NOTINIT = INT32_MAX, /**< No-OS signal not initialized */
-    HAL_SIGNAL_EMPTY = 0, /**< No-OS signal empty */
-    HAL_SIGNAL_FULL = 1, /**< No-OS signal fulfilled */
+    HAL_SIGNAL_EMPTY = 0,           /**< No-OS signal empty */
+    HAL_SIGNAL_FULL = 1,            /**< No-OS signal fulfilled */
 };
 
 /**
  * @brief       Macro to initialize a signal handle.
  */
-#define HAL_SIGNAL_HANDLE_INIT  {HAL_SIGNAL_NOTINIT, NULL}
+#define HAL_SIGNAL_HANDLE_INIT   \
+    {                            \
+        HAL_SIGNAL_NOTINIT, NULL \
+    }
 
 /**
  * @brief       Structure defining a signal object as a combination of a flag used in no-OS context and an abstract
@@ -60,7 +63,7 @@ enum HAL_Signal_Basic_Instance_E
 struct _HAL_SignalHandle_S
 {
     volatile uint32_t _Basic; /**< Variable used in no-OS context as a signal in concurrent execution contexts*/
-    void * _OsHandle; /**< reference to the signaling mechanism hooked-in from the OS in OS context */
+    void *_OsHandle;          /**< reference to the signaling mechanism hooked-in from the OS in OS context */
 };
 
 typedef struct _HAL_SignalHandle_S HAL_SignalHandle_T;
@@ -75,7 +78,7 @@ typedef struct _HAL_SignalHandle_S HAL_SignalHandle_T;
  * @param[in]   *handle : reference to the signal to wait for.
  * @param[in]   timeoutInMs: time duration to wait for the signal.
  */
-typedef Retcode_T (*HAL_Signal_WaitHook_T)(HAL_SignalHandle_T * handle, uint32_t timeoutInMs);
+typedef Retcode_T (*HAL_Signal_WaitHook_T)(HAL_SignalHandle_T *handle, uint32_t timeoutInMs);
 
 /**
  * @brief       Type definition for the signal hook function pointer.
@@ -86,7 +89,7 @@ typedef Retcode_T (*HAL_Signal_WaitHook_T)(HAL_SignalHandle_T * handle, uint32_t
  *
  * @param[in]   *handle : reference to the signal object issuing the notification.
  */
-typedef Retcode_T (*HAL_Signal_NotifyHook_T)(HAL_SignalHandle_T * handle);
+typedef Retcode_T (*HAL_Signal_NotifyHook_T)(HAL_SignalHandle_T *handle);
 
 /**
  * @brief       Set RTOS hooks
@@ -120,7 +123,7 @@ Retcode_T HAL_Signal_SetHooks(HAL_Signal_WaitHook_T waitHook, HAL_Signal_NotifyH
  *
  * @note        The Usage of wait in ISR Context is not Supported!
  */
-Retcode_T HAL_Signal_Wait(HAL_SignalHandle_T * handle, uint32_t timeoutInMs);
+Retcode_T HAL_Signal_Wait(HAL_SignalHandle_T *handle, uint32_t timeoutInMs);
 
 /**
  * @brief       Send a signal to handle context
@@ -131,7 +134,7 @@ Retcode_T HAL_Signal_Wait(HAL_SignalHandle_T * handle, uint32_t timeoutInMs);
  *
  * @retval      #RETCODE_NULL_POINTER when HAL_Signal_SetHooks() is not initialized.
  */
-Retcode_T HAL_Signal_Notify(HAL_SignalHandle_T * handle);
+Retcode_T HAL_Signal_Notify(HAL_SignalHandle_T *handle);
 
 #endif /* KISO_HAL_SIGNAL_H_ */
 /** @} */

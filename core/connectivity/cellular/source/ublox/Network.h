@@ -12,8 +12,6 @@
 *
 ********************************************************************************/
 
-
-
 /**
  *
  * @file
@@ -34,16 +32,16 @@
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
 
-#define CELLULAR_NETWORK_SMALL_BUFFER_SIZE     (UINT32_C(32))
-#define CELLULAR_NETWORK_BUFFER_SIZE           (UINT32_C(256))
+#define CELLULAR_NETWORK_SMALL_BUFFER_SIZE (UINT32_C(32))
+#define CELLULAR_NETWORK_BUFFER_SIZE (UINT32_C(256))
 
-#define CELLULAR_NETWORK_PROFILE_ID_LOW        (UINT8_C(0))
-#define CELLULAR_NETWORK_PROFILE_ID_HIGH       (UINT8_C(6))
-#define CELLULAR_NETWORK_CELLINFO_COUNT        (UINT8_C(4))
+#define CELLULAR_NETWORK_PROFILE_ID_LOW (UINT8_C(0))
+#define CELLULAR_NETWORK_PROFILE_ID_HIGH (UINT8_C(6))
+#define CELLULAR_NETWORK_CELLINFO_COUNT (UINT8_C(4))
 
-#define CELLULAR_NETWORK_APN_LENGTH_MAX        (UINT32_C(99))
-#define CELLULAR_NETWORK_USERNAME_LENGTH_MAX   (UINT32_C(30))
-#define CELLULAR_NETWORK_PASSWORD_LENGTH_MAX   (UINT32_C(30))
+#define CELLULAR_NETWORK_APN_LENGTH_MAX (UINT32_C(99))
+#define CELLULAR_NETWORK_USERNAME_LENGTH_MAX (UINT32_C(30))
+#define CELLULAR_NETWORK_PASSWORD_LENGTH_MAX (UINT32_C(30))
 
 /**
  * @brief Enumeration for selected radio access technology (ref1: SelectedAcT)
@@ -64,10 +62,10 @@ enum CellularNetwork_SelectedRadioAccessTechnology_E
     CELLULAR_NETWORK_SEL_RAT_GSM_SINGLEMODE = 0,
     CELLULAR_NETWORK_SEL_RAT_GSM_UMTS_DUALMODE = 1,
     CELLULAR_NETWORK_SEL_RAT_UMTS_SINGLEMODE = 2,
-    CELLULAR_NETWORK_SEL_RAT_LTE_SINGLEMODE = 3, //-- NOT for LISA-U200
+    CELLULAR_NETWORK_SEL_RAT_LTE_SINGLEMODE = 3,       //-- NOT for LISA-U200
     CELLULAR_NETWORK_SEL_RAT_GSM_UMTS_LTE_TRIMODE = 4, //-- NOT for LISA-U200
-    CELLULAR_NETWORK_SEL_RAT_GSM_LTE_DUALMODE = 5, //-- NOT for LISA-U200
-    CELLULAR_NETWORK_SEL_RAT_UMTS_LTE_DUALMODE = 6 //-- NOT for LISA-U200
+    CELLULAR_NETWORK_SEL_RAT_GSM_LTE_DUALMODE = 5,     //-- NOT for LISA-U200
+    CELLULAR_NETWORK_SEL_RAT_UMTS_LTE_DUALMODE = 6     //-- NOT for LISA-U200
 };
 typedef enum CellularNetwork_SelectedRadioAccessTechnology_E CellularNetwork_SelectedRadioAccessTechnology_T;
 
@@ -84,7 +82,7 @@ enum CellularNetwork_PreferredRadioAccessTechnology_E
 {
     CELLULAR_NETWORK_PREF_RAT_GSM = 0,
     CELLULAR_NETWORK_PREF_RAT_UMTS = 2, //-- sic 2 and not 1
-    CELLULAR_NETWORK_PREF_RAT_LTE = 3 //-- NOT for module LISA-U200
+    CELLULAR_NETWORK_PREF_RAT_LTE = 3   //-- NOT for module LISA-U200
 };
 typedef enum CellularNetwork_PreferredRadioAccessTechnology_E CellularNetwork_PreferredRadioAccessTechnology_T;
 
@@ -150,7 +148,7 @@ enum CellularNetwork_Rat_E
     CELLULAR_NETWORK_RAT_UTRAN_HSDPA = 4,
     CELLULAR_NETWORK_RAT_UTRAN_HSUPA = 5,
     CELLULAR_NETWORK_RAT_UTRAN_HSDPA_HSUPA = 6,
-    CELLULAR_NETWORK_RAT_LTE = 7, //-- not for LISA_U200
+    CELLULAR_NETWORK_RAT_LTE = 7,      //-- not for LISA_U200
     CELLULAR_NETWORK_RAT_INVALID = 255 //-- VALID value from modem if unkown!
 };
 typedef enum CellularNetwork_Rat_E CellularNetwork_Rat_T;
@@ -235,7 +233,7 @@ enum CellularNetwork_RegistrationInfo_E //-- this is the n in AT+CREG=[<n>]
 {
     CELLULAR_NETWORK_REG_INFO_DEFAULT = 0, //-- URC disabled
     CELLULAR_NETWORK_REG_INFO_URC = 1,
-    CELLULAR_NETWORK_REG_INFO_URC_LOC = 2, //-- verbose
+    CELLULAR_NETWORK_REG_INFO_URC_LOC = 2,  //-- verbose
     CELLULAR_NETWORK_REG_INFO_INVALID = 255 //-- invalid (NEVER part of modem answer)
 };
 typedef enum CellularNetwork_RegistrationInfo_E CellularNetwork_RegistrationInfo_T;
@@ -283,7 +281,7 @@ struct CellularNetwork_RegistrationStatus_S
     CellularNetwork_RegistrationInfo_T Info;
     CellularNetwork_RegistrationStatusStat_T Stat;
     uint32_t Lac; //-- Location Area Code, range 0h-FFFFh (2 octets)
-    uint32_t Ci; //-- Cell Identity, range 0h-FFFFFFFFh (4 octets)
+    uint32_t Ci;  //-- Cell Identity, range 0h-FFFFFFFFh (4 octets)
     CellularNetwork_Rat_T Rat;
     bool IsValidInfo;
     bool IsValidStat;
@@ -335,7 +333,7 @@ struct Cellular_CellEnvironmentData_S
     uint32_t Mcc; //-- Mobile Country Code, range 0 - 999 (3 digits). Other values are to be considered invalid
     uint32_t Mnc; //-- Mobile Network Code, range 0 - 999 (1 to 3 digits). Other values are to be considered invalid not available
     uint32_t Lac; //-- Location Area Code, range 1h-FFFFh without FFFE (2 octets) (Error in doc Ref 1 regarding value range)
-    uint32_t Ci; //-- Cell Identity, range 0h-FFFFFFFFh (4 octets)
+    uint32_t Ci;  //-- Cell Identity, range 0h-FFFFFFFFh (4 octets)
 };
 typedef struct Cellular_CellEnvironmentData_S Cellular_CellEnvironmentData_T;
 
@@ -467,7 +465,7 @@ typedef enum
     CELLULAR_PSD_PARAM_DNS1 = 4,
     CELLULAR_PSD_PARAM_DNS2 = 5,
     CELLULAR_PSD_PARAM_AUTH = 6
-/* Add more when required */
+    /* Add more when required */
 } Cellular_PsdParam_T;
 
 typedef enum
@@ -545,7 +543,7 @@ typedef struct
  * @param[out] NetworkSignalQuality
  * @return RETCODE_OK only if data has been received successfully
  */
-Retcode_T CellularNetwork_QueryCurrentSignalQuality(CellularNetwork_SignalQuality_T* NetworkSignalQuality); //-- AT+CSQ
+Retcode_T CellularNetwork_QueryCurrentSignalQuality(CellularNetwork_SignalQuality_T *NetworkSignalQuality); //-- AT+CSQ
 
 /**
  * @brief Registers callback for data of URC from CREG
@@ -572,7 +570,7 @@ void CellularNetwork_RegisterUrcCregCallback(CellularNetwork_UrcCregCallback_T C
  * @return RETCODE_CELLULAR_NOT_RESPONSIVE The modem did not respond to the network status query
  * @see Ref 2, p 106, ch 7.21�Cell environment description +CGED
  */
-Retcode_T CellularNetwork_QueryCellEnvironment(Cellular_CellEnvironmentData_T* data); //-- AT+CGED=3
+Retcode_T CellularNetwork_QueryCellEnvironment(Cellular_CellEnvironmentData_T *data); //-- AT+CGED=3
 
 /**
  * @brief Get the current network registration status from the modem
@@ -615,7 +613,7 @@ Retcode_T CellularNetwork_EnableAutomaticSelection(void); //-- AT+COPS=0
  * @brief Query current network operator
  * @return RETCODE_OK only if mode automatic network selecdtion was set successfully
  */
-Retcode_T CellularNetwork_QueryCurrentOperator(CellularNetwork_CurrentOperator_T* NetworkOperator); //-- AT+COPS?
+Retcode_T CellularNetwork_QueryCurrentOperator(CellularNetwork_CurrentOperator_T *NetworkOperator); //-- AT+COPS?
 
 /**
  * @brief set APN for PDP Context (hardcoded intern)
@@ -624,7 +622,7 @@ Retcode_T CellularNetwork_QueryCurrentOperator(CellularNetwork_CurrentOperator_T
  * @param[in] length of APN buffer
  * @return RETCODE_OK only if successful
  */
-Retcode_T CellularNetwork_SetAPN(uint8_t* APN, uint32_t length); //-- AT+UPSD=0,1,"xxx"
+Retcode_T CellularNetwork_SetAPN(uint8_t *APN, uint32_t length); //-- AT+UPSD=0,1,"xxx"
 
 /**
  * @brief set PDP Context configuration
@@ -649,14 +647,14 @@ Retcode_T CellularNetwork_DeactivatePdpContext(void); //-- AT+UPSDA=0,4
  * @brief verifies PDP Context
  * @return RETCODE_OK only if successful
  */
-Retcode_T Cellular_VerifyPdpContext(bool* success);
+Retcode_T Cellular_VerifyPdpContext(bool *success);
 
 /**
  * @brief Verifies PDP Context
  * @param[out] success flag
  * @return RETCODE_OK only if successful
  */
-Retcode_T CellularNetwork_VerifyPdpContext(bool* success); //-- AT+UPSND=0,8
+Retcode_T CellularNetwork_VerifyPdpContext(bool *success); //-- AT+UPSND=0,8
 
 /**
  * @brief Sets modem RAT (Radio Access Technology)
@@ -667,14 +665,14 @@ Retcode_T CellularNetwork_VerifyPdpContext(bool* success); //-- AT+UPSND=0,8
  * @return RETCODE_OK The network RAT selection was successful
  * @see Ref 2, p 88, ch 7.5 Radio Access Technology (RAT) selection +URAT
  */
-Retcode_T CellularNetwork_SelectRadioAccessTechnology(CellularNetwork_RadioAccessTechnology_T* rat); //-- e.g. AT+URAT=1,2
+Retcode_T CellularNetwork_SelectRadioAccessTechnology(CellularNetwork_RadioAccessTechnology_T *rat); //-- e.g. AT+URAT=1,2
 
 /**
  * @brief Gets modem RAT (Radio Access Technology)
  * @param[out] Radio Access Technology (select and prefer)
  * @return RETCODE_OK The network RAT query was successful
  */
-Retcode_T CellularNetwork_QueryRadioAccessTechnology(CellularNetwork_RadioAccessTechnology_T* rat); //-- AT+URAT?
+Retcode_T CellularNetwork_QueryRadioAccessTechnology(CellularNetwork_RadioAccessTechnology_T *rat); //-- AT+URAT?
 
 /**
  * @brief Implements URC handling for CREG events.
@@ -717,6 +715,5 @@ Retcode_T CellularNetworkUrc_UUPSDD(void);
  *          Call back routine will be called to provide the n/w init status
  */
 Retcode_T CellularNetwork_Init(void);
-
 
 #endif /* UBLOX_NETWORK_H */

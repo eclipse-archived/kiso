@@ -30,12 +30,11 @@ static Queue_T EventQueue;
 static uint8_t EventQueueBuffer[AT_RESPONSE_QUEUE_BUFFER_SIZE];
 
 /*response queue event mask*/
-static AtEventType_T AtEventMask = (AtEventType_T) 0;
-
+static AtEventType_T AtEventMask = (AtEventType_T)0;
 
 static Retcode_T AtResponseQueue_WaitForEntry(uint32_t timeout, AtEventType_T EventType, AtResponseQueueEntry_T **entry)
 {
-    Retcode_T retcode = Queue_Get(&EventQueue, (void **) entry, NULL, timeout);
+    Retcode_T retcode = Queue_Get(&EventQueue, (void **)entry, NULL, timeout);
 
     if (RETCODE_OK != retcode)
     {
@@ -48,7 +47,7 @@ static Retcode_T AtResponseQueue_WaitForEntry(uint32_t timeout, AtEventType_T Ev
     }
     else if (AT_EVENT_TYPE_ERROR == (*entry)->Type)
     {
-        (void) Queue_Purge(&EventQueue);
+        (void)Queue_Purge(&EventQueue);
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_AT_RESPONSE_QUEUE_ERROR_EVENT);
     }
     else
@@ -109,10 +108,9 @@ static Retcode_T AtResponseQueue_WaitForContent(uint32_t timeout, AtEventType_T 
      */
     if (RETCODE_OK == retcode)
     {
-        if (BufferLength == entry->BufferLength
-                && 0 == memcmp(entry->Buffer, buffer, entry->BufferLength))
+        if (BufferLength == entry->BufferLength && 0 == memcmp(entry->Buffer, buffer, entry->BufferLength))
         {
-            (void) Queue_Purge(&EventQueue);
+            (void)Queue_Purge(&EventQueue);
         }
         else
         {
@@ -126,12 +124,11 @@ static Retcode_T AtResponseQueue_WaitForContent(uint32_t timeout, AtEventType_T 
 void AtResponseQueue_EnqueueEvent(AtEventType_T EventType, uint8_t *arg, uint32_t len)
 {
     AtResponseQueueEntry_T entry = {
-            .Type = EventType,
-            .ResponseCode = AT_RESPONSE_CODE_OK,
-            .BufferLength = len
-    };
+        .Type = EventType,
+        .ResponseCode = AT_RESPONSE_CODE_OK,
+        .BufferLength = len};
 
-    if (AtEventMask&EventType)
+    if (AtEventMask & EventType)
     {
 
         Retcode_T retcode = Queue_Put(&EventQueue, &entry, sizeof(entry), arg, len);
@@ -172,10 +169,9 @@ static void AtResponseQueue_CallbackError(void)
 static void AtResponseQueue_CallbackResponseCode(AtResponseCode_T response)
 {
     AtResponseQueueEntry_T entry = {
-            .Type = AT_EVENT_TYPE_RESPONSE_CODE,
-            .ResponseCode = response,
-            .BufferLength = 0
-    };
+        .Type = AT_EVENT_TYPE_RESPONSE_CODE,
+        .ResponseCode = response,
+        .BufferLength = 0};
 
     Retcode_T retcode = Queue_Put(&EventQueue, &entry, sizeof(entry), NULL, 0);
 
@@ -187,7 +183,7 @@ static void AtResponseQueue_CallbackResponseCode(AtResponseCode_T response)
 
 Retcode_T AtResponseQueue_Init(void)
 {
-	AtResponseQueue_SetEventMask(AT_EVENT_TYPE_ALL-AT_EVENT_TYPE_MISC);
+    AtResponseQueue_SetEventMask(AT_EVENT_TYPE_ALL - AT_EVENT_TYPE_MISC);
 
     return Queue_Create(&EventQueue, EventQueueBuffer, sizeof(EventQueueBuffer));
 }
@@ -207,10 +203,10 @@ Retcode_T AtResponseQueue_SetEventMask(uint32_t eventMask)
     Retcode_T retcode = RETCODE_OK;
 
     /* check if the mask is in the possible range*/
-    if (eventMask<AT_EVENT_TYPE_OUT_OF_RANGE)
+    if (eventMask < AT_EVENT_TYPE_OUT_OF_RANGE)
     {
         retcode = RETCODE_OK;
-        AtEventMask = (AtEventType_T) eventMask;
+        AtEventMask = (AtEventType_T)eventMask;
     }
     else
     {
@@ -218,7 +214,6 @@ Retcode_T AtResponseQueue_SetEventMask(uint32_t eventMask)
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
     return retcode;
-
 }
 
 uint32_t AtResponseQueue_GetEventMask(void)
@@ -275,7 +270,7 @@ Retcode_T AtResponseQueue_WaitForNamedResponseCode(uint32_t timeout, AtResponseC
         }
         else
         {
-            (void) Queue_Purge(&EventQueue);
+            (void)Queue_Purge(&EventQueue);
         }
     }
     return retcode;
@@ -289,7 +284,7 @@ Retcode_T AtResponseQueue_WaitForArbitraryResponseCode(uint32_t timeout, AtRespo
     if (RETCODE_OK == retcode)
     {
         *response = entry->ResponseCode;
-        (void) Queue_Purge(&EventQueue);
+        (void)Queue_Purge(&EventQueue);
     }
 
     return retcode;
@@ -303,7 +298,7 @@ Retcode_T AtResponseQueue_WaitForMiscContent(uint32_t timeout, uint8_t **BufferP
 Retcode_T AtResponseQueue_IgnoreEvent(uint32_t timeout)
 {
     AtResponseQueueEntry_T *entry;
-    Retcode_T retcode = Queue_Get(&EventQueue, (void **) &entry, NULL, timeout);
+    Retcode_T retcode = Queue_Get(&EventQueue, (void **)&entry, NULL, timeout);
 
     if (RETCODE_OK != retcode)
     {
@@ -314,7 +309,7 @@ Retcode_T AtResponseQueue_IgnoreEvent(uint32_t timeout)
 
 Retcode_T AtResponseQueue_GetEvent(uint32_t timeout, AtResponseQueueEntry_T **entry)
 {
-    Retcode_T retcode = Queue_Get(&EventQueue, (void **) entry, NULL, timeout);
+    Retcode_T retcode = Queue_Get(&EventQueue, (void **)entry, NULL, timeout);
     if (RETCODE_OK != retcode)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_AT_RESPONSE_QUEUE_TIMEOUT);
@@ -326,7 +321,7 @@ Retcode_T AtResponseQueue_GetEvent(uint32_t timeout, AtResponseQueueEntry_T **en
 void AtResponseQueue_MarkBufferAsUnused(void)
 {
     /* Don't care if message is already purged */
-    (void) Queue_Purge(&EventQueue);
+    (void)Queue_Purge(&EventQueue);
     return;
 }
 
@@ -360,4 +355,3 @@ Retcode_T AtResponseQueue_Deinit(void)
 
     return ret;
 }
-

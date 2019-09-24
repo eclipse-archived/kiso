@@ -38,19 +38,18 @@
 
 #if KISO_FEATURE_EVENTHUB
 
-
 /* KISO interface header files */
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
 
 /* May be overridden by the project makefile */
 #ifndef CONFIG_EVENTHUB_MAX_OBSERVERS
-#define CONFIG_EVENTHUB_MAX_OBSERVERS   (16)
+#define CONFIG_EVENTHUB_MAX_OBSERVERS (16)
 #endif
 
 typedef uint32_t TaskEvent_T;
 
-typedef void (*EventHandler_T)(TaskEvent_T event, void * data);
+typedef void (*EventHandler_T)(TaskEvent_T event, void *data);
 
 struct EventObserver_S
 {
@@ -64,7 +63,7 @@ struct EventHub_S
 {
     uint32_t observerCount;
     EventObserver_T observers[CONFIG_EVENTHUB_MAX_OBSERVERS];
-    void * lock;
+    void *lock;
 };
 typedef struct EventHub_S EventHub_T;
 

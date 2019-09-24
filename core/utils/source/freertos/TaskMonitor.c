@@ -96,22 +96,21 @@ Retcode_T TaskMonitor_Register(TaskHandle_t task, uint32_t upperLimit)
         }
         if (KISO_TASKMONITOR_MAX_TASKS <= loopcnt)
         {
-            ret = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_TASKMONITOR_BUFFER_FULL_ERROR);
+            ret = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_TASKMONITOR_BUFFER_FULL_ERROR);
         }
     }
     else
     {
-        ret = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T) RETCODE_INVALID_PARAM);
+        ret = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_INVALID_PARAM);
     }
     return ret;
 }
 
 /* The description of the function is available in header file */
-KISO_INLINE void TaskMonitor_Update(unsigned int * taskTag, unsigned int tickCount)
+KISO_INLINE void TaskMonitor_Update(unsigned int *taskTag, unsigned int tickCount)
 {
     *taskTag = tickCount;
 }
-
 
 /*  The description of the function is available in Kiso_TaskMonitor.h */
 bool TaskMonitor_Check(void)
@@ -130,7 +129,7 @@ bool TaskMonitor_Check(void)
         if (TaskInfo[loopcnt].IsReg)
         {
             const TaskHookFunction_t taskTag = xTaskGetApplicationTaskTag(TaskInfo[loopcnt].Task);
-            taskTagValue[loopcnt] = (uint32_t) taskTag;
+            taskTagValue[loopcnt] = (uint32_t)taskTag;
         }
     }
     currentTickTime = xTaskGetTickCount();
@@ -153,8 +152,7 @@ bool TaskMonitor_Check(void)
                 }
             }
             diffTickTime =
-                (currentTickTime >= taskTickTime) ?
-                (currentTickTime - taskTickTime) : ((UINT32_MAX - taskTickTime) + currentTickTime);
+                (currentTickTime >= taskTickTime) ? (currentTickTime - taskTickTime) : ((UINT32_MAX - taskTickTime) + currentTickTime);
             if (diffTickTime > TaskInfo[loopcnt].UpperLimitTickTime)
             {
                 ret = true;

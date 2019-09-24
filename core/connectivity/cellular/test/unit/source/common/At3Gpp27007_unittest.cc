@@ -41,36 +41,35 @@ extern "C"
 #include "AtUtils.c"
 #undef KISO_MODULE_ID
 #include "At3Gpp27007.c"
-
 }
 /* end of global scope symbol and fake definitions section */
 FFF_DEFINITION_BLOCK_END
 
-#define TEST_AT_GET_CREG_URC            ("+CREG: %d,%d\r\nOK\r\n")
-#define TEST_AT_GET_CREG_URC_LOC        ("+CREG: %d,%d,\"%04X\",\"%08X\"\r\nOK\r\n")
+#define TEST_AT_GET_CREG_URC ("+CREG: %d,%d\r\nOK\r\n")
+#define TEST_AT_GET_CREG_URC_LOC ("+CREG: %d,%d,\"%04X\",\"%08X\"\r\nOK\r\n")
 
-#define TEST_AT_GET_CGREG_URC           ("+CGREG: %d,%d\r\nOK\r\n")
-#define TEST_AT_GET_CGREG_URC_LOC       ("+CGREG: %d,%d,\"%04X\",\"%08X\",%d,\"%02X\"\r\nOK\r\n")
+#define TEST_AT_GET_CGREG_URC ("+CGREG: %d,%d\r\nOK\r\n")
+#define TEST_AT_GET_CGREG_URC_LOC ("+CGREG: %d,%d,\"%04X\",\"%08X\",%d,\"%02X\"\r\nOK\r\n")
 
-#define TEST_AT_GET_CEREG_URC           ("+CEREG: %d,%d\r\nOK\r\n")
-#define TEST_AT_GET_CEREG_URC_LOC       ("+CEREG: %d,%d,\"%04X\",\"%08X\",%d\r\nOK\r\n")
+#define TEST_AT_GET_CEREG_URC ("+CEREG: %d,%d\r\nOK\r\n")
+#define TEST_AT_GET_CEREG_URC_LOC ("+CEREG: %d,%d,\"%04X\",\"%08X\",%d\r\nOK\r\n")
 
-#define TEST_IPV4                       "%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8
-#define TEST_IPV6                       "%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8
-#define TEST_AT_RESP_CGPADDR_IPV4       ("+CGPADDR: %" PRIu8 ",\"" TEST_IPV4 "\"\r\nOK\r\n")
-#define TEST_AT_RESP_CGPADDR_IPV4_IPV4  ("+CGPADDR: %" PRIu8 ",\"" TEST_IPV4 "\",\"" TEST_IPV4 "\"\r\nOK\r\n")
-#define TEST_AT_RESP_CGPADDR_IPV4_IPV6  ("+CGPADDR: %" PRIu8 ",\"" TEST_IPV4 "\",\"" TEST_IPV6 "\"\r\nOK\r\n")
-#define TEST_AT_RESP_CGPADDR_IPV6       ("+CGPADDR: %" PRIu8 ",\"" TEST_IPV6 "\"\r\nOK\r\n")
-#define TEST_AT_RESP_CGPADDR_IPV6_IPV4  ("+CGPADDR: %" PRIu8 ",\"" TEST_IPV6 "\",\"" TEST_IPV4 "\"\r\nOK\r\n")
-#define TEST_AT_RESP_CGPADDR_IPV6_IPV6  ("+CGPADDR: %" PRIu8 ",\"" TEST_IPV6 "\",\"" TEST_IPV6 "\"\r\nOK\r\n")
-#define TEST_AT_RESP_CGPADDR_INVALID    ("+CGPADDR: %" PRIu8 "\r\nOK\r\n")
+#define TEST_IPV4 "%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8
+#define TEST_IPV6 "%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8
+#define TEST_AT_RESP_CGPADDR_IPV4 ("+CGPADDR: %" PRIu8 ",\"" TEST_IPV4 "\"\r\nOK\r\n")
+#define TEST_AT_RESP_CGPADDR_IPV4_IPV4 ("+CGPADDR: %" PRIu8 ",\"" TEST_IPV4 "\",\"" TEST_IPV4 "\"\r\nOK\r\n")
+#define TEST_AT_RESP_CGPADDR_IPV4_IPV6 ("+CGPADDR: %" PRIu8 ",\"" TEST_IPV4 "\",\"" TEST_IPV6 "\"\r\nOK\r\n")
+#define TEST_AT_RESP_CGPADDR_IPV6 ("+CGPADDR: %" PRIu8 ",\"" TEST_IPV6 "\"\r\nOK\r\n")
+#define TEST_AT_RESP_CGPADDR_IPV6_IPV4 ("+CGPADDR: %" PRIu8 ",\"" TEST_IPV6 "\",\"" TEST_IPV4 "\"\r\nOK\r\n")
+#define TEST_AT_RESP_CGPADDR_IPV6_IPV6 ("+CGPADDR: %" PRIu8 ",\"" TEST_IPV6 "\",\"" TEST_IPV6 "\"\r\nOK\r\n")
+#define TEST_AT_RESP_CGPADDR_INVALID ("+CGPADDR: %" PRIu8 "\r\nOK\r\n")
 
-#define TEST_AT_RESP_CFUN               ("+CFUN: %" PRIu8 "\r\nOK\r\n")
+#define TEST_AT_RESP_CFUN ("+CFUN: %" PRIu8 "\r\nOK\r\n")
 
-#define TEST_AT_RESPONSE_OK     ("OK\r\n")
-#define TEST_AT_RESPONSE_ERROR  ("ERROR\r\n")
+#define TEST_AT_RESPONSE_OK ("OK\r\n")
+#define TEST_AT_RESPONSE_ERROR ("ERROR\r\n")
 
-class TS_At_HandleUrc_CREG: public TS_ModemTest
+class TS_At_HandleUrc_CREG : public TS_ModemTest
 {
 protected:
     virtual void SetUp()
@@ -84,9 +83,9 @@ protected:
 TEST_F(TS_At_HandleUrc_CREG, StatPass)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* cmd = "+CREG: 1\r\n";
+    const char *cmd = "+CREG: 1\r\n";
 
-    (void) AtResponseParser_Parse((uint8_t*) cmd, strlen(cmd));
+    (void)AtResponseParser_Parse((uint8_t *)cmd, strlen(cmd));
 
     retcode = At_HandleUrc_CREG();
 
@@ -97,9 +96,9 @@ TEST_F(TS_At_HandleUrc_CREG, StatPass)
 TEST_F(TS_At_HandleUrc_CREG, StatLacCiPass)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* cmd = "+CREG: 1,\"4E54\",\"44A5\"\r\n";
+    const char *cmd = "+CREG: 1,\"4E54\",\"44A5\"\r\n";
 
-    (void) AtResponseParser_Parse((uint8_t*) cmd, strlen(cmd));
+    (void)AtResponseParser_Parse((uint8_t *)cmd, strlen(cmd));
 
     retcode = At_HandleUrc_CREG();
 
@@ -110,9 +109,9 @@ TEST_F(TS_At_HandleUrc_CREG, StatLacCiPass)
 TEST_F(TS_At_HandleUrc_CREG, StatLacCiAcTPass)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* cmd = "+CREG: 1,\"4E54\",\"44A5\",2\r\n";
+    const char *cmd = "+CREG: 1,\"4E54\",\"44A5\",2\r\n";
 
-    (void) AtResponseParser_Parse((uint8_t*) cmd, strlen(cmd));
+    (void)AtResponseParser_Parse((uint8_t *)cmd, strlen(cmd));
 
     retcode = At_HandleUrc_CREG();
 
@@ -120,7 +119,7 @@ TEST_F(TS_At_HandleUrc_CREG, StatLacCiAcTPass)
     EXPECT_EQ(1U, Engine_NotifyNewState_fake.call_count);
 }
 
-class TS_At_HandleUrc_CGREG: public TS_ModemTest
+class TS_At_HandleUrc_CGREG : public TS_ModemTest
 {
 protected:
     virtual void SetUp()
@@ -134,9 +133,9 @@ protected:
 TEST_F(TS_At_HandleUrc_CGREG, StatPass)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* cmd = "+CGREG: 1\r\n";
+    const char *cmd = "+CGREG: 1\r\n";
 
-    (void) AtResponseParser_Parse((uint8_t*) cmd, strlen(cmd));
+    (void)AtResponseParser_Parse((uint8_t *)cmd, strlen(cmd));
 
     retcode = At_HandleUrc_CGREG();
 
@@ -147,9 +146,9 @@ TEST_F(TS_At_HandleUrc_CGREG, StatPass)
 TEST_F(TS_At_HandleUrc_CGREG, StatLacCiPass)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* cmd = "+CGREG: 1,\"4E54\",\"44A5\"\r\n";
+    const char *cmd = "+CGREG: 1,\"4E54\",\"44A5\"\r\n";
 
-    (void) AtResponseParser_Parse((uint8_t*) cmd, strlen(cmd));
+    (void)AtResponseParser_Parse((uint8_t *)cmd, strlen(cmd));
 
     retcode = At_HandleUrc_CGREG();
 
@@ -160,9 +159,9 @@ TEST_F(TS_At_HandleUrc_CGREG, StatLacCiPass)
 TEST_F(TS_At_HandleUrc_CGREG, StatLacCiAcTRacPass)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* cmd = "+CGREG: 1,\"4E54\",\"44A5\",2,\"FB\"\r\n";
+    const char *cmd = "+CGREG: 1,\"4E54\",\"44A5\",2,\"FB\"\r\n";
 
-    (void) AtResponseParser_Parse((uint8_t*) cmd, strlen(cmd));
+    (void)AtResponseParser_Parse((uint8_t *)cmd, strlen(cmd));
 
     retcode = At_HandleUrc_CGREG();
 
@@ -170,7 +169,7 @@ TEST_F(TS_At_HandleUrc_CGREG, StatLacCiAcTRacPass)
     EXPECT_EQ(1U, Engine_NotifyNewState_fake.call_count);
 }
 
-class TS_At_HandleUrc_CEREG: public TS_ModemTest
+class TS_At_HandleUrc_CEREG : public TS_ModemTest
 {
 protected:
     virtual void SetUp()
@@ -184,9 +183,9 @@ protected:
 TEST_F(TS_At_HandleUrc_CEREG, StatPass)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* cmd = "+CEREG: 1\r\n";
+    const char *cmd = "+CEREG: 1\r\n";
 
-    (void) AtResponseParser_Parse((uint8_t*) cmd, strlen(cmd));
+    (void)AtResponseParser_Parse((uint8_t *)cmd, strlen(cmd));
 
     retcode = At_HandleUrc_CEREG();
 
@@ -197,9 +196,9 @@ TEST_F(TS_At_HandleUrc_CEREG, StatPass)
 TEST_F(TS_At_HandleUrc_CEREG, StatTacCiAcTPass)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* cmd = "+CEREG: 1,\"3a9b\",\"0000c33d\",7\r\n";
+    const char *cmd = "+CEREG: 1,\"3a9b\",\"0000c33d\",7\r\n";
 
-    (void) AtResponseParser_Parse((uint8_t*) cmd, strlen(cmd));
+    (void)AtResponseParser_Parse((uint8_t *)cmd, strlen(cmd));
 
     retcode = At_HandleUrc_CEREG();
 
@@ -207,13 +206,13 @@ TEST_F(TS_At_HandleUrc_CEREG, StatTacCiAcTPass)
     EXPECT_EQ(1U, Engine_NotifyNewState_fake.call_count);
 }
 
-class TS_At_Set_CREG: public TS_ModemTest
+class TS_At_Set_CREG : public TS_ModemTest
 {
 protected:
-    const char* FormatTrigger(AT_CXREG_N_T n)
+    const char *FormatTrigger(AT_CXREG_N_T n)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_3GPP_27007_SET_ATCREG_FMT,
-                n);
+                                   n);
     }
 };
 TEST_F(TS_At_Set_CREG, DisablePass)
@@ -282,13 +281,13 @@ TEST_F(TS_At_Set_CREG, UrcLocPsmCauseFail)
     EXPECT_EQ(RETCODE_CELLULAR_RESPONDED_ERROR, Retcode_GetCode(retcode));
 }
 
-class TS_At_Set_CGREG: public TS_ModemTest
+class TS_At_Set_CGREG : public TS_ModemTest
 {
 protected:
-    const char* FormatTrigger(AT_CXREG_N_T n)
+    const char *FormatTrigger(AT_CXREG_N_T n)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_3GPP_27007_SET_ATCGREG_FMT,
-                n);
+                                   n);
     }
 };
 TEST_F(TS_At_Set_CGREG, DisablePass)
@@ -357,13 +356,13 @@ TEST_F(TS_At_Set_CGREG, UrcLocPsmCauseFail)
     EXPECT_EQ(RETCODE_CELLULAR_RESPONDED_ERROR, Retcode_GetCode(retcode));
 }
 
-class TS_At_Set_CEREG: public TS_ModemTest
+class TS_At_Set_CEREG : public TS_ModemTest
 {
 protected:
-    const char* FormatTrigger(AT_CXREG_N_T n)
+    const char *FormatTrigger(AT_CXREG_N_T n)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_3GPP_27007_SET_ATCEREG_FMT,
-                n);
+                                   n);
     }
 };
 TEST_F(TS_At_Set_CEREG, DisablePass)
@@ -432,7 +431,7 @@ TEST_F(TS_At_Set_CEREG, UrcLocPsmCauseFail)
     EXPECT_EQ(RETCODE_OK, retcode);
 }
 
-class TS_At_Get_CREG: public TS_ModemTest
+class TS_At_Get_CREG : public TS_ModemTest
 {
 protected:
     AT_CXREG_Stat_T AnswerStat;
@@ -445,21 +444,21 @@ protected:
         srand(time(NULL));
     }
 
-    const char* FormatAnswer(AT_CXREG_N_T n)
+    const char *FormatAnswer(AT_CXREG_N_T n)
     {
-        const char* fmt = NULL;
+        const char *fmt = NULL;
         switch (n)
         {
         case AT_CXREG_N_DISABLED:
-            case AT_CXREG_N_URC:
+        case AT_CXREG_N_URC:
             fmt = TEST_AT_GET_CREG_URC;
-            AnswerStat = (AT_CXREG_Stat_T) (rand() % (AT_CXREG_STAT_CSFB_NOT_PREF_ROAMING + 1));
+            AnswerStat = (AT_CXREG_Stat_T)(rand() % (AT_CXREG_STAT_CSFB_NOT_PREF_ROAMING + 1));
             break;
         case AT_CXREG_N_URC_LOC:
             fmt = TEST_AT_GET_CREG_URC_LOC;
-            AnswerStat = (AT_CXREG_Stat_T) (rand() % (AT_CXREG_STAT_CSFB_NOT_PREF_ROAMING + 1));
-            AnswerLac = (uint16_t) (rand() % (UINT16_MAX - 1));
-            AnswerCi = (uint32_t) (rand() % (UINT32_MAX - 1));
+            AnswerStat = (AT_CXREG_Stat_T)(rand() % (AT_CXREG_STAT_CSFB_NOT_PREF_ROAMING + 1));
+            AnswerLac = (uint16_t)(rand() % (UINT16_MAX - 1));
+            AnswerCi = (uint32_t)(rand() % (UINT32_MAX - 1));
             break;
         default:
             exit(1);
@@ -472,7 +471,7 @@ protected:
             AnswerStat = AT_CXREG_STAT_NOT;
         }
         return FormatIntoNewBuffer(&Answer, fmt,
-                n, AnswerStat, AnswerLac, AnswerCi);
+                                   n, AnswerStat, AnswerLac, AnswerCi);
     }
 };
 
@@ -521,7 +520,7 @@ TEST_F(TS_At_Get_CREG, UrcLocPass)
     EXPECT_EQ(AT_CXREG_ACT_INVALID, param.AcT);
 }
 
-class TS_At_Get_CGREG: public TS_ModemTest
+class TS_At_Get_CGREG : public TS_ModemTest
 {
 protected:
     AT_CXREG_Stat_T AnswerStat;
@@ -536,23 +535,23 @@ protected:
         srand(time(NULL));
     }
 
-    const char* FormatAnswer(AT_CXREG_N_T n)
+    const char *FormatAnswer(AT_CXREG_N_T n)
     {
-        const char* fmt = NULL;
+        const char *fmt = NULL;
         switch (n)
         {
         case AT_CXREG_N_DISABLED:
-            case AT_CXREG_N_URC:
+        case AT_CXREG_N_URC:
             fmt = TEST_AT_GET_CGREG_URC;
-            AnswerStat = (AT_CXREG_Stat_T) (rand() % (AT_CXREG_STAT_CSFB_NOT_PREF_ROAMING + 1));
+            AnswerStat = (AT_CXREG_Stat_T)(rand() % (AT_CXREG_STAT_CSFB_NOT_PREF_ROAMING + 1));
             break;
         case AT_CXREG_N_URC_LOC:
             fmt = TEST_AT_GET_CGREG_URC_LOC;
-            AnswerStat = (AT_CXREG_Stat_T) (rand() % (AT_CXREG_STAT_CSFB_NOT_PREF_ROAMING + 1));
-            AnswerLac = (uint16_t) (rand() % (UINT16_MAX - 1));
-            AnswerCi = (uint32_t) (rand() % (UINT32_MAX - 1));
-            AnswerAcT = (AT_CXREG_AcT_T) (rand() % (AT_CXREG_ACT_EUTRA_NR + 1));
-            AnswerRac = (uint8_t) (rand() % (UINT8_MAX - 1));
+            AnswerStat = (AT_CXREG_Stat_T)(rand() % (AT_CXREG_STAT_CSFB_NOT_PREF_ROAMING + 1));
+            AnswerLac = (uint16_t)(rand() % (UINT16_MAX - 1));
+            AnswerCi = (uint32_t)(rand() % (UINT32_MAX - 1));
+            AnswerAcT = (AT_CXREG_AcT_T)(rand() % (AT_CXREG_ACT_EUTRA_NR + 1));
+            AnswerRac = (uint8_t)(rand() % (UINT8_MAX - 1));
             break;
         default:
             exit(1);
@@ -566,7 +565,7 @@ protected:
         }
 
         return FormatIntoNewBuffer(&Answer, fmt,
-                n, AnswerStat, AnswerLac, AnswerCi, AnswerAcT, AnswerRac);
+                                   n, AnswerStat, AnswerLac, AnswerCi, AnswerAcT, AnswerRac);
     }
 };
 
@@ -616,7 +615,7 @@ TEST_F(TS_At_Get_CGREG, UrcLocPass)
     EXPECT_EQ(AnswerRac, param.Rac);
 }
 
-class TS_At_Get_CEREG: public TS_ModemTest
+class TS_At_Get_CEREG : public TS_ModemTest
 {
 protected:
     AT_CXREG_Stat_T AnswerStat;
@@ -630,22 +629,22 @@ protected:
         srand(time(NULL));
     }
 
-    const char* FormatAnswer(AT_CXREG_N_T n)
+    const char *FormatAnswer(AT_CXREG_N_T n)
     {
-        const char* fmt = NULL;
+        const char *fmt = NULL;
         switch (n)
         {
         case AT_CXREG_N_DISABLED:
-            case AT_CXREG_N_URC:
+        case AT_CXREG_N_URC:
             fmt = TEST_AT_GET_CEREG_URC;
-            AnswerStat = (AT_CXREG_Stat_T) (rand() % (AT_CXREG_STAT_CSFB_NOT_PREF_ROAMING + 1));
+            AnswerStat = (AT_CXREG_Stat_T)(rand() % (AT_CXREG_STAT_CSFB_NOT_PREF_ROAMING + 1));
             break;
         case AT_CXREG_N_URC_LOC:
             fmt = TEST_AT_GET_CEREG_URC_LOC;
-            AnswerStat = (AT_CXREG_Stat_T) (rand() % (AT_CXREG_STAT_CSFB_NOT_PREF_ROAMING + 1));
-            AnswerTac = (uint16_t) (rand() % (UINT16_MAX - 1));
-            AnswerCi = (uint32_t) (rand() % (UINT32_MAX - 1));
-            AnswerAcT = (AT_CXREG_AcT_T) (rand() % (AT_CXREG_ACT_EUTRA_NR + 1));
+            AnswerStat = (AT_CXREG_Stat_T)(rand() % (AT_CXREG_STAT_CSFB_NOT_PREF_ROAMING + 1));
+            AnswerTac = (uint16_t)(rand() % (UINT16_MAX - 1));
+            AnswerCi = (uint32_t)(rand() % (UINT32_MAX - 1));
+            AnswerAcT = (AT_CXREG_AcT_T)(rand() % (AT_CXREG_ACT_EUTRA_NR + 1));
             break;
         default:
             exit(1);
@@ -659,7 +658,7 @@ protected:
         }
 
         return FormatIntoNewBuffer(&Answer, fmt,
-                n, AnswerStat, AnswerTac, AnswerCi, AnswerAcT);
+                                   n, AnswerStat, AnswerTac, AnswerCi, AnswerAcT);
     }
 };
 
@@ -708,13 +707,13 @@ TEST_F(TS_At_Get_CEREG, UrcLocPass)
     EXPECT_EQ(AnswerAcT, param.AcT);
 }
 
-class TS_At_Set_COPS: public TS_ModemTest
+class TS_At_Set_COPS : public TS_ModemTest
 {
 protected:
-    const char* FormatTrigger(AT_COPS_Mode_T mode)
+    const char *FormatTrigger(AT_COPS_Mode_T mode)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_3GPP_27007_SET_ATCOPS_FMT,
-                mode);
+                                   mode);
     }
 };
 
@@ -806,18 +805,18 @@ TEST_F(TS_At_Set_COPS, DeregisterPass)
     EXPECT_EQ(RETCODE_OK, retcode);
 }
 
-class TS_At_Set_CGDCONT: public TS_ModemTest
+class TS_At_Set_CGDCONT : public TS_ModemTest
 {
 protected:
-    const char* FormatTrigger1(const AT_CGDCONT_Param_T* param)
+    const char *FormatTrigger1(const AT_CGDCONT_Param_T *param)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_3GPP_27007_SET_ATCGDCONT_FMT1,
-                param->Cid);
+                                   param->Cid);
     }
 
-    const char* FormatTrigger2(const AT_CGDCONT_Param_T* param)
+    const char *FormatTrigger2(const AT_CGDCONT_Param_T *param)
     {
-        const char* pdpType = "INVALID";
+        const char *pdpType = "INVALID";
 
         switch (param->PdpType)
         {
@@ -838,12 +837,12 @@ protected:
         }
 
         return FormatIntoNewBuffer(&Trigger, CMD_3GPP_27007_SET_ATCGDCONT_FMT2,
-                param->Cid, pdpType);
+                                   param->Cid, pdpType);
     }
 
-    const char* FormatTrigger3(const AT_CGDCONT_Param_T* param)
+    const char *FormatTrigger3(const AT_CGDCONT_Param_T *param)
     {
-        const char* pdpType = "INVALID";
+        const char *pdpType = "INVALID";
 
         switch (param->PdpType)
         {
@@ -865,7 +864,7 @@ protected:
         }
 
         return FormatIntoNewBuffer(&Trigger, CMD_3GPP_27007_SET_ATCGDCONT_FMT3,
-                param->Cid, pdpType, param->Apn);
+                                   param->Cid, pdpType, param->Apn);
     }
 };
 
@@ -944,13 +943,13 @@ TEST_F(TS_At_Set_CGDCONT, IPV6_DummyAPN_Pass)
     EXPECT_EQ(RETCODE_OK, retcode);
 }
 
-class TS_At_Set_CGACT: public TS_ModemTest
+class TS_At_Set_CGACT : public TS_ModemTest
 {
 protected:
-    const char* FormatTrigger(const AT_CGACT_Param_T* param)
+    const char *FormatTrigger(const AT_CGACT_Param_T *param)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_3GPP_27007_SET_ATCGACT_FMT,
-                param->State, param->Cid);
+                                   param->State, param->Cid);
     }
 };
 
@@ -982,16 +981,16 @@ TEST_F(TS_At_Set_CGACT, Deactivate2Pass)
     EXPECT_EQ(RETCODE_OK, retcode);
 }
 
-class TS_At_Set_CGPADDR: public TS_ModemTest
+class TS_At_Set_CGPADDR : public TS_ModemTest
 {
 protected:
-    const char* FormatTrigger(const AT_CGPADDR_Param_T* param)
+    const char *FormatTrigger(const AT_CGPADDR_Param_T *param)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_3GPP_27007_EXE_ATCGPADDR,
-                param->Cid);
+                                   param->Cid);
     }
 
-    const char* FormatAnswer(uint8_t cid, const AT_CGPADDR_Address_T* addr1, const AT_CGPADDR_Address_T* addr2)
+    const char *FormatAnswer(uint8_t cid, const AT_CGPADDR_Address_T *addr1, const AT_CGPADDR_Address_T *addr2)
     {
         switch (addr1->Type)
         {
@@ -1000,47 +999,47 @@ protected:
             {
             case AT_CGPADDR_ADDRESSTYPE_IPV4:
                 return FormatIntoNewBuffer(&Answer, TEST_AT_RESP_CGPADDR_IPV4_IPV4,
-                        cid,
-                        addr1->Address.IPv4[3],
-                        addr1->Address.IPv4[2],
-                        addr1->Address.IPv4[1],
-                        addr1->Address.IPv4[0],
+                                           cid,
+                                           addr1->Address.IPv4[3],
+                                           addr1->Address.IPv4[2],
+                                           addr1->Address.IPv4[1],
+                                           addr1->Address.IPv4[0],
 
-                        addr2->Address.IPv4[3],
-                        addr2->Address.IPv4[2],
-                        addr2->Address.IPv4[1],
-                        addr2->Address.IPv4[0]);
+                                           addr2->Address.IPv4[3],
+                                           addr2->Address.IPv4[2],
+                                           addr2->Address.IPv4[1],
+                                           addr2->Address.IPv4[0]);
             case AT_CGPADDR_ADDRESSTYPE_IPV6:
                 return FormatIntoNewBuffer(&Answer, TEST_AT_RESP_CGPADDR_IPV4_IPV6,
-                        cid,
-                        addr1->Address.IPv4[3],
-                        addr1->Address.IPv4[2],
-                        addr1->Address.IPv4[1],
-                        addr1->Address.IPv4[0],
+                                           cid,
+                                           addr1->Address.IPv4[3],
+                                           addr1->Address.IPv4[2],
+                                           addr1->Address.IPv4[1],
+                                           addr1->Address.IPv4[0],
 
-                        addr2->Address.IPv6[15],
-                        addr2->Address.IPv6[14],
-                        addr2->Address.IPv6[13],
-                        addr2->Address.IPv6[12],
-                        addr2->Address.IPv6[11],
-                        addr2->Address.IPv6[10],
-                        addr2->Address.IPv6[9],
-                        addr2->Address.IPv6[8],
-                        addr2->Address.IPv6[7],
-                        addr2->Address.IPv6[6],
-                        addr2->Address.IPv6[5],
-                        addr2->Address.IPv6[4],
-                        addr2->Address.IPv6[3],
-                        addr2->Address.IPv6[2],
-                        addr2->Address.IPv6[1],
-                        addr2->Address.IPv6[0]);
+                                           addr2->Address.IPv6[15],
+                                           addr2->Address.IPv6[14],
+                                           addr2->Address.IPv6[13],
+                                           addr2->Address.IPv6[12],
+                                           addr2->Address.IPv6[11],
+                                           addr2->Address.IPv6[10],
+                                           addr2->Address.IPv6[9],
+                                           addr2->Address.IPv6[8],
+                                           addr2->Address.IPv6[7],
+                                           addr2->Address.IPv6[6],
+                                           addr2->Address.IPv6[5],
+                                           addr2->Address.IPv6[4],
+                                           addr2->Address.IPv6[3],
+                                           addr2->Address.IPv6[2],
+                                           addr2->Address.IPv6[1],
+                                           addr2->Address.IPv6[0]);
             case AT_CGPADDR_ADDRESSTYPE_INVALID:
                 return FormatIntoNewBuffer(&Answer, TEST_AT_RESP_CGPADDR_IPV4,
-                        cid,
-                        addr1->Address.IPv4[3],
-                        addr1->Address.IPv4[2],
-                        addr1->Address.IPv4[1],
-                        addr1->Address.IPv4[0]);
+                                           cid,
+                                           addr1->Address.IPv4[3],
+                                           addr1->Address.IPv4[2],
+                                           addr1->Address.IPv4[1],
+                                           addr1->Address.IPv4[0]);
             default:
                 return NULL;
             }
@@ -1050,90 +1049,90 @@ protected:
             {
             case AT_CGPADDR_ADDRESSTYPE_IPV4:
                 return FormatIntoNewBuffer(&Answer, TEST_AT_RESP_CGPADDR_IPV6_IPV4,
-                        cid,
-                        addr1->Address.IPv6[15],
-                        addr1->Address.IPv6[14],
-                        addr1->Address.IPv6[13],
-                        addr1->Address.IPv6[12],
-                        addr1->Address.IPv6[11],
-                        addr1->Address.IPv6[10],
-                        addr1->Address.IPv6[9],
-                        addr1->Address.IPv6[8],
-                        addr1->Address.IPv6[7],
-                        addr1->Address.IPv6[6],
-                        addr1->Address.IPv6[5],
-                        addr1->Address.IPv6[4],
-                        addr1->Address.IPv6[3],
-                        addr1->Address.IPv6[2],
-                        addr1->Address.IPv6[1],
-                        addr1->Address.IPv6[0],
+                                           cid,
+                                           addr1->Address.IPv6[15],
+                                           addr1->Address.IPv6[14],
+                                           addr1->Address.IPv6[13],
+                                           addr1->Address.IPv6[12],
+                                           addr1->Address.IPv6[11],
+                                           addr1->Address.IPv6[10],
+                                           addr1->Address.IPv6[9],
+                                           addr1->Address.IPv6[8],
+                                           addr1->Address.IPv6[7],
+                                           addr1->Address.IPv6[6],
+                                           addr1->Address.IPv6[5],
+                                           addr1->Address.IPv6[4],
+                                           addr1->Address.IPv6[3],
+                                           addr1->Address.IPv6[2],
+                                           addr1->Address.IPv6[1],
+                                           addr1->Address.IPv6[0],
 
-                        addr2->Address.IPv4[3],
-                        addr2->Address.IPv4[2],
-                        addr2->Address.IPv4[1],
-                        addr2->Address.IPv4[0]);
+                                           addr2->Address.IPv4[3],
+                                           addr2->Address.IPv4[2],
+                                           addr2->Address.IPv4[1],
+                                           addr2->Address.IPv4[0]);
             case AT_CGPADDR_ADDRESSTYPE_IPV6:
                 return FormatIntoNewBuffer(&Answer, TEST_AT_RESP_CGPADDR_IPV6_IPV6,
-                        cid,
-                        addr1->Address.IPv6[15],
-                        addr1->Address.IPv6[14],
-                        addr1->Address.IPv6[13],
-                        addr1->Address.IPv6[12],
-                        addr1->Address.IPv6[11],
-                        addr1->Address.IPv6[10],
-                        addr1->Address.IPv6[9],
-                        addr1->Address.IPv6[8],
-                        addr1->Address.IPv6[7],
-                        addr1->Address.IPv6[6],
-                        addr1->Address.IPv6[5],
-                        addr1->Address.IPv6[4],
-                        addr1->Address.IPv6[3],
-                        addr1->Address.IPv6[2],
-                        addr1->Address.IPv6[1],
-                        addr1->Address.IPv6[0],
+                                           cid,
+                                           addr1->Address.IPv6[15],
+                                           addr1->Address.IPv6[14],
+                                           addr1->Address.IPv6[13],
+                                           addr1->Address.IPv6[12],
+                                           addr1->Address.IPv6[11],
+                                           addr1->Address.IPv6[10],
+                                           addr1->Address.IPv6[9],
+                                           addr1->Address.IPv6[8],
+                                           addr1->Address.IPv6[7],
+                                           addr1->Address.IPv6[6],
+                                           addr1->Address.IPv6[5],
+                                           addr1->Address.IPv6[4],
+                                           addr1->Address.IPv6[3],
+                                           addr1->Address.IPv6[2],
+                                           addr1->Address.IPv6[1],
+                                           addr1->Address.IPv6[0],
 
-                        addr2->Address.IPv6[15],
-                        addr2->Address.IPv6[14],
-                        addr2->Address.IPv6[13],
-                        addr2->Address.IPv6[12],
-                        addr2->Address.IPv6[11],
-                        addr2->Address.IPv6[10],
-                        addr2->Address.IPv6[9],
-                        addr2->Address.IPv6[8],
-                        addr2->Address.IPv6[7],
-                        addr2->Address.IPv6[6],
-                        addr2->Address.IPv6[5],
-                        addr2->Address.IPv6[4],
-                        addr2->Address.IPv6[3],
-                        addr2->Address.IPv6[2],
-                        addr2->Address.IPv6[1],
-                        addr2->Address.IPv6[0]);
+                                           addr2->Address.IPv6[15],
+                                           addr2->Address.IPv6[14],
+                                           addr2->Address.IPv6[13],
+                                           addr2->Address.IPv6[12],
+                                           addr2->Address.IPv6[11],
+                                           addr2->Address.IPv6[10],
+                                           addr2->Address.IPv6[9],
+                                           addr2->Address.IPv6[8],
+                                           addr2->Address.IPv6[7],
+                                           addr2->Address.IPv6[6],
+                                           addr2->Address.IPv6[5],
+                                           addr2->Address.IPv6[4],
+                                           addr2->Address.IPv6[3],
+                                           addr2->Address.IPv6[2],
+                                           addr2->Address.IPv6[1],
+                                           addr2->Address.IPv6[0]);
             case AT_CGPADDR_ADDRESSTYPE_INVALID:
                 return FormatIntoNewBuffer(&Answer, TEST_AT_RESP_CGPADDR_IPV6,
-                        cid,
-                        addr1->Address.IPv6[15],
-                        addr1->Address.IPv6[14],
-                        addr1->Address.IPv6[13],
-                        addr1->Address.IPv6[12],
-                        addr1->Address.IPv6[11],
-                        addr1->Address.IPv6[10],
-                        addr1->Address.IPv6[9],
-                        addr1->Address.IPv6[8],
-                        addr1->Address.IPv6[7],
-                        addr1->Address.IPv6[6],
-                        addr1->Address.IPv6[5],
-                        addr1->Address.IPv6[4],
-                        addr1->Address.IPv6[3],
-                        addr1->Address.IPv6[2],
-                        addr1->Address.IPv6[1],
-                        addr1->Address.IPv6[0]);
+                                           cid,
+                                           addr1->Address.IPv6[15],
+                                           addr1->Address.IPv6[14],
+                                           addr1->Address.IPv6[13],
+                                           addr1->Address.IPv6[12],
+                                           addr1->Address.IPv6[11],
+                                           addr1->Address.IPv6[10],
+                                           addr1->Address.IPv6[9],
+                                           addr1->Address.IPv6[8],
+                                           addr1->Address.IPv6[7],
+                                           addr1->Address.IPv6[6],
+                                           addr1->Address.IPv6[5],
+                                           addr1->Address.IPv6[4],
+                                           addr1->Address.IPv6[3],
+                                           addr1->Address.IPv6[2],
+                                           addr1->Address.IPv6[1],
+                                           addr1->Address.IPv6[0]);
             default:
                 return NULL;
             }
             break;
         case AT_CGPADDR_ADDRESSTYPE_INVALID:
             return FormatIntoNewBuffer(&Answer, TEST_AT_RESP_CGPADDR_INVALID,
-                    cid);
+                                       cid);
         default:
             return NULL;
         }
@@ -1304,13 +1303,12 @@ TEST_F(TS_At_Set_CGPADDR, NoAddr_Pass)
     EXPECT_EQ(expAddr2.Type, resp.Address2.Type);
 }
 
-class TS_ExtractCgpaddrAddress: public testing::Test
+class TS_ExtractCgpaddrAddress : public testing::Test
 {
 protected:
     virtual void SetUp()
     {
-        FFF_RESET_HISTORY()
-        ;
+        FFF_RESET_HISTORY();
     }
 
     virtual void TearDown()
@@ -1323,8 +1321,8 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_Normal_Pass)
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
 
-    retcode = ExtractCgpaddrAddress((uint8_t *) "192.168.2.100", strlen("192.168.2.100"),
-            &addr);
+    retcode = ExtractCgpaddrAddress((uint8_t *)"192.168.2.100", strlen("192.168.2.100"),
+                                    &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(192, addr.Address.IPv4[3]);
@@ -1339,8 +1337,8 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_LeadingZeros_Pass)
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
 
-    retcode = ExtractCgpaddrAddress((uint8_t *) "192.168.002.100", strlen("192.168.002.100"),
-            &addr);
+    retcode = ExtractCgpaddrAddress((uint8_t *)"192.168.002.100", strlen("192.168.002.100"),
+                                    &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(192, addr.Address.IPv4[3]);
@@ -1355,8 +1353,8 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv6_Normal_Pass)
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
 
-    retcode = ExtractCgpaddrAddress((uint8_t *) "254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55", strlen("254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55"),
-            &addr);
+    retcode = ExtractCgpaddrAddress((uint8_t *)"254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55", strlen("254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55"),
+                                    &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(254, addr.Address.IPv6[15]);
@@ -1383,8 +1381,8 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv6_LeadingZeros_Pass)
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
 
-    retcode = ExtractCgpaddrAddress((uint8_t *) "254.128.1.02.003.4.005.6.7.8.9.10.11.12.19.55", strlen("254.128.1.02.003.4.005.6.7.8.9.10.11.12.19.55"),
-            &addr);
+    retcode = ExtractCgpaddrAddress((uint8_t *)"254.128.1.02.003.4.005.6.7.8.9.10.11.12.19.55", strlen("254.128.1.02.003.4.005.6.7.8.9.10.11.12.19.55"),
+                                    &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(254, addr.Address.IPv6[15]);
@@ -1411,8 +1409,8 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_Quotes_Pass)
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
 
-    retcode = ExtractCgpaddrAddress((uint8_t *) "\"192.168.2.100\"", strlen("\"192.168.2.100\""),
-            &addr);
+    retcode = ExtractCgpaddrAddress((uint8_t *)"\"192.168.2.100\"", strlen("\"192.168.2.100\""),
+                                    &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(192, addr.Address.IPv4[3]);
@@ -1427,8 +1425,8 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv6_Quotes_Pass)
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
 
-    retcode = ExtractCgpaddrAddress((uint8_t *) "\"254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55\"", strlen("\"254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55\""),
-            &addr);
+    retcode = ExtractCgpaddrAddress((uint8_t *)"\"254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55\"", strlen("\"254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55\""),
+                                    &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(254, addr.Address.IPv6[15]);
@@ -1455,7 +1453,7 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_InvalidOctet1_Fail)
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
 
-    retcode = ExtractCgpaddrAddress((uint8_t *) "300.168.2.100", strlen("300.168.2.100"), &addr);
+    retcode = ExtractCgpaddrAddress((uint8_t *)"300.168.2.100", strlen("300.168.2.100"), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1465,7 +1463,7 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv6_InvalidOctet1_Fail)
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
 
-    retcode = ExtractCgpaddrAddress((uint8_t *) "300.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55", strlen("300.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55"), &addr);
+    retcode = ExtractCgpaddrAddress((uint8_t *)"300.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55", strlen("300.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55"), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1475,7 +1473,7 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_InvalidOctet2_Fail)
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
 
-    retcode = ExtractCgpaddrAddress((uint8_t *) "200.1680.2.100", strlen("200.1680.2.100"), &addr);
+    retcode = ExtractCgpaddrAddress((uint8_t *)"200.1680.2.100", strlen("200.1680.2.100"), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1485,7 +1483,7 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv6_InvalidOctet2_Fail)
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
 
-    retcode = ExtractCgpaddrAddress((uint8_t *) "254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.1055", strlen("254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.1055"), &addr);
+    retcode = ExtractCgpaddrAddress((uint8_t *)"254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.1055", strlen("254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.1055"), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1495,7 +1493,7 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_MissingOctet_Fail)
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
 
-    retcode = ExtractCgpaddrAddress((uint8_t *) "100.168.2", strlen("100.168.2"), &addr);
+    retcode = ExtractCgpaddrAddress((uint8_t *)"100.168.2", strlen("100.168.2"), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1515,7 +1513,7 @@ TEST_F(TS_ExtractCgpaddrAddress, ZeroLen_Fail)
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
 
-    retcode = ExtractCgpaddrAddress((uint8_t *) "200.1680.2.100", 0, &addr);
+    retcode = ExtractCgpaddrAddress((uint8_t *)"200.1680.2.100", 0, &addr);
 
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
 }
@@ -1525,7 +1523,7 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_LeadingZero_Fail)
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
 
-    retcode = ExtractCgpaddrAddress((uint8_t *) "20.0016.2.100", strlen("200.0016.2.100"), &addr);
+    retcode = ExtractCgpaddrAddress((uint8_t *)"20.0016.2.100", strlen("200.0016.2.100"), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1535,7 +1533,7 @@ TEST_F(TS_ExtractCgpaddrAddress, BuffTooLong_Fail)
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
 
-    retcode = ExtractCgpaddrAddress((uint8_t *) "192.168.2.100", AT_3GPP_27007_MAX_IP_STR_LENGTH + 1, &addr);
+    retcode = ExtractCgpaddrAddress((uint8_t *)"192.168.2.100", AT_3GPP_27007_MAX_IP_STR_LENGTH + 1, &addr);
 
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
 }
@@ -1545,7 +1543,7 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_InvalidChar1_Fail)
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
 
-    retcode = ExtractCgpaddrAddress((uint8_t *) "192.+.2.100", strlen("192.+.2.100"), &addr);
+    retcode = ExtractCgpaddrAddress((uint8_t *)"192.+.2.100", strlen("192.+.2.100"), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1555,25 +1553,25 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_InvalidChar2_Fail)
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
 
-    retcode = ExtractCgpaddrAddress((uint8_t *) "192.a.2.100", strlen("192.a.2.100"), &addr);
+    retcode = ExtractCgpaddrAddress((uint8_t *)"192.a.2.100", strlen("192.a.2.100"), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
 
-class TS_At_Set_CPIN: public TS_ModemTest
+class TS_At_Set_CPIN : public TS_ModemTest
 {
 protected:
-    const char* FormatTrigger(const char* pin)
+    const char *FormatTrigger(const char *pin)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_3GPP_27007_SET_ATCPIN_FMT,
-                pin);
+                                   pin);
     }
 };
 
 TEST_F(TS_At_Set_CPIN, Pass)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* pin = "1234";
+    const char *pin = "1234";
 
     AddFakeAnswer(FormatTrigger(pin), TEST_AT_RESPONSE_OK);
 
@@ -1582,20 +1580,20 @@ TEST_F(TS_At_Set_CPIN, Pass)
     EXPECT_EQ(RETCODE_OK, retcode);
 }
 
-class TS_At_Set_CFUN: public TS_ModemTest
+class TS_At_Set_CFUN : public TS_ModemTest
 {
 protected:
-    const char* FormatTrigger(const AT_CFUN_Param_T* param)
+    const char *FormatTrigger(const AT_CFUN_Param_T *param)
     {
         if (AT_CFUN_RST_INVALID == param->Rst)
         {
             return FormatIntoNewBuffer(&Trigger, CMD_3GPP_27007_SET_ATCFUN_FMT1,
-                    param->Fun);
+                                       param->Fun);
         }
         else
         {
             return FormatIntoNewBuffer(&Trigger, CMD_3GPP_27007_SET_ATCFUN_FMT2,
-                    param->Fun, param->Rst);
+                                       param->Fun, param->Rst);
         }
     }
 };
@@ -1660,7 +1658,7 @@ TEST_F(TS_At_Set_CFUN, Reserved15_Reset_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
     AT_CFUN_Param_T param;
-    param.Fun = (AT_CFUN_Fun_T) 15;
+    param.Fun = (AT_CFUN_Fun_T)15;
     param.Rst = AT_CFUN_RST_RESET;
 
     AddFakeAnswer(FormatTrigger(&param), TEST_AT_RESPONSE_OK);
@@ -1670,13 +1668,13 @@ TEST_F(TS_At_Set_CFUN, Reserved15_Reset_Pass)
     EXPECT_EQ(RETCODE_OK, retcode);
 }
 
-class TS_At_Get_CFUN: public TS_ModemTest
+class TS_At_Get_CFUN : public TS_ModemTest
 {
 protected:
-    const char* FormatAnswer(AT_CFUN_Fun_T fun)
+    const char *FormatAnswer(AT_CFUN_Fun_T fun)
     {
         return FormatIntoNewBuffer(&Answer, TEST_AT_RESP_CFUN,
-                fun);
+                                   fun);
     }
 };
 

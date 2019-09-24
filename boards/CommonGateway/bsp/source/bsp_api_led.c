@@ -25,7 +25,7 @@
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID MODULE_BSP_API_LED
 
-#define PIN_LED_ALL     (PIND_LED_R | PIND_LED_G | PIND_LED_B)
+#define PIN_LED_ALL (PIND_LED_R | PIND_LED_G | PIND_LED_B)
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
@@ -35,7 +35,7 @@ static Retcode_T LED_Toggle(uint32_t id);
 
 /*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/
 
-static uint8_t bspState = (uint8_t) BSP_STATE_INIT; /**< BSP state of the LEDs */
+static uint8_t bspState = (uint8_t)BSP_STATE_INIT; /**< BSP state of the LEDs */
 
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
 
@@ -48,7 +48,7 @@ Retcode_T BSP_LED_Connect(void)
 {
     GPIO_InitTypeDef GPIO_Init;
     Retcode_T retcode = RETCODE_OK;
-    if (!(bspState & (uint8_t) BSP_STATE_TO_CONNECTED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_CONNECTED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -61,7 +61,7 @@ Retcode_T BSP_LED_Connect(void)
         GPIO_Init.Speed = GPIO_SPEED_FREQ_LOW;
         HAL_GPIO_Init(GPIOD, &GPIO_Init);
 
-        bspState = (uint8_t) BSP_STATE_CONNECTED;
+        bspState = (uint8_t)BSP_STATE_CONNECTED;
     }
     return retcode;
 }
@@ -75,7 +75,7 @@ Retcode_T BSP_LED_Enable(uint32_t id)
 {
     KISO_UNUSED(id);
     Retcode_T retcode = RETCODE_OK;
-    if (!(bspState & (uint8_t) BSP_STATE_TO_ENABLED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_ENABLED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -85,7 +85,7 @@ Retcode_T BSP_LED_Enable(uint32_t id)
     }
     if (RETCODE_OK == retcode)
     {
-        bspState = (uint8_t) BSP_STATE_ENABLED;
+        bspState = (uint8_t)BSP_STATE_ENABLED;
     }
     return retcode;
 }
@@ -99,7 +99,7 @@ Retcode_T BSP_LED_Disable(uint32_t id)
 {
     KISO_UNUSED(id);
     Retcode_T retcode = RETCODE_OK;
-    if (!(bspState & (uint8_t) BSP_STATE_TO_DISABLED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_DISABLED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -113,7 +113,7 @@ Retcode_T BSP_LED_Disable(uint32_t id)
     }
     if (RETCODE_OK == retcode)
     {
-        bspState = (uint8_t) BSP_STATE_DISABLED;
+        bspState = (uint8_t)BSP_STATE_DISABLED;
     }
     return retcode;
 }
@@ -127,7 +127,7 @@ Retcode_T BSP_LED_Disconnect(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_DISCONNECTED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_DISCONNECTED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -136,7 +136,7 @@ Retcode_T BSP_LED_Disconnect(void)
         uint32_t pins = PIN_LED_ALL;
         HAL_GPIO_DeInit(GPIOD, pins);
         GPIO_CloseClockGate(GPIO_PORT_D, PIN_LED_ALL);
-        bspState = (uint8_t) BSP_STATE_DISCONNECTED;
+        bspState = (uint8_t)BSP_STATE_DISCONNECTED;
     }
     return retcode;
 }
@@ -150,7 +150,7 @@ Retcode_T BSP_LED_Disconnect(void)
 Retcode_T BSP_LED_Switch(uint32_t id, uint32_t command)
 {
     Retcode_T retcode = RETCODE_OK;
-    if ((uint8_t) BSP_STATE_ENABLED != bspState)
+    if ((uint8_t)BSP_STATE_ENABLED != bspState)
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -158,18 +158,18 @@ Retcode_T BSP_LED_Switch(uint32_t id, uint32_t command)
     {
         switch (command)
         {
-            case COMMONGATEWAY_LED_COMMAND_OFF:
-                retcode = LED_Off(id);
-                break;
-            case COMMONGATEWAY_LED_COMMAND_ON:
-                retcode = LED_On(id);
-                break;
-            case COMMONGATEWAY_LED_COMMAND_TOGGLE:
-                retcode = LED_Toggle(id);
-                break;
-            default:
-                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-                break;
+        case COMMONGATEWAY_LED_COMMAND_OFF:
+            retcode = LED_Off(id);
+            break;
+        case COMMONGATEWAY_LED_COMMAND_ON:
+            retcode = LED_On(id);
+            break;
+        case COMMONGATEWAY_LED_COMMAND_TOGGLE:
+            retcode = LED_Toggle(id);
+            break;
+        default:
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+            break;
         }
     }
     return retcode;
@@ -188,21 +188,21 @@ static Retcode_T LED_Off(uint32_t id)
     Retcode_T retcode = RETCODE_OK;
     switch (id)
     {
-        case COMMONGATEWAY_LED_ALL:
-            HAL_GPIO_WritePin(GPIOD, PIN_LED_ALL, GPIO_PIN_RESET);
-            break;
-        case COMMONGATEWAY_LED_RED_ID:
-            HAL_GPIO_WritePin(GPIOD, PIND_LED_R, GPIO_PIN_RESET);
-            break;
-        case COMMONGATEWAY_LED_GREEN_ID:
-            HAL_GPIO_WritePin(GPIOD, PIND_LED_G, GPIO_PIN_RESET);
-            break;
-        case COMMONGATEWAY_LED_BLUE_ID:
-            HAL_GPIO_WritePin(GPIOD, PIND_LED_B, GPIO_PIN_RESET);
-            break;
-        default:
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-            break;
+    case COMMONGATEWAY_LED_ALL:
+        HAL_GPIO_WritePin(GPIOD, PIN_LED_ALL, GPIO_PIN_RESET);
+        break;
+    case COMMONGATEWAY_LED_RED_ID:
+        HAL_GPIO_WritePin(GPIOD, PIND_LED_R, GPIO_PIN_RESET);
+        break;
+    case COMMONGATEWAY_LED_GREEN_ID:
+        HAL_GPIO_WritePin(GPIOD, PIND_LED_G, GPIO_PIN_RESET);
+        break;
+    case COMMONGATEWAY_LED_BLUE_ID:
+        HAL_GPIO_WritePin(GPIOD, PIND_LED_B, GPIO_PIN_RESET);
+        break;
+    default:
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+        break;
     }
     return retcode;
 }
@@ -218,21 +218,21 @@ static Retcode_T LED_On(uint32_t id)
     Retcode_T retcode = RETCODE_OK;
     switch (id)
     {
-        case COMMONGATEWAY_LED_ALL:
-            HAL_GPIO_WritePin(GPIOD, PIN_LED_ALL, GPIO_PIN_SET);
-            break;
-        case COMMONGATEWAY_LED_RED_ID:
-            HAL_GPIO_WritePin(GPIOD, PIND_LED_R, GPIO_PIN_SET);
-            break;
-        case COMMONGATEWAY_LED_GREEN_ID:
-            HAL_GPIO_WritePin(GPIOD, PIND_LED_G, GPIO_PIN_SET);
-            break;
-        case COMMONGATEWAY_LED_BLUE_ID:
-            HAL_GPIO_WritePin(GPIOD, PIND_LED_B, GPIO_PIN_SET);
-            break;
-        default:
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-            break;
+    case COMMONGATEWAY_LED_ALL:
+        HAL_GPIO_WritePin(GPIOD, PIN_LED_ALL, GPIO_PIN_SET);
+        break;
+    case COMMONGATEWAY_LED_RED_ID:
+        HAL_GPIO_WritePin(GPIOD, PIND_LED_R, GPIO_PIN_SET);
+        break;
+    case COMMONGATEWAY_LED_GREEN_ID:
+        HAL_GPIO_WritePin(GPIOD, PIND_LED_G, GPIO_PIN_SET);
+        break;
+    case COMMONGATEWAY_LED_BLUE_ID:
+        HAL_GPIO_WritePin(GPIOD, PIND_LED_B, GPIO_PIN_SET);
+        break;
+    default:
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+        break;
     }
     return retcode;
 }
@@ -248,21 +248,21 @@ static Retcode_T LED_Toggle(uint32_t id)
     Retcode_T retcode = RETCODE_OK;
     switch (id)
     {
-        case COMMONGATEWAY_LED_ALL:
-            HAL_GPIO_TogglePin(GPIOD, PIN_LED_ALL);
-            break;
-        case COMMONGATEWAY_LED_RED_ID:
-            HAL_GPIO_TogglePin(GPIOD, PIND_LED_R);
-            break;
-        case COMMONGATEWAY_LED_GREEN_ID:
-            HAL_GPIO_TogglePin(GPIOD, PIND_LED_G);
-            break;
-        case COMMONGATEWAY_LED_BLUE_ID:
-            HAL_GPIO_TogglePin(GPIOD, PIND_LED_B);
-            break;
-        default:
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-            break;
+    case COMMONGATEWAY_LED_ALL:
+        HAL_GPIO_TogglePin(GPIOD, PIN_LED_ALL);
+        break;
+    case COMMONGATEWAY_LED_RED_ID:
+        HAL_GPIO_TogglePin(GPIOD, PIND_LED_R);
+        break;
+    case COMMONGATEWAY_LED_GREEN_ID:
+        HAL_GPIO_TogglePin(GPIOD, PIND_LED_G);
+        break;
+    case COMMONGATEWAY_LED_BLUE_ID:
+        HAL_GPIO_TogglePin(GPIOD, PIND_LED_B);
+        break;
+    default:
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+        break;
     }
     return retcode;
 }

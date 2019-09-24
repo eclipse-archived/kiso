@@ -31,7 +31,7 @@
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 /*---------------------- VARIABLES DECLARATIONS ---------------------------------------------------------------------*/
 
-static uint8_t bspState = (uint8_t) BSP_STATE_INIT; /**< BSP State of the sensor */
+static uint8_t bspState = (uint8_t)BSP_STATE_INIT; /**< BSP State of the sensor */
 
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
 
@@ -45,7 +45,7 @@ Retcode_T BSP_BMA280_Connect(int32_t deviceId)
     KISO_UNUSED(deviceId);
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_CONNECTED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_CONNECTED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -55,7 +55,7 @@ Retcode_T BSP_BMA280_Connect(int32_t deviceId)
     }
     if (RETCODE_OK == retcode)
     {
-        GPIO_InitTypeDef BSP_GPIOInitStruct = { 0 };
+        GPIO_InitTypeDef BSP_GPIOInitStruct = {0};
 
         GPIO_OpenClockGate(GPIO_PORT_A, PINA_BMA_INT);
         BSP_GPIOInitStruct.Pin = PINA_BMA_INT;
@@ -64,7 +64,7 @@ Retcode_T BSP_BMA280_Connect(int32_t deviceId)
         BSP_GPIOInitStruct.Speed = GPIO_SPEED_FREQ_LOW;
         HAL_GPIO_Init(GPIOA, &BSP_GPIOInitStruct);
 
-        bspState = (uint8_t) BSP_STATE_CONNECTED;
+        bspState = (uint8_t)BSP_STATE_CONNECTED;
     }
     return retcode;
 }
@@ -79,7 +79,7 @@ Retcode_T BSP_BMA280_Enable(int32_t deviceId)
     KISO_UNUSED(deviceId);
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_ENABLED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_ENABLED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -93,7 +93,7 @@ Retcode_T BSP_BMA280_Enable(int32_t deviceId)
     }
     if (RETCODE_OK == retcode)
     {
-        bspState = (uint8_t) BSP_STATE_ENABLED;
+        bspState = (uint8_t)BSP_STATE_ENABLED;
     }
     return retcode;
 }
@@ -108,7 +108,7 @@ Retcode_T BSP_BMA280_Disable(int32_t deviceId)
     KISO_UNUSED(deviceId);
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_DISABLED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_DISABLED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -122,7 +122,7 @@ Retcode_T BSP_BMA280_Disable(int32_t deviceId)
     }
     if (RETCODE_OK == retcode)
     {
-        bspState = (uint8_t) BSP_STATE_DISABLED;
+        bspState = (uint8_t)BSP_STATE_DISABLED;
     }
     return retcode;
 }
@@ -136,7 +136,7 @@ Retcode_T BSP_BMA280_Disconnect(int32_t deviceId)
 {
     KISO_UNUSED(deviceId);
     Retcode_T retcode = RETCODE_OK;
-    if (!(bspState & (uint8_t) BSP_STATE_TO_DISCONNECTED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_DISCONNECTED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -151,7 +151,7 @@ Retcode_T BSP_BMA280_Disconnect(int32_t deviceId)
     }
     if (RETCODE_OK == retcode)
     {
-        bspState = (uint8_t) BSP_STATE_DISCONNECTED;
+        bspState = (uint8_t)BSP_STATE_DISCONNECTED;
     }
     return retcode;
 }
@@ -163,14 +163,14 @@ Retcode_T BSP_BMA280_Disconnect(int32_t deviceId)
 HWHandle_T BSP_BMA280_GetHandle(int32_t deviceId)
 {
     KISO_UNUSED(deviceId);
-    return (HWHandle_T) &sensorsI2CStruct;
+    return (HWHandle_T)&sensorsI2CStruct;
 }
 
 /**
  * See API interface for function documentation
  * @retval RETCODE(RETCODE_SEVERITY_ERROR,RETCODE_NOT_SUPPORTED) function not implemented by BSP.
  */
-Retcode_T BSP_BMA280_Control(uint32_t command, void* arg)
+Retcode_T BSP_BMA280_Control(uint32_t command, void *arg)
 {
     KISO_UNUSED(command);
     KISO_UNUSED(arg);

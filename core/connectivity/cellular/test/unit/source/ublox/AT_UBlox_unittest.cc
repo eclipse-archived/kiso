@@ -39,52 +39,53 @@ extern "C"
 
 #include <stdlib.h>
 #include <time.h>
-}FFF_DEFINITION_BLOCK_END
+}
+FFF_DEFINITION_BLOCK_END
 
-#define TEST_AT_RESPONSE_OK     ("OK\r\n")
-#define TEST_AT_RESPONSE_ERROR  ("ERROR\r\n")
-#define TEST_GET_ATMNOUPROF_RESPONSE_FMT    ("+%s:%" PRIu8 "\r\n%s")
-#define TEST_SET_ATUSOCR_RESPONSE_FMT       ("+%s:%" PRIu32 "\r\n%s")
-#define TEST_SET_ATUSOWR_RESPONSE_FMT       ("+%s:%" PRIu32 ",%" PRIu32 "\r\n%s")
-#define TEST_SET_ATUSOST_RESPONSE_FMT       ("+%s:%" PRIu32 ",%" PRIu32 "\r\n%s")
-#define TEST_SET_ATUSORD_RESPONSE_FMTDATA   ("+%s:%" PRIu32 ",%" PRIu32 ",\"%.*s\"\r\n%s")
+#define TEST_AT_RESPONSE_OK ("OK\r\n")
+#define TEST_AT_RESPONSE_ERROR ("ERROR\r\n")
+#define TEST_GET_ATMNOUPROF_RESPONSE_FMT ("+%s:%" PRIu8 "\r\n%s")
+#define TEST_SET_ATUSOCR_RESPONSE_FMT ("+%s:%" PRIu32 "\r\n%s")
+#define TEST_SET_ATUSOWR_RESPONSE_FMT ("+%s:%" PRIu32 ",%" PRIu32 "\r\n%s")
+#define TEST_SET_ATUSOST_RESPONSE_FMT ("+%s:%" PRIu32 ",%" PRIu32 "\r\n%s")
+#define TEST_SET_ATUSORD_RESPONSE_FMTDATA ("+%s:%" PRIu32 ",%" PRIu32 ",\"%.*s\"\r\n%s")
 #define TEST_SET_ATUSORD_RESPONSE_FMTNODATA ("+%s:%" PRIu32 ",%" PRIu32 "\r\n%s")
-#define TEST_SET_ATUSORD_RESPONSE_FMTNOLEN  ("+%s:%" PRIu32 ",\"\"\r\n%s")
-#define TEST_SET_ATUSORF_RESPONSE_FMTIPV4   ("+%s:%" PRIu32 ",\"%d.%d.%d.%d\",%d,%" PRIu32 ",\"%.*s\"\r\n%s")
-#define TEST_SET_ATUSORF_RESPONSE_FMTIPV6   ("+%s:%" PRIu32 ",\"%x:%x:%x:%x:%x:%x:%x:%x\",%d,%" PRIu32 ",\"%.*s\"\r\n%s")
+#define TEST_SET_ATUSORD_RESPONSE_FMTNOLEN ("+%s:%" PRIu32 ",\"\"\r\n%s")
+#define TEST_SET_ATUSORF_RESPONSE_FMTIPV4 ("+%s:%" PRIu32 ",\"%d.%d.%d.%d\",%d,%" PRIu32 ",\"%.*s\"\r\n%s")
+#define TEST_SET_ATUSORF_RESPONSE_FMTIPV6 ("+%s:%" PRIu32 ",\"%x:%x:%x:%x:%x:%x:%x:%x\",%d,%" PRIu32 ",\"%.*s\"\r\n%s")
 #define TEST_SET_ATUSORF_RESPONSE_FMTNODATA ("+%s:%" PRIu32 ",%" PRIu32 "\r\n%s")
-#define TEST_SET_ATUSORF_RESPONSE_FMTNOLEN  ("+%s:%" PRIu32 ",\"\"\r\n%s")
-#define TEST_GET_ATUDCONF_RESPONSE_FMTHEXMODE   ("+%s:%" PRIu32 ",%" PRIu32 "\r\n%s")
-#define TEST_GET_ATCCID_RESPONSE_FMT        ("+%s:%s\r\n%s")
-#define TEST_SET_ATUDNS_RESPONSE_FMT1       ("+%s:\"%d.%d.%d.%d\"\r\n%s")
-#define TEST_SET_ATUDNS_RESPONSE_FMT2       ("+%s:\"%x:%x:%x:%x:%x:%x:%x:%x\"\r\n%s")
-#define TEST_SET_ATUDNS_RESPONSE_FMT3       ("+%s:\"%s\"\r\n%s")
-#define TEST_URC_ATUSOLI_FMTIPV4IPV4        ("+%s:%" PRIu32 ",\"%d.%d.%d.%d\",%" PRIu32 ",%d,\"%d.%d.%d.%d\",%d\r\n")
-#define TEST_URC_ATUSOLI_FMTIPV6IPV4        ("+%s:%" PRIu32 ",\"%x:%x:%x:%x:%x:%x:%x:%x\",%" PRIu32 ",%d,\"%d.%d.%d.%d\",%d\r\n")
-#define TEST_URC_ATUSOLI_FMTIPV4IPV6        ("+%s:%" PRIu32 ",\"%d.%d.%d.%d\",%" PRIu32 ",%d,\"%x:%x:%x:%x:%x:%x:%x:%x\",%d\r\n")
-#define TEST_URC_ATUSOLI_FMTIPV6IPV6        ("+%s:%" PRIu32 ",\"%x:%x:%x:%x:%x:%x:%x:%x\",%" PRIu32 ",%d,\"%x:%x:%x:%x:%x:%x:%x:%x\",%d\r\n")
-#define TEST_URC_ATUSOCL_FMT                ("+%s:%" PRIu32 "\r\n")
-#define TEST_URC_ATUSORX_FMT                ("+%s:%" PRIu32 ",%" PRIu32 "\r\n")
+#define TEST_SET_ATUSORF_RESPONSE_FMTNOLEN ("+%s:%" PRIu32 ",\"\"\r\n%s")
+#define TEST_GET_ATUDCONF_RESPONSE_FMTHEXMODE ("+%s:%" PRIu32 ",%" PRIu32 "\r\n%s")
+#define TEST_GET_ATCCID_RESPONSE_FMT ("+%s:%s\r\n%s")
+#define TEST_SET_ATUDNS_RESPONSE_FMT1 ("+%s:\"%d.%d.%d.%d\"\r\n%s")
+#define TEST_SET_ATUDNS_RESPONSE_FMT2 ("+%s:\"%x:%x:%x:%x:%x:%x:%x:%x\"\r\n%s")
+#define TEST_SET_ATUDNS_RESPONSE_FMT3 ("+%s:\"%s\"\r\n%s")
+#define TEST_URC_ATUSOLI_FMTIPV4IPV4 ("+%s:%" PRIu32 ",\"%d.%d.%d.%d\",%" PRIu32 ",%d,\"%d.%d.%d.%d\",%d\r\n")
+#define TEST_URC_ATUSOLI_FMTIPV6IPV4 ("+%s:%" PRIu32 ",\"%x:%x:%x:%x:%x:%x:%x:%x\",%" PRIu32 ",%d,\"%d.%d.%d.%d\",%d\r\n")
+#define TEST_URC_ATUSOLI_FMTIPV4IPV6 ("+%s:%" PRIu32 ",\"%d.%d.%d.%d\",%" PRIu32 ",%d,\"%x:%x:%x:%x:%x:%x:%x:%x\",%d\r\n")
+#define TEST_URC_ATUSOLI_FMTIPV6IPV6 ("+%s:%" PRIu32 ",\"%x:%x:%x:%x:%x:%x:%x:%x\",%" PRIu32 ",%d,\"%x:%x:%x:%x:%x:%x:%x:%x\",%d\r\n")
+#define TEST_URC_ATUSOCL_FMT ("+%s:%" PRIu32 "\r\n")
+#define TEST_URC_ATUSORX_FMT ("+%s:%" PRIu32 ",%" PRIu32 "\r\n")
 
-class TS_At_Set_URAT: public TS_ModemTest
+class TS_At_Set_URAT : public TS_ModemTest
 {
 protected:
-    const char* FormatTrigger1(const AT_URAT_Param_T* param)
+    const char *FormatTrigger1(const AT_URAT_Param_T *param)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATURAT1_FMT,
-                (uint8_t) param->SelectedAcT);
+                                   (uint8_t)param->SelectedAcT);
     }
 
-    const char* FormatTrigger2(const AT_URAT_Param_T* param)
+    const char *FormatTrigger2(const AT_URAT_Param_T *param)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATURAT2_FMT,
-                (uint8_t) param->SelectedAcT, param->PreferredAcT);
+                                   (uint8_t)param->SelectedAcT, param->PreferredAcT);
     }
 
-    const char* FormatTrigger3(const AT_URAT_Param_T* param)
+    const char *FormatTrigger3(const AT_URAT_Param_T *param)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATURAT3_FMT,
-                (uint8_t) param->SelectedAcT, param->PreferredAcT, param->SecondPreferredAcT);
+                                   (uint8_t)param->SelectedAcT, param->PreferredAcT, param->SecondPreferredAcT);
     }
 };
 
@@ -193,13 +194,13 @@ TEST_F(TS_At_Set_URAT, GprsUmtsLtePass)
     EXPECT_EQ(RETCODE_OK, retcode);
 }
 
-class TS_At_Set_UMNOPROF: public TS_ModemTest
+class TS_At_Set_UMNOPROF : public TS_ModemTest
 {
 protected:
-    const char* FormatTrigger(AT_UMNOPROF_Mno_T mno)
+    const char *FormatTrigger(AT_UMNOPROF_Mno_T mno)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUMNOPROF_FMT,
-                (int) mno);
+                                   (int)mno);
     }
 };
 
@@ -227,13 +228,13 @@ TEST_F(TS_At_Set_UMNOPROF, SimPass)
     EXPECT_EQ(RETCODE_OK, retcode);
 }
 
-class TS_At_Get_UMNOPROF: public TS_ModemTest
+class TS_At_Get_UMNOPROF : public TS_ModemTest
 {
 protected:
-    const char* FormatAnswer(AT_UMNOPROF_Mno_T mno)
+    const char *FormatAnswer(AT_UMNOPROF_Mno_T mno)
     {
         return FormatIntoNewBuffer(&Answer, TEST_GET_ATMNOUPROF_RESPONSE_FMT,
-        CMD_UBLOX_ATUMNOPROF, (uint8_t) mno, TEST_AT_RESPONSE_OK);
+                                   CMD_UBLOX_ATUMNOPROF, (uint8_t)mno, TEST_AT_RESPONSE_OK);
     }
 };
 
@@ -278,13 +279,13 @@ TEST_F(TS_At_Get_UMNOPROF, InvalidMnoFail)
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
 }
 
-class TS_At_Set_UBANDMASK: public TS_ModemTest
+class TS_At_Set_UBANDMASK : public TS_ModemTest
 {
 protected:
-    const char* FormatTrigger(const AT_UBANDMASK_Param_T* param)
+    const char *FormatTrigger(const AT_UBANDMASK_Param_T *param)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUBANDMASK_FMT,
-                param->Rat, param->Bitmask1, param->Bitmask2);
+                                   param->Rat, param->Bitmask1, param->Bitmask2);
     }
 };
 
@@ -303,19 +304,19 @@ TEST_F(TS_At_Set_UBANDMASK, NBIoT_Pass)
     EXPECT_EQ(RETCODE_OK, retcode);
 }
 
-class TS_At_Set_USOCR: public TS_ModemTest
+class TS_At_Set_USOCR : public TS_ModemTest
 {
 protected:
-    const char* FormatTrigger(const AT_USOCR_Param_T* param)
+    const char *FormatTrigger(const AT_USOCR_Param_T *param)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUSOCR_FMT,
-                (int) param->Protocol, param->LocalPort);
+                                   (int)param->Protocol, param->LocalPort);
     }
 
-    const char* FormatAnswer(uint32_t socketId)
+    const char *FormatAnswer(uint32_t socketId)
     {
         return FormatIntoNewBuffer(&Answer, TEST_SET_ATUSOCR_RESPONSE_FMT,
-        CMD_UBLOX_ATUSOCR, socketId, TEST_AT_RESPONSE_OK);
+                                   CMD_UBLOX_ATUSOCR, socketId, TEST_AT_RESPONSE_OK);
     }
 };
 
@@ -353,33 +354,33 @@ TEST_F(TS_At_Set_USOCR, Udp_Pass)
     EXPECT_EQ(expSocket, socket);
 }
 
-class TS_At_Set_USOCO: public TS_ModemTest
+class TS_At_Set_USOCO : public TS_ModemTest
 {
 protected:
-    const char* FormatTrigger(const AT_USOCO_Param_T* param)
+    const char *FormatTrigger(const AT_USOCO_Param_T *param)
     {
         switch (param->RemoteAddr.Type)
         {
         case AT_UBLOX_ADDRESSTYPE_IPV4:
             return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUSOCO_FMTIPV4,
-                    (int) param->Socket,
-                    (int) param->RemoteAddr.Address.IPv4[3],
-                    (int) param->RemoteAddr.Address.IPv4[2],
-                    (int) param->RemoteAddr.Address.IPv4[1],
-                    (int) param->RemoteAddr.Address.IPv4[0],
-                    (int) param->RemotePort);
+                                       (int)param->Socket,
+                                       (int)param->RemoteAddr.Address.IPv4[3],
+                                       (int)param->RemoteAddr.Address.IPv4[2],
+                                       (int)param->RemoteAddr.Address.IPv4[1],
+                                       (int)param->RemoteAddr.Address.IPv4[0],
+                                       (int)param->RemotePort);
         case AT_UBLOX_ADDRESSTYPE_IPV6:
             return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUSOCO_FMTIPV6,
-                    (int) param->Socket,
-                    (int) param->RemoteAddr.Address.IPv6[7],
-                    (int) param->RemoteAddr.Address.IPv6[6],
-                    (int) param->RemoteAddr.Address.IPv6[5],
-                    (int) param->RemoteAddr.Address.IPv6[4],
-                    (int) param->RemoteAddr.Address.IPv6[3],
-                    (int) param->RemoteAddr.Address.IPv6[2],
-                    (int) param->RemoteAddr.Address.IPv6[1],
-                    (int) param->RemoteAddr.Address.IPv6[0],
-                    (int) param->RemotePort);
+                                       (int)param->Socket,
+                                       (int)param->RemoteAddr.Address.IPv6[7],
+                                       (int)param->RemoteAddr.Address.IPv6[6],
+                                       (int)param->RemoteAddr.Address.IPv6[5],
+                                       (int)param->RemoteAddr.Address.IPv6[4],
+                                       (int)param->RemoteAddr.Address.IPv6[3],
+                                       (int)param->RemoteAddr.Address.IPv6[2],
+                                       (int)param->RemoteAddr.Address.IPv6[1],
+                                       (int)param->RemoteAddr.Address.IPv6[0],
+                                       (int)param->RemotePort);
         default:
             return NULL;
         }
@@ -428,13 +429,12 @@ TEST_F(TS_At_Set_USOCO, IPv6_Pass)
     EXPECT_EQ(RETCODE_OK, retcode);
 }
 
-class TS_HexToBin: public testing::Test
+class TS_HexToBin : public testing::Test
 {
 protected:
     virtual void SetUp()
     {
-        FFF_RESET_HISTORY()
-        ;
+        FFF_RESET_HISTORY();
     }
 };
 
@@ -448,7 +448,7 @@ TEST_F(TS_HexToBin, LowerCase_Pass)
     uint8_t bin[1];
     uint32_t binLength = sizeof(bin);
 
-    retcode = HexToBin((const uint8_t *) data, bin, binLength);
+    retcode = HexToBin((const uint8_t *)data, bin, binLength);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0x1A, bin[0]);
@@ -464,7 +464,7 @@ TEST_F(TS_HexToBin, UpperCase_Pass)
     uint8_t bin[1];
     uint32_t binLength = sizeof(bin);
 
-    retcode = HexToBin((const uint8_t *) data, bin, binLength);
+    retcode = HexToBin((const uint8_t *)data, bin, binLength);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0x1A, bin[0]);
@@ -480,7 +480,7 @@ TEST_F(TS_HexToBin, InvalidChar1_Fail)
     uint8_t bin[1];
     uint32_t binLength = sizeof(bin);
 
-    retcode = HexToBin((const uint8_t *) data, bin, binLength);
+    retcode = HexToBin((const uint8_t *)data, bin, binLength);
 
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
 }
@@ -495,7 +495,7 @@ TEST_F(TS_HexToBin, InvalidChar2_Fail)
     uint8_t bin[1];
     uint32_t binLength = sizeof(bin);
 
-    retcode = HexToBin((const uint8_t *) data, bin, binLength);
+    retcode = HexToBin((const uint8_t *)data, bin, binLength);
 
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
 }
@@ -510,7 +510,7 @@ TEST_F(TS_HexToBin, InvalidChar3_Fail)
     uint8_t bin[1];
     uint32_t binLength = sizeof(bin);
 
-    retcode = HexToBin((const uint8_t *) data, bin, binLength);
+    retcode = HexToBin((const uint8_t *)data, bin, binLength);
 
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
 }
@@ -525,25 +525,24 @@ TEST_F(TS_HexToBin, InvalidChar4_Fail)
     uint8_t bin[1];
     uint32_t binLength = sizeof(bin);
 
-    retcode = HexToBin((const uint8_t *) data, bin, binLength);
+    retcode = HexToBin((const uint8_t *)data, bin, binLength);
 
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
 }
 
-class TS_EncodePayloadAsHex: public testing::Test
+class TS_EncodePayloadAsHex : public testing::Test
 {
 protected:
     virtual void SetUp()
     {
-        FFF_RESET_HISTORY()
-        ;
+        FFF_RESET_HISTORY();
     }
 };
 
 TEST_F(TS_EncodePayloadAsHex, Pass)
 {
     Retcode_T retcode = RETCODE_OK;
-    uint8_t binData[] = { 0x01, 0x02, 0x10, 0x11 };
+    uint8_t binData[] = {0x01, 0x02, 0x10, 0x11};
     char hexData[sizeof(binData) * 2];
 
     retcode = EncodePayloadAsHex(binData, sizeof(binData), hexData, sizeof(hexData));
@@ -555,7 +554,7 @@ TEST_F(TS_EncodePayloadAsHex, Pass)
 TEST_F(TS_EncodePayloadAsHex, HexTooSmall_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    uint8_t binData[] = { 0x01, 0x02, 0x10, 0x11 };
+    uint8_t binData[] = {0x01, 0x02, 0x10, 0x11};
     char hexData[sizeof(binData) * 2 - 1];
 
     retcode = EncodePayloadAsHex(binData, sizeof(binData), hexData, sizeof(hexData));
@@ -563,19 +562,19 @@ TEST_F(TS_EncodePayloadAsHex, HexTooSmall_Fail)
     EXPECT_EQ(RETCODE_OUT_OF_RESOURCES, Retcode_GetCode(retcode));
 }
 
-class TS_At_Set_USOWR: public TS_ModemTest
+class TS_At_Set_USOWR : public TS_ModemTest
 {
 protected:
-    const char* FormatTriggerBaseEnc(const AT_USOWR_Param_T* param)
+    const char *FormatTriggerBaseEnc(const AT_USOWR_Param_T *param)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUSOWR_FMTBASE,
-                (int) param->Socket,
-                (int) param->Length,
-                (int) param->Length,
-                param->Data);
+                                   (int)param->Socket,
+                                   (int)param->Length,
+                                   (int)param->Length,
+                                   param->Data);
     }
 
-    const char* FormatTriggerHexEnc(const AT_USOWR_Param_T* param)
+    const char *FormatTriggerHexEnc(const AT_USOWR_Param_T *param)
     {
         char hex[param->Length * 2];
         Retcode_T ret = EncodePayloadAsHex(param->Data, param->Length, hex, sizeof(hex));
@@ -585,17 +584,17 @@ protected:
 
         int n = 0;
         return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUSOWR_FMTHEX,
-                (int) param->Socket,
-                (int) param->Length,
-                &n,
-                (int) sizeof(hex),
-                hex);
+                                   (int)param->Socket,
+                                   (int)param->Length,
+                                   &n,
+                                   (int)sizeof(hex),
+                                   hex);
     }
 
-    const char* FormatAnswer(uint32_t socketId, uint32_t bytesSent)
+    const char *FormatAnswer(uint32_t socketId, uint32_t bytesSent)
     {
         return FormatIntoNewBuffer(&Answer, TEST_SET_ATUSOWR_RESPONSE_FMT,
-        CMD_UBLOX_ATUSOWR, socketId, bytesSent, TEST_AT_RESPONSE_OK);
+                                   CMD_UBLOX_ATUSOWR, socketId, bytesSent, TEST_AT_RESPONSE_OK);
     }
 };
 
@@ -605,8 +604,8 @@ TEST_F(TS_At_Set_USOWR, BaseEncoding_Pass)
     AT_USOWR_Param_T param;
     param.Socket = 5;
     param.Encoding = AT_UBLOX_PAYLOADENCODING_BASE;
-    param.Data = (const uint8_t*) "HELLO WORLD";
-    param.Length = strlen((const char*) param.Data);
+    param.Data = (const uint8_t *)"HELLO WORLD";
+    param.Length = strlen((const char *)param.Data);
 
     AT_USOWR_Resp_T resp;
     resp.Socket = 0;
@@ -625,8 +624,8 @@ TEST_F(TS_At_Set_USOWR, BaseEncoding_InvalidPayload_Fail)
     AT_USOWR_Param_T param;
     param.Socket = 5;
     param.Encoding = AT_UBLOX_PAYLOADENCODING_BASE;
-    param.Data = (const uint8_t*) "HELLO  \" WORLD";
-    param.Length = strlen((const char*) param.Data);
+    param.Data = (const uint8_t *)"HELLO  \" WORLD";
+    param.Length = strlen((const char *)param.Data);
 
     AT_USOWR_Resp_T resp;
     resp.Socket = 0;
@@ -643,8 +642,8 @@ TEST_F(TS_At_Set_USOWR, HexEncoding_Pass)
     AT_USOWR_Param_T param;
     param.Socket = 5;
     param.Encoding = AT_UBLOX_PAYLOADENCODING_HEX;
-    param.Data = (const uint8_t*) "HELLO WORLD";
-    param.Length = strlen((const char*) param.Data);
+    param.Data = (const uint8_t *)"HELLO WORLD";
+    param.Length = strlen((const char *)param.Data);
 
     AT_USOWR_Resp_T resp;
     resp.Socket = 0;
@@ -685,17 +684,16 @@ TEST_F(TS_At_Set_USOWR, HexEncoding_BigPacket_Pass)
     EXPECT_EQ(param.Length, resp.Length);
 }
 
-class TS_At_Set_USORD: public TS_ModemTest
+class TS_At_Set_USORD : public TS_ModemTest
 {
 protected:
-
-    const char* FormatTriggerHexEnc(const AT_USORD_Param_T* param)
+    const char *FormatTriggerHexEnc(const AT_USORD_Param_T *param)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUSORD_FMTHEX,
-                param->Socket, param->Length);
+                                   param->Socket, param->Length);
     }
 
-    const char* FormatAnswerWithData(uint32_t socket, uint32_t length, const uint8_t* data)
+    const char *FormatAnswerWithData(uint32_t socket, uint32_t length, const uint8_t *data)
     {
         char hex[length * 2];
 
@@ -705,22 +703,22 @@ protected:
             exit(1);
 
         return FormatIntoNewBuffer(&Answer, TEST_SET_ATUSORD_RESPONSE_FMTDATA,
-        CMD_UBLOX_ATUSORD, socket, length, sizeof(hex), hex,
-        TEST_AT_RESPONSE_OK);
+                                   CMD_UBLOX_ATUSORD, socket, length, sizeof(hex), hex,
+                                   TEST_AT_RESPONSE_OK);
     }
 
-    const char* FormatAnswerWithoutData(uint32_t socket, uint32_t length)
+    const char *FormatAnswerWithoutData(uint32_t socket, uint32_t length)
     {
         return FormatIntoNewBuffer(&Answer, TEST_SET_ATUSORD_RESPONSE_FMTNODATA,
-        CMD_UBLOX_ATUSORD, socket, length,
-        TEST_AT_RESPONSE_OK);
+                                   CMD_UBLOX_ATUSORD, socket, length,
+                                   TEST_AT_RESPONSE_OK);
     }
 
-    const char* FormatAnswerWithoutLength(uint32_t socket)
+    const char *FormatAnswerWithoutLength(uint32_t socket)
     {
         return FormatIntoNewBuffer(&Answer, TEST_SET_ATUSORD_RESPONSE_FMTNOLEN,
-        CMD_UBLOX_ATUSORD, socket,
-        TEST_AT_RESPONSE_OK);
+                                   CMD_UBLOX_ATUSORD, socket,
+                                   TEST_AT_RESPONSE_OK);
     }
 };
 
@@ -728,7 +726,7 @@ TEST_F(TS_At_Set_USORD, Data_HexEncoding_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    const char* expData = "HELLO";
+    const char *expData = "HELLO";
 
     AT_USORD_Param_T param;
     param.Socket = 3;
@@ -741,7 +739,7 @@ TEST_F(TS_At_Set_USORD, Data_HexEncoding_Pass)
     resp.Length = 0;
     resp.Data = respDataBuffer;
 
-    AddFakeAnswer(FormatTriggerHexEnc(&param), FormatAnswerWithData(param.Socket, param.Length, (const uint8_t*) expData));
+    AddFakeAnswer(FormatTriggerHexEnc(&param), FormatAnswerWithData(param.Socket, param.Length, (const uint8_t *)expData));
 
     retcode = At_Set_USORD(&param, &resp);
 
@@ -755,7 +753,7 @@ TEST_F(TS_At_Set_USORD, NoData_NoLength_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    const char* expData = "HELLO";
+    const char *expData = "HELLO";
     uint32_t expLength = strlen(expData);
 
     AT_USORD_Param_T param;
@@ -781,7 +779,7 @@ TEST_F(TS_At_Set_USORD, NoData_SetLength_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    const char* expData = "";
+    const char *expData = "";
     uint32_t expLength = strlen(expData);
     uint8_t respData[10]; /* some non-zero length buffer */
 
@@ -804,16 +802,16 @@ TEST_F(TS_At_Set_USORD, NoData_SetLength_Pass)
     EXPECT_EQ(expLength, resp.Length);
 }
 
-class TS_At_Set_USORF: public TS_ModemTest
+class TS_At_Set_USORF : public TS_ModemTest
 {
 protected:
-    const char* FormatTriggerHexEnc(const AT_USORF_Param_T* param)
+    const char *FormatTriggerHexEnc(const AT_USORF_Param_T *param)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUSORF_FMTHEX,
-                param->Socket, param->Length);
+                                   param->Socket, param->Length);
     }
 
-    const char* FormatAnswer(uint32_t socket, const AT_UBlox_Address_T* address, uint16_t port, uint32_t length, const uint8_t* data)
+    const char *FormatAnswer(uint32_t socket, const AT_UBlox_Address_T *address, uint16_t port, uint32_t length, const uint8_t *data)
     {
         char hex[length * 2];
 
@@ -826,48 +824,48 @@ protected:
         {
         case AT_UBLOX_ADDRESSTYPE_IPV4:
             return FormatIntoNewBuffer(&Answer, TEST_SET_ATUSORF_RESPONSE_FMTIPV4,
-            CMD_UBLOX_ATUSORF,
-                    socket,
-                    address->Address.IPv4[3],
-                    address->Address.IPv4[2],
-                    address->Address.IPv4[1],
-                    address->Address.IPv4[0],
-                    port,
-                    length, sizeof(hex), hex,
-                    TEST_AT_RESPONSE_OK);
+                                       CMD_UBLOX_ATUSORF,
+                                       socket,
+                                       address->Address.IPv4[3],
+                                       address->Address.IPv4[2],
+                                       address->Address.IPv4[1],
+                                       address->Address.IPv4[0],
+                                       port,
+                                       length, sizeof(hex), hex,
+                                       TEST_AT_RESPONSE_OK);
         case AT_UBLOX_ADDRESSTYPE_IPV6:
             return FormatIntoNewBuffer(&Answer, TEST_SET_ATUSORF_RESPONSE_FMTIPV6,
-            CMD_UBLOX_ATUSORF,
-                    socket,
-                    address->Address.IPv6[7],
-                    address->Address.IPv6[6],
-                    address->Address.IPv6[5],
-                    address->Address.IPv6[4],
-                    address->Address.IPv6[3],
-                    address->Address.IPv6[2],
-                    address->Address.IPv6[1],
-                    address->Address.IPv6[0],
-                    port,
-                    length, sizeof(hex), hex,
-                    TEST_AT_RESPONSE_OK);
+                                       CMD_UBLOX_ATUSORF,
+                                       socket,
+                                       address->Address.IPv6[7],
+                                       address->Address.IPv6[6],
+                                       address->Address.IPv6[5],
+                                       address->Address.IPv6[4],
+                                       address->Address.IPv6[3],
+                                       address->Address.IPv6[2],
+                                       address->Address.IPv6[1],
+                                       address->Address.IPv6[0],
+                                       port,
+                                       length, sizeof(hex), hex,
+                                       TEST_AT_RESPONSE_OK);
         default:
             exit(1);
             return NULL;
         }
     }
 
-    const char* FormatAnswer(uint32_t socket, uint32_t length)
+    const char *FormatAnswer(uint32_t socket, uint32_t length)
     {
         return FormatIntoNewBuffer(&Answer, TEST_SET_ATUSORF_RESPONSE_FMTNODATA,
-        CMD_UBLOX_ATUSORF, socket, length,
-        TEST_AT_RESPONSE_OK);
+                                   CMD_UBLOX_ATUSORF, socket, length,
+                                   TEST_AT_RESPONSE_OK);
     }
 
-    const char* FormatAnswer(uint32_t socket)
+    const char *FormatAnswer(uint32_t socket)
     {
         return FormatIntoNewBuffer(&Answer, TEST_SET_ATUSORF_RESPONSE_FMTNOLEN,
-        CMD_UBLOX_ATUSORF, socket,
-        TEST_AT_RESPONSE_OK);
+                                   CMD_UBLOX_ATUSORF, socket,
+                                   TEST_AT_RESPONSE_OK);
     }
 };
 
@@ -875,7 +873,7 @@ TEST_F(TS_At_Set_USORF, DataIPv4_HexEncoding_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    const char* expData = "HELLO";
+    const char *expData = "HELLO";
     AT_UBlox_Address_T expAddr;
     expAddr.Type = AT_UBLOX_ADDRESSTYPE_IPV4;
     expAddr.Address.IPv4[3] = 10;
@@ -898,7 +896,7 @@ TEST_F(TS_At_Set_USORF, DataIPv4_HexEncoding_Pass)
     memset(resp.RemoteIp.Address.IPv6, 0, sizeof(resp.RemoteIp.Address.IPv6));
     resp.RemotePort = 0;
 
-    AddFakeAnswer(FormatTriggerHexEnc(&param), FormatAnswer(param.Socket, &expAddr, expPort, param.Length, (const uint8_t*) expData));
+    AddFakeAnswer(FormatTriggerHexEnc(&param), FormatAnswer(param.Socket, &expAddr, expPort, param.Length, (const uint8_t *)expData));
 
     retcode = At_Set_USORF(&param, &resp);
 
@@ -915,7 +913,7 @@ TEST_F(TS_At_Set_USORF, DataIPv6_HexEncoding_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    const char* expData = "HELLO";
+    const char *expData = "HELLO";
     AT_UBlox_Address_T expAddr;
     expAddr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     expAddr.Address.IPv6[7] = 0xfe80;
@@ -942,7 +940,7 @@ TEST_F(TS_At_Set_USORF, DataIPv6_HexEncoding_Pass)
     memset(resp.RemoteIp.Address.IPv6, 0, sizeof(resp.RemoteIp.Address.IPv6));
     resp.RemotePort = 0;
 
-    AddFakeAnswer(FormatTriggerHexEnc(&param), FormatAnswer(param.Socket, &expAddr, expPort, param.Length, (const uint8_t*) expData));
+    AddFakeAnswer(FormatTriggerHexEnc(&param), FormatAnswer(param.Socket, &expAddr, expPort, param.Length, (const uint8_t *)expData));
 
     retcode = At_Set_USORF(&param, &resp);
 
@@ -959,7 +957,7 @@ TEST_F(TS_At_Set_USORF, NoData_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    const char* expData = "HELLO";
+    const char *expData = "HELLO";
     uint32_t expLength = strlen(expData);
 
     AT_USORF_Param_T param;
@@ -985,7 +983,7 @@ TEST_F(TS_At_Set_USORF, NoData_SetLength_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    const char* expData = "";
+    const char *expData = "";
     uint32_t expLength = strlen(expData);
     uint8_t respData[10]; /* some non-zero length buffer */
 
@@ -1008,13 +1006,12 @@ TEST_F(TS_At_Set_USORF, NoData_SetLength_Pass)
     EXPECT_EQ(expLength, resp.Length);
 }
 
-class TS_ParseIPv6LeftToRight: public testing::Test
+class TS_ParseIPv6LeftToRight : public testing::Test
 {
 protected:
     virtual void SetUp()
     {
-        FFF_RESET_HISTORY()
-        ;
+        FFF_RESET_HISTORY();
         srand(time(NULL));
     }
 };
@@ -1025,24 +1022,24 @@ TEST_F(TS_ParseIPv6LeftToRight, Full_Pass)
     AT_UBlox_Address_T expAddr;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv6[i] = (uint16_t) rand();
+        expAddr.Address.IPv6[i] = (uint16_t)rand();
     }
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16,
-            expAddr.Address.IPv6[7],
-            expAddr.Address.IPv6[6],
-            expAddr.Address.IPv6[5],
-            expAddr.Address.IPv6[4],
-            expAddr.Address.IPv6[3],
-            expAddr.Address.IPv6[2],
-            expAddr.Address.IPv6[1],
-            expAddr.Address.IPv6[0]);
+                       expAddr.Address.IPv6[7],
+                       expAddr.Address.IPv6[6],
+                       expAddr.Address.IPv6[5],
+                       expAddr.Address.IPv6[4],
+                       expAddr.Address.IPv6[3],
+                       expAddr.Address.IPv6[2],
+                       expAddr.Address.IPv6[1],
+                       expAddr.Address.IPv6[0]);
     printf("%.*s\n", len, ipToParse);
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) len, &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)len, &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
@@ -1054,24 +1051,24 @@ TEST_F(TS_ParseIPv6LeftToRight, 1SkippedMiddle_Pass)
     AT_UBlox_Address_T expAddr;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv6[i] = (uint16_t) rand();
+        expAddr.Address.IPv6[i] = (uint16_t)rand();
     }
     expAddr.Address.IPv6[3] = 0;
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 "::%" PRIx16 ":%" PRIx16 ":%" PRIx16,
-            expAddr.Address.IPv6[7],
-            expAddr.Address.IPv6[6],
-            expAddr.Address.IPv6[5],
-            expAddr.Address.IPv6[4],
-            expAddr.Address.IPv6[2],
-            expAddr.Address.IPv6[1],
-            expAddr.Address.IPv6[0]);
+                       expAddr.Address.IPv6[7],
+                       expAddr.Address.IPv6[6],
+                       expAddr.Address.IPv6[5],
+                       expAddr.Address.IPv6[4],
+                       expAddr.Address.IPv6[2],
+                       expAddr.Address.IPv6[1],
+                       expAddr.Address.IPv6[0]);
     printf("%.*s\n", len, ipToParse);
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) len, &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)len, &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
@@ -1083,24 +1080,24 @@ TEST_F(TS_ParseIPv6LeftToRight, 2SkippedMiddle_Pass)
     AT_UBlox_Address_T expAddr;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv6[i] = (uint16_t) rand();
+        expAddr.Address.IPv6[i] = (uint16_t)rand();
     }
     expAddr.Address.IPv6[3] = 0;
     expAddr.Address.IPv6[2] = 0;
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 "::%" PRIx16 ":%" PRIx16,
-            expAddr.Address.IPv6[7],
-            expAddr.Address.IPv6[6],
-            expAddr.Address.IPv6[5],
-            expAddr.Address.IPv6[4],
-            expAddr.Address.IPv6[1],
-            expAddr.Address.IPv6[0]);
+                       expAddr.Address.IPv6[7],
+                       expAddr.Address.IPv6[6],
+                       expAddr.Address.IPv6[5],
+                       expAddr.Address.IPv6[4],
+                       expAddr.Address.IPv6[1],
+                       expAddr.Address.IPv6[0]);
     printf("%.*s\n", len, ipToParse);
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) len, &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)len, &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
@@ -1112,7 +1109,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 4SkippedMiddle_Pass)
     AT_UBlox_Address_T expAddr;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv6[i] = (uint16_t) rand();
+        expAddr.Address.IPv6[i] = (uint16_t)rand();
     }
     expAddr.Address.IPv6[5] = 0;
     expAddr.Address.IPv6[4] = 0;
@@ -1120,16 +1117,16 @@ TEST_F(TS_ParseIPv6LeftToRight, 4SkippedMiddle_Pass)
     expAddr.Address.IPv6[2] = 0;
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "%" PRIx16 ":%" PRIx16 "::%" PRIx16 ":%" PRIx16,
-            expAddr.Address.IPv6[7],
-            expAddr.Address.IPv6[6],
-            expAddr.Address.IPv6[1],
-            expAddr.Address.IPv6[0]);
+                       expAddr.Address.IPv6[7],
+                       expAddr.Address.IPv6[6],
+                       expAddr.Address.IPv6[1],
+                       expAddr.Address.IPv6[0]);
     printf("%.*s\n", len, ipToParse);
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) len, &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)len, &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
@@ -1141,7 +1138,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 6SkippedMiddle_Pass)
     AT_UBlox_Address_T expAddr;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv6[i] = (uint16_t) rand();
+        expAddr.Address.IPv6[i] = (uint16_t)rand();
     }
     expAddr.Address.IPv6[6] = 0;
     expAddr.Address.IPv6[5] = 0;
@@ -1151,14 +1148,14 @@ TEST_F(TS_ParseIPv6LeftToRight, 6SkippedMiddle_Pass)
     expAddr.Address.IPv6[1] = 0;
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "%" PRIx16 "::%" PRIx16,
-            expAddr.Address.IPv6[7],
-            expAddr.Address.IPv6[0]);
+                       expAddr.Address.IPv6[7],
+                       expAddr.Address.IPv6[0]);
     printf("%.*s\n", len, ipToParse);
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) len, &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)len, &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
@@ -1170,24 +1167,24 @@ TEST_F(TS_ParseIPv6LeftToRight, 1SkippedEnd_Pass)
     AT_UBlox_Address_T expAddr;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv6[i] = (uint16_t) rand();
+        expAddr.Address.IPv6[i] = (uint16_t)rand();
     }
     expAddr.Address.IPv6[0] = 0;
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 "::",
-            expAddr.Address.IPv6[7],
-            expAddr.Address.IPv6[6],
-            expAddr.Address.IPv6[5],
-            expAddr.Address.IPv6[4],
-            expAddr.Address.IPv6[3],
-            expAddr.Address.IPv6[2],
-            expAddr.Address.IPv6[1]);
+                       expAddr.Address.IPv6[7],
+                       expAddr.Address.IPv6[6],
+                       expAddr.Address.IPv6[5],
+                       expAddr.Address.IPv6[4],
+                       expAddr.Address.IPv6[3],
+                       expAddr.Address.IPv6[2],
+                       expAddr.Address.IPv6[1]);
     printf("%.*s\n", len, ipToParse);
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) len, &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)len, &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
@@ -1199,7 +1196,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 5SkippedEnd_Pass)
     AT_UBlox_Address_T expAddr;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv6[i] = (uint16_t) rand();
+        expAddr.Address.IPv6[i] = (uint16_t)rand();
     }
     expAddr.Address.IPv6[4] = 0;
     expAddr.Address.IPv6[3] = 0;
@@ -1208,15 +1205,15 @@ TEST_F(TS_ParseIPv6LeftToRight, 5SkippedEnd_Pass)
     expAddr.Address.IPv6[0] = 0;
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "%" PRIx16 ":%" PRIx16 ":%" PRIx16 "::",
-            expAddr.Address.IPv6[7],
-            expAddr.Address.IPv6[6],
-            expAddr.Address.IPv6[5]);
+                       expAddr.Address.IPv6[7],
+                       expAddr.Address.IPv6[6],
+                       expAddr.Address.IPv6[5]);
     printf("%.*s\n", len, ipToParse);
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) len, &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)len, &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
@@ -1228,7 +1225,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 7SkippedEnd_Pass)
     AT_UBlox_Address_T expAddr;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv6[i] = (uint16_t) rand();
+        expAddr.Address.IPv6[i] = (uint16_t)rand();
     }
     expAddr.Address.IPv6[6] = 0;
     expAddr.Address.IPv6[5] = 0;
@@ -1239,13 +1236,13 @@ TEST_F(TS_ParseIPv6LeftToRight, 7SkippedEnd_Pass)
     expAddr.Address.IPv6[0] = 0;
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "%" PRIx16 "::",
-            expAddr.Address.IPv6[7]);
+                       expAddr.Address.IPv6[7]);
     printf("%.*s\n", len, ipToParse);
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) len, &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)len, &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
@@ -1257,24 +1254,24 @@ TEST_F(TS_ParseIPv6LeftToRight, 1SkippedStart_Pass)
     AT_UBlox_Address_T expAddr;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv6[i] = (uint16_t) rand();
+        expAddr.Address.IPv6[i] = (uint16_t)rand();
     }
     expAddr.Address.IPv6[7] = 0;
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "::%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16,
-            expAddr.Address.IPv6[6],
-            expAddr.Address.IPv6[5],
-            expAddr.Address.IPv6[4],
-            expAddr.Address.IPv6[3],
-            expAddr.Address.IPv6[2],
-            expAddr.Address.IPv6[1],
-            expAddr.Address.IPv6[0]);
+                       expAddr.Address.IPv6[6],
+                       expAddr.Address.IPv6[5],
+                       expAddr.Address.IPv6[4],
+                       expAddr.Address.IPv6[3],
+                       expAddr.Address.IPv6[2],
+                       expAddr.Address.IPv6[1],
+                       expAddr.Address.IPv6[0]);
     printf("%.*s\n", len, ipToParse);
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) len, &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)len, &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
@@ -1286,24 +1283,24 @@ TEST_F(TS_ParseIPv6LeftToRight, 3SkippedStart_Pass)
     AT_UBlox_Address_T expAddr;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv6[i] = (uint16_t) rand();
+        expAddr.Address.IPv6[i] = (uint16_t)rand();
     }
     expAddr.Address.IPv6[7] = 0;
     expAddr.Address.IPv6[6] = 0;
     expAddr.Address.IPv6[5] = 0;
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "::%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16,
-            expAddr.Address.IPv6[4],
-            expAddr.Address.IPv6[3],
-            expAddr.Address.IPv6[2],
-            expAddr.Address.IPv6[1],
-            expAddr.Address.IPv6[0]);
+                       expAddr.Address.IPv6[4],
+                       expAddr.Address.IPv6[3],
+                       expAddr.Address.IPv6[2],
+                       expAddr.Address.IPv6[1],
+                       expAddr.Address.IPv6[0]);
     printf("%.*s\n", len, ipToParse);
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) len, &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)len, &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
@@ -1315,7 +1312,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 7SkippedStart_Pass)
     AT_UBlox_Address_T expAddr;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv6[i] = (uint16_t) rand();
+        expAddr.Address.IPv6[i] = (uint16_t)rand();
     }
     expAddr.Address.IPv6[7] = 0;
     expAddr.Address.IPv6[6] = 0;
@@ -1326,13 +1323,13 @@ TEST_F(TS_ParseIPv6LeftToRight, 7SkippedStart_Pass)
     expAddr.Address.IPv6[1] = 0;
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "::%" PRIx16,
-            expAddr.Address.IPv6[0]);
+                       expAddr.Address.IPv6[0]);
     printf("%.*s\n", len, ipToParse);
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) len, &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)len, &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
@@ -1344,24 +1341,24 @@ TEST_F(TS_ParseIPv6LeftToRight, AllZero_Pass)
     AT_UBlox_Address_T expAddr;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv6[i] = (uint16_t) 0;
+        expAddr.Address.IPv6[i] = (uint16_t)0;
     }
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16,
-            expAddr.Address.IPv6[7],
-            expAddr.Address.IPv6[6],
-            expAddr.Address.IPv6[5],
-            expAddr.Address.IPv6[4],
-            expAddr.Address.IPv6[3],
-            expAddr.Address.IPv6[2],
-            expAddr.Address.IPv6[1],
-            expAddr.Address.IPv6[0]);
+                       expAddr.Address.IPv6[7],
+                       expAddr.Address.IPv6[6],
+                       expAddr.Address.IPv6[5],
+                       expAddr.Address.IPv6[4],
+                       expAddr.Address.IPv6[3],
+                       expAddr.Address.IPv6[2],
+                       expAddr.Address.IPv6[1],
+                       expAddr.Address.IPv6[0]);
     printf("%.*s\n", len, ipToParse);
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) len, &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)len, &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
@@ -1373,24 +1370,24 @@ TEST_F(TS_ParseIPv6LeftToRight, Full_Quotes_Pass)
     AT_UBlox_Address_T expAddr;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv6[i] = (uint16_t) rand();
+        expAddr.Address.IPv6[i] = (uint16_t)rand();
     }
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "\"%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 "\"",
-            expAddr.Address.IPv6[7],
-            expAddr.Address.IPv6[6],
-            expAddr.Address.IPv6[5],
-            expAddr.Address.IPv6[4],
-            expAddr.Address.IPv6[3],
-            expAddr.Address.IPv6[2],
-            expAddr.Address.IPv6[1],
-            expAddr.Address.IPv6[0]);
+                       expAddr.Address.IPv6[7],
+                       expAddr.Address.IPv6[6],
+                       expAddr.Address.IPv6[5],
+                       expAddr.Address.IPv6[4],
+                       expAddr.Address.IPv6[3],
+                       expAddr.Address.IPv6[2],
+                       expAddr.Address.IPv6[1],
+                       expAddr.Address.IPv6[0]);
     printf("%.*s\n", len, ipToParse);
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) len, &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)len, &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
@@ -1402,24 +1399,24 @@ TEST_F(TS_ParseIPv6LeftToRight, 1SkippedMiddle_Quotes_Pass)
     AT_UBlox_Address_T expAddr;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv6[i] = (uint16_t) rand();
+        expAddr.Address.IPv6[i] = (uint16_t)rand();
     }
     expAddr.Address.IPv6[3] = 0;
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "\"%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 "::%" PRIx16 ":%" PRIx16 ":%" PRIx16 "\"",
-            expAddr.Address.IPv6[7],
-            expAddr.Address.IPv6[6],
-            expAddr.Address.IPv6[5],
-            expAddr.Address.IPv6[4],
-            expAddr.Address.IPv6[2],
-            expAddr.Address.IPv6[1],
-            expAddr.Address.IPv6[0]);
+                       expAddr.Address.IPv6[7],
+                       expAddr.Address.IPv6[6],
+                       expAddr.Address.IPv6[5],
+                       expAddr.Address.IPv6[4],
+                       expAddr.Address.IPv6[2],
+                       expAddr.Address.IPv6[1],
+                       expAddr.Address.IPv6[0]);
     printf("%.*s\n", len, ipToParse);
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) len, &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)len, &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
@@ -1431,7 +1428,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 7SkippedEnd_Quotes_Pass)
     AT_UBlox_Address_T expAddr;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv6[i] = (uint16_t) rand();
+        expAddr.Address.IPv6[i] = (uint16_t)rand();
     }
     expAddr.Address.IPv6[6] = 0;
     expAddr.Address.IPv6[5] = 0;
@@ -1442,13 +1439,13 @@ TEST_F(TS_ParseIPv6LeftToRight, 7SkippedEnd_Quotes_Pass)
     expAddr.Address.IPv6[0] = 0;
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "\"%" PRIx16 "::\"",
-            expAddr.Address.IPv6[7]);
+                       expAddr.Address.IPv6[7]);
     printf("%.*s\n", len, ipToParse);
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) len, &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)len, &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
@@ -1460,7 +1457,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 7SkippedStart_Quotes_Pass)
     AT_UBlox_Address_T expAddr;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv6[i] = (uint16_t) rand();
+        expAddr.Address.IPv6[i] = (uint16_t)rand();
     }
     expAddr.Address.IPv6[7] = 0;
     expAddr.Address.IPv6[6] = 0;
@@ -1471,13 +1468,13 @@ TEST_F(TS_ParseIPv6LeftToRight, 7SkippedStart_Quotes_Pass)
     expAddr.Address.IPv6[1] = 0;
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "\"::%" PRIx16 "\"",
-            expAddr.Address.IPv6[0]);
+                       expAddr.Address.IPv6[0]);
     printf("%.*s\n", len, ipToParse);
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) len, &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)len, &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
@@ -1489,24 +1486,24 @@ TEST_F(TS_ParseIPv6LeftToRight, AllZero_Quotes_Pass)
     AT_UBlox_Address_T expAddr;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv6[i] = (uint16_t) 0;
+        expAddr.Address.IPv6[i] = (uint16_t)0;
     }
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "\"%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 ":%" PRIx16 "\"",
-            expAddr.Address.IPv6[7],
-            expAddr.Address.IPv6[6],
-            expAddr.Address.IPv6[5],
-            expAddr.Address.IPv6[4],
-            expAddr.Address.IPv6[3],
-            expAddr.Address.IPv6[2],
-            expAddr.Address.IPv6[1],
-            expAddr.Address.IPv6[0]);
+                       expAddr.Address.IPv6[7],
+                       expAddr.Address.IPv6[6],
+                       expAddr.Address.IPv6[5],
+                       expAddr.Address.IPv6[4],
+                       expAddr.Address.IPv6[3],
+                       expAddr.Address.IPv6[2],
+                       expAddr.Address.IPv6[1],
+                       expAddr.Address.IPv6[0]);
     printf("%.*s\n", len, ipToParse);
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) len, &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)len, &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
@@ -1515,12 +1512,12 @@ TEST_F(TS_ParseIPv6LeftToRight, AllZero_Quotes_Pass)
 TEST_F(TS_ParseIPv6LeftToRight, GroupTooBig1_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* ipToParse = "0123:4567:89AB:CDEF:F0123:4567:89AB:CDEF";
+    const char *ipToParse = "0123:4567:89AB:CDEF:F0123:4567:89AB:CDEF";
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) strlen(ipToParse), &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1528,12 +1525,12 @@ TEST_F(TS_ParseIPv6LeftToRight, GroupTooBig1_Fail)
 TEST_F(TS_ParseIPv6LeftToRight, GroupTooBig2_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* ipToParse = "0123F:4567:89AB:CDEF:0123:4567:89AB:CDEF";
+    const char *ipToParse = "0123F:4567:89AB:CDEF:0123:4567:89AB:CDEF";
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) strlen(ipToParse), &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1541,12 +1538,12 @@ TEST_F(TS_ParseIPv6LeftToRight, GroupTooBig2_Fail)
 TEST_F(TS_ParseIPv6LeftToRight, InvalidChar_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* ipToParse = "0123:4567:89AB:CDEG:0123:4567:89AB:CDEF";
+    const char *ipToParse = "0123:4567:89AB:CDEG:0123:4567:89AB:CDEF";
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) strlen(ipToParse), &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1554,12 +1551,12 @@ TEST_F(TS_ParseIPv6LeftToRight, InvalidChar_Fail)
 TEST_F(TS_ParseIPv6LeftToRight, GroupTooBig1_Quotes_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* ipToParse = "\"0123:4567:89AB:CDEF:F0123:4567:89AB:CDEF\"";
+    const char *ipToParse = "\"0123:4567:89AB:CDEF:F0123:4567:89AB:CDEF\"";
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) strlen(ipToParse), &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1567,12 +1564,12 @@ TEST_F(TS_ParseIPv6LeftToRight, GroupTooBig1_Quotes_Fail)
 TEST_F(TS_ParseIPv6LeftToRight, GroupTooBig2_Quotes_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* ipToParse = "\"0123F:4567:89AB:CDEF:0123:4567:89AB:CDEF\"";
+    const char *ipToParse = "\"0123F:4567:89AB:CDEF:0123:4567:89AB:CDEF\"";
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) strlen(ipToParse), &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1580,12 +1577,12 @@ TEST_F(TS_ParseIPv6LeftToRight, GroupTooBig2_Quotes_Fail)
 TEST_F(TS_ParseIPv6LeftToRight, InvalidChar_Quotes_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* ipToParse = "\"0123:4567:89AB:CDEG:0123:4567:89AB:CDEF\"";
+    const char *ipToParse = "\"0123:4567:89AB:CDEG:0123:4567:89AB:CDEF\"";
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) strlen(ipToParse), &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1593,12 +1590,12 @@ TEST_F(TS_ParseIPv6LeftToRight, InvalidChar_Quotes_Fail)
 TEST_F(TS_ParseIPv6LeftToRight, TooManySkips1_Quotes_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* ipToParse = "\"0123:4567:89AB::0123::89AB:CDEF\"";
+    const char *ipToParse = "\"0123:4567:89AB::0123::89AB:CDEF\"";
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) strlen(ipToParse), &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1606,12 +1603,12 @@ TEST_F(TS_ParseIPv6LeftToRight, TooManySkips1_Quotes_Fail)
 TEST_F(TS_ParseIPv6LeftToRight, TooManySkips2_Quotes_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* ipToParse = "\"0123:4567:89AB::::89AB:CDEF\"";
+    const char *ipToParse = "\"0123:4567:89AB::::89AB:CDEF\"";
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) strlen(ipToParse), &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1619,12 +1616,12 @@ TEST_F(TS_ParseIPv6LeftToRight, TooManySkips2_Quotes_Fail)
 TEST_F(TS_ParseIPv6LeftToRight, TooManySkips3_Quotes_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* ipToParse = "\"0123:4567:89AB::0123:89AB:CDEF::\"";
+    const char *ipToParse = "\"0123:4567:89AB::0123:89AB:CDEF::\"";
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) strlen(ipToParse), &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1632,12 +1629,12 @@ TEST_F(TS_ParseIPv6LeftToRight, TooManySkips3_Quotes_Fail)
 TEST_F(TS_ParseIPv6LeftToRight, TooManySkips4_Quotes_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* ipToParse = "\"::0123:4567:89AB:0123:89AB:CDEF::\"";
+    const char *ipToParse = "\"::0123:4567:89AB:0123:89AB:CDEF::\"";
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) strlen(ipToParse), &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1645,12 +1642,12 @@ TEST_F(TS_ParseIPv6LeftToRight, TooManySkips4_Quotes_Fail)
 TEST_F(TS_ParseIPv6LeftToRight, TooManyGroups1_Quotes_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* ipToParse = "\"0123:4567:89AB:CDEF:0123:4567:89AB:CDEF:0123\"";
+    const char *ipToParse = "\"0123:4567:89AB:CDEF:0123:4567:89AB:CDEF:0123\"";
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) strlen(ipToParse), &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1658,12 +1655,12 @@ TEST_F(TS_ParseIPv6LeftToRight, TooManyGroups1_Quotes_Fail)
 TEST_F(TS_ParseIPv6LeftToRight, TooManyGroups2_Quotes_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* ipToParse = "\"0123:4567:89AB:CDEF:0123::4567:89AB:CDEF:0123\"";
+    const char *ipToParse = "\"0123:4567:89AB:CDEF:0123::4567:89AB:CDEF:0123\"";
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) strlen(ipToParse), &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1671,12 +1668,12 @@ TEST_F(TS_ParseIPv6LeftToRight, TooManyGroups2_Quotes_Fail)
 TEST_F(TS_ParseIPv6LeftToRight, TooManyGroups3_Quotes_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* ipToParse = "\"::0123:4567:89AB:CDEF:0123:4567:89AB:CDEF:0123\"";
+    const char *ipToParse = "\"::0123:4567:89AB:CDEF:0123:4567:89AB:CDEF:0123\"";
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) strlen(ipToParse), &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1684,23 +1681,22 @@ TEST_F(TS_ParseIPv6LeftToRight, TooManyGroups3_Quotes_Fail)
 TEST_F(TS_ParseIPv6LeftToRight, TooManyGroups4_Quotes_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* ipToParse = "\"0123:4567:89AB:CDEF:0123:4567:89AB:CDEF:0123::\"";
+    const char *ipToParse = "\"0123:4567:89AB:CDEF:0123:4567:89AB:CDEF:0123::\"";
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
 
-    retcode = ParseIPv6LeftToRight((const uint8_t*) ipToParse, (uint32_t) strlen(ipToParse), &addr);
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
 
-class TS_ParseIPv4: public testing::Test
+class TS_ParseIPv4 : public testing::Test
 {
 protected:
     virtual void SetUp()
     {
-        FFF_RESET_HISTORY()
-        ;
+        FFF_RESET_HISTORY();
         srand(time(NULL));
     }
 };
@@ -1713,17 +1709,17 @@ TEST_F(TS_ParseIPv4, Normal_Pass)
     expAddr.Type = AT_UBLOX_ADDRESSTYPE_IPV4;
     for (uint32_t i = 0; i < AT_UBLOX_IPV4_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv4[i] = (uint8_t) rand();
+        expAddr.Address.IPv4[i] = (uint8_t)rand();
     }
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8,
-            expAddr.Address.IPv4[3],
-            expAddr.Address.IPv4[2],
-            expAddr.Address.IPv4[1],
-            expAddr.Address.IPv4[0]);
+                       expAddr.Address.IPv4[3],
+                       expAddr.Address.IPv4[2],
+                       expAddr.Address.IPv4[1],
+                       expAddr.Address.IPv4[0]);
     printf("%.*s\n", len, ipToParse);
 
-    retcode = ParseIPv4((const uint8_t*) ipToParse, (uint32_t) len, &parsedAddr);
+    retcode = ParseIPv4((const uint8_t *)ipToParse, (uint32_t)len, &parsedAddr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv4, parsedAddr.Address.IPv4, sizeof(expAddr.Address.IPv4)));
@@ -1737,17 +1733,17 @@ TEST_F(TS_ParseIPv4, Quotes_Pass)
     expAddr.Type = AT_UBLOX_ADDRESSTYPE_IPV4;
     for (uint32_t i = 0; i < AT_UBLOX_IPV4_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv4[i] = (uint8_t) rand();
+        expAddr.Address.IPv4[i] = (uint8_t)rand();
     }
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "\"%" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 "\"",
-            expAddr.Address.IPv4[3],
-            expAddr.Address.IPv4[2],
-            expAddr.Address.IPv4[1],
-            expAddr.Address.IPv4[0]);
+                       expAddr.Address.IPv4[3],
+                       expAddr.Address.IPv4[2],
+                       expAddr.Address.IPv4[1],
+                       expAddr.Address.IPv4[0]);
     printf("%.*s\n", len, ipToParse);
 
-    retcode = ParseIPv4((const uint8_t*) ipToParse, (uint32_t) len, &parsedAddr);
+    retcode = ParseIPv4((const uint8_t *)ipToParse, (uint32_t)len, &parsedAddr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv4, parsedAddr.Address.IPv4, sizeof(expAddr.Address.IPv4)));
@@ -1761,18 +1757,18 @@ TEST_F(TS_ParseIPv4, LeadingZero_Pass)
     expAddr.Type = AT_UBLOX_ADDRESSTYPE_IPV4;
     for (uint32_t i = 0; i < AT_UBLOX_IPV4_GROUP_COUNT; i++)
     {
-        expAddr.Address.IPv4[i] = (uint8_t) rand();
+        expAddr.Address.IPv4[i] = (uint8_t)rand();
     }
     expAddr.Address.IPv4[3] = 20;
     char ipToParse[AT_UBLOX_MAX_IP_STR_LENGTH + 1];
     int len = snprintf(ipToParse, sizeof(ipToParse), "\"%03" PRIu8 ".%" PRIu8 ".%" PRIu8 ".%" PRIu8 "\"",
-            expAddr.Address.IPv4[3],
-            expAddr.Address.IPv4[2],
-            expAddr.Address.IPv4[1],
-            expAddr.Address.IPv4[0]);
+                       expAddr.Address.IPv4[3],
+                       expAddr.Address.IPv4[2],
+                       expAddr.Address.IPv4[1],
+                       expAddr.Address.IPv4[0]);
     printf("%.*s\n", len, ipToParse);
 
-    retcode = ParseIPv4((const uint8_t*) ipToParse, (uint32_t) len, &parsedAddr);
+    retcode = ParseIPv4((const uint8_t *)ipToParse, (uint32_t)len, &parsedAddr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv4, parsedAddr.Address.IPv4, sizeof(expAddr.Address.IPv4)));
@@ -1782,10 +1778,10 @@ TEST_F(TS_ParseIPv4, GroupTooBig1_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
     AT_UBlox_Address_T parsedAddr;
-    const char* ipToParse = "123.300.123.123";
-    printf("%.*s\n", (int) strlen(ipToParse), ipToParse);
+    const char *ipToParse = "123.300.123.123";
+    printf("%.*s\n", (int)strlen(ipToParse), ipToParse);
 
-    retcode = ParseIPv4((const uint8_t*) ipToParse, (uint32_t) strlen(ipToParse), &parsedAddr);
+    retcode = ParseIPv4((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &parsedAddr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1794,10 +1790,10 @@ TEST_F(TS_ParseIPv4, GroupTooBig2_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
     AT_UBlox_Address_T parsedAddr;
-    const char* ipToParse = "123.2000.123.123";
-    printf("%.*s\n", (int) strlen(ipToParse), ipToParse);
+    const char *ipToParse = "123.2000.123.123";
+    printf("%.*s\n", (int)strlen(ipToParse), ipToParse);
 
-    retcode = ParseIPv4((const uint8_t*) ipToParse, (uint32_t) strlen(ipToParse), &parsedAddr);
+    retcode = ParseIPv4((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &parsedAddr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1806,54 +1802,54 @@ TEST_F(TS_ParseIPv4, TooManyGroups_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
     AT_UBlox_Address_T parsedAddr;
-    const char* ipToParse = "123.123.123.123.123";
-    printf("%.*s\n", (int) strlen(ipToParse), ipToParse);
+    const char *ipToParse = "123.123.123.123.123";
+    printf("%.*s\n", (int)strlen(ipToParse), ipToParse);
 
-    retcode = ParseIPv4((const uint8_t*) ipToParse, (uint32_t) strlen(ipToParse), &parsedAddr);
+    retcode = ParseIPv4((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &parsedAddr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
 
-class TS_At_Set_USOST: public TS_ModemTest
+class TS_At_Set_USOST : public TS_ModemTest
 {
 protected:
-    const char* FormatTriggerBaseEnc(const AT_USOST_Param_T* param)
+    const char *FormatTriggerBaseEnc(const AT_USOST_Param_T *param)
     {
         switch (param->RemoteIp.Type)
         {
         case AT_UBLOX_ADDRESSTYPE_IPV4:
             return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUSOST_FMTIPV4BASE,
-                    (int) param->Socket,
-                    (int) param->RemoteIp.Address.IPv4[3],
-                    (int) param->RemoteIp.Address.IPv4[2],
-                    (int) param->RemoteIp.Address.IPv4[1],
-                    (int) param->RemoteIp.Address.IPv4[0],
-                    (int) param->RemotePort,
-                    (int) param->Length,
-                    (int) param->Length,
-                    param->Data);
+                                       (int)param->Socket,
+                                       (int)param->RemoteIp.Address.IPv4[3],
+                                       (int)param->RemoteIp.Address.IPv4[2],
+                                       (int)param->RemoteIp.Address.IPv4[1],
+                                       (int)param->RemoteIp.Address.IPv4[0],
+                                       (int)param->RemotePort,
+                                       (int)param->Length,
+                                       (int)param->Length,
+                                       param->Data);
         case AT_UBLOX_ADDRESSTYPE_IPV6:
             return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUSOST_FMTIPV6BASE,
-                    (int) param->Socket,
-                    (int) param->RemoteIp.Address.IPv6[7],
-                    (int) param->RemoteIp.Address.IPv6[6],
-                    (int) param->RemoteIp.Address.IPv6[5],
-                    (int) param->RemoteIp.Address.IPv6[4],
-                    (int) param->RemoteIp.Address.IPv6[3],
-                    (int) param->RemoteIp.Address.IPv6[2],
-                    (int) param->RemoteIp.Address.IPv6[1],
-                    (int) param->RemoteIp.Address.IPv6[0],
-                    (int) param->RemotePort,
-                    (int) param->Length,
-                    (int) param->Length,
-                    param->Data);
+                                       (int)param->Socket,
+                                       (int)param->RemoteIp.Address.IPv6[7],
+                                       (int)param->RemoteIp.Address.IPv6[6],
+                                       (int)param->RemoteIp.Address.IPv6[5],
+                                       (int)param->RemoteIp.Address.IPv6[4],
+                                       (int)param->RemoteIp.Address.IPv6[3],
+                                       (int)param->RemoteIp.Address.IPv6[2],
+                                       (int)param->RemoteIp.Address.IPv6[1],
+                                       (int)param->RemoteIp.Address.IPv6[0],
+                                       (int)param->RemotePort,
+                                       (int)param->Length,
+                                       (int)param->Length,
+                                       param->Data);
         default:
             exit(1);
             return NULL;
         }
     }
 
-    const char* FormatTriggerHexEnc(const AT_USOST_Param_T* param)
+    const char *FormatTriggerHexEnc(const AT_USOST_Param_T *param)
     {
         char hex[param->Length * 2];
         Retcode_T ret = EncodePayloadAsHex(param->Data, param->Length, hex, sizeof(hex));
@@ -1866,42 +1862,42 @@ protected:
         {
         case AT_UBLOX_ADDRESSTYPE_IPV4:
             return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUSOST_FMTIPV4HEX,
-                    (int) param->Socket,
-                    (int) param->RemoteIp.Address.IPv4[3],
-                    (int) param->RemoteIp.Address.IPv4[2],
-                    (int) param->RemoteIp.Address.IPv4[1],
-                    (int) param->RemoteIp.Address.IPv4[0],
-                    (int) param->RemotePort,
-                    (int) param->Length,
-                    &n,
-                    (int) sizeof(hex),
-                    hex);
+                                       (int)param->Socket,
+                                       (int)param->RemoteIp.Address.IPv4[3],
+                                       (int)param->RemoteIp.Address.IPv4[2],
+                                       (int)param->RemoteIp.Address.IPv4[1],
+                                       (int)param->RemoteIp.Address.IPv4[0],
+                                       (int)param->RemotePort,
+                                       (int)param->Length,
+                                       &n,
+                                       (int)sizeof(hex),
+                                       hex);
         case AT_UBLOX_ADDRESSTYPE_IPV6:
             return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUSOST_FMTIPV6HEX,
-                    (int) param->Socket,
-                    (int) param->RemoteIp.Address.IPv6[7],
-                    (int) param->RemoteIp.Address.IPv6[6],
-                    (int) param->RemoteIp.Address.IPv6[5],
-                    (int) param->RemoteIp.Address.IPv6[4],
-                    (int) param->RemoteIp.Address.IPv6[3],
-                    (int) param->RemoteIp.Address.IPv6[2],
-                    (int) param->RemoteIp.Address.IPv6[1],
-                    (int) param->RemoteIp.Address.IPv6[0],
-                    (int) param->RemotePort,
-                    (int) param->Length,
-                    &n,
-                    (int) sizeof(hex),
-                    hex);
+                                       (int)param->Socket,
+                                       (int)param->RemoteIp.Address.IPv6[7],
+                                       (int)param->RemoteIp.Address.IPv6[6],
+                                       (int)param->RemoteIp.Address.IPv6[5],
+                                       (int)param->RemoteIp.Address.IPv6[4],
+                                       (int)param->RemoteIp.Address.IPv6[3],
+                                       (int)param->RemoteIp.Address.IPv6[2],
+                                       (int)param->RemoteIp.Address.IPv6[1],
+                                       (int)param->RemoteIp.Address.IPv6[0],
+                                       (int)param->RemotePort,
+                                       (int)param->Length,
+                                       &n,
+                                       (int)sizeof(hex),
+                                       hex);
         default:
             exit(1);
             return NULL;
         }
     }
 
-    const char* FormatAnswer(uint32_t socketId, uint32_t bytesSent)
+    const char *FormatAnswer(uint32_t socketId, uint32_t bytesSent)
     {
         return FormatIntoNewBuffer(&Answer, TEST_SET_ATUSOST_RESPONSE_FMT,
-        CMD_UBLOX_ATUSOST, socketId, bytesSent, TEST_AT_RESPONSE_OK);
+                                   CMD_UBLOX_ATUSOST, socketId, bytesSent, TEST_AT_RESPONSE_OK);
     }
 };
 
@@ -1916,8 +1912,8 @@ TEST_F(TS_At_Set_USOST, BaseIPv4_Pass)
     param.RemoteIp.Address.IPv4[1] = 2;
     param.RemoteIp.Address.IPv4[0] = 3;
     param.RemotePort = 1337;
-    param.Data = (const uint8_t*) "HELLO";
-    param.Length = strlen((const char*) param.Data);
+    param.Data = (const uint8_t *)"HELLO";
+    param.Length = strlen((const char *)param.Data);
     param.Encoding = AT_UBLOX_PAYLOADENCODING_BASE;
     AT_USOST_Resp_T resp;
 
@@ -1941,8 +1937,8 @@ TEST_F(TS_At_Set_USOST, HexIPv4_Pass)
     param.RemoteIp.Address.IPv4[1] = 2;
     param.RemoteIp.Address.IPv4[0] = 3;
     param.RemotePort = 1337;
-    param.Data = (const uint8_t*) "HELLO";
-    param.Length = strlen((const char*) param.Data);
+    param.Data = (const uint8_t *)"HELLO";
+    param.Length = strlen((const char *)param.Data);
     param.Encoding = AT_UBLOX_PAYLOADENCODING_HEX;
     AT_USOST_Resp_T resp;
 
@@ -1970,8 +1966,8 @@ TEST_F(TS_At_Set_USOST, BaseIPv6_Pass)
     param.RemoteIp.Address.IPv6[1] = 0x4321;
     param.RemoteIp.Address.IPv6[0] = 0xFEFE;
     param.RemotePort = 1337;
-    param.Data = (const uint8_t*) "HELLO";
-    param.Length = strlen((const char*) param.Data);
+    param.Data = (const uint8_t *)"HELLO";
+    param.Length = strlen((const char *)param.Data);
     param.Encoding = AT_UBLOX_PAYLOADENCODING_BASE;
     AT_USOST_Resp_T resp;
 
@@ -1999,8 +1995,8 @@ TEST_F(TS_At_Set_USOST, HexIPv6_Pass)
     param.RemoteIp.Address.IPv6[1] = 0x4321;
     param.RemoteIp.Address.IPv6[0] = 0xFEFE;
     param.RemotePort = 1337;
-    param.Data = (const uint8_t*) "HELLO";
-    param.Length = strlen((const char*) param.Data);
+    param.Data = (const uint8_t *)"HELLO";
+    param.Length = strlen((const char *)param.Data);
     param.Encoding = AT_UBLOX_PAYLOADENCODING_HEX;
     AT_USOST_Resp_T resp;
 
@@ -2013,14 +2009,14 @@ TEST_F(TS_At_Set_USOST, HexIPv6_Pass)
     EXPECT_EQ(param.Length, resp.Length);
 }
 
-class TS_At_Set_USOLI: public TS_ModemTest
+class TS_At_Set_USOLI : public TS_ModemTest
 {
 protected:
-    const char* FormatTrigger(const AT_USOLI_Param_T* param)
+    const char *FormatTrigger(const AT_USOLI_Param_T *param)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUSOLI_FMT,
-                param->Socket,
-                param->Port);
+                                   param->Socket,
+                                   param->Port);
     }
 };
 
@@ -2038,13 +2034,13 @@ TEST_F(TS_At_Set_USOLI, Pass)
     EXPECT_EQ(RETCODE_OK, retcode);
 }
 
-class TS_At_Set_USOCL: public TS_ModemTest
+class TS_At_Set_USOCL : public TS_ModemTest
 {
 protected:
-    const char* FormatTrigger(const AT_USOCL_Param_T* param)
+    const char *FormatTrigger(const AT_USOCL_Param_T *param)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUSOCL_FMT,
-                (uint32_t) param->Socket);
+                                   (uint32_t)param->Socket);
     }
 };
 
@@ -2061,14 +2057,14 @@ TEST_F(TS_At_Set_USOCL, Pass)
     EXPECT_EQ(RETCODE_OK, retcode);
 }
 
-class TS_At_Set_UDCONF: public TS_ModemTest
+class TS_At_Set_UDCONF : public TS_ModemTest
 {
 protected:
-    const char* FormatTriggerHexMode(const AT_UDCONF_Param_T* param)
+    const char *FormatTriggerHexMode(const AT_UDCONF_Param_T *param)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUDCONF_FMTHEXMODE,
-                (int) param->Config,
-                (int) *((bool*) param->Value));
+                                   (int)param->Config,
+                                   (int)*((bool *)param->Value));
     }
 };
 
@@ -2102,22 +2098,22 @@ TEST_F(TS_At_Set_UDCONF, HexMode_Disable_Pass)
     EXPECT_EQ(RETCODE_OK, retcode);
 }
 
-class TS_At_Get_UDCONF: public TS_ModemTest
+class TS_At_Get_UDCONF : public TS_ModemTest
 {
 protected:
-    const char* FormatTriggerHexMode(const AT_UDCONF_Param_T* param)
+    const char *FormatTriggerHexMode(const AT_UDCONF_Param_T *param)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_GET_ATUDCONF_FMT,
-                (int) param->Config);
+                                   (int)param->Config);
     }
 
-    const char* FormatAnswerHexMode(bool enabled)
+    const char *FormatAnswerHexMode(bool enabled)
     {
         return FormatIntoNewBuffer(&Answer, TEST_GET_ATUDCONF_RESPONSE_FMTHEXMODE,
-                CMD_UBLOX_ATUDCONF,
-                (uint32_t) AT_UDCONF_CONFIG_HEXMODE,
-                (uint32_t) enabled,
-                TEST_AT_RESPONSE_OK);
+                                   CMD_UBLOX_ATUDCONF,
+                                   (uint32_t)AT_UDCONF_CONFIG_HEXMODE,
+                                   (uint32_t)enabled,
+                                   TEST_AT_RESPONSE_OK);
     }
 };
 
@@ -2135,7 +2131,7 @@ TEST_F(TS_At_Get_UDCONF, HexMode_Enabled_Pass)
     retcode = At_Get_UDCONF(&param);
 
     EXPECT_EQ(RETCODE_OK, retcode);
-    EXPECT_EQ(expEnabled, *((bool*) param.Value));
+    EXPECT_EQ(expEnabled, *((bool *)param.Value));
 }
 
 TEST_F(TS_At_Get_UDCONF, HexMode_Disabled_Pass)
@@ -2152,10 +2148,10 @@ TEST_F(TS_At_Get_UDCONF, HexMode_Disabled_Pass)
     retcode = At_Get_UDCONF(&param);
 
     EXPECT_EQ(RETCODE_OK, retcode);
-    EXPECT_EQ(expEnabled, *((bool*) param.Value));
+    EXPECT_EQ(expEnabled, *((bool *)param.Value));
 }
 
-class TS_At_HandleUrc_UUSOCL: public TS_ModemTest
+class TS_At_HandleUrc_UUSOCL : public TS_ModemTest
 {
 protected:
     virtual void SetUp()
@@ -2171,13 +2167,13 @@ protected:
 TEST_F(TS_At_HandleUrc_UUSOCL, Pass)
 {
     Retcode_T retcode = RETCODE_OK;
-    uint32_t expSocketId = (uint32_t) rand();
+    uint32_t expSocketId = (uint32_t)rand();
     char cmd[1024];
     int32_t len = snprintf(cmd, sizeof(cmd), TEST_URC_ATUSOCL_FMT,
-            CMD_UBLOX_ATUUSOCL,
-            expSocketId);
+                           CMD_UBLOX_ATUUSOCL,
+                           expSocketId);
 
-    (void) AtResponseParser_Parse((uint8_t*) cmd, (uint32_t) len);
+    (void)AtResponseParser_Parse((uint8_t *)cmd, (uint32_t)len);
 
     retcode = At_HandleUrc_UUSOCL();
 
@@ -2186,7 +2182,7 @@ TEST_F(TS_At_HandleUrc_UUSOCL, Pass)
     EXPECT_EQ(expSocketId, SocketService_NotifySocketClosed_fake.arg0_val);
 }
 
-class TS_At_HandleUrc_UUSORX: public TS_ModemTest
+class TS_At_HandleUrc_UUSORX : public TS_ModemTest
 {
 protected:
     virtual void SetUp()
@@ -2202,15 +2198,15 @@ protected:
 TEST_F(TS_At_HandleUrc_UUSORX, UUSORD_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
-    uint32_t expSocketId = (uint32_t) rand();
-    uint32_t expLength = (uint32_t) rand();
+    uint32_t expSocketId = (uint32_t)rand();
+    uint32_t expLength = (uint32_t)rand();
     char cmd[1024];
     int32_t len = snprintf(cmd, sizeof(cmd), TEST_URC_ATUSORX_FMT,
-            CMD_UBLOX_ATUUSORD,
-            expSocketId,
-            expLength);
+                           CMD_UBLOX_ATUUSORD,
+                           expSocketId,
+                           expLength);
 
-    (void) AtResponseParser_Parse((uint8_t*) cmd, (uint32_t) len);
+    (void)AtResponseParser_Parse((uint8_t *)cmd, (uint32_t)len);
 
     retcode = At_HandleUrc_UUSORD();
 
@@ -2223,15 +2219,15 @@ TEST_F(TS_At_HandleUrc_UUSORX, UUSORD_Pass)
 TEST_F(TS_At_HandleUrc_UUSORX, UUSORF_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
-    uint32_t expSocketId = (uint32_t) rand();
-    uint32_t expLength = (uint32_t) rand();
+    uint32_t expSocketId = (uint32_t)rand();
+    uint32_t expLength = (uint32_t)rand();
     char cmd[1024];
     int32_t len = snprintf(cmd, sizeof(cmd), TEST_URC_ATUSORX_FMT,
-            CMD_UBLOX_ATUUSORF,
-            expSocketId,
-            expLength);
+                           CMD_UBLOX_ATUUSORF,
+                           expSocketId,
+                           expLength);
 
-    (void) AtResponseParser_Parse((uint8_t*) cmd, (uint32_t) len);
+    (void)AtResponseParser_Parse((uint8_t *)cmd, (uint32_t)len);
 
     retcode = At_HandleUrc_UUSORF();
 
@@ -2245,11 +2241,11 @@ static AT_UBlox_Address_T UUSOLI_RemoteIp;
 static AT_UBlox_Address_T UUSOLI_LocalIp;
 
 static void Custom_SocketService_NotifySocketAccepted(uint32_t createdSocketId,
-    const AT_UBlox_Address_T* remoteIp,
-    uint16_t remotePort,
-    uint32_t listeningSocketId,
-    const AT_UBlox_Address_T* localIp,
-    uint16_t listeningPort)
+                                                      const AT_UBlox_Address_T *remoteIp,
+                                                      uint16_t remotePort,
+                                                      uint32_t listeningSocketId,
+                                                      const AT_UBlox_Address_T *localIp,
+                                                      uint16_t listeningPort)
 {
     KISO_UNUSED(createdSocketId);
     KISO_UNUSED(remotePort);
@@ -2260,7 +2256,7 @@ static void Custom_SocketService_NotifySocketAccepted(uint32_t createdSocketId,
     memcpy(&UUSOLI_LocalIp, localIp, sizeof(UUSOLI_LocalIp));
 }
 
-class TS_At_HandleUrc_UUSOLI: public TS_ModemTest
+class TS_At_HandleUrc_UUSOLI : public TS_ModemTest
 {
 protected:
     virtual void SetUp()
@@ -2282,39 +2278,39 @@ protected:
 TEST_F(TS_At_HandleUrc_UUSOLI, IPv4_IPv4_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
-    uint32_t expSocketId = (uint32_t) rand();
+    uint32_t expSocketId = (uint32_t)rand();
     AT_UBlox_Address_T expRemoteIp;
     expRemoteIp.Type = AT_UBLOX_ADDRESSTYPE_IPV4;
     for (uint32_t i = 0; i < AT_UBLOX_IPV4_GROUP_COUNT; i++)
     {
-        expRemoteIp.Address.IPv4[i] = (uint8_t) rand();
+        expRemoteIp.Address.IPv4[i] = (uint8_t)rand();
     }
-    uint16_t expRemotePort = (uint16_t) rand();
-    uint32_t expListeningSocket = (uint32_t) rand();
+    uint16_t expRemotePort = (uint16_t)rand();
+    uint32_t expListeningSocket = (uint32_t)rand();
     AT_UBlox_Address_T expLocalIp;
     expLocalIp.Type = AT_UBLOX_ADDRESSTYPE_IPV4;
     for (uint32_t i = 0; i < AT_UBLOX_IPV4_GROUP_COUNT; i++)
     {
-        expLocalIp.Address.IPv4[i] = (uint8_t) rand();
+        expLocalIp.Address.IPv4[i] = (uint8_t)rand();
     }
-    uint16_t expListeningPort = (uint16_t) rand();
+    uint16_t expListeningPort = (uint16_t)rand();
     char cmd[1024];
     int32_t len = snprintf(cmd, sizeof(cmd), TEST_URC_ATUSOLI_FMTIPV4IPV4,
-            CMD_UBLOX_ATUUSOLI,
-            expSocketId,
-            expRemoteIp.Address.IPv4[3],
-            expRemoteIp.Address.IPv4[2],
-            expRemoteIp.Address.IPv4[1],
-            expRemoteIp.Address.IPv4[0],
-            expRemotePort,
-            expListeningSocket,
-            expLocalIp.Address.IPv4[3],
-            expLocalIp.Address.IPv4[2],
-            expLocalIp.Address.IPv4[1],
-            expLocalIp.Address.IPv4[0],
-            expListeningPort);
+                           CMD_UBLOX_ATUUSOLI,
+                           expSocketId,
+                           expRemoteIp.Address.IPv4[3],
+                           expRemoteIp.Address.IPv4[2],
+                           expRemoteIp.Address.IPv4[1],
+                           expRemoteIp.Address.IPv4[0],
+                           expRemotePort,
+                           expListeningSocket,
+                           expLocalIp.Address.IPv4[3],
+                           expLocalIp.Address.IPv4[2],
+                           expLocalIp.Address.IPv4[1],
+                           expLocalIp.Address.IPv4[0],
+                           expListeningPort);
 
-    (void) AtResponseParser_Parse((uint8_t*) cmd, (uint32_t) len);
+    (void)AtResponseParser_Parse((uint8_t *)cmd, (uint32_t)len);
 
     retcode = At_HandleUrc_UUSOLI();
 
@@ -2333,43 +2329,43 @@ TEST_F(TS_At_HandleUrc_UUSOLI, IPv4_IPv4_Pass)
 TEST_F(TS_At_HandleUrc_UUSOLI, IPv4_IPv6_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
-    uint32_t expSocketId = (uint32_t) rand();
+    uint32_t expSocketId = (uint32_t)rand();
     AT_UBlox_Address_T expRemoteIp;
     expRemoteIp.Type = AT_UBLOX_ADDRESSTYPE_IPV4;
     for (uint32_t i = 0; i < AT_UBLOX_IPV4_GROUP_COUNT; i++)
     {
-        expRemoteIp.Address.IPv4[i] = (uint8_t) rand();
+        expRemoteIp.Address.IPv4[i] = (uint8_t)rand();
     }
-    uint16_t expRemotePort = (uint16_t) rand();
-    uint32_t expListeningSocket = (uint32_t) rand();
+    uint16_t expRemotePort = (uint16_t)rand();
+    uint32_t expListeningSocket = (uint32_t)rand();
     AT_UBlox_Address_T expLocalIp;
     expLocalIp.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expLocalIp.Address.IPv6[i] = (uint16_t) rand();
+        expLocalIp.Address.IPv6[i] = (uint16_t)rand();
     }
-    uint16_t expListeningPort = (uint16_t) rand();
+    uint16_t expListeningPort = (uint16_t)rand();
     char cmd[1024];
     int32_t len = snprintf(cmd, sizeof(cmd), TEST_URC_ATUSOLI_FMTIPV4IPV6,
-            CMD_UBLOX_ATUUSOLI,
-            expSocketId,
-            expRemoteIp.Address.IPv4[3],
-            expRemoteIp.Address.IPv4[2],
-            expRemoteIp.Address.IPv4[1],
-            expRemoteIp.Address.IPv4[0],
-            expRemotePort,
-            expListeningSocket,
-            expLocalIp.Address.IPv6[7],
-            expLocalIp.Address.IPv6[6],
-            expLocalIp.Address.IPv6[5],
-            expLocalIp.Address.IPv6[4],
-            expLocalIp.Address.IPv6[3],
-            expLocalIp.Address.IPv6[2],
-            expLocalIp.Address.IPv6[1],
-            expLocalIp.Address.IPv6[0],
-            expListeningPort);
+                           CMD_UBLOX_ATUUSOLI,
+                           expSocketId,
+                           expRemoteIp.Address.IPv4[3],
+                           expRemoteIp.Address.IPv4[2],
+                           expRemoteIp.Address.IPv4[1],
+                           expRemoteIp.Address.IPv4[0],
+                           expRemotePort,
+                           expListeningSocket,
+                           expLocalIp.Address.IPv6[7],
+                           expLocalIp.Address.IPv6[6],
+                           expLocalIp.Address.IPv6[5],
+                           expLocalIp.Address.IPv6[4],
+                           expLocalIp.Address.IPv6[3],
+                           expLocalIp.Address.IPv6[2],
+                           expLocalIp.Address.IPv6[1],
+                           expLocalIp.Address.IPv6[0],
+                           expListeningPort);
 
-    (void) AtResponseParser_Parse((uint8_t*) cmd, (uint32_t) len);
+    (void)AtResponseParser_Parse((uint8_t *)cmd, (uint32_t)len);
 
     retcode = At_HandleUrc_UUSOLI();
 
@@ -2387,43 +2383,43 @@ TEST_F(TS_At_HandleUrc_UUSOLI, IPv4_IPv6_Pass)
 TEST_F(TS_At_HandleUrc_UUSOLI, IPv6_IPv4_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
-    uint32_t expSocketId = (uint32_t) rand();
+    uint32_t expSocketId = (uint32_t)rand();
     AT_UBlox_Address_T expRemoteIp;
     expRemoteIp.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expRemoteIp.Address.IPv6[i] = (uint8_t) rand();
+        expRemoteIp.Address.IPv6[i] = (uint8_t)rand();
     }
-    uint16_t expRemotePort = (uint16_t) rand();
-    uint32_t expListeningSocket = (uint32_t) rand();
+    uint16_t expRemotePort = (uint16_t)rand();
+    uint32_t expListeningSocket = (uint32_t)rand();
     AT_UBlox_Address_T expLocalIp;
     expLocalIp.Type = AT_UBLOX_ADDRESSTYPE_IPV4;
     for (uint32_t i = 0; i < AT_UBLOX_IPV4_GROUP_COUNT; i++)
     {
-        expLocalIp.Address.IPv4[i] = (uint16_t) rand();
+        expLocalIp.Address.IPv4[i] = (uint16_t)rand();
     }
-    uint16_t expListeningPort = (uint16_t) rand();
+    uint16_t expListeningPort = (uint16_t)rand();
     char cmd[1024];
     int32_t len = snprintf(cmd, sizeof(cmd), TEST_URC_ATUSOLI_FMTIPV6IPV4,
-            CMD_UBLOX_ATUUSOLI,
-            expSocketId,
-            expRemoteIp.Address.IPv6[7],
-            expRemoteIp.Address.IPv6[6],
-            expRemoteIp.Address.IPv6[5],
-            expRemoteIp.Address.IPv6[4],
-            expRemoteIp.Address.IPv6[3],
-            expRemoteIp.Address.IPv6[2],
-            expRemoteIp.Address.IPv6[1],
-            expRemoteIp.Address.IPv6[0],
-            expRemotePort,
-            expListeningSocket,
-            expLocalIp.Address.IPv4[3],
-            expLocalIp.Address.IPv4[2],
-            expLocalIp.Address.IPv4[1],
-            expLocalIp.Address.IPv4[0],
-            expListeningPort);
+                           CMD_UBLOX_ATUUSOLI,
+                           expSocketId,
+                           expRemoteIp.Address.IPv6[7],
+                           expRemoteIp.Address.IPv6[6],
+                           expRemoteIp.Address.IPv6[5],
+                           expRemoteIp.Address.IPv6[4],
+                           expRemoteIp.Address.IPv6[3],
+                           expRemoteIp.Address.IPv6[2],
+                           expRemoteIp.Address.IPv6[1],
+                           expRemoteIp.Address.IPv6[0],
+                           expRemotePort,
+                           expListeningSocket,
+                           expLocalIp.Address.IPv4[3],
+                           expLocalIp.Address.IPv4[2],
+                           expLocalIp.Address.IPv4[1],
+                           expLocalIp.Address.IPv4[0],
+                           expListeningPort);
 
-    (void) AtResponseParser_Parse((uint8_t*) cmd, (uint32_t) len);
+    (void)AtResponseParser_Parse((uint8_t *)cmd, (uint32_t)len);
 
     retcode = At_HandleUrc_UUSOLI();
 
@@ -2442,47 +2438,47 @@ TEST_F(TS_At_HandleUrc_UUSOLI, IPv6_IPv4_Pass)
 TEST_F(TS_At_HandleUrc_UUSOLI, IPv6_IPv6_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
-    uint32_t expSocketId = (uint32_t) rand();
+    uint32_t expSocketId = (uint32_t)rand();
     AT_UBlox_Address_T expRemoteIp;
     expRemoteIp.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expRemoteIp.Address.IPv6[i] = (uint8_t) rand();
+        expRemoteIp.Address.IPv6[i] = (uint8_t)rand();
     }
-    uint16_t expRemotePort = (uint16_t) rand();
-    uint32_t expListeningSocket = (uint32_t) rand();
+    uint16_t expRemotePort = (uint16_t)rand();
+    uint32_t expListeningSocket = (uint32_t)rand();
     AT_UBlox_Address_T expLocalIp;
     expLocalIp.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     for (uint32_t i = 0; i < AT_UBLOX_IPV6_GROUP_COUNT; i++)
     {
-        expLocalIp.Address.IPv6[i] = (uint16_t) rand();
+        expLocalIp.Address.IPv6[i] = (uint16_t)rand();
     }
-    uint16_t expListeningPort = (uint16_t) rand();
+    uint16_t expListeningPort = (uint16_t)rand();
     char cmd[1024];
     int32_t len = snprintf(cmd, sizeof(cmd), TEST_URC_ATUSOLI_FMTIPV6IPV6,
-            CMD_UBLOX_ATUUSOLI,
-            expSocketId,
-            expRemoteIp.Address.IPv6[7],
-            expRemoteIp.Address.IPv6[6],
-            expRemoteIp.Address.IPv6[5],
-            expRemoteIp.Address.IPv6[4],
-            expRemoteIp.Address.IPv6[3],
-            expRemoteIp.Address.IPv6[2],
-            expRemoteIp.Address.IPv6[1],
-            expRemoteIp.Address.IPv6[0],
-            expRemotePort,
-            expListeningSocket,
-            expLocalIp.Address.IPv6[7],
-            expLocalIp.Address.IPv6[6],
-            expLocalIp.Address.IPv6[5],
-            expLocalIp.Address.IPv6[4],
-            expLocalIp.Address.IPv6[3],
-            expLocalIp.Address.IPv6[2],
-            expLocalIp.Address.IPv6[1],
-            expLocalIp.Address.IPv6[0],
-            expListeningPort);
+                           CMD_UBLOX_ATUUSOLI,
+                           expSocketId,
+                           expRemoteIp.Address.IPv6[7],
+                           expRemoteIp.Address.IPv6[6],
+                           expRemoteIp.Address.IPv6[5],
+                           expRemoteIp.Address.IPv6[4],
+                           expRemoteIp.Address.IPv6[3],
+                           expRemoteIp.Address.IPv6[2],
+                           expRemoteIp.Address.IPv6[1],
+                           expRemoteIp.Address.IPv6[0],
+                           expRemotePort,
+                           expListeningSocket,
+                           expLocalIp.Address.IPv6[7],
+                           expLocalIp.Address.IPv6[6],
+                           expLocalIp.Address.IPv6[5],
+                           expLocalIp.Address.IPv6[4],
+                           expLocalIp.Address.IPv6[3],
+                           expLocalIp.Address.IPv6[2],
+                           expLocalIp.Address.IPv6[1],
+                           expLocalIp.Address.IPv6[0],
+                           expListeningPort);
 
-    (void) AtResponseParser_Parse((uint8_t*) cmd, (uint32_t) len);
+    (void)AtResponseParser_Parse((uint8_t *)cmd, (uint32_t)len);
 
     retcode = At_HandleUrc_UUSOLI();
 
@@ -2498,19 +2494,19 @@ TEST_F(TS_At_HandleUrc_UUSOLI, IPv6_IPv6_Pass)
     EXPECT_EQ(expListeningPort, SocketService_NotifySocketAccepted_fake.arg5_val);
 }
 
-class TS_At_Get_CCID: public TS_ModemTest
+class TS_At_Get_CCID : public TS_ModemTest
 {
 protected:
-    const char* FormatAnswer(const char* iccid)
+    const char *FormatAnswer(const char *iccid)
     {
         return FormatIntoNewBuffer(&Answer, TEST_GET_ATCCID_RESPONSE_FMT,
-                CMD_UBLOX_ATCCID, iccid, TEST_AT_RESPONSE_OK);
+                                   CMD_UBLOX_ATCCID, iccid, TEST_AT_RESPONSE_OK);
     }
 };
 
 TEST_F(TS_At_Get_CCID, 19Char_Pass)
 {
-    const char* expIccid = "1234567890123456789";
+    const char *expIccid = "1234567890123456789";
 
     Retcode_T retcode = RETCODE_OK;
     AT_CCID_Resp_T resp;
@@ -2526,7 +2522,7 @@ TEST_F(TS_At_Get_CCID, 19Char_Pass)
 
 TEST_F(TS_At_Get_CCID, 20Char_Pass)
 {
-    const char* expIccid = "12345678901234567890";
+    const char *expIccid = "12345678901234567890";
 
     Retcode_T retcode = RETCODE_OK;
     AT_CCID_Resp_T resp;
@@ -2540,80 +2536,80 @@ TEST_F(TS_At_Get_CCID, 20Char_Pass)
     EXPECT_STREQ(expIccid, resp.Iccid);
 }
 
-class TS_At_Set_UDNSRN: public TS_ModemTest
+class TS_At_Set_UDNSRN : public TS_ModemTest
 {
 protected:
-    const char* FormatTrigger(const char* domain)
+    const char *FormatTrigger(const char *domain)
     {
         return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUDNSRN_FMT1,
-                AT_UDNSRN_RESOLUTIONTYPE_DOMAINTOIP,
-                domain);
+                                   AT_UDNSRN_RESOLUTIONTYPE_DOMAINTOIP,
+                                   domain);
     }
 
-    const char* FormatTrigger(const AT_UBlox_Address_T* ip)
+    const char *FormatTrigger(const AT_UBlox_Address_T *ip)
     {
         switch (ip->Type)
         {
         case AT_UBLOX_ADDRESSTYPE_IPV4:
             return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUDNSRN_FMT2,
-                    AT_UDNSRN_RESOLUTIONTYPE_IPTODOMAIN,
-                    ip->Address.IPv4[3],
-                    ip->Address.IPv4[2],
-                    ip->Address.IPv4[1],
-                    ip->Address.IPv4[0]);
+                                       AT_UDNSRN_RESOLUTIONTYPE_IPTODOMAIN,
+                                       ip->Address.IPv4[3],
+                                       ip->Address.IPv4[2],
+                                       ip->Address.IPv4[1],
+                                       ip->Address.IPv4[0]);
         case AT_UBLOX_ADDRESSTYPE_IPV6:
             return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUDNSRN_FMT3,
-                    AT_UDNSRN_RESOLUTIONTYPE_IPTODOMAIN,
-                    ip->Address.IPv6[7],
-                    ip->Address.IPv6[6],
-                    ip->Address.IPv6[5],
-                    ip->Address.IPv6[4],
-                    ip->Address.IPv6[3],
-                    ip->Address.IPv6[2],
-                    ip->Address.IPv6[1],
-                    ip->Address.IPv6[0]);
-            default:
-                exit(1);
-                return NULL;
+                                       AT_UDNSRN_RESOLUTIONTYPE_IPTODOMAIN,
+                                       ip->Address.IPv6[7],
+                                       ip->Address.IPv6[6],
+                                       ip->Address.IPv6[5],
+                                       ip->Address.IPv6[4],
+                                       ip->Address.IPv6[3],
+                                       ip->Address.IPv6[2],
+                                       ip->Address.IPv6[1],
+                                       ip->Address.IPv6[0]);
+        default:
+            exit(1);
+            return NULL;
         }
     }
 
-    const char* FormatAnswer(const AT_UBlox_Address_T* ip)
+    const char *FormatAnswer(const AT_UBlox_Address_T *ip)
     {
         switch (ip->Type)
         {
         case AT_UBLOX_ADDRESSTYPE_IPV4:
             return FormatIntoNewBuffer(&Answer, TEST_SET_ATUDNS_RESPONSE_FMT1,
-                    CMD_UBLOX_ATUDNSRN,
-                    ip->Address.IPv4[3],
-                    ip->Address.IPv4[2],
-                    ip->Address.IPv4[1],
-                    ip->Address.IPv4[0],
-                    TEST_AT_RESPONSE_OK);
+                                       CMD_UBLOX_ATUDNSRN,
+                                       ip->Address.IPv4[3],
+                                       ip->Address.IPv4[2],
+                                       ip->Address.IPv4[1],
+                                       ip->Address.IPv4[0],
+                                       TEST_AT_RESPONSE_OK);
         case AT_UBLOX_ADDRESSTYPE_IPV6:
             return FormatIntoNewBuffer(&Answer, TEST_SET_ATUDNS_RESPONSE_FMT2,
-                    CMD_UBLOX_ATUDNSRN,
-                    ip->Address.IPv6[7],
-                    ip->Address.IPv6[6],
-                    ip->Address.IPv6[5],
-                    ip->Address.IPv6[4],
-                    ip->Address.IPv6[3],
-                    ip->Address.IPv6[2],
-                    ip->Address.IPv6[1],
-                    ip->Address.IPv6[0],
-                    TEST_AT_RESPONSE_OK);
-            default:
-                exit(1);
-                return NULL;
+                                       CMD_UBLOX_ATUDNSRN,
+                                       ip->Address.IPv6[7],
+                                       ip->Address.IPv6[6],
+                                       ip->Address.IPv6[5],
+                                       ip->Address.IPv6[4],
+                                       ip->Address.IPv6[3],
+                                       ip->Address.IPv6[2],
+                                       ip->Address.IPv6[1],
+                                       ip->Address.IPv6[0],
+                                       TEST_AT_RESPONSE_OK);
+        default:
+            exit(1);
+            return NULL;
         }
     }
 
-    const char* FormatAnswer(const char* domain)
+    const char *FormatAnswer(const char *domain)
     {
         return FormatIntoNewBuffer(&Answer, TEST_SET_ATUDNS_RESPONSE_FMT3,
-                CMD_UBLOX_ATUDNSRN,
-                domain,
-                TEST_AT_RESPONSE_OK);
+                                   CMD_UBLOX_ATUDNSRN,
+                                   domain,
+                                   TEST_AT_RESPONSE_OK);
     }
 };
 
@@ -2671,7 +2667,7 @@ TEST_F(TS_At_Set_UDNSRN, DomainToIPv6_Pass)
 
 TEST_F(TS_At_Set_UDNSRN, IPv4ToDomain_Pass)
 {
-    const char* expDomain = "bosch.com";
+    const char *expDomain = "bosch.com";
 
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV4;
@@ -2696,7 +2692,7 @@ TEST_F(TS_At_Set_UDNSRN, IPv4ToDomain_Pass)
 
 TEST_F(TS_At_Set_UDNSRN, IPv6ToDomain_Pass)
 {
-    const char* expDomain = "google.com";
+    const char *expDomain = "google.com";
 
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;

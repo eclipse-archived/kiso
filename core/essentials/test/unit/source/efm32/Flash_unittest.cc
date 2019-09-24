@@ -25,29 +25,27 @@ extern "C"
 #include "em_int_th.hh"
 #include "em_msc_th.hh"
 
-//#include "em_msc_th.hh"
+    //#include "em_msc_th.hh"
 
 #if KISO_FEATURE_FLASH
 
 /* include module under test */
 #include "Flash.c"
 
-//uint32_t flash_data[10];
-//#define FLASH_ADDRESS &flash_data[0]
+    //uint32_t flash_data[10];
+    //#define FLASH_ADDRESS &flash_data[0]
 }
 
 /* end of global scope symbol and fake definitions section */
 
-class KISO_FLASHtest: public testing::Test
+class KISO_FLASHtest : public testing::Test
 {
 protected:
-
     virtual void SetUp()
     {
         MSC_WriteWord_fake.return_val = mscReturnOk;
 
-        FFF_RESET_HISTORY()
-        ;
+        FFF_RESET_HISTORY();
     }
 
     virtual void TearDown()
@@ -65,7 +63,6 @@ protected:
 
 TEST_F(KISO_FLASHtest, dummyTest)
 {
-
 }
 
 /**
@@ -88,7 +85,7 @@ TEST_F(KISO_FLASHtest, MCU_Flash_GetPageSize)
 
 TEST_F(KISO_FLASHtest, MCU_Flash_ErasePage_ok)
 {
-    uint32_t * pageAddress = (uint32_t*) 0x20000;
+    uint32_t *pageAddress = (uint32_t *)0x20000;
     MSC_ErasePage_fake.return_val = mscReturnOk;
     Retcode_T rc;
 
@@ -105,7 +102,7 @@ TEST_F(KISO_FLASHtest, MCU_Flash_ErasePage_ok)
 
 TEST_F(KISO_FLASHtest, MCU_Flash_EraseInvalid_addr)
 {
-    uint32_t * pageAddress = (uint32_t*) 0x20000;
+    uint32_t *pageAddress = (uint32_t *)0x20000;
     MSC_ErasePage_fake.return_val = mscReturnInvalidAddr;
     Retcode_T rc;
 
@@ -120,10 +117,9 @@ TEST_F(KISO_FLASHtest, MCU_Flash_EraseInvalid_addr)
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_HAL_FLASH_INVALID_ADDRESS), rc);
 }
 
-
 TEST_F(KISO_FLASHtest, MCU_Flash_EraseInvalid_addrInput)
 {
-    uint32_t * pageAddress = (uint32_t*) 0x20001;
+    uint32_t *pageAddress = (uint32_t *)0x20001;
     MSC_ErasePage_fake.return_val = mscReturnInvalidAddr;
     Retcode_T rc;
 
@@ -138,10 +134,9 @@ TEST_F(KISO_FLASHtest, MCU_Flash_EraseInvalid_addrInput)
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_HAL_FLASH_INVALID_ADDRESS), rc);
 }
 
-
 TEST_F(KISO_FLASHtest, MCU_Flash_EraseAddr_Locked)
 {
-    uint32_t * pageAddress = (uint32_t*) 0x20000;
+    uint32_t *pageAddress = (uint32_t *)0x20000;
     MSC_ErasePage_fake.return_val = mscReturnLocked;
     Retcode_T rc;
 
@@ -158,7 +153,7 @@ TEST_F(KISO_FLASHtest, MCU_Flash_EraseAddr_Locked)
 
 TEST_F(KISO_FLASHtest, MCU_Flash_Erase_timeout)
 {
-    uint32_t * pageAddress = (uint32_t*) 0x20000;
+    uint32_t *pageAddress = (uint32_t *)0x20000;
     MSC_ErasePage_fake.return_val = mscReturnTimeOut;
     Retcode_T rc;
 
@@ -180,7 +175,7 @@ TEST_F(KISO_FLASHtest, MCU_Flash_Erase_timeout)
 
 TEST_F(KISO_FLASHtest, MCU_Flash_Erase)
 {
-    uint32_t * pageAddress = (uint32_t*) 0x20000;
+    uint32_t *pageAddress = (uint32_t *)0x20000;
     uint32_t numPages = 2;
 
     Retcode_T rc;
@@ -200,9 +195,9 @@ TEST_F(KISO_FLASHtest, MCU_Flash_Erase)
 TEST_F(KISO_FLASHtest, MCU_Flash_Write_ok)
 {
     uint8_t tempAddr;
-    uint8_t * targetAddress = &tempAddr;
+    uint8_t *targetAddress = &tempAddr;
     uint8_t tempAddr2;
-    uint8_t * sourceAddress = &tempAddr2;
+    uint8_t *sourceAddress = &tempAddr2;
 
     uint32_t numBytes = 2;
 
@@ -214,9 +209,9 @@ TEST_F(KISO_FLASHtest, MCU_Flash_Write_ok)
 TEST_F(KISO_FLASHtest, MCU_Flash_Write_fail)
 {
     uint8_t tempAddr;
-    uint8_t * targetAddress = &tempAddr;
+    uint8_t *targetAddress = &tempAddr;
     uint8_t tempAddr2;
-    uint8_t * sourceAddress = &tempAddr2;
+    uint8_t *sourceAddress = &tempAddr2;
 
     uint32_t numBytes = 2;
     MSC_WriteWord_fake.return_val = mscReturnLocked;
@@ -235,9 +230,9 @@ TEST_F(KISO_FLASHtest, MCU_Flash_Write_fail)
 TEST_F(KISO_FLASHtest, MCU_Flash_Read_ok)
 {
     uint8_t tempAddr;
-    uint8_t * targetAddress = &tempAddr;
+    uint8_t *targetAddress = &tempAddr;
     uint8_t tempAddr2;
-    uint8_t * sourceAddress = &tempAddr2;
+    uint8_t *sourceAddress = &tempAddr2;
 
     uint32_t numBytes = 2;
 
@@ -249,7 +244,7 @@ TEST_F(KISO_FLASHtest, MCU_Flash_Read_ok)
 TEST_F(KISO_FLASHtest, MCU_Flash_Read_readFromNull)
 {
     uint8_t tempAddr2;
-    uint8_t * sourceAddress = &tempAddr2;
+    uint8_t *sourceAddress = &tempAddr2;
     uint32_t numBytes = 2;
 
     Retcode_T rc;
@@ -260,7 +255,7 @@ TEST_F(KISO_FLASHtest, MCU_Flash_Read_readFromNull)
 TEST_F(KISO_FLASHtest, MCU_Flash_Read_writeToNull)
 {
     uint8_t tempAddr2;
-    uint8_t * targetAddress = &tempAddr2;
+    uint8_t *targetAddress = &tempAddr2;
     uint32_t numBytes = 2;
 
     Retcode_T rc;

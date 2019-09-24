@@ -51,10 +51,10 @@
  */
 typedef struct RingBuffer_S
 {
-    uint8_t * Base; /**< Pointer to the base of the user-supplied buffer */
+    uint8_t *Base;       /**< Pointer to the base of the user-supplied buffer */
     uint32_t WriteIndex; /**< Write index. NOT to be changed by hand */
-    uint32_t ReadIndex; /**< Read index. NOT to be changed by hand */
-    uint32_t Size; /**< Maximum number of bytes in the user-supplied buffer. Must be set during initialization */
+    uint32_t ReadIndex;  /**< Read index. NOT to be changed by hand */
+    uint32_t Size;       /**< Maximum number of bytes in the user-supplied buffer. Must be set during initialization */
 } RingBuffer_T;
 
 /**
@@ -78,7 +78,7 @@ typedef struct RingBuffer_S
  *      NOTE: the actual number of bytes that can be stored is size -1
  * 
  */
-void RingBuffer_Initialize(RingBuffer_T * ringBuffer, uint8_t * bufferSpace, uint32_t size);
+void RingBuffer_Initialize(RingBuffer_T *ringBuffer, uint8_t *bufferSpace, uint32_t size);
 
 /**
  *  @brief
@@ -106,7 +106,7 @@ void RingBuffer_Initialize(RingBuffer_T * ringBuffer, uint8_t * bufferSpace, uin
  *      actual number of bytes written
  * 
  */
-uint32_t RingBuffer_Write(RingBuffer_T * ringBuffer, uint8_t * data, uint32_t length);
+uint32_t RingBuffer_Write(RingBuffer_T *ringBuffer, uint8_t *data, uint32_t length);
 
 /**
  *  @brief
@@ -131,7 +131,7 @@ uint32_t RingBuffer_Write(RingBuffer_T * ringBuffer, uint8_t * data, uint32_t le
  *      Actual number of bytes read
  *
  */
-uint32_t RingBuffer_Read(RingBuffer_T * ringBuffer, uint8_t * data, uint32_t length);
+uint32_t RingBuffer_Read(RingBuffer_T *ringBuffer, uint8_t *data, uint32_t length);
 
 /**
  *  @brief

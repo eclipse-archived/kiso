@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.6)
 
 ## Command line parameter for build variant
 option(ENABLE_TESTING "Configure a build tree for testing instead of normal application mode" OFF)
+option(ENABLE_FORMAT_CHECKS "Run format checks during configuration stage and generate target to fix formatting" ON)
+option(SKIP_FORMAT_REPORTS "Skip generation of format XML reports in build directory" ON)
 option(ENABLE_STATIC_CHECKS "Configure a build tree for static code analysis" OFF)
 option(ENABLE_COVERAGE "Build unit tests with coverage information to use with GCOV and LCOV" ON)
 option(ENABLE_ALL_FEATURES "Configure a build tree in which all optional Kiso features are 'forced-ON'. Useful for static code analysis and test coverage reports. " OFF)
@@ -34,6 +36,17 @@ add_compile_options(-Werror -Wall -Wextra -Wdouble-promotion
                     -Wuninitialized -fstrict-overflow -Wstrict-overflow=4 -Wshadow -Wcast-qual)
 
 set(KISO_CENTRAL_CONFIG_DIR ${CMAKE_CURRENT_LIST_DIR}/config)
+
+## Run format checks during configure stage
+if(${ENABLE_FORMAT_CHECKS})
+   include(cmake/CodeFormatting.cmake)
+   list(APPEND FOLDERS
+      core thirdparty examples boards config docs)
+   list(APPEND FILETYPES
+      *.c *.cc *.cpp *.cxx *.c++
+      *.h *.hh *.hpp *.hxx *.h++)
+   ADD_TO_FORMATTING_TARGET("${FOLDERS}" "${FILETYPES}" "${SKIP_FORMAT_REPORTS}")
+endif()
 
 ## Needs to be in project scope before board is loaded
 if(${ENABLE_TESTING})

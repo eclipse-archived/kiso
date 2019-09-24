@@ -22,10 +22,10 @@
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID MODULE_BSP_TIME
 
-#define TIME_PERIOD     (uint32_t) (65535)
-#define TIME_TIMEOUT    (uint32_t) (65535)
-#define TIME_DIVIDE_BY_65536(x)       ((x) >> 16)
-#define TIME_REMAINDER_65536(x)       ((x) & (65536-1))
+#define TIME_PERIOD (uint32_t)(65535)
+#define TIME_TIMEOUT (uint32_t)(65535)
+#define TIME_DIVIDE_BY_65536(x) ((x) >> 16)
+#define TIME_REMAINDER_65536(x) ((x) & (65536 - 1))
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
@@ -38,13 +38,13 @@ static volatile uint64_t overflow = 0;
 static volatile uint16_t offset = 0;
 
 LPTIM_HandleTypeDef LptimHandle =
-        {
-                .Instance = LPTIM1,
-                .Init.Clock.Source = LPTIM_CLOCKSOURCE_APBCLOCK_LPOSC,
-                .Init.Clock.Prescaler = LPTIM_PRESCALER_DIV16,
-                .Init.Trigger.Source = LPTIM_TRIGSOURCE_SOFTWARE,
-                .Init.CounterSource = LPTIM_COUNTERSOURCE_INTERNAL,
-        };
+    {
+        .Instance = LPTIM1,
+        .Init.Clock.Source = LPTIM_CLOCKSOURCE_APBCLOCK_LPOSC,
+        .Init.Clock.Prescaler = LPTIM_PRESCALER_DIV16,
+        .Init.Trigger.Source = LPTIM_TRIGSOURCE_SOFTWARE,
+        .Init.CounterSource = LPTIM_COUNTERSOURCE_INTERNAL,
+};
 
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
 
@@ -53,7 +53,7 @@ LPTIM_HandleTypeDef LptimHandle =
  */
 uint64_t Time_GetTimeStamp(void)
 {
-    uint32_t temp1 = LPTIM1->CNT; /* Read LPTIM counter*/
+    uint32_t temp1 = LPTIM1->CNT;    /* Read LPTIM counter*/
     uint64_t temp2 = overflow << 16; /* Read overflow counter*/
     /** \todo Check if the result is correct because of multiple types addition */
     return (temp2 + (temp1 + offset)); /* Combine time value */
@@ -68,8 +68,7 @@ Retcode_T Time_StartTime(uint64_t initialValue)
 
     if (!timeStarted)
     {
-        __HAL_RCC_LPTIM1_CLK_ENABLE()
-        ;
+        __HAL_RCC_LPTIM1_CLK_ENABLE();
         __HAL_RCC_LPTIM1_FORCE_RESET();
         __HAL_RCC_LPTIM1_RELEASE_RESET();
         /* Enable and set LPTIM Interrupt to high priority */

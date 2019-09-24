@@ -22,7 +22,7 @@ extern "C"
 #include "Kiso_Retcode_th.hh"
 #include "Kiso_HAL_th.hh"
 
-/**
+    /**
  * Kiso_HALConfig.h file which breaks the unit test implementation.
  *
  * Below four lines hot-fix needs to be replaced by proper implementation.
@@ -32,15 +32,12 @@ extern "C"
 
 /* include module under test */
 #include "I2C.c"
-
-
 }
 /* end of global scope symbol and fake definitions section */
 
-class KISO_I2Ctest: public testing::Test
+class KISO_I2Ctest : public testing::Test
 {
 protected:
-
     virtual void SetUp()
     {
         DeInit();
@@ -55,7 +52,6 @@ protected:
 
     void DeInit()
     {
-
     }
 
 public:
@@ -65,14 +61,13 @@ public:
     static struct MCU_I2C_Event_S m_event_cbf;
 };
 
-const struct MCU_I2C_Event_S KISO_I2Ctest::m_EventInit = { 0, 0, 0, 0 };
+const struct MCU_I2C_Event_S KISO_I2Ctest::m_EventInit = {0, 0, 0, 0};
 bool KISO_I2Ctest::m_isCalled_cbf = false;
 
 struct MCU_I2C_Event_S KISO_I2Ctest::m_event_cbf = m_EventInit;
 uint32_t KISO_I2Ctest::m_i2c_cbf = 0;
 
 //----------------------------------------------------------------------
-
 
 class I2CDevice
 {
@@ -100,8 +95,7 @@ I2CDevice::I2CDevice(enum KISO_HAL_TransferMode_E TransferMode)
     m_I2C.DmaRxCallback = NULL;
     m_I2C.DmaTxCallback = NULL;
 
-
-    m_I2CInterfaceParam = (intptr_t) &m_I2C;
+    m_I2CInterfaceParam = (intptr_t)&m_I2C;
 }
 
 I2CDevice::~I2CDevice()
@@ -120,7 +114,7 @@ uint32_t I2CDevice::getAppInterfaceHandle()
  */
 void AppTestCallbackFunction(I2C_T i2c, struct MCU_I2C_Event_S event)
 {
-    KISO_I2Ctest::m_i2c_cbf = (intptr_t) i2c;
+    KISO_I2Ctest::m_i2c_cbf = (intptr_t)i2c;
     KISO_I2Ctest::m_event_cbf = event;
     /*
      std::cout << "     --- Hello from AppTestCallbackFunction ---" << std::endl;
@@ -152,7 +146,6 @@ TEST_F(KISO_I2Ctest, dummyTest)
     /* VERIFY : Compare the expected with actual */
 
     /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
-
 }
 
 /*************************** I2C TESTS *****************************/
@@ -165,7 +158,7 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_Initialize_ok)
 {
     Retcode_T rc;
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
 }
@@ -190,7 +183,7 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_Initialize_nullCallback)
 {
     Retcode_T rc;
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, NULL);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
 }
@@ -199,11 +192,10 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_Initialize_wrongTransferMode)
 {
     Retcode_T rc;
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_BLOCKING);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
 }
-
 
 /**
  * @brief   Test public I2C MCU interface MCU_I2C_Deinitialize
@@ -215,7 +207,7 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_Deinitialize_ok)
 {
     Retcode_T rc;
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_I2C_Deinitialize(i2c01);
@@ -226,7 +218,7 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_Deinitialize_notInitialized)
 {
     Retcode_T rc;
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Deinitialize(i2c01);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_UNINITIALIZED), rc);
 }
@@ -235,14 +227,13 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_Deinitialize_nullI2C)
 {
     Retcode_T rc;
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_I2C_Deinitialize(0);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
     rc = MCU_I2C_Deinitialize(i2c01);
 }
-
 
 /**
  * @brief   Test public I2C MCU interface MCU_I2C_Send
@@ -255,9 +246,9 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_Send_ok)
     uint16_t addr = 0x01;
     const uint16_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t buffer[ size ] = {0x01};
+    uint8_t buffer[size] = {0x01};
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, (Retcode_T)rc);
     I2C_TransferInit_fake.return_val = i2cTransferInProgress;
@@ -273,9 +264,9 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_Send_notInitialized)
     uint8_t addr = 0x01;
     const uint16_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Send(i2c01, addr, buffer, size);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNINITIALIZED), rc);
 }
@@ -286,7 +277,7 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_Send_nullBuffer)
     const uint16_t size = 10;
     Retcode_T rc;
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_I2C_Send(i2c01, addr, NULL, size);
@@ -298,9 +289,9 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_Send_sendCancel)
     uint8_t addr = 0x01;
     const uint16_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_I2C_Send(i2c01, addr, buffer, 0); /* send cancel */
@@ -314,9 +305,9 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_Send_wrongTransferMode)
     uint8_t addr = 0x01;
     const uint16_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_BLOCKING);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
     rc = MCU_I2C_Send(i2c01, addr, buffer, size);
@@ -334,9 +325,9 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_Receive_ok)
     uint8_t addr = 0x01;
     const uint32_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     I2C_TransferInit_fake.return_val = i2cTransferInProgress;
@@ -352,7 +343,7 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_Receive_nullBuffer)
     const uint16_t size = 10;
     Retcode_T rc;
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_I2C_Receive(i2c01, addr, 0, size);
@@ -364,9 +355,9 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_Receive_receiveCancel)
     uint8_t addr = 0x01;
     const uint16_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_I2C_Receive(i2c01, addr, buffer, 0); /* receive cancel */
@@ -380,9 +371,9 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_Receive_notInitialized)
     uint8_t addr = 0x01;
     const uint16_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Receive(i2c01, addr, buffer, size);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNINITIALIZED), rc);
 }
@@ -392,9 +383,9 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_Receive_wrongTransferMode)
     uint8_t addr = 0x01;
     const uint16_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_BLOCKING);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
     rc = MCU_I2C_Receive(i2c01, addr, buffer, size);
@@ -413,9 +404,9 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_ReadRegister_ok)
     uint16_t addr2 = 0x02;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
-    uint8_t buffer[ size ] = {0x10};
+    uint8_t buffer[size] = {0x10};
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     I2C_TransferInit_fake.return_val = i2cTransferInProgress;
@@ -424,7 +415,6 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_ReadRegister_ok)
     I2C_TransferInit_fake.return_val = i2cTransferDone;
     rc = MCU_I2C_Deinitialize(i2c01);
     EXPECT_EQ(RETCODE_OK, rc);
-
 }
 
 TEST_F(KISO_I2Ctest, test_MCU_I2C_ReadRegister_nullBuff)
@@ -434,7 +424,7 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_ReadRegister_nullBuff)
     const uint32_t size = 10;
     Retcode_T rc;
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_I2C_ReadRegister(i2c01, addr, addr2, 0, size);
@@ -450,9 +440,9 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_ReadRegister_nullLength)
     uint16_t addr2 = 0x02;
     const uint16_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_I2C_ReadRegister(i2c01, addr, addr2, buffer, 0);
@@ -468,13 +458,12 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_ReadRegister_notInitialized)
     uint16_t addr2 = 0x01;
     const uint32_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_ReadRegister(i2c01, addr, addr2, buffer, size);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNINITIALIZED), rc);
 }
-
 
 /**
  * @brief   Test public I2C MCU interface MCU_I2C_ReadRegister
@@ -488,9 +477,9 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_WriteRegister_ok)
     uint16_t addr2 = 0x01;
     const uint32_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     I2C_TransferInit_fake.return_val = i2cTransferInProgress;
@@ -508,7 +497,7 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_WriteRegister_nullBuff)
     const uint32_t size = 10;
     Retcode_T rc;
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_I2C_WriteRegister(i2c01, addr, addr2, 0, size);
@@ -524,9 +513,9 @@ TEST_F(KISO_I2Ctest, test_MCU_I2C_WriteRegister_nullLength)
     uint8_t addr2 = 0x01;
     const uint32_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    I2C_T i2c01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    I2C_T i2c01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_I2C_Initialize(i2c01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_I2C_WriteRegister(i2c01, addr, addr2, buffer, 0);

@@ -111,4 +111,3 @@ Retcode_T BSP_BLE_CC2640_Disable(void);
 HWHandle_T BSP_BLE_CC2640_GetUARTHandle(void);
 
 #endif /* BSP_BLE_CC2640_H_ */
-

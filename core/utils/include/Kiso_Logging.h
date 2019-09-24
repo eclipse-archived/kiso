@@ -73,17 +73,17 @@
 #include "Kiso_Retcode.h"
 #include "LogConfig.h"
 
-#define LOG_LEVEL_VAR(a)        LOG_LEVEL_COMPOSE(__log_level_, a)
-#define LOG_LEVEL_COMPOSE(a, b) a ## b
+#define LOG_LEVEL_VAR(a) LOG_LEVEL_COMPOSE(__log_level_, a)
+#define LOG_LEVEL_COMPOSE(a, b) a##b
 
 #ifndef MIN
-    #define MIN(a, b)           (((a) < (b)) ? (a) : (b))
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #endif /* MIN */
 
 /*For IAR compiler __builtin_va_list is not available in stdarg.h file, In IAR type defined as  defined as va_list*/
 #ifndef ti_cc26xx
 #ifndef va_list
-    typedef __builtin_va_list va_list;
+typedef __builtin_va_list va_list;
 #endif /* va_list */
 #endif
 
@@ -103,7 +103,7 @@
  * @retval
  *      A module log level.
  */
-#define LOG_LEVEL_GET_CURRENT_MODULE()  (LOG_LEVEL_VAR(KISO_MODULE_ID))
+#define LOG_LEVEL_GET_CURRENT_MODULE() (LOG_LEVEL_VAR(KISO_MODULE_ID))
 
 /**
  * @brief
@@ -141,7 +141,7 @@ typedef enum
  *      A log level to be set for the package.
  * 
  */
-#define LOG_LEVEL_SET_PACKAGE(package, level)   LOG_LEVEL_VAR(package) = (uint8_t) level;
+#define LOG_LEVEL_SET_PACKAGE(package, level) LOG_LEVEL_VAR(package) = (uint8_t)level;
 
 /**
  * @brief
@@ -152,7 +152,7 @@ typedef enum
  * @param [in] level
  *      A log level to be set for the module.
  */
-#define LOG_LEVEL_SET_MODULE(module, level)     LOG_LEVEL_VAR(module) = (uint8_t) level;
+#define LOG_LEVEL_SET_MODULE(module, level) LOG_LEVEL_VAR(module) = (uint8_t)level;
 
 #ifdef KISO_LOGGING
 
@@ -161,9 +161,9 @@ typedef enum
  *      A package log level variable.
  */
 #ifdef LOG_LEVEL_PACKAGE
-uint8_t LOG_LEVEL_VAR(KISO_PACKAGE_ID) = (uint8_t) LOG_LEVEL_PACKAGE;
+uint8_t LOG_LEVEL_VAR(KISO_PACKAGE_ID) = (uint8_t)LOG_LEVEL_PACKAGE;
 #else
-__attribute__(( weak )) uint8_t LOG_LEVEL_VAR(KISO_PACKAGE_ID) = (uint8_t) LOG_LEVEL_PACKAGE_DEFAULT;
+__attribute__((weak)) uint8_t LOG_LEVEL_VAR(KISO_PACKAGE_ID) = (uint8_t)LOG_LEVEL_PACKAGE_DEFAULT;
 #endif /* LOG_LEVEL_PACKAGE */
 
 /**
@@ -171,9 +171,9 @@ __attribute__(( weak )) uint8_t LOG_LEVEL_VAR(KISO_PACKAGE_ID) = (uint8_t) LOG_L
  *      A module log level variable.
  */
 #ifdef LOG_LEVEL_MODULE
-uint8_t LOG_LEVEL_VAR(KISO_MODULE_ID) = (uint8_t) LOG_LEVEL_MODULE;
+uint8_t LOG_LEVEL_VAR(KISO_MODULE_ID) = (uint8_t)LOG_LEVEL_MODULE;
 #else
-__attribute__(( weak )) uint8_t LOG_LEVEL_VAR(KISO_MODULE_ID) = (uint8_t) LOG_LEVEL_MODULE_DEFAULT;
+__attribute__((weak)) uint8_t LOG_LEVEL_VAR(KISO_MODULE_ID) = (uint8_t)LOG_LEVEL_MODULE_DEFAULT;
 #endif /* LOG_LEVEL_MODULE */
 
 /**
@@ -184,49 +184,69 @@ __attribute__(( weak )) uint8_t LOG_LEVEL_VAR(KISO_MODULE_ID) = (uint8_t) LOG_LE
  *      A log level with followed message arguments.
  * 
  */
-#define LOG(level, ...) { \
-    if (level <= LOG_LEVEL_GET_CURRENT()) { \
-        (void) Logging_Log(level, KISO_PACKAGE_ID, KISO_MODULE_ID, __FILE__, __LINE__, __VA_ARGS__); \
-    } \
-}
+#define LOG(level, ...)                                                                                 \
+    {                                                                                                   \
+        if (level <= LOG_LEVEL_GET_CURRENT())                                                           \
+        {                                                                                               \
+            (void)Logging_Log(level, KISO_PACKAGE_ID, KISO_MODULE_ID, __FILE__, __LINE__, __VA_ARGS__); \
+        }                                                                                               \
+    }
 
 /**
  * @brief
  *      A macro to be used to log fatal level messages.
  */
-#define LOG_FATAL(...)      LOG(LOG_LEVEL_FATAL, __VA_ARGS__)
+#define LOG_FATAL(...) LOG(LOG_LEVEL_FATAL, __VA_ARGS__)
 
 /**
  * @brief
  *      A macro to be used to log error level messages.
  */
-#define LOG_ERROR(...)      LOG(LOG_LEVEL_ERROR, __VA_ARGS__)
+#define LOG_ERROR(...) LOG(LOG_LEVEL_ERROR, __VA_ARGS__)
 
 /**
  * @brief
  *      A macro to be used to log warning level messages.
  */
-#define LOG_WARNING(...)    LOG(LOG_LEVEL_WARNING, __VA_ARGS__)
+#define LOG_WARNING(...) LOG(LOG_LEVEL_WARNING, __VA_ARGS__)
 
 /**
  * @brief
  *      A macro to be used to log info level messages.
  */
-#define LOG_INFO(...)       LOG(LOG_LEVEL_INFO, __VA_ARGS__)
+#define LOG_INFO(...) LOG(LOG_LEVEL_INFO, __VA_ARGS__)
 
 /**
  * @brief
  *      A macro to be used to log debug level messages.
  */
-#define LOG_DEBUG(...)      LOG(LOG_LEVEL_DEBUG, __VA_ARGS__)
+#define LOG_DEBUG(...) LOG(LOG_LEVEL_DEBUG, __VA_ARGS__)
 
 #else
-#define LOG(...)            do {} while(0)
-#define LOG_FATAL(...)      do {} while(0)
-#define LOG_ERROR(...)      do {} while(0)
-#define LOG_WARNING(...)    do {} while(0)
-#define LOG_INFO(...)       do {} while(0)
-#define LOG_DEBUG(...)      do {} while(0)
+#define LOG(...) \
+    do           \
+    {            \
+    } while (0)
+#define LOG_FATAL(...) \
+    do                 \
+    {                  \
+    } while (0)
+#define LOG_ERROR(...) \
+    do                 \
+    {                  \
+    } while (0)
+#define LOG_WARNING(...) \
+    do                   \
+    {                    \
+    } while (0)
+#define LOG_INFO(...) \
+    do                \
+    {                 \
+    } while (0)
+#define LOG_DEBUG(...) \
+    do                 \
+    {                  \
+    } while (0)
 #endif /* KISO_LOGGING */
 
 /**

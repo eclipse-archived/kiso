@@ -62,8 +62,8 @@ void KISO_HAL_DMA_IRQHandler(DMA_HandleTypeDef *hdma, uint32_t channel)
             /* Clear the half transfer complete flag */
             hdma->DmaBaseAddress->IFCR |= htflag;
 
-          /* DMA peripheral state is not updated in Half Transfer */
-          /* but in Transfer Complete case */
+            /* DMA peripheral state is not updated in Half Transfer */
+            /* but in Transfer Complete case */
 
             if (NULL != hdma->XferHalfCpltCallback)
             {

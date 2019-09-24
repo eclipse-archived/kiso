@@ -50,7 +50,7 @@ extern "C"
 #include "RingBuffer.c"
 #undef inline
 
- /* End of global scope symbol and fake definitions section */
+    /* End of global scope symbol and fake definitions section */
 }
 
 /* Define a fake call-back function for the frame processor related tests */
@@ -62,11 +62,11 @@ static void Retcode_CustomRaiseError(Retcode_T error)
 
 /* Create test fixture initializing all variables automatically */
 
-#define TEST_LOW_BUFFER_SIZE                (15U)
-#define TEST_TOTAL_DATA_TO_BE_READ_WRITTEN  (100U)
-#define TEST_PRODUCER_WRITE_BLOCKS          (TEST_TOTAL_DATA_TO_BE_READ_WRITTEN / 4U)
+#define TEST_LOW_BUFFER_SIZE (15U)
+#define TEST_TOTAL_DATA_TO_BE_READ_WRITTEN (100U)
+#define TEST_PRODUCER_WRITE_BLOCKS (TEST_TOTAL_DATA_TO_BE_READ_WRITTEN / 4U)
 
-class UartRingBuffer_InitTest: public testing::Test
+class UartRingBuffer_InitTest : public testing::Test
 {
 public:
     RingBuffer_T ringBuffer;
@@ -76,8 +76,7 @@ protected:
     /* Remember that SetUp() is run immediately before a test starts. */
     virtual void SetUp()
     {
-        FFF_RESET_HISTORY()
-        ;
+        FFF_RESET_HISTORY();
         Retcode_RaiseError_fake.custom_fake = Retcode_CustomRaiseError;
         memset(&ringBuffer, 0, sizeof(RingBuffer_T));
     }
@@ -113,32 +112,31 @@ TEST_F(UartRingBuffer_InitTest, BufferInitNullCheck)
     RingBuffer_Initialize(NULL, localBuffer, sizeof(localBuffer));
 
     /* Validate implementation internal details*/
-    EXPECT_EQ(RETCODE( RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM), RunTimeError);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM), RunTimeError);
     EXPECT_EQ(1U, Retcode_RaiseError_fake.call_count);
     RESET_FAKE(Retcode_RaiseError);
 
     RingBuffer_Initialize(&ringBuffer, NULL, sizeof(localBuffer));
 
     /* Validate implementation internal details*/
-    EXPECT_EQ(RETCODE( RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM), RunTimeError);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM), RunTimeError);
     EXPECT_EQ(1U, Retcode_RaiseError_fake.call_count);
-    RESET_FAKE( Retcode_RaiseError);
+    RESET_FAKE(Retcode_RaiseError);
 
     RingBuffer_Initialize(&ringBuffer, NULL, sizeof(localBuffer));
 
     /* Validate implementation internal details*/
-    EXPECT_EQ(RETCODE( RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM), RunTimeError);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM), RunTimeError);
     EXPECT_EQ(1U, Retcode_RaiseError_fake.call_count);
-    RESET_FAKE( Retcode_RaiseError);
+    RESET_FAKE(Retcode_RaiseError);
 
-    RingBuffer_Initialize(&ringBuffer, localBuffer,0U);
+    RingBuffer_Initialize(&ringBuffer, localBuffer, 0U);
 
     /* Validate implementation internal details*/
-    EXPECT_EQ(RETCODE( RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM), RunTimeError);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM), RunTimeError);
     EXPECT_EQ(1U, Retcode_RaiseError_fake.call_count);
-    RESET_FAKE( Retcode_RaiseError);
+    RESET_FAKE(Retcode_RaiseError);
 }
-
 
 TEST_F(UartRingBuffer_InitTest, BufferWriteSufficientSpace)
 {
@@ -228,9 +226,7 @@ TEST_F(UartRingBuffer_InitTest, BufferReadOnEmptyNullCheck)
 
     read = RingBuffer_Read(NULL, NULL, sizeof(dummyData));
     EXPECT_EQ(0U, read);
-
 }
-
 
 TEST_F(UartRingBuffer_InitTest, BufferReadMultipleOnEmpty)
 {
@@ -358,21 +354,20 @@ TEST_F(UartRingBuffer_InitTest, RingBufferResetNullCheck)
 
     RingBuffer_Reset(NULL);
 
-    EXPECT_EQ(RETCODE( RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM), RunTimeError);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM), RunTimeError);
     EXPECT_EQ(1U, Retcode_RaiseError_fake.call_count);
-    RESET_FAKE( Retcode_RaiseError);
-
+    RESET_FAKE(Retcode_RaiseError);
 }
 
 TEST_F(UartRingBuffer_InitTest, RingBufferReset)
 {
     RingBuffer_T ringBufferReset;
-    uint8_t RingbufferData[5]={'b','o','s','c','h'};
+    uint8_t RingbufferData[5] = {'b', 'o', 's', 'c', 'h'};
 
-    ringBufferReset.Base =RingbufferData;
-    ringBufferReset.WriteIndex =5;
-    ringBufferReset.ReadIndex =6;
-    ringBufferReset.Size =5;
+    ringBufferReset.Base = RingbufferData;
+    ringBufferReset.WriteIndex = 5;
+    ringBufferReset.ReadIndex = 6;
+    ringBufferReset.Size = 5;
 
     RingBuffer_Reset(&ringBufferReset);
 
@@ -384,7 +379,6 @@ TEST_F(UartRingBuffer_InitTest, RingBufferReset)
     EXPECT_EQ(0U, ringBufferReset.WriteIndex);
     EXPECT_EQ(0U, ringBufferReset.ReadIndex);
     EXPECT_EQ(5U, ringBufferReset.Size);
-
 }
 
 TEST_F(UartRingBuffer_InitTest, RingBuffer_Reset)
@@ -411,7 +405,6 @@ TEST_F(UartRingBuffer_InitTest, RingBuffer_Reset)
     EXPECT_EQ(0U, ringBufferReset.WriteIndex);
     EXPECT_EQ(0U, ringBufferReset.ReadIndex);
     EXPECT_EQ(index, ringBufferReset.Size);
-
 }
 
 #if 0 /** \todo: provide pthread capabilities */

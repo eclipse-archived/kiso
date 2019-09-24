@@ -22,7 +22,7 @@
 
 /* Mock-ups for the provided interfaces */
 FAKE_VALUE_FUNC(Retcode_T, HAL_Signal_SetHooks, HAL_Signal_WaitHook_T, HAL_Signal_NotifyHook_T)
-FAKE_VALUE_FUNC(Retcode_T, HAL_Signal_Wait, HAL_SignalHandle_T*, uint32_t )
-FAKE_VALUE_FUNC(Retcode_T, HAL_Signal_Notify, HAL_SignalHandle_T*)
+FAKE_VALUE_FUNC(Retcode_T, HAL_Signal_Wait, HAL_SignalHandle_T *, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, HAL_Signal_Notify, HAL_SignalHandle_T *)
 
 #endif /* KISO_HAL_SIGNAL_TH_HH */

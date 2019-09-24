@@ -587,7 +587,7 @@ TEST_F(TS_Engine_Dispatch, LockTimeout_Failure)
     EXPECT_EQ(0U, xSemaphoreGive_fake.call_count);
 }
 
-std::array<AtResponseQueueEntry_T*, 6> TS_Engine_HandleEvents_GetEventVals;
+std::array<AtResponseQueueEntry_T *, 6> TS_Engine_HandleEvents_GetEventVals;
 size_t TS_Engine_HandleEvents_GetEventVals_Index = 0;
 
 void TS_Engine_HandleEvents_DummyMarkUnused(void)
@@ -613,7 +613,7 @@ protected:
             exit(1);
         }
 
-        *entry = (AtResponseQueueEntry_T *) malloc(sizeof(AtResponseQueueEntry_T) + len + 1);
+        *entry = (AtResponseQueueEntry_T *)malloc(sizeof(AtResponseQueueEntry_T) + len + 1);
         for (size_t i = 0; i < len; ++i)
         {
             (*entry)->Buffer[i] = (char)((rand() % ('Z' - 'A')) + 'A'); // generate some random A-Z string
@@ -633,12 +633,12 @@ protected:
         RESET_FAKE(AtResponseQueue_GetEvent);
         RESET_FAKE(AtResponseQueue_MarkBufferAsUnused);
 
-        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[0], AT_EVENT_TYPE_COMMAND_ECHO, (AtResponseCode_T) 666, std::min(rand() % 16, 2));
-        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[1], AT_EVENT_TYPE_COMMAND_ARG, (AtResponseCode_T) 667, std::min(rand() % 16, 2));
-        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[2], AT_EVENT_TYPE_ERROR, (AtResponseCode_T) 669, 0);
-        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[3], AT_EVENT_TYPE_MISC, (AtResponseCode_T) 670, std::min(rand() % 32, 2));
+        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[0], AT_EVENT_TYPE_COMMAND_ECHO, (AtResponseCode_T)666, std::min(rand() % 16, 2));
+        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[1], AT_EVENT_TYPE_COMMAND_ARG, (AtResponseCode_T)667, std::min(rand() % 16, 2));
+        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[2], AT_EVENT_TYPE_ERROR, (AtResponseCode_T)669, 0);
+        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[3], AT_EVENT_TYPE_MISC, (AtResponseCode_T)670, std::min(rand() % 32, 2));
         CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[4], AT_EVENT_TYPE_RESPONSE_CODE, AT_RESPONSE_CODE_OK, 0);
-        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[5], AT_EVENT_TYPE_COMMAND, (AtResponseCode_T) 668, std::min(rand() % 16, 2));
+        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[5], AT_EVENT_TYPE_COMMAND, (AtResponseCode_T)668, std::min(rand() % 16, 2));
         TS_Engine_HandleEvents_GetEventVals_Index = 0;
 
         AtResponseQueue_GetEventCount_fake.return_val = TS_Engine_HandleEvents_GetEventVals.size();
@@ -673,7 +673,6 @@ TEST_F(TS_Engine_HandleEvents, Success)
     EXPECT_EQ(AtResponseQueue_GetEventCount_fake.return_val - 1, AtResponseQueue_MarkBufferAsUnused_fake.call_count);
 }
 
-
 class TS_ReadData : public testing::Test
 {
 protected:
@@ -687,7 +686,7 @@ protected:
 
         RESET_FAKE(RingBuffer_Read);
 
-        RingBuffer_Read_fake.return_val = std::min(rand() % sizeof(data), (size_t) 2);
+        RingBuffer_Read_fake.return_val = std::min(rand() % sizeof(data), (size_t)2);
     }
 };
 
@@ -733,7 +732,7 @@ TEST_F(TS_HandleMcuIsrCallback, Tx_Success)
     struct MCU_UART_Event_S event;
     memset(&event, 0U, sizeof(event));
     event.TxComplete = 1;
-    UART_T uart = (UART_T) 1;
+    UART_T uart = (UART_T)1;
 
     HandleMcuIsrCallback(uart, event);
 
@@ -748,7 +747,7 @@ TEST_F(TS_HandleMcuIsrCallback, RxS4Char_Success)
     struct MCU_UART_Event_S event;
     memset(&event, 0U, sizeof(event));
     event.RxComplete = 1;
-    UART_T uart = (UART_T) 1;
+    UART_T uart = (UART_T)1;
     UartRxByte = AT_DEFAULT_S4_CHARACTER;
 
     HandleMcuIsrCallback(uart, event);
@@ -765,7 +764,7 @@ TEST_F(TS_HandleMcuIsrCallback, RxNonS4Char_Success)
     struct MCU_UART_Event_S event;
     memset(&event, 0U, sizeof(event));
     event.RxComplete = 1;
-    UART_T uart = (UART_T) 1;
+    UART_T uart = (UART_T)1;
     UartRxByte = '0';
 
     HandleMcuIsrCallback(uart, event);

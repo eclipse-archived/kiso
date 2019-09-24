@@ -48,16 +48,16 @@
 #include "semphr.h"
 
 /* Prototypes */
-static void GuardedTaskExecute(GuardedTask_T* context);
+static void GuardedTaskExecute(GuardedTask_T *context);
 
-static void GuardedTaskRunFunction(void* param);
+static void GuardedTaskRunFunction(void *param);
 
 /* Local variable */
 
 /* Global variables */
 
 /* Local functions */
-static void GuardedTaskExecute(GuardedTask_T* context)
+static void GuardedTaskExecute(GuardedTask_T *context)
 {
     if ((NULL != context) && (NULL != context->runFunction) && (NULL != context->signal))
     {
@@ -65,7 +65,7 @@ static void GuardedTaskExecute(GuardedTask_T* context)
         BaseType_t osRetcode = xSemaphoreTake(context->signal, portMAX_DELAY);
         if (pdPASS != osRetcode)
         {
-            Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, (uint32_t) RETCODE_GUARDEDTASK_SEMAPHORE_ERROR));
+            Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, (uint32_t)RETCODE_GUARDEDTASK_SEMAPHORE_ERROR));
             return;
         }
 
@@ -73,23 +73,23 @@ static void GuardedTaskExecute(GuardedTask_T* context)
     }
     else
     {
-        Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, (uint32_t) RETCODE_INVALID_PARAM));
+        Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, (uint32_t)RETCODE_INVALID_PARAM));
         return;
     }
 }
 
-static void GuardedTaskRunFunction(void* param)
+static void GuardedTaskRunFunction(void *param)
 {
     for (;;)
     {
-        GuardedTask_T* context = (GuardedTask_T*) param;
+        GuardedTask_T *context = (GuardedTask_T *)param;
 
         GuardedTaskExecute(context);
     }
 }
 
 /*  The description of the function is available in Kiso_GuardedTask.h */
-Retcode_T GuardedTask_Deinitialize(GuardedTask_T* handle)
+Retcode_T GuardedTask_Deinitialize(GuardedTask_T *handle)
 {
     Retcode_T retcode = RETCODE_OK;
 
@@ -113,14 +113,14 @@ Retcode_T GuardedTask_Deinitialize(GuardedTask_T* handle)
     }
     else
     {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t) RETCODE_INVALID_PARAM);
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t)RETCODE_INVALID_PARAM);
     }
 
     return retcode;
 }
 
 /*  The description of the function is available in Kiso_GuardedTask.h */
-Retcode_T GuardedTask_Initialize(GuardedTask_T* handle, GuardedTask_Function_T taskRunFunction, const char* taskName, uint32_t taskPriority, uint32_t taskStackSize)
+Retcode_T GuardedTask_Initialize(GuardedTask_T *handle, GuardedTask_Function_T taskRunFunction, const char *taskName, uint32_t taskPriority, uint32_t taskStackSize)
 {
     Retcode_T retcode = RETCODE_OK;
 
@@ -131,14 +131,14 @@ Retcode_T GuardedTask_Initialize(GuardedTask_T* handle, GuardedTask_Function_T t
         handle->signal = xSemaphoreCreateBinary();
         if (handle->signal == NULL)
         {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t) RETCODE_OUT_OF_RESOURCES);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t)RETCODE_OUT_OF_RESOURCES);
         }
 
         if (RETCODE_OK == retcode)
         {
             if (pdPASS != xTaskCreate(GuardedTaskRunFunction, taskName, (uint16_t)taskStackSize, handle, taskPriority, &handle->task))
             {
-                retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t) RETCODE_OUT_OF_RESOURCES);
+                retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t)RETCODE_OUT_OF_RESOURCES);
             }
         }
 
@@ -153,14 +153,14 @@ Retcode_T GuardedTask_Initialize(GuardedTask_T* handle, GuardedTask_Function_T t
     }
     else
     {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t) RETCODE_INVALID_PARAM);
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t)RETCODE_INVALID_PARAM);
     }
 
     return retcode;
 }
 
 /*  The description of the function is available in Kiso_GuardedTask.h */
-Retcode_T GuardedTask_Signal(GuardedTask_T* handle)
+Retcode_T GuardedTask_Signal(GuardedTask_T *handle)
 {
     Retcode_T retcode = RETCODE_OK;
 
@@ -175,19 +175,19 @@ Retcode_T GuardedTask_Signal(GuardedTask_T* handle)
             // The osRetcode will be pdFAIL if the internal queue interaction failed.
             // This could be caused by the queue being full, which is non fatal for a binary semaphore.
             // That's why we set the severity to "WARNING" only.
-            retcode = RETCODE(RETCODE_SEVERITY_WARNING, (uint32_t) RETCODE_GUARDEDTASK_SEMAPHORE_ALREADY_GIVEN);
+            retcode = RETCODE(RETCODE_SEVERITY_WARNING, (uint32_t)RETCODE_GUARDEDTASK_SEMAPHORE_ALREADY_GIVEN);
         }
     }
     else
     {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t) RETCODE_INVALID_PARAM);
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t)RETCODE_INVALID_PARAM);
     }
 
     return retcode;
 }
 
 /*  The description of the function is available in Kiso_GuardedTask.h */
-Retcode_T GuardedTask_SignalFromIsr(GuardedTask_T* handle)
+Retcode_T GuardedTask_SignalFromIsr(GuardedTask_T *handle)
 {
     Retcode_T retcode = RETCODE_OK;
 
@@ -205,12 +205,12 @@ Retcode_T GuardedTask_SignalFromIsr(GuardedTask_T* handle)
             // The osRetcode will be pdFAIL if the internal queue interaction failed.
             // This could be caused by the queue being full, which is non fatal for a binary semaphore.
             // That's why we set the severity to "WARNING" only.
-            retcode = RETCODE(RETCODE_SEVERITY_WARNING, (uint32_t) RETCODE_GUARDEDTASK_SEMAPHORE_ALREADY_GIVEN);
+            retcode = RETCODE(RETCODE_SEVERITY_WARNING, (uint32_t)RETCODE_GUARDEDTASK_SEMAPHORE_ALREADY_GIVEN);
         }
     }
     else
     {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t) RETCODE_INVALID_PARAM);
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, (uint32_t)RETCODE_INVALID_PARAM);
     }
 
     return retcode;

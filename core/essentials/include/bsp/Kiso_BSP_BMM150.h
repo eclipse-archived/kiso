@@ -143,7 +143,7 @@ HWHandle_T BSP_BMM150_GetHandle(int32_t deviceId);
  * @brief       Returns a reference to the initialization parameters
  *
  */
-void * BSP_BMM150_GetInitParams(int32_t deviceId);
+void *BSP_BMM150_GetInitParams(int32_t deviceId);
 
 /**
  * @brief       Enables INT interrupt handling for the peripheral.
@@ -244,7 +244,7 @@ Retcode_T BSP_BMM150_SetCSHigh(int32_t deviceId);
  */
 Retcode_T BSP_BMM150_SetCSLow(int32_t deviceId);
 
-/**@}*//* KISO_HAL_BSP_BMM150 */
+/**@}*/ /* KISO_HAL_BSP_BMM150 */
 
 #endif /*KISO_FEATURE_BSP_BMM150*/
 #endif /* KISO_BSP_BMM150_H_ */

@@ -33,7 +33,7 @@
 
 #endif
 
-#define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_CMD_LINE_DEBUGGER
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_CMD_LINE_DEBUGGER
 
 /* Include Kiso_CmdLineDebugger interface header */
 #include "Kiso_CmdLineDebugger.h"
@@ -47,9 +47,9 @@
 #define KISO_COMMAND_LINE_CUSTOM_OPTIONS 0
 #endif
 
-#if(0 == KISO_COMMAND_LINE_CUSTOM_OPTIONS)
-#define KISO_COMMAND_LINE_SEPARATOR_TOKENS  " " /**< Default Separator Token */
-#define KISO_COMMAND_LINE_MAX_PARAMETERS      16
+#if (0 == KISO_COMMAND_LINE_CUSTOM_OPTIONS)
+#define KISO_COMMAND_LINE_SEPARATOR_TOKENS " " /**< Default Separator Token */
+#define KISO_COMMAND_LINE_MAX_PARAMETERS 16
 #endif
 
 /**
@@ -62,7 +62,7 @@
  * @return size_t : Amount of tokens found. This includes the Command String
  *
  */
-static size_t CmdLine_ExtractTokensFromString(char ** argv, char * input);
+static size_t CmdLine_ExtractTokensFromString(char **argv, char *input);
 
 /**
  * @brief Find command in the command list
@@ -75,7 +75,7 @@ static size_t CmdLine_ExtractTokensFromString(char ** argv, char * input);
  * @return NULL : Command was not found
  * @return struct CommandLineCommand_S : Pointer to command found
  */
-static struct CmdLineDbg_Element_S * CmdLine_FindCmd(struct CmdLineDbg_Element_S * list, const char * commandString);
+static struct CmdLineDbg_Element_S *CmdLine_FindCmd(struct CmdLineDbg_Element_S *list, const char *commandString);
 
 /**
  * @brief Execute Command
@@ -89,7 +89,7 @@ static struct CmdLineDbg_Element_S * CmdLine_FindCmd(struct CmdLineDbg_Element_S
  * @return RETCODE_OK : Command was executed correctly
  *
  */
-static Retcode_T CmdLine_ExecuteCmd(struct CmdLineDbg_Element_S * command, const char * const* paramPtr, size_t paramLen);
+static Retcode_T CmdLine_ExecuteCmd(struct CmdLineDbg_Element_S *command, const char *const *paramPtr, size_t paramLen);
 
 /**
  * Global Variable containing separator
@@ -101,7 +101,7 @@ static const char CmdLine_separator[] = KISO_COMMAND_LINE_SEPARATOR_TOKENS;
 /* ************************************************************************** */
 
 /*  The description of the function is available in Kiso_CmdLineDebugger.h */
-Retcode_T CmdLineDbg_RegisterCmd(struct CmdLineDbg_Element_S * list, struct CmdLineDbg_Element_S * cmd)
+Retcode_T CmdLineDbg_RegisterCmd(struct CmdLineDbg_Element_S *list, struct CmdLineDbg_Element_S *cmd)
 {
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
 
@@ -130,7 +130,7 @@ Retcode_T CmdLineDbg_RegisterCmd(struct CmdLineDbg_Element_S * list, struct CmdL
 }
 
 /*  The description of the function is available in Kiso_CmdLineDebugger.h */
-Retcode_T CmdLineDbg_RegisterCmdArray(struct CmdLineDbg_Element_S * list, size_t nElements)
+Retcode_T CmdLineDbg_RegisterCmdArray(struct CmdLineDbg_Element_S *list, size_t nElements)
 {
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
 
@@ -161,25 +161,25 @@ Retcode_T CmdLineDbg_RegisterCmdArray(struct CmdLineDbg_Element_S * list, size_t
 }
 
 /*  The description of the function is available in Kiso_CmdLineDebugger.h */
-Retcode_T CmdLineDbg_Parse(struct CmdLineDbg_Element_S * list, char * input)
+Retcode_T CmdLineDbg_Parse(struct CmdLineDbg_Element_S *list, char *input)
 {
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
 
-    char * argv[KISO_COMMAND_LINE_MAX_PARAMETERS];
+    char *argv[KISO_COMMAND_LINE_MAX_PARAMETERS];
     size_t argc = 0;
 
-    struct CmdLineDbg_Element_S * result = NULL;
+    struct CmdLineDbg_Element_S *result = NULL;
 
     if (NULL == list)
     {
         return rc;
     }
-    
+
     if (NULL == input)
     {
         return rc;
     }
-   
+
     /* Tokenize the string */
     argc = CmdLine_ExtractTokensFromString(argv, input);
 
@@ -190,7 +190,7 @@ Retcode_T CmdLineDbg_Parse(struct CmdLineDbg_Element_S * list, char * input)
 
     if (NULL != result) /* Command */
     {
-        rc = CmdLine_ExecuteCmd(result, (const char * const*) argv, argc);
+        rc = CmdLine_ExecuteCmd(result, (const char *const *)argv, argc);
     }
     else
     {
@@ -205,9 +205,9 @@ Retcode_T CmdLineDbg_Parse(struct CmdLineDbg_Element_S * list, char * input)
 /* ************************************************************************** */
 
 /* Find Command inside the linked list */
-static struct CmdLineDbg_Element_S * CmdLine_FindCmd(struct CmdLineDbg_Element_S * list, const char * commandString)
+static struct CmdLineDbg_Element_S *CmdLine_FindCmd(struct CmdLineDbg_Element_S *list, const char *commandString)
 {
-    struct CmdLineDbg_Element_S * command = NULL;
+    struct CmdLineDbg_Element_S *command = NULL;
 
     while (NULL != list)
     {
@@ -225,7 +225,7 @@ static struct CmdLineDbg_Element_S * CmdLine_FindCmd(struct CmdLineDbg_Element_S
 }
 
 /* Tokenize String for argv mode */
-static size_t CmdLine_ExtractTokensFromString(char ** argv, char * input)
+static size_t CmdLine_ExtractTokensFromString(char **argv, char *input)
 {
     size_t i = 0;
 
@@ -241,7 +241,7 @@ static size_t CmdLine_ExtractTokensFromString(char ** argv, char * input)
 }
 
 /* Execute the command */
-static Retcode_T CmdLine_ExecuteCmd(struct CmdLineDbg_Element_S * command, const char * const* paramPtr, size_t paramLen)
+static Retcode_T CmdLine_ExecuteCmd(struct CmdLineDbg_Element_S *command, const char *const *paramPtr, size_t paramLen)
 {
     Retcode_T rc;
 
@@ -255,7 +255,7 @@ static Retcode_T CmdLine_ExecuteCmd(struct CmdLineDbg_Element_S * command, const
     }
     else
     {
-        rc = command->callback((uint32_t) paramLen, paramPtr);
+        rc = command->callback((uint32_t)paramLen, paramPtr);
     }
 
     return rc;

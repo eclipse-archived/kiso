@@ -25,7 +25,7 @@
 /* Include utils to have access to the defined module and error IDs */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
-#define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_LOGGING_RECORD_SYNCHRONOUS
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_LOGGING_RECORD_SYNCHRONOUS
 
 /* Include the Logging header, which include the configuration that enable and define macros for this module */
 #include "Kiso_Logging.h"
@@ -44,11 +44,10 @@
 
 /* Message structure definition via macros*/
 #define LOG_LINE_FMT "%" PRIu32 " %s %" PRIu32 " %.*s\t[%s:%" PRIu32 "]\t"
-#define LOG_LINE_ENDING         "\r\n"
+#define LOG_LINE_ENDING "\r\n"
 
 const char *LOG_LEVEL_STRING[LOG_LEVEL_COUNT] =
-{   "", "F", "E", "W", "I", "D"};
-
+    {"", "F", "E", "W", "I", "D"};
 
 /**
  * @brief
@@ -56,10 +55,10 @@ const char *LOG_LEVEL_STRING[LOG_LEVEL_COUNT] =
  */
 static Retcode_T SyncRecorder_Init(void *self)
 {
-    LogRecorder_T *recorder = (LogRecorder_T *) self;
+    LogRecorder_T *recorder = (LogRecorder_T *)self;
     if (NULL == recorder)
     {
-        return(RETCODE(RETCODE_SEVERITY_ERROR,RETCODE_NULL_POINTER));
+        return (RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER));
     }
     return RETCODE_OK;
 }
@@ -70,10 +69,10 @@ static Retcode_T SyncRecorder_Init(void *self)
  */
 static Retcode_T SyncRecorder_Deinit(void *self)
 {
-    LogRecorder_T *recorder = (LogRecorder_T *) self;
+    LogRecorder_T *recorder = (LogRecorder_T *)self;
     if (NULL == recorder)
     {
-        return(RETCODE(RETCODE_SEVERITY_ERROR,RETCODE_NULL_POINTER));
+        return (RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER));
     }
     return RETCODE_OK;
 }
@@ -89,29 +88,29 @@ static Retcode_T SyncRecorder_Write(void *self, LogLevel_T level, uint8_t packag
     KISO_UNUSED(module);
 
     /* Check NULL pointers to avoid overflows or wrong addressing */
-    if ( (NULL == file) || (NULL == fmt) || (NULL == self))
+    if ((NULL == file) || (NULL == fmt) || (NULL == self))
     {
-        return(RETCODE(RETCODE_SEVERITY_ERROR,RETCODE_NULL_POINTER));
+        return (RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER));
     }
 
     /* Cast the pointer to the recorder to be able to access the appender */
-    LogRecorder_T *recorder = (LogRecorder_T *) self;
+    LogRecorder_T *recorder = (LogRecorder_T *)self;
 
     /* Add first into the buffer different information relative to what is logged such as tick, file name, line, log level, ... */
     size = snprintf(buffer, sizeof(buffer), LOG_LINE_FMT,
-            (uint32_t) xTaskGetTickCount(), LOG_LEVEL_STRING[level], (uint32_t) package,
-            configMAX_TASK_NAME_LEN, pcTaskGetTaskName(NULL), file, (uint32_t) line);
+                    (uint32_t)xTaskGetTickCount(), LOG_LEVEL_STRING[level], (uint32_t)package,
+                    configMAX_TASK_NAME_LEN, pcTaskGetTaskName(NULL), file, (uint32_t)line);
 
     /* Parse and add the message sent via the log function */
-    if (size > 0 && (uint32_t) size < sizeof(buffer))
+    if (size > 0 && (uint32_t)size < sizeof(buffer))
     {
         size += vsnprintf(buffer + size, sizeof(buffer) - size, fmt, args);
     }
 
     /* Add the end of line */
-    if (size > 0 && (uint32_t) size < sizeof(buffer))
+    if (size > 0 && (uint32_t)size < sizeof(buffer))
     {
-    	size += snprintf(buffer + size, sizeof(buffer) - size, LOG_LINE_ENDING);
+        size += snprintf(buffer + size, sizeof(buffer) - size, LOG_LINE_ENDING);
     }
 
     /* Write to the appender the generated log message */
@@ -122,14 +121,13 @@ static Retcode_T SyncRecorder_Write(void *self, LogLevel_T level, uint8_t packag
  * @brief Create singleton
  */
 static const LogRecorder_T LogRecordSyncCompact =
-{
-    .Init = SyncRecorder_Init,
-    .Deinit = SyncRecorder_Deinit,
-    .Write = SyncRecorder_Write,
-    .Wakeup = NULL,
-    .Appender =
-    {   .Init = NULL, .Write = NULL}
-};
-const LogRecorder_T* Logging_SyncRecorder = &LogRecordSyncCompact;
+    {
+        .Init = SyncRecorder_Init,
+        .Deinit = SyncRecorder_Deinit,
+        .Write = SyncRecorder_Write,
+        .Wakeup = NULL,
+        .Appender =
+            {.Init = NULL, .Write = NULL}};
+const LogRecorder_T *Logging_SyncRecorder = &LogRecordSyncCompact;
 
 #endif /* if KISO_FEATURE_LOGGING && KISO_SYNC_RECORDER*/

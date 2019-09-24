@@ -50,5 +50,3 @@ FAKE_VALUE_FUNC(Retcode_T, PipeAndFilter_FillPipe, PipeAndFilter_Pipe_T, uint8_t
 FAKE_VALUE_FUNC(Retcode_T, PipeAndFilter_FillPipeFromISR, PipeAndFilter_Pipe_T, uint8_t *, uint32_t)
 
 #endif /* TEST_UNIT_INCLUDE_KISO_PIPEANDFILTER_TH_HH_ */
-
-

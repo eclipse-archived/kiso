@@ -37,16 +37,16 @@
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
-s8 bma280_Write(u8 address, u8 reg, u8 * data, u8 len);
-s8 bma280_Read(u8 address , u8 reg, u8 * data, u8 len);
+s8 bma280_Write(u8 address, u8 reg, u8 *data, u8 len);
+s8 bma280_Read(u8 address, u8 reg, u8 *data, u8 len);
 
 /*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/
 
 struct bma2x2_t bma280Struct = {
-        .bus_read = bma280_Read,
-        .bus_write = bma280_Write,
-        .delay_msec = BSP_Board_Delay,
-        .dev_addr = COMMONGATEWAY_BMA280_I2CADDRESS,
+    .bus_read = bma280_Read,
+    .bus_write = bma280_Write,
+    .delay_msec = BSP_Board_Delay,
+    .dev_addr = COMMONGATEWAY_BMA280_I2CADDRESS,
 };
 
 static I2cTranceiverHandlePtr_T accelSensorTransceiver = NULL;
@@ -65,14 +65,14 @@ Retcode_T Accelerometer_Init(I2cTranceiverHandlePtr_T i2cTransceiverRef)
         accelSensorTransceiver = i2cTransceiverRef;
         if (SUCCESS != bma2x2_init(&bma280Struct))
         {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR,RETCODE_APP_BMA280_INIT_FAILED);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_APP_BMA280_INIT_FAILED);
         }
     }
     if (RETCODE_OK == retcode)
     {
         if (SUCCESS != bma2x2_set_bw(BMA2x2_BW_500HZ))
         {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR,RETCODE_APP_BMA280_INIT_FAILED);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_APP_BMA280_INIT_FAILED);
         }
         BSP_Board_Delay(100);
     }
@@ -80,9 +80,9 @@ Retcode_T Accelerometer_Init(I2cTranceiverHandlePtr_T i2cTransceiverRef)
 }
 
 /*---------------------- LOCAL FUNCTIONS IMPLEMENTATION -------------------------------------------------------------*/
-s8 bma280_Write(u8 address, u8 reg, u8 * data, u8 len)
+s8 bma280_Write(u8 address, u8 reg, u8 *data, u8 len)
 {
-    Retcode_T retcode=  I2CTransceiver_Write(accelSensorTransceiver, address, reg, data, len);
+    Retcode_T retcode = I2CTransceiver_Write(accelSensorTransceiver, address, reg, data, len);
     if (RETCODE_OK == retcode)
     {
         return SUCCESS;
@@ -93,9 +93,9 @@ s8 bma280_Write(u8 address, u8 reg, u8 * data, u8 len)
     }
 }
 
-s8 bma280_Read(u8 address, u8 reg, u8 * data, u8 len)
+s8 bma280_Read(u8 address, u8 reg, u8 *data, u8 len)
 {
-    Retcode_T retcode=  I2CTransceiver_Read(accelSensorTransceiver, address, reg, data, len);
+    Retcode_T retcode = I2CTransceiver_Read(accelSensorTransceiver, address, reg, data, len);
     if (RETCODE_OK == retcode)
     {
         return SUCCESS;

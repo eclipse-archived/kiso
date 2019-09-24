@@ -21,7 +21,7 @@
 
 #include "Kiso_Retcode.h"
 
-#define UBLOX_MAX_PIN_LENGTH    (UINT32_C(12))
+#define UBLOX_MAX_PIN_LENGTH (UINT32_C(12))
 
 /**
  * @brief Setup the initial modem configuration after modem boot-up.

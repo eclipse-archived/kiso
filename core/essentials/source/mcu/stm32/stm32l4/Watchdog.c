@@ -28,7 +28,7 @@
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_WATCHDOG
 
-static IWDG_HandleTypeDef* WdgHandle_ptr = NULL;
+static IWDG_HandleTypeDef *WdgHandle_ptr = NULL;
 
 /**
  * @brief init the hardware watchdog
@@ -40,15 +40,15 @@ static IWDG_HandleTypeDef* WdgHandle_ptr = NULL;
  */
 Retcode_T MCU_Watchdog_Init(WdgHandle_T wdgHandle)
 {
-	Retcode_T retcode = RETCODE_OK;
-	WdgHandle_ptr = (IWDG_HandleTypeDef*) wdgHandle;
+    Retcode_T retcode = RETCODE_OK;
+    WdgHandle_ptr = (IWDG_HandleTypeDef *)wdgHandle;
 
-	if (NULL == WdgHandle_ptr)
-	{
-		retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM);
-	}
+    if (NULL == WdgHandle_ptr)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM);
+    }
 
-	return retcode;
+    return retcode;
 }
 
 /**
@@ -61,21 +61,21 @@ Retcode_T MCU_Watchdog_Init(WdgHandle_T wdgHandle)
  */
 Retcode_T MCU_Watchdog_Enable(void)
 {
-	/*With new STM32Cube Lib 1.5.1 , watchdog will be started by
+    /*With new STM32Cube Lib 1.5.1 , watchdog will be started by
 	 * Call to HAL_IWDG_Init API itself*/
-	Retcode_T retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_FAILURE);
+    Retcode_T retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_FAILURE);
 
-	if (NULL == WdgHandle_ptr)
-	{
-		retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_UNINITIALIZED);
-	}
-	else
-	{
-		if (HAL_OK == HAL_IWDG_Init(WdgHandle_ptr))
-		{
-			retcode = RETCODE_OK;
-		}
-	}
+    if (NULL == WdgHandle_ptr)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_UNINITIALIZED);
+    }
+    else
+    {
+        if (HAL_OK == HAL_IWDG_Init(WdgHandle_ptr))
+        {
+            retcode = RETCODE_OK;
+        }
+    }
 
     return retcode;
 }
@@ -92,17 +92,17 @@ Retcode_T MCU_Watchdog_Feed(void)
 {
     Retcode_T retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_FAILURE);
 
-	if (NULL == WdgHandle_ptr)
-	{
-		retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_UNINITIALIZED);
-	}
-	else
-	{
-		if (HAL_OK == HAL_IWDG_Refresh(WdgHandle_ptr))
-		{
-			retcode = RETCODE_OK;
-		}
-	}
+    if (NULL == WdgHandle_ptr)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_UNINITIALIZED);
+    }
+    else
+    {
+        if (HAL_OK == HAL_IWDG_Refresh(WdgHandle_ptr))
+        {
+            retcode = RETCODE_OK;
+        }
+    }
     return retcode;
 }
 
@@ -120,10 +120,10 @@ bool MCU_Watchdog_IsResetCausedByWatchdog(void)
 {
     bool retcode = false;
     uint32_t WatchDogResetFlag;
-    WatchDogResetFlag = (uint32_t) __HAL_RCC_GET_FLAG(RCC_FLAG_IWDGRST);
+    WatchDogResetFlag = (uint32_t)__HAL_RCC_GET_FLAG(RCC_FLAG_IWDGRST);
 
     /* Check if the system has resumed from WWDG reset */
-    if ((uint32_t) RESET != WatchDogResetFlag)
+    if ((uint32_t)RESET != WatchDogResetFlag)
     {
         /* clear the reset flags */
         __HAL_RCC_CLEAR_RESET_FLAGS();
@@ -133,4 +133,3 @@ bool MCU_Watchdog_IsResetCausedByWatchdog(void)
 }
 
 #endif //-- KISO_FEATURE_WATCHDOG
-

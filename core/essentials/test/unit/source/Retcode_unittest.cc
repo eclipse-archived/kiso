@@ -40,7 +40,7 @@ static uint32_t numErrors;
 static Retcode_T lastError;
 static bool isFromInterrupt;
 
-class Retcode: public testing::Test
+class Retcode : public testing::Test
 {
 protected:
     virtual void SetUp()
@@ -50,7 +50,6 @@ protected:
         lastError = 0;
         isFromInterrupt = false;
         IsRetcodeModuleInitialized = false;
-
     }
 
     virtual void TearDown()
@@ -63,31 +62,29 @@ protected:
 
 static void myErrorHandlingFunc(Retcode_T error, bool isFromIsr)
 {
-	numErrors++;
-	lastError = error;
-	isFromInterrupt = isFromIsr;
+    numErrors++;
+    lastError = error;
+    isFromInterrupt = isFromIsr;
 }
-
 
 TEST_F(Retcode, initializeToDefaultFunc)
 {
 
-	numErrors = 0;
-	lastError = 0;
+    numErrors = 0;
+    lastError = 0;
 
-	EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), Retcode_Initialize(NULL));
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), Retcode_Initialize(NULL));
 }
-
 
 TEST_F(Retcode, initialize)
 {
 
-	numErrors = 0;
-	lastError = 0;
+    numErrors = 0;
+    lastError = 0;
 
-	EXPECT_EQ(RETCODE_OK, Retcode_Initialize(&myErrorHandlingFunc));
+    EXPECT_EQ(RETCODE_OK, Retcode_Initialize(&myErrorHandlingFunc));
 
-	EXPECT_EQ(&myErrorHandlingFunc, errorHandlingFunc);
+    EXPECT_EQ(&myErrorHandlingFunc, errorHandlingFunc);
 }
 
 TEST_F(Retcode, initializeMutipleTimes)
@@ -103,104 +100,94 @@ TEST_F(Retcode, initializeMutipleTimes)
 TEST_F(Retcode, raise)
 {
 
-	Retcode_T retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_RTOS_QUEUE_ERROR);
+    Retcode_T retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_RTOS_QUEUE_ERROR);
 
-	Retcode_RaiseError(retcode);
+    Retcode_RaiseError(retcode);
 
-	EXPECT_EQ(retcode, lastError);
-	EXPECT_EQ(RETCODE_RTOS_QUEUE_ERROR, Retcode_GetCode(retcode));
-	EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
-	EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
-	EXPECT_EQ(KISO_ESSENTIALS_MODULE_ID_RETCODE, Retcode_GetModuleId(retcode));
-	EXPECT_EQ((uint32_t)1, numErrors);
-	EXPECT_NE(true, isFromInterrupt);
+    EXPECT_EQ(retcode, lastError);
+    EXPECT_EQ(RETCODE_RTOS_QUEUE_ERROR, Retcode_GetCode(retcode));
+    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
+    EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
+    EXPECT_EQ(KISO_ESSENTIALS_MODULE_ID_RETCODE, Retcode_GetModuleId(retcode));
+    EXPECT_EQ((uint32_t)1, numErrors);
+    EXPECT_NE(true, isFromInterrupt);
 
-	retcode = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_INVALID_PARAM);
+    retcode = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_INVALID_PARAM);
 
-	Retcode_RaiseError(retcode);
+    Retcode_RaiseError(retcode);
 
-	EXPECT_EQ(retcode, lastError);
-	EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
-	EXPECT_EQ(RETCODE_SEVERITY_WARNING, Retcode_GetSeverity(retcode));
-	EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
-	EXPECT_EQ(KISO_ESSENTIALS_MODULE_ID_RETCODE, Retcode_GetModuleId(retcode));
-	EXPECT_EQ((uint32_t)2, numErrors);
-	EXPECT_NE(true, isFromInterrupt);
+    EXPECT_EQ(retcode, lastError);
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
+    EXPECT_EQ(RETCODE_SEVERITY_WARNING, Retcode_GetSeverity(retcode));
+    EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
+    EXPECT_EQ(KISO_ESSENTIALS_MODULE_ID_RETCODE, Retcode_GetModuleId(retcode));
+    EXPECT_EQ((uint32_t)2, numErrors);
+    EXPECT_NE(true, isFromInterrupt);
 }
-
 
 TEST_F(Retcode, retcodeOKPackageAndSeverityDropped1)
 {
-	Retcode_T retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_SUCCESS);
+    Retcode_T retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_SUCCESS);
 
-	EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_SUCCESS), retcode);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_SUCCESS), retcode);
 
-	EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
-	EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
-	EXPECT_EQ(RETCODE_SUCCESS, Retcode_GetCode(retcode));
+    EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
+    EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
+    EXPECT_EQ(RETCODE_SUCCESS, Retcode_GetCode(retcode));
 }
-
 
 TEST_F(Retcode, retcodeSeverity)
 {
-	Retcode_T retcode = RETCODE(RETCODE_SEVERITY_NONE, RETCODE_FAILURE);
-	EXPECT_EQ(RETCODE_SEVERITY_NONE, Retcode_GetSeverity(retcode));
+    Retcode_T retcode = RETCODE(RETCODE_SEVERITY_NONE, RETCODE_FAILURE);
+    EXPECT_EQ(RETCODE_SEVERITY_NONE, Retcode_GetSeverity(retcode));
 
-	retcode = RETCODE(RETCODE_SEVERITY_INFO, RETCODE_FAILURE);
-	EXPECT_EQ(RETCODE_SEVERITY_INFO, Retcode_GetSeverity(retcode));
+    retcode = RETCODE(RETCODE_SEVERITY_INFO, RETCODE_FAILURE);
+    EXPECT_EQ(RETCODE_SEVERITY_INFO, Retcode_GetSeverity(retcode));
 
-	retcode = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_FAILURE);
-	EXPECT_EQ(RETCODE_SEVERITY_WARNING, Retcode_GetSeverity(retcode));
+    retcode = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_FAILURE);
+    EXPECT_EQ(RETCODE_SEVERITY_WARNING, Retcode_GetSeverity(retcode));
 
-	retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
-	EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
+    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retcode));
 
-	retcode = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_FAILURE);
-	EXPECT_EQ(RETCODE_SEVERITY_WARNING, Retcode_GetSeverity(retcode));
+    retcode = RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_FAILURE);
+    EXPECT_EQ(RETCODE_SEVERITY_WARNING, Retcode_GetSeverity(retcode));
 }
-
-
 
 TEST_F(Retcode, retcodeOKPackageAndSeverityDropped2)
 {
 
-	Retcode_T retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_SUCCESS);
+    Retcode_T retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_SUCCESS);
 
-	EXPECT_NE(RETCODE_SUCCESS, retcode);
+    EXPECT_NE(RETCODE_SUCCESS, retcode);
 
-
-	EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
-	EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
-	EXPECT_EQ(RETCODE_SUCCESS, Retcode_GetCode(retcode));
+    EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
+    EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
+    EXPECT_EQ(RETCODE_SUCCESS, Retcode_GetCode(retcode));
 }
-
-
-
 
 TEST_F(Retcode, retcodeMacro)
 {
-	Retcode_T retcode = RETCODE(RETCODE_SEVERITY_NONE,RETCODE_FAILURE);
+    Retcode_T retcode = RETCODE(RETCODE_SEVERITY_NONE, RETCODE_FAILURE);
 
-	EXPECT_NE((Retcode_T)0, retcode);
-	EXPECT_NE(RETCODE_OK, retcode);
+    EXPECT_NE((Retcode_T)0, retcode);
+    EXPECT_NE(RETCODE_OK, retcode);
 
-	EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
-	EXPECT_EQ(0, Retcode_GetSeverity(retcode));
-	EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
+    EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
+    EXPECT_EQ(0, Retcode_GetSeverity(retcode));
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
-
-
 
 TEST_F(Retcode, composeMacro)
 {
-	Retcode_T retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_FAILURE);
+    Retcode_T retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_FAILURE);
 
-	EXPECT_NE((Retcode_T)0, retcode);
-	EXPECT_NE(RETCODE_SUCCESS, retcode);
+    EXPECT_NE((Retcode_T)0, retcode);
+    EXPECT_NE(RETCODE_SUCCESS, retcode);
 
-	EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
-	EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
-	EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
+    EXPECT_EQ((uint32_t)KISO_PACKAGE_ID, Retcode_GetPackage(retcode));
+    EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
 
 TEST_F(Retcode, RetcodeRaiseFromIsr)
@@ -217,7 +204,5 @@ TEST_F(Retcode, RetcodeRaiseFromIsr)
     EXPECT_EQ((uint32_t)1, numErrors);
     EXPECT_EQ(true, isFromInterrupt);
 }
-
-
 
 /*****************************************************************************************/

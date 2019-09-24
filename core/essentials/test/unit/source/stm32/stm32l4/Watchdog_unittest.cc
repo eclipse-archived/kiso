@@ -16,8 +16,7 @@
 #include <gtest.h>
 
 extern "C"
-{/* start of global scope symbol and fake definitions section */
-
+{ /* start of global scope symbol and fake definitions section */
 
 #include "Kiso_Basics.h"
 #include "Kiso_HAL_th.hh"
@@ -30,23 +29,21 @@ extern "C"
 
 /* include module under test */
 #include "Watchdog.c"
-
 }
 
-class STM32_WATCHDOG_TEST: public testing::Test
+class STM32_WATCHDOG_TEST : public testing::Test
 {
 protected:
-
     /* Watch-dog handle created at board initialization. */
     IWDG_HandleTypeDef testWatchogHandle;
 
     virtual void SetUp()
     {
         FFF_RESET_HISTORY()
-        RESET_FAKE (HAL_IWDG_Init);
-        RESET_FAKE (HAL_IWDG_Refresh);
-        RESET_FAKE (__HAL_RCC_GET_FLAG);
-        RESET_FAKE (__HAL_RCC_CLEAR_RESET_FLAGS);
+        RESET_FAKE(HAL_IWDG_Init);
+        RESET_FAKE(HAL_IWDG_Refresh);
+        RESET_FAKE(__HAL_RCC_GET_FLAG);
+        RESET_FAKE(__HAL_RCC_CLEAR_RESET_FLAGS);
     }
 
     virtual void TearDown()
@@ -119,7 +116,7 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_Enable_success)
     EXPECT_EQ(WdgHandle_ptr, HAL_IWDG_Init_fake.arg0_val);
 
     /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
-    RESET_FAKE (HAL_IWDG_Init);
+    RESET_FAKE(HAL_IWDG_Init);
     WdgHandle_ptr = NULL;
 }
 
@@ -158,7 +155,7 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_Enable_errorPropagationTest)
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 
     /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
-    RESET_FAKE (HAL_IWDG_Init);
+    RESET_FAKE(HAL_IWDG_Init);
     WdgHandle_ptr = NULL;
 }
 
@@ -185,7 +182,7 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_Feed_success)
     EXPECT_EQ(WdgHandle_ptr, HAL_IWDG_Refresh_fake.arg0_val);
 
     /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
-    RESET_FAKE (HAL_IWDG_Refresh);
+    RESET_FAKE(HAL_IWDG_Refresh);
     WdgHandle_ptr = NULL;
 }
 
@@ -223,7 +220,7 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_Feed_errorPropagationTest)
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 
     /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
-    RESET_FAKE (HAL_IWDG_Refresh);
+    RESET_FAKE(HAL_IWDG_Refresh);
     WdgHandle_ptr = NULL;
 }
 
@@ -248,7 +245,7 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_IsResetCausedByWatchdog_success_dueToRe
     EXPECT_EQ(UINT32_C(0), __HAL_RCC_CLEAR_RESET_FLAGS_fake.call_count);
 
     /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
-    RESET_FAKE (__HAL_RCC_GET_FLAG);
+    RESET_FAKE(__HAL_RCC_GET_FLAG);
 }
 
 TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_IsResetCausedByWatchdog_success_notDueToReset)
@@ -269,8 +266,8 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_IsResetCausedByWatchdog_success_notDueT
     EXPECT_EQ(UINT32_C(1), __HAL_RCC_CLEAR_RESET_FLAGS_fake.call_count);
 
     /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
-    RESET_FAKE (__HAL_RCC_GET_FLAG);
-    RESET_FAKE (__HAL_RCC_CLEAR_RESET_FLAGS);
+    RESET_FAKE(__HAL_RCC_GET_FLAG);
+    RESET_FAKE(__HAL_RCC_CLEAR_RESET_FLAGS);
 }
 #else
 }

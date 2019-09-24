@@ -11,7 +11,7 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
- 
+
 #ifndef KISO_KISO_BSP_Mic_AKU340_th_HH
 #define KISO_KISO_BSP_Mic_AKU340_th_HH
 

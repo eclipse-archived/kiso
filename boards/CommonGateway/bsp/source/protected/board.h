@@ -32,4 +32,3 @@
 bool Board_IsInitDone(void);
 
 #endif /* PROTECTED_BOARD_H_ */
-

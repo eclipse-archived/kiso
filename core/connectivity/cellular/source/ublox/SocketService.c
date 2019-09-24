@@ -29,7 +29,7 @@
 
 #include <limits.h>
 
-#define CELLULAR_SOCKET_SHORT_ENQUEUE_TIMEOUT   (UINT32_C(1000))
+#define CELLULAR_SOCKET_SHORT_ENQUEUE_TIMEOUT (UINT32_C(1000))
 
 struct CellularSocket_Context_S
 {
@@ -51,7 +51,7 @@ struct CellularSocket_Context_S
     /**
      * @brief Data-context associated with this socket.
      */
-    const Cellular_DataContext_T* DataContext;
+    const Cellular_DataContext_T *DataContext;
 
     /**
      * @brief Socket-Closed callback associated with this socket.
@@ -82,9 +82,9 @@ struct CellularSocket_Context_S
 
 struct CellularSocket_CreateAndBindParam_S
 {
-    CellularSocket_Handle_T* CreatedHandle;
+    CellularSocket_Handle_T *CreatedHandle;
 
-    const Cellular_DataContext_T* DataContext;
+    const Cellular_DataContext_T *DataContext;
     uint16_t LocalPort;
     CellularSocket_Protocol_T Protocol;
     CellularSocket_NotifySocketClosed_T OnSocketClosed;
@@ -93,15 +93,15 @@ struct CellularSocket_CreateAndBindParam_S
 
 struct CellularSocket_ConnectParam_S
 {
-    struct CellularSocket_Context_S* Context;
+    struct CellularSocket_Context_S *Context;
 
-    const Cellular_IpAddress_T* RemoteIp;
+    const Cellular_IpAddress_T *RemoteIp;
     uint16_t RemotePort;
 };
 
 struct CellularSocket_ListenParam_S
 {
-    struct CellularSocket_Context_S* Context;
+    struct CellularSocket_Context_S *Context;
 
     uint16_t LocalPort;
     CellularSocket_NotifyConnectionAccepted_T OnConnectionAccepted;
@@ -109,23 +109,23 @@ struct CellularSocket_ListenParam_S
 
 struct CellularSocket_SendToParam_S
 {
-    const struct CellularSocket_Context_S* Context;
+    const struct CellularSocket_Context_S *Context;
 
-    const uint8_t* Data;
+    const uint8_t *Data;
     uint32_t DataLength;
-    const Cellular_IpAddress_T* RemoteIp;
+    const Cellular_IpAddress_T *RemoteIp;
     uint16_t RemotePort;
 };
 
 struct CellularSocket_ReceiveFromParam_S
 {
-    const struct CellularSocket_Context_S* Context;
+    const struct CellularSocket_Context_S *Context;
 
-    uint8_t* Buffer;
+    uint8_t *Buffer;
     uint32_t BufferLength;
-    uint32_t* BytesReceivedOrAvailable;
-    Cellular_IpAddress_T* RemoteIp;
-    uint16_t* RemotePort;
+    uint32_t *BytesReceivedOrAvailable;
+    Cellular_IpAddress_T *RemoteIp;
+    uint16_t *RemotePort;
 };
 
 static struct CellularSocket_Context_S Sockets[CELLULAR_SOCKET_COUNT];
@@ -148,7 +148,7 @@ static struct CellularSocket_Context_S Sockets[CELLULAR_SOCKET_COUNT];
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-static Retcode_T CreateAndBind(void* param, uint32_t len);
+static Retcode_T CreateAndBind(void *param, uint32_t len);
 
 /**
  * @brief Connect a created socket via the modem-internal TCP/IP stack.
@@ -167,7 +167,7 @@ static Retcode_T CreateAndBind(void* param, uint32_t len);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-static Retcode_T Connect(void* param, uint32_t len);
+static Retcode_T Connect(void *param, uint32_t len);
 
 /**
  * @brief Send data over a socket using the modem-internal TCP/IP stack.
@@ -187,7 +187,7 @@ static Retcode_T Connect(void* param, uint32_t len);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-static Retcode_T Send(void* param, uint32_t len);
+static Retcode_T Send(void *param, uint32_t len);
 
 /**
  * @brief Send data over a UDP socket using the modem-internal TCP/IP stack.
@@ -205,7 +205,7 @@ static Retcode_T Send(void* param, uint32_t len);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-static Retcode_T SendTo(void* param, uint32_t len);
+static Retcode_T SendTo(void *param, uint32_t len);
 
 /**
  * @brief Receive data from a UDP socket on the modem-internal TCP/IP stack.
@@ -224,7 +224,7 @@ static Retcode_T SendTo(void* param, uint32_t len);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-static Retcode_T ReceiveFrom(void* param, uint32_t len);
+static Retcode_T ReceiveFrom(void *param, uint32_t len);
 
 /**
  * @brief Receive data from a socket on the modem-internal TCP/IP stack.
@@ -244,7 +244,7 @@ static Retcode_T ReceiveFrom(void* param, uint32_t len);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-static Retcode_T Receive(void* param, uint32_t len);
+static Retcode_T Receive(void *param, uint32_t len);
 
 /**
  * @brief Set the given socket into listening mode. Incoming connections will
@@ -264,7 +264,7 @@ static Retcode_T Receive(void* param, uint32_t len);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-static Retcode_T Listen(void* param, uint32_t len);
+static Retcode_T Listen(void *param, uint32_t len);
 
 /**
  * @brief Close a socket on the modem-internal TCP/IP stack.
@@ -281,7 +281,7 @@ static Retcode_T Listen(void* param, uint32_t len);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-static Retcode_T Close(void* param, uint32_t len);
+static Retcode_T Close(void *param, uint32_t len);
 
 /**
  * @brief Find a free socket context in the #Sockets pool by verifying the
@@ -292,7 +292,7 @@ static Retcode_T Close(void* param, uint32_t len);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-static inline Retcode_T FindFreeSlot(uint32_t* freeSlot);
+static inline Retcode_T FindFreeSlot(uint32_t *freeSlot);
 
 /**
  * @brief Verify if the provided socket handle is locally allocated.
@@ -317,23 +317,23 @@ static inline bool IsValidOnModem(CellularSocket_Handle_T socket);
 /**
  * @brief Translate #CellularSocket_Protocol_T to #AT_USOCR_Protocol_T.
  */
-static inline Retcode_T CelToUbloxProt(CellularSocket_Protocol_T from, AT_USOCR_Protocol_T* to);
+static inline Retcode_T CelToUbloxProt(CellularSocket_Protocol_T from, AT_USOCR_Protocol_T *to);
 
-static Retcode_T CreateAndBind(void* param, uint32_t len)
+static Retcode_T CreateAndBind(void *param, uint32_t len)
 {
     KISO_UNUSED(len);
 
     assert(NULL != param);
     assert(sizeof(struct CellularSocket_CreateAndBindParam_S) == len);
 
-    struct CellularSocket_CreateAndBindParam_S* crtParam = (struct CellularSocket_CreateAndBindParam_S*) param;
-    struct CellularSocket_Context_S* ctx = NULL;
+    struct CellularSocket_CreateAndBindParam_S *crtParam = (struct CellularSocket_CreateAndBindParam_S *)param;
+    struct CellularSocket_Context_S *ctx = NULL;
     AT_USOCR_Param_T usocr;
-    Retcode_T retcode = FindFreeSlot((uint32_t*) crtParam->CreatedHandle);
+    Retcode_T retcode = FindFreeSlot((uint32_t *)crtParam->CreatedHandle);
 
     if (RETCODE_OK == retcode)
     {
-        ctx = &(Sockets[(uint32_t) *crtParam->CreatedHandle]);
+        ctx = &(Sockets[(uint32_t)*crtParam->CreatedHandle]);
         ctx->IsCreatedLocally = true;
         ctx->DataContext = crtParam->DataContext;
         ctx->OnDataReady = crtParam->OnDataReady;
@@ -379,14 +379,14 @@ static Retcode_T CreateAndBind(void* param, uint32_t len)
     return retcode;
 }
 
-static Retcode_T Connect(void* param, uint32_t len)
+static Retcode_T Connect(void *param, uint32_t len)
 {
     KISO_UNUSED(len);
 
     assert(NULL != param);
     assert(sizeof(struct CellularSocket_ConnectParam_S) == len);
 
-    const struct CellularSocket_ConnectParam_S* connectParam = (struct CellularSocket_ConnectParam_S*) param;
+    const struct CellularSocket_ConnectParam_S *connectParam = (struct CellularSocket_ConnectParam_S *)param;
     AT_USOCO_Param_T usoco;
     Retcode_T retcode = RETCODE_OK;
 
@@ -402,14 +402,14 @@ static Retcode_T Connect(void* param, uint32_t len)
     return retcode;
 }
 
-static Retcode_T Listen(void* param, uint32_t len)
+static Retcode_T Listen(void *param, uint32_t len)
 {
     KISO_UNUSED(len);
 
     assert(NULL != param);
     assert(sizeof(struct CellularSocket_ListenParam_S) == len);
 
-    struct CellularSocket_ListenParam_S* listenParam = (struct CellularSocket_ListenParam_S*) param;
+    struct CellularSocket_ListenParam_S *listenParam = (struct CellularSocket_ListenParam_S *)param;
     Retcode_T retcode = RETCODE_OK;
 
     /* Listening on port 0 is not allowed by the u-blox stack. */
@@ -429,14 +429,14 @@ static Retcode_T Listen(void* param, uint32_t len)
     return retcode;
 }
 
-static Retcode_T Send(void* param, uint32_t len)
+static Retcode_T Send(void *param, uint32_t len)
 {
     KISO_UNUSED(len);
 
     assert(NULL != param);
     assert(sizeof(struct CellularSocket_SendToParam_S) == len);
 
-    const struct CellularSocket_SendToParam_S* sendToParam = (struct CellularSocket_SendToParam_S*) param;
+    const struct CellularSocket_SendToParam_S *sendToParam = (struct CellularSocket_SendToParam_S *)param;
     AT_USOWR_Param_T usowrParam;
     usowrParam.Socket = sendToParam->Context->Id;
     usowrParam.Encoding = AT_UBLOX_PAYLOADENCODING_HEX;
@@ -447,14 +447,14 @@ static Retcode_T Send(void* param, uint32_t len)
     return At_Set_USOWR(&usowrParam, &usowrResp);
 }
 
-static Retcode_T SendTo(void* param, uint32_t len)
+static Retcode_T SendTo(void *param, uint32_t len)
 {
     KISO_UNUSED(len);
 
     assert(NULL != param);
     assert(sizeof(struct CellularSocket_SendToParam_S) == len);
 
-    const struct CellularSocket_SendToParam_S* sendToParam = (struct CellularSocket_SendToParam_S*) param;
+    const struct CellularSocket_SendToParam_S *sendToParam = (struct CellularSocket_SendToParam_S *)param;
     AT_USOST_Param_T usostParam;
     AT_USOST_Resp_T usostResp;
 
@@ -472,14 +472,14 @@ static Retcode_T SendTo(void* param, uint32_t len)
     return retcode;
 }
 
-static Retcode_T Receive(void* param, uint32_t len)
+static Retcode_T Receive(void *param, uint32_t len)
 {
     KISO_UNUSED(len);
 
     assert(NULL != param);
     assert(sizeof(struct CellularSocket_ReceiveFromParam_S) == len);
 
-    struct CellularSocket_ReceiveFromParam_S* recvParam = (struct CellularSocket_ReceiveFromParam_S*) param;
+    struct CellularSocket_ReceiveFromParam_S *recvParam = (struct CellularSocket_ReceiveFromParam_S *)param;
 
     AT_USORD_Param_T usordParam;
     usordParam.Socket = recvParam->Context->Id;
@@ -495,14 +495,14 @@ static Retcode_T Receive(void* param, uint32_t len)
     return retcode;
 }
 
-static Retcode_T ReceiveFrom(void* param, uint32_t len)
+static Retcode_T ReceiveFrom(void *param, uint32_t len)
 {
     KISO_UNUSED(len);
 
     assert(NULL != param);
     assert(sizeof(struct CellularSocket_ReceiveFromParam_S) == len);
 
-    struct CellularSocket_ReceiveFromParam_S* recvParam = (struct CellularSocket_ReceiveFromParam_S*) param;
+    struct CellularSocket_ReceiveFromParam_S *recvParam = (struct CellularSocket_ReceiveFromParam_S *)param;
 
     AT_USORF_Param_T usorfParam;
     usorfParam.Socket = recvParam->Context->Id;
@@ -529,14 +529,14 @@ static Retcode_T ReceiveFrom(void* param, uint32_t len)
     return retcode;
 }
 
-static Retcode_T Close(void* param, uint32_t len)
+static Retcode_T Close(void *param, uint32_t len)
 {
     KISO_UNUSED(len);
 
     assert(NULL != param);
     assert(sizeof(struct CellularSocket_Context_S) == len);
 
-    struct CellularSocket_Context_S* ctx = (struct CellularSocket_Context_S*) param;
+    struct CellularSocket_Context_S *ctx = (struct CellularSocket_Context_S *)param;
     AT_USOCL_Param_T usocl;
     usocl.Socket = ctx->Id;
     Retcode_T retcode = At_Set_USOCL(&usocl);
@@ -555,7 +555,7 @@ static Retcode_T Close(void* param, uint32_t len)
     return retcode;
 }
 
-static inline Retcode_T FindFreeSlot(uint32_t* freeSlot)
+static inline Retcode_T FindFreeSlot(uint32_t *freeSlot)
 {
     assert(NULL != freeSlot);
     for (uint32_t i = 0; i < CELLULAR_SOCKET_COUNT; ++i)
@@ -569,15 +569,16 @@ static inline Retcode_T FindFreeSlot(uint32_t* freeSlot)
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
 }
 
-static inline Retcode_T FindSocketById(uint32_t socketId, struct CellularSocket_Context_S** ctx, CellularSocket_Handle_T* handle)
+static inline Retcode_T FindSocketById(uint32_t socketId, struct CellularSocket_Context_S **ctx, CellularSocket_Handle_T *handle)
 {
     for (uint32_t i = 0; i < CELLULAR_SOCKET_COUNT; ++i)
     {
         if (Sockets[i].IsCreatedLocally && Sockets[i].Id == socketId)
         {
             *ctx = &(Sockets[i]);
-            *handle = (CellularSocket_Handle_T) i;
-            return RETCODE_OK;;
+            *handle = (CellularSocket_Handle_T)i;
+            return RETCODE_OK;
+            ;
         }
     }
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
@@ -585,17 +586,15 @@ static inline Retcode_T FindSocketById(uint32_t socketId, struct CellularSocket_
 
 static inline bool IsValidLocally(CellularSocket_Handle_T socket)
 {
-    return (CELLULAR_SOCKET_COUNT > (uint32_t) socket)
-            && Sockets[(uint32_t) socket].IsCreatedLocally;
+    return (CELLULAR_SOCKET_COUNT > (uint32_t)socket) && Sockets[(uint32_t)socket].IsCreatedLocally;
 }
 
 static inline bool IsValidOnModem(CellularSocket_Handle_T socket)
 {
-    return (CELLULAR_SOCKET_COUNT > (uint32_t) socket)
-            && Sockets[(uint32_t) socket].IsCreatedOnModem;
+    return (CELLULAR_SOCKET_COUNT > (uint32_t)socket) && Sockets[(uint32_t)socket].IsCreatedOnModem;
 }
 
-static inline Retcode_T CelToUbloxProt(CellularSocket_Protocol_T from, AT_USOCR_Protocol_T* to)
+static inline Retcode_T CelToUbloxProt(CellularSocket_Protocol_T from, AT_USOCR_Protocol_T *to)
 {
     switch (from)
     {
@@ -615,7 +614,7 @@ void SocketService_NotifySocketDataReceived(uint32_t socketId, uint32_t length)
 {
     KISO_UNUSED(length);
 
-    struct CellularSocket_Context_S* ctx = NULL;
+    struct CellularSocket_Context_S *ctx = NULL;
     CellularSocket_Handle_T handle;
     Retcode_T retcode = FindSocketById(socketId, &ctx, &handle);
 
@@ -639,17 +638,17 @@ void SocketService_NotifySocketDataReceived(uint32_t socketId, uint32_t length)
 }
 
 void SocketService_NotifySocketAccepted(uint32_t createdSocketId,
-        const AT_UBlox_Address_T* remoteIp,
-        uint16_t remotePort,
-        uint32_t listeningSocketId,
-        const AT_UBlox_Address_T* localIp,
-        uint16_t listeningPort)
+                                        const AT_UBlox_Address_T *remoteIp,
+                                        uint16_t remotePort,
+                                        uint32_t listeningSocketId,
+                                        const AT_UBlox_Address_T *localIp,
+                                        uint16_t listeningPort)
 {
     KISO_UNUSED(localIp);
     KISO_UNUSED(listeningPort);
 
-    struct CellularSocket_Context_S* listeningCtx = NULL;
-    struct CellularSocket_Context_S* createdCtx = NULL;
+    struct CellularSocket_Context_S *listeningCtx = NULL;
+    struct CellularSocket_Context_S *createdCtx = NULL;
     CellularSocket_Handle_T listeningHandle;
     CellularSocket_Handle_T createdHandle;
     Cellular_IpAddress_T celRemoteIp;
@@ -657,12 +656,12 @@ void SocketService_NotifySocketAccepted(uint32_t createdSocketId,
 
     if (RETCODE_OK == retcode)
     {
-        retcode = FindFreeSlot((uint32_t*) &createdHandle);
+        retcode = FindFreeSlot((uint32_t *)&createdHandle);
     }
 
     if (RETCODE_OK == retcode)
     {
-        createdCtx = &(Sockets[(uint32_t) createdHandle]);
+        createdCtx = &(Sockets[(uint32_t)createdHandle]);
         createdCtx->Id = createdSocketId;
         createdCtx->IsCreatedLocally = true;
         createdCtx->LocalPort = 0;
@@ -678,10 +677,10 @@ void SocketService_NotifySocketAccepted(uint32_t createdSocketId,
         if (NULL != listeningCtx->OnConnectionAccepted)
         {
             listeningCtx->OnConnectionAccepted(
-                    createdHandle,
-                    &celRemoteIp,
-                    remotePort,
-                    listeningHandle);
+                createdHandle,
+                &celRemoteIp,
+                remotePort,
+                listeningHandle);
         }
         else
         {
@@ -698,7 +697,7 @@ void SocketService_NotifySocketAccepted(uint32_t createdSocketId,
 
 void SocketService_NotifySocketClosed(uint32_t socketId)
 {
-    struct CellularSocket_Context_S* ctx = NULL;
+    struct CellularSocket_Context_S *ctx = NULL;
     CellularSocket_Handle_T handle;
     Retcode_T retcode = FindSocketById(socketId, &ctx, &handle);
 
@@ -723,18 +722,14 @@ void SocketService_NotifySocketClosed(uint32_t socketId)
 }
 
 Retcode_T CellularSocket_CreateAndBind(
-        CellularSocket_Handle_T* socket,
-        const Cellular_DataContext_T* dataContext,
-        uint16_t localPort,
-        CellularSocket_Protocol_T protocol,
-        CellularSocket_NotifySocketClosed_T onSocketClosed,
-        CellularSocket_NotifyDataReady_T onDataReady)
+    CellularSocket_Handle_T *socket,
+    const Cellular_DataContext_T *dataContext,
+    uint16_t localPort,
+    CellularSocket_Protocol_T protocol,
+    CellularSocket_NotifySocketClosed_T onSocketClosed,
+    CellularSocket_NotifyDataReady_T onDataReady)
 {
-    if (NULL == socket
-            || NULL == dataContext
-            || NULL == onSocketClosed
-            || NULL == onDataReady
-            || CELLULAR_DATACONTEXTTYPE_INTERNAL != dataContext->Type)
+    if (NULL == socket || NULL == dataContext || NULL == onSocketClosed || NULL == onDataReady || CELLULAR_DATACONTEXTTYPE_INTERNAL != dataContext->Type)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
@@ -753,20 +748,18 @@ Retcode_T CellularSocket_CreateAndBind(
 }
 
 Retcode_T CellularSocket_Connect(
-        CellularSocket_Handle_T socket,
-        const Cellular_IpAddress_T* remoteIp,
-        uint16_t remotePort)
+    CellularSocket_Handle_T socket,
+    const Cellular_IpAddress_T *remoteIp,
+    uint16_t remotePort)
 {
-    if (!IsValidLocally(socket)
-            || NULL == remoteIp
-            || CELLULAR_IPADDRESSTYPE_MAX <= remoteIp->Type)
+    if (!IsValidLocally(socket) || NULL == remoteIp || CELLULAR_IPADDRESSTYPE_MAX <= remoteIp->Type)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
     else
     {
         struct CellularSocket_ConnectParam_S param;
-        param.Context = &(Sockets[(uint32_t) socket]);
+        param.Context = &(Sockets[(uint32_t)socket]);
         param.RemoteIp = remoteIp;
         param.RemotePort = remotePort;
         return Engine_Dispatch(Connect, CELLULAR_SOCKET_SHORT_ENQUEUE_TIMEOUT, &param, sizeof(param));
@@ -774,9 +767,9 @@ Retcode_T CellularSocket_Connect(
 }
 
 Retcode_T CellularSocket_Listen(
-        CellularSocket_Handle_T socket,
-        uint16_t localPort,
-        CellularSocket_NotifyConnectionAccepted_T onConnectionAccept)
+    CellularSocket_Handle_T socket,
+    uint16_t localPort,
+    CellularSocket_NotifyConnectionAccepted_T onConnectionAccept)
 {
     if (!IsValidLocally(socket))
     {
@@ -785,7 +778,7 @@ Retcode_T CellularSocket_Listen(
     else
     {
         struct CellularSocket_ListenParam_S param;
-        param.Context = &(Sockets[(uint32_t) socket]);
+        param.Context = &(Sockets[(uint32_t)socket]);
         param.LocalPort = localPort;
         param.OnConnectionAccepted = onConnectionAccept;
         return Engine_Dispatch(Listen, CELLULAR_SOCKET_SHORT_ENQUEUE_TIMEOUT, &param, sizeof(param));
@@ -793,21 +786,18 @@ Retcode_T CellularSocket_Listen(
 }
 
 Retcode_T CellularSocket_Send(
-        CellularSocket_Handle_T socket,
-        const uint8_t* data,
-        uint32_t dataLength)
+    CellularSocket_Handle_T socket,
+    const uint8_t *data,
+    uint32_t dataLength)
 {
-    if (!IsValidLocally(socket)
-            || !IsValidOnModem(socket)
-            || NULL == data
-            || 0 >= dataLength)
+    if (!IsValidLocally(socket) || !IsValidOnModem(socket) || NULL == data || 0 >= dataLength)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
     else
     {
         struct CellularSocket_SendToParam_S param;
-        param.Context = &(Sockets[(uint32_t) socket]);
+        param.Context = &(Sockets[(uint32_t)socket]);
         param.Data = data;
         param.DataLength = dataLength;
         return Engine_Dispatch(Send, CELLULAR_SOCKET_SHORT_ENQUEUE_TIMEOUT, &param, sizeof(param));
@@ -815,25 +805,20 @@ Retcode_T CellularSocket_Send(
 }
 
 Retcode_T CellularSocket_SendTo(
-        CellularSocket_Handle_T socket,
-        const uint8_t* data,
-        uint32_t dataLength,
-        const Cellular_IpAddress_T* remoteIp,
-        uint16_t remotePort)
+    CellularSocket_Handle_T socket,
+    const uint8_t *data,
+    uint32_t dataLength,
+    const Cellular_IpAddress_T *remoteIp,
+    uint16_t remotePort)
 {
-    if (!IsValidLocally(socket)
-            || !IsValidOnModem(socket)
-            || NULL == data
-            || 0 >= dataLength
-            || NULL == remoteIp
-            || CELLULAR_IPADDRESSTYPE_MAX <= remoteIp->Type)
+    if (!IsValidLocally(socket) || !IsValidOnModem(socket) || NULL == data || 0 >= dataLength || NULL == remoteIp || CELLULAR_IPADDRESSTYPE_MAX <= remoteIp->Type)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
     else
     {
         struct CellularSocket_SendToParam_S param;
-        param.Context = &(Sockets[(uint32_t) socket]);
+        param.Context = &(Sockets[(uint32_t)socket]);
         param.Data = data;
         param.DataLength = dataLength;
         param.RemoteIp = remoteIp;
@@ -843,23 +828,19 @@ Retcode_T CellularSocket_SendTo(
 }
 
 Retcode_T CellularSocket_Receive(
-        CellularSocket_Handle_T socket,
-        uint8_t* buffer,
-        uint32_t bufferLength,
-        uint32_t* bytesReceived)
+    CellularSocket_Handle_T socket,
+    uint8_t *buffer,
+    uint32_t bufferLength,
+    uint32_t *bytesReceived)
 {
-    if (!IsValidLocally(socket)
-            || !IsValidOnModem(socket)
-            || NULL == buffer
-            || NULL == bytesReceived
-            || 0U >= bufferLength)
+    if (!IsValidLocally(socket) || !IsValidOnModem(socket) || NULL == buffer || NULL == bytesReceived || 0U >= bufferLength)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
     else
     {
         struct CellularSocket_ReceiveFromParam_S param;
-        param.Context = &(Sockets[(uint32_t) socket]);
+        param.Context = &(Sockets[(uint32_t)socket]);
         param.Buffer = buffer;
         param.BufferLength = bufferLength;
         param.BytesReceivedOrAvailable = bytesReceived;
@@ -868,27 +849,21 @@ Retcode_T CellularSocket_Receive(
 }
 
 Retcode_T CellularSocket_ReceiveFrom(
-        CellularSocket_Handle_T socket,
-        uint8_t* buffer,
-        uint32_t bufferLength,
-        uint32_t* bytesReceived,
-        Cellular_IpAddress_T* remoteIp,
-        uint16_t* remotePort)
+    CellularSocket_Handle_T socket,
+    uint8_t *buffer,
+    uint32_t bufferLength,
+    uint32_t *bytesReceived,
+    Cellular_IpAddress_T *remoteIp,
+    uint16_t *remotePort)
 {
-    if (!IsValidLocally(socket)
-            || !IsValidOnModem(socket)
-            || NULL == buffer
-            || NULL == bytesReceived
-            || NULL == remoteIp
-            || NULL == remotePort
-            || 0U >= bufferLength)
+    if (!IsValidLocally(socket) || !IsValidOnModem(socket) || NULL == buffer || NULL == bytesReceived || NULL == remoteIp || NULL == remotePort || 0U >= bufferLength)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
     else
     {
         struct CellularSocket_ReceiveFromParam_S param;
-        param.Context = &(Sockets[(uint32_t) socket]);
+        param.Context = &(Sockets[(uint32_t)socket]);
         param.Buffer = buffer;
         param.BufferLength = bufferLength;
         param.BytesReceivedOrAvailable = bytesReceived;
@@ -899,19 +874,17 @@ Retcode_T CellularSocket_ReceiveFrom(
 }
 
 Retcode_T CellularSocket_QueryBytesAvailable(
-        CellularSocket_Handle_T socket,
-        uint32_t* numBytesAvailable)
+    CellularSocket_Handle_T socket,
+    uint32_t *numBytesAvailable)
 {
-    if (!IsValidLocally(socket)
-            || !IsValidOnModem(socket)
-            || NULL == numBytesAvailable)
+    if (!IsValidLocally(socket) || !IsValidOnModem(socket) || NULL == numBytesAvailable)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
     else
     {
         struct CellularSocket_ReceiveFromParam_S param;
-        param.Context = &(Sockets[(uint32_t) socket]);
+        param.Context = &(Sockets[(uint32_t)socket]);
         param.Buffer = NULL;
         param.BufferLength = 0;
         param.BytesReceivedOrAvailable = numBytesAvailable;
@@ -920,7 +893,7 @@ Retcode_T CellularSocket_QueryBytesAvailable(
 }
 
 Retcode_T CellularSocket_Close(
-        CellularSocket_Handle_T socket)
+    CellularSocket_Handle_T socket)
 {
     if (!IsValidLocally(socket))
     {
@@ -928,7 +901,7 @@ Retcode_T CellularSocket_Close(
     }
     else
     {
-        struct CellularSocket_Context_S* ctx = &(Sockets[(uint32_t) socket]);
+        struct CellularSocket_Context_S *ctx = &(Sockets[(uint32_t)socket]);
         return Engine_Dispatch(Close, CELLULAR_SOCKET_SHORT_ENQUEUE_TIMEOUT, ctx, sizeof(struct CellularSocket_Context_S));
     }
 }

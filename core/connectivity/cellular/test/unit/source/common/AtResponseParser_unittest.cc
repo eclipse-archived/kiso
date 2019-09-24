@@ -25,8 +25,8 @@ extern "C"
 #define GTEST
 #endif /* GTEST */
 
-#define portNUM_CONFIGURABLE_REGIONS    1
-#define KISO_MODULE_ID  KISO_CELLULAR_MODULE_ID_ATPARSER
+#define portNUM_CONFIGURABLE_REGIONS 1
+#define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_ATPARSER
 
 #include "Kiso_Retcode_th.hh"
 #include "Kiso_Assert_th.hh"
@@ -35,32 +35,31 @@ extern "C"
 #include "queue_th.hh"
 
 #undef RETCODE
-#define RETCODE(severity,code) ((Retcode_T) code)
+#define RETCODE(severity, code) ((Retcode_T)code)
 
 #undef KISO_MODULE_ID
 #include "AtResponseParser.c"
 
 #ifndef countof
-#   define countof(a) (sizeof(a) / sizeof(*(a)))
+#define countof(a) (sizeof(a) / sizeof(*(a)))
 #endif
 
-static void AtrpTestErrorHandler()
-{
-    CallbackError();
-    AtResponseParser_Reset();
-}
-
+    static void AtrpTestErrorHandler()
+    {
+        CallbackError();
+        AtResponseParser_Reset();
+    }
 }
 
 FAKE_VOID_FUNC(CallbackResponseCode, AtResponseCode_T)
-FAKE_VOID_FUNC(CallbackCmdEcho, uint8_t*, uint32_t)
-FAKE_VOID_FUNC(CallbackCmd, uint8_t*, uint32_t)
-FAKE_VOID_FUNC(CallbackCmdArg, uint8_t*, uint32_t)
-FAKE_VOID_FUNC(CallbackMisc, uint8_t*, uint32_t)
+FAKE_VOID_FUNC(CallbackCmdEcho, uint8_t *, uint32_t)
+FAKE_VOID_FUNC(CallbackCmd, uint8_t *, uint32_t)
+FAKE_VOID_FUNC(CallbackCmdArg, uint8_t *, uint32_t)
+FAKE_VOID_FUNC(CallbackMisc, uint8_t *, uint32_t)
 
 FFF_DEFINITION_BLOCK_END
 
-class AtResponseParser: public testing::Test
+class AtResponseParser : public testing::Test
 {
 protected:
     virtual void SetUp()
@@ -103,14 +102,13 @@ TEST_F(AtResponseParser, AtrpTrimWhitespaceAllContent)
     uint32_t NewLength = strlen(buffer);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    uint8_t *TrimmedBuffer = AtrpTrimWhitespace((uint8_t *) buffer, NewLength, &NewLength);
+    uint8_t *TrimmedBuffer = AtrpTrimWhitespace((uint8_t *)buffer, NewLength, &NewLength);
     KISO_UNUSED(TrimmedBuffer);
 
     /* VERIFY: Compare the expected with actual */
     EXPECT_EQ(0U, NewLength);
 
     /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
-
 }
 
 TEST_F(AtResponseParser, AtResponseParserResetSuccess)
@@ -122,7 +120,7 @@ TEST_F(AtResponseParser, AtResponseParserResetSuccess)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     state.BufferPosition = 123;
-    state.StateCallback = (AtrpStateCallback_T) 1;
+    state.StateCallback = (AtrpStateCallback_T)1;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     AtResponseParser_Reset();
@@ -132,7 +130,6 @@ TEST_F(AtResponseParser, AtResponseParserResetSuccess)
     EXPECT_EQ((AtrpStateCallback_T)AtrpStateRoot, state.StateCallback);
 
     /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
-
 }
 
 TEST_F(AtResponseParser, InternationalMobileSubscriberIdentification)
@@ -143,19 +140,19 @@ TEST_F(AtResponseParser, InternationalMobileSubscriberIdentification)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    const char* AtResponse = "AT+CIMI\r\r\n310170230316694\r\n\r\nOK\r\n";
+    const char *AtResponse = "AT+CIMI\r\r\n310170230316694\r\n\r\nOK\r\n";
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = AtResponseParser_Parse((uint8_t*) AtResponse, AtResponseLength);
+    retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
 
     /* VERIFY: Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(1U, CallbackCmdEcho_fake.call_count);
     EXPECT_EQ(strlen("AT+CIMI"), CallbackCmdEcho_fake.arg1_val);
 
-    EXPECT_EQ(4U, CallbackMisc_fake.call_count); /* FIXME: should we really handle \n as individual events? */
+    EXPECT_EQ(4U, CallbackMisc_fake.call_count);                                 /* FIXME: should we really handle \n as individual events? */
     EXPECT_EQ(strlen("310170230316694\r\n"), CallbackMisc_fake.arg1_history[1]); /* should be the second misc, event incl. whitespace ... for now */
 
     // Unfortunately the cmdEcho_fake.arg0_val is lost by the AtrpResetBuffer-function inside AtResponseParser_Parse.
@@ -173,12 +170,12 @@ TEST_F(AtResponseParser, ReportMobileTerminationError)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    const char* AtResponse = "AT+CMEE?\r\r\n+CMEE: 0\r\n\r\nOK\r\n";
+    const char *AtResponse = "AT+CMEE?\r\r\n+CMEE: 0\r\n\r\nOK\r\n";
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = AtResponseParser_Parse((uint8_t*) AtResponse, AtResponseLength);
+    retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
 
     /* VERIFY: Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retcode);
@@ -207,12 +204,12 @@ TEST_F(AtResponseParser, RequestCompleteCapabilitiesList)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    const char* AtResponse = "AT+GCAP\r\n\r\n+GCAP: +FCLASS, +CGSM\r\n\r\nOK\r\n";
+    const char *AtResponse = "AT+GCAP\r\n\r\n+GCAP: +FCLASS, +CGSM\r\n\r\nOK\r\n";
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = AtResponseParser_Parse((uint8_t*) AtResponse, AtResponseLength);
+    retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
 
     /* VERIFY: Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retcode);
@@ -244,12 +241,12 @@ TEST_F(AtResponseParser, UrcNetworkSelectionControl)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    const char* AtResponse = "\r\n+PACSP1\r\n";
+    const char *AtResponse = "\r\n+PACSP1\r\n";
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = AtResponseParser_Parse((uint8_t*) AtResponse, AtResponseLength);
+    retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
 
     /* VERIFY: Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retcode);
@@ -269,12 +266,12 @@ TEST_F(AtResponseParser, UrcNetworkSelectionControlFollowedByCmd)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    const char* AtResponse = "\r\n+PACSP1\r\n\r\n+UMWI: 1\r\n";
+    const char *AtResponse = "\r\n+PACSP1\r\n\r\n+UMWI: 1\r\n";
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = AtResponseParser_Parse((uint8_t*) AtResponse, AtResponseLength);
+    retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
 
     /* VERIFY: Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retcode);
@@ -297,12 +294,12 @@ TEST_F(AtResponseParser, AtCommandEchoTerminatedByS3)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    const char* AtResponse = "AT+PACSP\r";
+    const char *AtResponse = "AT+PACSP\r";
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode = AtResponseParser_Parse((uint8_t*) AtResponse, AtResponseLength);
+    retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
 
     /* VERIFY: Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retcode);
@@ -349,9 +346,9 @@ TEST_F(AtResponseParser, AtResponseParser_Parse_Fail)
     EXPECT_EQ(AT_RESPONSE_PARSER_INPUT_TOO_SHORT, Retcode_GetCode(retcode));
 }
 
-static const char* AtResponseParserParsingIncompleteResonseFull =
-        "AT+USOCR=6\r\r\n+USOCR: 0\r\n\r\nOK\r\n";
-class AtResponseParserParsingIncomplete: public testing::TestWithParam<uint32_t>
+static const char *AtResponseParserParsingIncompleteResonseFull =
+    "AT+USOCR=6\r\r\n+USOCR: 0\r\n\r\nOK\r\n";
+class AtResponseParserParsingIncomplete : public testing::TestWithParam<uint32_t>
 {
 protected:
     virtual void SetUp()
@@ -366,12 +363,12 @@ protected:
         state.EventErrorCallback = AtrpTestErrorHandler;
         state.StateCallback = AtrpStateRoot;
 
-        RESET_FAKE (CallbackResponseCode);
-        RESET_FAKE (CallbackCmdEcho);
-        RESET_FAKE (CallbackCmd);
-        RESET_FAKE (CallbackCmdArg);
-        RESET_FAKE (CallbackMisc);
-        RESET_FAKE (CallbackError);
+        RESET_FAKE(CallbackResponseCode);
+        RESET_FAKE(CallbackCmdEcho);
+        RESET_FAKE(CallbackCmd);
+        RESET_FAKE(CallbackCmdArg);
+        RESET_FAKE(CallbackMisc);
+        RESET_FAKE(CallbackError);
 
         AtResponseParser_Reset();
     }
@@ -390,11 +387,11 @@ TEST_P(AtResponseParserParsingIncomplete, ParseIncomplete00)
     Retcode_T retcode01 = RETCODE_OK;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retcode00 = AtResponseParser_Parse((uint8_t*) AtResponseParserParsingIncompleteResonseFull,
-            split);
+    retcode00 = AtResponseParser_Parse((uint8_t *)AtResponseParserParsingIncompleteResonseFull,
+                                       split);
     retcode01 = AtResponseParser_Parse(
-            (uint8_t*) AtResponseParserParsingIncompleteResonseFull + split,
-            strlen(AtResponseParserParsingIncompleteResonseFull) - split);
+        (uint8_t *)AtResponseParserParsingIncompleteResonseFull + split,
+        strlen(AtResponseParserParsingIncompleteResonseFull) - split);
 
     EXPECT_EQ(RETCODE_OK, retcode00);
     EXPECT_EQ(RETCODE_OK, retcode01);
@@ -416,7 +413,7 @@ TEST_P(AtResponseParserParsingIncomplete, ParseIncomplete00)
 std::vector<uint32_t> GenerateSplitTestcaseValues()
 {
     uint32_t noOfSplits = strlen(AtResponseParserParsingIncompleteResonseFull) - 1;
-    std::vector < uint32_t > result(noOfSplits);
+    std::vector<uint32_t> result(noOfSplits);
 
     for (uint32_t i = 0; i < noOfSplits; i++)
     {
@@ -427,24 +424,24 @@ std::vector<uint32_t> GenerateSplitTestcaseValues()
 }
 
 INSTANTIATE_TEST_CASE_P(ATRPi, AtResponseParserParsingIncomplete,
-        testing::ValuesIn(GenerateSplitTestcaseValues()));
+                        testing::ValuesIn(GenerateSplitTestcaseValues()));
 
 TEST_F(AtResponseParser, TestAtrpStateResponseCode)
 {
-    const struct {
+    const struct
+    {
         const char *name;
         AtResponseCode_T code;
     } m[] = {
-            { AT_RESPONSE_CODE_NAME_OK, AT_RESPONSE_CODE_OK },
-            { AT_RESPONSE_CODE_NAME_CONNECT, AT_RESPONSE_CODE_CONNECT },
-            { AT_RESPONSE_CODE_NAME_RING, AT_RESPONSE_CODE_RING },
-            { AT_RESPONSE_CODE_NAME_NO_CARRIER, AT_RESPONSE_CODE_NO_CARRIER },
-            { AT_RESPONSE_CODE_NAME_ERROR, AT_RESPONSE_CODE_ERROR },
-            { AT_RESPONSE_CODE_NAME_NO_DIALTONE, AT_RESPONSE_CODE_NO_DIALTONE },
-            { AT_RESPONSE_CODE_NAME_BUSY, AT_RESPONSE_CODE_BUSY },
-            { AT_RESPONSE_CODE_NAME_NO_ANSWER, AT_RESPONSE_CODE_NO_ANSWER },
-            { AT_RESPONSE_CODE_NAME_ABORTED, AT_RESPONSE_CODE_ABORTED }
-    };
+        {AT_RESPONSE_CODE_NAME_OK, AT_RESPONSE_CODE_OK},
+        {AT_RESPONSE_CODE_NAME_CONNECT, AT_RESPONSE_CODE_CONNECT},
+        {AT_RESPONSE_CODE_NAME_RING, AT_RESPONSE_CODE_RING},
+        {AT_RESPONSE_CODE_NAME_NO_CARRIER, AT_RESPONSE_CODE_NO_CARRIER},
+        {AT_RESPONSE_CODE_NAME_ERROR, AT_RESPONSE_CODE_ERROR},
+        {AT_RESPONSE_CODE_NAME_NO_DIALTONE, AT_RESPONSE_CODE_NO_DIALTONE},
+        {AT_RESPONSE_CODE_NAME_BUSY, AT_RESPONSE_CODE_BUSY},
+        {AT_RESPONSE_CODE_NAME_NO_ANSWER, AT_RESPONSE_CODE_NO_ANSWER},
+        {AT_RESPONSE_CODE_NAME_ABORTED, AT_RESPONSE_CODE_ABORTED}};
 
     /* test failing scenarios */
     uint8_t buffer[ATRP_INTERNAL_BUFFER_LEN] = {'\0'};
@@ -456,7 +453,7 @@ TEST_F(AtResponseParser, TestAtrpStateResponseCode)
     AtrpResetBuffer();
     for (uint32_t i = 0; i < countof(m); i++)
     {
-        int32_t count = snprintf((char *) buffer, BufferLength, "%s\n", m[i].name);
+        int32_t count = snprintf((char *)buffer, BufferLength, "%s\n", m[i].name);
         EXPECT_EQ(true, count > 0 && (uint32_t)count < BufferLength);
         EXPECT_EQ(count, AtrpStateResponseCode(buffer, count));
         EXPECT_EQ(m[i].code, CallbackResponseCode_fake.arg0_val);
@@ -466,39 +463,39 @@ TEST_F(AtResponseParser, TestAtrpStateResponseCode)
 TEST_F(AtResponseParser, TestRegisterCallback)
 {
     AtResponseParser_RegisterResponseCodeCallback(NULL);
-    EXPECT_EQ(ATRP_RESPONSE_CODE_EVENT, (void *) NULL);
+    EXPECT_EQ(ATRP_RESPONSE_CODE_EVENT, (void *)NULL);
     AtResponseParser_RegisterResponseCodeCallback(CallbackResponseCode);
-    EXPECT_EQ(ATRP_RESPONSE_CODE_EVENT, (void *) CallbackResponseCode);
+    EXPECT_EQ(ATRP_RESPONSE_CODE_EVENT, (void *)CallbackResponseCode);
 
     AtResponseParser_RegisterErrorCallback(NULL);
-    EXPECT_EQ(ATRP_ERROR_EVENT, (void *) NULL);
+    EXPECT_EQ(ATRP_ERROR_EVENT, (void *)NULL);
     AtResponseParser_RegisterErrorCallback(AtrpTestErrorHandler);
-    EXPECT_EQ(ATRP_ERROR_EVENT, (void *) AtrpTestErrorHandler);
+    EXPECT_EQ(ATRP_ERROR_EVENT, (void *)AtrpTestErrorHandler);
 
     AtResponseParser_RegisterCmdEchoCallback(NULL);
-    EXPECT_EQ(ATRP_CMD_ECHO_EVENT, (void *) NULL);
+    EXPECT_EQ(ATRP_CMD_ECHO_EVENT, (void *)NULL);
     AtResponseParser_RegisterCmdEchoCallback(CallbackCmdEcho);
-    EXPECT_EQ(ATRP_CMD_ECHO_EVENT, (void *) CallbackCmdEcho);
+    EXPECT_EQ(ATRP_CMD_ECHO_EVENT, (void *)CallbackCmdEcho);
 
     AtResponseParser_RegisterCmdCallback(NULL);
-    EXPECT_EQ(ATRP_CMD_EVENT, (void *) NULL);
+    EXPECT_EQ(ATRP_CMD_EVENT, (void *)NULL);
     AtResponseParser_RegisterCmdCallback(CallbackCmd);
-    EXPECT_EQ(ATRP_CMD_EVENT, (void *) CallbackCmd);
+    EXPECT_EQ(ATRP_CMD_EVENT, (void *)CallbackCmd);
 
     AtResponseParser_RegisterCmdArgCallback(NULL);
-    EXPECT_EQ(ATRP_CMDARG_EVENT, (void *) NULL);
+    EXPECT_EQ(ATRP_CMDARG_EVENT, (void *)NULL);
     AtResponseParser_RegisterCmdArgCallback(CallbackCmdArg);
-    EXPECT_EQ(ATRP_CMDARG_EVENT, (void *) CallbackCmdArg);
+    EXPECT_EQ(ATRP_CMDARG_EVENT, (void *)CallbackCmdArg);
 
     AtResponseParser_RegisterMiscCallback(NULL);
-    EXPECT_EQ(ATRP_MISC_EVENT, (void *) NULL);
+    EXPECT_EQ(ATRP_MISC_EVENT, (void *)NULL);
     AtResponseParser_RegisterMiscCallback(CallbackMisc);
-    EXPECT_EQ(ATRP_MISC_EVENT, (void *) CallbackMisc);
+    EXPECT_EQ(ATRP_MISC_EVENT, (void *)CallbackMisc);
 
     AtrpSwitchState(NULL);
-    EXPECT_EQ(state.StateCallback, (void *) NULL);
+    EXPECT_EQ(state.StateCallback, (void *)NULL);
     AtResponseParser_Reset();
-    EXPECT_EQ(state.StateCallback, (void *) AtrpStateRoot);
+    EXPECT_EQ(state.StateCallback, (void *)AtrpStateRoot);
 }
 
 TEST_F(AtResponseParser, TestAtrpStateError)
@@ -520,7 +517,7 @@ TEST_F(AtResponseParser, AtrpStateCmdargTest)
     int32_t result = 0U;
     uint8_t buffer[ATRP_INTERNAL_BUFFER_LEN] = {'\0'};
     state.BufferPosition = 1024;
-    result = AtrpStateCmdarg(buffer,2);
+    result = AtrpStateCmdarg(buffer, 2);
     EXPECT_EQ(ATRP_PARSE_FAILURE_RETVAL, result);
 }
 
@@ -528,7 +525,6 @@ TEST_F(AtResponseParser, AtrpStateErrorTest)
 {
     int32_t result = 1U;
     state.EventErrorCallback = NULL;
-    result = AtrpStateError(NULL,0);
+    result = AtrpStateError(NULL, 0);
     EXPECT_EQ(0, result);
-
 }

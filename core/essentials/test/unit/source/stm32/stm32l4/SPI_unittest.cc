@@ -30,7 +30,7 @@ extern "C"
 #include "Kiso_HAL_th.hh"
 
 #if KISO_FEATURE_SPI
-/* include faked interfaces */
+    /* include faked interfaces */
 
 #include "stm32l4xx_th.hh"
 #include "stm32l4xx_hal_dma_th.hh"
@@ -53,7 +53,7 @@ public:
     }
     // A static pointer that will be set upon setup to be able to access
     // the test instance from within static functions
-    static SPITestContext* TestContext;
+    static SPITestContext *TestContext;
 
     // Declare a static function used as application callback for SPI
     static void TestAppCallback(SPI_T spi, struct MCU_SPI_Event_S event);
@@ -65,7 +65,7 @@ public:
 };
 
 // static member variable
-SPITestContext* SPITestContext::TestContext = NULL;
+SPITestContext *SPITestContext::TestContext = NULL;
 // static member function
 void SPITestContext::TestAppCallback(SPI_T spi, struct MCU_SPI_Event_S event)
 {
@@ -80,8 +80,8 @@ void SPITestContext::TestAppCallback(SPI_T spi, struct MCU_SPI_Event_S event)
 
 uint32_t HAL_SPI_GetErrorCustomFake(SPI_HandleTypeDef *hspi)
 {
-  /* Return SPI ErrorCode */
-  return hspi->ErrorCode;
+    /* Return SPI ErrorCode */
+    return hspi->ErrorCode;
 }
 
 // Create an instance for the test context
@@ -89,10 +89,9 @@ SPITestContext testContext;
 SPI_HandleTypeDef spiHandle;
 SPI_TypeDef spiDef;
 
-class KISO_SPItest: public testing::Test
+class KISO_SPItest : public testing::Test
 {
 public:
-
 protected:
     virtual void SetUp()
     {
@@ -121,39 +120,37 @@ protected:
     }
 };
 
-
-
 TEST_F(KISO_SPItest, testSPI_initialize)
 {
     /* here we test the MCU_SPI_Initialize function */
 
     /* call initialize function without a valid SPI handler */
     Retcode_T rc = MCU_SPI_Initialize(0, SPITestContext::TestAppCallback);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_INVALID_PARAM), rc);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_INVALID_PARAM), rc);
 
     /* call initialize function with missing callback function  */
-    rc = MCU_SPI_Initialize((SPI_T) &testContext.mBSPHandleSPI, NULL);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_INVALID_PARAM), rc);
+    rc = MCU_SPI_Initialize((SPI_T)&testContext.mBSPHandleSPI, NULL);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_INVALID_PARAM), rc);
 
     /* call initialize function with correct parameters but unsupported transfer modes */
     testContext.mBSPHandleSPI.TransferMode = KISO_HAL_TRANSFER_MODE_BLOCKING;
-    rc = MCU_SPI_Initialize((SPI_T) &testContext.mBSPHandleSPI, &SPITestContext::TestAppCallback);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL,RETCODE_NOT_SUPPORTED), rc);
+    rc = MCU_SPI_Initialize((SPI_T)&testContext.mBSPHandleSPI, &SPITestContext::TestAppCallback);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NOT_SUPPORTED), rc);
 
     testContext.mBSPHandleSPI.TransferMode = KISO_HAL_TRANSFER_MODE_DMA;
     /* call initialize function with correct parameters  */
-    rc = MCU_SPI_Initialize((SPI_T) &testContext.mBSPHandleSPI, &SPITestContext::TestAppCallback);
+    rc = MCU_SPI_Initialize((SPI_T)&testContext.mBSPHandleSPI, &SPITestContext::TestAppCallback);
     EXPECT_EQ(RETCODE_OK, rc);
 
     testContext.mBSPHandleSPI.TransferMode = KISO_HAL_TRANSFER_MODE_INTERRUPT_RX_DMA_TX;
     /* call initialize function with correct parameters  */
-    rc = MCU_SPI_Initialize((SPI_T) &testContext.mBSPHandleSPI, &SPITestContext::TestAppCallback);
+    rc = MCU_SPI_Initialize((SPI_T)&testContext.mBSPHandleSPI, &SPITestContext::TestAppCallback);
     EXPECT_EQ(RETCODE_SEVERITY_WARNING, Retcode_GetSeverity(rc));
     EXPECT_EQ(RETCODE_NOT_SUPPORTED, Retcode_GetCode(rc));
 
     /* make copy of SPI object */
     SPITestContext testContextBackup = testContext;
-    rc = MCU_SPI_Deinitialize((SPI_T) &testContext.mBSPHandleSPI);
+    rc = MCU_SPI_Deinitialize((SPI_T)&testContext.mBSPHandleSPI);
     EXPECT_EQ(RETCODE_OK, rc);
 
     /* copy object back */
@@ -161,14 +158,14 @@ TEST_F(KISO_SPItest, testSPI_initialize)
 
     testContext.mBSPHandleSPI.TransferMode = KISO_HAL_TRANSFER_MODE_INTERRUPT;
     /* call initialize function with correct parameters  */
-    rc = MCU_SPI_Initialize((SPI_T) &testContext.mBSPHandleSPI, &SPITestContext::TestAppCallback);
+    rc = MCU_SPI_Initialize((SPI_T)&testContext.mBSPHandleSPI, &SPITestContext::TestAppCallback);
     EXPECT_EQ(RETCODE_OK, rc);
 
     testContext.mBSPHandleSPI.TransferMode = KISO_HAL_TRANSFER_MODE_INTERRUPT;
 
     /* make copy of SPI object */
     testContextBackup = testContext;
-    rc = MCU_SPI_Deinitialize((SPI_T) &testContext.mBSPHandleSPI);
+    rc = MCU_SPI_Deinitialize((SPI_T)&testContext.mBSPHandleSPI);
     EXPECT_EQ(RETCODE_OK, rc);
 
     /* copy object back */
@@ -177,9 +174,8 @@ TEST_F(KISO_SPItest, testSPI_initialize)
     /* restore initial state */
     testContext.mBSPHandleSPI.TransferMode = KISO_HAL_TRANSFER_MODE_DMA;
     /* call initialize function with correct parameters in DMA mode for further tests  */
-    rc = MCU_SPI_Initialize((SPI_T) &testContext.mBSPHandleSPI, &SPITestContext::TestAppCallback);
+    rc = MCU_SPI_Initialize((SPI_T)&testContext.mBSPHandleSPI, &SPITestContext::TestAppCallback);
     EXPECT_EQ(RETCODE_OK, rc);
-
 }
 
 TEST_F(KISO_SPItest, testSPI_Send)
@@ -189,31 +185,30 @@ TEST_F(KISO_SPItest, testSPI_Send)
 
     /* First try with wrong handle */
     Retcode_T rc = MCU_SPI_Send(0, buffer, len);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_INVALID_PARAM), rc);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_INVALID_PARAM), rc);
 
     /* Then use a valid handle, but invalid buffer */
-    rc = MCU_SPI_Send((SPI_T) &testContext.mBSPHandleSPI, NULL, len);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_NOT_SUPPORTED), rc);
+    rc = MCU_SPI_Send((SPI_T)&testContext.mBSPHandleSPI, NULL, len);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED), rc);
 
     /* Then use a valid handle, valid buffer but invalid len */
-    rc = MCU_SPI_Send((SPI_T) &testContext.mBSPHandleSPI, buffer, UINT16_MAX + 1);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_NOT_SUPPORTED), rc);
+    rc = MCU_SPI_Send((SPI_T)&testContext.mBSPHandleSPI, buffer, UINT16_MAX + 1);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED), rc);
 
     /* Then use a valid handle, valid buffer but invalid len */
-    rc = MCU_SPI_Send((SPI_T) &testContext.mBSPHandleSPI, buffer, 0);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_NOT_SUPPORTED), rc);
+    rc = MCU_SPI_Send((SPI_T)&testContext.mBSPHandleSPI, buffer, 0);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED), rc);
 
     /* STM32 transmit function return is valid */
     HAL_SPI_Transmit_DMA_fake.return_val = HAL_OK;
     /* Send with all valid parameters */
-    rc = MCU_SPI_Send((SPI_T) &testContext.mBSPHandleSPI, buffer, len);
+    rc = MCU_SPI_Send((SPI_T)&testContext.mBSPHandleSPI, buffer, len);
     EXPECT_EQ(RETCODE_OK, rc);
 
     /* STM32 transmit function return is not valid */
     HAL_SPI_Transmit_DMA_fake.return_val = HAL_ERROR;
-    rc = MCU_SPI_Send((SPI_T) &testContext.mBSPHandleSPI, buffer, len);
+    rc = MCU_SPI_Send((SPI_T)&testContext.mBSPHandleSPI, buffer, len);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), rc);
-
 }
 
 TEST_F(KISO_SPItest, testSPI_Receive)
@@ -223,32 +218,31 @@ TEST_F(KISO_SPItest, testSPI_Receive)
 
     /* First try with wrong handle */
     Retcode_T rc = MCU_SPI_Receive(0, NULL, 0);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_INVALID_PARAM), rc);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_INVALID_PARAM), rc);
 
     /* Then use a valid handle but invalid buffer and length */
-    rc = MCU_SPI_Receive((SPI_T) &testContext.mBSPHandleSPI, NULL, 0);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_NOT_SUPPORTED), rc);
+    rc = MCU_SPI_Receive((SPI_T)&testContext.mBSPHandleSPI, NULL, 0);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED), rc);
 
     /* Then use a valid handle and buffer but invalid length */
-    rc = MCU_SPI_Receive((SPI_T) &testContext.mBSPHandleSPI, buffer, 0);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_NOT_SUPPORTED), rc);
+    rc = MCU_SPI_Receive((SPI_T)&testContext.mBSPHandleSPI, buffer, 0);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED), rc);
 
     /* Then use a valid handle, valid buffer but invalid length */
-    rc = MCU_SPI_Receive((SPI_T) &testContext.mBSPHandleSPI, buffer, UINT16_MAX + 1);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_NOT_SUPPORTED), rc);
+    rc = MCU_SPI_Receive((SPI_T)&testContext.mBSPHandleSPI, buffer, UINT16_MAX + 1);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED), rc);
 
     /* STM32 receive function return is valid */
     HAL_SPI_Receive_DMA_fake.return_val = HAL_OK;
     /* Receive with valid parameters */
-    rc = MCU_SPI_Receive((SPI_T) &testContext.mBSPHandleSPI, buffer, len);
+    rc = MCU_SPI_Receive((SPI_T)&testContext.mBSPHandleSPI, buffer, len);
     EXPECT_EQ(RETCODE_OK, rc);
 
     /* STM32 receive function return is not valid */
     HAL_SPI_Receive_DMA_fake.return_val = HAL_ERROR;
     /* Receive with valid parameters */
-    rc = MCU_SPI_Receive((SPI_T) &testContext.mBSPHandleSPI, buffer, len);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR,RETCODE_FAILURE), rc);
-
+    rc = MCU_SPI_Receive((SPI_T)&testContext.mBSPHandleSPI, buffer, len);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), rc);
 }
 
 TEST_F(KISO_SPItest, testSPI_Transfer)
@@ -259,40 +253,39 @@ TEST_F(KISO_SPItest, testSPI_Transfer)
 
     /* First try with wrong handle */
     Retcode_T rc = MCU_SPI_Transfer(0, NULL, NULL, 0);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_INVALID_PARAM), rc);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_INVALID_PARAM), rc);
 
     /* Then use a valid handle but invalid data buffers and length */
-    rc = MCU_SPI_Transfer((SPI_T) &testContext.mBSPHandleSPI, NULL, NULL, 0);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_NOT_SUPPORTED), rc);
+    rc = MCU_SPI_Transfer((SPI_T)&testContext.mBSPHandleSPI, NULL, NULL, 0);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED), rc);
 
     /* Try with valid handle, valid data_out and length, invalid data_in */
-    rc = MCU_SPI_Transfer((SPI_T) &testContext.mBSPHandleSPI, data_out, NULL, len);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_NOT_SUPPORTED), rc);
+    rc = MCU_SPI_Transfer((SPI_T)&testContext.mBSPHandleSPI, data_out, NULL, len);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED), rc);
 
     /* Try with valid handle, valid data_in and length, invalid data_in */
-    rc = MCU_SPI_Transfer((SPI_T) &testContext.mBSPHandleSPI, NULL, data_in, len);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_NOT_SUPPORTED), rc);
+    rc = MCU_SPI_Transfer((SPI_T)&testContext.mBSPHandleSPI, NULL, data_in, len);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED), rc);
 
     /* Try with valid handle, valid buffers, invalid length */
-    rc = MCU_SPI_Transfer((SPI_T) &testContext.mBSPHandleSPI, data_out, data_in, 0);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_NOT_SUPPORTED), rc);
+    rc = MCU_SPI_Transfer((SPI_T)&testContext.mBSPHandleSPI, data_out, data_in, 0);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED), rc);
 
     /* Try with valid handle, valid buffers, invalid length */
-    rc = MCU_SPI_Transfer((SPI_T) &testContext.mBSPHandleSPI, data_out, data_in, UINT16_MAX + 1);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_NOT_SUPPORTED), rc);
+    rc = MCU_SPI_Transfer((SPI_T)&testContext.mBSPHandleSPI, data_out, data_in, UINT16_MAX + 1);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED), rc);
 
     /* STM32 receive function return is invalid */
     HAL_SPI_TransmitReceive_DMA_fake.return_val = HAL_ERROR;
     /* Try with valid parameters */
-    rc = MCU_SPI_Transfer((SPI_T) &testContext.mBSPHandleSPI, data_out, data_in, len);
+    rc = MCU_SPI_Transfer((SPI_T)&testContext.mBSPHandleSPI, data_out, data_in, len);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), rc);
 
     /* STM32 receive function return is valid */
     HAL_SPI_TransmitReceive_DMA_fake.return_val = HAL_OK;
     /* Try with valid parameters */
-    rc = MCU_SPI_Transfer((SPI_T) &testContext.mBSPHandleSPI, data_out, data_in, len);
+    rc = MCU_SPI_Transfer((SPI_T)&testContext.mBSPHandleSPI, data_out, data_in, len);
     EXPECT_EQ(RETCODE_OK, rc);
-
 }
 
 TEST_F(KISO_SPItest, testSPI_GetDataCount)
@@ -302,24 +295,23 @@ TEST_F(KISO_SPItest, testSPI_GetDataCount)
     EXPECT_EQ(UINT32_C(0), count);
 
     // Then use a valid handle
-    count = MCU_SPI_GetDataCount((SPI_T) &testContext.mBSPHandleSPI);
+    count = MCU_SPI_GetDataCount((SPI_T)&testContext.mBSPHandleSPI);
     EXPECT_EQ(UINT32_C(0), count);
 
     HAL_SPI_GetState_fake.return_val = HAL_SPI_STATE_BUSY_RX;
     // Then use a valid handle
-    count = MCU_SPI_GetDataCount((SPI_T) &testContext.mBSPHandleSPI);
+    count = MCU_SPI_GetDataCount((SPI_T)&testContext.mBSPHandleSPI);
     EXPECT_EQ(UINT32_C(0), count);
 
     HAL_SPI_GetState_fake.return_val = HAL_SPI_STATE_BUSY_TX;
     // Then use a valid handle
-    count = MCU_SPI_GetDataCount((SPI_T) &testContext.mBSPHandleSPI);
+    count = MCU_SPI_GetDataCount((SPI_T)&testContext.mBSPHandleSPI);
     EXPECT_EQ(UINT32_C(0), count);
 
     HAL_SPI_GetState_fake.return_val = HAL_SPI_STATE_BUSY_TX_RX;
     // Then use a valid handle
-    count = MCU_SPI_GetDataCount((SPI_T) &testContext.mBSPHandleSPI);
+    count = MCU_SPI_GetDataCount((SPI_T)&testContext.mBSPHandleSPI);
     EXPECT_EQ(UINT32_C(0), count);
-
 }
 
 /**
@@ -329,11 +321,11 @@ TEST_F(KISO_SPItest, testSPI_GetDataCount)
 TEST_F(KISO_SPItest, testSPI_IRQHandler)
 {
     /* First try with totally wrong parameters */
-	RESET_FAKE(HAL_SPI_IRQHandler);
+    RESET_FAKE(HAL_SPI_IRQHandler);
     SPI_IRQHandler(0);
     EXPECT_EQ(0u, HAL_SPI_IRQHandler_fake.call_count);
     /* Then use a valid handle */
-    SPI_IRQHandler((SPI_T) &testContext.mBSPHandleSPI);
+    SPI_IRQHandler((SPI_T)&testContext.mBSPHandleSPI);
     EXPECT_EQ(1u, HAL_SPI_IRQHandler_fake.call_count);
     RESET_FAKE(HAL_SPI_IRQHandler);
 }
@@ -345,11 +337,11 @@ TEST_F(KISO_SPItest, testSPI_IRQHandler)
 TEST_F(KISO_SPItest, testSPI_DMARxHandler)
 {
     /* First try with totally wrong parameters */
-	RESET_FAKE(HAL_DMA_IRQHandler);
+    RESET_FAKE(HAL_DMA_IRQHandler);
     SPI_DMARxHandler(0);
     EXPECT_EQ(0u, HAL_DMA_IRQHandler_fake.call_count);
     /* Then use a valid handle */
-    SPI_DMARxHandler((SPI_T) &testContext.mBSPHandleSPI);
+    SPI_DMARxHandler((SPI_T)&testContext.mBSPHandleSPI);
     EXPECT_EQ(1u, HAL_DMA_IRQHandler_fake.call_count);
     RESET_FAKE(HAL_DMA_IRQHandler);
 }
@@ -361,11 +353,11 @@ TEST_F(KISO_SPItest, testSPI_DMARxHandler)
 TEST_F(KISO_SPItest, testSPI_DMATxHandler)
 {
     /* First try with totally wrong parameters */
-	RESET_FAKE(HAL_DMA_IRQHandler);
+    RESET_FAKE(HAL_DMA_IRQHandler);
     SPI_DMATxHandler(0);
     EXPECT_EQ(0u, HAL_DMA_IRQHandler_fake.call_count);
     /* Then use a valid handle */
-    SPI_DMATxHandler((SPI_T) &testContext.mBSPHandleSPI);
+    SPI_DMATxHandler((SPI_T)&testContext.mBSPHandleSPI);
     EXPECT_EQ(1u, HAL_DMA_IRQHandler_fake.call_count);
     RESET_FAKE(HAL_DMA_IRQHandler);
 }
@@ -378,15 +370,15 @@ TEST_F(KISO_SPItest, testSPI_HAL_SPI_ErrorCallback)
 {
     /* struct MCU_SPI_Event_S Events = { 0, 0, 0, 0, 0, 0 }; */
 
-//#define HAL_SPI_ERROR_NONE   (uint32_t)0x00000000  /*!< No error                          */
-//#define HAL_SPI_ERROR_MODF   (uint32_t)0x00000001  /*!< MODF error                        */
-//#define HAL_SPI_ERROR_CRC    (uint32_t)0x00000002  /*!< CRC error                         */
-//#define HAL_SPI_ERROR_OVR    (uint32_t)0x00000004  /*!< OVR error                         */
-//#define HAL_SPI_ERROR_FRE    (uint32_t)0x00000008  /*!< FRE error                         */
-//#define HAL_SPI_ERROR_DMA    (uint32_t)0x00000010  /*!< DMA transfer error                */
-//#define HAL_SPI_ERROR_FLAG   (uint32_t)0x00000020  /*!< Error on BSY/TXE/FTLVL/FRLVL Flag */
-//#define HAL_SPI_ERROR_UNKNOW (uint32_t)0x00000040  /*!< Unknown error                     */
-	//HAL_SPI_GetError_fake.custom_fake = HAL_SPI_GetErrorCustomFake;
+    //#define HAL_SPI_ERROR_NONE   (uint32_t)0x00000000  /*!< No error                          */
+    //#define HAL_SPI_ERROR_MODF   (uint32_t)0x00000001  /*!< MODF error                        */
+    //#define HAL_SPI_ERROR_CRC    (uint32_t)0x00000002  /*!< CRC error                         */
+    //#define HAL_SPI_ERROR_OVR    (uint32_t)0x00000004  /*!< OVR error                         */
+    //#define HAL_SPI_ERROR_FRE    (uint32_t)0x00000008  /*!< FRE error                         */
+    //#define HAL_SPI_ERROR_DMA    (uint32_t)0x00000010  /*!< DMA transfer error                */
+    //#define HAL_SPI_ERROR_FLAG   (uint32_t)0x00000020  /*!< Error on BSY/TXE/FTLVL/FRLVL Flag */
+    //#define HAL_SPI_ERROR_UNKNOW (uint32_t)0x00000040  /*!< Unknown error                     */
+    //HAL_SPI_GetError_fake.custom_fake = HAL_SPI_GetErrorCustomFake;
     /* First try with totally wrong parameters */
     HAL_SPI_ErrorCallback(NULL);
 
@@ -394,56 +386,55 @@ TEST_F(KISO_SPItest, testSPI_HAL_SPI_ErrorCallback)
     HAL_SPI_GetError_fake.return_val = HAL_SPI_ERROR_NONE;
     /* Then use a valid handle */
     HAL_SPI_ErrorCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(0u,testContext.mLastEvent.RxReady);
-    EXPECT_EQ(0u,testContext.mLastEvent.RxError);
-    EXPECT_EQ(0u,testContext.mLastEvent.RxComplete);
-    EXPECT_EQ(0u,testContext.mLastEvent.TxError);
-    EXPECT_EQ(0u,testContext.mLastEvent.TxComplete);
-    EXPECT_EQ(0u,testContext.mLastEvent.DataLoss);
+    EXPECT_EQ(0u, testContext.mLastEvent.RxReady);
+    EXPECT_EQ(0u, testContext.mLastEvent.RxError);
+    EXPECT_EQ(0u, testContext.mLastEvent.RxComplete);
+    EXPECT_EQ(0u, testContext.mLastEvent.TxError);
+    EXPECT_EQ(0u, testContext.mLastEvent.TxComplete);
+    EXPECT_EQ(0u, testContext.mLastEvent.DataLoss);
 
     /* Fake return of STM32 SPI GetError function */
     HAL_SPI_GetError_fake.return_val = HAL_SPI_ERROR_MODF;
     /* Then use a valid handle */
     HAL_SPI_ErrorCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1u,testContext.mLastEvent.DataLoss);
+    EXPECT_EQ(1u, testContext.mLastEvent.DataLoss);
 
     /* Fake return of STM32 SPI GetError function */
     HAL_SPI_GetError_fake.return_val = HAL_SPI_ERROR_CRC;
     /* Then use a valid handle */
     HAL_SPI_ErrorCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1u,testContext.mLastEvent.DataLoss);
-    EXPECT_EQ(1u,testContext.mLastEvent.RxError);
+    EXPECT_EQ(1u, testContext.mLastEvent.DataLoss);
+    EXPECT_EQ(1u, testContext.mLastEvent.RxError);
 
     /* Fake return of STM32 SPI GetError function */
     HAL_SPI_GetError_fake.return_val = HAL_SPI_ERROR_OVR;
     /* Then use a valid handle */
     HAL_SPI_ErrorCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1u,testContext.mLastEvent.DataLoss);
-    EXPECT_EQ(1u,testContext.mLastEvent.RxError);
+    EXPECT_EQ(1u, testContext.mLastEvent.DataLoss);
+    EXPECT_EQ(1u, testContext.mLastEvent.RxError);
 
     /* Fake return of STM32 SPI GetError function */
     HAL_SPI_GetError_fake.return_val = HAL_SPI_ERROR_FRE;
     /* Then use a valid handle */
     HAL_SPI_ErrorCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1u,testContext.mLastEvent.DataLoss);
-    EXPECT_EQ(1u,testContext.mLastEvent.RxError);
+    EXPECT_EQ(1u, testContext.mLastEvent.DataLoss);
+    EXPECT_EQ(1u, testContext.mLastEvent.RxError);
 
     /* Fake return of STM32 SPI GetError function */
     HAL_SPI_GetError_fake.return_val = HAL_SPI_ERROR_DMA;
     /* Then use a valid handle */
     HAL_SPI_ErrorCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1u,testContext.mLastEvent.DataLoss);
-    EXPECT_EQ(1u,testContext.mLastEvent.RxError);
-    EXPECT_EQ(1u,testContext.mLastEvent.TxError);
+    EXPECT_EQ(1u, testContext.mLastEvent.DataLoss);
+    EXPECT_EQ(1u, testContext.mLastEvent.RxError);
+    EXPECT_EQ(1u, testContext.mLastEvent.TxError);
 
     /* Fake return of STM32 SPI GetError function */
     HAL_SPI_GetError_fake.return_val = HAL_SPI_ERROR_FLAG;
     /* Then use a valid handle */
     HAL_SPI_ErrorCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1u,testContext.mLastEvent.DataLoss);
-    EXPECT_EQ(1u,testContext.mLastEvent.RxError);
-    EXPECT_EQ(1u,testContext.mLastEvent.TxError);
-
+    EXPECT_EQ(1u, testContext.mLastEvent.DataLoss);
+    EXPECT_EQ(1u, testContext.mLastEvent.RxError);
+    EXPECT_EQ(1u, testContext.mLastEvent.TxError);
 }
 
 /**
@@ -453,13 +444,13 @@ TEST_F(KISO_SPItest, testSPI_HAL_SPI_ErrorCallback)
 TEST_F(KISO_SPItest, testSPI_HAL_SPI_TxCpltCallback)
 {
     /* First try with totally wrong parameters */
-	testContext.mTestAppCallbackCount = 0;
+    testContext.mTestAppCallbackCount = 0;
     HAL_SPI_TxCpltCallback(NULL);
-    EXPECT_EQ(0u,testContext.mTestAppCallbackCount);
+    EXPECT_EQ(0u, testContext.mTestAppCallbackCount);
     /* Then use a valid handle */
     HAL_SPI_TxCpltCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1u,testContext.mLastEvent.TxComplete);
-    EXPECT_EQ(1u,testContext.mTestAppCallbackCount);
+    EXPECT_EQ(1u, testContext.mLastEvent.TxComplete);
+    EXPECT_EQ(1u, testContext.mTestAppCallbackCount);
 }
 
 /**
@@ -469,13 +460,13 @@ TEST_F(KISO_SPItest, testSPI_HAL_SPI_TxCpltCallback)
 TEST_F(KISO_SPItest, testSPI_HAL_SPI_RxCpltCallback)
 {
     /* First try with totally wrong parameters */
-	testContext.mTestAppCallbackCount = 0;
+    testContext.mTestAppCallbackCount = 0;
     HAL_SPI_RxCpltCallback(NULL);
-    EXPECT_EQ(0u,testContext.mTestAppCallbackCount);
+    EXPECT_EQ(0u, testContext.mTestAppCallbackCount);
     /* Then use a valid handle */
     HAL_SPI_RxCpltCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1u,testContext.mLastEvent.RxComplete);
-    EXPECT_EQ(1u,testContext.mTestAppCallbackCount);
+    EXPECT_EQ(1u, testContext.mLastEvent.RxComplete);
+    EXPECT_EQ(1u, testContext.mTestAppCallbackCount);
 }
 
 /**
@@ -485,14 +476,14 @@ TEST_F(KISO_SPItest, testSPI_HAL_SPI_RxCpltCallback)
 TEST_F(KISO_SPItest, testSPI_HAL_SPI_TxRxCpltCallback)
 {
     /* First try with totally wrong parameters */
-	testContext.mTestAppCallbackCount = 0;
+    testContext.mTestAppCallbackCount = 0;
     HAL_SPI_TxRxCpltCallback(NULL);
-    EXPECT_EQ(0u,testContext.mTestAppCallbackCount);
+    EXPECT_EQ(0u, testContext.mTestAppCallbackCount);
     /* Then use a valid handle */
     HAL_SPI_TxRxCpltCallback(&testContext.mBSPHandleSPI.hspi);
-    EXPECT_EQ(1u,testContext.mLastEvent.RxComplete);
-    EXPECT_EQ(1u,testContext.mLastEvent.TxComplete);
-    EXPECT_EQ(1u,testContext.mTestAppCallbackCount);
+    EXPECT_EQ(1u, testContext.mLastEvent.RxComplete);
+    EXPECT_EQ(1u, testContext.mLastEvent.TxComplete);
+    EXPECT_EQ(1u, testContext.mTestAppCallbackCount);
 }
 
 /**
@@ -505,21 +496,20 @@ TEST_F(KISO_SPItest, testSPI_DeInitializer)
 {
     /* First try with totally wrong parameters */
     Retcode_T rc = MCU_SPI_Deinitialize(0);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_INVALID_PARAM), rc);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_INVALID_PARAM), rc);
     /* Then use the correct handle */
-    rc = MCU_SPI_Deinitialize((SPI_T) &testContext.mBSPHandleSPI);
+    rc = MCU_SPI_Deinitialize((SPI_T)&testContext.mBSPHandleSPI);
     EXPECT_EQ(RETCODE_OK, rc);
     /* check if the pointers are reset to default */
-    EXPECT_EQ(testContext.mBSPHandleSPI.AppCallback,nullptr);
-    EXPECT_EQ(testContext.mBSPHandleSPI.IRQCallback,nullptr);
-    EXPECT_EQ(testContext.mBSPHandleSPI.DmaTxCallback,nullptr);
-    EXPECT_EQ(testContext.mBSPHandleSPI.DmaRxCallback,nullptr);
-    EXPECT_EQ(testContext.mBSPHandleSPI.RxFunPtr,nullptr);
-    EXPECT_EQ(testContext.mBSPHandleSPI.TxFunPtr,nullptr);
+    EXPECT_EQ(testContext.mBSPHandleSPI.AppCallback, nullptr);
+    EXPECT_EQ(testContext.mBSPHandleSPI.IRQCallback, nullptr);
+    EXPECT_EQ(testContext.mBSPHandleSPI.DmaTxCallback, nullptr);
+    EXPECT_EQ(testContext.mBSPHandleSPI.DmaRxCallback, nullptr);
+    EXPECT_EQ(testContext.mBSPHandleSPI.RxFunPtr, nullptr);
+    EXPECT_EQ(testContext.mBSPHandleSPI.TxFunPtr, nullptr);
     /* After this any call except to initalize should fail */
-    rc = MCU_SPI_Send((SPI_T) &testContext.mBSPHandleSPI, NULL, 0);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING,RETCODE_NOT_SUPPORTED), rc);
-
+    rc = MCU_SPI_Send((SPI_T)&testContext.mBSPHandleSPI, NULL, 0);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NOT_SUPPORTED), rc);
 }
 /*****************************************************************************************/
 #else

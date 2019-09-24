@@ -42,11 +42,11 @@
 #if (__STDC_VERSION__ <= 199901L)
 
 #ifndef __FILE__
-#define __FILE_    "Filename not defined"
+#define __FILE_ "Filename not defined"
 #endif
 
 #ifndef __LINE__
-#define __LINE__    0
+#define __LINE__ 0
 #endif
 
 /**
@@ -82,8 +82,7 @@
  *
  * @param[in]   message : A string about the test case - note that it is not compiled into the code.
  */
-#define static_assert(expression, message) \
-   enum { ASSERT_CONCAT(ASSERT_LINE_, __LINE__) = 1/(!!(expression)) }
+#define static_assert(expression, message) enum {ASSERT_CONCAT(ASSERT_LINE_, __LINE__) = 1 / (!!(expression)) }
 #else
 
 /* Expand the C11 Keyword _Static_assert if not included already by the compiler */
@@ -110,9 +109,14 @@
  *
  * @param[in]   Expression : A logical statement which can be true or false.
  */
-#define assert(expression) \
-   do{ if (!(expression)) { Assert_Dynamic(__LINE__, (const unsigned char*)__FILE__); } } while (0)
-
+#define assert(expression)                                             \
+    do                                                                 \
+    {                                                                  \
+        if (!(expression))                                             \
+        {                                                              \
+            Assert_Dynamic(__LINE__, (const unsigned char *)__FILE__); \
+        }                                                              \
+    } while (0)
 
 /**
  * @brief       Type definition for the assertion callback.
@@ -124,7 +128,7 @@
  *
  * @param[in]   file : The file name of the source code from where the assert() is called.
  */
-typedef void (*Assert_Callback_T)(const unsigned long line, const unsigned char * const file);
+typedef void (*Assert_Callback_T)(const unsigned long line, const unsigned char *const file);
 
 /**
  * @brief       Initializes the Assert module.
@@ -160,9 +164,9 @@ Retcode_T Assert_Initialize(Assert_Callback_T callback);
  *
  * @param[in]   file : The file name of the source code from where the assert() is called.
  */
-void Assert_Dynamic(const unsigned long line, const unsigned char * const file);
+void Assert_Dynamic(const unsigned long line, const unsigned char *const file);
 
-#else /* valid only for release builds */
+#else         /* valid only for release builds */
 
 /**
  * @note        For release builds where NDEBUG flag is defined
@@ -171,8 +175,8 @@ void Assert_Dynamic(const unsigned long line, const unsigned char * const file);
  *              to suppress unused function warning.
  */
 #undef assert /* removing the default compiler assert function */
-#define assert(expression)                     ((void)0)
-#define Assert_Initialize(callback)               ((Retcode_T)0)
+#define assert(expression) ((void)0)
+#define Assert_Initialize(callback) ((Retcode_T)0)
 
 #endif /* NDEBUG */
 

@@ -11,7 +11,7 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
- 
+
 #ifndef CORE_CMINSTR_TH_HH_
 #define CORE_CMINSTR_TH_HH_
 

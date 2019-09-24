@@ -22,7 +22,7 @@
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_RNG
 
-#define AS_CUBE_HANDLE(rng) ((RNG_HandleTypeDef*) rng)
+#define AS_CUBE_HANDLE(rng) ((RNG_HandleTypeDef *)rng)
 
 /**
  * @brief Mapper for HAL function return values.
@@ -59,7 +59,7 @@ static inline Retcode_T MapHalRetToMcuRet(HAL_StatusTypeDef halRet)
 Retcode_T MCU_RNG_Initialize(RNG_T rng)
 {
     Retcode_T retcode = RETCODE_OK;
-    RNG_HandleTypeDef* cubeHandle = NULL;
+    RNG_HandleTypeDef *cubeHandle = NULL;
     HAL_StatusTypeDef status = HAL_OK;
 
     if (NULL == rng)
@@ -80,7 +80,7 @@ Retcode_T MCU_RNG_Initialize(RNG_T rng)
 Retcode_T MCU_RNG_Deinitialize(RNG_T rng)
 {
     Retcode_T retcode = RETCODE_OK;
-    RNG_HandleTypeDef* cubeHandle = NULL;
+    RNG_HandleTypeDef *cubeHandle = NULL;
     HAL_StatusTypeDef status = HAL_OK;
 
     if (NULL == rng)
@@ -98,10 +98,10 @@ Retcode_T MCU_RNG_Deinitialize(RNG_T rng)
     return retcode;
 }
 
-Retcode_T MCU_RNG_Generate(RNG_T rng, uint8_t* buffer, uint32_t length)
+Retcode_T MCU_RNG_Generate(RNG_T rng, uint8_t *buffer, uint32_t length)
 {
     Retcode_T retcode = RETCODE_OK;
-    RNG_HandleTypeDef* cubeHandle = NULL;
+    RNG_HandleTypeDef *cubeHandle = NULL;
     HAL_StatusTypeDef status = HAL_OK;
     uint32_t random32 = 0;
 
@@ -113,7 +113,7 @@ Retcode_T MCU_RNG_Generate(RNG_T rng, uint8_t* buffer, uint32_t length)
     cubeHandle = AS_CUBE_HANDLE(rng);
 
     for (uint32_t i = 0; (RETCODE_OK == retcode) && (i < length);
-            i += sizeof(uint32_t))
+         i += sizeof(uint32_t))
     {
         /* Check if remaining buffer length allows direct write into the
          * buffer and... */
@@ -121,7 +121,7 @@ Retcode_T MCU_RNG_Generate(RNG_T rng, uint8_t* buffer, uint32_t length)
         {
             /* ...fill into buffer directly. */
             status = HAL_RNG_GenerateRandomNumber(cubeHandle,
-                    (uint32_t*) &buffer[i]);
+                                                  (uint32_t *)&buffer[i]);
             retcode = MapHalRetToMcuRet(status);
         }
         else
@@ -133,7 +133,7 @@ Retcode_T MCU_RNG_Generate(RNG_T rng, uint8_t* buffer, uint32_t length)
             if (RETCODE_OK == retcode)
             {
                 /* ...and copy only the chunk of bytes needed. */
-                memcpy(&(buffer[i]), (uint8_t*) &random32, length - i);
+                memcpy(&(buffer[i]), (uint8_t *)&random32, length - i);
             }
         }
     }

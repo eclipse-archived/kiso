@@ -25,7 +25,7 @@
  *
  * @file
  **/
- 
+
 /* Header definition */
 #ifndef KISO_CMDPROCESSOR_TH_HH_
 #define KISO_CMDPROCESSOR_TH_HH_
@@ -42,11 +42,11 @@ typedef void (*CmdProcessor_Func_T)(void *param1, uint32_t param2);
 
 /* Mock-ups for the provided interfaces */
 
-FAKE_VOID_FUNC(CmdProcessor_Suspend, CmdProcessor_T*)
-FAKE_VOID_FUNC(CmdProcessor_Resume, CmdProcessor_T*)
-FAKE_VALUE_FUNC(Retcode_T, CmdProcessor_Initialize, CmdProcessor_T*, const char*, uint32_t, uint32_t, uint32_t)
-FAKE_VALUE_FUNC(Retcode_T, CmdProcessor_Enqueue, CmdProcessor_T*, CmdProcessor_Func_T, void*, uint32_t)
-FAKE_VALUE_FUNC(Retcode_T, CmdProcessor_EnqueueFromIsr, CmdProcessor_T*, CmdProcessor_Func_T, void*, uint32_t)
+FAKE_VOID_FUNC(CmdProcessor_Suspend, CmdProcessor_T *)
+FAKE_VOID_FUNC(CmdProcessor_Resume, CmdProcessor_T *)
+FAKE_VALUE_FUNC(Retcode_T, CmdProcessor_Initialize, CmdProcessor_T *, const char *, uint32_t, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, CmdProcessor_Enqueue, CmdProcessor_T *, CmdProcessor_Func_T, void *, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, CmdProcessor_EnqueueFromIsr, CmdProcessor_T *, CmdProcessor_Func_T, void *, uint32_t)
 
 #endif /* KISO_CMDPROCESSOR_TH_HH_ */
 

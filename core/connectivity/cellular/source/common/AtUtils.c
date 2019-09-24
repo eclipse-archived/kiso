@@ -22,8 +22,8 @@
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
 
-#define IPV4_ADDR_BYTE_COUNT    4
-#define LONG_INT_STR_LENGTH     11
+#define IPV4_ADDR_BYTE_COUNT 4
+#define LONG_INT_STR_LENGTH 11
 
 Retcode_T Utils_ConvertAtResponseRetcodeToCellularRetcode(Retcode_T retcode)
 {
@@ -35,8 +35,8 @@ Retcode_T Utils_ConvertAtResponseRetcodeToCellularRetcode(Retcode_T retcode)
         result = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_NOT_RESPONSIVE);
         break;
     case RETCODE_AT_RESPONSE_QUEUE_WRONG_EVENT:
-        case RETCODE_AT_RESPONSE_QUEUE_ERROR_EVENT:
-        case RETCODE_AT_RESPONSE_QUEUE_WRONG_RESPONSE:
+    case RETCODE_AT_RESPONSE_QUEUE_ERROR_EVENT:
+    case RETCODE_AT_RESPONSE_QUEUE_WRONG_RESPONSE:
         result = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_RESPONSE_UNEXPECTED);
         break;
     default:
@@ -123,7 +123,7 @@ Retcode_T Utils_Strtol(const uint8_t *buffer, uint32_t BufferLength, int32_t *nu
         }
         else
         {
-            *number = (IsSigned ? -1 : 1) * ((int32_t) ResultNumber);
+            *number = (IsSigned ? -1 : 1) * ((int32_t)ResultNumber);
         }
     }
 
@@ -176,7 +176,7 @@ Retcode_T Utils_WaitForAndHandleResponseCode(uint32_t timeout, Retcode_T retcode
             retcode = ResponseCodeRetcode;
         }
     }
-    else if (Retcode_GetCode(ResponseCodeRetcode) == (uint32_t) RETCODE_AT_RESPONSE_QUEUE_TIMEOUT) /* modem resp. timeout */
+    else if (Retcode_GetCode(ResponseCodeRetcode) == (uint32_t)RETCODE_AT_RESPONSE_QUEUE_TIMEOUT) /* modem resp. timeout */
     {
         /* overwrite with not-response-error */
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_NOT_RESPONSIVE);
@@ -195,9 +195,7 @@ uint8_t *Utils_TrimFlukeCharacters(uint8_t *buffer, uint32_t BufferLength, uint3
     uint32_t ResultBufferLength = BufferLength;
     uint8_t *ResultBuffer = buffer;
 
-    while (ResultBufferLength > 0
-            && ((*ResultBuffer) < AT_SPACE_CHARACTER || (*ResultBuffer) > AT_TILDE_CHARACTER)
-            && (AT_DEFAULT_S4_CHARACTER != (*ResultBuffer) && AT_DEFAULT_S3_CHARACTER != (*ResultBuffer)))
+    while (ResultBufferLength > 0 && ((*ResultBuffer) < AT_SPACE_CHARACTER || (*ResultBuffer) > AT_TILDE_CHARACTER) && (AT_DEFAULT_S4_CHARACTER != (*ResultBuffer) && AT_DEFAULT_S3_CHARACTER != (*ResultBuffer)))
     {
         ++ResultBuffer;
         --ResultBufferLength;

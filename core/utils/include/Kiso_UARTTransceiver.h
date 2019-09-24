@@ -103,7 +103,6 @@ typedef void (*UARTransceiver_Callback_T)(struct MCU_UART_Event_S event);
 typedef void (*UARTransceiver_Callback_T)(struct MCU_LEUART_Event_S event);
 #endif
 
-
 typedef bool (*UARTTransceiver_EndofFrameCheckFunc_T)(uint8_t lastByte);
 
 enum UARTTransceiver_State_E
@@ -150,7 +149,7 @@ struct _UARTTransceiver_S
     RingBuffer_T UartRxBufDescr;
 
     /* receive buffer*/
-    uint8_t * RawRxBuffer;
+    uint8_t *RawRxBuffer;
 
     uint32_t RawRxBufferSize;
 
@@ -207,10 +206,9 @@ typedef struct _UARTTransceiver_S UARTTransceiver_T;
  * 
  */
 Retcode_T UARTTransceiver_Initialize(
-        UARTTransceiver_T *transceiver,
-        HWHandle_T handle, uint8_t * rawRxBuffer, uint32_t rawRxBufferSize,
-        enum UARTTransceiver_UartType_E type
-);
+    UARTTransceiver_T *transceiver,
+    HWHandle_T handle, uint8_t *rawRxBuffer, uint32_t rawRxBufferSize,
+    enum UARTTransceiver_UartType_E type);
 
 /**
  * @brief
@@ -253,8 +251,8 @@ Retcode_T UARTTransceiver_Deinitialize(UARTTransceiver_T *transceiver);
  * 
  */
 Retcode_T UARTTransceiver_Start(
-        UARTTransceiver_T *transceiver,
-        UARTTransceiver_EndofFrameCheckFunc_T frameEndCheckFunc);
+    UARTTransceiver_T *transceiver,
+    UARTTransceiver_EndofFrameCheckFunc_T frameEndCheckFunc);
 
 /**
  * @brief
@@ -286,9 +284,9 @@ Retcode_T UARTTransceiver_Start(
  * 
  */
 Retcode_T UARTTransceiver_StartInAsyncMode(
-        UARTTransceiver_T *transceiver,
-        UARTTransceiver_EndofFrameCheckFunc_T frameEndCheckFunc,
-        UARTransceiver_Callback_T callback);
+    UARTTransceiver_T *transceiver,
+    UARTTransceiver_EndofFrameCheckFunc_T frameEndCheckFunc,
+    UARTransceiver_Callback_T callback);
 
 /**
  * @brief
@@ -405,8 +403,8 @@ Retcode_T UARTTransceiver_Stop(UARTTransceiver_T *transceiver);
  * 
  */
 Retcode_T UARTTransceiver_ReadData(
-        UARTTransceiver_T *transceiver,
-        uint8_t *buffer, uint32_t size, uint32_t *length, uint32_t timeout_ms);
+    UARTTransceiver_T *transceiver,
+    uint8_t *buffer, uint32_t size, uint32_t *length, uint32_t timeout_ms);
 
 /**
  * @brief
@@ -445,10 +443,8 @@ Retcode_T UARTTransceiver_ReadData(
  * 
  */
 Retcode_T UARTTransceiver_WriteData(
-        UARTTransceiver_T *transceiver,
-        const uint8_t* data, uint32_t length, uint32_t timeout_ms);
-
-
+    UARTTransceiver_T *transceiver,
+    const uint8_t *data, uint32_t length, uint32_t timeout_ms);
 
 #if KISO_FEATURE_UART
 /**
@@ -474,8 +470,8 @@ Retcode_T UARTTransceiver_WriteData(
  * 
  */
 void UARTTransceiver_LoopCallback(
-        UARTTransceiver_T *transceiver,
-        struct MCU_UART_Event_S event);
+    UARTTransceiver_T *transceiver,
+    struct MCU_UART_Event_S event);
 /**
  * @brief
  *      Generates a UART loop callback.
@@ -492,11 +488,11 @@ void UARTTransceiver_LoopCallback(
  *      the context structure but the context structure itself.
  * 
  */
-#define UART_TRANSCEIVER_DECLARE_LOOP_CALLBACK(transceiver) \
-static KISO_ALWAYS_INLINE void UARTTransceiverLoopCallback(UART_T uart, struct MCU_UART_Event_S event) \
-{ \
-	UARTTransceiver_LoopCallback(&transceiver, event);\
-}
+#define UART_TRANSCEIVER_DECLARE_LOOP_CALLBACK(transceiver)                                                \
+    static KISO_ALWAYS_INLINE void UARTTransceiverLoopCallback(UART_T uart, struct MCU_UART_Event_S event) \
+    {                                                                                                      \
+        UARTTransceiver_LoopCallback(&transceiver, event);                                                 \
+    }
 
 #elif KISO_FEATURE_LEUART
 
@@ -523,8 +519,8 @@ static KISO_ALWAYS_INLINE void UARTTransceiverLoopCallback(UART_T uart, struct M
  * 
  */
 void UARTTransceiver_LoopCallbackLE(
-        UARTTransceiver_T *transceiver,
-        struct MCU_LEUART_Event_S event);
+    UARTTransceiver_T *transceiver,
+    struct MCU_LEUART_Event_S event);
 /**
  * @brief
  *      Generates a LEUART loop callback.
@@ -541,11 +537,11 @@ void UARTTransceiver_LoopCallbackLE(
  *      the context structure but the context structure itself.
  * 
  */
-#define UART_TRANSCEIVER_DECLARE_LOOP_CALLBACK_LE(transceiver) \
-static KISO_ALWAYS_INLINE void UARTTransceiverLoopCallbackLE(LEUART_T leuart, struct MCU_LEUART_Event_S event) \
-{ \
-    UARTTransceiver_LoopCallbackLE(&transceiver, event);\
-}
+#define UART_TRANSCEIVER_DECLARE_LOOP_CALLBACK_LE(transceiver)                                                     \
+    static KISO_ALWAYS_INLINE void UARTTransceiverLoopCallbackLE(LEUART_T leuart, struct MCU_LEUART_Event_S event) \
+    {                                                                                                              \
+        UARTTransceiver_LoopCallbackLE(&transceiver, event);                                                       \
+    }
 #endif /* KISO_FEATURE_LEUART */
 
 #endif /* KISO_FEATURE_UART || KISO_FEATURE_LEUART */

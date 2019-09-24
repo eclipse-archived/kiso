@@ -83,7 +83,7 @@ typedef enum MCU_Watchdog_ResetMode_E
 {
     MCU_WATCHDOG_RESET_ON, /**< Generates reset after timeout */
     MCU_WATCHDOG_RESET_OFF /**< Timeouts generate interrupts only */
-}MCU_Watchdog_ResetMode_T;
+} MCU_Watchdog_ResetMode_T;
 
 /**
  *  @brief    Watchdog timer init structure
@@ -106,10 +106,10 @@ typedef enum MCU_Watchdog_ResetMode_E
 typedef struct MCU_Watchdog_Init_S
 {
     MCU_Watchdog_Callback_T WdgCallback; /**< Pointer to callback upon watchdog interrupt */
-    MCU_Watchdog_ResetMode_T ResetMode; /**< Mode to enable resets */
-    bool RunOnCpuHalt; /**< If set to false when in debug mode, watchdog timer will be frozen whenever the cpu core is halted e.g for breakpoint. */
-    uint32_t Timeout; /**< Watchdog timeout in milliseconds */
-}MCU_Watchdog_Init_T;
+    MCU_Watchdog_ResetMode_T ResetMode;  /**< Mode to enable resets */
+    bool RunOnCpuHalt;                   /**< If set to false when in debug mode, watchdog timer will be frozen whenever the cpu core is halted e.g for breakpoint. */
+    uint32_t Timeout;                    /**< Watchdog timeout in milliseconds */
+} MCU_Watchdog_Init_T;
 
 /**
  * @brief   Data type for the WATCHdOG handler type which is used to identify the

@@ -134,7 +134,7 @@ Retcode_T BSP_GNSS_MAXM8_Reset(void);
  *
  * @return      RETCODE_OK in the case of success or an error code otherwise.
  */
-Retcode_T BSP_GNSS_MAXM8_Control(uint32_t command, void* arg);
+Retcode_T BSP_GNSS_MAXM8_Control(uint32_t command, void *arg);
 
 #endif /* KISO_FEATURE_BSP_GNSS_MAXM8 */
 

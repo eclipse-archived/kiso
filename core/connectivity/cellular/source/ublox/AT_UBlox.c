@@ -1609,7 +1609,7 @@ Retcode_T At_Set_URDBLOCK(const AT_URDBLOCK_Param_T *param, AT_URDBLOCK_Resp_T *
         {
             int32_t size = 0;
             retcode = Utils_Strtol(buffer, bufferLen, &size);
-            resp->Size = (uint32_t) size;
+            resp->Size = (uint32_t)size;
         }
         AtResponseQueue_MarkBufferAsUnused();
     }

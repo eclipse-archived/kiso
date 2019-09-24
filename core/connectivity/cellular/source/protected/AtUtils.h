@@ -68,7 +68,7 @@ Retcode_T Utils_ConvertCellularResponseCodeToCellularRetcode(AtResponseCode_T re
  * @retval RETCODE_NULL_POINTER     The buffer or number param was a NULL pointer
  * @retval RETCODE_INVALID_PARAM    The number did exceed the int32_t max value
  */
-Retcode_T Utils_Strtol(const uint8_t* buffer, uint32_t bufferLength, int32_t* number);
+Retcode_T Utils_Strtol(const uint8_t *buffer, uint32_t bufferLength, int32_t *number);
 
 /**
  * @brief Parses a string to a signed long number and checks if the number is within given bounds.
@@ -84,7 +84,7 @@ Retcode_T Utils_Strtol(const uint8_t* buffer, uint32_t bufferLength, int32_t* nu
  * @retval RETCODE_NULL_POINTER     The buffer or number param was a NULL pointer
  * @retval RETCODE_INVALID_PARAM    The number did exceed the int32_t max value or was not within bounds
  */
-Retcode_T Utils_StrtolBounds(const uint8_t* buffer, uint32_t bufferLength, int32_t* number, int32_t lowerBound, int32_t upperBound);
+Retcode_T Utils_StrtolBounds(const uint8_t *buffer, uint32_t bufferLength, int32_t *number, int32_t lowerBound, int32_t upperBound);
 
 /**
  * @brief Waits for a AT response code from the modem and merges it with the passed retcode to generate a unified
@@ -117,6 +117,6 @@ Retcode_T Utils_WaitForAndHandleResponseCode(uint32_t timeout, Retcode_T retcode
  *
  * @return The start of the "fluke free" buffer
  */
-uint8_t* Utils_TrimFlukeCharacters(uint8_t* buffer, uint32_t bufferLength, uint32_t* newBufferLength);
+uint8_t *Utils_TrimFlukeCharacters(uint8_t *buffer, uint32_t bufferLength, uint32_t *newBufferLength);
 
 #endif /* ATUTILS_H_ */

@@ -69,8 +69,8 @@ static bool dummyFrameEndCheckFunc(uint8_t x);
 
 /*  The description of the function is available in Kiso_UARTTransceiver.h */
 Retcode_T UARTTransceiver_Initialize(UARTTransceiver_T *transceiver,
-        HWHandle_T handle, uint8_t * rawRxBuffer, uint32_t rawRxBufferSize,
-        enum UARTTransceiver_UartType_E type)
+                                     HWHandle_T handle, uint8_t *rawRxBuffer, uint32_t rawRxBufferSize,
+                                     enum UARTTransceiver_UartType_E type)
 {
     Retcode_T retcode = RETCODE_OK;
     if (NULL == transceiver || NULL == handle || NULL == rawRxBuffer || 0 == rawRxBufferSize || UART_TRANSCEIVER_UART_TYPE_NONE == type)
@@ -150,12 +150,12 @@ Retcode_T UARTTransceiver_Start(UARTTransceiver_T *transceiver, UARTTransceiver_
 #if KISO_FEATURE_UART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_UART)
             {
-                retcode = MCU_UART_Receive((UART_T) transceiver->handle, &(transceiver->LastByte), 1);
+                retcode = MCU_UART_Receive((UART_T)transceiver->handle, &(transceiver->LastByte), 1);
             }
 #elif KISO_FEATURE_LEUART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_LEUART)
             {
-                retcode = MCU_LEUART_Receive((LEUART_T) transceiver->handle, &transceiver->LastByte, 1);
+                retcode = MCU_LEUART_Receive((LEUART_T)transceiver->handle, &transceiver->LastByte, 1);
             }
 #endif
             if (RETCODE_OK == retcode)
@@ -173,8 +173,8 @@ Retcode_T UARTTransceiver_Start(UARTTransceiver_T *transceiver, UARTTransceiver_
 
 /*  The description of the function is available in Kiso_UARTTransceiver.h */
 Retcode_T UARTTransceiver_StartInAsyncMode(UARTTransceiver_T *transceiver,
-        UARTTransceiver_EndofFrameCheckFunc_T frameEndCheckFunc,
-        UARTransceiver_Callback_T callback)
+                                           UARTTransceiver_EndofFrameCheckFunc_T frameEndCheckFunc,
+                                           UARTransceiver_Callback_T callback)
 {
     Retcode_T retcode = RETCODE_OK;
     if ((NULL == transceiver) || (NULL == callback))
@@ -199,12 +199,12 @@ Retcode_T UARTTransceiver_StartInAsyncMode(UARTTransceiver_T *transceiver,
 #if KISO_FEATURE_UART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_UART)
             {
-                retcode = MCU_UART_Receive((UART_T) transceiver->handle, &(transceiver->LastByte), 1);
+                retcode = MCU_UART_Receive((UART_T)transceiver->handle, &(transceiver->LastByte), 1);
             }
 #elif KISO_FEATURE_LEUART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_LEUART)
             {
-                retcode = MCU_LEUART_Receive((LEUART_T) transceiver->handle, &transceiver->LastByte, 1);
+                retcode = MCU_LEUART_Receive((LEUART_T)transceiver->handle, &transceiver->LastByte, 1);
             }
 #endif
             if (RETCODE_OK == retcode)
@@ -237,12 +237,12 @@ Retcode_T UARTTransceiver_Stop(UARTTransceiver_T *transceiver)
 #if KISO_FEATURE_UART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_UART)
             {
-                retcode = MCU_UART_Receive((UART_T) transceiver->handle, &(transceiver->LastByte), 0);
+                retcode = MCU_UART_Receive((UART_T)transceiver->handle, &(transceiver->LastByte), 0);
             }
 #elif KISO_FEATURE_LEUART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_LEUART)
             {
-                retcode = MCU_LEUART_Receive((LEUART_T) transceiver->handle, &(transceiver->LastByte), 0);
+                retcode = MCU_LEUART_Receive((LEUART_T)transceiver->handle, &(transceiver->LastByte), 0);
             }
 #endif
             if (RETCODE_OK == retcode)
@@ -273,12 +273,12 @@ Retcode_T UARTTransceiver_Suspend(UARTTransceiver_T *transceiver)
 #if KISO_FEATURE_UART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_UART)
             {
-                retcode = MCU_UART_Receive((UART_T) transceiver->handle, &(transceiver->LastByte), 0);
+                retcode = MCU_UART_Receive((UART_T)transceiver->handle, &(transceiver->LastByte), 0);
             }
 #elif KISO_FEATURE_LEUART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_LEUART)
             {
-                retcode = MCU_LEUART_Receive((LEUART_T) transceiver->handle, &(transceiver->LastByte), 0);
+                retcode = MCU_LEUART_Receive((LEUART_T)transceiver->handle, &(transceiver->LastByte), 0);
             }
 #endif
             if (RETCODE_OK == retcode)
@@ -309,12 +309,12 @@ Retcode_T UARTTransceiver_Resume(UARTTransceiver_T *transceiver)
 #if KISO_FEATURE_UART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_UART)
             {
-                retcode = MCU_UART_Receive((UART_T) transceiver->handle, &(transceiver->LastByte), 1);
+                retcode = MCU_UART_Receive((UART_T)transceiver->handle, &(transceiver->LastByte), 1);
             }
 #elif KISO_FEATURE_LEUART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_LEUART)
             {
-                retcode = MCU_LEUART_Receive((LEUART_T) transceiver->handle, &transceiver->LastByte, 1);
+                retcode = MCU_LEUART_Receive((LEUART_T)transceiver->handle, &transceiver->LastByte, 1);
             }
 #endif
             if (RETCODE_OK == retcode)
@@ -354,7 +354,6 @@ Retcode_T UARTTransceiver_ReadData(UARTTransceiver_T *transceiver, uint8_t *buff
                     if (RETCODE_SUCCESS != transceiver->errorCode)
                     {
                         retcode = RETCODE(RETCODE_SEVERITY_ERROR, transceiver->errorCode);
-
                     }
                 }
             }
@@ -371,7 +370,7 @@ Retcode_T UARTTransceiver_ReadData(UARTTransceiver_T *transceiver, uint8_t *buff
 }
 
 /*  The description of the function is available in Kiso_UARTTransceiver.h */
-Retcode_T UARTTransceiver_WriteData(UARTTransceiver_T *transceiver, const uint8_t* data, uint32_t length, uint32_t timeout_ms)
+Retcode_T UARTTransceiver_WriteData(UARTTransceiver_T *transceiver, const uint8_t *data, uint32_t length, uint32_t timeout_ms)
 {
     Retcode_T retcode = RETCODE_OK;
     if (NULL == transceiver || NULL == data || 0 == length)
@@ -385,12 +384,12 @@ Retcode_T UARTTransceiver_WriteData(UARTTransceiver_T *transceiver, const uint8_
 #if KISO_FEATURE_UART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_UART)
             {
-                retcode = MCU_UART_Send((UART_T) transceiver->handle, data, length);
+                retcode = MCU_UART_Send((UART_T)transceiver->handle, data, length);
             }
 #elif KISO_FEATURE_LEUART
             if (transceiver->UartType == UART_TRANSCEIVER_UART_TYPE_LEUART)
             {
-                retcode = MCU_LEUART_Send((LEUART_T) transceiver->handle, data, length);
+                retcode = MCU_LEUART_Send((LEUART_T)transceiver->handle, data, length);
             }
 #endif
             if (RETCODE_OK == retcode)
@@ -408,7 +407,6 @@ Retcode_T UARTTransceiver_WriteData(UARTTransceiver_T *transceiver, const uint8_
                     }
                     else
                     {
-
                     }
                 }
             }
@@ -497,7 +495,7 @@ void UARTTransceiver_LoopCallbackLE(UARTTransceiver_T *transceiver, struct MCU_L
 
     if (event.RxComplete)
     {
-        if (1U == RingBuffer_Write(&(transceiver->UartRxBufDescr), (uint8_t *) &(transceiver->LastByte), 1UL))
+        if (1U == RingBuffer_Write(&(transceiver->UartRxBufDescr), (uint8_t *)&(transceiver->LastByte), 1UL))
         {
             if (transceiver->EndOfFrameCheck(transceiver->LastByte))
             {

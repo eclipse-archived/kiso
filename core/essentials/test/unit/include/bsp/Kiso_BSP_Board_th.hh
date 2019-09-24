@@ -25,7 +25,7 @@
 
 /* Mock-ups for the provided interfaces */
 
-FAKE_VALUE_FUNC(Retcode_T, BSP_Board_Initialize, uint32_t, void*)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Board_Initialize, uint32_t, void *)
 FAKE_VALUE_FUNC(Retcode_T, BSP_Board_SwitchPowerMode, uint32_t)
 FAKE_VALUE_FUNC(uint32_t, BSP_Board_GetWakeupSource)
 FAKE_VALUE_FUNC(uint32_t, BSP_Board_DetectPowerSupply)

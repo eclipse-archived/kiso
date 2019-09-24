@@ -122,8 +122,8 @@ typedef enum CellularSocket_Protocol_E CellularSocket_Protocol_T;
  * this is the number of bytes in the current packet.
  */
 typedef void (*CellularSocket_NotifyDataReady_T)(
-        CellularSocket_Handle_T socket,
-        uint32_t numBytesAvailable);
+    CellularSocket_Handle_T socket,
+    uint32_t numBytesAvailable);
 
 /**
  * @brief Callback to notify the client about a new incoming connection. The
@@ -145,10 +145,10 @@ typedef void (*CellularSocket_NotifyDataReady_T)(
  * Handle of the socket that accept the incoming connection.
  */
 typedef void (*CellularSocket_NotifyConnectionAccepted_T)(
-        CellularSocket_Handle_T acceptedSocket,
-        const Cellular_IpAddress_T* remoteIp,
-        uint16_t remotePort,
-        CellularSocket_Handle_T listeningSocket);
+    CellularSocket_Handle_T acceptedSocket,
+    const Cellular_IpAddress_T *remoteIp,
+    uint16_t remotePort,
+    CellularSocket_Handle_T listeningSocket);
 
 /**
  * @brief Callback to notify the client about the closure the given socket
@@ -157,7 +157,7 @@ typedef void (*CellularSocket_NotifyConnectionAccepted_T)(
  * @param[in] closedSocket
  */
 typedef void (*CellularSocket_NotifySocketClosed_T)(
-        CellularSocket_Handle_T closedSocket);
+    CellularSocket_Handle_T closedSocket);
 
 /**
  * @brief Create a new socket with the given protocol and bind it to a address
@@ -195,12 +195,12 @@ typedef void (*CellularSocket_NotifySocketClosed_T)(
  * @return A #Retcode_T indicating the result of the procedure.
  */
 Retcode_T CellularSocket_CreateAndBind(
-        CellularSocket_Handle_T* socket,
-        const Cellular_DataContext_T* dataContext,
-        uint16_t localPort,
-        CellularSocket_Protocol_T protocol,
-        CellularSocket_NotifySocketClosed_T onSocketClosed,
-        CellularSocket_NotifyDataReady_T onDataReady);
+    CellularSocket_Handle_T *socket,
+    const Cellular_DataContext_T *dataContext,
+    uint16_t localPort,
+    CellularSocket_Protocol_T protocol,
+    CellularSocket_NotifySocketClosed_T onSocketClosed,
+    CellularSocket_NotifyDataReady_T onDataReady);
 
 /**
  * @brief Establishes a connection between the specified socket and the remote
@@ -226,9 +226,9 @@ Retcode_T CellularSocket_CreateAndBind(
  * @return A #Retcode_T indicating the result of the procedure.
  */
 Retcode_T CellularSocket_Connect(
-        CellularSocket_Handle_T socket,
-        const Cellular_IpAddress_T* remoteIp,
-        uint16_t remotePort);
+    CellularSocket_Handle_T socket,
+    const Cellular_IpAddress_T *remoteIp,
+    uint16_t remotePort);
 
 /**
  * @brief Mark this socket as a passive socket, i.e. waiting for incoming
@@ -253,9 +253,9 @@ Retcode_T CellularSocket_Connect(
  * @return A #Retcode_T indicating the result of the procedure.
  */
 Retcode_T CellularSocket_Listen(
-        CellularSocket_Handle_T socket,
-        uint16_t localPort,
-        CellularSocket_NotifyConnectionAccepted_T onConnectionAccept);
+    CellularSocket_Handle_T socket,
+    uint16_t localPort,
+    CellularSocket_NotifyConnectionAccepted_T onConnectionAccept);
 
 /**
  * @brief Sends data to a remove host on an already connected socket.
@@ -278,9 +278,9 @@ Retcode_T CellularSocket_Listen(
  * @return A #Retcode_T indicating the result of the procedure.
  */
 Retcode_T CellularSocket_Send(
-        CellularSocket_Handle_T socket,
-        const uint8_t* data,
-        uint32_t dataLength);
+    CellularSocket_Handle_T socket,
+    const uint8_t *data,
+    uint32_t dataLength);
 
 /**
  * @brief Sends data to a remote host given by parameter. Only for UDP sockets!
@@ -305,11 +305,11 @@ Retcode_T CellularSocket_Send(
  * @return A #Retcode_T indicating the result of the procedure.
  */
 Retcode_T CellularSocket_SendTo(
-        CellularSocket_Handle_T socket,
-        const uint8_t* data,
-        uint32_t dataLength,
-        const Cellular_IpAddress_T* remoteIp,
-        uint16_t remotePort);
+    CellularSocket_Handle_T socket,
+    const uint8_t *data,
+    uint32_t dataLength,
+    const Cellular_IpAddress_T *remoteIp,
+    uint16_t remotePort);
 
 /**
  * @brief Receive incoming data on the given socket.
@@ -341,10 +341,10 @@ Retcode_T CellularSocket_SendTo(
  * @return A #Retcode_T indicating the result of the procedure.
  */
 Retcode_T CellularSocket_Receive(
-        CellularSocket_Handle_T socket,
-        uint8_t* buffer,
-        uint32_t bufferLength,
-        uint32_t* bytedReceived);
+    CellularSocket_Handle_T socket,
+    uint8_t *buffer,
+    uint32_t bufferLength,
+    uint32_t *bytedReceived);
 
 /**
  * @brief Receive incoming data on the given UDP socket.
@@ -384,12 +384,12 @@ Retcode_T CellularSocket_Receive(
  * @return A #Retcode_T indicating the result of the procedure.
  */
 Retcode_T CellularSocket_ReceiveFrom(
-        CellularSocket_Handle_T socket,
-        uint8_t* buffer,
-        uint32_t bufferLength,
-        uint32_t* bytedReceived,
-        Cellular_IpAddress_T* remoteIp,
-        uint16_t* remotePort);
+    CellularSocket_Handle_T socket,
+    uint8_t *buffer,
+    uint32_t bufferLength,
+    uint32_t *bytedReceived,
+    Cellular_IpAddress_T *remoteIp,
+    uint16_t *remotePort);
 
 /**
  * @brief Query the driver/modem how many bytes are currently buffered and ready
@@ -405,8 +405,8 @@ Retcode_T CellularSocket_ReceiveFrom(
  * @return A #Retcode_T indicating the result of the procedure.
  */
 Retcode_T CellularSocket_QueryBytesAvailable(
-        CellularSocket_Handle_T socket,
-        uint32_t* numBytesAvailable);
+    CellularSocket_Handle_T socket,
+    uint32_t *numBytesAvailable);
 
 /**
  * @brief Close the socket identified by the given Id.
@@ -417,6 +417,6 @@ Retcode_T CellularSocket_QueryBytesAvailable(
  * @return A #Retcode_T indicating the result of the procedure.
  */
 Retcode_T CellularSocket_Close(
-        CellularSocket_Handle_T socket);
+    CellularSocket_Handle_T socket);
 
 #endif /* KISO_CELLULARSOCKETSERVICE_H_ */

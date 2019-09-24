@@ -31,7 +31,7 @@
 /* Include utils to have access to the defined module and error IDs */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
-#define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_LOGGING_RECORD_ASYNCHRONOUS
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_LOGGING_RECORD_ASYNCHRONOUS
 
 /* Include the Logging header, which include the configuration that enable and define macros for this module */
 #include "Kiso_Logging.h"
@@ -52,14 +52,14 @@
 
 /* Message structure definition via macros*/
 #define LOG_LINE_FMT "%" PRIu32 " %s %" PRIu32 " %.*s\t[%s:%" PRIu32 "]\t"
-#define LOG_LINE_ENDING         "\r\n"
+#define LOG_LINE_ENDING "\r\n"
 
 const char *LOG_LEVEL_STR[LOG_LEVEL_COUNT] =
-{   "", "F", "E", "W", "I", "D"};
+    {"", "F", "E", "W", "I", "D"};
 
-static Queue_T LogQueue; /**< Guarded queue used to forward the messages to the task that will send them */
+static Queue_T LogQueue;                              /**< Guarded queue used to forward the messages to the task that will send them */
 static uint8_t LogQueueBuffer[LOG_QUEUE_BUFFER_SIZE]; /**< Buffer that will gather a suit of messages */
-static TaskHandle_t LogTaskHandle = NULL; /**< FreeRTOS task handle */
+static TaskHandle_t LogTaskHandle = NULL;             /**< FreeRTOS task handle */
 
 /**
  * @brief
@@ -69,11 +69,11 @@ static void AsyncRecorder_Task(void *param)
 {
     char *msg;
     uint32_t len;
-    LogRecorder_T *recorder = (LogRecorder_T *) param;
+    LogRecorder_T *recorder = (LogRecorder_T *)param;
 
     if ((NULL == recorder) || (NULL == recorder->Wakeup) || (NULL == recorder->Appender.Write))
     {
-        Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_ERROR,RETCODE_NULL_POINTER));
+        Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER));
         return;
     }
 
@@ -81,12 +81,12 @@ static void AsyncRecorder_Task(void *param)
 
     while (1)
     {
-        if (RETCODE_OK == Queue_Get(&LogQueue, (void **) &msg, &len, portMAX_DELAY))
+        if (RETCODE_OK == Queue_Get(&LogQueue, (void **)&msg, &len, portMAX_DELAY))
         {
             if (RETCODE_OK == recorder->Appender.Write(msg, len))
             {
-                (void) xSemaphoreTake((SemaphoreHandle_t) recorder->Wakeup, LOG_APPENDER_TIMEOUT / portTICK_PERIOD_MS);
-                (void) Queue_Purge(&LogQueue);
+                (void)xSemaphoreTake((SemaphoreHandle_t)recorder->Wakeup, LOG_APPENDER_TIMEOUT / portTICK_PERIOD_MS);
+                (void)Queue_Purge(&LogQueue);
             }
         }
     }
@@ -98,10 +98,10 @@ static void AsyncRecorder_Task(void *param)
  */
 static Retcode_T AsyncRecorder_Init(void *self)
 {
-    LogRecorder_T *recorder = (LogRecorder_T *) self;
+    LogRecorder_T *recorder = (LogRecorder_T *)self;
     if (NULL == recorder)
     {
-        return(RETCODE(RETCODE_SEVERITY_ERROR,RETCODE_NULL_POINTER));
+        return (RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER));
     }
 
     Retcode_T retcode = Queue_Create(&LogQueue, LogQueueBuffer, sizeof(LogQueueBuffer));
@@ -113,14 +113,14 @@ static Retcode_T AsyncRecorder_Init(void *self)
     recorder->Wakeup = xSemaphoreCreateBinary();
     if (NULL == recorder->Wakeup)
     {
-        (void) Queue_Delete(&LogQueue);
+        (void)Queue_Delete(&LogQueue);
         return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_OUT_OF_RESOURCES);
     }
 
     BaseType_t status = xTaskCreate(AsyncRecorder_Task, "LOG", LOG_TASK_STACK_SIZE, recorder, LOG_TASK_PRIORITY, &LogTaskHandle);
     if (pdPASS != status)
     {
-        (void) Queue_Delete(&LogQueue);
+        (void)Queue_Delete(&LogQueue);
         vSemaphoreDelete(recorder->Wakeup);
         return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_OUT_OF_RESOURCES);
     }
@@ -134,10 +134,10 @@ static Retcode_T AsyncRecorder_Init(void *self)
  */
 static Retcode_T AsyncRecorder_Deinit(void *self)
 {
-    LogRecorder_T *recorder = (LogRecorder_T *) self;
+    LogRecorder_T *recorder = (LogRecorder_T *)self;
     if ((NULL == recorder) || (NULL == recorder->Wakeup))
     {
-        return(RETCODE(RETCODE_SEVERITY_ERROR,RETCODE_NULL_POINTER));
+        return (RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER));
     }
 
     Retcode_T retcode = Queue_Delete(&LogQueue);
@@ -159,23 +159,23 @@ static Retcode_T AsyncRecorder_Write(void *self, LogLevel_T level, uint8_t packa
     KISO_UNUSED(self);
 
     /* Check NULL pointers to avoid overflows or wrong addressing */
-    if ( (NULL == file) || (NULL == fmt))
+    if ((NULL == file) || (NULL == fmt))
     {
-        return(RETCODE(RETCODE_SEVERITY_ERROR,RETCODE_NULL_POINTER));
+        return (RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER));
     }
 
     /* Add first into the buffer different information relative to what is logged such as tick, file name, line, log level, ... */
     int32_t size = snprintf(buffer, sizeof(buffer), LOG_LINE_FMT,
-            (uint32_t) xTaskGetTickCount(), LOG_LEVEL_STR[level], (uint32_t) package,
-            configMAX_TASK_NAME_LEN, pcTaskGetTaskName(NULL), file, (uint32_t) line);
+                            (uint32_t)xTaskGetTickCount(), LOG_LEVEL_STR[level], (uint32_t)package,
+                            configMAX_TASK_NAME_LEN, pcTaskGetTaskName(NULL), file, (uint32_t)line);
     /* Parse and add the message sent via the log function */
-    if (size > 0 && (uint32_t) size < sizeof(buffer))
+    if (size > 0 && (uint32_t)size < sizeof(buffer))
     {
         size += vsnprintf(buffer + size, sizeof(buffer) - size, fmt, args);
     }
 
     /* Delete data to make an end of line fit */
-    if ((uint32_t) size > sizeof(buffer) - sizeof(LOG_LINE_ENDING))
+    if ((uint32_t)size > sizeof(buffer) - sizeof(LOG_LINE_ENDING))
     {
         size = sizeof(buffer) - sizeof(LOG_LINE_ENDING);
     }
@@ -191,14 +191,13 @@ static Retcode_T AsyncRecorder_Write(void *self, LogLevel_T level, uint8_t packa
  * @brief Create singleton
  */
 static const LogRecorder_T LogRecordAsyncCompact =
-{
-    .Init = AsyncRecorder_Init,
-    .Deinit = AsyncRecorder_Deinit,
-    .Write = AsyncRecorder_Write,
-    .Wakeup = NULL,
-    .Appender =
-    {   .Init = NULL, .Write = NULL}
-};
-const LogRecorder_T* Logging_AsyncRecorder = &LogRecordAsyncCompact;
+    {
+        .Init = AsyncRecorder_Init,
+        .Deinit = AsyncRecorder_Deinit,
+        .Write = AsyncRecorder_Write,
+        .Wakeup = NULL,
+        .Appender =
+            {.Init = NULL, .Write = NULL}};
+const LogRecorder_T *Logging_AsyncRecorder = &LogRecordAsyncCompact;
 
 #endif /* if KISO_FEATURE_LOGGING && KISO_ASYNC_RECORDER */

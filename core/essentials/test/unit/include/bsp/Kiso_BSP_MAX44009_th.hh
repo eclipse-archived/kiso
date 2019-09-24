@@ -11,7 +11,7 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
- 
+
 #ifndef KISO_BSP_MAX44009_TH_HH
 #define KISO_BSP_MAX44009_TH_HH
 
@@ -34,8 +34,7 @@ FAKE_VALUE_FUNC(Retcode_T, BSP_MAX44009_IntDisable, int32_t)
 FAKE_VALUE_FUNC(Retcode_T, BSP_MAX44009_Disable, int32_t)
 FAKE_VALUE_FUNC(Retcode_T, BSP_MAX44009_Disconnect, int32_t)
 FAKE_VALUE_FUNC(HWHandle_T, BSP_MAX44009_GetHandle, int32_t)
-FAKE_VALUE_FUNC(void*, BSP_MAX44009_GetInitParams, int32_t)
-
+FAKE_VALUE_FUNC(void *, BSP_MAX44009_GetInitParams, int32_t)
 
 #endif /* KISO_FEATURE_BSP_MAX44009 */
 

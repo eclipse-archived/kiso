@@ -42,24 +42,24 @@
 
 struct TLV_Element_S
 {
-    uint8_t* DataBuffer;
+    uint8_t *DataBuffer;
     uint16_t DataType;
     uint16_t DataLength;
 };
 
 typedef struct TLV_Element_S TLV_Element_T;
 
-typedef struct TLV_Group_S * TLV_GroupHandle_TP;
+typedef struct TLV_Group_S *TLV_GroupHandle_TP;
 
 /* Public function prototype declarations */
 
-TLV_GroupHandle_TP TLV_AddGroup(void* const Buffer, const uint16_t Size);
+TLV_GroupHandle_TP TLV_AddGroup(void *const Buffer, const uint16_t Size);
 
 void TLV_RemoveGroup(TLV_GroupHandle_TP Handle);
 
-TLV_Element_T* TLV_AddElement(TLV_GroupHandle_TP const Handle, const uint16_t Type, const uint16_t Length, const void* const Value);
+TLV_Element_T *TLV_AddElement(TLV_GroupHandle_TP const Handle, const uint16_t Type, const uint16_t Length, const void *const Value);
 
-TLV_Element_T* TLV_GetElement(TLV_GroupHandle_TP const Handle, const uint16_t Type);
+TLV_Element_T *TLV_GetElement(TLV_GroupHandle_TP const Handle, const uint16_t Type);
 
 void TLV_RemoveElement(TLV_GroupHandle_TP const Handle, const uint16_t Type);
 

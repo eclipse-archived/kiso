@@ -182,8 +182,8 @@ Retcode_T MCU_CRC32(struct MCU_CRC32_S *initParms, uint32_t *data_in, uint32_t d
     /* CRC module initialization by passing the populated CRC handle */
     if (HAL_OK != HAL_CRC_Init(&handle))
     {
-            /* TODO: Use a more meaningful error code */
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+        /* TODO: Use a more meaningful error code */
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
     }
 
     if (RETCODE_OK == retcode)

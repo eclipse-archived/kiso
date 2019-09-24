@@ -11,7 +11,7 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
- 
+
 #ifndef STM32_HAL_LEGACY_TH_HH_
 #define STM32_HAL_LEGACY_TH_HH_
 

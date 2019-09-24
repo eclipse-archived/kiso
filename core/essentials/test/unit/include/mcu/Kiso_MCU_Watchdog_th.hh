@@ -29,7 +29,7 @@
 
 #if KISO_FEATURE_WATCHDOG
 
-FAKE_VALUE_FUNC(Retcode_T, MCU_Watchdog_Init,WdgHandle_T)
+FAKE_VALUE_FUNC(Retcode_T, MCU_Watchdog_Init, WdgHandle_T)
 FAKE_VALUE_FUNC(Retcode_T, MCU_Watchdog_Enable)
 FAKE_VALUE_FUNC(Retcode_T, MCU_Watchdog_Feed)
 FAKE_VALUE_FUNC(bool, MCU_Watchdog_IsResetCausedByWatchdog)

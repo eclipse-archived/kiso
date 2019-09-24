@@ -44,7 +44,7 @@ static I2C_T i2cHandle;
 
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
 
-void appInitSystem(void * CmdProcessorHandle, uint32_t param2)
+void appInitSystem(void *CmdProcessorHandle, uint32_t param2)
 {
     Retcode_T returnValue = RETCODE_OK;
 

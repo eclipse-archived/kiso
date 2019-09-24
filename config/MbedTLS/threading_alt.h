@@ -8,18 +8,19 @@
 #include "task.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-typedef struct
-{
-    SemaphoreHandle_t mutex;
-} mbedtls_threading_mutex_t;
+    typedef struct
+    {
+        SemaphoreHandle_t mutex;
+    } mbedtls_threading_mutex_t;
 
-void threading_mutex_init(mbedtls_threading_mutex_t *mutex);
-void threading_mutex_free(mbedtls_threading_mutex_t *mutex);
-int threading_mutex_lock(mbedtls_threading_mutex_t *mutex);
-int threading_mutex_unlock(mbedtls_threading_mutex_t *mutex);
+    void threading_mutex_init(mbedtls_threading_mutex_t *mutex);
+    void threading_mutex_free(mbedtls_threading_mutex_t *mutex);
+    int threading_mutex_lock(mbedtls_threading_mutex_t *mutex);
+    int threading_mutex_unlock(mbedtls_threading_mutex_t *mutex);
 
 #ifdef __cplusplus
 }

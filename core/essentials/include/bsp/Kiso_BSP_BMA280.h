@@ -158,7 +158,7 @@ HWHandle_T BSP_BMA280_GetHandle(int32_t deviceId);
  *
  * @return      RETCODE_OK in the case of success or an error code otherwise.
  */
-Retcode_T BSP_BMA280_Control(uint32_t command, void* arg);
+Retcode_T BSP_BMA280_Control(uint32_t command, void *arg);
 
 /**
  * @brief       Enables INT1 interrupt handling for the peripheral.
@@ -256,7 +256,7 @@ Retcode_T BSP_BMA280_SetCSHigh(int32_t deviceId);
  */
 Retcode_T BSP_BMA280_SetCSLow(int32_t deviceId);
 
-/**@}*//* KISO_HAL_BSP_BMA280 */
+/**@}*/ /* KISO_HAL_BSP_BMA280 */
 
 #endif /*KISO_FEATURE_BSP_BMA280*/
 #endif /* KISO_BSP_BMA280_H_ */

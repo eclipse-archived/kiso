@@ -23,10 +23,9 @@ extern "C"
 }
 FFF_DEFINITION_BLOCK_END
 
-class TS_SmokeTest: public testing::Test
+class TS_SmokeTest : public testing::Test
 {
 protected:
-
     virtual void SetUp()
     {
         FFF_RESET_HISTORY();
@@ -42,89 +41,90 @@ protected:
 
 TEST_F(TS_SmokeTest, EchoReceivePass)
 {
-    const char* cmd = "UREG";
-    const char* data = "+UREG: 1,0\r\n";
-    uint8_t* buf = NULL;
+    const char *cmd = "UREG";
+    const char *data = "+UREG: 1,0\r\n";
+    uint8_t *buf = NULL;
     uint32_t bufLen = 0;
 
     Retcode_T retcode = RETCODE_OK;
 
-    retcode = AtResponseParser_Parse((uint8_t*) data, strlen(data));
+    retcode = AtResponseParser_Parse((uint8_t *)data, strlen(data));
     EXPECT_EQ(RETCODE_OK, retcode);
 
-    retcode = AtResponseQueue_WaitForNamedCmd(0U, (const uint8_t*) cmd, strlen(cmd));
+    retcode = AtResponseQueue_WaitForNamedCmd(0U, (const uint8_t *)cmd, strlen(cmd));
     EXPECT_EQ(RETCODE_OK, retcode);
 
     retcode = AtResponseQueue_WaitForArbitraryCmdArg(0U, &buf, &bufLen);
     EXPECT_EQ(RETCODE_OK, retcode);
-    EXPECT_STREQ("1", (char*) buf);
+    EXPECT_STREQ("1", (char *)buf);
     AtResponseQueue_MarkBufferAsUnused();
 
     retcode = AtResponseQueue_WaitForArbitraryCmdArg(0U, &buf, &bufLen);
     EXPECT_EQ(RETCODE_OK, retcode);
-    EXPECT_STREQ("0", (char*) buf);
+    EXPECT_STREQ("0", (char *)buf);
     AtResponseQueue_MarkBufferAsUnused();
 }
 
 TEST_F(TS_SmokeTest, EchoSendPass)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* cmd = "AT+CREG?\r\n";
+    const char *cmd = "AT+CREG?\r\n";
 
-    retcode = Engine_SendAtCommandWaitEcho((const uint8_t*) cmd, strlen(cmd), 0);
+    retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)cmd, strlen(cmd), 0);
     EXPECT_EQ(RETCODE_OK, retcode);
 }
 
 TEST_F(TS_SmokeTest, EchoSendThenReceivePass)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* rxcmd = "UREG";
-    const char* txcmd = "AT+CREG?\r\n";
-    uint8_t* buf = NULL;
+    const char *rxcmd = "UREG";
+    const char *txcmd = "AT+CREG?\r\n";
+    uint8_t *buf = NULL;
     uint32_t bufLen = 0;
-    const char* rxdata = "+UREG: 1,0\r\n";
+    const char *rxdata = "+UREG: 1,0\r\n";
     AddFakeAnswer(txcmd, rxdata);
 
-    retcode = Engine_SendAtCommandWaitEcho((const uint8_t*) txcmd, strlen(txcmd), 0);
+    retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)txcmd, strlen(txcmd), 0);
     EXPECT_EQ(RETCODE_OK, retcode);
 
-    retcode = AtResponseQueue_WaitForNamedCmd(0U, (const uint8_t*) rxcmd, strlen(rxcmd));
+    retcode = AtResponseQueue_WaitForNamedCmd(0U, (const uint8_t *)rxcmd, strlen(rxcmd));
     EXPECT_EQ(RETCODE_OK, retcode);
 
     retcode = AtResponseQueue_WaitForArbitraryCmdArg(0U, &buf, &bufLen);
     EXPECT_EQ(RETCODE_OK, retcode);
-    EXPECT_STREQ("1", (char*) buf);
+    EXPECT_STREQ("1", (char *)buf);
     AtResponseQueue_MarkBufferAsUnused();
 
     retcode = AtResponseQueue_WaitForArbitraryCmdArg(0U, &buf, &bufLen);
     EXPECT_EQ(RETCODE_OK, retcode);
-    EXPECT_STREQ("0", (char*) buf);
+    EXPECT_STREQ("0", (char *)buf);
     AtResponseQueue_MarkBufferAsUnused();
 }
 
 TEST_F(TS_SmokeTest, NoEchoSendThenReceivePass)
 {
     Retcode_T retcode = RETCODE_OK;
-    const char* rxcmd = "UREG";
-    const char* txcmd = "AT+CREG?\r\n";
-    uint8_t* buf = NULL;
+    const char *rxcmd = "UREG";
+    const char *txcmd = "AT+CREG?\r\n";
+    uint8_t *buf = NULL;
     uint32_t bufLen = 0;
-    const char* rxdata = "+UREG: 1,0\r\n";
+    const char *rxdata = "+UREG: 1,0\r\n";
     AddFakeAnswer(txcmd, rxdata);
     ModemEmulator_EnableEcho = false;
 
-    retcode = Engine_SendAtCommand((const uint8_t*) txcmd, strlen(txcmd));
+    retcode = Engine_SendAtCommand((const uint8_t *)txcmd, strlen(txcmd));
     EXPECT_EQ(RETCODE_OK, retcode);
 
-    retcode = AtResponseQueue_WaitForNamedCmd(0U, (const uint8_t*) rxcmd, strlen(rxcmd));
+    retcode = AtResponseQueue_WaitForNamedCmd(0U, (const uint8_t *)rxcmd, strlen(rxcmd));
     EXPECT_EQ(RETCODE_OK, retcode);
 
     retcode = AtResponseQueue_WaitForArbitraryCmdArg(0U, &buf, &bufLen);
     EXPECT_EQ(RETCODE_OK, retcode);
-    EXPECT_STREQ("1", (char*) buf);
+    EXPECT_STREQ("1", (char *)buf);
     AtResponseQueue_MarkBufferAsUnused();
 
     retcode = AtResponseQueue_WaitForArbitraryCmdArg(0U, &buf, &bufLen);
     EXPECT_EQ(RETCODE_OK, retcode);
-    EXPECT_STREQ("0", (char*) buf);
-    AtResponseQueue_MarkBufferAsUnused();}
+    EXPECT_STREQ("0", (char *)buf);
+    AtResponseQueue_MarkBufferAsUnused();
+}

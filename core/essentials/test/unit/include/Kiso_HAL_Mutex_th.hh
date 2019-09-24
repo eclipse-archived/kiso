@@ -11,7 +11,7 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
- 
+
 #ifndef KISO_HAL_MUTEX_TH_HH_
 #define KISO_HAL_MUTEX_TH_HH_
 
@@ -25,7 +25,7 @@
 
 /* Mock-ups for the provided interfaces */
 FAKE_VALUE_FUNC(Retcode_T, HAL_Mutex_SetHooks, HAL_Mutex_Hook_T, HAL_Mutex_Hook_T)
-FAKE_VALUE_FUNC(Retcode_T, HAL_Mutex_Lock, HAL_Mutex_T*)
-FAKE_VALUE_FUNC(Retcode_T, HAL_Mutex_Unlock, HAL_Mutex_T*)
+FAKE_VALUE_FUNC(Retcode_T, HAL_Mutex_Lock, HAL_Mutex_T *)
+FAKE_VALUE_FUNC(Retcode_T, HAL_Mutex_Unlock, HAL_Mutex_T *)
 
 #endif /* KISO_HAL_MUTEX_TH_HH_ */

@@ -785,7 +785,7 @@ Retcode_T At_Set_ULSTFILE(AT_ULSTFILE_Param_T *param);
  *
  * @return A #Retcode_T indicating the result of the requested action.
  */
-Retcode_T At_Set_URDBLOCK(const AT_URDBLOCK_Param_T *param, AT_URDBLOCK_Resp_T* resp);
+Retcode_T At_Set_URDBLOCK(const AT_URDBLOCK_Param_T *param, AT_URDBLOCK_Resp_T *resp);
 
 Retcode_T At_Set_URDFILE(AT_URDFILE_Param_T *param);
 

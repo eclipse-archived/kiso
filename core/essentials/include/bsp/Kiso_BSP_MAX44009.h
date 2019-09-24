@@ -57,19 +57,19 @@
 
 #include "Kiso_HAL.h"
 
-#if(1 == KISO_FEATURE_BSP_MAX44009)
+#if (1 == KISO_FEATURE_BSP_MAX44009)
 
 /* ************************************************************************** */
 /* I2C DEVICE ADDRESSES ***************************************************** */
 /* ************************************************************************** */
-#define BSP_MAX44009_I2C_ADDR0  UINT8_C(0x4A)   /**< MAX44009 Device Address 0 */
-#define BSP_MAX44009_I2C_ADDR1  UINT8_C(0x4B)   /**< MAX44009 Device Address 1 */
+#define BSP_MAX44009_I2C_ADDR0 UINT8_C(0x4A) /**< MAX44009 Device Address 0 */
+#define BSP_MAX44009_I2C_ADDR1 UINT8_C(0x4B) /**< MAX44009 Device Address 1 */
 
 /* ************************************************************************** */
 /* RETURN CODES ************************************************************* */
 /* ************************************************************************** */
-#define BSP_MAX44009_I2C_FAIL       INT8_C(-1)  /**< MAX44009 I2C operation failed return code */
-#define BSP_MAX44009_I2C_SUCCESS    INT8_C( 0)  /**< MAX44009 I2C operation succeeded return code */
+#define BSP_MAX44009_I2C_FAIL INT8_C(-1)   /**< MAX44009 I2C operation failed return code */
+#define BSP_MAX44009_I2C_SUCCESS INT8_C(0) /**< MAX44009 I2C operation succeeded return code */
 
 /**
  * @brief       Type definition for the sensor interrupt callback
@@ -159,7 +159,7 @@ HWHandle_T BSP_MAX44009_GetHandle(int32_t deviceId);
  *
  * @returns     Reference to the initialization parameters needed by the driver initialization routine
  */
-void * BSP_MAX44009_GetInitParams(int32_t deviceId);
+void *BSP_MAX44009_GetInitParams(int32_t deviceId);
 
 /**
  * @brief       Enables the interrupt handling for the nINT pin.

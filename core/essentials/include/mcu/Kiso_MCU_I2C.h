@@ -69,7 +69,7 @@
  */
 enum RETCODE_MCU_I2C_E
 {
-    RETCODE_MCU_I2C_FAILURE = RETCODE_FIRST_CUSTOM_CODE ,
+    RETCODE_MCU_I2C_FAILURE = RETCODE_FIRST_CUSTOM_CODE,
     RETCODE_MCU_I2C_NACK,
     RETCODE_MCU_I2C_INVALID_PERIPHERAL
 };
@@ -84,19 +84,18 @@ typedef HWHandle_T I2C_T;
  */
 struct MCU_I2C_Event_S
 {
-    uint32_t RxReady        :1; /**< At least one byte has arrived after the call to MCU_UART_Receive(). */
-    uint32_t TransferError  :1; /**< A Transfer error has occurred. */
-    uint32_t RxComplete     :1; /**< The expected number of bytes have been received. */
-    uint32_t TxComplete     :1; /**< All bytes passed with the last call to MCU_UART_Send() are sent. */
+    uint32_t RxReady : 1;       /**< At least one byte has arrived after the call to MCU_UART_Receive(). */
+    uint32_t TransferError : 1; /**< A Transfer error has occurred. */
+    uint32_t RxComplete : 1;    /**< The expected number of bytes have been received. */
+    uint32_t TxComplete : 1;    /**< All bytes passed with the last call to MCU_UART_Send() are sent. */
 };
 
 /**
  * @brief       Union of MCU_I2C_Event_S and a scalar uint32_t for optimized access.
  */
-union MCU_I2C_Event_U
-{
-    uint32_t value; /**< Stored value in the event structure (could be used to reset the overall bitfield structure).*/
-    struct MCU_I2C_Event_S bits;/**< Events structure as a bitfield.*/
+union MCU_I2C_Event_U {
+    uint32_t value;              /**< Stored value in the event structure (could be used to reset the overall bitfield structure).*/
+    struct MCU_I2C_Event_S bits; /**< Events structure as a bitfield.*/
 };
 
 /**
@@ -174,7 +173,7 @@ Retcode_T MCU_I2C_Deinitialize(I2C_T i2c);
  *
  * @return      RETCODE_OK in case of success, error code otherwise.
  */
-Retcode_T MCU_I2C_Send(I2C_T i2c, uint16_t slaveAddress, uint8_t * data, uint32_t len);
+Retcode_T MCU_I2C_Send(I2C_T i2c, uint16_t slaveAddress, uint8_t *data, uint32_t len);
 
 /**
  * @brief       Receives data via I2C.
@@ -203,7 +202,7 @@ Retcode_T MCU_I2C_Send(I2C_T i2c, uint16_t slaveAddress, uint8_t * data, uint32_
  *
  * @return      RETCODE_OK in case of success, error code otherwise.
  */
-Retcode_T MCU_I2C_Receive(I2C_T i2c, uint16_t slaveAddr, uint8_t * buffer, uint32_t len);
+Retcode_T MCU_I2C_Receive(I2C_T i2c, uint16_t slaveAddr, uint8_t *buffer, uint32_t len);
 
 /**
  * @brief       Reads from a device's register.
@@ -228,7 +227,7 @@ Retcode_T MCU_I2C_Receive(I2C_T i2c, uint16_t slaveAddr, uint8_t * buffer, uint3
  *
  * @return      RETCODE_OK in case of success, error code otherwise.
  */
-Retcode_T MCU_I2C_ReadRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAddr, uint8_t * rxBuffer, uint32_t rxLen);
+Retcode_T MCU_I2C_ReadRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAddr, uint8_t *rxBuffer, uint32_t rxLen);
 
 /**
  * @brief       Writes to a device's register.
@@ -253,7 +252,7 @@ Retcode_T MCU_I2C_ReadRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAd
  *
  * @return      RETCODE_OK in case of success, error code otherwise.
  */
-Retcode_T MCU_I2C_WriteRegister(I2C_T i2c, uint16_t slaveAddr,uint8_t registerAddr, uint8_t * txdata, uint32_t txLen);
+Retcode_T MCU_I2C_WriteRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAddr, uint8_t *txdata, uint32_t txLen);
 
 #endif /* KISO_FEATURE_I2C */
 #endif /* KISO_MCU_I2C_H */

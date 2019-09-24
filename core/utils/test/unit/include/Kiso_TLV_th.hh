@@ -26,7 +26,6 @@
  * @file
  **/
 
-
 /* Header definition */
 #ifndef KISO_TLV_TH_HH_
 #define KISO_TLV_TH_HH_
@@ -39,21 +38,21 @@
 
 struct TLV_Element_S
 {
-    uint8_t* DataBuffer;
+    uint8_t *DataBuffer;
     uint16_t DataType;
     uint16_t DataLength;
 };
 
 typedef struct TLV_Element_S TLV_Element_T;
 
-typedef struct TLV_Group_S * TLV_GroupHandle_TP;
+typedef struct TLV_Group_S *TLV_GroupHandle_TP;
 
 /* Mock-ups for the provided interfaces */
-FAKE_VALUE_FUNC(TLV_GroupHandle_TP,TLV_AddGroup,void*,uint16_t)
-FAKE_VOID_FUNC(TLV_RemoveGroup ,TLV_GroupHandle_TP)
-FAKE_VALUE_FUNC(TLV_Element_T* ,TLV_AddElement,TLV_GroupHandle_TP , uint16_t, uint16_t , void * )
-FAKE_VALUE_FUNC(TLV_Element_T* ,TLV_GetElement,TLV_GroupHandle_TP ,uint16_t)
-FAKE_VOID_FUNC(TLV_RemoveElement ,TLV_GroupHandle_TP,uint16_t)
+FAKE_VALUE_FUNC(TLV_GroupHandle_TP, TLV_AddGroup, void *, uint16_t)
+FAKE_VOID_FUNC(TLV_RemoveGroup, TLV_GroupHandle_TP)
+FAKE_VALUE_FUNC(TLV_Element_T *, TLV_AddElement, TLV_GroupHandle_TP, uint16_t, uint16_t, void *)
+FAKE_VALUE_FUNC(TLV_Element_T *, TLV_GetElement, TLV_GroupHandle_TP, uint16_t)
+FAKE_VOID_FUNC(TLV_RemoveElement, TLV_GroupHandle_TP, uint16_t)
 
 #endif /* KISO_TLV_TH_HH_ */
 

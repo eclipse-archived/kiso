@@ -99,7 +99,7 @@ Retcode_T BSP_Button_Connect(void);
  * @return      RETCODE_OK in the case of success or an error code otherwise.
  */
 
-Retcode_T BSP_Button_Enable( uint32_t buttonId, BSP_Button_Callback_T callback);
+Retcode_T BSP_Button_Enable(uint32_t buttonId, BSP_Button_Callback_T callback);
 
 /**
  * @brief       Disables the the specified button.
@@ -110,7 +110,7 @@ Retcode_T BSP_Button_Enable( uint32_t buttonId, BSP_Button_Callback_T callback);
  *
  * @return      RETCODE_OK in the case of success or an error code otherwise.
  */
-Retcode_T BSP_Button_Disable(uint32_t buttonId );
+Retcode_T BSP_Button_Disable(uint32_t buttonId);
 
 /**
  * @brief       Disconnects the button.

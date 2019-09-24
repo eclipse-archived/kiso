@@ -47,24 +47,24 @@
  */
 FAKE_VALUE_FUNC(Retcode_T, xProtocol_Init)
 FAKE_VALUE_FUNC(Retcode_T, xProtocol_EncodeFrame, const uint8_t *, uint32_t,
-        uint32_t, uint8_t *, uint32_t *);
+                uint32_t, uint8_t *, uint32_t *);
 FAKE_VALUE_FUNC(Retcode_T, xProtocol_DecodeFrame, const uint8_t *, uint32_t,
-        uint32_t, uint8_t *, uint32_t *);
+                uint32_t, uint8_t *, uint32_t *);
 FAKE_VALUE_FUNC(Retcode_T, xProtocol_IsCompleteFrame, const uint8_t *, uint32_t,
-        const uint8_t **);
+                const uint8_t **);
 FAKE_VALUE_FUNC(Retcode_T, xProtocol_GetPayloadLength, const uint8_t *, uint32_t,
-        uint32_t *);
+                uint32_t *);
 
 /* Faked variables needs to be initialized by the test fixture */
 FAKE_VALUE_FUNC(Retcode_T, XProtocol_Init)
 FAKE_VALUE_FUNC(Retcode_T, XProtocol_EncodeFrame, const uint8_t *, uint32_t,
-        uint32_t, uint8_t *, uint32_t *);
+                uint32_t, uint8_t *, uint32_t *);
 FAKE_VALUE_FUNC(Retcode_T, XProtocol_DecodeFrame, const uint8_t *, uint32_t,
-        uint32_t, uint8_t *, uint32_t *);
+                uint32_t, uint8_t *, uint32_t *);
 FAKE_VALUE_FUNC(Retcode_T, XProtocol_IsCompleteFrame, const uint8_t *, uint32_t,
-        const uint8_t **);
+                const uint8_t **);
 FAKE_VALUE_FUNC(Retcode_T, XProtocol_GetPayloadLength, const uint8_t *, uint32_t,
-        uint32_t *);
+                uint32_t *);
 
 #endif /* KISO_XPROTOCOL_TH_HH_*/
 

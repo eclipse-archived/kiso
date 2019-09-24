@@ -12,7 +12,6 @@
 *
 ********************************************************************************/
 
-
 /**
  * @file
  *
@@ -40,19 +39,19 @@
  *        is too low, some URCs might not be handled. If it's too high we waste time
  *        doing nothing. When in dought, err on the side of making this number too high.
  */
-#define CELLULAR_MAX_URC_HANDLER_RUNS      UINT8_C(100)
+#define CELLULAR_MAX_URC_HANDLER_RUNS UINT8_C(100)
 
 /**
  * @brief Macro used exclusively in CellularEngine_HandleUrcResponses to register URC handlers.
  *
  * @param x The URC handler to register
  */
-#define CELLULAR_REGISTER_URC_HANDLER(x)   (result = CallHandler((x), result, &OneHandlerCared))
+#define CELLULAR_REGISTER_URC_HANDLER(x) (result = CallHandler((x), result, &OneHandlerCared))
 
 /**
  * @brief The maximum time to wait for the URC argument to be received.
  */
-#define CELLULAR_URC_ARG_WAIT_TIME         (UINT32_C(100) / portTICK_PERIOD_MS)
+#define CELLULAR_URC_ARG_WAIT_TIME (UINT32_C(100) / portTICK_PERIOD_MS)
 
 /**
  * @brief Calls a single URC handler and updates the
@@ -74,7 +73,7 @@
  * handler was not interested and did not encounter and error. If the handler
  * did encounter an error, that #Retcode_T will be returned.
  */
-static Retcode_T CallHandler(CellularUrcHandler_T handler, Retcode_T totalResult, bool* handlerWasInterested);
+static Retcode_T CallHandler(CellularUrcHandler_T handler, Retcode_T totalResult, bool *handlerWasInterested);
 
 /**
  * @brief Handle u-blox variant specific URCs that do not need proper
@@ -85,7 +84,7 @@ static Retcode_T CallHandler(CellularUrcHandler_T handler, Retcode_T totalResult
  */
 static Retcode_T HandleMiscellaneousUrc(void);
 
-static Retcode_T CallHandler(CellularUrcHandler_T handler, Retcode_T totalResult, bool* handlerWasInterested)
+static Retcode_T CallHandler(CellularUrcHandler_T handler, Retcode_T totalResult, bool *handlerWasInterested)
 {
     if (NULL == handler || NULL == handlerWasInterested)
     {
@@ -99,7 +98,7 @@ static Retcode_T CallHandler(CellularUrcHandler_T handler, Retcode_T totalResult
     {
         *handlerWasInterested = true;
     }
-    else if (Retcode_GetCode(handlerResult) == (uint32_t) RETCODE_CELLULAR_URC_NOT_PRESENT)
+    else if (Retcode_GetCode(handlerResult) == (uint32_t)RETCODE_CELLULAR_URC_NOT_PRESENT)
     {
         /* Handler is still ok, but simply wasn't interested. Nothing to do. */
     }
@@ -116,31 +115,31 @@ static Retcode_T HandleMiscellaneousUrc(void)
     Retcode_T result = RETCODE(RETCODE_SEVERITY_INFO, RETCODE_CELLULAR_URC_NOT_PRESENT);
     Retcode_T retcode;
 
-    retcode = AtResponseQueue_WaitForNamedCmd(0, (uint8_t *) "PACSP0", strlen("PACSP0"));
+    retcode = AtResponseQueue_WaitForNamedCmd(0, (uint8_t *)"PACSP0", strlen("PACSP0"));
     if (RETCODE_OK == retcode)
     {
         LOG_DEBUG("URC for PACSP0");
         result = RETCODE_OK;
     }
 
-    retcode = AtResponseQueue_WaitForNamedCmd(0, (uint8_t *) "PACSP1", strlen("PACSP1"));
+    retcode = AtResponseQueue_WaitForNamedCmd(0, (uint8_t *)"PACSP1", strlen("PACSP1"));
     if (RETCODE_OK == retcode)
     {
         LOG_DEBUG("URC for PACSP1");
         result = RETCODE_OK;
     }
 
-    retcode = AtResponseQueue_WaitForNamedCmd(0, (uint8_t *) "UMWI", strlen("UMWI"));
+    retcode = AtResponseQueue_WaitForNamedCmd(0, (uint8_t *)"UMWI", strlen("UMWI"));
     if (RETCODE_OK == retcode)
     {
         LOG_DEBUG("URC for UMWI");
         result = RETCODE_OK;
 
         // ignore arg 0
-        (void) AtResponseQueue_IgnoreEvent(0);
+        (void)AtResponseQueue_IgnoreEvent(0);
 
         // ignore arg 1
-        (void) AtResponseQueue_IgnoreEvent(0);
+        (void)AtResponseQueue_IgnoreEvent(0);
     }
 
     return result;

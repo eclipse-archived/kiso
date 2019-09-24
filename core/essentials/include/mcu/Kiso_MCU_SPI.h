@@ -79,8 +79,8 @@ typedef HWHandle_T SPI_T;
  */
 struct MCU_SPI_DeviceAttr_S
 {
-    Retcode_T (*MCU_SPI_SelectFuncPtr)(int32_t); /**< Reference to the SPI device select function*/
-    Retcode_T (*MCU_SPI_DeselectFuncPtr)(int32_t);/**< Reference to the SPI device deselect function */
+    Retcode_T (*MCU_SPI_SelectFuncPtr)(int32_t);   /**< Reference to the SPI device select function*/
+    Retcode_T (*MCU_SPI_DeselectFuncPtr)(int32_t); /**< Reference to the SPI device deselect function */
 };
 
 /**
@@ -88,21 +88,19 @@ struct MCU_SPI_DeviceAttr_S
  */
 struct MCU_SPI_Event_S
 {
-    uint32_t RxReady        :1; /**< At least one byte has arrived.*/
-    uint32_t RxError        :1; /**< Receive error has occurred.*/
-    uint32_t RxComplete     :1; /**< The expected bytes have been received.*/
-    uint32_t TxError        :1; /**< Transmit error has occurred.*/
-    uint32_t TxComplete     :1; /**< All bytes passed with the last call are sent through the medium.*/
-    uint32_t DataLoss       :1; /**< Occurs upon bus error.*/
+    uint32_t RxReady : 1;    /**< At least one byte has arrived.*/
+    uint32_t RxError : 1;    /**< Receive error has occurred.*/
+    uint32_t RxComplete : 1; /**< The expected bytes have been received.*/
+    uint32_t TxError : 1;    /**< Transmit error has occurred.*/
+    uint32_t TxComplete : 1; /**< All bytes passed with the last call are sent through the medium.*/
+    uint32_t DataLoss : 1;   /**< Occurs upon bus error.*/
 };
 /**
  * @brief       Union combining event bitfield structure with a uint32_t value.
  */
-union MCU_SPI_Event_U
-{
+union MCU_SPI_Event_U {
     struct MCU_SPI_Event_S bitfield; /**< Events structure as a bitfield */
-    uint32_t registerValue; /**< Stored value in the event structure (could be used to reset the overall bitfield structure) */
-
+    uint32_t registerValue;          /**< Stored value in the event structure (could be used to reset the overall bitfield structure) */
 };
 
 /**
@@ -191,7 +189,7 @@ Retcode_T MCU_SPI_Deinitialize(SPI_T spi);
  *
  * @return      RETCODE_OK in case of success, error code otherwise.
  */
-Retcode_T MCU_SPI_Send(SPI_T spi, uint8_t * data, uint32_t len);
+Retcode_T MCU_SPI_Send(SPI_T spi, uint8_t *data, uint32_t len);
 
 /**
  * @brief       Receives data via SPI
@@ -223,7 +221,7 @@ Retcode_T MCU_SPI_Send(SPI_T spi, uint8_t * data, uint32_t len);
  *
  * @return      RETCODE_OK in case of success, error code otherwise.
  */
-Retcode_T MCU_SPI_Receive(SPI_T spi, uint8_t * buffer, uint32_t len);
+Retcode_T MCU_SPI_Receive(SPI_T spi, uint8_t *buffer, uint32_t len);
 /**
  * @brief       Transfers data via SPI (send while receive).
  *
@@ -259,7 +257,7 @@ Retcode_T MCU_SPI_Receive(SPI_T spi, uint8_t * buffer, uint32_t len);
  *
  * @return      RETCODE_OK in case of success, error code otherwise.
  */
-Retcode_T MCU_SPI_Transfer(SPI_T spi, uint8_t* data_out, uint8_t* data_in, uint32_t numTransfer);
+Retcode_T MCU_SPI_Transfer(SPI_T spi, uint8_t *data_out, uint8_t *data_in, uint32_t numTransfer);
 
 /**
  * @brief       Get the transfered data count.

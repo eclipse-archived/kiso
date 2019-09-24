@@ -62,11 +62,11 @@ void SocketService_NotifySocketDataReceived(uint32_t socketId, uint32_t length);
  * Port on which the listening socket was listening.
  */
 void SocketService_NotifySocketAccepted(uint32_t createdSocketId,
-        const AT_UBlox_Address_T* remoteIp,
-        uint16_t remotePort,
-        uint32_t listeningSocketId,
-        const AT_UBlox_Address_T* localIp,
-        uint16_t listeningPort);
+                                        const AT_UBlox_Address_T *remoteIp,
+                                        uint16_t remotePort,
+                                        uint32_t listeningSocketId,
+                                        const AT_UBlox_Address_T *localIp,
+                                        uint16_t listeningPort);
 
 /**
  * @brief Called by the URC handler to notify that a socket got closed by
@@ -78,4 +78,3 @@ void SocketService_NotifySocketAccepted(uint32_t createdSocketId,
 void SocketService_NotifySocketClosed(uint32_t socketId);
 
 #endif /* SOCKETSERVICE_H_ */
-

@@ -11,7 +11,7 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
- 
+
 #ifndef KISO_HAL_DELAY_TH_HH_
 #define KISO_HAL_DELAY_TH_HH_
 

@@ -11,13 +11,12 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
- 
+
 #ifndef KISO_KISO_UMTS_QECTELUC20_TH_HH
 #define KISO_KISO_UMTS_QECTELUC20_TH_HH
 
 #include "Kiso_HAL_th.hh"
 #include "Kiso_BSP_UMTS_QuectelUC20.h"
-
 
 /* Mock-ups for the provided interfaces */
 #if KISO_FEATURE_BSP_UMTS_QUECTELUC20

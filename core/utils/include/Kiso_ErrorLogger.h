@@ -47,20 +47,20 @@
  */
 struct ErrorLogger_LogEntry_S
 {
-    uint32_t TimeStamp;      /** It records the timestamp (uptime) of error occurance */
-    uint32_t ErrorCode;      /** It holds the Retcode_T which says from where the error comes */
-    uint16_t SeqNo;          /** It holds error occurance number */
-    uint16_t Reserved;       /** For furture use */
-}__attribute__((packed));
+    uint32_t TimeStamp; /** It records the timestamp (uptime) of error occurance */
+    uint32_t ErrorCode; /** It holds the Retcode_T which says from where the error comes */
+    uint16_t SeqNo;     /** It holds error occurance number */
+    uint16_t Reserved;  /** For furture use */
+} __attribute__((packed));
 
 typedef struct ErrorLogger_LogEntry_S ErrorLogger_LogEntry_T;
 
 /** @Warning This item needs to be updated whenever the log entry structure changes!! */
-#define SIZEOF_LOGENTRY     (UINT8_C(12))
+#define SIZEOF_LOGENTRY (UINT8_C(12))
 
-#define ERRORLOGGER_SIZE    (UINT8_C(120))
+#define ERRORLOGGER_SIZE (UINT8_C(120))
 
-#define MAXENTRIES (ERRORLOGGER_SIZE/SIZEOF_LOGENTRY)
+#define MAXENTRIES (ERRORLOGGER_SIZE / SIZEOF_LOGENTRY)
 
 /**
  * @brief
@@ -68,10 +68,10 @@ typedef struct ErrorLogger_LogEntry_S ErrorLogger_LogEntry_T;
  */
 enum ErrorLogger_StorageMedium_E
 {
-	STORAGE_TYPE_SDCARD = 0,
-	STORAGE_TYPE_EXT_FLASH,
-	STORAGE_TYPE_NVM,
-	STORAGE_TYPE_OTHERS // Reserved for future usage of any other medium
+    STORAGE_TYPE_SDCARD = 0,
+    STORAGE_TYPE_EXT_FLASH,
+    STORAGE_TYPE_NVM,
+    STORAGE_TYPE_OTHERS // Reserved for future usage of any other medium
 };
 
 typedef enum ErrorLogger_StorageMedium_E ErrorLogger_StorageMedium_T;
@@ -98,7 +98,7 @@ typedef enum ErrorLogger_StorageMedium_E ErrorLogger_StorageMedium_T;
  *      If the read was successful, else an error code is returned.
  *
  */
-typedef Retcode_T (*ErrorLogger_ReadFunc_T)(ErrorLogger_StorageMedium_T storageSelect, void* value, uint32_t StartAddr, uint32_t numOfBytes);
+typedef Retcode_T (*ErrorLogger_ReadFunc_T)(ErrorLogger_StorageMedium_T storageSelect, void *value, uint32_t StartAddr, uint32_t numOfBytes);
 
 /**
  * @brief
@@ -122,7 +122,7 @@ typedef Retcode_T (*ErrorLogger_ReadFunc_T)(ErrorLogger_StorageMedium_T storageS
  *      If the write was successful, else an error code is returned.
  *
  */
-typedef Retcode_T (*ErrorLogger_WriteFunc_T)(ErrorLogger_StorageMedium_T storageSelect, void* value, uint32_t StartAddr, uint32_t numOfBytes);
+typedef Retcode_T (*ErrorLogger_WriteFunc_T)(ErrorLogger_StorageMedium_T storageSelect, void *value, uint32_t StartAddr, uint32_t numOfBytes);
 
 /**
  * @brief
@@ -146,7 +146,7 @@ typedef Retcode_T (*ErrorLogger_WriteFunc_T)(ErrorLogger_StorageMedium_T storage
  *      When the erase was successful else an error code is returned.
  *
  */
-typedef Retcode_T (*ErrorLogger_EraseFunc_T)(ErrorLogger_StorageMedium_T storageSelect, void* value, uint32_t StartAddr, uint32_t numOfBytes);
+typedef Retcode_T (*ErrorLogger_EraseFunc_T)(ErrorLogger_StorageMedium_T storageSelect, void *value, uint32_t StartAddr, uint32_t numOfBytes);
 
 /**
  * @brief
@@ -156,12 +156,12 @@ typedef Retcode_T (*ErrorLogger_EraseFunc_T)(ErrorLogger_StorageMedium_T storage
  * @return
  *      Current time stamp.
  */
-typedef uint32_t (*ErrorLogger_GetTime) (void);
+typedef uint32_t (*ErrorLogger_GetTime)(void);
 
 /** Structure contains function pointers as it members to access the storage medium easily.*/
 struct ErrorLoggerConfig_S
 {
-	ErrorLogger_StorageMedium_T StorageMedium;
+    ErrorLogger_StorageMedium_T StorageMedium;
     ErrorLogger_ReadFunc_T ReadLogs;
     ErrorLogger_WriteFunc_T WriteLogs;
     ErrorLogger_EraseFunc_T EraseLogs;

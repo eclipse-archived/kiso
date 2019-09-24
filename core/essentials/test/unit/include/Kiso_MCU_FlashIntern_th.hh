@@ -11,7 +11,7 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
- 
+
 #ifndef KISO_MCU_FLASHINTERN_TH_HH_
 #define KISO_MCU_FLASHINTERN_TH_HH_
 
@@ -25,15 +25,15 @@
 
 /* Mock-ups for the provided interfaces */
 
-FAKE_VALUE_FUNC(Retcode_T ,MCU_FlashIntern_Initialize, MCU_FlashIntern_T)
+FAKE_VALUE_FUNC(Retcode_T, MCU_FlashIntern_Initialize, MCU_FlashIntern_T)
 
-FAKE_VALUE_FUNC(Retcode_T ,MCU_FlashIntern_Erase, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_FlashIntern_Erase, uint32_t, uint32_t)
 
-FAKE_VALUE_FUNC(Retcode_T ,MCU_FlashIntern_Write, uint32_t, uint8_t*, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_FlashIntern_Write, uint32_t, uint8_t *, uint32_t)
 
-FAKE_VALUE_FUNC(Retcode_T ,MCU_FlashIntern_Read, uint32_t, uint8_t*, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_FlashIntern_Read, uint32_t, uint8_t *, uint32_t)
 
-FAKE_VALUE_FUNC(Retcode_T ,MCU_FlashIntern_WriteProtect, uint32_t, uint32_t, bool)
+FAKE_VALUE_FUNC(Retcode_T, MCU_FlashIntern_WriteProtect, uint32_t, uint32_t, bool)
 
-FAKE_VALUE_FUNC(uint32_t ,MCU_FlashIntern_GetMinRWSize)
+FAKE_VALUE_FUNC(uint32_t, MCU_FlashIntern_GetMinRWSize)
 #endif /* KISO_MCU_FLASHINTERN_TH_HH_ */

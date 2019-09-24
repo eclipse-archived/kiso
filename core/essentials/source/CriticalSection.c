@@ -25,11 +25,8 @@
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_CRITICALSECTION
 
-
 /* additional interface header files */
 #include "Kiso_Basics.h"
-
-
 
 #ifdef __GNUC__
 
@@ -42,59 +39,53 @@
 #include "intrinsics.h"
 #endif /* ti_cc26xx */
 
-static Retcode_T NoOs_CriticalSection_Enter(uint32_t * count);
-static Retcode_T NoOs_CriticalSection_Leave(uint32_t * count);
+static Retcode_T NoOs_CriticalSection_Enter(uint32_t *count);
+static Retcode_T NoOs_CriticalSection_Leave(uint32_t *count);
 
-static uint32_t _CriticalSection_Count=0;
+static uint32_t _CriticalSection_Count = 0;
 
+static HAL_CriticalSection_Hook_T _CriticalSectionEnterHook = NoOs_CriticalSection_Enter;
+static HAL_CriticalSection_Hook_T _CriticalSectionLeaveHook = NoOs_CriticalSection_Leave;
 
-static HAL_CriticalSection_Hook_T _CriticalSectionEnterHook = 	NoOs_CriticalSection_Enter;
-static HAL_CriticalSection_Hook_T _CriticalSectionLeaveHook = 	NoOs_CriticalSection_Leave;
-
-
-
-Retcode_T HAL_CriticalSection_SetHooks( HAL_CriticalSection_Hook_T enterHook,HAL_CriticalSection_Hook_T leaveHook)
+Retcode_T HAL_CriticalSection_SetHooks(HAL_CriticalSection_Hook_T enterHook, HAL_CriticalSection_Hook_T leaveHook)
 {
-    Retcode_T retcode=RETCODE_OK;
-	if(NULL != enterHook && NULL != leaveHook)
-	{
-		_CriticalSectionEnterHook = enterHook;
-		_CriticalSectionLeaveHook = leaveHook;
-		retcode = RETCODE_OK;
-	}
-	else
-	{
-		retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NULL_POINTER);
-	}
+    Retcode_T retcode = RETCODE_OK;
+    if (NULL != enterHook && NULL != leaveHook)
+    {
+        _CriticalSectionEnterHook = enterHook;
+        _CriticalSectionLeaveHook = leaveHook;
+        retcode = RETCODE_OK;
+    }
+    else
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NULL_POINTER);
+    }
     return retcode;
 }
 
+Retcode_T HAL_CriticalSection_Enter(uint32_t *count)
+{
 
-Retcode_T HAL_CriticalSection_Enter(uint32_t * count ){
+    if (NULL != _CriticalSectionEnterHook)
+    {
+        return (_CriticalSectionEnterHook(count));
+    }
 
-	if(NULL != _CriticalSectionEnterHook)
-		{
-			return( _CriticalSectionEnterHook(count));
-		}
-
-	return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NULL_POINTER);
+    return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NULL_POINTER);
 }
 
+Retcode_T HAL_CriticalSection_Leave(uint32_t *count)
+{
 
-Retcode_T HAL_CriticalSection_Leave(uint32_t * count ){
+    if (NULL != _CriticalSectionLeaveHook)
+    {
+        return (_CriticalSectionLeaveHook(count));
+    }
 
-	if(NULL != _CriticalSectionLeaveHook)
-		{
-			return( _CriticalSectionLeaveHook(count));
-		}
-
-
-	return RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NULL_POINTER);
+    return RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_NULL_POINTER);
 }
 
-
-
-static Retcode_T NoOs_CriticalSection_Enter(uint32_t * count)
+static Retcode_T NoOs_CriticalSection_Enter(uint32_t *count)
 {
     __disable_irq();
     if (_CriticalSection_Count < UINT32_MAX)
@@ -102,15 +93,12 @@ static Retcode_T NoOs_CriticalSection_Enter(uint32_t * count)
         _CriticalSection_Count++;
         *count = _CriticalSection_Count;
         return RETCODE_OK;
-
     }
     *count = UINT32_MAX;
     return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_OUT_OF_RESOURCES);
-    
 }
 
-
-static Retcode_T NoOs_CriticalSection_Leave(uint32_t * count)
+static Retcode_T NoOs_CriticalSection_Leave(uint32_t *count)
 {
 
     uint32_t lockLevel;
@@ -128,8 +116,7 @@ static Retcode_T NoOs_CriticalSection_Leave(uint32_t * count)
         return RETCODE_OK;
     }
     *count = UINT32_MAX;
-     return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_OUT_OF_RESOURCES);
+    return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_OUT_OF_RESOURCES);
 }
-
 
 #endif

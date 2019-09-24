@@ -11,7 +11,7 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
- 
+
 #ifndef KISO_BSP_TMP116_TH_HH
 #define KISO_BSP_TMP116_TH_HH
 

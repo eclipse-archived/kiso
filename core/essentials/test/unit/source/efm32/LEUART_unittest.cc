@@ -23,7 +23,7 @@ extern "C"
 #include "Kiso_Retcode_th.hh"
 #include "Kiso_HAL_th.hh"
 
-/**
+    /**
  * Kiso_HALConfig.h file which breaks the unit test implementation.
  *
  * Below four lines hot-fix needs to be replaced by proper implementation.
@@ -34,25 +34,22 @@ extern "C"
 
 #include "em_leuart_th.hh"
 
-typedef HWHandle_T LEUART_T;
+    typedef HWHandle_T LEUART_T;
 
 /* include module under test */
 #include "LEUART.c"
-
 }
 /* end of global scope symbol and fake definitions section */
 
-class KISO_LEUARTtest: public testing::Test
+class KISO_LEUARTtest : public testing::Test
 {
 protected:
-
     virtual void SetUp()
     {
         DeInit();
 
         for (int i = 0; i < 10; i++)
         {
-
         }
 
         FFF_RESET_HISTORY()
@@ -65,7 +62,7 @@ protected:
 
     void DeInit()
     {
-        ;/* nothing to do if clean up is not required */
+        ; /* nothing to do if clean up is not required */
     }
 
 public:
@@ -81,31 +78,25 @@ public:
 };
 
 const union MCU_LEUART_Event_U KISO_LEUARTtest::m_EventInit =
-{   .bitfield =
-    {   0, 0, 0, 0, 0, 0, 0, 0, 0}
-};
+    {.bitfield =
+         {0, 0, 0, 0, 0, 0, 0, 0, 0}};
 
 const union MCU_LEUART_Event_U KISO_LEUARTtest::m_EventRxReady =
-{   .bitfield =
-    {   1, 0, 0, 0, 0, 0, 0, 0, 0}
-};
+    {.bitfield =
+         {1, 0, 0, 0, 0, 0, 0, 0, 0}};
 
 const union MCU_LEUART_Event_U KISO_LEUARTtest::m_EventRxError =
-{   .bitfield =
-    {   0, 1, 0, 0, 0, 0, 0, 0, 0}
-};
+    {.bitfield =
+         {0, 1, 0, 0, 0, 0, 0, 0, 0}};
 const union MCU_LEUART_Event_U KISO_LEUARTtest::m_EventRxComplete =
-{   .bitfield =
-    {   0, 0, 1, 0, 0, 0, 0, 0, 0}
-};
+    {.bitfield =
+         {0, 0, 1, 0, 0, 0, 0, 0, 0}};
 const union MCU_LEUART_Event_U KISO_LEUARTtest::m_EventTxError =
-{   .bitfield =
-    {   0, 0, 0, 1, 0, 0, 0, 0, 0}
-};
+    {.bitfield =
+         {0, 0, 0, 1, 0, 0, 0, 0, 0}};
 const union MCU_LEUART_Event_U KISO_LEUARTtest::m_EventTxComplete =
-{   .bitfield =
-    {   0, 0, 0, 0, 1, 0, 0, 0, 0}
-};
+    {.bitfield =
+         {0, 0, 0, 0, 1, 0, 0, 0, 0}};
 
 bool KISO_LEUARTtest::m_isCalled_cbf = false;
 
@@ -143,7 +134,7 @@ LeuartDevice::LeuartDevice(enum KISO_HAL_TransferMode_E TransferMode)
     m_Leuart._DriverCtx.RxState = LEUART_STATE_INIT;
     m_Leuart._DriverCtx.TxState = LEUART_STATE_INIT;
 
-    m_LeuartInterfaceParam = (intptr_t) &m_Leuart;
+    m_LeuartInterfaceParam = (intptr_t)&m_Leuart;
 }
 
 LeuartDevice::~LeuartDevice()
@@ -163,7 +154,7 @@ uint32_t LeuartDevice::getAppInterfaceHandle()
  */
 void AppTestCallbackFunction(LEUART_T leuart, struct MCU_LEUART_Event_S event)
 {
-    KISO_LEUARTtest::m_leuart_cbf = (intptr_t) leuart;
+    KISO_LEUARTtest::m_leuart_cbf = (intptr_t)leuart;
     KISO_LEUARTtest::m_event_cbf.bitfield = event;
     /*
      std::cout << "     --- Hello from AppTestCallbackFunction ---" << std::endl;
@@ -190,7 +181,7 @@ TEST_F(KISO_LEUARTtest, test_MCU_LEUART_Initialize_ok)
 {
     Retcode_T rc;
     LeuartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    LEUART_T leuart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    LEUART_T leuart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_LEUART_Initialize(leuart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
 }
@@ -214,7 +205,7 @@ TEST_F(KISO_LEUARTtest, test_MCU_LEUART_Initialize_nullCallback)
 {
     Retcode_T rc;
     LeuartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    LEUART_T leuart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    LEUART_T leuart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_LEUART_Initialize(leuart01, NULL);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
 }
@@ -223,11 +214,10 @@ TEST_F(KISO_LEUARTtest, test_MCU_LEUART_Initialize_wrongTransferMode)
 {
     Retcode_T rc;
     LeuartDevice Device01(KISO_HAL_TRANSFER_MODE_BLOCKING);
-    LEUART_T leuart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    LEUART_T leuart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_LEUART_Initialize(leuart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
 }
-
 
 /**
  * @brief       Test public LEUART MCU interface MCU_UART_Deinitialize
@@ -239,20 +229,18 @@ TEST_F(KISO_LEUARTtest, test_MCU_LEUART_Deinitialize_ok)
 {
     Retcode_T rc;
     LeuartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    LEUART_T leuart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    LEUART_T leuart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_LEUART_Initialize(leuart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_LEUART_Deinitialize(leuart01);
     EXPECT_EQ(RETCODE_OK, rc);
 }
 
-
-
 TEST_F(KISO_LEUARTtest, test_MCU_LEUART_Deinitialize_nullLeuart)
 {
     Retcode_T rc;
     LeuartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    LEUART_T leuart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    LEUART_T leuart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_LEUART_Initialize(leuart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_LEUART_Deinitialize(0);
@@ -270,7 +258,7 @@ TEST_F(KISO_LEUARTtest, test_MCU_LEUART_Send_ok)
     Retcode_T rc = RETCODE_OK;
     uint8_t buffer[size];
     LeuartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    LEUART_T leuart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    LEUART_T leuart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_LEUART_Initialize(leuart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_LEUART_Send(leuart01, buffer, size);
@@ -306,9 +294,9 @@ TEST_F(KISO_LEUARTtest, test_MCU_LEUART_Send_sendCancel)
 {
     const uint16_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     LeuartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    LEUART_T leuart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    LEUART_T leuart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_LEUART_Initialize(leuart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_LEUART_Send(leuart01, buffer, 0); /* send cancel */
@@ -321,9 +309,9 @@ TEST_F(KISO_LEUARTtest, test_MCU_LEUART_Send_wrongTransferMode)
 {
     const uint16_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     LeuartDevice Device01(KISO_HAL_TRANSFER_MODE_BLOCKING);
-    LEUART_T leuart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    LEUART_T leuart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_LEUART_Initialize(leuart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
     rc = MCU_LEUART_Send(leuart01, buffer, size);
@@ -340,9 +328,9 @@ TEST_F(KISO_LEUARTtest, test_MCU_LEUART_Receive_ok)
 {
     const uint16_t size = 10;
     Retcode_T rc;
-    uint8_t buffer[ size ];
+    uint8_t buffer[size];
     LeuartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    LEUART_T leuart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    LEUART_T leuart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_LEUART_Initialize(leuart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_LEUART_Receive(leuart01, buffer, size);
@@ -356,7 +344,7 @@ TEST_F(KISO_LEUARTtest, test_MCU_LEUART_Receive_nullBuffer)
     const uint16_t size = 10;
     Retcode_T rc;
     LeuartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    LEUART_T leuart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    LEUART_T leuart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_LEUART_Initialize(leuart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_LEUART_Receive(leuart01, 0, size);
@@ -367,9 +355,9 @@ TEST_F(KISO_LEUARTtest, test_MCU_LEUART_Receive_receiveCancel)
 {
     const uint16_t size = 1;
     Retcode_T rc;
-    uint8_t buffer[ size ] = {0x01};
+    uint8_t buffer[size] = {0x01};
     LeuartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    LEUART_T leuart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    LEUART_T leuart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_LEUART_Initialize(leuart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_LEUART_Receive(leuart01, buffer, 0); /* receive cancel */
@@ -412,10 +400,10 @@ TEST_F(KISO_LEUARTtest, test_MCU_LEUART_Receive_wrongTransferMode)
 TEST_F(KISO_LEUARTtest, test_MCU_LEUART_GetRxCount_ok)
 {
     uint32_t temp = 10;
-    uint32_t * count = &temp;
+    uint32_t *count = &temp;
     Retcode_T rc;
     LeuartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    LEUART_T leuart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    LEUART_T leuart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_LEUART_Initialize(leuart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_LEUART_GetRxCount(leuart01, count);
@@ -426,7 +414,7 @@ TEST_F(KISO_LEUARTtest, test_MCU_LEUART_GetRxCount_nullCount)
 {
     Retcode_T rc;
     LeuartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    LEUART_T leuart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    LEUART_T leuart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_LEUART_Initialize(leuart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_LEUART_GetRxCount(leuart01, 0);
@@ -436,10 +424,10 @@ TEST_F(KISO_LEUARTtest, test_MCU_LEUART_GetRxCount_nullCount)
 TEST_F(KISO_LEUARTtest, test_MCU_LEUART_GetRxCount_notInitialized)
 {
     uint32_t temp = 10;
-    uint32_t * count = &temp;
+    uint32_t *count = &temp;
     Retcode_T rc;
     LeuartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    LEUART_T leuart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    LEUART_T leuart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_LEUART_GetRxCount(leuart01, count);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
 }
@@ -447,10 +435,10 @@ TEST_F(KISO_LEUARTtest, test_MCU_LEUART_GetRxCount_notInitialized)
 TEST_F(KISO_LEUARTtest, test_MCU_LEUART_GetRxCount_wrongTransferMode)
 {
     uint32_t temp = 10;
-    uint32_t * count = &temp;
+    uint32_t *count = &temp;
     Retcode_T rc;
     LeuartDevice Device01(KISO_HAL_TRANSFER_MODE_BLOCKING);
-    LEUART_T leuart01 = (HWHandle_T) Device01.getAppInterfaceHandle();
+    LEUART_T leuart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_LEUART_Initialize(leuart01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
     rc = MCU_LEUART_GetRxCount(leuart01, count);

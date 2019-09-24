@@ -42,21 +42,21 @@
 enum RETCODE_MCU_FLASH_INTERN_ERROR_E
 {
     RETCODE_MCU_FLASH_INTERN_ADDRESS_OUT_OF_BOUND = RETCODE_FIRST_CUSTOM_CODE, /**< Erase sequence error */
-    RETCODE_MCU_FLASH_INTERN_INVALID_ADDRESS, /**< Invalid address. Write to an address that is not within the internal flash memory. */
-    RETCODE_MCU_FLASH_INTERN_ADDR_UNALIGNED_WITH_PAGE_ADDR, /**< The given address is not aligned to any of the pages. */
-    RETCODE_MCU_FLASH_INTERN_ADDR_UNALIGNED_WITH_SECTOR_ADDR, /**< The given address is not aligned to any of the sectors. */
-    RETCODE_MCU_FLASH_INTERN_ADDRESS_LOCKED, /**< Flash address is locked. */
-    RETCODE_MCU_FLASH_INTERN_TIMEOUT, /**< Timeout while writing to internal flash memory. */
-    RETCODE_MCU_FLASH_INTERN_LOCK_FAILED, /**< Failed to lock the internal flash memory. */
-    RETCODE_MCU_FLASH_INTERN_UNLOCK_FAILED, /**< Failed to unlock the internal flash memory. */
-    RETCODE_MCU_FLASH_INTERN_ERASE_ERROR, /**< Programming Sequence error */
-    RETCODE_MCU_FLASH_INTERN_PROG_ERROR, /**< Programming Alignment error */
-    RETCODE_MCU_FLASH_INTERN_PROG_PARALLELISM_ERROR, /**< Programming Parallelism error  */
-    RETCODE_MCU_FLASH_INTERN_PROG_ALIGMENT_ERROR, /**< Programming Alignment error */
-    RETCODE_MCU_FLASH_INTERN_WRITE_PROTECTED_ERROR, /**< Write protection error  */
-    RETCODE_MCU_FLASH_INTERN_FLASH_OPERATION_ERROR, /**< Flash operation Error  */
-    RETCODE_MCU_FLASH_INTERN_READ_PROTECTED_ERROR, /**< Read Protection Error */
-    RETCODE_MCU_FLASH_INTERN_FAILED_TO_CONFIGURE_WRITE_PROTECTION, /**< Write protection error  */
+    RETCODE_MCU_FLASH_INTERN_INVALID_ADDRESS,                                  /**< Invalid address. Write to an address that is not within the internal flash memory. */
+    RETCODE_MCU_FLASH_INTERN_ADDR_UNALIGNED_WITH_PAGE_ADDR,                    /**< The given address is not aligned to any of the pages. */
+    RETCODE_MCU_FLASH_INTERN_ADDR_UNALIGNED_WITH_SECTOR_ADDR,                  /**< The given address is not aligned to any of the sectors. */
+    RETCODE_MCU_FLASH_INTERN_ADDRESS_LOCKED,                                   /**< Flash address is locked. */
+    RETCODE_MCU_FLASH_INTERN_TIMEOUT,                                          /**< Timeout while writing to internal flash memory. */
+    RETCODE_MCU_FLASH_INTERN_LOCK_FAILED,                                      /**< Failed to lock the internal flash memory. */
+    RETCODE_MCU_FLASH_INTERN_UNLOCK_FAILED,                                    /**< Failed to unlock the internal flash memory. */
+    RETCODE_MCU_FLASH_INTERN_ERASE_ERROR,                                      /**< Programming Sequence error */
+    RETCODE_MCU_FLASH_INTERN_PROG_ERROR,                                       /**< Programming Alignment error */
+    RETCODE_MCU_FLASH_INTERN_PROG_PARALLELISM_ERROR,                           /**< Programming Parallelism error  */
+    RETCODE_MCU_FLASH_INTERN_PROG_ALIGMENT_ERROR,                              /**< Programming Alignment error */
+    RETCODE_MCU_FLASH_INTERN_WRITE_PROTECTED_ERROR,                            /**< Write protection error  */
+    RETCODE_MCU_FLASH_INTERN_FLASH_OPERATION_ERROR,                            /**< Flash operation Error  */
+    RETCODE_MCU_FLASH_INTERN_READ_PROTECTED_ERROR,                             /**< Read Protection Error */
+    RETCODE_MCU_FLASH_INTERN_FAILED_TO_CONFIGURE_WRITE_PROTECTION,             /**< Write protection error  */
 };
 
 /**
@@ -74,9 +74,9 @@ typedef void (*FlashIntern_Callback)(uint32_t, void *);
 typedef struct MCU_FlashIntern_S
 {
     enum KISO_HAL_CallMode_E CallMode; /**< Blocking or interrupt mode selection for the internal flash operations. */
-    FlashIntern_Callback Callback; /**< Pointer to callback upon an interrupt from the internal flash in interrupt mode.
+    FlashIntern_Callback Callback;     /**< Pointer to callback upon an interrupt from the internal flash in interrupt mode.
      A NULL parameter must be provided if blocking mode was selected. */
-}MCU_FlashIntern_T;
+} MCU_FlashIntern_T;
 
 /* Put the function declarations here */
 
@@ -132,7 +132,7 @@ Retcode_T MCU_FlashIntern_Erase(uint32_t startAddress, uint32_t endAddress);
  * @retval RETCODE_MCU_FLASH_INTERN_WRITE_PROTECTED_ERROR if a or more section are write protected.
  * @retval RETCODE_MCU_FLASH_INTERN_LOCK_FAILED if locking the internal flash memory failed.
  */
-Retcode_T MCU_FlashIntern_Write(uint32_t StartAddress, uint8_t* buffer, uint32_t length);
+Retcode_T MCU_FlashIntern_Write(uint32_t StartAddress, uint8_t *buffer, uint32_t length);
 
 /** @brief This API read from a given address in the non-volatile memory.
  *
@@ -147,7 +147,7 @@ Retcode_T MCU_FlashIntern_Write(uint32_t StartAddress, uint8_t* buffer, uint32_t
  * @retval RETCODE_NULL_POINTER if a null pointer was provided for parameter buffer.
  * @retval RETCODE_INVALID_PARAM if length is inferior/equal to 0.
  */
-Retcode_T MCU_FlashIntern_Read(uint32_t startAddress, uint8_t* buffer, uint32_t length);
+Retcode_T MCU_FlashIntern_Read(uint32_t startAddress, uint8_t *buffer, uint32_t length);
 
 /** @brief This API enables/disables protecting against writing to a given section of the internal memory.
  *
@@ -175,4 +175,3 @@ uint32_t MCU_FlashIntern_GetMinRWSize(void);
 
 #endif /* KISO_FEATURE_FLASH_INTERN */
 #endif /* KISO_MCU_FLASH_INTERN_H_ */
-

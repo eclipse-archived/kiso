@@ -148,7 +148,7 @@ Retcode_T BSP_Cellular_SaraR4N4_Reset(void);
  *
  * @return      RETCODE_OK in the case of success or an error code otherwise.
  */
-Retcode_T BSP_Cellular_SaraR4N4_Control(uint32_t command, void* arg);
+Retcode_T BSP_Cellular_SaraR4N4_Control(uint32_t command, void *arg);
 
 /**
  * @brief       Reads the state of the input CTS pin.

@@ -64,7 +64,7 @@
 /**
  * @brief The size of the AT response ring buffer in bytes
  */
-#define AT_RESPONSE_QUEUE_BUFFER_SIZE   (CELLULAR_AT_SEND_BUFFER_SIZE * 2)
+#define AT_RESPONSE_QUEUE_BUFFER_SIZE (CELLULAR_AT_SEND_BUFFER_SIZE * 2)
 
 /**
  * @brief
@@ -75,36 +75,26 @@
  */
 typedef enum
 {
-    AT_EVENT_TYPE_COMMAND_ECHO=(1<<0),
-    AT_EVENT_TYPE_COMMAND=(1<<1),
-    AT_EVENT_TYPE_COMMAND_ARG=(1<<2),
-    AT_EVENT_TYPE_RESPONSE_CODE=(1<<3),
-    AT_EVENT_TYPE_MISC=(1<<4),
-    AT_EVENT_TYPE_ERROR=(1<<5),
-    AT_EVENT_TYPE_OUT_OF_RANGE = (1<<6)
+    AT_EVENT_TYPE_COMMAND_ECHO = (1 << 0),
+    AT_EVENT_TYPE_COMMAND = (1 << 1),
+    AT_EVENT_TYPE_COMMAND_ARG = (1 << 2),
+    AT_EVENT_TYPE_RESPONSE_CODE = (1 << 3),
+    AT_EVENT_TYPE_MISC = (1 << 4),
+    AT_EVENT_TYPE_ERROR = (1 << 5),
+    AT_EVENT_TYPE_OUT_OF_RANGE = (1 << 6)
 } AtEventType_T;
-
 
 /**
  * @brief
  * 		the macro enables all featured events
 */
-#define AT_EVENT_TYPE_ALL   (  AT_EVENT_TYPE_COMMAND_ECHO  \
-                             | AT_EVENT_TYPE_COMMAND       \
-                             | AT_EVENT_TYPE_COMMAND_ARG   \
-                             | AT_EVENT_TYPE_RESPONSE_CODE \
-                             | AT_EVENT_TYPE_MISC \
-                             | AT_EVENT_TYPE_ERROR )
+#define AT_EVENT_TYPE_ALL (AT_EVENT_TYPE_COMMAND_ECHO | AT_EVENT_TYPE_COMMAND | AT_EVENT_TYPE_COMMAND_ARG | AT_EVENT_TYPE_RESPONSE_CODE | AT_EVENT_TYPE_MISC | AT_EVENT_TYPE_ERROR)
 
 /**
  * @brief
  * 		the macro enables all featured events except misc
 */
-#define AT_EVENT_TYPE_ALL_EXCEPT_MISC   (  AT_EVENT_TYPE_COMMAND_ECHO  \
-                                         | AT_EVENT_TYPE_COMMAND       \
-                                         | AT_EVENT_TYPE_COMMAND_ARG   \
-                                         | AT_EVENT_TYPE_RESPONSE_CODE \
-                                         | AT_EVENT_TYPE_ERROR )
+#define AT_EVENT_TYPE_ALL_EXCEPT_MISC (AT_EVENT_TYPE_COMMAND_ECHO | AT_EVENT_TYPE_COMMAND | AT_EVENT_TYPE_COMMAND_ARG | AT_EVENT_TYPE_RESPONSE_CODE | AT_EVENT_TYPE_ERROR)
 
 /**
  * @brief An entry in the AT response queue
@@ -126,10 +116,8 @@ typedef enum
     RETCODE_AT_RESPONSE_QUEUE_WRONG_EVENT,
     RETCODE_AT_RESPONSE_QUEUE_ERROR_EVENT,
     RETCODE_AT_RESPONSE_QUEUE_WRONG_RESPONSE,
-	RETCODE_AT_RESPONSE_QUEUE_LAST_CUSTOM_CODE
+    RETCODE_AT_RESPONSE_QUEUE_LAST_CUSTOM_CODE
 } AtResponseQueueRetcode_T;
-
-
 
 /**
  * @brief Initializes the AT response queue by setting up the queue itself.
@@ -425,7 +413,6 @@ void AtResponseQueue_EnqueueEvent(AtEventType_T EventType, uint8_t *arg, uint32_
  * @retval  RETCODE_INVALID_PARAMETER - if the parameter is out of range
  */
 Retcode_T AtResponseQueue_SetEventMask(uint32_t eventMask);
-
 
 /**
  * @brief get the event mask of the AT-response-queue

@@ -23,9 +23,9 @@
 
 #include "Kiso_Retcode.h"
 
-#define TASK_PRIO_MAIN_CMD_PROCESSOR                (UINT32_C(1))
-#define TASK_STACK_SIZE_MAIN_CMD_PROCESSOR          (UINT16_C(700))
-#define TASK_Q_LEN_MAIN_CMD_PROCESSOR                (UINT32_C(10))
+#define TASK_PRIO_MAIN_CMD_PROCESSOR (UINT32_C(1))
+#define TASK_STACK_SIZE_MAIN_CMD_PROCESSOR (UINT16_C(700))
+#define TASK_Q_LEN_MAIN_CMD_PROCESSOR (UINT32_C(10))
 
 /**
  * @brief Enumerates application modules which are reporting error codes according to RETCODE specification.
@@ -39,7 +39,7 @@ enum CGW_App_ModuleID_E
     CGW_APP_MODULE_ENV_SENSOR,
     CGW_APP_MODULE_ACCEL_SENSOR,
     CGW_APP_MODULE_SENSORS_COMMON,
-/* Define next module ID here and assign a value to it! */
+    /* Define next module ID here and assign a value to it! */
 };
 
 /**
@@ -49,8 +49,8 @@ enum CGW_App_ModuleID_E
 enum CGW_App_Retcode_E
 {
     RETCODE_APP_I2C_HANDLE_DOES_NOT_EXIST = RETCODE_FIRST_CUSTOM_CODE,
-    RETCODE_APP_BME280_INIT_FAILED ,
-    RETCODE_APP_BMA280_INIT_FAILED ,
+    RETCODE_APP_BME280_INIT_FAILED,
+    RETCODE_APP_BMA280_INIT_FAILED,
 };
 
 #endif /* CGW_APPINFO_H_ */

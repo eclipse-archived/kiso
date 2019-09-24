@@ -40,9 +40,9 @@
 /* public type and macro definitions */
 typedef void (*GuardedTask_Function_T)(void);
 
-typedef void * GuardedTask_TaskHandle_T;
+typedef void *GuardedTask_TaskHandle_T;
 
-typedef void * GuardedTask_SemaphoreHandle_T;
+typedef void *GuardedTask_SemaphoreHandle_T;
 
 struct GuardedTask_S
 {
@@ -77,7 +77,7 @@ typedef struct GuardedTask_S GuardedTask_T;
  *      Unable to allocate resources for task or semaphore
  * 
  */
-Retcode_T GuardedTask_Initialize(GuardedTask_T* handle, GuardedTask_Function_T taskRunFunction, const char* taskName, uint32_t taskPriority, uint32_t taskStackSize);
+Retcode_T GuardedTask_Initialize(GuardedTask_T *handle, GuardedTask_Function_T taskRunFunction, const char *taskName, uint32_t taskPriority, uint32_t taskStackSize);
 
 /**  @brief
  *      This function deinitializes a given GuardTask handle and sets all attributes to NULL.
@@ -91,7 +91,7 @@ Retcode_T GuardedTask_Initialize(GuardedTask_T* handle, GuardedTask_Function_T t
  *      handle pointer is NULL
  * 
  */
-Retcode_T GuardedTask_Deinitialize(GuardedTask_T* handle);
+Retcode_T GuardedTask_Deinitialize(GuardedTask_T *handle);
 
 /**  @brief
  *      This function signals the GuardTask-task to execute its user run function
@@ -111,7 +111,7 @@ Retcode_T GuardedTask_Deinitialize(GuardedTask_T* handle);
  *      Given parameter was invalid
  * 
  */
-Retcode_T GuardedTask_Signal(GuardedTask_T* handle);
+Retcode_T GuardedTask_Signal(GuardedTask_T *handle);
 
 /**  @brief
  *      This function signals the GuardTask-task to execute its user run function
@@ -132,7 +132,7 @@ Retcode_T GuardedTask_Signal(GuardedTask_T* handle);
  *      Given parameter was invalid
  * 
  */
-Retcode_T GuardedTask_SignalFromIsr(GuardedTask_T* handle);
+Retcode_T GuardedTask_SignalFromIsr(GuardedTask_T *handle);
 
 #endif /* if KISO_FEATURE_GUARDEDTASK */
 

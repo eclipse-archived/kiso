@@ -32,7 +32,7 @@
 #include "Kiso_HAL.h"
 
 /* Function data type for to handle different os Functions by setting a new Function*/
-typedef Retcode_T (*HAL_CriticalSection_Hook_T)(uint32_t * count);
+typedef Retcode_T (*HAL_CriticalSection_Hook_T)(uint32_t *count);
 
 /**
  * @brief       Set CriticalSection Mode for use in NoOs or Rtos Context
@@ -56,7 +56,7 @@ Retcode_T HAL_CriticalSection_SetHooks(HAL_CriticalSection_Hook_T enterHook, HAL
  *
  * @retval      #RETCODE_NULL_POINTER when any one of the param has been NULL
  */
-Retcode_T HAL_CriticalSection_Enter(uint32_t * count);
+Retcode_T HAL_CriticalSection_Enter(uint32_t *count);
 
 /**
  * @brief       CriticalSection Leave
@@ -67,8 +67,7 @@ Retcode_T HAL_CriticalSection_Enter(uint32_t * count);
  *
  * @retval      #RETCODE_NULL_POINTER when any one of the param has been NULL
  */
-Retcode_T HAL_CriticalSection_Leave(uint32_t * count);
+Retcode_T HAL_CriticalSection_Leave(uint32_t *count);
 
 #endif /* KISO_HAL_CRITICALSECTION_H_ */
 /** @} */
-

@@ -22,38 +22,38 @@
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
 #undef KISO_MODULE_ID
-#define KISO_MODULE_ID  MODULE_BSP_POWER_SUPPLY
+#define KISO_MODULE_ID MODULE_BSP_POWER_SUPPLY
 
-#define POWER_SUPPLY_3V9GSM_ON_DELAY_MS     UINT32_C(100)
-#define POWER_SUPPLY_2V8GPS_ON_DELAY_MS     UINT32_C(10)
-#define POWER_SUPPLY_2V8BLE_ON_DELAY_MS     UINT32_C(10)
-#define POWER_SUPPLY_2V8SENS_ON_DELAY_MS    UINT32_C(10)
-#define POWER_SUPPLY_2V8MEM_ON_DELAY_MS     UINT32_C(10)
-#define POWER_SUPPLY_5VCAN_ON_DELAY_MS      UINT32_C(10)
-#define POWER_SUPPLY_5VA_ON_DELAY_MS        UINT32_C(10)
-#define POWER_SUPPLY_5VB_ON_DELAY_MS        UINT32_C(10)
+#define POWER_SUPPLY_3V9GSM_ON_DELAY_MS UINT32_C(100)
+#define POWER_SUPPLY_2V8GPS_ON_DELAY_MS UINT32_C(10)
+#define POWER_SUPPLY_2V8BLE_ON_DELAY_MS UINT32_C(10)
+#define POWER_SUPPLY_2V8SENS_ON_DELAY_MS UINT32_C(10)
+#define POWER_SUPPLY_2V8MEM_ON_DELAY_MS UINT32_C(10)
+#define POWER_SUPPLY_5VCAN_ON_DELAY_MS UINT32_C(10)
+#define POWER_SUPPLY_5VA_ON_DELAY_MS UINT32_C(10)
+#define POWER_SUPPLY_5VB_ON_DELAY_MS UINT32_C(10)
 
-#define POWER_SUPPLY_3V9GSM_OFF_DELAY_MS     UINT32_C(100)
-#define POWER_SUPPLY_2V8GPS_OFF_DELAY_MS     UINT32_C(100)
-#define POWER_SUPPLY_2V8BLE_OFF_DELAY_MS     UINT32_C(100)
-#define POWER_SUPPLY_2V8SENS_OFF_DELAY_MS    UINT32_C(100)
-#define POWER_SUPPLY_2V8MEM_OFF_DELAY_MS     UINT32_C(10)
-#define POWER_SUPPLY_5VCAN_OFF_DELAY_MS      UINT32_C(10)
-#define POWER_SUPPLY_5VA_OFF_DELAY_MS        UINT32_C(10)
-#define POWER_SUPPLY_5VB_OFF_DELAY_MS        UINT32_C(10)
+#define POWER_SUPPLY_3V9GSM_OFF_DELAY_MS UINT32_C(100)
+#define POWER_SUPPLY_2V8GPS_OFF_DELAY_MS UINT32_C(100)
+#define POWER_SUPPLY_2V8BLE_OFF_DELAY_MS UINT32_C(100)
+#define POWER_SUPPLY_2V8SENS_OFF_DELAY_MS UINT32_C(100)
+#define POWER_SUPPLY_2V8MEM_OFF_DELAY_MS UINT32_C(10)
+#define POWER_SUPPLY_5VCAN_OFF_DELAY_MS UINT32_C(10)
+#define POWER_SUPPLY_5VA_OFF_DELAY_MS UINT32_C(10)
+#define POWER_SUPPLY_5VB_OFF_DELAY_MS UINT32_C(10)
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
 /*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/
 
-static uint8_t powerSupply5VCAN = 0x00; /**< Each bit corresponds to a peripheral supplied from the power supply */
-static uint8_t powerSupply3V9GSM = 0x00; /**< Each bit corresponds to a peripheral supplied from the power supply */
-static uint8_t powerSupply2V8GPS = 0x00; /**< Each bit corresponds to a peripheral supplied from the power supply */
-static uint8_t powerSupply2V8BLE = 0x00; /**< Each bit corresponds to a peripheral supplied from the power supply */
+static uint8_t powerSupply5VCAN = 0x00;     /**< Each bit corresponds to a peripheral supplied from the power supply */
+static uint8_t powerSupply3V9GSM = 0x00;    /**< Each bit corresponds to a peripheral supplied from the power supply */
+static uint8_t powerSupply2V8GPS = 0x00;    /**< Each bit corresponds to a peripheral supplied from the power supply */
+static uint8_t powerSupply2V8BLE = 0x00;    /**< Each bit corresponds to a peripheral supplied from the power supply */
 static uint8_t powerSupply2V8Sensor = 0x00; /**< Each bit corresponds to a peripheral supplied from the power supply */
 static uint8_t powerSupply2V8Memory = 0x00; /**< Each bit corresponds to a peripheral supplied from the power supply */
-static uint8_t powerSupply5VA = 0x00; /**< Each bit corresponds to a peripheral supplied from the power supply */
-static uint8_t powerSupply5VB = 0x00; /**< Each bit corresponds to a peripheral supplied from the power supply */
+static uint8_t powerSupply5VA = 0x00;       /**< Each bit corresponds to a peripheral supplied from the power supply */
+static uint8_t powerSupply5VB = 0x00;       /**< Each bit corresponds to a peripheral supplied from the power supply */
 
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
 
@@ -333,7 +333,6 @@ Retcode_T PowerSupply_DisablePower2V8BLE(void)
         /* Capacitor discharge time */
         HAL_Delay_WaitMs(POWER_SUPPLY_2V8BLE_OFF_DELAY_MS);
         GPIO_CloseClockGate(GPIO_PORT_B, PINB_EN_POW_BLE);
-
     }
     return retcode;
 }
@@ -413,7 +412,6 @@ Retcode_T PowerSupply_DisablePower5VCAN(enum PowerSupply_CAN_E peripheral)
             /* Capacitor discharge time */
             HAL_Delay_WaitMs(POWER_SUPPLY_5VCAN_OFF_DELAY_MS);
             GPIO_CloseClockGate(GPIO_PORT_E, PINE_EN_POW_CAN);
-
         }
     }
     return retcode;
@@ -444,7 +442,6 @@ Retcode_T PowerSupply_DisablePower5VA(enum PowerSupply_5VA_E peripheral)
             /* Capacitor discharge time */
             HAL_Delay_WaitMs(POWER_SUPPLY_5VA_OFF_DELAY_MS);
             GPIO_CloseClockGate(GPIO_PORT_C, PINC_EN_POW_5V_A);
-
         }
     }
     if (RETCODE_OK == retcode)

@@ -45,4 +45,3 @@ enum KISO_CELLULAR_ModuleID_E
 };
 
 #endif /* KISO_CELLULARMODULES_H_ */
-

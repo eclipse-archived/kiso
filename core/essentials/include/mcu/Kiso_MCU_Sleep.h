@@ -44,7 +44,7 @@
 
 #include "Kiso_HAL.h"
 
-#if( KISO_FEATURE_SLEEP )
+#if (KISO_FEATURE_SLEEP)
 
 /**
  * @brief       Initialize MCU Sleep Management

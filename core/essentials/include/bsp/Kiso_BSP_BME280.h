@@ -149,7 +149,7 @@ HWHandle_T BSP_BME280_GetHandle(int32_t deviceId);
  *
  * @return      RETCODE_OK in the case of success or an error code otherwise.
  */
-Retcode_T BSP_BME280_Control(uint32_t command, void* arg);
+Retcode_T BSP_BME280_Control(uint32_t command, void *arg);
 
 /**
  * @brief       Sets Chip-Select pin to high level.
@@ -175,7 +175,7 @@ Retcode_T BSP_BME280_SetCSHigh(int32_t deviceId);
  */
 Retcode_T BSP_BME280_SetCSLow(int32_t deviceId);
 
-/**@}*//* KISO_HAL_BSP_BME280 */
+/**@}*/ /* KISO_HAL_BSP_BME280 */
 
 #endif /*KISO_FEATURE_BSP_BME280*/
 #endif /* KISO_BSP_BME280_H_ */

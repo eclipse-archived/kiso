@@ -32,8 +32,8 @@ FAKE_VALUE_FUNC(Retcode_T, BSP_LoRa_RN2xx3_Enable)
 FAKE_VALUE_FUNC(Retcode_T, BSP_LoRa_RN2xx3_Disable)
 FAKE_VALUE_FUNC(Retcode_T, BSP_LoRa_RN2xx3_Disconnect)
 FAKE_VALUE_FUNC(HWHandle_T, BSP_LoRa_RN2xx3_GetUartHandle)
-FAKE_VALUE_FUNC(Retcode_T, BSP_LoRa_RN2xx3_SetResetPin,uint32_t)
-FAKE_VALUE_FUNC(Retcode_T, BSP_LoRa_RN2xx3_ChangeBaudrate,uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_LoRa_RN2xx3_SetResetPin, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, BSP_LoRa_RN2xx3_ChangeBaudrate, uint32_t)
 FAKE_VALUE_FUNC(Retcode_T, BSP_LoRa_RN2xx3_WakeUp)
 
 #endif /* KISO_FEATURE_BSP_LORA_RN2XX3 */

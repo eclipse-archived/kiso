@@ -37,14 +37,14 @@
 
 #if KISO_FEATURE_CRC
 
-#define CRC_SHIFT_VAL                   UINT8_C(1)                /**< used to shift data by one time */
-#define CRC8_MASK_VAL                   UINT8_C(0X80)             /**< used to mask MSB bit of the byte */
-#define CRC16_MASK_VAL                  UINT16_C(0X8000)          /**< used to mask MSB bit of the byte */
-#define CRC32_MASK_VAL                  UINT32_C(0X80000000)      /**< used to mask MSB bit of the byte */
-#define CRC32_ETHERNET_MASK_VAL         UINT32_C(0x00000001)      /**< used to mask LSB bit of the byte */
+#define CRC_SHIFT_VAL UINT8_C(1)                     /**< used to shift data by one time */
+#define CRC8_MASK_VAL UINT8_C(0X80)                  /**< used to mask MSB bit of the byte */
+#define CRC16_MASK_VAL UINT16_C(0X8000)              /**< used to mask MSB bit of the byte */
+#define CRC32_MASK_VAL UINT32_C(0X80000000)          /**< used to mask MSB bit of the byte */
+#define CRC32_ETHERNET_MASK_VAL UINT32_C(0x00000001) /**< used to mask LSB bit of the byte */
 
 /*  The description of the function is available in Kiso_CRC.h */
-Retcode_T CRC_8(uint8_t poly, uint8_t * shifter, const uint8_t * data_p, uint16_t len)
+Retcode_T CRC_8(uint8_t poly, uint8_t *shifter, const uint8_t *data_p, uint16_t len)
 {
     uint8_t lftmstShftrBit;
     uint16_t octetIdx = UINT8_C(0);
@@ -97,7 +97,7 @@ Retcode_T CRC_8(uint8_t poly, uint8_t * shifter, const uint8_t * data_p, uint16_
 }
 
 /*  The description of the function is available in Kiso_CRC.h */
-Retcode_T CRC_16(uint16_t poly, uint16_t * shifter, const uint8_t * data_p, uint16_t len)
+Retcode_T CRC_16(uint16_t poly, uint16_t *shifter, const uint8_t *data_p, uint16_t len)
 {
     uint16_t lftmstShftrBit;
     uint16_t octetIdx = UINT8_C(0);
@@ -148,7 +148,7 @@ Retcode_T CRC_16(uint16_t poly, uint16_t * shifter, const uint8_t * data_p, uint
 }
 
 /*  The description of the function is available in Kiso_CRC.h */
-Retcode_T CRC_32(uint32_t poly, uint32_t * shifter, const uint8_t * data_p, uint16_t len)
+Retcode_T CRC_32(uint32_t poly, uint32_t *shifter, const uint8_t *data_p, uint16_t len)
 {
     uint32_t lftmstShftrBit;
     uint16_t octetIdx = UINT8_C(0);
@@ -201,7 +201,7 @@ Retcode_T CRC_32(uint32_t poly, uint32_t * shifter, const uint8_t * data_p, uint
 }
 
 /*  The description of the function is available in Kiso_CRC.h */
-Retcode_T CRC_32_Reverse(uint32_t poly, uint32_t * shifter, const uint8_t * data_p, uint16_t len)
+Retcode_T CRC_32_Reverse(uint32_t poly, uint32_t *shifter, const uint8_t *data_p, uint16_t len)
 {
     uint32_t lftmstShftrBit;
     uint16_t octetIdx = UINT8_C(0);

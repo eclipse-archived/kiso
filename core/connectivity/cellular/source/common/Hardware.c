@@ -26,9 +26,9 @@
 
 static bool Initialized = false;
 static HWHandle_T UartHandle;
-static uint8_t* UartByte;
+static uint8_t *UartByte;
 
-Retcode_T Hardware_Initialize(MCU_UART_Callback_T uartCallback, uint8_t* uartRxByte)
+Retcode_T Hardware_Initialize(MCU_UART_Callback_T uartCallback, uint8_t *uartRxByte)
 {
     if (Initialized)
     {
@@ -41,7 +41,7 @@ Retcode_T Hardware_Initialize(MCU_UART_Callback_T uartCallback, uint8_t* uartRxB
     {
         UartHandle = CELLULAR_BSP_GET_UART_HANDLE();
         UartByte = uartRxByte;
-        retcode = MCU_UART_Initialize((UART_T) UartHandle, uartCallback);
+        retcode = MCU_UART_Initialize((UART_T)UartHandle, uartCallback);
     }
 
     if (RETCODE_OK == retcode)
@@ -65,7 +65,7 @@ Retcode_T Hardware_Startup(void)
             /* Start the receive process, this will enable UART interrupts and trigger
              * a callback on receive
              */
-            retcode = MCU_UART_Receive((UART_T) UartHandle, UartByte, UINT32_C(1));
+            retcode = MCU_UART_Receive((UART_T)UartHandle, UartByte, UINT32_C(1));
         }
     }
     else
@@ -83,7 +83,7 @@ Retcode_T Hardware_Shutdown(void)
     if (Initialized)
     {
         /* Stop the receive process, this will disable UART interrupts */
-        retcode = MCU_UART_Receive((UART_T) UartHandle, UartByte, UINT32_C(0));
+        retcode = MCU_UART_Receive((UART_T)UartHandle, UartByte, UINT32_C(0));
 
         if (RETCODE_OK == retcode)
         {
@@ -114,7 +114,7 @@ Retcode_T Hardware_Reset(void)
     return retcode;
 }
 
-Retcode_T Hardware_GetCommunicationChannel(UART_T* uartHandle)
+Retcode_T Hardware_GetCommunicationChannel(UART_T *uartHandle)
 {
     Retcode_T ret = RETCODE_OK;
 
@@ -125,11 +125,11 @@ Retcode_T Hardware_GetCommunicationChannel(UART_T* uartHandle)
 
     if (Initialized)
     {
-        *uartHandle = (UART_T) UartHandle;
+        *uartHandle = (UART_T)UartHandle;
     }
     else
     {
-        *uartHandle = (UART_T) NULL;
+        *uartHandle = (UART_T)NULL;
         ret = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNINITIALIZED);
     }
 
@@ -142,7 +142,7 @@ Retcode_T Hardware_Deinitialize(void)
 
     if (Initialized)
     {
-        retcode = MCU_UART_Deinitialize((UART_T) UartHandle);
+        retcode = MCU_UART_Deinitialize((UART_T)UartHandle);
 
         if (RETCODE_OK == retcode)
         {

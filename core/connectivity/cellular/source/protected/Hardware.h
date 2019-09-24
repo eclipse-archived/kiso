@@ -34,7 +34,7 @@
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-Retcode_T Hardware_Initialize(MCU_UART_Callback_T uartCallback, uint8_t* uartRxByte);
+Retcode_T Hardware_Initialize(MCU_UART_Callback_T uartCallback, uint8_t *uartRxByte);
 
 /**
  * @brief Powers on the cellular modem by invoking the respective BSP-enable
@@ -67,7 +67,7 @@ Retcode_T Hardware_Reset(void);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-Retcode_T Hardware_GetCommunicationChannel(UART_T* uartHandle);
+Retcode_T Hardware_GetCommunicationChannel(UART_T *uartHandle);
 
 /**
  * @brief Deinitialize the hardware layer.

@@ -11,7 +11,7 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
- 
+
 #ifndef KISO_STM32L4XX_HAL_DMA_TH_HH_
 #define KISO_STM32L4XX_HAL_DMA_TH_HH_
 
@@ -25,6 +25,6 @@
 
 /* Mock-ups for the provided interfaces */
 
-FAKE_VOID_FUNC(KISO_HAL_DMA_IRQHandler, DMA_HandleTypeDef*, uint32_t)
+FAKE_VOID_FUNC(KISO_HAL_DMA_IRQHandler, DMA_HandleTypeDef *, uint32_t)
 
 #endif /* KISO_STM32L4XX_HAL_DMA_TH_HH_ */

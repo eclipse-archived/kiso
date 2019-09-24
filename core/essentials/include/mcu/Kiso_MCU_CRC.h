@@ -32,8 +32,8 @@
 /* Code is only effective if feature is enabled in configuration */
 #if KISO_FEATURE_MCU_CRC
 
-#define MCU_CRC32_POLY_ETHERNET         0x04C11DB7		/**< @def Default polynomial for 32-Bit CRC */
-#define MCU_CRC32_INIT_VALUE_DEFAULT    0XFFFFFFFF		/**< @def Default initial Value for 32-Bit CRC */
+#define MCU_CRC32_POLY_ETHERNET 0x04C11DB7      /**< @def Default polynomial for 32-Bit CRC */
+#define MCU_CRC32_INIT_VALUE_DEFAULT 0XFFFFFFFF /**< @def Default initial Value for 32-Bit CRC */
 
 /**
  * @brief       Defines input data format
@@ -91,7 +91,7 @@ struct MCU_CRC32_S
  *
  * @retval      RETCODE_OK on success, or an error code otherwise.
  */
-Retcode_T MCU_CRC8(struct MCU_CRC8_S *initParms ,uint8_t * data_in, uint32_t dataLength, uint8_t * crc);
+Retcode_T MCU_CRC8(struct MCU_CRC8_S *initParms, uint8_t *data_in, uint32_t dataLength, uint8_t *crc);
 
 /**
  * @brief       Compute the 16-bit CRC value of an 16-bit data buffer
@@ -108,7 +108,7 @@ Retcode_T MCU_CRC8(struct MCU_CRC8_S *initParms ,uint8_t * data_in, uint32_t dat
  *
  * @retval      RETCODE_OK on success, or an error code otherwise.
  */
-Retcode_T MCU_CRC16(struct MCU_CRC16_S *initParms ,uint16_t * data_in, uint32_t dataLength, uint16_t * crc);
+Retcode_T MCU_CRC16(struct MCU_CRC16_S *initParms, uint16_t *data_in, uint32_t dataLength, uint16_t *crc);
 
 /**
  * @brief       Compute the 32-bit CRC value of an 32-bit data buffer
@@ -130,7 +130,7 @@ Retcode_T MCU_CRC16(struct MCU_CRC16_S *initParms ,uint16_t * data_in, uint32_t 
  *
  * @note        If user wants to accumulate CRC,use below API with previously computed CRC as initialization value
  */
-Retcode_T MCU_CRC32(struct MCU_CRC32_S *initParms ,uint32_t * data_in, uint32_t dataLength, uint32_t * crc);
+Retcode_T MCU_CRC32(struct MCU_CRC32_S *initParms, uint32_t *data_in, uint32_t dataLength, uint32_t *crc);
 
 #endif /* KISO_FEATURE_MCU_CRC  */
 #endif /* KISO_MCU_CRC_H */

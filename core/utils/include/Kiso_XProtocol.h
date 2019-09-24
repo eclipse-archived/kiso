@@ -97,7 +97,7 @@ Retcode_T XProtocol_Init(void);
  * 
  */
 Retcode_T XProtocol_EncodeFrame(const uint8_t *data, uint32_t dataLength,
-        uint32_t maxFrameLength, uint8_t *frame, uint32_t *frameLength);
+                                uint32_t maxFrameLength, uint8_t *frame, uint32_t *frameLength);
 
 /**
  * @brief
@@ -129,8 +129,8 @@ Retcode_T XProtocol_EncodeFrame(const uint8_t *data, uint32_t dataLength,
  * 
  */
 Retcode_T XProtocol_DecodeFrame(const uint8_t *frame, uint32_t frameLength,
-        uint32_t maxDataLength,
-        uint8_t *data, uint32_t *dataLength);
+                                uint32_t maxDataLength,
+                                uint8_t *data, uint32_t *dataLength);
 
 /**
  * @brief
@@ -161,7 +161,7 @@ Retcode_T XProtocol_DecodeFrame(const uint8_t *frame, uint32_t frameLength,
  * 
  */
 Retcode_T XProtocol_IsCompleteFrame(const uint8_t *frame, uint32_t frameLength,
-        const uint8_t **lastCheckPosition);
+                                    const uint8_t **lastCheckPosition);
 
 /**
  * @brief
@@ -181,7 +181,7 @@ Retcode_T XProtocol_IsCompleteFrame(const uint8_t *frame, uint32_t frameLength,
  * 
  */
 Retcode_T XProtocol_GetPayloadLength(const uint8_t *frame, uint32_t frameLength,
-        uint32_t *payloadLength);
+                                     uint32_t *payloadLength);
 
 #endif /* if KISO_FEATURE_XPROTOCOL */
 

@@ -36,7 +36,7 @@ typedef QueueHandle_t SemaphoreHandle_t;
 /* @note : This is a work around for a bug that was conflicting
  * with the in built gcov's __gcov.vSemaphoreDelete variable
  * resulting in a multiple definition error - mta5cob */
-#define vSemaphoreDelete( xSemaphore ) vQueueDelete( ( QueueHandle_t ) ( xSemaphore ) );
+#define vSemaphoreDelete(xSemaphore) vQueueDelete((QueueHandle_t)(xSemaphore));
 
 #if (configSUPPORT_STATIC_ALLOCATION == 1)
 FAKE_VALUE_FUNC(SemaphoreHandle_t, xSemaphoreCreateBinaryStatic, StaticSemaphore_t *)
@@ -58,8 +58,8 @@ FAKE_VALUE_FUNC(BaseType_t, xSemaphoreTakeRecursive, SemaphoreHandle_t, TickType
 
 FAKE_VALUE_FUNC(BaseType_t, xSemaphoreGive, SemaphoreHandle_t)
 FAKE_VALUE_FUNC(BaseType_t, xSemaphoreGiveRecursive, SemaphoreHandle_t)
-FAKE_VALUE_FUNC(BaseType_t, xSemaphoreGiveFromISR, SemaphoreHandle_t, BaseType_t*)
-FAKE_VALUE_FUNC(BaseType_t, xSemaphoreTakeFromISR, SemaphoreHandle_t, BaseType_t*)
+FAKE_VALUE_FUNC(BaseType_t, xSemaphoreGiveFromISR, SemaphoreHandle_t, BaseType_t *)
+FAKE_VALUE_FUNC(BaseType_t, xSemaphoreTakeFromISR, SemaphoreHandle_t, BaseType_t *)
 
 FAKE_VALUE_FUNC(BaseType_t, xSemaphoreGetMutexHolder, SemaphoreHandle_t)
 

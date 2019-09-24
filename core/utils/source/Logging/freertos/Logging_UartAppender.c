@@ -27,7 +27,7 @@
 /* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
-#define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_LOGGING_APPENDER_UART
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_LOGGING_APPENDER_UART
 
 /* Include the real interface header */
 #include "Kiso_Logging.h"
@@ -60,10 +60,9 @@ static bool LogCheckEndFrameFunc(uint8_t lastByte);
 
 /*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/
 static const LogAppender_T UartAppender =
-{
-    .Init = UartAppenderInit,
-    .Write = UartAppenderWrite
-};
+    {
+        .Init = UartAppenderInit,
+        .Write = UartAppenderWrite};
 /**
  * Exported
  */
@@ -82,7 +81,7 @@ uint8_t buffer[LOG_BUFFER_SIZE];
 static Retcode_T UartAppenderInit(void *init)
 {
     (void)init;
-    HWHandle_T uartHandle=NULL;
+    HWHandle_T uartHandle = NULL;
     Retcode_T retcode = BSP_TestInterface_Connect();
     if (RETCODE_OK == retcode)
     {
@@ -99,7 +98,7 @@ static Retcode_T UartAppenderInit(void *init)
     }
     if (RETCODE_OK == retcode)
     {
-       retcode = UARTTransceiver_Start(&LogTransceiver,LogCheckEndFrameFunc);
+        retcode = UARTTransceiver_Start(&LogTransceiver, LogCheckEndFrameFunc);
     }
     return retcode;
 }

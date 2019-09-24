@@ -12,7 +12,6 @@
 *
 ********************************************************************************/
 
-
 /**
  * @file
  * @brief Cellular base API header.
@@ -92,7 +91,7 @@
 #include "Kiso_CellularConfig.h"
 #include "Kiso_CellularModules.h"
 
-#define CELLULAR_ICCID_MAX_LENGTH   (UINT32_C(20))
+#define CELLULAR_ICCID_MAX_LENGTH (UINT32_C(20))
 
 /**
  * @brief Cellular package specific retcode-codes.
@@ -122,9 +121,9 @@ enum
  */
 enum Cellular_ApnAuthMethod_E
 {
-    CELLULAR_APNAUTHMETHOD_NONE, //!<       No authentication (user+pw ignored)
-    CELLULAR_APNAUTHMETHOD_PAP, //!<        Personal Authentication Protocol
-    CELLULAR_APNAUTHMETHOD_CHAP, //!<       Challenge Handshake Authentication Protocol
+    CELLULAR_APNAUTHMETHOD_NONE,      //!<       No authentication (user+pw ignored)
+    CELLULAR_APNAUTHMETHOD_PAP,       //!<        Personal Authentication Protocol
+    CELLULAR_APNAUTHMETHOD_CHAP,      //!<       Challenge Handshake Authentication Protocol
     CELLULAR_APNAUTHMETHOD_AUTOMATIC, //!<  Automatically detect the auth-method (may not be supported by every modem)
 
     CELLULAR_APNAUTHMETHOD_MAX //!<         Placeholder for iterating
@@ -136,7 +135,7 @@ struct Cellular_PowerUpParameters_S
     /**
      * @brief PIN to unlock the SIM card. Can be NULL.
      */
-    const char* SimPin;
+    const char *SimPin;
 };
 typedef struct Cellular_PowerUpParameters_S Cellular_PowerUpParameters_T;
 
@@ -147,10 +146,10 @@ typedef struct Cellular_PowerUpParameters_S Cellular_PowerUpParameters_T;
  */
 enum Cellular_RadioAccessTechnology_E
 {
-    CELLULAR_RAT_DEFAULT = 0x00, //!<       Use what's available/supported by SIM
-    CELLULAR_RAT_GSM = 0x01, //!<           GSM/GPRS/eGPRS
-    CELLULAR_RAT_UMTS = 0x02, //!<          UMTS
-    CELLULAR_RAT_LTE = 0x04, //!<           LTE
+    CELLULAR_RAT_DEFAULT = 0x00,    //!<       Use what's available/supported by SIM
+    CELLULAR_RAT_GSM = 0x01,        //!<           GSM/GPRS/eGPRS
+    CELLULAR_RAT_UMTS = 0x02,       //!<          UMTS
+    CELLULAR_RAT_LTE = 0x04,        //!<           LTE
     CELLULAR_RAT_LTE_CAT_M1 = 0x08, //!<    LTE Cat. M1
     CELLULAR_RAT_LTE_CAT_NB1 = 0x10 //!<    LTE Cat. Narrow-Band IoT
 };
@@ -173,7 +172,6 @@ struct Cellular_NetworkParameters_S
      * @brief The fall-back RAT selection to be used if @e AcT can not be met.
      */
     Cellular_RadioAccessTechnology_T FallbackAcT;
-
 };
 typedef struct Cellular_NetworkParameters_S Cellular_NetworkParameters_T;
 
@@ -235,7 +233,7 @@ struct Cellular_ApnSettings_S
      * Set this to NULL if you want the default APN as defined by the
      * MNO-profile to be used.
      */
-    const char* ApnName;
+    const char *ApnName;
     /**
      * @brief Authentication method to use.
      */
@@ -243,11 +241,11 @@ struct Cellular_ApnSettings_S
     /**
      * @brief C-string containing the APN username. May be NULL.
      */
-    const char* Username;
+    const char *Username;
     /**
      * @brief C-string containing the APN password. May be NULL.
      */
-    const char* Password;
+    const char *Password;
 };
 typedef struct Cellular_ApnSettings_S Cellular_ApnSettings_T;
 
@@ -289,8 +287,7 @@ typedef enum Cellular_IpAddressType_E Cellular_IpAddressType_T;
 struct Cellular_IpAddress_S
 {
     Cellular_IpAddressType_T Type;
-    union
-    {
+    union {
         uint8_t IPv4[4];
         uint8_t IPv6[16];
     } Address;
@@ -321,11 +318,11 @@ typedef struct Cellular_DataContext_S Cellular_DataContext_T;
  */
 enum Cellular_State_E
 {
-    CELLULAR_STATE_POWEROFF, //!<       Modem powered off
-    CELLULAR_STATE_POWERON, //!<        Modem powered on and idling (no radio communication)
+    CELLULAR_STATE_POWEROFF,    //!<       Modem powered off
+    CELLULAR_STATE_POWERON,     //!<        Modem powered on and idling (no radio communication)
     CELLULAR_STATE_REGISTERING, //!<    Modem in the process of registering on a network
-    CELLULAR_STATE_REGISTERED, //!<     Modem registered on network
-    CELLULAR_STATE_DATAACTIVE, //!<     Modem obtained data-context and may use data-services like TCP/IP
+    CELLULAR_STATE_REGISTERED,  //!<     Modem registered on network
+    CELLULAR_STATE_DATAACTIVE,  //!<     Modem obtained data-context and may use data-services like TCP/IP
 
     CELLULAR_STATE_MAX //!<             Placeholder for iterating
 };
@@ -353,7 +350,7 @@ typedef enum Cellular_State_E Cellular_State_T;
  * @param[in] len
  * Length of the data-structure or array @e param is pointing to.
  */
-typedef void (*Cellular_StateChanged_T)(Cellular_State_T oldState, Cellular_State_T newState, void* param, uint32_t len);
+typedef void (*Cellular_StateChanged_T)(Cellular_State_T oldState, Cellular_State_T newState, void *param, uint32_t len);
 
 /**
  * @brief Initialize the driver resources. Only driver-side software resources
@@ -377,7 +374,7 @@ Retcode_T Cellular_Initialize(Cellular_StateChanged_T onStateChanged);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-Retcode_T Cellular_PowerOn(const Cellular_PowerUpParameters_T* parameters);
+Retcode_T Cellular_PowerOn(const Cellular_PowerUpParameters_T *parameters);
 
 /**
  * @brief Reset the modem hardware.
@@ -389,7 +386,7 @@ Retcode_T Cellular_PowerOn(const Cellular_PowerUpParameters_T* parameters);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-Retcode_T Cellular_Reset(const Cellular_PowerUpParameters_T* parameters);
+Retcode_T Cellular_Reset(const Cellular_PowerUpParameters_T *parameters);
 
 /**
  * @brief Initiate the automatic network registration process.
@@ -404,7 +401,7 @@ Retcode_T Cellular_Reset(const Cellular_PowerUpParameters_T* parameters);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-Retcode_T Cellular_RegisterOnNetwork(const Cellular_NetworkParameters_T* networkParameters);
+Retcode_T Cellular_RegisterOnNetwork(const Cellular_NetworkParameters_T *networkParameters);
 
 /**
  * @brief Deregister from the current network and remain in
@@ -447,7 +444,7 @@ Retcode_T Cellular_SetAirPlaneMode(bool airPlanModeOn);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-Retcode_T Cellular_QueryIccid(char* iccid, uint32_t* iccidLen);
+Retcode_T Cellular_QueryIccid(char *iccid, uint32_t *iccidLen);
 
 /**
  * @brief Query the current cell and network information.
@@ -458,7 +455,7 @@ Retcode_T Cellular_QueryIccid(char* iccid, uint32_t* iccidLen);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-Retcode_T Cellular_QueryNetworkInfo(Cellular_NetworkInfo_T* networkInfo);
+Retcode_T Cellular_QueryNetworkInfo(Cellular_NetworkInfo_T *networkInfo);
 
 /**
  * @brief Configure the specified data-context identified by the Context-Id.
@@ -477,7 +474,7 @@ Retcode_T Cellular_QueryNetworkInfo(Cellular_NetworkInfo_T* networkInfo);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-Retcode_T Cellular_ConfigureDataContext(uint32_t cid, const Cellular_DataContextParameters_T* parameters);
+Retcode_T Cellular_ConfigureDataContext(uint32_t cid, const Cellular_DataContextParameters_T *parameters);
 
 /**
  * @brief Activate the PDP or EPS data context.
@@ -495,7 +492,7 @@ Retcode_T Cellular_ConfigureDataContext(uint32_t cid, const Cellular_DataContext
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-Retcode_T Cellular_ActivateDataContext(uint32_t cid, const Cellular_DataContext_T** ctx);
+Retcode_T Cellular_ActivateDataContext(uint32_t cid, const Cellular_DataContext_T **ctx);
 
 /**
  * @brief Attempt to deactivate any PDP context created by the driver.
@@ -535,7 +532,7 @@ Retcode_T Cellular_PowerOff(void);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-Retcode_T Cellular_IsPoweredOn(bool* isPoweredOn);
+Retcode_T Cellular_IsPoweredOn(bool *isPoweredOn);
 
 /**
  * @brief Deinitialize the driver and release hardware-resources.

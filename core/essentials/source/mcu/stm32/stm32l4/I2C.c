@@ -27,16 +27,16 @@
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef  KISO_MODULE_ID
-#define KISO_MODULE_ID                  KISO_ESSENTIALS_MODULE_ID_I2C
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_I2C
 
-#define I2C_DEFAULT_TIMEOUT_MS          UINT32_C(1000) /* Default timeout in ms */
-#define I2C_MIN_TIMEOUT_MS              UINT32_C(100) /* Minimal timeout in ms*/
-#define I2C_SECOND_TO_MILLI_MS          UINT32_C(1000) /* Convert one second to millisecond*/
-#define I2C_SAFETY_FACTOR               UINT32_C(2) /* factor to multiply with the reulting time value for safety */
-#define I2C_ADDITIONAL_BYTES            UINT32_C(2) /* at max, additionally one byte for slave address and one byte for register address  */
-#define I2C_CLOCK_CYCLES_PER_BYTE       UINT32_C(10) /* an 8 bit value + 2 bits i2c protocol overhead(start, stop, ack, nack ) */
-#define I2C_MAX_NBYTES                  UINT32_C(255) /* maximum bytes to send per i2c cycle a reload is necessary if the data to tranfer exceeds this value*/
+#define I2C_DEFAULT_TIMEOUT_MS UINT32_C(1000)  /* Default timeout in ms */
+#define I2C_MIN_TIMEOUT_MS UINT32_C(100)       /* Minimal timeout in ms*/
+#define I2C_SECOND_TO_MILLI_MS UINT32_C(1000)  /* Convert one second to millisecond*/
+#define I2C_SAFETY_FACTOR UINT32_C(2)          /* factor to multiply with the reulting time value for safety */
+#define I2C_ADDITIONAL_BYTES UINT32_C(2)       /* at max, additionally one byte for slave address and one byte for register address  */
+#define I2C_CLOCK_CYCLES_PER_BYTE UINT32_C(10) /* an 8 bit value + 2 bits i2c protocol overhead(start, stop, ack, nack ) */
+#define I2C_MAX_NBYTES UINT32_C(255)           /* maximum bytes to send per i2c cycle a reload is necessary if the data to tranfer exceeds this value*/
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
 static void I2C_EventCallback(I2C_T i2c);
@@ -44,30 +44,30 @@ static void I2C_ErrorCallback(I2C_T i2c);
 static void I2C_DmaTxHandler(I2C_T i2c);
 static void I2C_DmaRxHandler(I2C_T i2c);
 
-static Retcode_T I2C_SendPollMode(struct MCU_I2C_S * pi2c);
-static Retcode_T I2C_ReceivePollMode(struct MCU_I2C_S * pi2c);
-static Retcode_T I2C_CancelPollMode(struct MCU_I2C_S * pi2c);
+static Retcode_T I2C_SendPollMode(struct MCU_I2C_S *pi2c);
+static Retcode_T I2C_ReceivePollMode(struct MCU_I2C_S *pi2c);
+static Retcode_T I2C_CancelPollMode(struct MCU_I2C_S *pi2c);
 
-static Retcode_T I2C_SendIntMode(struct MCU_I2C_S * pi2c);
-static Retcode_T I2C_ReceiveIntMode(struct MCU_I2C_S * pi2c);
-static Retcode_T I2C_ReadRegisterIntMode(struct MCU_I2C_S * pi2c);
-static Retcode_T I2C_WriteRegisterIntMode(struct MCU_I2C_S * pi2c);
-static Retcode_T I2C_CancelIntMode(struct MCU_I2C_S * pi2c);
+static Retcode_T I2C_SendIntMode(struct MCU_I2C_S *pi2c);
+static Retcode_T I2C_ReceiveIntMode(struct MCU_I2C_S *pi2c);
+static Retcode_T I2C_ReadRegisterIntMode(struct MCU_I2C_S *pi2c);
+static Retcode_T I2C_WriteRegisterIntMode(struct MCU_I2C_S *pi2c);
+static Retcode_T I2C_CancelIntMode(struct MCU_I2C_S *pi2c);
 
-static Retcode_T I2C_SendDmaMode(struct MCU_I2C_S * pi2c);
-static Retcode_T I2C_ReceiveDmaMode(struct MCU_I2C_S * pi2c);
-static Retcode_T I2C_ReadRegisterDmaMode(struct MCU_I2C_S * pi2c);
-static Retcode_T I2C_WriteRegisterDmaMode(struct MCU_I2C_S * pi2c);
-static Retcode_T I2C_CancelDmaMode(struct MCU_I2C_S * pi2c);
+static Retcode_T I2C_SendDmaMode(struct MCU_I2C_S *pi2c);
+static Retcode_T I2C_ReceiveDmaMode(struct MCU_I2C_S *pi2c);
+static Retcode_T I2C_ReadRegisterDmaMode(struct MCU_I2C_S *pi2c);
+static Retcode_T I2C_WriteRegisterDmaMode(struct MCU_I2C_S *pi2c);
+static Retcode_T I2C_CancelDmaMode(struct MCU_I2C_S *pi2c);
 
 static void I2C_WriteControlWord(I2C_TypeDef *i2c, uint16_t slaveAddress, uint8_t nBytes, uint32_t mode, uint32_t req);
-static Retcode_T I2C_WaitUntilTimeout_ms(struct MCU_I2C_S * pi2c, bool (*waitCondition)(struct MCU_I2C_S * pi2c), uint32_t timeout);
-static bool I2C_IsI2CNotReady(struct MCU_I2C_S * pi2c);
-static bool I2C_IsTXISReset(struct MCU_I2C_S * pi2c);
-static bool I2C_IsNACKSet(struct MCU_I2C_S * pi2c);
-static bool I2C_IsSTOPFReset(struct MCU_I2C_S * pi2c);
-static bool I2C_IsTCRReset(struct MCU_I2C_S * pi2c);
-static bool I2C_IsBUSYSet(struct MCU_I2C_S * pi2c);
+static Retcode_T I2C_WaitUntilTimeout_ms(struct MCU_I2C_S *pi2c, bool (*waitCondition)(struct MCU_I2C_S *pi2c), uint32_t timeout);
+static bool I2C_IsI2CNotReady(struct MCU_I2C_S *pi2c);
+static bool I2C_IsTXISReset(struct MCU_I2C_S *pi2c);
+static bool I2C_IsNACKSet(struct MCU_I2C_S *pi2c);
+static bool I2C_IsSTOPFReset(struct MCU_I2C_S *pi2c);
+static bool I2C_IsTCRReset(struct MCU_I2C_S *pi2c);
+static bool I2C_IsBUSYSet(struct MCU_I2C_S *pi2c);
 
 /*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/
 
@@ -77,7 +77,7 @@ static bool I2C_IsBUSYSet(struct MCU_I2C_S * pi2c);
 Retcode_T MCU_I2C_Initialize(I2C_T i2c, MCU_I2C_Callback_T callback)
 {
     Retcode_T retcode = RETCODE_OK;
-    struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
+    struct MCU_I2C_S *pI2C = (struct MCU_I2C_S *)i2c;
     if (NULL == pI2C)
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
@@ -98,65 +98,65 @@ Retcode_T MCU_I2C_Initialize(I2C_T i2c, MCU_I2C_Callback_T callback)
              */
             switch (pI2C->TransferMode)
             {
-                case KISO_HAL_TRANSFER_MODE_POLLING:
-                    pI2C->IRQCallback = NULL;
-                    pI2C->ERRCallback = NULL;
+            case KISO_HAL_TRANSFER_MODE_POLLING:
+                pI2C->IRQCallback = NULL;
+                pI2C->ERRCallback = NULL;
+                pI2C->DMATxCallback = NULL;
+                pI2C->DMARxCallback = NULL;
+                pI2C->AppLayerCallback = NULL;
+                pI2C->SendFunPtr = I2C_SendPollMode;
+                pI2C->ReceiveFunPtr = I2C_ReceivePollMode;
+                pI2C->ReadRegisterFunPtr = I2C_ReceivePollMode;
+                pI2C->WriteRegisterFunPtr = I2C_SendPollMode;
+                pI2C->CancelFunPtr = I2C_CancelPollMode;
+                pI2C->State = I2C_STATE_READY;
+                break;
+
+            case KISO_HAL_TRANSFER_MODE_INTERRUPT:
+                if (NULL != callback)
+                {
+                    pI2C->IRQCallback = I2C_EventCallback;
+                    pI2C->ERRCallback = I2C_ErrorCallback;
                     pI2C->DMATxCallback = NULL;
                     pI2C->DMARxCallback = NULL;
-                    pI2C->AppLayerCallback = NULL;
-                    pI2C->SendFunPtr = I2C_SendPollMode;
-                    pI2C->ReceiveFunPtr = I2C_ReceivePollMode;
-                    pI2C->ReadRegisterFunPtr = I2C_ReceivePollMode;
-                    pI2C->WriteRegisterFunPtr = I2C_SendPollMode;
-                    pI2C->CancelFunPtr = I2C_CancelPollMode;
+                    pI2C->AppLayerCallback = callback;
+                    pI2C->SendFunPtr = I2C_SendIntMode;
+                    pI2C->ReceiveFunPtr = I2C_ReceiveIntMode;
+                    pI2C->ReadRegisterFunPtr = I2C_ReadRegisterIntMode;
+                    pI2C->WriteRegisterFunPtr = I2C_WriteRegisterIntMode;
+                    pI2C->CancelFunPtr = I2C_CancelIntMode;
                     pI2C->State = I2C_STATE_READY;
-                    break;
+                }
+                else
+                {
+                    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+                }
+                break;
 
-                case KISO_HAL_TRANSFER_MODE_INTERRUPT:
-                    if (NULL != callback)
-                    {
-                        pI2C->IRQCallback = I2C_EventCallback;
-                        pI2C->ERRCallback = I2C_ErrorCallback;
-                        pI2C->DMATxCallback = NULL;
-                        pI2C->DMARxCallback = NULL;
-                        pI2C->AppLayerCallback = callback;
-                        pI2C->SendFunPtr = I2C_SendIntMode;
-                        pI2C->ReceiveFunPtr = I2C_ReceiveIntMode;
-                        pI2C->ReadRegisterFunPtr = I2C_ReadRegisterIntMode;
-                        pI2C->WriteRegisterFunPtr = I2C_WriteRegisterIntMode;
-                        pI2C->CancelFunPtr = I2C_CancelIntMode;
-                        pI2C->State = I2C_STATE_READY;
-                    }
-                    else
-                    {
-                        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-                    }
-                    break;
+            case KISO_HAL_TRANSFER_MODE_DMA:
+                if (NULL != callback)
+                {
+                    pI2C->IRQCallback = I2C_EventCallback;
+                    pI2C->ERRCallback = I2C_ErrorCallback;
+                    pI2C->DMATxCallback = I2C_DmaTxHandler;
+                    pI2C->DMARxCallback = I2C_DmaRxHandler;
+                    pI2C->AppLayerCallback = callback;
+                    pI2C->SendFunPtr = I2C_SendDmaMode;
+                    pI2C->ReceiveFunPtr = I2C_ReceiveDmaMode;
+                    pI2C->ReadRegisterFunPtr = I2C_ReadRegisterDmaMode;
+                    pI2C->WriteRegisterFunPtr = I2C_WriteRegisterDmaMode;
+                    pI2C->CancelFunPtr = I2C_CancelDmaMode;
+                    pI2C->State = I2C_STATE_READY;
+                }
+                else
+                {
+                    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+                }
+                break;
 
-                case KISO_HAL_TRANSFER_MODE_DMA:
-                    if (NULL != callback)
-                    {
-                        pI2C->IRQCallback = I2C_EventCallback;
-                        pI2C->ERRCallback = I2C_ErrorCallback;
-                        pI2C->DMATxCallback = I2C_DmaTxHandler;
-                        pI2C->DMARxCallback = I2C_DmaRxHandler;
-                        pI2C->AppLayerCallback = callback;
-                        pI2C->SendFunPtr = I2C_SendDmaMode;
-                        pI2C->ReceiveFunPtr = I2C_ReceiveDmaMode;
-                        pI2C->ReadRegisterFunPtr = I2C_ReadRegisterDmaMode;
-                        pI2C->WriteRegisterFunPtr = I2C_WriteRegisterDmaMode;
-                        pI2C->CancelFunPtr = I2C_CancelDmaMode;
-                        pI2C->State = I2C_STATE_READY;
-                    }
-                    else
-                    {
-                        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-                    }
-                    break;
-
-                default:
-                    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
-                    break;
+            default:
+                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
+                break;
             }
         }
         else
@@ -171,7 +171,7 @@ Retcode_T MCU_I2C_Initialize(I2C_T i2c, MCU_I2C_Callback_T callback)
 Retcode_T MCU_I2C_Deinitialize(I2C_T i2c)
 {
     Retcode_T retcode = RETCODE_OK;
-    struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
+    struct MCU_I2C_S *pI2C = (struct MCU_I2C_S *)i2c;
 
     if (NULL == pI2C)
     {
@@ -192,10 +192,10 @@ Retcode_T MCU_I2C_Deinitialize(I2C_T i2c)
 }
 
 /** See description in the interface declaration */
-Retcode_T MCU_I2C_Send(I2C_T i2c, uint16_t slaveAddr, uint8_t * data, uint32_t len)
+Retcode_T MCU_I2C_Send(I2C_T i2c, uint16_t slaveAddr, uint8_t *data, uint32_t len)
 {
     Retcode_T retcode = RETCODE_OK;
-    struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
+    struct MCU_I2C_S *pI2C = (struct MCU_I2C_S *)i2c;
     if ((NULL == pI2C) || (data == NULL) || (len > UINT16_MAX))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
@@ -208,7 +208,7 @@ Retcode_T MCU_I2C_Send(I2C_T i2c, uint16_t slaveAddr, uint8_t * data, uint32_t l
             {
                 pI2C->Transaction.DevAddress = slaveAddr;
                 pI2C->Transaction.pDataBuffer = data;
-                pI2C->Transaction.Size = (uint16_t) len;
+                pI2C->Transaction.Size = (uint16_t)len;
                 pI2C->Transaction.PrependRegAddr = false;
                 pI2C->Transaction.RegisterAddr = 0;
                 retcode = pI2C->SendFunPtr(pI2C);
@@ -234,10 +234,10 @@ Retcode_T MCU_I2C_Send(I2C_T i2c, uint16_t slaveAddr, uint8_t * data, uint32_t l
 }
 
 /** See description in the interface declaration */
-Retcode_T MCU_I2C_Receive(I2C_T i2c, uint16_t slaveAddr, uint8_t * buffer, uint32_t len)
+Retcode_T MCU_I2C_Receive(I2C_T i2c, uint16_t slaveAddr, uint8_t *buffer, uint32_t len)
 {
     Retcode_T retcode = RETCODE_OK;
-    struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
+    struct MCU_I2C_S *pI2C = (struct MCU_I2C_S *)i2c;
     if ((NULL == pI2C) || (buffer == NULL) || (len > UINT16_MAX))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
@@ -250,7 +250,7 @@ Retcode_T MCU_I2C_Receive(I2C_T i2c, uint16_t slaveAddr, uint8_t * buffer, uint3
             {
                 pI2C->Transaction.DevAddress = slaveAddr;
                 pI2C->Transaction.pDataBuffer = buffer;
-                pI2C->Transaction.Size = (uint16_t) len;
+                pI2C->Transaction.Size = (uint16_t)len;
                 pI2C->Transaction.PrependRegAddr = false;
                 pI2C->Transaction.RegisterAddr = 0;
 
@@ -277,10 +277,10 @@ Retcode_T MCU_I2C_Receive(I2C_T i2c, uint16_t slaveAddr, uint8_t * buffer, uint3
 }
 
 /** See description in the interface declaration */
-Retcode_T MCU_I2C_WriteRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAddr, uint8_t * data, uint32_t len)
+Retcode_T MCU_I2C_WriteRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAddr, uint8_t *data, uint32_t len)
 {
     Retcode_T retcode = RETCODE_OK;
-    struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
+    struct MCU_I2C_S *pI2C = (struct MCU_I2C_S *)i2c;
     if ((NULL == pI2C) || (data == NULL) || (len > UINT16_MAX))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
@@ -293,7 +293,7 @@ Retcode_T MCU_I2C_WriteRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerA
             {
                 pI2C->Transaction.DevAddress = slaveAddr;
                 pI2C->Transaction.pDataBuffer = data;
-                pI2C->Transaction.Size = (uint16_t) len;
+                pI2C->Transaction.Size = (uint16_t)len;
                 pI2C->Transaction.PrependRegAddr = true;
                 pI2C->Transaction.RegisterAddr = registerAddr;
                 retcode = pI2C->WriteRegisterFunPtr(pI2C);
@@ -319,10 +319,10 @@ Retcode_T MCU_I2C_WriteRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerA
 }
 
 /** See description in the interface declaration */
-Retcode_T MCU_I2C_ReadRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAddr, uint8_t * buffer, uint32_t len)
+Retcode_T MCU_I2C_ReadRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAddr, uint8_t *buffer, uint32_t len)
 {
     Retcode_T retcode = RETCODE_OK;
-    struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
+    struct MCU_I2C_S *pI2C = (struct MCU_I2C_S *)i2c;
     if ((NULL == pI2C) || (buffer == NULL) || (len > UINT16_MAX))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
@@ -335,7 +335,7 @@ Retcode_T MCU_I2C_ReadRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAd
             {
                 pI2C->Transaction.DevAddress = slaveAddr;
                 pI2C->Transaction.pDataBuffer = buffer;
-                pI2C->Transaction.Size = (uint16_t) len;
+                pI2C->Transaction.Size = (uint16_t)len;
                 pI2C->Transaction.PrependRegAddr = true;
                 pI2C->Transaction.RegisterAddr = registerAddr;
 
@@ -371,7 +371,7 @@ Retcode_T MCU_I2C_ReadRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAd
  * @retval      RETCODE_TIMEOUT in case of timeout
  * @retval      RETCODE_MCU_I2C_NACK in case of unexpected NACK reception
  */
-static Retcode_T I2C_SendPollMode(struct MCU_I2C_S * pi2c)
+static Retcode_T I2C_SendPollMode(struct MCU_I2C_S *pi2c)
 {
     pi2c->State = I2C_STATE_TX;
 
@@ -382,8 +382,7 @@ static Retcode_T I2C_SendPollMode(struct MCU_I2C_S * pi2c)
     if (pi2c->DataRate)
     {
         timeout +=
-                (((pi2c->Transaction.Size + I2C_ADDITIONAL_BYTES) * I2C_CLOCK_CYCLES_PER_BYTE * I2C_SAFETY_FACTOR)
-                        / (1 + (pi2c->DataRate / I2C_SECOND_TO_MILLI_MS)));
+            (((pi2c->Transaction.Size + I2C_ADDITIONAL_BYTES) * I2C_CLOCK_CYCLES_PER_BYTE * I2C_SAFETY_FACTOR) / (1 + (pi2c->DataRate / I2C_SECOND_TO_MILLI_MS)));
     }
     if (I2C_ADDRESSINGMODE_7BIT == pi2c->hi2c.Init.AddressingMode)
     {
@@ -430,7 +429,7 @@ static Retcode_T I2C_SendPollMode(struct MCU_I2C_S * pi2c)
                 if (I2C_IsNACKSet(pi2c))
                 {
                     /* Wait for STOP to be sent */
-                    (void) I2C_WaitUntilTimeout_ms(pi2c, I2C_IsSTOPFReset, timeout);
+                    (void)I2C_WaitUntilTimeout_ms(pi2c, I2C_IsSTOPFReset, timeout);
                     retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_I2C_NACK);
                 }
                 /* exit the loop once an error is detected */
@@ -496,7 +495,7 @@ static Retcode_T I2C_SendPollMode(struct MCU_I2C_S * pi2c)
  * @retval      RETCODE_OK in case of success
  * @retval      RETCODE_FAILURE in case of STM32 HAL Library failure
  */
-Retcode_T I2C_ReceivePollMode(struct MCU_I2C_S* pI2C)
+Retcode_T I2C_ReceivePollMode(struct MCU_I2C_S *pI2C)
 {
     pI2C->State = I2C_STATE_RX;
 
@@ -507,8 +506,7 @@ Retcode_T I2C_ReceivePollMode(struct MCU_I2C_S* pI2C)
     if (pI2C->DataRate)
     {
         timeout +=
-                (((pI2C->Transaction.Size + I2C_ADDITIONAL_BYTES) * I2C_CLOCK_CYCLES_PER_BYTE * I2C_SAFETY_FACTOR)
-                        / (1 + pI2C->DataRate / I2C_SECOND_TO_MILLI_MS));
+            (((pI2C->Transaction.Size + I2C_ADDITIONAL_BYTES) * I2C_CLOCK_CYCLES_PER_BYTE * I2C_SAFETY_FACTOR) / (1 + pI2C->DataRate / I2C_SECOND_TO_MILLI_MS));
     }
 
     if (I2C_ADDRESSINGMODE_7BIT == pI2C->hi2c.Init.AddressingMode)
@@ -517,16 +515,14 @@ Retcode_T I2C_ReceivePollMode(struct MCU_I2C_S* pI2C)
     }
     if (pI2C->Transaction.PrependRegAddr)
     {
-        if (HAL_OK
-                != HAL_I2C_Master_Transmit(&pI2C->hi2c, slaveAddr, &pI2C->Transaction.RegisterAddr, 1, timeout))
+        if (HAL_OK != HAL_I2C_Master_Transmit(&pI2C->hi2c, slaveAddr, &pI2C->Transaction.RegisterAddr, 1, timeout))
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
         }
     }
     if (RETCODE_OK == retcode)
     {
-        if (HAL_OK
-                != HAL_I2C_Master_Receive(&pI2C->hi2c, slaveAddr, pI2C->Transaction.pDataBuffer, pI2C->Transaction.Size, timeout))
+        if (HAL_OK != HAL_I2C_Master_Receive(&pI2C->hi2c, slaveAddr, pI2C->Transaction.pDataBuffer, pI2C->Transaction.Size, timeout))
         {
             /* roll back the state and return error*/
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
@@ -541,7 +537,7 @@ Retcode_T I2C_ReceivePollMode(struct MCU_I2C_S* pI2C)
  * @param       pi2c irrelevant parameter
  * @return      RETCODE_OK always
  */
-static Retcode_T I2C_CancelPollMode(struct MCU_I2C_S * pi2c)
+static Retcode_T I2C_CancelPollMode(struct MCU_I2C_S *pi2c)
 {
     KISO_UNUSED(pi2c);
     return RETCODE_OK;
@@ -554,7 +550,7 @@ static Retcode_T I2C_CancelPollMode(struct MCU_I2C_S * pi2c)
  * @retval      RETCODE_OK in case of success
  * @retval      RETCODE_FAILURE in case HAL transmit operation failure
  */
-Retcode_T I2C_SendIntMode(struct MCU_I2C_S* pI2C)
+Retcode_T I2C_SendIntMode(struct MCU_I2C_S *pI2C)
 {
     pI2C->State = I2C_STATE_TX;
 
@@ -566,8 +562,7 @@ Retcode_T I2C_SendIntMode(struct MCU_I2C_S* pI2C)
         slaveAddress = slaveAddress << 1; /**< 7bit Addressing Mode */
     }
 
-    if (HAL_OK
-            != HAL_I2C_Master_Transmit_IT(&pI2C->hi2c, slaveAddress, pI2C->Transaction.pDataBuffer, pI2C->Transaction.Size))
+    if (HAL_OK != HAL_I2C_Master_Transmit_IT(&pI2C->hi2c, slaveAddress, pI2C->Transaction.pDataBuffer, pI2C->Transaction.Size))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
         pI2C->State = I2C_STATE_READY;
@@ -582,7 +577,7 @@ Retcode_T I2C_SendIntMode(struct MCU_I2C_S* pI2C)
  * @retval      RETCODE_OK in case of success
  * @retval      RETCODE_FAILURE in case HAL transmit operation failure
  */
-Retcode_T I2C_ReceiveIntMode(struct MCU_I2C_S* pI2C)
+Retcode_T I2C_ReceiveIntMode(struct MCU_I2C_S *pI2C)
 {
     pI2C->State = I2C_STATE_RX;
 
@@ -594,12 +589,10 @@ Retcode_T I2C_ReceiveIntMode(struct MCU_I2C_S* pI2C)
         slaveAddress = slaveAddress << 1; /**< 7bit Addressing Mode */
     }
 
-    if (HAL_OK
-            != HAL_I2C_Master_Receive_IT(&pI2C->hi2c, slaveAddress, pI2C->Transaction.pDataBuffer, pI2C->Transaction.Size))
+    if (HAL_OK != HAL_I2C_Master_Receive_IT(&pI2C->hi2c, slaveAddress, pI2C->Transaction.pDataBuffer, pI2C->Transaction.Size))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
         pI2C->State = I2C_STATE_READY;
-
     }
     return retcode;
 }
@@ -612,7 +605,7 @@ Retcode_T I2C_ReceiveIntMode(struct MCU_I2C_S* pI2C)
  * @retval      RETCODE_OK in case of success
  * @retval      RETCODE_FAILURE in case HAL transmit operation failure
  */
-Retcode_T I2C_WriteRegisterIntMode(struct MCU_I2C_S* pI2C)
+Retcode_T I2C_WriteRegisterIntMode(struct MCU_I2C_S *pI2C)
 {
     pI2C->State = I2C_STATE_TX;
     uint32_t timeout = I2C_DEFAULT_TIMEOUT_MS;
@@ -620,8 +613,7 @@ Retcode_T I2C_WriteRegisterIntMode(struct MCU_I2C_S* pI2C)
     if (pI2C->DataRate)
     {
         timeout +=
-                (((I2C_ADDITIONAL_BYTES) * I2C_CLOCK_CYCLES_PER_BYTE * I2C_SAFETY_FACTOR)
-                        / (1 + (pI2C->DataRate / I2C_SECOND_TO_MILLI_MS)));
+            (((I2C_ADDITIONAL_BYTES)*I2C_CLOCK_CYCLES_PER_BYTE * I2C_SAFETY_FACTOR) / (1 + (pI2C->DataRate / I2C_SECOND_TO_MILLI_MS)));
     }
     Retcode_T retcode = RETCODE_OK;
     uint16_t slaveAddr = pI2C->Transaction.DevAddress;
@@ -630,8 +622,7 @@ Retcode_T I2C_WriteRegisterIntMode(struct MCU_I2C_S* pI2C)
     {
         slaveAddr = slaveAddr << 1; /**< 7bit Adressing Mode */
     }
-    if (HAL_OK
-            != HAL_I2C_Master_Sequential_Transmit_IT(&pI2C->hi2c, slaveAddr, &pI2C->Transaction.RegisterAddr, 1, I2C_RELOAD_MODE))
+    if (HAL_OK != HAL_I2C_Master_Sequential_Transmit_IT(&pI2C->hi2c, slaveAddr, &pI2C->Transaction.RegisterAddr, 1, I2C_RELOAD_MODE))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
     }
@@ -643,8 +634,7 @@ Retcode_T I2C_WriteRegisterIntMode(struct MCU_I2C_S* pI2C)
     }
     if (RETCODE_OK == retcode)
     {
-        if (HAL_OK
-                != HAL_I2C_Master_Sequential_Transmit_IT(&pI2C->hi2c, slaveAddr, pI2C->Transaction.pDataBuffer, pI2C->Transaction.Size, I2C_LAST_FRAME))
+        if (HAL_OK != HAL_I2C_Master_Sequential_Transmit_IT(&pI2C->hi2c, slaveAddr, pI2C->Transaction.pDataBuffer, pI2C->Transaction.Size, I2C_LAST_FRAME))
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
         }
@@ -665,7 +655,7 @@ Retcode_T I2C_WriteRegisterIntMode(struct MCU_I2C_S* pI2C)
  * @retval      RETCODE_FAILURE in case of HAL library error
  *
  */
-Retcode_T I2C_ReadRegisterIntMode(struct MCU_I2C_S* pI2C)
+Retcode_T I2C_ReadRegisterIntMode(struct MCU_I2C_S *pI2C)
 {
     pI2C->State = I2C_STATE_RX;
     Retcode_T retcode = RETCODE_OK;
@@ -675,8 +665,7 @@ Retcode_T I2C_ReadRegisterIntMode(struct MCU_I2C_S* pI2C)
     if (pI2C->DataRate)
     {
         timeout +=
-                (((pI2C->Transaction.Size + I2C_ADDITIONAL_BYTES) * I2C_CLOCK_CYCLES_PER_BYTE * I2C_SAFETY_FACTOR)
-                        / (1 + (pI2C->DataRate / I2C_SECOND_TO_MILLI_MS)));
+            (((pI2C->Transaction.Size + I2C_ADDITIONAL_BYTES) * I2C_CLOCK_CYCLES_PER_BYTE * I2C_SAFETY_FACTOR) / (1 + (pI2C->DataRate / I2C_SECOND_TO_MILLI_MS)));
     }
 
     if (I2C_ADDRESSINGMODE_7BIT == pI2C->hi2c.Init.AddressingMode)
@@ -684,8 +673,7 @@ Retcode_T I2C_ReadRegisterIntMode(struct MCU_I2C_S* pI2C)
         slaveAddr = slaveAddr << 1; /**< 7bit Adressing Mode */
     }
     /* write first the register address in polling mode.*/
-    if (HAL_OK
-            != HAL_I2C_Master_Transmit(&pI2C->hi2c, slaveAddr, &pI2C->Transaction.RegisterAddr, 1, timeout))
+    if (HAL_OK != HAL_I2C_Master_Transmit(&pI2C->hi2c, slaveAddr, &pI2C->Transaction.RegisterAddr, 1, timeout))
     {
         pI2C->State = I2C_STATE_READY;
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
@@ -693,8 +681,7 @@ Retcode_T I2C_ReadRegisterIntMode(struct MCU_I2C_S* pI2C)
     if (RETCODE_OK == retcode)
     {
         /* Read the requested data in interrupt mode */
-        if (HAL_OK
-                != HAL_I2C_Master_Receive_IT(&pI2C->hi2c, slaveAddr, pI2C->Transaction.pDataBuffer, pI2C->Transaction.Size))
+        if (HAL_OK != HAL_I2C_Master_Receive_IT(&pI2C->hi2c, slaveAddr, pI2C->Transaction.pDataBuffer, pI2C->Transaction.Size))
         {
             /* roll back the state and return error*/
             pI2C->State = I2C_STATE_READY;
@@ -709,7 +696,7 @@ Retcode_T I2C_ReadRegisterIntMode(struct MCU_I2C_S* pI2C)
  * @param   pi2c reference to the I2C control block.
  * @return  RETCODE_NOT_SUPPORTED
  */
-static Retcode_T I2C_CancelIntMode(struct MCU_I2C_S * pi2c)
+static Retcode_T I2C_CancelIntMode(struct MCU_I2C_S *pi2c)
 {
     KISO_UNUSED(pi2c);
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
@@ -722,7 +709,7 @@ static Retcode_T I2C_CancelIntMode(struct MCU_I2C_S * pi2c)
  * @retval      RETCODE_OK in case of success
  * @retval      RETCODE_FAILURE in case HAL transmit operation failure
  */
-Retcode_T I2C_SendDmaMode(struct MCU_I2C_S* pI2C)
+Retcode_T I2C_SendDmaMode(struct MCU_I2C_S *pI2C)
 {
     pI2C->State = I2C_STATE_TX;
     Retcode_T retcode = RETCODE_OK;
@@ -733,8 +720,7 @@ Retcode_T I2C_SendDmaMode(struct MCU_I2C_S* pI2C)
         slaveAddress = slaveAddress << 1; /**< 7bit Addressing Mode */
     }
 
-    if (HAL_OK
-            != HAL_I2C_Master_Transmit_DMA(&pI2C->hi2c, slaveAddress, pI2C->Transaction.pDataBuffer, (pI2C->Transaction).Size))
+    if (HAL_OK != HAL_I2C_Master_Transmit_DMA(&pI2C->hi2c, slaveAddress, pI2C->Transaction.pDataBuffer, (pI2C->Transaction).Size))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
         pI2C->State = I2C_STATE_READY;
@@ -749,7 +735,7 @@ Retcode_T I2C_SendDmaMode(struct MCU_I2C_S* pI2C)
  * @retval      RETCODE_OK in case of success
  * @retval      RETCODE_FAILURE in case HAL transmit operation failure
  */
-Retcode_T I2C_ReceiveDmaMode(struct MCU_I2C_S* pI2C)
+Retcode_T I2C_ReceiveDmaMode(struct MCU_I2C_S *pI2C)
 {
     pI2C->State = I2C_STATE_RX;
     Retcode_T retcode = RETCODE_OK;
@@ -760,8 +746,7 @@ Retcode_T I2C_ReceiveDmaMode(struct MCU_I2C_S* pI2C)
         slaveAddress = slaveAddress << 1; /**< 7bit Addressing Mode */
     }
 
-    if (HAL_OK
-            != HAL_I2C_Master_Receive_DMA(&pI2C->hi2c, slaveAddress, pI2C->Transaction.pDataBuffer, pI2C->Transaction.Size))
+    if (HAL_OK != HAL_I2C_Master_Receive_DMA(&pI2C->hi2c, slaveAddress, pI2C->Transaction.pDataBuffer, pI2C->Transaction.Size))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
         pI2C->State = I2C_STATE_READY;
@@ -777,7 +762,7 @@ Retcode_T I2C_ReceiveDmaMode(struct MCU_I2C_S* pI2C)
  * @retval      RETCODE_OK in case of success
  * @retval      RETCODE_FAILURE in case HAL transmit operation failure
  */
-Retcode_T I2C_WriteRegisterDmaMode(struct MCU_I2C_S* pI2C)
+Retcode_T I2C_WriteRegisterDmaMode(struct MCU_I2C_S *pI2C)
 {
     KISO_UNUSED(pI2C);
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
@@ -788,7 +773,7 @@ Retcode_T I2C_WriteRegisterDmaMode(struct MCU_I2C_S* pI2C)
  * @param pI2C
  * @return
  */
-Retcode_T I2C_ReadRegisterDmaMode(struct MCU_I2C_S* pI2C)
+Retcode_T I2C_ReadRegisterDmaMode(struct MCU_I2C_S *pI2C)
 {
     pI2C->State = I2C_STATE_RX;
     Retcode_T retcode = RETCODE_OK;
@@ -798,8 +783,7 @@ Retcode_T I2C_ReadRegisterDmaMode(struct MCU_I2C_S* pI2C)
     if (pI2C->DataRate)
     {
         timeout +=
-                (((pI2C->Transaction.Size + I2C_ADDITIONAL_BYTES) * I2C_CLOCK_CYCLES_PER_BYTE * I2C_SAFETY_FACTOR)
-                        / (1 + (pI2C->DataRate / I2C_SECOND_TO_MILLI_MS)));
+            (((pI2C->Transaction.Size + I2C_ADDITIONAL_BYTES) * I2C_CLOCK_CYCLES_PER_BYTE * I2C_SAFETY_FACTOR) / (1 + (pI2C->DataRate / I2C_SECOND_TO_MILLI_MS)));
     }
 
     if (I2C_ADDRESSINGMODE_7BIT == pI2C->hi2c.Init.AddressingMode)
@@ -807,16 +791,14 @@ Retcode_T I2C_ReadRegisterDmaMode(struct MCU_I2C_S* pI2C)
         slaveAddr = slaveAddr << 1; /**< 7bit Adressing Mode */
     }
 
-    if (HAL_OK
-            != HAL_I2C_Master_Transmit(&pI2C->hi2c, slaveAddr, &pI2C->Transaction.RegisterAddr, 1, timeout))
+    if (HAL_OK != HAL_I2C_Master_Transmit(&pI2C->hi2c, slaveAddr, &pI2C->Transaction.RegisterAddr, 1, timeout))
     {
         pI2C->State = I2C_STATE_READY;
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
     }
     if (RETCODE_OK == retcode)
     {
-        if (HAL_OK
-                != HAL_I2C_Master_Receive_DMA(&pI2C->hi2c, slaveAddr, pI2C->Transaction.pDataBuffer, pI2C->Transaction.Size))
+        if (HAL_OK != HAL_I2C_Master_Receive_DMA(&pI2C->hi2c, slaveAddr, pI2C->Transaction.pDataBuffer, pI2C->Transaction.Size))
         {
             /* roll back the state and return error*/
             pI2C->State = I2C_STATE_READY;
@@ -831,7 +813,7 @@ Retcode_T I2C_ReadRegisterDmaMode(struct MCU_I2C_S* pI2C)
  * @param   pi2c reference to the I2C control block.
  * @return  RETCODE_NOT_SUPPORTED
  */
-static Retcode_T I2C_CancelDmaMode(struct MCU_I2C_S * pi2c)
+static Retcode_T I2C_CancelDmaMode(struct MCU_I2C_S *pi2c)
 {
     KISO_UNUSED(pi2c);
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
@@ -845,7 +827,7 @@ static Retcode_T I2C_CancelDmaMode(struct MCU_I2C_S * pi2c)
  */
 void I2C_EventCallback(I2C_T i2c)
 {
-    struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
+    struct MCU_I2C_S *pI2C = (struct MCU_I2C_S *)i2c;
     if (pI2C)
     {
         HAL_I2C_EV_IRQHandler(&pI2C->hi2c);
@@ -860,7 +842,7 @@ void I2C_EventCallback(I2C_T i2c)
  */
 void I2C_ErrorCallback(I2C_T i2c)
 {
-    struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
+    struct MCU_I2C_S *pI2C = (struct MCU_I2C_S *)i2c;
     if (pI2C)
     {
         HAL_I2C_ER_IRQHandler(&pI2C->hi2c);
@@ -875,7 +857,7 @@ void I2C_ErrorCallback(I2C_T i2c)
  */
 void I2C_DmaRxHandler(I2C_T i2c)
 {
-    struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
+    struct MCU_I2C_S *pI2C = (struct MCU_I2C_S *)i2c;
     if (pI2C)
     {
         HAL_DMA_IRQHandler(pI2C->hi2c.hdmarx);
@@ -890,7 +872,7 @@ void I2C_DmaRxHandler(I2C_T i2c)
  */
 void I2C_DmaTxHandler(I2C_T i2c)
 {
-    struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) i2c;
+    struct MCU_I2C_S *pI2C = (struct MCU_I2C_S *)i2c;
     if (pI2C)
     {
         HAL_DMA_IRQHandler(pI2C->hi2c.hdmatx);
@@ -905,7 +887,7 @@ void I2C_DmaTxHandler(I2C_T i2c)
  */
 void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
 {
-    struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) hi2c;
+    struct MCU_I2C_S *pI2C = (struct MCU_I2C_S *)hi2c;
     if (pI2C)
     {
         /* Has a valid handle, now process the event */
@@ -918,10 +900,10 @@ void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
          */
         if ((HAL_I2C_ERROR_NONE != errorValue) && pI2C->AppLayerCallback)
         {
-            struct MCU_I2C_Event_S event = { 0, 0, 0, 0 };
+            struct MCU_I2C_Event_S event = {0, 0, 0, 0};
             /* Set the error bit in the event and signal it to application */
             event.TransferError = 1;
-            pI2C->AppLayerCallback((I2C_T) pI2C, event);
+            pI2C->AppLayerCallback((I2C_T)pI2C, event);
         }
     }
 }
@@ -934,7 +916,7 @@ void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
  */
 void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
-    struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) hi2c;
+    struct MCU_I2C_S *pI2C = (struct MCU_I2C_S *)hi2c;
     if (pI2C)
     {
         if (pI2C->State == I2C_STATE_TX)
@@ -947,10 +929,10 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
             else
             {
                 /* Has a valid handle, now process the event */
-                struct MCU_I2C_Event_S event = { 0, 0, 0, 0 };
+                struct MCU_I2C_Event_S event = {0, 0, 0, 0};
                 /* Signal that transfer is complete to application */
                 event.TxComplete = 1;
-                pI2C->AppLayerCallback((I2C_T) pI2C, event);
+                pI2C->AppLayerCallback((I2C_T)pI2C, event);
                 pI2C->State = I2C_STATE_READY;
             }
         }
@@ -965,16 +947,16 @@ void HAL_I2C_MasterTxCpltCallback(I2C_HandleTypeDef *hi2c)
  */
 void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
-    struct MCU_I2C_S* pI2C = (struct MCU_I2C_S*) hi2c;
+    struct MCU_I2C_S *pI2C = (struct MCU_I2C_S *)hi2c;
     if (pI2C && pI2C->AppLayerCallback)
     {
         if (pI2C->State == I2C_STATE_RX)
         {
             /* Has a valid handle, now process the event */
-            struct MCU_I2C_Event_S event = { 0, 0, 0, 0 };
+            struct MCU_I2C_Event_S event = {0, 0, 0, 0};
             /* Signal that transfer is complete to application */
             event.RxComplete = 1;
-            pI2C->AppLayerCallback((I2C_T) pI2C, event);
+            pI2C->AppLayerCallback((I2C_T)pI2C, event);
             pI2C->State = I2C_STATE_READY;
         }
     }
@@ -994,12 +976,11 @@ static void I2C_WriteControlWord(I2C_TypeDef *i2c, uint16_t slaveAddress, uint8_
     uint32_t tmp = i2c->CR2;
 
     /* clear CR2 specific bits */
-    tmp &= (uint32_t) ~((uint32_t)(I2C_CR2_SADD | I2C_CR2_NBYTES | I2C_CR2_RELOAD | I2C_CR2_AUTOEND | I2C_CR2_RD_WRN
-            | I2C_CR2_START | I2C_CR2_STOP));
+    tmp &= (uint32_t) ~((uint32_t)(I2C_CR2_SADD | I2C_CR2_NBYTES | I2C_CR2_RELOAD | I2C_CR2_AUTOEND | I2C_CR2_RD_WRN | I2C_CR2_START | I2C_CR2_STOP));
 
     /* update value */
-    tmp |= (uint32_t)(((uint32_t) slaveAddress & I2C_CR2_SADD) | (((uint32_t) nBytes << 16) & I2C_CR2_NBYTES) |
-            (uint32_t) mode | (uint32_t) req);
+    tmp |= (uint32_t)(((uint32_t)slaveAddress & I2C_CR2_SADD) | (((uint32_t)nBytes << 16) & I2C_CR2_NBYTES) |
+                      (uint32_t)mode | (uint32_t)req);
 
     /* write to register */
     i2c->CR2 = tmp;
@@ -1016,7 +997,7 @@ static void I2C_WriteControlWord(I2C_TypeDef *i2c, uint16_t slaveAddress, uint8_
  * @retval      RETCODE_TIMEOUT if the timeout elapses before the condition becomes flase.
  *
  */
-static Retcode_T I2C_WaitUntilTimeout_ms(struct MCU_I2C_S * pi2c, bool (*waitCondition)(struct MCU_I2C_S * pi2c), uint32_t timeout)
+static Retcode_T I2C_WaitUntilTimeout_ms(struct MCU_I2C_S *pi2c, bool (*waitCondition)(struct MCU_I2C_S *pi2c), uint32_t timeout)
 {
     Retcode_T retcode = RETCODE_OK;
     uint32_t start = HAL_GetTick();
@@ -1036,7 +1017,7 @@ static Retcode_T I2C_WaitUntilTimeout_ms(struct MCU_I2C_S * pi2c, bool (*waitCon
  * @param       pi2c reference to the i2c control block
  * @return      true if Flag is reset
  */
-static bool I2C_IsI2CNotReady(struct MCU_I2C_S * pi2c)
+static bool I2C_IsI2CNotReady(struct MCU_I2C_S *pi2c)
 {
     return (bool)(HAL_I2C_GetState(&pi2c->hi2c) != HAL_I2C_STATE_READY);
 }
@@ -1046,7 +1027,7 @@ static bool I2C_IsI2CNotReady(struct MCU_I2C_S * pi2c)
  * @param       pi2c reference to the i2c control block
  * @return      true if Flag is reset
  */
-static bool I2C_IsTXISReset(struct MCU_I2C_S * pi2c)
+static bool I2C_IsTXISReset(struct MCU_I2C_S *pi2c)
 {
     return (bool)(__HAL_I2C_GET_FLAG(&pi2c->hi2c, I2C_FLAG_TXIS) == RESET);
 }
@@ -1056,7 +1037,7 @@ static bool I2C_IsTXISReset(struct MCU_I2C_S * pi2c)
  * @param       pi2c reference to the i2c control block
  * @return      true if Flag is set
  */
-static bool I2C_IsNACKSet(struct MCU_I2C_S * pi2c)
+static bool I2C_IsNACKSet(struct MCU_I2C_S *pi2c)
 {
     return (bool)(__HAL_I2C_GET_FLAG(&pi2c->hi2c, I2C_FLAG_AF) == SET);
 }
@@ -1066,7 +1047,7 @@ static bool I2C_IsNACKSet(struct MCU_I2C_S * pi2c)
  * @param       pi2c reference to the i2c control block
  * @return      true if Flag is reset
  */
-static bool I2C_IsSTOPFReset(struct MCU_I2C_S * pi2c)
+static bool I2C_IsSTOPFReset(struct MCU_I2C_S *pi2c)
 {
     return (bool)(__HAL_I2C_GET_FLAG(&pi2c->hi2c, I2C_FLAG_STOPF) == RESET);
 }
@@ -1076,7 +1057,7 @@ static bool I2C_IsSTOPFReset(struct MCU_I2C_S * pi2c)
  * @param       pi2c reference to the i2c control block
  * @return      true if Flag is reset
  */
-static bool I2C_IsTCRReset(struct MCU_I2C_S * pi2c)
+static bool I2C_IsTCRReset(struct MCU_I2C_S *pi2c)
 {
     return (bool)(__HAL_I2C_GET_FLAG(&pi2c->hi2c, I2C_FLAG_TCR) == RESET);
 }
@@ -1086,7 +1067,7 @@ static bool I2C_IsTCRReset(struct MCU_I2C_S * pi2c)
  * @param       pi2c reference to the i2c control block
  * @return      true if Flag is reset
  */
-static bool I2C_IsBUSYSet(struct MCU_I2C_S * pi2c)
+static bool I2C_IsBUSYSet(struct MCU_I2C_S *pi2c)
 {
     return (bool)(__HAL_I2C_GET_FLAG(&pi2c->hi2c, I2C_FLAG_BUSY) == SET);
 }

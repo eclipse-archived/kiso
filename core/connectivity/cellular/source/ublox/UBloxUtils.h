@@ -27,11 +27,11 @@
 /**
  * @brief Translate #Cellular_IpAddress_T to #AT_UBlox_Address_T.
  */
-Retcode_T CelToUbloxAddr(const Cellular_IpAddress_T* from, AT_UBlox_Address_T* to);
+Retcode_T CelToUbloxAddr(const Cellular_IpAddress_T *from, AT_UBlox_Address_T *to);
 
 /**
  * @brief Translate #AT_UBlox_Address_T to #Cellular_IpAddress_T.
  */
-Retcode_T UbloxToCelAddr(const AT_UBlox_Address_T* from, Cellular_IpAddress_T* to);
+Retcode_T UbloxToCelAddr(const AT_UBlox_Address_T *from, Cellular_IpAddress_T *to);
 
 #endif /* UBLOXUTILS_H_ */

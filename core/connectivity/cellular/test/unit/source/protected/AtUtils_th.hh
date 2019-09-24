@@ -21,8 +21,8 @@
 
 FAKE_VALUE_FUNC(Retcode_T, Utils_ConvertAtResponseRetcodeToCellularRetcode, Retcode_T)
 FAKE_VALUE_FUNC(Retcode_T, Utils_ConvertCellularResponseCodeToCellularRetcode, AtResponseCode_T)
-FAKE_VALUE_FUNC(Retcode_T, Utils_Strtol, const uint8_t*, uint32_t, int32_t *)
-FAKE_VALUE_FUNC(Retcode_T, Utils_StrtolBounds, const uint8_t*, uint32_t, int32_t*, int32_t, int32_t)
+FAKE_VALUE_FUNC(Retcode_T, Utils_Strtol, const uint8_t *, uint32_t, int32_t *)
+FAKE_VALUE_FUNC(Retcode_T, Utils_StrtolBounds, const uint8_t *, uint32_t, int32_t *, int32_t, int32_t)
 FAKE_VALUE_FUNC(Retcode_T, Utils_WaitForAndHandleResponseCode, uint32_t, Retcode_T)
 FAKE_VALUE_FUNC(uint8_t *, Utils_TrimFlukeCharacters, uint8_t *, uint32_t, uint32_t *)
 

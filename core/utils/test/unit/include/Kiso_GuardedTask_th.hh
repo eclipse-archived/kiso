@@ -53,16 +53,16 @@ typedef void (*GuardedTask_Function_T)(void);
  * Deprecated functions will be removed as part of PFM-659
  * Deprecated since vXXX (\todo: replace XXX with next version)
  */
-FAKE_VALUE_FUNC(Retcode_T, GuardedTask_initialize, GuardedTask_T*, GuardedTask_Function_T, const char*, uint32_t, uint32_t)
-FAKE_VALUE_FUNC(Retcode_T, GuardedTask_deinitialize, GuardedTask_T*)
-FAKE_VALUE_FUNC(Retcode_T, GuardedTask_signal, GuardedTask_T*)
-FAKE_VALUE_FUNC(Retcode_T, GuardedTask_signalFromIsr, GuardedTask_T*)
+FAKE_VALUE_FUNC(Retcode_T, GuardedTask_initialize, GuardedTask_T *, GuardedTask_Function_T, const char *, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, GuardedTask_deinitialize, GuardedTask_T *)
+FAKE_VALUE_FUNC(Retcode_T, GuardedTask_signal, GuardedTask_T *)
+FAKE_VALUE_FUNC(Retcode_T, GuardedTask_signalFromIsr, GuardedTask_T *)
 
 /* Mock-ups for the provided interfaces */
-FAKE_VALUE_FUNC(Retcode_T, GuardedTask_Initialize, GuardedTask_T*, GuardedTask_Function_T, const char*, uint32_t, uint32_t)
-FAKE_VALUE_FUNC(Retcode_T, GuardedTask_Deinitialize, GuardedTask_T*)
-FAKE_VALUE_FUNC(Retcode_T, GuardedTask_Signal, GuardedTask_T*)
-FAKE_VALUE_FUNC(Retcode_T, GuardedTask_SignalFromIsr, GuardedTask_T*)
+FAKE_VALUE_FUNC(Retcode_T, GuardedTask_Initialize, GuardedTask_T *, GuardedTask_Function_T, const char *, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, GuardedTask_Deinitialize, GuardedTask_T *)
+FAKE_VALUE_FUNC(Retcode_T, GuardedTask_Signal, GuardedTask_T *)
+FAKE_VALUE_FUNC(Retcode_T, GuardedTask_SignalFromIsr, GuardedTask_T *)
 
 #endif /* KISO_GUARDEDTASK_TH_HH_ */
 

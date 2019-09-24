@@ -42,7 +42,7 @@
 #include "timers.h"
 #include "Kiso_Logging.h"
 
-void blink_led(void* param1, uint32_t param2);
+void blink_led(void *param1, uint32_t param2);
 
 /*Application Command Processor Instance */
 CmdProcessor_T *AppCmdProcessor;
@@ -51,31 +51,30 @@ CmdProcessor_T *AppCmdProcessor;
  * @brief This is a template function where the user can write his custom application.
  *
  */
-void appInitSystem(void * CmdProcessorHandle, uint32_t param2)
+void appInitSystem(void *CmdProcessorHandle, uint32_t param2)
 {
-	(void)param2;
-	Retcode_T returnVal = RETCODE_OK;
+    (void)param2;
+    Retcode_T returnVal = RETCODE_OK;
 
-	// Initialize logging module
+    // Initialize logging module
 
-	returnVal = Logging_Init(Logging_SyncRecorder, Logging_UARTAppender);
+    returnVal = Logging_Init(Logging_SyncRecorder, Logging_UARTAppender);
     if (RETCODE_OK == returnVal)
     {
-    	LOG_DEBUG(" Logging was started successfully");
+        LOG_DEBUG(" Logging was started successfully");
     }
 
-	// Initialize the blinking led
+    // Initialize the blinking led
     if (CmdProcessorHandle == NULL)
     {
         printf("Command processor handle is null \n\r");
         assert(false);
     }
-    AppCmdProcessor = (CmdProcessor_T *) CmdProcessorHandle;
-
+    AppCmdProcessor = (CmdProcessor_T *)CmdProcessorHandle;
 
     if (RETCODE_OK == returnVal)
     {
-        CmdProcessor_Enqueue((CmdProcessor_T*)AppCmdProcessor,blink_led,(void *)AppCmdProcessor,0);
+        CmdProcessor_Enqueue((CmdProcessor_T *)AppCmdProcessor, blink_led, (void *)AppCmdProcessor, 0);
     }
     if (RETCODE_OK != returnVal)
     {
@@ -87,16 +86,15 @@ void appInitSystem(void * CmdProcessorHandle, uint32_t param2)
     }
 }
 
-void blink_led(void* param1, uint32_t param2)
+void blink_led(void *param1, uint32_t param2)
 {
     (void)param1;
     (void)param2;
-	BSP_LED_Switch(COMMONGATEWAY_LED_BLUE_ID, COMMONGATEWAY_LED_COMMAND_TOGGLE);
-	LOG_DEBUG("Led switch");
+    BSP_LED_Switch(COMMONGATEWAY_LED_BLUE_ID, COMMONGATEWAY_LED_COMMAND_TOGGLE);
+    LOG_DEBUG("Led switch");
     vTaskDelay(500);
-    CmdProcessor_Enqueue((CmdProcessor_T*)param1,blink_led,param1,0);
+    CmdProcessor_Enqueue((CmdProcessor_T *)param1, blink_led, param1, 0);
 }
 /**@} */
 
 /** ************************************************************************* */
-

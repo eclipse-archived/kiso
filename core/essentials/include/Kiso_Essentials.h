@@ -74,6 +74,5 @@ enum KISO_Essentials_ModuleID_E
     KISO_ESSENTIALS_MODULE_ID_FLASH_INTERN,
 };
 
-
 #endif /* KISO_ESSENTIALS_H_ */
-/**@} */
+       /**@} */

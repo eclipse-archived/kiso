@@ -52,7 +52,7 @@ struct MCU_SPI_Transaction_S
 {
     uint8_t *pRxDataBuffer; /**< Reference to the receive buffer used for the transaction*/
     uint8_t *pTxDataBuffer; /**< Reference to the transmit buffer used for the transcation */
-    uint16_t Size; /**< Size in bytes of the transaction */
+    uint16_t Size;          /**< Size in bytes of the transaction */
 };
 
 /**
@@ -63,22 +63,22 @@ struct MCU_SPI_Transaction_S
 struct MCU_SPI_S;
 struct MCU_SPI_S
 {
-    SPI_HandleTypeDef hspi; /**< STM32 HAL library SPI handle structure  */
-    enum KISO_HAL_TransferMode_E TransferMode; /**< Identifies the transfer mode that is currently configured for
+    SPI_HandleTypeDef hspi;                              /**< STM32 HAL library SPI handle structure  */
+    enum KISO_HAL_TransferMode_E TransferMode;           /**< Identifies the transfer mode that is currently configured for
      this SPI instance. This value will be set by the BSP upon configuration of the SPI interface.*/
-    uint8_t DefaultData; /**<default data to be sent on the MOSI line in order to trigger the clock generation*/
-    MCU_SPI_State_T State; /**< driver state */
-    uint32_t DataRate; /**< Data rate in bits per second as configured by the BSP */
-    void (*IRQCallback)(SPI_T spi); /**< Reference to the SPI IRQ handler function */
-    void (*DmaRxCallback)(SPI_T spi); /**< Reference to the Rx DMA IRQ handler in case DMA mode is used mode */
-    void (*DmaTxCallback)(SPI_T spi); /**< Reference to the Tx DMA IRQ handler in case DMA mode is used mode*/
-    MCU_SPI_Callback_T AppCallback; /**< Reference to the application event handler which will be called if an event has
+    uint8_t DefaultData;                                 /**<default data to be sent on the MOSI line in order to trigger the clock generation*/
+    MCU_SPI_State_T State;                               /**< driver state */
+    uint32_t DataRate;                                   /**< Data rate in bits per second as configured by the BSP */
+    void (*IRQCallback)(SPI_T spi);                      /**< Reference to the SPI IRQ handler function */
+    void (*DmaRxCallback)(SPI_T spi);                    /**< Reference to the Rx DMA IRQ handler in case DMA mode is used mode */
+    void (*DmaTxCallback)(SPI_T spi);                    /**< Reference to the Tx DMA IRQ handler in case DMA mode is used mode*/
+    MCU_SPI_Callback_T AppCallback;                      /**< Reference to the application event handler which will be called if an event has
     to be signaled */
-    Retcode_T (*TxFunPtr)(struct MCU_SPI_S* pSPI); /**< Reference to the Tx function. Will be set upon initialization. */
-    Retcode_T (*RxFunPtr)(struct MCU_SPI_S* pSPI); /**< Reference to the Rx function. Will be set upon initialization. */
-    Retcode_T (*TransferFunPtr)(struct MCU_SPI_S* pSPI); /**< Reference to the Transfer function. Will be set upon initialization. */
-    Retcode_T (*CancelFunPtr)(struct MCU_SPI_S* pSPI); /**< Reference to the Cancel function. Will be set upon initialization. */
-    struct MCU_SPI_Transaction_S Transaction; /**< Current transaction parameters*/
+    Retcode_T (*TxFunPtr)(struct MCU_SPI_S *pSPI);       /**< Reference to the Tx function. Will be set upon initialization. */
+    Retcode_T (*RxFunPtr)(struct MCU_SPI_S *pSPI);       /**< Reference to the Rx function. Will be set upon initialization. */
+    Retcode_T (*TransferFunPtr)(struct MCU_SPI_S *pSPI); /**< Reference to the Transfer function. Will be set upon initialization. */
+    Retcode_T (*CancelFunPtr)(struct MCU_SPI_S *pSPI);   /**< Reference to the Cancel function. Will be set upon initialization. */
+    struct MCU_SPI_Transaction_S Transaction;            /**< Current transaction parameters*/
 };
 
 #endif /* KISO_FEATURE_SPI */

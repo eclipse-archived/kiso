@@ -18,7 +18,7 @@
  *  Mockup implementation for the portable.h module.
  *
  * ****************************************************************************/
- 
+
 /* header definition ******************************************************** */
 #ifndef KISO_PORTABLE_TH_HH_
 #define KISO_PORTABLE_TH_HH_
@@ -34,16 +34,16 @@
 /* Necessary typedef as original file is banned. */
 typedef struct HeapRegion
 {
-	uint8_t *pucStartAddress;
-	size_t xSizeInBytes;
+    uint8_t *pucStartAddress;
+    size_t xSizeInBytes;
 } HeapRegion_t;
 
 /* faked variables needs to be initialized by the test fixture */
 
 /* mock-ups for the provided interfaces */
 FAKE_VOID_FUNC(vPortDefineHeapRegions, const HeapRegion_t *)
-FAKE_VALUE_FUNC(void*, pvPortMalloc, size_t)
-FAKE_VOID_FUNC(vPortFree, void*)
+FAKE_VALUE_FUNC(void *, pvPortMalloc, size_t)
+FAKE_VOID_FUNC(vPortFree, void *)
 FAKE_VOID_FUNC(vPortInitialiseBlocks)
 FAKE_VALUE_FUNC(size_t, xPortGetFreeHeapSize)
 FAKE_VALUE_FUNC(size_t, xPortGetMinimumEverFreeHeapSize)

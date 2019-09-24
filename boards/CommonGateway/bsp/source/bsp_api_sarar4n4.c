@@ -28,16 +28,16 @@
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID MODULE_BSP_API_SARAR4N4
 
-#define SARAR4N4_DELAY_1_MS                     UINT32_C(1)
-#define SARAR4N4_LVL_SHIFT_VCCA_SET_DELAY_MS    SARAR4N4_DELAY_1_MS
-#define SARAR4N4_LVL_SHIFT_OE_SET_DELAY_MS      SARAR4N4_DELAY_1_MS
-#define SARAR4N4_LVL_SHIFT_OE_RESET_DELAY_MS    SARAR4N4_DELAY_1_MS
-#define SARAR4N4_PWRON_VALID_TIME_MS            UINT32_C(2000) //2 seconds
-#define SARAR4N4_MAX_TIME_TO_OFF_MS             UINT32_C(20000) //20 seconds
-#define SARAR4N4_MAX_TIME_TO_ACTIVE_MS          4000
+#define SARAR4N4_DELAY_1_MS UINT32_C(1)
+#define SARAR4N4_LVL_SHIFT_VCCA_SET_DELAY_MS SARAR4N4_DELAY_1_MS
+#define SARAR4N4_LVL_SHIFT_OE_SET_DELAY_MS SARAR4N4_DELAY_1_MS
+#define SARAR4N4_LVL_SHIFT_OE_RESET_DELAY_MS SARAR4N4_DELAY_1_MS
+#define SARAR4N4_PWRON_VALID_TIME_MS UINT32_C(2000) //2 seconds
+#define SARAR4N4_MAX_TIME_TO_OFF_MS UINT32_C(20000) //20 seconds
+#define SARAR4N4_MAX_TIME_TO_ACTIVE_MS 4000
 
-#define SARAR4N4_UART_INT_PRIORITY              UINT32_C(5)
-#define SARAR4N4_UART_SUBPRIORITY               UINT32_C(0)
+#define SARAR4N4_UART_INT_PRIORITY UINT32_C(5)
+#define SARAR4N4_UART_SUBPRIORITY UINT32_C(0)
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
@@ -48,27 +48,27 @@ void USART2_IRQHandler(void);
 /*
  * BSP State of the cellular module
  */
-static uint8_t bspState = (uint8_t) BSP_STATE_INIT;
+static uint8_t bspState = (uint8_t)BSP_STATE_INIT;
 
 /*
  * Static structure which is used to keep the UART handle for CellularSaraR4N4.
  */
 static struct MCU_UART_S SaraR4N4_UARTStruct =
-        {
-                .TxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
-                .RxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
-                .Datarate = 115200,
-                .huart.Instance = USART2,
-                .huart.Init.BaudRate = 115200,
-                .huart.Init.WordLength = UART_WORDLENGTH_8B,
-                .huart.Init.StopBits = UART_STOPBITS_1,
-                .huart.Init.Parity = UART_PARITY_NONE,
-                .huart.Init.Mode = UART_MODE_TX_RX,
-                .huart.Init.HwFlowCtl = UART_HWCONTROL_RTS_CTS,
-                .huart.Init.OverSampling = UART_OVERSAMPLING_16,
-                .huart.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE,
-                .huart.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT,
-        };
+    {
+        .TxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
+        .RxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
+        .Datarate = 115200,
+        .huart.Instance = USART2,
+        .huart.Init.BaudRate = 115200,
+        .huart.Init.WordLength = UART_WORDLENGTH_8B,
+        .huart.Init.StopBits = UART_STOPBITS_1,
+        .huart.Init.Parity = UART_PARITY_NONE,
+        .huart.Init.Mode = UART_MODE_TX_RX,
+        .huart.Init.HwFlowCtl = UART_HWCONTROL_RTS_CTS,
+        .huart.Init.OverSampling = UART_OVERSAMPLING_16,
+        .huart.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE,
+        .huart.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT,
+};
 
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
 
@@ -81,13 +81,13 @@ Retcode_T BSP_Cellular_SaraR4N4_Connect(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_CONNECTED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_CONNECTED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
     if (RETCODE_OK == retcode)
     {
-        GPIO_InitTypeDef BSP_GPIOInitStruct = { 0 };
+        GPIO_InitTypeDef BSP_GPIOInitStruct = {0};
 
         GPIO_OpenClockGate(GPIO_PORT_B, PINB_GSM_PON);
 
@@ -126,7 +126,7 @@ Retcode_T BSP_Cellular_SaraR4N4_Connect(void)
         BSP_GPIOInitStruct.Alternate = GPIO_AF7_USART2;
         HAL_GPIO_Init(GPIOD, &BSP_GPIOInitStruct);
 
-        bspState = (uint8_t) BSP_STATE_CONNECTED;
+        bspState = (uint8_t)BSP_STATE_CONNECTED;
     }
     return retcode;
 }
@@ -140,7 +140,7 @@ Retcode_T BSP_Cellular_SaraR4N4_Enable(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_ENABLED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_ENABLED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -190,8 +190,7 @@ Retcode_T BSP_Cellular_SaraR4N4_Enable(void)
     if (RETCODE_OK == retcode)
     {
         /* enable the uart clock */
-        __HAL_RCC_USART2_CLK_ENABLE()
-        ;
+        __HAL_RCC_USART2_CLK_ENABLE();
         __HAL_RCC_USART2_FORCE_RESET();
         __HAL_RCC_USART2_RELEASE_RESET();
 
@@ -206,7 +205,7 @@ Retcode_T BSP_Cellular_SaraR4N4_Enable(void)
         HAL_NVIC_SetPriority(USART2_IRQn, SARAR4N4_UART_INT_PRIORITY, SARAR4N4_UART_SUBPRIORITY);
         HAL_NVIC_EnableIRQ(USART2_IRQn);
 
-        bspState = (uint8_t) BSP_STATE_ENABLED;
+        bspState = (uint8_t)BSP_STATE_ENABLED;
     }
     return retcode;
 }
@@ -220,7 +219,7 @@ Retcode_T BSP_Cellular_SaraR4N4_Disable(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_DISABLED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_DISABLED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -255,7 +254,7 @@ Retcode_T BSP_Cellular_SaraR4N4_Disable(void)
     }
     if (RETCODE_OK == retcode)
     {
-        bspState = (uint8_t) BSP_STATE_DISABLED;
+        bspState = (uint8_t)BSP_STATE_DISABLED;
     }
     return retcode;
 }
@@ -268,7 +267,7 @@ Retcode_T BSP_Cellular_SaraR4N4_Disable(void)
 Retcode_T BSP_Cellular_SaraR4N4_Disconnect(void)
 {
     Retcode_T retcode = RETCODE_OK;
-    if (!(bspState & (uint8_t) BSP_STATE_TO_DISCONNECTED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_DISCONNECTED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -286,7 +285,7 @@ Retcode_T BSP_Cellular_SaraR4N4_Disconnect(void)
         HAL_GPIO_DeInit(GPIOE, PINE_EN_LVL | PINE_POW_LVL | PINE_GSM_RESN | PINE_GSM_GPIO1);
         GPIO_CloseClockGate(GPIO_PORT_E, PINE_EN_LVL | PINE_POW_LVL | PINE_GSM_RESN | PINE_GSM_GPIO1);
 
-        bspState = (uint8_t) BSP_STATE_DISCONNECTED;
+        bspState = (uint8_t)BSP_STATE_DISCONNECTED;
     }
     return retcode;
 }
@@ -297,7 +296,7 @@ Retcode_T BSP_Cellular_SaraR4N4_Disconnect(void)
  */
 HWHandle_T BSP_Cellular_SaraR4N4_GetUARTHandle(void)
 {
-    return (HWHandle_T) &SaraR4N4_UARTStruct;
+    return (HWHandle_T)&SaraR4N4_UARTStruct;
 }
 
 /**
@@ -306,7 +305,7 @@ HWHandle_T BSP_Cellular_SaraR4N4_GetUARTHandle(void)
  */
 HWHandle_T BSP_Cellular_SaraR4N4_GetSPIHandle(void)
 {
-    return (HWHandle_T) NULL;
+    return (HWHandle_T)NULL;
 }
 
 /**
@@ -318,7 +317,7 @@ Retcode_T BSP_Cellular_SaraR4N4_Reset(void)
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
 }
 
-Retcode_T BSP_Cellular_SaraR4N4_Control(uint32_t command, void* arg)
+Retcode_T BSP_Cellular_SaraR4N4_Control(uint32_t command, void *arg)
 {
     KISO_UNUSED(command);
     KISO_UNUSED(arg);
@@ -341,7 +340,6 @@ uint32_t BSP_Cellular_SaraR4N4_GetCTS(void)
 Retcode_T BSP_Cellular_SaraR4N4_SetRTSLow(void)
 {
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
-
 }
 
 /**
@@ -362,7 +360,7 @@ void USART2_IRQHandler(void)
 {
     if (SaraR4N4_UARTStruct.IrqCallback)
     {
-        SaraR4N4_UARTStruct.IrqCallback((UART_T) &SaraR4N4_UARTStruct);
+        SaraR4N4_UARTStruct.IrqCallback((UART_T)&SaraR4N4_UARTStruct);
     }
 }
 

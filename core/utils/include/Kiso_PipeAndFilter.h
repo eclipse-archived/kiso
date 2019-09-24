@@ -59,22 +59,21 @@
  *     OTHER - Needs to be define by the user \n
  * 
  */
-typedef Retcode_T (*PipeAndFilter_FilterFunction_T) (uint8_t * bufferIn, uint32_t bufferInSize, uint8_t * bufferOut, uint32_t * bufferOutSize);
+typedef Retcode_T (*PipeAndFilter_FilterFunction_T)(uint8_t *bufferIn, uint32_t bufferInSize, uint8_t *bufferOut, uint32_t *bufferOutSize);
 
 /**
  * @brief
  *     Will contain a pointer to an internal pipe structure.
  *     In case of Carbon, it will contain a stream-buffer handle.
  */
-typedef void * PipeAndFilter_PipeInternalHandle_T;
+typedef void *PipeAndFilter_PipeInternalHandle_T;
 
 /**
  * @brief
  *     Will contain a pointer to an internal filter handle structure.
  *     In case of Carbon, it will contain a task handle.
  */
-typedef void * PipeAndFilter_FilterInternalHandle_T;
-
+typedef void *PipeAndFilter_FilterInternalHandle_T;
 
 /**
  * @brief
@@ -84,9 +83,9 @@ typedef void * PipeAndFilter_FilterInternalHandle_T;
  */
 typedef struct PipeAndFilter_Pipe_S
 {
-	PipeAndFilter_FilterInternalHandle_T filterInternalHandle; /**< link to the receiver handle */
-	PipeAndFilter_PipeInternalHandle_T pipeInternalHandle; /**< link to the pipe handle */
-}PipeAndFilter_Pipe_T;
+    PipeAndFilter_FilterInternalHandle_T filterInternalHandle; /**< link to the receiver handle */
+    PipeAndFilter_PipeInternalHandle_T pipeInternalHandle;     /**< link to the pipe handle */
+} PipeAndFilter_Pipe_T;
 
 /**
  * @brief
@@ -96,12 +95,11 @@ typedef struct PipeAndFilter_Pipe_S
  */
 typedef struct PipeAndFilter_Filter_S
 {
-	PipeAndFilter_FilterFunction_T filterFunction; /**< filter function to call */
-	PipeAndFilter_Pipe_T * pipeInHandle; /**< Pipe as input */
-	PipeAndFilter_Pipe_T * pipeOutHandle; /**< Pipe as output */
-	PipeAndFilter_FilterInternalHandle_T filterInternalHandle; /**< Internal handle */
+    PipeAndFilter_FilterFunction_T filterFunction;             /**< filter function to call */
+    PipeAndFilter_Pipe_T *pipeInHandle;                        /**< Pipe as input */
+    PipeAndFilter_Pipe_T *pipeOutHandle;                       /**< Pipe as output */
+    PipeAndFilter_FilterInternalHandle_T filterInternalHandle; /**< Internal handle */
 } PipeAndFilter_Filter_T;
-
 
 /******** Creational *********/
 /**
@@ -128,7 +126,7 @@ typedef struct PipeAndFilter_Filter_S
  * @endcode
  *
  */
-Retcode_T PipeAndFilter_CreatePipe(PipeAndFilter_Pipe_T * pipeHandle);
+Retcode_T PipeAndFilter_CreatePipe(PipeAndFilter_Pipe_T *pipeHandle);
 
 /**
  * @brief
@@ -186,7 +184,7 @@ Retcode_T PipeAndFilter_CreatePipe(PipeAndFilter_Pipe_T * pipeHandle);
  * @endcode
  * 
  */
-Retcode_T PipeAndFilter_CreateFilter(PipeAndFilter_FilterFunction_T filterFunction, PipeAndFilter_Pipe_T * pipeInHandle, PipeAndFilter_Pipe_T * pipeOutHandle, PipeAndFilter_Filter_T * filterHandle);
+Retcode_T PipeAndFilter_CreateFilter(PipeAndFilter_FilterFunction_T filterFunction, PipeAndFilter_Pipe_T *pipeInHandle, PipeAndFilter_Pipe_T *pipeOutHandle, PipeAndFilter_Filter_T *filterHandle);
 
 /******** Behavioral *********/
 /**
@@ -214,7 +212,7 @@ Retcode_T PipeAndFilter_CreateFilter(PipeAndFilter_FilterFunction_T filterFuncti
  * @endcode
  * 
  */
-Retcode_T PipeAndFilter_FillPipe(PipeAndFilter_Pipe_T pipe, uint8_t * xTxBuffer, uint32_t xToSendBytes);
+Retcode_T PipeAndFilter_FillPipe(PipeAndFilter_Pipe_T pipe, uint8_t *xTxBuffer, uint32_t xToSendBytes);
 
 /**
  * @brief
@@ -241,7 +239,7 @@ Retcode_T PipeAndFilter_FillPipe(PipeAndFilter_Pipe_T pipe, uint8_t * xTxBuffer,
  * @endcode
  * 
  */
-Retcode_T PipeAndFilter_FillPipeFromISR(PipeAndFilter_Pipe_T pipe, uint8_t * xTxBuffer, uint32_t xToSendBytes);
+Retcode_T PipeAndFilter_FillPipeFromISR(PipeAndFilter_Pipe_T pipe, uint8_t *xTxBuffer, uint32_t xToSendBytes);
 
 #endif /* if KISO_FEATURE_PIPEANDFILTER */
 

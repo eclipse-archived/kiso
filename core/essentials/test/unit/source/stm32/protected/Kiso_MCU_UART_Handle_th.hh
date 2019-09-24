@@ -17,12 +17,12 @@
 
 /* Include the needed headers */
 
-#if defined (stm32l4)
-    #include "stm32l4/Kiso_MCU_STM32L4_UART_Handle_th.hh"
-#elif defined (stm32f7)
-     #include "stm32f7/Kiso_MCU_STM32F7_UART_Handle_th.hh"
+#if defined(stm32l4)
+#include "stm32l4/Kiso_MCU_STM32L4_UART_Handle_th.hh"
+#elif defined(stm32f7)
+#include "stm32f7/Kiso_MCU_STM32F7_UART_Handle_th.hh"
 #else
-    #error "The STM32 family is not defined or not supported."
+#error "The STM32 family is not defined or not supported."
 #endif
 
 /* wrap the real interface header */

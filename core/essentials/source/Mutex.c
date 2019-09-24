@@ -22,7 +22,6 @@
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_LOCK
 
-
 /* own header files */
 #include "Kiso_HAL_Mutex.h"
 
@@ -30,62 +29,53 @@
 #include "Kiso_Basics.h"
 #include "Cmsis.h"
 
-
-
 static Retcode_T NoOs_Mutex_Lock(HAL_Mutex_T *mutex);
 static Retcode_T NoOs_Mutex_Unlock(HAL_Mutex_T *mutex);
 
-
-static HAL_Mutex_Hook_T _HAL_Mutex_LockFunction 	= 	NoOs_Mutex_Lock;
-static HAL_Mutex_Hook_T _HAL_Mutex_UnlockFunction	= 	NoOs_Mutex_Unlock;
-
-
+static HAL_Mutex_Hook_T _HAL_Mutex_LockFunction = NoOs_Mutex_Lock;
+static HAL_Mutex_Hook_T _HAL_Mutex_UnlockFunction = NoOs_Mutex_Unlock;
 
 Retcode_T HAL_Mutex_SetHooks(HAL_Mutex_Hook_T lockHook, HAL_Mutex_Hook_T unlockHook)
 {
-	if( NULL != lockHook && NULL != unlockHook)
-	{
+    if (NULL != lockHook && NULL != unlockHook)
+    {
 
-		_HAL_Mutex_LockFunction 	= 	lockHook;
-		_HAL_Mutex_UnlockFunction 	= 	unlockHook;
+        _HAL_Mutex_LockFunction = lockHook;
+        _HAL_Mutex_UnlockFunction = unlockHook;
 
-		return RETCODE_OK;
-	}
-		return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NULL_POINTER);
+        return RETCODE_OK;
+    }
+    return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NULL_POINTER);
 }
-
 
 Retcode_T HAL_Mutex_Lock(HAL_Mutex_T *mutex)
 {
-	if(NULL != _HAL_Mutex_LockFunction)
-	{
-		return (_HAL_Mutex_LockFunction(mutex));
-	}
+    if (NULL != _HAL_Mutex_LockFunction)
+    {
+        return (_HAL_Mutex_LockFunction(mutex));
+    }
 
-	return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NULL_POINTER);
+    return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NULL_POINTER);
 }
-
 
 Retcode_T HAL_Mutex_Unlock(HAL_Mutex_T *mutex)
 {
-	if(NULL != _HAL_Mutex_UnlockFunction)
-	{
-		return (_HAL_Mutex_UnlockFunction(mutex));
-	}
+    if (NULL != _HAL_Mutex_UnlockFunction)
+    {
+        return (_HAL_Mutex_UnlockFunction(mutex));
+    }
 
-	return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NULL_POINTER);
+    return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NULL_POINTER);
 }
-
 
 static Retcode_T NoOs_Mutex_Lock(HAL_Mutex_T *mutex)
 {
-	KISO_UNUSED(mutex);
-	return RETCODE_OK;
+    KISO_UNUSED(mutex);
+    return RETCODE_OK;
 }
 
 static Retcode_T NoOs_Mutex_Unlock(HAL_Mutex_T *mutex)
 {
-	KISO_UNUSED(mutex);
-	return RETCODE_OK;
+    KISO_UNUSED(mutex);
+    return RETCODE_OK;
 }
-

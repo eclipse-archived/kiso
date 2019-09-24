@@ -20,7 +20,6 @@
 #include "em_wdog_th.hh"
 #include "em_rmu_th.hh"
 
-
 #if KISO_FEATURE_WATCHDOG
 
 /* include module under test */
@@ -28,19 +27,18 @@
 
 /* end of global scope symbol and fake definitions section */
 
-class EFM32_WATCHDOG_TEST: public testing::Test
+class EFM32_WATCHDOG_TEST : public testing::Test
 {
 protected:
-
     /* Watch-dog handle with init configuration */
     MCU_Watchdog_Init_T wdgInitStruct;
 
     virtual void SetUp()
     {
         FFF_RESET_HISTORY()
-        RESET_FAKE (WDOG_Init);
-        RESET_FAKE (WDOG_Enable);
-        RESET_FAKE (WDOG_Feed);
+        RESET_FAKE(WDOG_Init);
+        RESET_FAKE(WDOG_Enable);
+        RESET_FAKE(WDOG_Feed);
     }
 
     virtual void TearDown()

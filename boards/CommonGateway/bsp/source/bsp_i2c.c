@@ -38,18 +38,18 @@ void I2C3_ER_IRQHandler(void);
  * Variable storing I2C control block for the sensors.
  */
 struct MCU_I2C_S sensorsI2CStruct =
-        {
-                .TransferMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
-                .hi2c.Instance = I2C3,
-                .hi2c.Init.Timing = 0x10b0153d, // 400kHz; 200ns rise time 50ns fall time
-                .hi2c.Init.OwnAddress1 = 0,
-                .hi2c.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT,
-                .hi2c.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED,
-                .hi2c.Init.OwnAddress2 = 0,
-                .hi2c.Init.OwnAddress2Masks = I2C_OA2_NOMASK,
-                .hi2c.Init.GeneralCallMode = I2C_GENERALCALL_DISABLED,
-                .hi2c.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED,
-        };
+    {
+        .TransferMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
+        .hi2c.Instance = I2C3,
+        .hi2c.Init.Timing = 0x10b0153d, // 400kHz; 200ns rise time 50ns fall time
+        .hi2c.Init.OwnAddress1 = 0,
+        .hi2c.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT,
+        .hi2c.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED,
+        .hi2c.Init.OwnAddress2 = 0,
+        .hi2c.Init.OwnAddress2Masks = I2C_OA2_NOMASK,
+        .hi2c.Init.GeneralCallMode = I2C_GENERALCALL_DISABLED,
+        .hi2c.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED,
+};
 
 uint8_t i2c3ConnectedState = 0;
 uint8_t i2c3EnabledState = 0;
@@ -64,7 +64,7 @@ Retcode_T I2C_Connect(enum BSP_I2c_Devices id)
 {
     if (0 == i2c3ConnectedState)
     {
-        GPIO_InitTypeDef BSP_GPIOInitStruct = { 0 };
+        GPIO_InitTypeDef BSP_GPIOInitStruct = {0};
 
         GPIO_OpenClockGate(GPIO_PORT_C, PINC_SENS_SCL | PINC_SENS_SDA);
         BSP_GPIOInitStruct.Pin = PINC_SENS_SCL | PINC_SENS_SDA;
@@ -159,7 +159,7 @@ void I2C3_EV_IRQHandler(void)
 {
     if (NULL != sensorsI2CStruct.IRQCallback)
     {
-        sensorsI2CStruct.IRQCallback((I2C_T) &sensorsI2CStruct);
+        sensorsI2CStruct.IRQCallback((I2C_T)&sensorsI2CStruct);
     }
 }
 
@@ -171,7 +171,7 @@ void I2C3_ER_IRQHandler(void)
     {
         if (NULL != sensorsI2CStruct.ERRCallback)
         {
-            sensorsI2CStruct.ERRCallback((I2C_T) &sensorsI2CStruct);
+            sensorsI2CStruct.ERRCallback((I2C_T)&sensorsI2CStruct);
         }
     }
 }

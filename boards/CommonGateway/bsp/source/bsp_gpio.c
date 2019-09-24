@@ -37,28 +37,28 @@ void GPIO_OpenClockGate(enum GPIO_Ports_E port, uint16_t pinNames)
 {
     switch (port)
     {
-        case GPIO_PORT_A:
-            gpioA |= pinNames;
-            BITBAND_GPIOAEN_BIT = 1;
-            break;
-        case GPIO_PORT_B:
-            gpioB |= pinNames;
-            BITBAND_GPIOBEN_BIT = 1;
-            break;
-        case GPIO_PORT_C:
-            gpioC |= pinNames;
-            BITBAND_GPIOCEN_BIT = 1;
-            break;
-        case GPIO_PORT_D:
-            gpioD |= pinNames;
-            BITBAND_GPIODEN_BIT = 1;
-            break;
-        case GPIO_PORT_E:
-            gpioB |= pinNames;
-            BITBAND_GPIOEEN_BIT = 1;
-            break;
-        default:
-            break;
+    case GPIO_PORT_A:
+        gpioA |= pinNames;
+        BITBAND_GPIOAEN_BIT = 1;
+        break;
+    case GPIO_PORT_B:
+        gpioB |= pinNames;
+        BITBAND_GPIOBEN_BIT = 1;
+        break;
+    case GPIO_PORT_C:
+        gpioC |= pinNames;
+        BITBAND_GPIOCEN_BIT = 1;
+        break;
+    case GPIO_PORT_D:
+        gpioD |= pinNames;
+        BITBAND_GPIODEN_BIT = 1;
+        break;
+    case GPIO_PORT_E:
+        gpioB |= pinNames;
+        BITBAND_GPIOEEN_BIT = 1;
+        break;
+    default:
+        break;
     }
 }
 
@@ -69,44 +69,44 @@ void GPIO_CloseClockGate(enum GPIO_Ports_E port, uint16_t pinNames)
 {
     switch (port)
     {
-        case GPIO_PORT_A:
-            gpioA &= ~pinNames;
-            if (!gpioA)
-            {
-                BITBAND_GPIOAEN_BIT = 0;
-            }
-            break;
-        case GPIO_PORT_B:
-            gpioB &= ~pinNames;
-            if (!gpioB)
-            {
-                BITBAND_GPIOBEN_BIT = 0;
-            }
-            
-            break;
-        case GPIO_PORT_C:
-            gpioC &= ~pinNames;
-            if (!gpioC) 
-            {
-                BITBAND_GPIOCEN_BIT = 0;
-            }
-            break;
-        case GPIO_PORT_D:
-            gpioD &= ~pinNames;
-            if (!gpioD)
-            {
-                BITBAND_GPIODEN_BIT = 0;
-            }
-            break;
-        case GPIO_PORT_E:
-            gpioE &= ~pinNames;
-            if (!gpioE)
-            {
-                BITBAND_GPIOEEN_BIT = 0;
-            }
-            break;
-        default:
-            break;
+    case GPIO_PORT_A:
+        gpioA &= ~pinNames;
+        if (!gpioA)
+        {
+            BITBAND_GPIOAEN_BIT = 0;
+        }
+        break;
+    case GPIO_PORT_B:
+        gpioB &= ~pinNames;
+        if (!gpioB)
+        {
+            BITBAND_GPIOBEN_BIT = 0;
+        }
+
+        break;
+    case GPIO_PORT_C:
+        gpioC &= ~pinNames;
+        if (!gpioC)
+        {
+            BITBAND_GPIOCEN_BIT = 0;
+        }
+        break;
+    case GPIO_PORT_D:
+        gpioD &= ~pinNames;
+        if (!gpioD)
+        {
+            BITBAND_GPIODEN_BIT = 0;
+        }
+        break;
+    case GPIO_PORT_E:
+        gpioE &= ~pinNames;
+        if (!gpioE)
+        {
+            BITBAND_GPIOEEN_BIT = 0;
+        }
+        break;
+    default:
+        break;
     }
 }
 
@@ -118,23 +118,23 @@ bool GPIO_GetClockGate(enum GPIO_Ports_E port)
     bool result;
     switch (port)
     {
-        case GPIO_PORT_A:
-            result = (bool) gpioA;
-            break;
-        case GPIO_PORT_B:
-            result = (bool) gpioB;
-            break;
-        case GPIO_PORT_C:
-            result = (bool) gpioC;
-            break;
-        case GPIO_PORT_D:
-            result = (bool) gpioD;
-            break;
-        case GPIO_PORT_E:
-            result = (bool) gpioE;
-            break;
-        default:
-            result = false;
+    case GPIO_PORT_A:
+        result = (bool)gpioA;
+        break;
+    case GPIO_PORT_B:
+        result = (bool)gpioB;
+        break;
+    case GPIO_PORT_C:
+        result = (bool)gpioC;
+        break;
+    case GPIO_PORT_D:
+        result = (bool)gpioD;
+        break;
+    case GPIO_PORT_E:
+        result = (bool)gpioE;
+        break;
+    default:
+        result = false;
     }
     return result;
 }

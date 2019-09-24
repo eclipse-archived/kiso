@@ -56,13 +56,13 @@ Retcode_T Retcode_Initialize(Retcode_ErrorHandlingFunc_T func)
 {
     Retcode_T Rc;
 
-    if(IsRetcodeModuleInitialized)
+    if (IsRetcodeModuleInitialized)
     {
         /* Already initialized. */
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSITENT_STATE);
     }
 
-    if(NULL == func)
+    if (NULL == func)
     {
         Rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
     }
@@ -81,7 +81,7 @@ void Retcode_RaiseError(Retcode_T error)
     /* If it asserts here, Retcode_initialize() is not done */
     assert(errorHandlingFunc);
 
-	errorHandlingFunc(error, false);
+    errorHandlingFunc(error, false);
 }
 
 /* The description of the function is available in header file */

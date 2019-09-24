@@ -47,7 +47,7 @@ extern "C"
 /* Include module under test */
 #include "GuardedTask.c"
 
- /* End of global scope symbol and fake definitions section */
+    /* End of global scope symbol and fake definitions section */
 }
 
 static bool runFunctionCalled = false;
@@ -57,16 +57,16 @@ static void dummyRunFunction(void)
     runFunctionCalled = true;
 }
 
-class guardedTask: public testing::Test
+class guardedTask : public testing::Test
 {
 public:
     GuardedTask_T guardTask;
 
-    protected:
+protected:
     virtual void SetUp()
     {
-        guardTask.task = (TaskHandle_t) 1;
-        guardTask.signal = (SemaphoreHandle_t) 1;
+        guardTask.task = (TaskHandle_t)1;
+        guardTask.signal = (SemaphoreHandle_t)1;
         guardTask.runFunction = &dummyRunFunction;
         runFunctionCalled = false;
         RESET_FAKE(xTaskCreate);
@@ -92,11 +92,11 @@ TEST_F(guardedTask, GuardedTaskInitializeInvalidParam1)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    GuardedTask_T* handle = NULL;
+    GuardedTask_T *handle = NULL;
     Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = GuardedTask_Initialize(handle, &dummyRunFunction, (const char*) NULL, 0, 0);
+    retVal = GuardedTask_Initialize(handle, &dummyRunFunction, (const char *)NULL, 0, 0);
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
@@ -118,7 +118,7 @@ TEST_F(guardedTask, GuardedTaskInitializeInvalidParam2)
     Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = GuardedTask_Initialize(&handleBlock, &dummyRunFunction, (const char*) NULL, 0, 0);
+    retVal = GuardedTask_Initialize(&handleBlock, &dummyRunFunction, (const char *)NULL, 0, 0);
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
@@ -140,7 +140,7 @@ TEST_F(guardedTask, GuardedTaskInitializeInvalidParam3)
     Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = GuardedTask_Initialize(&handleBlock, NULL, (const char*) "abc", 0, 0);
+    retVal = GuardedTask_Initialize(&handleBlock, NULL, (const char *)"abc", 0, 0);
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
@@ -161,18 +161,19 @@ TEST_F(guardedTask, GuardedTaskInitializeTaskFail)
     GuardedTask_T handleBlock;
     Retcode_T retVal;
     xTaskCreate_fake.return_val = pdFAIL;
-    xSemaphoreCreateBinary_fake.return_val = (SemaphoreHandle_t) 1;
-    xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t) 1;
+    xSemaphoreCreateBinary_fake.return_val = (SemaphoreHandle_t)1;
+    xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t)1;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = GuardedTask_Initialize(&handleBlock, &dummyRunFunction, (const char*) "abc", 0, 0);
+    retVal = GuardedTask_Initialize(&handleBlock, &dummyRunFunction, (const char *)"abc", 0, 0);
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OUT_OF_RESOURCES, Retcode_GetCode(retVal));
     EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retVal));
     EXPECT_EQ(UINT32_C(1), xTaskCreate_fake.call_count);
     EXPECT_EQ(UINT32_C(1), xSemaphoreCreateBinary_fake.call_count);
-    EXPECT_EQ(UINT32_C(0), xSemaphoreCreateMutex_fake.call_count);;
+    EXPECT_EQ(UINT32_C(0), xSemaphoreCreateMutex_fake.call_count);
+    ;
 }
 
 TEST_F(guardedTask, GuardedTaskInitializeSemaphoreBinaryFail)
@@ -186,18 +187,19 @@ TEST_F(guardedTask, GuardedTaskInitializeSemaphoreBinaryFail)
     GuardedTask_T handleBlock;
     Retcode_T retVal;
     xTaskCreate_fake.return_val = pdPASS;
-    xSemaphoreCreateBinary_fake.return_val = (SemaphoreHandle_t) NULL;
-    xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t) 1;
+    xSemaphoreCreateBinary_fake.return_val = (SemaphoreHandle_t)NULL;
+    xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t)1;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = GuardedTask_Initialize(&handleBlock, &dummyRunFunction, (const char*) "abc", 0, 0);
+    retVal = GuardedTask_Initialize(&handleBlock, &dummyRunFunction, (const char *)"abc", 0, 0);
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OUT_OF_RESOURCES, Retcode_GetCode(retVal));
     EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retVal));
     EXPECT_EQ(UINT32_C(0), xTaskCreate_fake.call_count);
     EXPECT_EQ(UINT32_C(1), xSemaphoreCreateBinary_fake.call_count);
-    EXPECT_EQ(UINT32_C(0), xSemaphoreCreateMutex_fake.call_count);;
+    EXPECT_EQ(UINT32_C(0), xSemaphoreCreateMutex_fake.call_count);
+    ;
 }
 
 TEST_F(guardedTask, GuardedTaskInitializeSuccess)
@@ -211,11 +213,11 @@ TEST_F(guardedTask, GuardedTaskInitializeSuccess)
     GuardedTask_T handleBlock;
     Retcode_T retVal;
     xTaskCreate_fake.return_val = pdPASS;
-    xSemaphoreCreateBinary_fake.return_val = (SemaphoreHandle_t) 1;
-    xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t) 1;
+    xSemaphoreCreateBinary_fake.return_val = (SemaphoreHandle_t)1;
+    xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t)1;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = GuardedTask_Initialize(&handleBlock, &dummyRunFunction, (const char*) "abc", 0, 0);
+    retVal = GuardedTask_Initialize(&handleBlock, &dummyRunFunction, (const char *)"abc", 0, 0);
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -234,14 +236,14 @@ TEST_F(guardedTask, GuardedTaskDeinitializeInvalidParam1)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    GuardedTask_T* handle = NULL;
+    GuardedTask_T *handle = NULL;
     Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = GuardedTask_Deinitialize(handle);
 
     /* VERIFY : Compare the expected with actual */
-    EXPECT_NE(RETCODE_OK,Retcode_GetCode(retVal));
+    EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retVal));
     EXPECT_EQ(RETCODE_SEVERITY_ERROR, Retcode_GetSeverity(retVal));
 }
@@ -256,8 +258,8 @@ TEST_F(guardedTask, GuardedTaskDeinitializeSuccess)
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T handleBlock;
     Retcode_T retVal;
-    handleBlock.task = (TaskHandle_t) 1;
-    handleBlock.signal = (SemaphoreHandle_t) 1;
+    handleBlock.task = (TaskHandle_t)1;
+    handleBlock.signal = (SemaphoreHandle_t)1;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = GuardedTask_Deinitialize(&handleBlock);
@@ -281,7 +283,7 @@ TEST_F(guardedTask, GuardedTaskSignalInvalidParam1)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    GuardedTask_T* handle = NULL;
+    GuardedTask_T *handle = NULL;
     Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
@@ -329,7 +331,7 @@ TEST_F(guardedTask, GuardedTaskSignalSuccess)
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T handleBlock;
     Retcode_T retVal;
-    handleBlock.signal = (SemaphoreHandle_t) 1;
+    handleBlock.signal = (SemaphoreHandle_t)1;
     xSemaphoreGive_fake.return_val = pdPASS;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
@@ -348,7 +350,7 @@ TEST_F(guardedTask, GuardedTaskSignalFromIsrInvalidParam1)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    GuardedTask_T* handle = NULL;
+    GuardedTask_T *handle = NULL;
     Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
@@ -396,7 +398,7 @@ TEST_F(guardedTask, GuardedTaskSignalFromIsrSuccess)
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T handleBlock;
     Retcode_T retVal;
-    handleBlock.signal = (SemaphoreHandle_t) 1;
+    handleBlock.signal = (SemaphoreHandle_t)1;
     xSemaphoreGiveFromISR_fake.return_val = pdPASS;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
@@ -415,7 +417,7 @@ TEST_F(guardedTask, guardedTaskExecuteInvalidParam1)
      */
 
     /* SETUP: Declare and initialize local variables required only by this test case */
-    GuardedTask_T* handle = NULL;
+    GuardedTask_T *handle = NULL;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     GuardedTaskExecute(handle);
@@ -434,7 +436,7 @@ TEST_F(guardedTask, guardedTaskExecuteTakeFail)
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T handleBlock;
     handleBlock.runFunction = &dummyRunFunction;
-    handleBlock.signal = (SemaphoreHandle_t) 1;
+    handleBlock.signal = (SemaphoreHandle_t)1;
     xSemaphoreTake_fake.return_val = pdFAIL;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
@@ -456,7 +458,7 @@ TEST_F(guardedTask, guardedTaskExecuteSuccess)
     /* SETUP: Declare and initialize local variables required only by this test case */
     GuardedTask_T handleBlock;
     handleBlock.runFunction = &dummyRunFunction;
-    handleBlock.signal = (SemaphoreHandle_t) 1;
+    handleBlock.signal = (SemaphoreHandle_t)1;
     xSemaphoreTake_fake.return_val = pdPASS;
     xSemaphoreGive_fake.return_val = pdPASS;
 

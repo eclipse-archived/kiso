@@ -27,13 +27,13 @@
 
 #if KISO_FEATURE_BSP_TEST_INTERFACE
 
-FAKE_VALUE_FUNC(Retcode_T, BSP_TestInterface_Connect )
-FAKE_VALUE_FUNC(Retcode_T, BSP_TestInterface_Enable )
-FAKE_VALUE_FUNC(Retcode_T, BSP_TestInterface_Disable )
-FAKE_VALUE_FUNC(Retcode_T, BSP_TestInterface_Disconnect )
-FAKE_VALUE_FUNC(HWHandle_T, BSP_TestInterface_GetUARTHandle )
-FAKE_VALUE_FUNC(HWHandle_T, BSP_TestInterface_GetSPIHandle )
-FAKE_VALUE_FUNC(HWHandle_T, BSP_TestInterface_GetUSBHandle )
+FAKE_VALUE_FUNC(Retcode_T, BSP_TestInterface_Connect)
+FAKE_VALUE_FUNC(Retcode_T, BSP_TestInterface_Enable)
+FAKE_VALUE_FUNC(Retcode_T, BSP_TestInterface_Disable)
+FAKE_VALUE_FUNC(Retcode_T, BSP_TestInterface_Disconnect)
+FAKE_VALUE_FUNC(HWHandle_T, BSP_TestInterface_GetUARTHandle)
+FAKE_VALUE_FUNC(HWHandle_T, BSP_TestInterface_GetSPIHandle)
+FAKE_VALUE_FUNC(HWHandle_T, BSP_TestInterface_GetUSBHandle)
 
 #endif /* KISO_FEATURE_BSP_TEST_INTERFACE */
 #endif /* KISO_BSP_TESTINTERFACE_TH_HH */

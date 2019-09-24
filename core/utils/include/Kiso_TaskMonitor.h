@@ -35,11 +35,9 @@
 /* Interface dependency checks */
 #include "Kiso_Retcode.h"
 
-
 /* FreeRTOS header files */
 #include "FreeRTOS.h"
 #include "task.h"
-
 
 /**
  * @brief
@@ -93,7 +91,7 @@ Retcode_T TaskMonitor_Register(TaskHandle_t task, uint32_t upperLimit);
  * 	    Count of ticks since vTaskStartScheduler was called
  *
  */
-void TaskMonitor_Update (unsigned int * taskTag, unsigned int tickCount);
+void TaskMonitor_Update(unsigned int *taskTag, unsigned int tickCount);
 
 /**
  * @brief

@@ -32,8 +32,8 @@
 /* configuration tests ****************************************************** */
 
 #if (KISO_FREE_RTOS_VERSION_MAJOR != tskKERNEL_VERSION_MAJOR) || \
-	(KISO_FREE_RTOS_VERSION_MINOR != tskKERNEL_VERSION_MINOR) || \
-	(KISO_FREE_RTOS_VERSION_BUILD != tskKERNEL_VERSION_BUILD)
+    (KISO_FREE_RTOS_VERSION_MINOR != tskKERNEL_VERSION_MINOR) || \
+    (KISO_FREE_RTOS_VERSION_BUILD != tskKERNEL_VERSION_BUILD)
 #error "The FreeRTOS library and the FreeRTOSConfig.h provided for the build have a version mismatch."
 #endif
 

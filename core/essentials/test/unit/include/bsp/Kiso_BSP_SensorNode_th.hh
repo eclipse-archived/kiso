@@ -27,12 +27,12 @@
 
 #if KISO_FEATURE_BSP_SENSOR_NODE
 
-FAKE_VALUE_FUNC(Retcode_T, BSP_SensorNode_Connect )
+FAKE_VALUE_FUNC(Retcode_T, BSP_SensorNode_Connect)
 FAKE_VALUE_FUNC(Retcode_T, BSP_SensorNode_Enable, uint32_t, BSP_Sensor_InterruptCallback_T)
 FAKE_VALUE_FUNC(Retcode_T, BSP_SensorNode_Disable, uint32_t)
-FAKE_VALUE_FUNC(Retcode_T, BSP_SensorNode_Disconnect )
-FAKE_VALUE_FUNC(HWHandle_T, BSP_SensorNode_GetI2CHandle )
-FAKE_VALUE_FUNC(bool, BSP_SensorNode_IsAllNodesDisabled )
+FAKE_VALUE_FUNC(Retcode_T, BSP_SensorNode_Disconnect)
+FAKE_VALUE_FUNC(HWHandle_T, BSP_SensorNode_GetI2CHandle)
+FAKE_VALUE_FUNC(bool, BSP_SensorNode_IsAllNodesDisabled)
 
 #endif /* KISO_FEATURE_BSP_SENSOR_NODE */
 #endif /* KISO_BSP_SENSORNODE_TH_HH */

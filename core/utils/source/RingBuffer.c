@@ -43,7 +43,7 @@
 #include "Kiso_Basics.h"
 #include "Kiso_Assert.h"
 
-static KISO_INLINE void Add(RingBuffer_T * ringBuffer, uint8_t element)
+static KISO_INLINE void Add(RingBuffer_T *ringBuffer, uint8_t element)
 {
     /* Load the writeIndex to avoid false intermediate values on the real write index */
     register uint32_t index = ringBuffer->WriteIndex;
@@ -56,7 +56,7 @@ static KISO_INLINE void Add(RingBuffer_T * ringBuffer, uint8_t element)
     /* Now it is safe to read from the "old" index and write to the new index */
 }
 
-static KISO_INLINE uint8_t Get(RingBuffer_T * ringBuffer)
+static KISO_INLINE uint8_t Get(RingBuffer_T *ringBuffer)
 {
     /* Use a copy of the ReadIndex to avoid false intermediate values on the real read index
      * since it is also used in the write process (add) */
@@ -84,11 +84,11 @@ static KISO_INLINE bool RingBuffer_IsEmpty(RingBuffer_T *ringBuffer)
 }
 
 /*  The description of the function is available in Kiso_RingBuffer.h */
-void RingBuffer_Initialize(RingBuffer_T * ringBuffer, uint8_t * bufferSpace, uint32_t size)
+void RingBuffer_Initialize(RingBuffer_T *ringBuffer, uint8_t *bufferSpace, uint32_t size)
 {
     if ((NULL == ringBuffer) || (NULL == bufferSpace) || (0UL == size))
     {
-        Retcode_RaiseError (RETCODE( RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM));
+        Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM));
     }
     else
     {
@@ -101,7 +101,7 @@ void RingBuffer_Initialize(RingBuffer_T * ringBuffer, uint8_t * bufferSpace, uin
 }
 
 /*  The description of the function is available in Kiso_RingBuffer.h */
-uint32_t RingBuffer_Write(RingBuffer_T * ringBuffer, uint8_t * data, uint32_t length)
+uint32_t RingBuffer_Write(RingBuffer_T *ringBuffer, uint8_t *data, uint32_t length)
 {
     uint32_t actualLength = 0UL;
 
@@ -116,7 +116,7 @@ uint32_t RingBuffer_Write(RingBuffer_T * ringBuffer, uint8_t * data, uint32_t le
 }
 
 /*  The description of the function is available in Kiso_RingBuffer.h */
-uint32_t RingBuffer_Read(RingBuffer_T * ringBuffer, uint8_t * data, uint32_t length)
+uint32_t RingBuffer_Read(RingBuffer_T *ringBuffer, uint8_t *data, uint32_t length)
 {
     uint32_t actualLength = 0UL;
     if ((NULL != ringBuffer) && (NULL != data))
@@ -139,11 +139,11 @@ void RingBuffer_Reset(RingBuffer_T *ringBuffer)
         /* Reset the ring-buffer structure:buffer, index r/w */
         ringBuffer->ReadIndex = 0;
         ringBuffer->WriteIndex = 0;
-        (void) memset(ringBuffer->Base, 0x00, ringBuffer->Size);
+        (void)memset(ringBuffer->Base, 0x00, ringBuffer->Size);
     }
     else
     {
-        Retcode_RaiseError (RETCODE( RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM));
+        Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM));
     }
 }
 

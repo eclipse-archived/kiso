@@ -45,8 +45,8 @@
  * @return A #Retcode_T indicating the result of the procedure.
  */
 Retcode_T CellularDns_ResolveDomain(
-        const Cellular_DataContext_T* dataContext,
-        const char* fqdn,
-        Cellular_IpAddress_T* result);
+    const Cellular_DataContext_T *dataContext,
+    const char *fqdn,
+    Cellular_IpAddress_T *result);
 
 #endif /* KISO_CELLULARDNSSERVICE_H_ */

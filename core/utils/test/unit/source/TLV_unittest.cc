@@ -47,7 +47,7 @@ extern "C"
 /* Include module under test */
 #include "TLV.c"
 
-/* End of global scope symbol and fake definitions section */
+    /* End of global scope symbol and fake definitions section */
 }
 
 /* Create test fixture initializing all variables automatically */
@@ -82,27 +82,29 @@ typedef enum tlvTestValueID_e
 
 typedef struct string_s
 {
-    const char* string;
+    const char *string;
     uint16_t Length;
 } string_t;
 
-#define STRING_LITERAL(string) {(string), (sizeof(string))}
+#define STRING_LITERAL(string)     \
+    {                              \
+        (string), (sizeof(string)) \
+    }
 
 const string_t tlvTestValuesTable[] =
     {
-    STRING_LITERAL(""),
-    STRING_LITERAL("2"),
-    STRING_LITERAL("33"),
-    STRING_LITERAL("444"),
-    STRING_LITERAL("testtesttest"),
-    STRING_LITERAL("blabla"),
-    STRING_LITERAL("00000000"),
-    STRING_LITERAL("\0\0\0\0 "),
-    STRING_LITERAL("!%/!/(/=(/=(!%=!%/+/!%=!%"),
-    STRING_LITERAL("                ")
-    };
+        STRING_LITERAL(""),
+        STRING_LITERAL("2"),
+        STRING_LITERAL("33"),
+        STRING_LITERAL("444"),
+        STRING_LITERAL("testtesttest"),
+        STRING_LITERAL("blabla"),
+        STRING_LITERAL("00000000"),
+        STRING_LITERAL("\0\0\0\0 "),
+        STRING_LITERAL("!%/!/(/=(/=(!%=!%/+/!%=!%"),
+        STRING_LITERAL("                ")};
 
-class TLV: public testing::Test
+class TLV : public testing::Test
 {
 protected:
     /* Remember that SetUp() is run immediately before a test starts. */
@@ -126,14 +128,14 @@ protected:
     {
         uint32_t groupHandleSize;
 
-        TLV_Element_T* Element = TLV_AddElement(TLV_AddGroup(DataBuffer, 256), TLV_TEST_TYPE_0, 1, "");
+        TLV_Element_T *Element = TLV_AddElement(TLV_AddGroup(DataBuffer, 256), TLV_TEST_TYPE_0, 1, "");
 
         if (Element)
         {
             /* Calculate group Handle Size based on the base address of the application Buffer
              * and the address of the created first Element
              */
-            groupHandleSize = (uint64_t) Element - (uint64_t) DataBuffer;
+            groupHandleSize = (uint64_t)Element - (uint64_t)DataBuffer;
         }
         else
         {
@@ -144,7 +146,7 @@ protected:
         return (groupHandleSize);
     }
 
-    uint8_t* DataBuffer;
+    uint8_t *DataBuffer;
     uint16_t dataBufferSize;
 };
 
@@ -165,7 +167,7 @@ protected:
  * - shall support only 32 bit architectures
  */
 
-TEST_F(TLV,tlvGroupAdd)
+TEST_F(TLV, tlvGroupAdd)
 {
     /**
      * @testcase{TLV::tlvGroupAdd: }
@@ -183,16 +185,15 @@ TEST_F(TLV,tlvGroupAdd)
         /* set up test case */
         typedef struct parameterSet_s
         {
-            void* Buffer;
+            void *Buffer;
             uint16_t bufferSize;
             bool expectedResult;
         } parameterSet_t;
 
         parameterSet_t parameterSet[] = {
-            { DataBuffer, dataBufferSize, true },
-            { NULL, dataBufferSize, false },
-            { DataBuffer, 0, false }
-        };
+            {DataBuffer, dataBufferSize, true},
+            {NULL, dataBufferSize, false},
+            {DataBuffer, 0, false}};
 
         for (uint8_t index = 0; index < (sizeof(parameterSet) / sizeof(parameterSet_t)); index++)
         {
@@ -217,7 +218,7 @@ TEST_F(TLV,tlvGroupAdd)
     }
 }
 
-TEST_F(TLV,tlvGroupRemove)
+TEST_F(TLV, tlvGroupRemove)
 {
     /**
      * @testcase{TLV::tlvGroupRemove: }
@@ -229,7 +230,7 @@ TEST_F(TLV,tlvGroupRemove)
     /* N/A */
 }
 
-TEST_F(TLV,tlvElementAdd)
+TEST_F(TLV, tlvElementAdd)
 {
     /**
      * @testcase{TLV::tlvElementAdd: }
@@ -243,7 +244,7 @@ TEST_F(TLV,tlvElementAdd)
 
     {
         TLV_GroupHandle_TP Handle;
-        TLV_Element_T* elementHandle;
+        TLV_Element_T *elementHandle;
         uint16_t testSpecificBufferSize;
 
         /* set up test case */
@@ -251,23 +252,22 @@ TEST_F(TLV,tlvElementAdd)
         {
             tlvTestTypes_t Type;
             uint16_t Length;
-            const void* Value;
+            const void *Value;
         } parameterSet_t;
 
         parameterSet_t parameterSet[] = {
             /* add new unique Element */
-            { TLV_TEST_TYPE_0, tlvTestValuesTable[TLV_TEST_VALUE_ID_2].Length, tlvTestValuesTable[TLV_TEST_VALUE_ID_2].string },
+            {TLV_TEST_TYPE_0, tlvTestValuesTable[TLV_TEST_VALUE_ID_2].Length, tlvTestValuesTable[TLV_TEST_VALUE_ID_2].string},
             /* add new unique Element */
-            { TLV_TEST_TYPE_1, tlvTestValuesTable[TLV_TEST_VALUE_ID_4].Length, tlvTestValuesTable[TLV_TEST_VALUE_ID_4].string },
+            {TLV_TEST_TYPE_1, tlvTestValuesTable[TLV_TEST_VALUE_ID_4].Length, tlvTestValuesTable[TLV_TEST_VALUE_ID_4].string},
             /* add new unique Element */
-            { TLV_TEST_TYPE_2, tlvTestValuesTable[TLV_TEST_VALUE_ID_3].Length, tlvTestValuesTable[TLV_TEST_VALUE_ID_3].string },
+            {TLV_TEST_TYPE_2, tlvTestValuesTable[TLV_TEST_VALUE_ID_3].Length, tlvTestValuesTable[TLV_TEST_VALUE_ID_3].string},
             /* update existing Element with shorter Value Length */
-            { TLV_TEST_TYPE_1, tlvTestValuesTable[TLV_TEST_VALUE_ID_1].Length, tlvTestValuesTable[TLV_TEST_VALUE_ID_1].string },
+            {TLV_TEST_TYPE_1, tlvTestValuesTable[TLV_TEST_VALUE_ID_1].Length, tlvTestValuesTable[TLV_TEST_VALUE_ID_1].string},
             /* add new unique Element */
-            { TLV_TEST_TYPE_3, tlvTestValuesTable[TLV_TEST_VALUE_ID_9].Length, tlvTestValuesTable[TLV_TEST_VALUE_ID_9].string },
+            {TLV_TEST_TYPE_3, tlvTestValuesTable[TLV_TEST_VALUE_ID_9].Length, tlvTestValuesTable[TLV_TEST_VALUE_ID_9].string},
             /* update previously added Element with longer Value Length */
-            { TLV_TEST_TYPE_3, tlvTestValuesTable[TLV_TEST_VALUE_ID_8].Length, tlvTestValuesTable[TLV_TEST_VALUE_ID_8].string }
-        };
+            {TLV_TEST_TYPE_3, tlvTestValuesTable[TLV_TEST_VALUE_ID_8].Length, tlvTestValuesTable[TLV_TEST_VALUE_ID_8].string}};
 
         typedef struct parameterSet2_s
         {
@@ -276,11 +276,10 @@ TEST_F(TLV,tlvElementAdd)
         } parameterSet2_t;
 
         parameterSet2_t parameterSet2[] = {
-            { TLV_TEST_TYPE_0, 0 },
-            { TLV_TEST_TYPE_1, 3 },
-            { TLV_TEST_TYPE_2, 2 },
-            { TLV_TEST_TYPE_3, 5 }
-        };
+            {TLV_TEST_TYPE_0, 0},
+            {TLV_TEST_TYPE_1, 3},
+            {TLV_TEST_TYPE_2, 2},
+            {TLV_TEST_TYPE_3, 5}};
 
         /* the test shall exercise use cases where the Buffer space would not
          * be sufficient to hold all TLVs - calculate required Size of unique
@@ -291,11 +290,11 @@ TEST_F(TLV,tlvElementAdd)
          * related information
          */
         testSpecificBufferSize = 4 * sizeof(TLV_Element_T) +
-            getGroupHandleSize() +
-            tlvTestValuesTable[TLV_TEST_VALUE_ID_2].Length +
-            tlvTestValuesTable[TLV_TEST_VALUE_ID_1].Length +
-            tlvTestValuesTable[TLV_TEST_VALUE_ID_3].Length +
-            tlvTestValuesTable[TLV_TEST_VALUE_ID_8].Length;
+                                 getGroupHandleSize() +
+                                 tlvTestValuesTable[TLV_TEST_VALUE_ID_2].Length +
+                                 tlvTestValuesTable[TLV_TEST_VALUE_ID_1].Length +
+                                 tlvTestValuesTable[TLV_TEST_VALUE_ID_3].Length +
+                                 tlvTestValuesTable[TLV_TEST_VALUE_ID_8].Length;
 
         ASSERT_LE(testSpecificBufferSize, dataBufferSize);
 
@@ -310,8 +309,8 @@ TEST_F(TLV,tlvElementAdd)
             elementHandle = TLV_AddElement(Handle, parameterSet[index].Type, parameterSet[index].Length, parameterSet[index].Value);
 
             /* check test results */
-            ASSERT_NE((TLV_Element_T*)NULL, elementHandle)<< "Test set index: " << (char)('0' + index) << "";
-            EXPECT_NE((uint8_t*)NULL, elementHandle->DataBuffer);
+            ASSERT_NE((TLV_Element_T *)NULL, elementHandle) << "Test set index: " << (char)('0' + index) << "";
+            EXPECT_NE((uint8_t *)NULL, elementHandle->DataBuffer);
             EXPECT_EQ(parameterSet[index].Type, elementHandle->DataType);
             EXPECT_EQ(parameterSet[index].Length, elementHandle->DataLength);
             EXPECT_EQ(0, memcmp(elementHandle->DataBuffer, parameterSet[index].Value, parameterSet[index].Length));
@@ -321,15 +320,15 @@ TEST_F(TLV,tlvElementAdd)
         for (uint8_t index = 0; index < (sizeof(parameterSet2) / sizeof(parameterSet2_t)); index++)
         {
             elementHandle = TLV_GetElement(Handle, parameterSet2[index].Type);
-            ASSERT_NE((TLV_Element_T*)NULL, elementHandle)<< "Test set index: " << (char)('0' + index) << "";
+            ASSERT_NE((TLV_Element_T *)NULL, elementHandle) << "Test set index: " << (char)('0' + index) << "";
             EXPECT_EQ(0, memcmp(elementHandle->DataBuffer,
-                parameterSet[parameterSet2[index].parameterSetTableIndex].Value,
-                parameterSet[parameterSet2[index].parameterSetTableIndex].Length));
+                                parameterSet[parameterSet2[index].parameterSetTableIndex].Value,
+                                parameterSet[parameterSet2[index].parameterSetTableIndex].Length));
         }
 
         /* Testing the negative case by invalid Buffer Length as parameter */
         uint8_t TestdataBuffer[5];
-        testSpecificBufferSize  = 7;
+        testSpecificBufferSize = 7;
         Handle = TLV_AddGroup(TestdataBuffer, testSpecificBufferSize);
         EXPECT_EQ((TLV_GroupHandle_TP)NULL, Handle);
 
@@ -338,7 +337,7 @@ TEST_F(TLV,tlvElementAdd)
     }
 }
 
-TEST_F(TLV,tlvElementRemove)
+TEST_F(TLV, tlvElementRemove)
 {
     /**
      * @testcase{TLV::tlvElementRemove: }
@@ -363,29 +362,29 @@ TEST_F(TLV,tlvElementRemove)
         TLV_AddElement(Handle, TLV_TEST_TYPE_7, tlvTestValuesTable[TLV_TEST_VALUE_ID_9].Length, tlvTestValuesTable[TLV_TEST_VALUE_ID_9].string);
 
         /* stop test run if set up phase fails */
-        ASSERT_NE((TLV_Element_T*)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_4));
-        ASSERT_NE((TLV_Element_T*)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_5));
-        ASSERT_NE((TLV_Element_T*)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_6));
-        ASSERT_NE((TLV_Element_T*)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_7));
+        ASSERT_NE((TLV_Element_T *)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_4));
+        ASSERT_NE((TLV_Element_T *)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_5));
+        ASSERT_NE((TLV_Element_T *)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_6));
+        ASSERT_NE((TLV_Element_T *)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_7));
 
         /* call function under test */
         TLV_RemoveElement(Handle, TLV_TEST_TYPE_3);
         TLV_RemoveElement(Handle, TLV_TEST_TYPE_5);
         TLV_RemoveElement(Handle, TLV_TEST_TYPE_7);
-        TLV_RemoveElement((TLV_GroupHandle_TP) NULL, TLV_TEST_TYPE_6);
+        TLV_RemoveElement((TLV_GroupHandle_TP)NULL, TLV_TEST_TYPE_6);
 
         /* check test results */
-        EXPECT_NE((TLV_Element_T*)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_4));
-        EXPECT_EQ((TLV_Element_T*)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_5));
-        EXPECT_NE((TLV_Element_T*)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_6));
-        EXPECT_EQ((TLV_Element_T*)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_7));
+        EXPECT_NE((TLV_Element_T *)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_4));
+        EXPECT_EQ((TLV_Element_T *)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_5));
+        EXPECT_NE((TLV_Element_T *)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_6));
+        EXPECT_EQ((TLV_Element_T *)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_7));
 
         /* clean up resources */
         TLV_RemoveGroup(Handle);
     }
 }
 
-TEST_F(TLV,tlvElementGet)
+TEST_F(TLV, tlvElementGet)
 {
     /**
      * @testcase{TLV::tlvElementGet: }
@@ -398,7 +397,7 @@ TEST_F(TLV,tlvElementGet)
 
     {
         TLV_GroupHandle_TP Handle;
-        TLV_Element_T* elementHandle;
+        TLV_Element_T *elementHandle;
 
         /* set up test case */
         Handle = TLV_AddGroup(DataBuffer, dataBufferSize);
@@ -410,12 +409,11 @@ TEST_F(TLV,tlvElementGet)
         } parameterSet_t;
 
         parameterSet_t parameterSet[] = {
-            { TLV_TEST_TYPE_0, false },
-            { TLV_TEST_TYPE_3, false },
-            { TLV_TEST_TYPE_7, true },
-            { TLV_TEST_TYPE_8, true },
-            { TLV_TEST_TYPE_9, false }
-        };
+            {TLV_TEST_TYPE_0, false},
+            {TLV_TEST_TYPE_3, false},
+            {TLV_TEST_TYPE_7, true},
+            {TLV_TEST_TYPE_8, true},
+            {TLV_TEST_TYPE_9, false}};
 
         /* stop test run if set up phase fails */
         ASSERT_NE((TLV_GroupHandle_TP)NULL, Handle);
@@ -437,26 +435,26 @@ TEST_F(TLV,tlvElementGet)
             if (parameterSet[index].expectedResult)
             {
                 /* API call should return a valid Handle */
-                EXPECT_NE((TLV_Element_T*)NULL, elementHandle);
+                EXPECT_NE((TLV_Element_T *)NULL, elementHandle);
             }
             else
             {
                 /* API call should return invalid Handle */
-                EXPECT_EQ((TLV_Element_T*)NULL, elementHandle);
+                EXPECT_EQ((TLV_Element_T *)NULL, elementHandle);
             }
         }
 
         /* Testing the negative case by passing NULL as parameter */
         elementHandle = TLV_AddElement(Handle, TLV_TEST_TYPE_8, tlvTestValuesTable[TLV_TEST_VALUE_ID_8].Length, NULL);
-        EXPECT_EQ((TLV_Element_T*)NULL, elementHandle);
+        EXPECT_EQ((TLV_Element_T *)NULL, elementHandle);
 
         /* Testing the negative case by passing NULL as parameter */
         elementHandle = TLV_AddElement(NULL, TLV_TEST_TYPE_8, tlvTestValuesTable[TLV_TEST_VALUE_ID_8].Length, tlvTestValuesTable[TLV_TEST_VALUE_ID_8].string);
-        EXPECT_EQ((TLV_Element_T*)NULL, elementHandle);
+        EXPECT_EQ((TLV_Element_T *)NULL, elementHandle);
     }
 }
 
-TEST_F(TLV,IsElementValidFail)
+TEST_F(TLV, IsElementValidFail)
 {
     /**
      * @testcase{TLV::IsElementValidFail: }
@@ -470,9 +468,8 @@ TEST_F(TLV,IsElementValidFail)
     element.DataLength = 0U;
     status = IsElementValid(&element);
     EXPECT_EQ(0U, status);
-
 }
-TEST_F(TLV,GarbageCollectGroupTest)
+TEST_F(TLV, GarbageCollectGroupTest)
 {
     /**
      * @testcase{TLV::GarbageCollectGroupTest: }
@@ -485,20 +482,20 @@ TEST_F(TLV,GarbageCollectGroupTest)
     /* set up test case */
     typedef struct parameterSet_s
     {
-        void* Buffer;
+        void *Buffer;
         uint16_t bufferSize;
         bool expectedResult;
     } parameterSet_t;
 
     parameterSet_t parameterSet[] = {
-        { DataBuffer, dataBufferSize, true },
+        {DataBuffer, dataBufferSize, true},
     };
     /* call function under test */
     Handle = TLV_AddGroup(parameterSet[0].Buffer, parameterSet[0].bufferSize);
     (void)TLV_AddElement(Handle, TLV_TEST_TYPE_0, 0, "");
 
     sizeLeft = GarbageCollectGroup(Handle);
-    EXPECT_EQ((dataBufferSize-sizeof(TLV_Element_T)), sizeLeft);
+    EXPECT_EQ((dataBufferSize - sizeof(TLV_Element_T)), sizeLeft);
 }
 /** ************************************************************************* */
 #else

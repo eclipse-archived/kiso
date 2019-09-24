@@ -27,32 +27,29 @@ extern "C"
 #include "Kiso_Retcode_th.hh"
 #include "Kiso_Assert_th.hh"
 
-
 #include "em_device_th.hh"
 #include "em_int_th.hh"
 #include "em_emu_th.hh"
 
-/* Should go to a CoreInstruction Test Header */
-void __ISB(void);
-void __DSB(void);
-void __DMB(void);
-void __NOP(void);
+    /* Should go to a CoreInstruction Test Header */
+    void __ISB(void);
+    void __DSB(void);
+    void __DMB(void);
+    void __NOP(void);
 
-FAKE_VOID_FUNC(__ISB)
-FAKE_VOID_FUNC(__DSB)
-FAKE_VOID_FUNC(__DMB)
-FAKE_VOID_FUNC(__NOP)
+    FAKE_VOID_FUNC(__ISB)
+    FAKE_VOID_FUNC(__DSB)
+    FAKE_VOID_FUNC(__DMB)
+    FAKE_VOID_FUNC(__NOP)
 
 #include "Sleep.c"
-
 }
 
 /* end of global scope symbol and fake definitions section */
 
-class HAL_MCU_Sleep_Test: public testing::Test
+class HAL_MCU_Sleep_Test : public testing::Test
 {
 protected:
-
     virtual void SetUp()
     {
         FFF_RESET_HISTORY()
@@ -73,8 +70,6 @@ protected:
 
         RESET_FAKE(INT_Enable);
         RESET_FAKE(INT_Disable);
-
-
     }
 
     virtual void TearDown()
@@ -88,7 +83,6 @@ TEST_F(HAL_MCU_Sleep_Test, ModuleIdValidation)
     ASSERT_EQ(KISO_ESSENTIALS_MODULE_ID_SLEEP, KISO_MODULE_ID);
 }
 
-
 TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_Initialize)
 {
     Retcode_T rc;
@@ -96,12 +90,10 @@ TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_Initialize)
     rc = MCU_Sleep_Initialize();
 
     ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(0,SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(0,SleepBlockCounter[SleepMode_EM3 - 1]);
-
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     ASSERT_EQ(RETCODE_OK, rc);
-
 }
 
 /* ******************************************************************** */
@@ -110,36 +102,36 @@ TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_Initialize)
 
 TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_IncreaseCounter)
 {
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
 
     MCU_Sleep_IncreaseCounter(SleepMode_EM1);
 
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM1 - 1]);
 
     MCU_Sleep_IncreaseCounter(SleepMode_EM1);
 
-    ASSERT_EQ(2,  SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(2, SleepBlockCounter[SleepMode_EM1 - 1]);
 
     SleepBlockCounter[SleepMode_EM1 - 1] = UINT8_C(0xFF);
 
     MCU_Sleep_IncreaseCounter(SleepMode_EM1);
 
-    ASSERT_EQ(0xFF,  SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0xFF, SleepBlockCounter[SleepMode_EM1 - 1]);
 }
 
 TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_DecreaseCounter)
 {
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
 
     MCU_Sleep_DecreaseCounter(SleepMode_EM1);
 
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
 
     SleepBlockCounter[SleepMode_EM1 - 1] = UINT8_C(1);
 
     MCU_Sleep_DecreaseCounter(SleepMode_EM1);
 
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
 }
 
 /* ******************************************************************** */
@@ -210,38 +202,37 @@ TEST_F(HAL_MCU_Sleep_Test, MCU_Enter_SleepMode_EM4)
 TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_BlockSleepMode_FAIL)
 {
     Retcode_T rc;
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     /* Test EM1 */
     rc = MCU_Sleep_BlockSleepMode((uint32_t)SleepMode_EM3 + 1);
 
     ASSERT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
 
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     ASSERT_EQ(0, EMU_EM2Block_fake.call_count);
 }
 
-
 TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_BlockSleepMode_EM0)
 {
     Retcode_T rc;
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     /* Test EM1 */
     rc = MCU_Sleep_BlockSleepMode((uint32_t)SleepMode_EM0);
 
     ASSERT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
 
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     ASSERT_EQ(0, EMU_EM2Block_fake.call_count);
 }
@@ -249,18 +240,18 @@ TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_BlockSleepMode_EM0)
 TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_BlockSleepMode_EM1)
 {
     Retcode_T rc;
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     /* Test EM1 */
     rc = MCU_Sleep_BlockSleepMode((uint32_t)SleepMode_EM1);
 
     ASSERT_EQ(RETCODE_OK, rc);
 
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     ASSERT_EQ(0, EMU_EM2Block_fake.call_count);
 }
@@ -268,18 +259,18 @@ TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_BlockSleepMode_EM1)
 TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_BlockSleepMode_EM2)
 {
     Retcode_T rc;
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     /* Test EM1 */
     rc = MCU_Sleep_BlockSleepMode((uint32_t)SleepMode_EM2);
 
     ASSERT_EQ(RETCODE_OK, rc);
 
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     ASSERT_EQ(1, EMU_EM2Block_fake.call_count);
 }
@@ -287,18 +278,18 @@ TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_BlockSleepMode_EM2)
 TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_BlockSleepMode_EM3)
 {
     Retcode_T rc;
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     /* Test EM1 */
     rc = MCU_Sleep_BlockSleepMode((uint32_t)SleepMode_EM3);
 
     ASSERT_EQ(RETCODE_OK, rc);
 
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     ASSERT_EQ(0, EMU_EM2Block_fake.call_count);
 }
@@ -306,18 +297,18 @@ TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_BlockSleepMode_EM3)
 TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_BlockSleepMode_EM4)
 {
     Retcode_T rc;
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     /* Test EM1 */
     rc = MCU_Sleep_BlockSleepMode((uint32_t)SleepMode_EM3 + 1);
 
     ASSERT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
 
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     ASSERT_EQ(0, EMU_EM2Block_fake.call_count);
 }
@@ -328,22 +319,21 @@ TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_BlockSleepMode_EM4)
 TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_UnblockSleepMode_FAIL)
 {
     Retcode_T rc;
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     /* Test EM1 */
     rc = MCU_Sleep_UnblockSleepMode((uint32_t)SleepMode_EM3 + 1);
 
     ASSERT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
 
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     ASSERT_EQ(0, EMU_EM2UnBlock_fake.call_count);
 }
-
 
 TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_UnblockSleepMode_EM1)
 {
@@ -353,23 +343,21 @@ TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_UnblockSleepMode_EM1)
     SleepBlockCounter[SleepMode_EM2 - 1] = 1;
     SleepBlockCounter[SleepMode_EM3 - 1] = 1;
 
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM3 - 1]);
-
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     /* Test EM1 */
     rc = MCU_Sleep_UnblockSleepMode((uint32_t)SleepMode_EM1);
 
     ASSERT_EQ(RETCODE_OK, rc);
 
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     ASSERT_EQ(0, EMU_EM2UnBlock_fake.call_count);
 }
-
 
 TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_UnblockSleepMode_EM2)
 {
@@ -379,19 +367,18 @@ TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_UnblockSleepMode_EM2)
     SleepBlockCounter[SleepMode_EM2 - 1] = 2;
     SleepBlockCounter[SleepMode_EM3 - 1] = 1;
 
-
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(2,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(2, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     /* Test EM1 */
     rc = MCU_Sleep_UnblockSleepMode((uint32_t)SleepMode_EM2);
 
     ASSERT_EQ(RETCODE_OK, rc);
 
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     ASSERT_EQ(0, EMU_EM2UnBlock_fake.call_count);
 
@@ -399,14 +386,12 @@ TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_UnblockSleepMode_EM2)
 
     ASSERT_EQ(RETCODE_OK, rc);
 
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     ASSERT_EQ(1, EMU_EM2UnBlock_fake.call_count);
-
 }
-
 
 TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_UnblockSleepMode_EM3)
 {
@@ -416,22 +401,21 @@ TEST_F(HAL_MCU_Sleep_Test, MCU_Sleep_UnblockSleepMode_EM3)
     SleepBlockCounter[SleepMode_EM2 - 1] = 1;
     SleepBlockCounter[SleepMode_EM3 - 1] = 1;
 
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     /* Test EM1 */
     rc = MCU_Sleep_UnblockSleepMode((uint32_t)SleepMode_EM3);
 
     ASSERT_EQ(RETCODE_OK, rc);
 
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM1 - 1]);
-    ASSERT_EQ(1,  SleepBlockCounter[SleepMode_EM2 - 1]);
-    ASSERT_EQ(0,  SleepBlockCounter[SleepMode_EM3 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM1 - 1]);
+    ASSERT_EQ(1, SleepBlockCounter[SleepMode_EM2 - 1]);
+    ASSERT_EQ(0, SleepBlockCounter[SleepMode_EM3 - 1]);
 
     ASSERT_EQ(0, EMU_EM2UnBlock_fake.call_count);
 }
-
 
 TEST_F(HAL_MCU_Sleep_Test, GetLowestSleepMode)
 {
@@ -441,40 +425,39 @@ TEST_F(HAL_MCU_Sleep_Test, GetLowestSleepMode)
      */
     uint32_t mode;
 
-     /* Step 0 */
-     mode =  MCU_Sleep_GetLowestSleepMode(); /* Lowest SleepMode is 3 */
-     ASSERT_EQ(SleepMode_EM3,  mode);
+    /* Step 0 */
+    mode = MCU_Sleep_GetLowestSleepMode(); /* Lowest SleepMode is 3 */
+    ASSERT_EQ(SleepMode_EM3, mode);
 
-     /* Step 1*/
-     MCU_Sleep_BlockSleepMode(SleepMode_EM3); /* Block Sleep mode EM3. Lowest Sleep mode is 2 */
-     mode =  MCU_Sleep_GetLowestSleepMode();
-     ASSERT_EQ(SleepMode_EM2,  mode);
+    /* Step 1*/
+    MCU_Sleep_BlockSleepMode(SleepMode_EM3); /* Block Sleep mode EM3. Lowest Sleep mode is 2 */
+    mode = MCU_Sleep_GetLowestSleepMode();
+    ASSERT_EQ(SleepMode_EM2, mode);
 
-     /* Step 2 */
-     MCU_Sleep_BlockSleepMode(SleepMode_EM2); /* Block Sleep mode EM3. Lowest Sleep mode is 1 */
-     mode =  MCU_Sleep_GetLowestSleepMode();
-     ASSERT_EQ(SleepMode_EM1,  mode);
+    /* Step 2 */
+    MCU_Sleep_BlockSleepMode(SleepMode_EM2); /* Block Sleep mode EM3. Lowest Sleep mode is 1 */
+    mode = MCU_Sleep_GetLowestSleepMode();
+    ASSERT_EQ(SleepMode_EM1, mode);
 
-     /* Step 3*/
-     MCU_Sleep_BlockSleepMode(SleepMode_EM2); /* Block Sleep mode EM2. Lowest Sleep mode is still 1 */
-     mode =  MCU_Sleep_GetLowestSleepMode();
-     ASSERT_EQ(SleepMode_EM1,  mode);
+    /* Step 3*/
+    MCU_Sleep_BlockSleepMode(SleepMode_EM2); /* Block Sleep mode EM2. Lowest Sleep mode is still 1 */
+    mode = MCU_Sleep_GetLowestSleepMode();
+    ASSERT_EQ(SleepMode_EM1, mode);
 
-     /* Step 4 */
-     MCU_Sleep_UnblockSleepMode(SleepMode_EM3); /* Unblock Sleep mode EM3. Lowest Sleep mode is still 1 */
-     mode =  MCU_Sleep_GetLowestSleepMode();
-     ASSERT_EQ(SleepMode_EM1,  mode);
+    /* Step 4 */
+    MCU_Sleep_UnblockSleepMode(SleepMode_EM3); /* Unblock Sleep mode EM3. Lowest Sleep mode is still 1 */
+    mode = MCU_Sleep_GetLowestSleepMode();
+    ASSERT_EQ(SleepMode_EM1, mode);
 
-     /* Step 5 */
-     MCU_Sleep_UnblockSleepMode(SleepMode_EM2); /* Unblock Sleep mode EM2. Lowest Sleep mode is still 1 */
-     mode =  MCU_Sleep_GetLowestSleepMode();
-     ASSERT_EQ(SleepMode_EM1,  mode);
+    /* Step 5 */
+    MCU_Sleep_UnblockSleepMode(SleepMode_EM2); /* Unblock Sleep mode EM2. Lowest Sleep mode is still 1 */
+    mode = MCU_Sleep_GetLowestSleepMode();
+    ASSERT_EQ(SleepMode_EM1, mode);
 
-     /* Step 3 */
-     MCU_Sleep_UnblockSleepMode(SleepMode_EM2); /* Unblock Sleep mode EM2. Lowest Sleep mode now 3 */
-     mode =  MCU_Sleep_GetLowestSleepMode();
-     ASSERT_EQ(SleepMode_EM3,  mode);
-
+    /* Step 3 */
+    MCU_Sleep_UnblockSleepMode(SleepMode_EM2); /* Unblock Sleep mode EM2. Lowest Sleep mode now 3 */
+    mode = MCU_Sleep_GetLowestSleepMode();
+    ASSERT_EQ(SleepMode_EM3, mode);
 }
 
 #else

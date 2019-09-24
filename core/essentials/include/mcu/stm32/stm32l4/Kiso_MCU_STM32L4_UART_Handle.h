@@ -42,10 +42,10 @@ typedef enum MCU_UART_State_E
  */
 struct MCU_UART_Transcation_S
 {
-    uint8_t* pTransmitBuffer; /**< *pTransmitBuffer Reference to the transmit buffer for the current send transaction. */
-    uint16_t TransmitSize; /**< TransmitSize Transmit size. */
-    uint8_t* pReceiveBuffer; /**< *pReceiveBuffer Reference to the receive buffer for the current receiver transaction. */
-    uint16_t ReceivetSize; /**< ReceivetSize Receive size. */
+    uint8_t *pTransmitBuffer; /**< *pTransmitBuffer Reference to the transmit buffer for the current send transaction. */
+    uint16_t TransmitSize;    /**< TransmitSize Transmit size. */
+    uint8_t *pReceiveBuffer;  /**< *pReceiveBuffer Reference to the receive buffer for the current receiver transaction. */
+    uint16_t ReceivetSize;    /**< ReceivetSize Receive size. */
 };
 
 /* forward structure declaration */
@@ -55,21 +55,21 @@ struct MCU_UART_S;
  */
 struct MCU_UART_S
 {
-    UART_HandleTypeDef huart; /**< huart STM32L4 library UART Handle. */
-    enum KISO_HAL_TransferMode_E TxMode; /**< TxMode Transmitter mode (set by BSP) */
-    enum KISO_HAL_TransferMode_E RxMode; /**< RxMode Receiver mode (set by BSP). */
-    uint32_t Datarate; /**< Datarate Data rate in bauds (set by the BSP). */
-    MCU_UART_State_T TxState; /**< TxState State of the transmitter (internal use only). */
-    MCU_UART_State_T RxState; /**< RxState State of the receiver (internal use only). */
-    void (*IrqCallback)(UART_T uart); /**< IrqCallback Reference to the IRQ handler function (internal use only). */
-    void (*DmaRxCallback)(UART_T uart); /**< DmaRxCallback Reference to the  Rx DMA handler function (internal use only). */
-    void (*DmaTxCallback)(UART_T uart); /**< DmaTxCallback Reference to the  Rx DMA handler function (internal use only). */
-    MCU_UART_Callback_T AppCallback; /**< AppCallback Reference to the applications event handler function  (internal use only). */
-    Retcode_T (*SendFunc)(struct MCU_UART_S* uart); /**< SendFunc Reference to the sending function depending on the transmitter mode (internal use only).*/
-    Retcode_T (*ReceiveFunc)(struct MCU_UART_S* uart); /**< ReceiveFunc Reference to the receiving function depending on the receiver mode (internal use only). */
-    void (*AbortSendFunc)(struct MCU_UART_S* uart); /**< AbortSendFunc Reference to the canceling function depending on the transmitter mode (internal use only).*/
-    void (*AbortReceiveFunc)(struct MCU_UART_S* uart); /**< AbortReceiveFunc Reference to the canceling function depending on the receiver mode (internal use only). */
-    struct MCU_UART_Transcation_S Transaction; /**< Transaction Current transaction parameters.*/
+    UART_HandleTypeDef huart;                          /**< huart STM32L4 library UART Handle. */
+    enum KISO_HAL_TransferMode_E TxMode;               /**< TxMode Transmitter mode (set by BSP) */
+    enum KISO_HAL_TransferMode_E RxMode;               /**< RxMode Receiver mode (set by BSP). */
+    uint32_t Datarate;                                 /**< Datarate Data rate in bauds (set by the BSP). */
+    MCU_UART_State_T TxState;                          /**< TxState State of the transmitter (internal use only). */
+    MCU_UART_State_T RxState;                          /**< RxState State of the receiver (internal use only). */
+    void (*IrqCallback)(UART_T uart);                  /**< IrqCallback Reference to the IRQ handler function (internal use only). */
+    void (*DmaRxCallback)(UART_T uart);                /**< DmaRxCallback Reference to the  Rx DMA handler function (internal use only). */
+    void (*DmaTxCallback)(UART_T uart);                /**< DmaTxCallback Reference to the  Rx DMA handler function (internal use only). */
+    MCU_UART_Callback_T AppCallback;                   /**< AppCallback Reference to the applications event handler function  (internal use only). */
+    Retcode_T (*SendFunc)(struct MCU_UART_S *uart);    /**< SendFunc Reference to the sending function depending on the transmitter mode (internal use only).*/
+    Retcode_T (*ReceiveFunc)(struct MCU_UART_S *uart); /**< ReceiveFunc Reference to the receiving function depending on the receiver mode (internal use only). */
+    void (*AbortSendFunc)(struct MCU_UART_S *uart);    /**< AbortSendFunc Reference to the canceling function depending on the transmitter mode (internal use only).*/
+    void (*AbortReceiveFunc)(struct MCU_UART_S *uart); /**< AbortReceiveFunc Reference to the canceling function depending on the receiver mode (internal use only). */
+    struct MCU_UART_Transcation_S Transaction;         /**< Transaction Current transaction parameters.*/
 };
 
 #endif /* KISO_FEATURE_UART */

@@ -39,11 +39,10 @@
 
 FAKE_VALUE_FUNC(Retcode_T, MCU_SPI_Initialize, SPI_T, MCU_SPI_Callback_T)
 FAKE_VALUE_FUNC(Retcode_T, MCU_SPI_Deinitialize, SPI_T)
-FAKE_VALUE_FUNC(Retcode_T, MCU_SPI_Send, SPI_T, uint8_t*, uint32_t)
-FAKE_VALUE_FUNC(Retcode_T, MCU_SPI_Receive, SPI_T, uint8_t*, uint32_t)
-FAKE_VALUE_FUNC(Retcode_T, MCU_SPI_Transfer, SPI_T, uint8_t*, uint8_t*, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_SPI_Send, SPI_T, uint8_t *, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_SPI_Receive, SPI_T, uint8_t *, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_SPI_Transfer, SPI_T, uint8_t *, uint8_t *, uint32_t)
 FAKE_VALUE_FUNC(uint32_t, MCU_SPI_GetDataCount, SPI_T)
 
 #endif /* KISO_FEATURE_SPI */
 #endif /* KISO_MCU_SPI_TH_HH_*/
-

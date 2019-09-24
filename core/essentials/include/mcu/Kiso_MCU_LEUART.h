@@ -71,30 +71,29 @@ typedef HWHandle_T LEUART_T;
  */
 struct MCU_LEUART_Event_S
 {
-    uint32_t RxError :1; /**<  Some Receiver error has occurred. */
-    uint32_t RxComplete :1; /**< The expected bytes have been received. This
+    uint32_t RxError : 1;    /**<  Some Receiver error has occurred. */
+    uint32_t RxComplete : 1; /**< The expected bytes have been received. This
      event follows the call of MCU_LEUART_Receive(). It
      is only relevant when configured for
      non-blocking transmissions. */
-    uint32_t TxError :1; /**< Some transmitter error has occurred. This event
+    uint32_t TxError : 1;    /**< Some transmitter error has occurred. This event
      is only relevant when configured for
      non-blocking transmissions. */
-    uint32_t TxComplete :1; /**< All bytes passed with the last call of
+    uint32_t TxComplete : 1; /**< All bytes passed with the last call of
      MCU_LEUART_Send() are sent. This event is only
      relevant when configured for non-blocking
      transmissions. */
-    uint32_t Cts :1; /**< CTS (Clear To Send) line state has changed. */
-    uint32_t Dsr :1; /**< DSR (Data Set Ready) line state has changed. */
-    uint32_t Dcd :1; /**< DCD (Data Carrier Detect) line state has changed. */
-    uint32_t Ri :1; /**< RI (Ring Indicator) line state has changed. */
-	uint32_t Unused :24;
+    uint32_t Cts : 1;        /**< CTS (Clear To Send) line state has changed. */
+    uint32_t Dsr : 1;        /**< DSR (Data Set Ready) line state has changed. */
+    uint32_t Dcd : 1;        /**< DCD (Data Carrier Detect) line state has changed. */
+    uint32_t Ri : 1;         /**< RI (Ring Indicator) line state has changed. */
+    uint32_t Unused : 24;
 };
 
 /**
  * @brief Union grouping MCU_LEUART_Event_S structure to an uint32_t value
  */
-union MCU_LEUART_Event_U
-{
+union MCU_LEUART_Event_U {
     struct MCU_LEUART_Event_S bitfield;
     uint32_t registerValue;
 };
@@ -188,7 +187,7 @@ Retcode_T MCU_LEUART_Deinitialize(LEUART_T leuart);
  *
  * @return RETCODE_OK on successful send or an error code otherwise.
  */
-Retcode_T MCU_LEUART_Send(LEUART_T leuart, uint8_t * data, uint32_t len);
+Retcode_T MCU_LEUART_Send(LEUART_T leuart, uint8_t *data, uint32_t len);
 
 /**
  * @brief   Receiving data from the RT.
@@ -217,7 +216,7 @@ Retcode_T MCU_LEUART_Send(LEUART_T leuart, uint8_t * data, uint32_t len);
  *
  * @retval RETCODE_OK on success or an error code otherwise.
  */
-Retcode_T MCU_LEUART_Receive(LEUART_T leuart, uint8_t* data, uint32_t len);
+Retcode_T MCU_LEUART_Receive(LEUART_T leuart, uint8_t *data, uint32_t len);
 
 /**
  * @brief   Number of bytes available in the receiving buffer.
@@ -230,7 +229,7 @@ Retcode_T MCU_LEUART_Receive(LEUART_T leuart, uint8_t* data, uint32_t len);
  *
  * @return  returns RETCODE_OK on success, or an error code otherwise.
  */
-Retcode_T MCU_LEUART_GetRxCount(LEUART_T leuart, uint32_t* count);
+Retcode_T MCU_LEUART_GetRxCount(LEUART_T leuart, uint32_t *count);
 
 #endif /* KISO_FEATURE_LEUART */
 #endif /* KISO_MCU_LEUART_H_ */

@@ -33,20 +33,20 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#define CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT    (UINT32_C(1000))
-#define CELLULAR_POWER_STARTUP_DELAY            (pdMS_TO_TICKS(UINT32_C(5000)))
-#define CELLULAR_POWER_STARTUP_MAX_RETRY_COUNT  (UINT32_C(3))
-#define CELLULAR_POWER_STARTUP_RETRY_PERIOD     (UINT32_C(3000))
-#define CELLULAR_POWER_SOFT_RESET_PERIOD        (UINT32_C(3000))
+#define CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT (UINT32_C(1000))
+#define CELLULAR_POWER_STARTUP_DELAY (pdMS_TO_TICKS(UINT32_C(5000)))
+#define CELLULAR_POWER_STARTUP_MAX_RETRY_COUNT (UINT32_C(3))
+#define CELLULAR_POWER_STARTUP_RETRY_PERIOD (UINT32_C(3000))
+#define CELLULAR_POWER_SOFT_RESET_PERIOD (UINT32_C(3000))
 
-#define CELLULAR_POWER_RESET_MAX_RETRY_COUNT    (UINT32_C(4))
-#define CELLULAR_POWER_RESET_RETRY_PERIOD       (UINT32_C(1000))
+#define CELLULAR_POWER_RESET_MAX_RETRY_COUNT (UINT32_C(4))
+#define CELLULAR_POWER_RESET_RETRY_PERIOD (UINT32_C(1000))
 
-#define CELLULAR_POWER_SIM_UNLOCK_DELAY         (pdMS_TO_TICKS(UINT32_C(1000)))
+#define CELLULAR_POWER_SIM_UNLOCK_DELAY (pdMS_TO_TICKS(UINT32_C(1000)))
 
-#define CELLULAR_POWER_USE_HEX_MODE             (true)
+#define CELLULAR_POWER_USE_HEX_MODE (true)
 
-#define UBLOX_CFUN_FUN_SILENTRESET              ((AT_CFUN_Fun_T) 15)
+#define UBLOX_CFUN_FUN_SILENTRESET ((AT_CFUN_Fun_T)15)
 
 /**
  * @brief Check if the modem responds and is in AT mode.
@@ -76,7 +76,7 @@ static Retcode_T StartupCellular(void *parameter, uint32_t parameterLength);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-static Retcode_T ShutdownCellular(void* parameter, uint32_t parameterLength);
+static Retcode_T ShutdownCellular(void *parameter, uint32_t parameterLength);
 
 /**
  * @brief Reset the Cellular hardware and bring back into operating mode.
@@ -88,7 +88,7 @@ static Retcode_T ShutdownCellular(void* parameter, uint32_t parameterLength);
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-static Retcode_T ResetCellular(void* parameter, uint32_t parameterLength);
+static Retcode_T ResetCellular(void *parameter, uint32_t parameterLength);
 
 static bool IsPoweredOn = false;
 static char Pin[UBLOX_MAX_PIN_LENGTH + 1];
@@ -166,9 +166,8 @@ Retcode_T Power_SetupModem(void)
 
     if (RETCODE_OK == retcode)
     {
-    	LOG_DEBUG("Setting CMEE after startup.");
-    	retcode = At_Set_CMEE(0);
-
+        LOG_DEBUG("Setting CMEE after startup.");
+        retcode = At_Set_CMEE(0);
     }
 
     if (RETCODE_OK == retcode)
@@ -210,8 +209,7 @@ Retcode_T Power_SoftReset(void)
         {
             retcode = ProbeForResponsiveness();
             vTaskDelay(pdMS_TO_TICKS(CELLULAR_POWER_STARTUP_RETRY_PERIOD));
-        }
-        while (RETCODE_OK != retcode && attempt++ < CELLULAR_POWER_STARTUP_MAX_RETRY_COUNT);
+        } while (RETCODE_OK != retcode && attempt++ < CELLULAR_POWER_STARTUP_MAX_RETRY_COUNT);
     }
 
     if (RETCODE_OK == retcode)
@@ -236,7 +234,7 @@ static Retcode_T StartupCellular(void *parameter, uint32_t parameterLength)
     KISO_UNUSED(parameterLength);
     assert(NULL != parameter);
     assert(sizeof(Cellular_PowerUpParameters_T) == parameterLength);
-    const Cellular_PowerUpParameters_T* powerUpParam = (const Cellular_PowerUpParameters_T*) parameter;
+    const Cellular_PowerUpParameters_T *powerUpParam = (const Cellular_PowerUpParameters_T *)parameter;
 
     LOG_DEBUG("Powering up Cellular.");
 
@@ -297,9 +295,8 @@ static Retcode_T StartupCellular(void *parameter, uint32_t parameterLength)
             /* OK, modem is still not responding ... try resetting */
             LOG_WARNING("Cellular not responding, trying reset...");
             IsPoweredOn = false;
-            (void) ResetCellular(NULL, 0);
+            (void)ResetCellular(NULL, 0);
         }
-
     }
     else
     {
@@ -314,12 +311,12 @@ static Retcode_T StartupCellular(void *parameter, uint32_t parameterLength)
     return retcode;
 }
 
-static Retcode_T CheckCellular(void* parameter, uint32_t parameterLength)
+static Retcode_T CheckCellular(void *parameter, uint32_t parameterLength)
 {
     KISO_UNUSED(parameterLength);
-    assert(sizeof(bool*) == parameterLength);
+    assert(sizeof(bool *) == parameterLength);
     assert(NULL != parameter);
-    bool* isPoweredOn = (bool*) parameter;
+    bool *isPoweredOn = (bool *)parameter;
 
     Retcode_T retcode = RETCODE_OK;
 
@@ -336,7 +333,7 @@ static Retcode_T CheckCellular(void* parameter, uint32_t parameterLength)
     return retcode;
 }
 
-static Retcode_T ShutdownCellular(void* parameter, uint32_t parameterLength)
+static Retcode_T ShutdownCellular(void *parameter, uint32_t parameterLength)
 {
     KISO_UNUSED(parameter);
     KISO_UNUSED(parameterLength);
@@ -358,12 +355,12 @@ static Retcode_T ShutdownCellular(void* parameter, uint32_t parameterLength)
     return retcode;
 }
 
-static Retcode_T ResetCellular(void* parameter, uint32_t parameterLength)
+static Retcode_T ResetCellular(void *parameter, uint32_t parameterLength)
 {
     KISO_UNUSED(parameterLength);
     assert(NULL != parameter);
     assert(sizeof(Cellular_PowerUpParameters_T) == parameterLength);
-    const Cellular_PowerUpParameters_T* powerUpParam = (const Cellular_PowerUpParameters_T*) parameter;
+    const Cellular_PowerUpParameters_T *powerUpParam = (const Cellular_PowerUpParameters_T *)parameter;
 
     LOG_DEBUG("Resetting Cellular.");
 
@@ -429,7 +426,7 @@ static Retcode_T ResetCellular(void* parameter, uint32_t parameterLength)
     return retcode;
 }
 
-Retcode_T Cellular_PowerOn(const Cellular_PowerUpParameters_T* parameters)
+Retcode_T Cellular_PowerOn(const Cellular_PowerUpParameters_T *parameters)
 {
     if (NULL == parameters)
     {
@@ -437,7 +434,7 @@ Retcode_T Cellular_PowerOn(const Cellular_PowerUpParameters_T* parameters)
     }
     else
     {
-        return Engine_Dispatch(StartupCellular, CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT, (void*) parameters, sizeof(Cellular_PowerUpParameters_T));
+        return Engine_Dispatch(StartupCellular, CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT, (void *)parameters, sizeof(Cellular_PowerUpParameters_T));
     }
 }
 
@@ -446,7 +443,7 @@ Retcode_T Cellular_PowerOff(void)
     return Engine_Dispatch(ShutdownCellular, CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT, NULL, 0);
 }
 
-Retcode_T Cellular_Reset(const Cellular_PowerUpParameters_T* parameters)
+Retcode_T Cellular_Reset(const Cellular_PowerUpParameters_T *parameters)
 {
     if (NULL == parameters)
     {
@@ -454,11 +451,11 @@ Retcode_T Cellular_Reset(const Cellular_PowerUpParameters_T* parameters)
     }
     else
     {
-        return Engine_Dispatch(ResetCellular, CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT, (void*) parameters, sizeof(Cellular_PowerUpParameters_T));
+        return Engine_Dispatch(ResetCellular, CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT, (void *)parameters, sizeof(Cellular_PowerUpParameters_T));
     }
 }
 
-Retcode_T Cellular_IsPoweredOn(bool* isPoweredOn)
+Retcode_T Cellular_IsPoweredOn(bool *isPoweredOn)
 {
     if (NULL == isPoweredOn)
     {

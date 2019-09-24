@@ -80,7 +80,7 @@ typedef void (*OStoBSPDelayFunc_T)(uint32_t delay);
  *
  * @return      RETCODE_OK in the case of success or an error code otherwise.
  */
-Retcode_T BSP_Board_Initialize(uint32_t param1, void* param2);
+Retcode_T BSP_Board_Initialize(uint32_t param1, void *param2);
 
 /**
  * @brief       Switches between different power modes.

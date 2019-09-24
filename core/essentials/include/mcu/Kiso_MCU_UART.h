@@ -67,26 +67,24 @@ typedef HWHandle_T UART_T;
  */
 struct MCU_UART_Event_S
 {
-    uint32_t RxError        :1; /**<  Receiver error has occurred.*/
-    uint32_t RxComplete     :1; /**< The expected bytes have been received.*/
-    uint32_t RxAborted      :1; /**< The receive operation has been aborted for some reason (e.g error ).*/
-    uint32_t TxError        :1; /**< Transmitter error has occurred.*/
-    uint32_t TxComplete     :1; /**< All bytes have been sent.*/
-    uint32_t Cts            :1; /**< CTS (Clear To Send) line state has changed. */
-    uint32_t Dsr            :1; /**< DSR (Data Set Ready) line state has changed. */
-    uint32_t Dcd            :1; /**< DCD (Data Carrier Detect) line state has changed. */
-    uint32_t Ri             :1; /**< RI (Ring Indicator) line state has changed. */
-    uint32_t Unused         :24;
-
+    uint32_t RxError : 1;    /**<  Receiver error has occurred.*/
+    uint32_t RxComplete : 1; /**< The expected bytes have been received.*/
+    uint32_t RxAborted : 1;  /**< The receive operation has been aborted for some reason (e.g error ).*/
+    uint32_t TxError : 1;    /**< Transmitter error has occurred.*/
+    uint32_t TxComplete : 1; /**< All bytes have been sent.*/
+    uint32_t Cts : 1;        /**< CTS (Clear To Send) line state has changed. */
+    uint32_t Dsr : 1;        /**< DSR (Data Set Ready) line state has changed. */
+    uint32_t Dcd : 1;        /**< DCD (Data Carrier Detect) line state has changed. */
+    uint32_t Ri : 1;         /**< RI (Ring Indicator) line state has changed. */
+    uint32_t Unused : 24;
 };
 
 /**
  * @brief       Union grouping MCU_UART_Event_S structure to an uint32_t value
  */
-union MCU_UART_Event_U
-{
+union MCU_UART_Event_U {
     struct MCU_UART_Event_S bitfield; /**< Events structure as a bitfield */
-    uint32_t registerValue; /**< Stored value in the event structure (could be used to reset the overall bitfield structure) */
+    uint32_t registerValue;           /**< Stored value in the event structure (could be used to reset the overall bitfield structure) */
 };
 
 /**
@@ -94,9 +92,8 @@ union MCU_UART_Event_U
  */
 enum RETCODE_MCU_UART_E
 {
-    RETCODE_MCU_UART_FAILURE = RETCODE_FIRST_CUSTOM_CODE ,
+    RETCODE_MCU_UART_FAILURE = RETCODE_FIRST_CUSTOM_CODE,
 };
-
 
 /**
  * @brief       Type definition for the UART event callback.
@@ -172,7 +169,7 @@ Retcode_T MCU_UART_Deinitialize(UART_T uart);
  *
  * @return      RETCODE_OK in case of success, error code otherwise.
  */
-Retcode_T MCU_UART_Send(UART_T uart, const uint8_t * data, uint32_t len);
+Retcode_T MCU_UART_Send(UART_T uart, const uint8_t *data, uint32_t len);
 
 /**
  * @brief       Receiving data from the UART.
@@ -203,7 +200,7 @@ Retcode_T MCU_UART_Send(UART_T uart, const uint8_t * data, uint32_t len);
  *
  * @return      RETCODE_OK in case of success, error code otherwise.
  */
-Retcode_T MCU_UART_Receive(UART_T uart, uint8_t* buffer, uint32_t size);
+Retcode_T MCU_UART_Receive(UART_T uart, uint8_t *buffer, uint32_t size);
 
 /**
  * @brief       Number of bytes available in the receiving buffer.
@@ -215,7 +212,7 @@ Retcode_T MCU_UART_Receive(UART_T uart, uint8_t* buffer, uint32_t size);
  *
  * @return      RETCODE_OK in case of success, error code otherwise.
  */
-Retcode_T MCU_UART_GetRxCount(UART_T uart, uint32_t* count);
+Retcode_T MCU_UART_GetRxCount(UART_T uart, uint32_t *count);
 
 #endif /* KISO_FEATURE_UART */
 #endif /* KISO_MCU_UART_H_ */

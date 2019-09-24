@@ -28,12 +28,12 @@
 
 FAKE_VALUE_FUNC(Retcode_T, BSP_Charger_BQ2407X_Connect)
 FAKE_VALUE_FUNC(Retcode_T, BSP_Charger_BQ2407X_Enable, uint32_t)
-FAKE_VALUE_FUNC(Retcode_T, BSP_Charger_BQ2407X_GetStatus, BSP_ChargeState_T*)
-FAKE_VALUE_FUNC(Retcode_T, BSP_Charger_BQ2407X_MeasureSignal, uint32_t, uint32_t*)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Charger_BQ2407X_GetStatus, BSP_ChargeState_T *)
+FAKE_VALUE_FUNC(Retcode_T, BSP_Charger_BQ2407X_MeasureSignal, uint32_t, uint32_t *)
 FAKE_VALUE_FUNC(Retcode_T, BSP_Charger_BQ2407X_Disable)
 FAKE_VALUE_FUNC(Retcode_T, BSP_Charger_BQ2407X_Disconnect)
 FAKE_VALUE_FUNC(Retcode_T, BSP_Charger_BQ2407X_SetSysoffHigh)
 FAKE_VALUE_FUNC(Retcode_T, BSP_Charger_BQ2407X_SetSysoffLow)
-FAKE_VALUE_FUNC(Retcode_T, BSP_Charger_BQ2407X_CheckStatus,BSP_ChargeState_T* , uint32_t )
+FAKE_VALUE_FUNC(Retcode_T, BSP_Charger_BQ2407X_CheckStatus, BSP_ChargeState_T *, uint32_t)
 #endif /* KISO_FEATURE_BSP_CHARGER_BQ2407X */
 #endif /* KISO_BSP_CHARGER_BQ2407X_TH_HH */

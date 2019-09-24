@@ -11,7 +11,7 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
- 
+
 #ifndef KISO_BSP_BMM150_TH_HH
 #define KISO_BSP_BMM150_TH_HH
 
@@ -38,7 +38,6 @@ FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_Disconnect, int32_t)
 FAKE_VALUE_FUNC(HAL_DeviceHandle_T, BSP_BMM150_GetHandle)
 FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_SetCSLow, int32_t)
 FAKE_VALUE_FUNC(Retcode_T, BSP_BMM150_SetCSHigh, int32_t)
-
 
 #endif /* KISO_FEATURE_BSP_BMM150 */
 

@@ -37,17 +37,17 @@
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
-int8_t bme280_Write(uint8_t address, uint8_t reg, uint8_t * data, uint16_t len);
-int8_t bme280_Read(uint8_t address, uint8_t reg, uint8_t * data, uint16_t len);
+int8_t bme280_Write(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len);
+int8_t bme280_Read(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len);
 
 /*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/
 
 struct bme280_dev bme280Struct = {
-	.read = bme280_Read,
-	.write = bme280_Write,
-	.delay_ms = BSP_Board_Delay,
-	.intf = BME280_I2C_INTF,
-	.dev_id = COMMONGATEWAY_BME280_I2CADDRESS,
+    .read = bme280_Read,
+    .write = bme280_Write,
+    .delay_ms = BSP_Board_Delay,
+    .intf = BME280_I2C_INTF,
+    .dev_id = COMMONGATEWAY_BME280_I2CADDRESS,
 };
 
 static I2cTranceiverHandlePtr_T envSensorTransceiver = NULL;
@@ -64,22 +64,22 @@ Retcode_T Environmental_Init(I2cTranceiverHandlePtr_T i2cTransceiverRef)
     if (RETCODE_OK == retcode)
     {
         envSensorTransceiver = i2cTransceiverRef;
-        bme280Struct.settings = (struct bme280_settings) {
-        	.osr_p = BME280_OVERSAMPLING_4X,
-        	.osr_h = BME280_OVERSAMPLING_2X,
-			.standby_time = BME280_STANDBY_TIME_125_MS,
+        bme280Struct.settings = (struct bme280_settings){
+            .osr_p = BME280_OVERSAMPLING_4X,
+            .osr_h = BME280_OVERSAMPLING_2X,
+            .standby_time = BME280_STANDBY_TIME_125_MS,
         };
 
         if (BME280_OK != bme280_init(&bme280Struct))
         {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR,RETCODE_APP_BME280_INIT_FAILED);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_APP_BME280_INIT_FAILED);
         }
     }
     if (RETCODE_OK == retcode)
     {
         if (BME280_OK != bme280_set_sensor_mode(BME280_NORMAL_MODE, &bme280Struct))
         {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR,RETCODE_APP_BME280_INIT_FAILED);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_APP_BME280_INIT_FAILED);
         }
         BSP_Board_Delay(100);
     }
@@ -87,7 +87,7 @@ Retcode_T Environmental_Init(I2cTranceiverHandlePtr_T i2cTransceiverRef)
 }
 
 /*---------------------- LOCAL FUNCTIONS IMPLEMENTATION -------------------------------------------------------------*/
-int8_t bme280_Write(uint8_t address, uint8_t reg, uint8_t * data, uint16_t len)
+int8_t bme280_Write(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len)
 {
     Retcode_T retcode = I2CTransceiver_Write(envSensorTransceiver, address, reg, data, len);
     if (RETCODE_OK == retcode)
@@ -100,7 +100,7 @@ int8_t bme280_Write(uint8_t address, uint8_t reg, uint8_t * data, uint16_t len)
     }
 }
 
-int8_t bme280_Read(uint8_t address, uint8_t reg, uint8_t * data, uint16_t len)
+int8_t bme280_Read(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len)
 {
     Retcode_T retcode = I2CTransceiver_Read(envSensorTransceiver, address, reg, data, len);
     if (RETCODE_OK == retcode)

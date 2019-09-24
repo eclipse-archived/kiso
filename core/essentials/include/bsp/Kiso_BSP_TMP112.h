@@ -175,7 +175,7 @@ Retcode_T BSP_TMP112_InterruptEnable(uint32_t deviceId, BSP_TMP112_InterruptCall
  */
 Retcode_T BSP_TMP112_InterruptDisable(uint32_t deviceId);
 
-/**@}*//* KISO_HAL_BSP_TMP112 */
+/**@}*/ /* KISO_HAL_BSP_TMP112 */
 
 #endif /*KISO_FEATURE_BSP_TMP112*/
 #endif /* KISO_BSP_TMP112_H_ */

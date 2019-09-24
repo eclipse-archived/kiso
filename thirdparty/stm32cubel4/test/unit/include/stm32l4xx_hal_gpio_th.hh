@@ -35,13 +35,13 @@ FAKE_VOID_FUNC(__HAL_GPIO_EXTI_CLEAR_IT, uint32_t)
 #undef __HAL_GPIO_EXTI_GENERATE_SWIT
 FAKE_VOID_FUNC(__HAL_GPIO_EXTI_GENERATE_SWIT, uint32_t)
 
-FAKE_VOID_FUNC(HAL_GPIO_Init, GPIO_TypeDef*, GPIO_InitTypeDef*)
-FAKE_VOID_FUNC(HAL_GPIO_DeInit, GPIO_TypeDef*, uint32_t)
+FAKE_VOID_FUNC(HAL_GPIO_Init, GPIO_TypeDef *, GPIO_InitTypeDef *)
+FAKE_VOID_FUNC(HAL_GPIO_DeInit, GPIO_TypeDef *, uint32_t)
 
-FAKE_VALUE_FUNC(GPIO_PinState, HAL_GPIO_ReadPin, GPIO_TypeDef*, uint16_t)
-FAKE_VOID_FUNC(HAL_GPIO_WritePin, GPIO_TypeDef*, uint16_t, GPIO_PinState)
-FAKE_VOID_FUNC(HAL_GPIO_TogglePin, GPIO_TypeDef*, uint16_t)
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_GPIO_LockPin, GPIO_TypeDef*, uint16_t)
+FAKE_VALUE_FUNC(GPIO_PinState, HAL_GPIO_ReadPin, GPIO_TypeDef *, uint16_t)
+FAKE_VOID_FUNC(HAL_GPIO_WritePin, GPIO_TypeDef *, uint16_t, GPIO_PinState)
+FAKE_VOID_FUNC(HAL_GPIO_TogglePin, GPIO_TypeDef *, uint16_t)
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_GPIO_LockPin, GPIO_TypeDef *, uint16_t)
 FAKE_VOID_FUNC(HAL_GPIO_EXTI_IRQHandler, uint16_t)
 
 #endif /* STM32L4XX_HAL_GPIO_TH_HH_ */

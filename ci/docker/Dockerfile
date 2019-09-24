@@ -30,3 +30,6 @@ RUN apt-get install -y doxygen graphviz
 
 # Get the compilers
 RUN apt-get install -y gcc-arm-none-eabi gcc g++
+
+# Get xmllint
+RUN apt-get install -y libxml2-utils

@@ -27,12 +27,12 @@
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID MODULE_BSP_API_MAXM8
 
-#define MAXM8_DELAY_1_MS                     UINT32_C(1)
-#define MAXM8_MAX_TIME_TO_OFF_MS             UINT32_C(1000)
-#define MAXM8_MAX_TIME_TO_ACTIVE_MS          4000
+#define MAXM8_DELAY_1_MS UINT32_C(1)
+#define MAXM8_MAX_TIME_TO_OFF_MS UINT32_C(1000)
+#define MAXM8_MAX_TIME_TO_ACTIVE_MS 4000
 
-#define MAXM8_UART_INT_PRIORITY              UINT32_C(10)
-#define MAXM8_UART_SUBPRIORITY               UINT32_C(0)
+#define MAXM8_UART_INT_PRIORITY UINT32_C(10)
+#define MAXM8_UART_SUBPRIORITY UINT32_C(0)
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
@@ -40,27 +40,27 @@ void UART4_IRQHandler(void);
 
 /*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/
 
-static uint8_t bspState = (uint8_t) BSP_STATE_INIT; /**< BSP State of the cellular module */
+static uint8_t bspState = (uint8_t)BSP_STATE_INIT; /**< BSP State of the cellular module */
 
 /**
  * Static structure storing the UART handle for GNSS MAXM8.
  */
 static struct MCU_UART_S MaxM8_UARTStruct =
-        {
-                .TxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
-                .RxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
-                .Datarate = 9600,
-                .huart.Instance = UART4,
-                .huart.Init.BaudRate = 9600,
-                .huart.Init.WordLength = UART_WORDLENGTH_8B,
-                .huart.Init.StopBits = UART_STOPBITS_1,
-                .huart.Init.Parity = UART_PARITY_NONE,
-                .huart.Init.Mode = UART_MODE_TX_RX,
-                .huart.Init.HwFlowCtl = UART_HWCONTROL_NONE,
-                .huart.Init.OverSampling = UART_OVERSAMPLING_16,
-                .huart.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE,
-                .huart.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT,
-        };
+    {
+        .TxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
+        .RxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
+        .Datarate = 9600,
+        .huart.Instance = UART4,
+        .huart.Init.BaudRate = 9600,
+        .huart.Init.WordLength = UART_WORDLENGTH_8B,
+        .huart.Init.StopBits = UART_STOPBITS_1,
+        .huart.Init.Parity = UART_PARITY_NONE,
+        .huart.Init.Mode = UART_MODE_TX_RX,
+        .huart.Init.HwFlowCtl = UART_HWCONTROL_NONE,
+        .huart.Init.OverSampling = UART_OVERSAMPLING_16,
+        .huart.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE,
+        .huart.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT,
+};
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
 
 /**
@@ -72,13 +72,13 @@ Retcode_T BSP_GNSS_MAXM8_Connect(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_CONNECTED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_CONNECTED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
     if (RETCODE_OK == retcode)
     {
-        GPIO_InitTypeDef BSP_GPIOInitStruct = { 0 };
+        GPIO_InitTypeDef BSP_GPIOInitStruct = {0};
 
         GPIO_OpenClockGate(GPIO_PORT_B, PINB_POW_GPS_BAK | PINB_GPS_RESN);
         /* Configure PIN_GPS_RESN PIN_POW_GPS_BAK as output push pull */
@@ -97,7 +97,7 @@ Retcode_T BSP_GNSS_MAXM8_Connect(void)
         BSP_GPIOInitStruct.Alternate = GPIO_AF8_UART4;
         HAL_GPIO_Init(GPIOA, &BSP_GPIOInitStruct);
 
-        bspState = (uint8_t) BSP_STATE_CONNECTED;
+        bspState = (uint8_t)BSP_STATE_CONNECTED;
     }
     return retcode;
 }
@@ -111,7 +111,7 @@ Retcode_T BSP_GNSS_MAXM8_Enable(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_ENABLED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_ENABLED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -126,8 +126,7 @@ Retcode_T BSP_GNSS_MAXM8_Enable(void)
     if (RETCODE_OK == retcode)
     {
         /* Enable the UART clock */
-        __HAL_RCC_UART4_CLK_ENABLE()
-        ;
+        __HAL_RCC_UART4_CLK_ENABLE();
         __HAL_RCC_UART4_FORCE_RESET();
         __HAL_RCC_UART4_RELEASE_RESET();
 
@@ -142,7 +141,7 @@ Retcode_T BSP_GNSS_MAXM8_Enable(void)
         HAL_NVIC_SetPriority(UART4_IRQn, MAXM8_UART_INT_PRIORITY, MAXM8_UART_SUBPRIORITY);
         HAL_NVIC_EnableIRQ(UART4_IRQn);
 
-        bspState = (uint8_t) BSP_STATE_ENABLED;
+        bspState = (uint8_t)BSP_STATE_ENABLED;
     }
     return retcode;
 }
@@ -156,7 +155,7 @@ Retcode_T BSP_GNSS_MAXM8_Disable(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_DISABLED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_DISABLED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -177,7 +176,7 @@ Retcode_T BSP_GNSS_MAXM8_Disable(void)
     }
     if (RETCODE_OK == retcode)
     {
-        bspState = (uint8_t) BSP_STATE_DISABLED;
+        bspState = (uint8_t)BSP_STATE_DISABLED;
     }
     return retcode;
 }
@@ -190,7 +189,7 @@ Retcode_T BSP_GNSS_MAXM8_Disable(void)
 Retcode_T BSP_GNSS_MAXM8_Disconnect(void)
 {
     Retcode_T retcode = RETCODE_OK;
-    if (!(bspState & (uint8_t) BSP_STATE_TO_DISCONNECTED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_DISCONNECTED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -204,7 +203,7 @@ Retcode_T BSP_GNSS_MAXM8_Disconnect(void)
     }
     if (RETCODE_OK == retcode)
     {
-        bspState = (uint8_t) BSP_STATE_DISCONNECTED;
+        bspState = (uint8_t)BSP_STATE_DISCONNECTED;
     }
     return retcode;
 }
@@ -215,7 +214,7 @@ Retcode_T BSP_GNSS_MAXM8_Disconnect(void)
  */
 HWHandle_T BSP_GNSS_MAXM8_GetUARTHandle(void)
 {
-    return (HWHandle_T) &MaxM8_UARTStruct;
+    return (HWHandle_T)&MaxM8_UARTStruct;
 }
 
 /**
@@ -231,7 +230,7 @@ Retcode_T BSP_GNSS_MAXM8_Reset(void)
  * See API interface for function documentation
  * @retval RETCODE_NOT_SUPPORTED Reset procedure using RESN signal has not been implemented because of high risks.
  */
-Retcode_T BSP_GNSS_MAXM8_Control(uint32_t command, void* arg)
+Retcode_T BSP_GNSS_MAXM8_Control(uint32_t command, void *arg)
 {
     KISO_UNUSED(command);
     KISO_UNUSED(arg);
@@ -247,7 +246,7 @@ void UART4_IRQHandler(void)
 {
     if (MaxM8_UARTStruct.IrqCallback)
     {
-        MaxM8_UARTStruct.IrqCallback((UART_T) &MaxM8_UARTStruct);
+        MaxM8_UARTStruct.IrqCallback((UART_T)&MaxM8_UARTStruct);
     }
 }
 #endif /* KISO_FEATURE_BSP_GNSS_MAXM8 */

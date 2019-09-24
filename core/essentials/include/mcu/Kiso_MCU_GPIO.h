@@ -70,7 +70,7 @@ Retcode_T MCU_GPIO_DeInitialize(GPIO_T gpio);
  *
  * @return      RETCODE_OK in case of success, error code otherwise.
  */
-Retcode_T MCU_GPIO_WritePin(GPIO_T gpio, MCU_GPIO_PinState_T gpioLevel );
+Retcode_T MCU_GPIO_WritePin(GPIO_T gpio, MCU_GPIO_PinState_T gpioLevel);
 
 /**
  * @brief       Read the output level of a GPIO pin from the GPIO perspective.
@@ -81,7 +81,7 @@ Retcode_T MCU_GPIO_WritePin(GPIO_T gpio, MCU_GPIO_PinState_T gpioLevel );
  *
  * @return      RETCODE_OK in case of success error code otherwise.
  */
-Retcode_T MCU_GPIO_ReadPin(GPIO_T gpio, MCU_GPIO_PinState_T *gpioLevel );
+Retcode_T MCU_GPIO_ReadPin(GPIO_T gpio, MCU_GPIO_PinState_T *gpioLevel);
 
 /**
  * @brief       Toggle the output level of a GPIO pin.
@@ -95,4 +95,3 @@ Retcode_T MCU_GPIO_TogglePin(GPIO_T gpio);
 #endif /* KISO_FEATURE_GPIO */
 #endif /* KISO_MCU_GPIO_H_ */
 /**  @} */
-

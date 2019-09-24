@@ -29,7 +29,7 @@
 /* Start of global scope symbol and fake definitions section */
 extern "C"
 {
-/* Setup compile time configuration defines */
+    /* Setup compile time configuration defines */
 
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
@@ -42,27 +42,27 @@ extern "C"
 #include "FreeRTOS_th.hh"
 #include "semphr_th.hh"
 
-uint32_t tempI2CHandle = 0x55;
-I2C_T I2CHandle = (I2C_T)&tempI2CHandle;
+    uint32_t tempI2CHandle = 0x55;
+    I2C_T I2CHandle = (I2C_T)&tempI2CHandle;
 
 /* Include module under test */
 #include "I2CTransceiver.c"
 
- /* End of global scope symbol and fake definitions section */
+    /* End of global scope symbol and fake definitions section */
 }
 /* Create test fixture initializing all variables automatically */
-class I2CTransceiver: public testing::Test
+class I2CTransceiver : public testing::Test
 {
 public:
     I2cTranceiverHandle_T TranceiverHandle;
-    
-    protected:
+
+protected:
     /* Remember that SetUp() is run immediately before a test starts. */
     virtual void SetUp()
     {
-        TranceiverHandle.I2CBusSync = (xSemaphoreHandle) 0x1234;
+        TranceiverHandle.I2CBusSync = (xSemaphoreHandle)0x1234;
         TranceiverHandle.I2CHandle = I2CHandle;
-        TranceiverHandle.I2CMutexLock = (xSemaphoreHandle) 0x1234;
+        TranceiverHandle.I2CMutexLock = (xSemaphoreHandle)0x1234;
         TranceiverHandle.I2cTransferStatusFlag = INT8_C(0);
         TranceiverHandle.InitializationStatus = false;
         RESET_FAKE(xSemaphoreCreateMutex);
@@ -90,8 +90,8 @@ TEST_F(I2CTransceiver, I2CTransceiverInitSuccess)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal = RETCODE_FAILURE;
-    xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle) 0x124;
-    xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle) 0x124;
+    xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle)0x124;
+    xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle)0x124;
     TranceiverHandle.I2CHandle = I2CHandle;
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = I2CTransceiver_Init(&TranceiverHandle, I2CHandle);
@@ -112,8 +112,8 @@ TEST_F(I2CTransceiver, I2CTransceiverInitNULLHandle)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal = RETCODE_FAILURE;
-    xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle) 0x1234;
-    xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle) 0x1234;
+    xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle)0x1234;
+    xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle)0x1234;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = I2CTransceiver_Init(NULL, I2CHandle);
@@ -133,8 +133,8 @@ TEST_F(I2CTransceiver, I2CTransceiverInitNULLI2CHandle)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal = RETCODE_FAILURE;
-    xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle) 0x1234;
-    xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle) 0x1234;
+    xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle)0x1234;
+    xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle)0x1234;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = I2CTransceiver_Init(&TranceiverHandle, NULL);
@@ -154,8 +154,8 @@ TEST_F(I2CTransceiver, I2CTransceiverInitDoppleInit)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal = RETCODE_FAILURE;
-    xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle) 0x1234;
-    xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle) 0x1234;
+    xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle)0x1234;
+    xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle)0x1234;
     TranceiverHandle.InitializationStatus = true;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
@@ -176,8 +176,8 @@ TEST_F(I2CTransceiver, I2CTransceiverInitSemaphoreFail)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal = RETCODE_FAILURE;
-    xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle) NULL;
-    xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle) 0x1234;
+    xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle)NULL;
+    xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle)0x1234;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = I2CTransceiver_Init(&TranceiverHandle, I2CHandle);
@@ -197,8 +197,8 @@ TEST_F(I2CTransceiver, I2CTransceiverInitMutexFail)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal = RETCODE_FAILURE;
-    xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle) 0x1234;
-    xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle) NULL;
+    xSemaphoreCreateBinary_fake.return_val = (xSemaphoreHandle)0x1234;
+    xSemaphoreCreateMutex_fake.return_val = (xSemaphoreHandle)NULL;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = I2CTransceiver_Init(&TranceiverHandle, I2CHandle);
@@ -457,7 +457,7 @@ TEST_F(I2CTransceiver, I2CTransceiverSynFail)
     uint8_t Reg = 0x80;
     uint8_t RegData = 4;
     uint8_t NbrBytesToRead = 10;
-    BaseType_t SemaphoreRetcode[2] = { pdTRUE, pdFALSE };
+    BaseType_t SemaphoreRetcode[2] = {pdTRUE, pdFALSE};
     xSemaphoreTake_fake.return_val_seq = SemaphoreRetcode;
     xSemaphoreTake_fake.return_val_seq_len = 2;
     xSemaphoreGive_fake.return_val = pdTRUE;
@@ -488,7 +488,7 @@ TEST_F(I2CTransceiver, I2CTransceiverSendFail)
     uint8_t Reg = 0x80;
     uint8_t RegData = 4;
     uint8_t NbrBytesToRead = 10;
-    BaseType_t SemaphoreRetcode[2] = { pdTRUE, pdFALSE };
+    BaseType_t SemaphoreRetcode[2] = {pdTRUE, pdFALSE};
     xSemaphoreTake_fake.return_val_seq = SemaphoreRetcode;
     xSemaphoreTake_fake.return_val_seq_len = 2;
     xSemaphoreGive_fake.return_val = pdTRUE;
@@ -846,7 +846,7 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteSynFail)
     uint8_t Reg = 0x80;
     uint8_t RegData = 4;
     uint8_t NbrBytesToWrite = 10;
-    BaseType_t SemaphoreRetcode[2] = { pdTRUE, pdFALSE };
+    BaseType_t SemaphoreRetcode[2] = {pdTRUE, pdFALSE};
     xSemaphoreTake_fake.return_val_seq = SemaphoreRetcode;
     xSemaphoreTake_fake.return_val_seq_len = 2;
     xSemaphoreGive_fake.return_val = pdTRUE;
@@ -877,7 +877,7 @@ TEST_F(I2CTransceiver, I2CTransceiverWriteSendFail)
     uint8_t Reg = 0x80;
     uint8_t RegData = 4;
     uint8_t NbrBytesToWrite = 10;
-    BaseType_t SemaphoreRetcode[2] = { pdTRUE, pdFALSE };
+    BaseType_t SemaphoreRetcode[2] = {pdTRUE, pdFALSE};
     xSemaphoreTake_fake.return_val_seq = SemaphoreRetcode;
     xSemaphoreTake_fake.return_val_seq_len = 2;
     xSemaphoreGive_fake.return_val = pdTRUE;

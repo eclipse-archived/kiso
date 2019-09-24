@@ -26,15 +26,15 @@
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
 #undef KISO_MODULE_ID
-#define KISO_MODULE_ID                  KISO_ESSENTIALS_MODULE_ID_UART
+#define KISO_MODULE_ID KISO_ESSENTIALS_MODULE_ID_UART
 
-#define UART_MIN_TIMEOUT_MS             UINT32_C(100) /* Minimal timeout in ms*/
-#define UART_SECOND_TO_MILLI_MS         UINT32_C(1000) /* Convert one second to millisecond*/
-#define UART_SAFETY_FACTOR              UINT32_C(2) /* factor to multiply with the reulting time value for safety */
-#define UART_CLOCK_CYCLES_PER_BYTE      UINT32_C(12) /* a 9 bits value + one start bit* 2 stop bits */
+#define UART_MIN_TIMEOUT_MS UINT32_C(100)       /* Minimal timeout in ms*/
+#define UART_SECOND_TO_MILLI_MS UINT32_C(1000)  /* Convert one second to millisecond*/
+#define UART_SAFETY_FACTOR UINT32_C(2)          /* factor to multiply with the reulting time value for safety */
+#define UART_CLOCK_CYCLES_PER_BYTE UINT32_C(12) /* a 9 bits value + one start bit* 2 stop bits */
 
-#define UART_HAL_ERROR_RECOVERABLE      (HAL_UART_ERROR_PE|HAL_UART_ERROR_NE|HAL_UART_ERROR_FE) /* recoverable error flags combined */
-#define UART_HAL_ERROR_NON_RECOVERABLE  (HAL_UART_ERROR_ORE|HAL_UART_ERROR_DMA) /* non recoverable error flags combined */
+#define UART_HAL_ERROR_RECOVERABLE (HAL_UART_ERROR_PE | HAL_UART_ERROR_NE | HAL_UART_ERROR_FE) /* recoverable error flags combined */
+#define UART_HAL_ERROR_NON_RECOVERABLE (HAL_UART_ERROR_ORE | HAL_UART_ERROR_DMA)               /* non recoverable error flags combined */
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
@@ -42,17 +42,17 @@ static void UART_IRQHandler(UART_T uart);
 static void UART_DMARxHandler(UART_T uart);
 static void UART_DMATxHandler(UART_T uart);
 
-static Retcode_T UART_SendPolling(struct MCU_UART_S* uart_ptr);
-static Retcode_T UART_ReceivePolling(struct MCU_UART_S* uart_ptr);
+static Retcode_T UART_SendPolling(struct MCU_UART_S *uart_ptr);
+static Retcode_T UART_ReceivePolling(struct MCU_UART_S *uart_ptr);
 
-static Retcode_T UART_SendInt(struct MCU_UART_S* uart_ptr);
-static Retcode_T UART_ReceiveInt(struct MCU_UART_S* uart_ptr);
+static Retcode_T UART_SendInt(struct MCU_UART_S *uart_ptr);
+static Retcode_T UART_ReceiveInt(struct MCU_UART_S *uart_ptr);
 
-static Retcode_T UART_SendDMA(struct MCU_UART_S* uart_ptr);
-static Retcode_T UART_ReceiveDMA(struct MCU_UART_S* uart_ptr);
+static Retcode_T UART_SendDMA(struct MCU_UART_S *uart_ptr);
+static Retcode_T UART_ReceiveDMA(struct MCU_UART_S *uart_ptr);
 
-static void UART_AbortSend(struct MCU_UART_S* uart_ptr);
-static void UART_AbortReceive(struct MCU_UART_S* uart_ptr);
+static void UART_AbortSend(struct MCU_UART_S *uart_ptr);
+static void UART_AbortReceive(struct MCU_UART_S *uart_ptr);
 
 static Retcode_T MapHalRetToMcuRet(HAL_StatusTypeDef halRet);
 
@@ -64,7 +64,7 @@ static Retcode_T MapHalRetToMcuRet(HAL_StatusTypeDef halRet);
 Retcode_T MCU_UART_Initialize(UART_T uart, MCU_UART_Callback_T callback)
 {
     Retcode_T retcode = RETCODE_OK;
-    struct MCU_UART_S* uart_ptr = (struct MCU_UART_S*) uart;
+    struct MCU_UART_S *uart_ptr = (struct MCU_UART_S *)uart;
 
     if (NULL == uart_ptr)
     {
@@ -81,90 +81,90 @@ Retcode_T MCU_UART_Initialize(UART_T uart, MCU_UART_Callback_T callback)
     {
         switch (uart_ptr->TxMode)
         {
-            case KISO_HAL_TRANSFER_MODE_POLLING:
-                uart_ptr->SendFunc = UART_SendPolling;
+        case KISO_HAL_TRANSFER_MODE_POLLING:
+            uart_ptr->SendFunc = UART_SendPolling;
+            uart_ptr->AbortSendFunc = UART_AbortSend;
+            uart_ptr->TxState = UART_STATE_READY;
+            break;
+
+        case KISO_HAL_TRANSFER_MODE_INTERRUPT:
+            if (callback)
+            {
+                uart_ptr->AppCallback = callback;
+                uart_ptr->SendFunc = UART_SendInt;
                 uart_ptr->AbortSendFunc = UART_AbortSend;
+                uart_ptr->IrqCallback = UART_IRQHandler;
                 uart_ptr->TxState = UART_STATE_READY;
-                break;
+            }
+            else
+            {
+                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+            }
+            break;
 
-            case KISO_HAL_TRANSFER_MODE_INTERRUPT:
-                if (callback)
-                {
-                    uart_ptr->AppCallback = callback;
-                    uart_ptr->SendFunc = UART_SendInt;
-                    uart_ptr->AbortSendFunc = UART_AbortSend;
-                    uart_ptr->IrqCallback = UART_IRQHandler;
-                    uart_ptr->TxState = UART_STATE_READY;
-                }
-                else
-                {
-                    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-                }
-                break;
+        case KISO_HAL_TRANSFER_MODE_DMA:
+            if (callback)
+            {
+                uart_ptr->AppCallback = callback;
+                uart_ptr->SendFunc = UART_SendDMA;
+                uart_ptr->AbortSendFunc = UART_AbortSend;
+                uart_ptr->IrqCallback = UART_IRQHandler;
+                uart_ptr->DmaTxCallback = UART_DMATxHandler;
+                uart_ptr->TxState = UART_STATE_READY;
+            }
+            else
+            {
+                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+            }
+            break;
 
-            case KISO_HAL_TRANSFER_MODE_DMA:
-                if (callback)
-                {
-                    uart_ptr->AppCallback = callback;
-                    uart_ptr->SendFunc = UART_SendDMA;
-                    uart_ptr->AbortSendFunc = UART_AbortSend;
-                    uart_ptr->IrqCallback = UART_IRQHandler;
-                    uart_ptr->DmaTxCallback = UART_DMATxHandler;
-                    uart_ptr->TxState = UART_STATE_READY;
-                }
-                else
-                {
-                    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-                }
-                break;
-
-            default:
-                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
+        default:
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
         }
     }
     if (RETCODE_OK == retcode)
     {
         switch (uart_ptr->RxMode)
         {
-            case KISO_HAL_TRANSFER_MODE_POLLING:
-                uart_ptr->SendFunc = UART_ReceivePolling;
-                uart_ptr->AbortSendFunc = UART_AbortReceive;
+        case KISO_HAL_TRANSFER_MODE_POLLING:
+            uart_ptr->SendFunc = UART_ReceivePolling;
+            uart_ptr->AbortSendFunc = UART_AbortReceive;
+            uart_ptr->RxState = UART_STATE_READY;
+            break;
+
+        case KISO_HAL_TRANSFER_MODE_INTERRUPT:
+            if (callback)
+            {
+                uart_ptr->AppCallback = callback;
+                uart_ptr->ReceiveFunc = UART_ReceiveInt;
+                uart_ptr->AbortReceiveFunc = UART_AbortReceive;
+                uart_ptr->IrqCallback = UART_IRQHandler;
                 uart_ptr->RxState = UART_STATE_READY;
-                break;
+            }
+            else
+            {
+                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+            }
+            break;
 
-            case KISO_HAL_TRANSFER_MODE_INTERRUPT:
-                if (callback)
-                {
-                    uart_ptr->AppCallback = callback;
-                    uart_ptr->ReceiveFunc = UART_ReceiveInt;
-                    uart_ptr->AbortReceiveFunc = UART_AbortReceive;
-                    uart_ptr->IrqCallback = UART_IRQHandler;
-                    uart_ptr->RxState = UART_STATE_READY;
-                }
-                else
-                {
-                    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-                }
-                break;
+        case KISO_HAL_TRANSFER_MODE_DMA:
+            if (callback)
+            {
+                uart_ptr->AppCallback = callback;
+                uart_ptr->SendFunc = UART_ReceiveDMA;
+                uart_ptr->AbortReceiveFunc = UART_AbortReceive;
+                uart_ptr->IrqCallback = UART_IRQHandler;
+                uart_ptr->DmaRxCallback = UART_DMARxHandler;
+                uart_ptr->RxState = UART_STATE_READY;
+            }
+            else
+            {
+                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+            }
+            break;
 
-            case KISO_HAL_TRANSFER_MODE_DMA:
-                if (callback)
-                {
-                    uart_ptr->AppCallback = callback;
-                    uart_ptr->SendFunc = UART_ReceiveDMA;
-                    uart_ptr->AbortReceiveFunc = UART_AbortReceive;
-                    uart_ptr->IrqCallback = UART_IRQHandler;
-                    uart_ptr->DmaRxCallback = UART_DMARxHandler;
-                    uart_ptr->RxState = UART_STATE_READY;
-                }
-                else
-                {
-                    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-                }
-                break;
-
-            default:
-                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
+        default:
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
         }
     }
     return retcode;
@@ -174,7 +174,7 @@ Retcode_T MCU_UART_Initialize(UART_T uart, MCU_UART_Callback_T callback)
 Retcode_T MCU_UART_Deinitialize(UART_T uart)
 {
     Retcode_T retcode = RETCODE_OK;
-    struct MCU_UART_S* uart_ptr = (struct MCU_UART_S*) uart;
+    struct MCU_UART_S *uart_ptr = (struct MCU_UART_S *)uart;
     if (NULL == uart_ptr)
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
@@ -195,10 +195,10 @@ Retcode_T MCU_UART_Deinitialize(UART_T uart)
 }
 
 /** @brief See public interface function description in Kiso_MCU_UART.h */
-Retcode_T MCU_UART_Send(UART_T uart, const uint8_t * data, uint32_t len)
+Retcode_T MCU_UART_Send(UART_T uart, const uint8_t *data, uint32_t len)
 {
     Retcode_T retcode = RETCODE_OK;
-    struct MCU_UART_S* uart_ptr = (struct MCU_UART_S*) uart;
+    struct MCU_UART_S *uart_ptr = (struct MCU_UART_S *)uart;
 
     if (NULL == uart_ptr || NULL == data)
     {
@@ -221,7 +221,7 @@ Retcode_T MCU_UART_Send(UART_T uart, const uint8_t * data, uint32_t len)
 #pragma GCC diagnostic ignored "-Wdiscarded-qualifiers"
 #pragma GCC diagnostic ignored "-Wcast-qual"
                 // This eventually reaches the driver and adding const here doesn't help to clean it up
-                uart_ptr->Transaction.pTransmitBuffer = (uint8_t*) data;
+                uart_ptr->Transaction.pTransmitBuffer = (uint8_t *)data;
 #pragma GCC diagnostic pop
                 uart_ptr->Transaction.TransmitSize = (uint16_t)len;
                 retcode = uart_ptr->SendFunc(uart_ptr);
@@ -247,10 +247,10 @@ Retcode_T MCU_UART_Send(UART_T uart, const uint8_t * data, uint32_t len)
 }
 
 /** @brief See public interface function description in Kiso_MCU_UART.h */
-Retcode_T MCU_UART_Receive(UART_T uart, uint8_t * buffer, uint32_t size)
+Retcode_T MCU_UART_Receive(UART_T uart, uint8_t *buffer, uint32_t size)
 {
     Retcode_T retcode = RETCODE_OK;
-    struct MCU_UART_S* uart_ptr = (struct MCU_UART_S*) uart;
+    struct MCU_UART_S *uart_ptr = (struct MCU_UART_S *)uart;
 
     if (NULL == uart_ptr || NULL == buffer || size > UINT16_MAX)
     {
@@ -298,17 +298,16 @@ Retcode_T MCU_UART_Receive(UART_T uart, uint8_t * buffer, uint32_t size)
  * @retval      RETCODE_INCONSISTENT_STATE if an ongoing process is running on the STM32 HAL library level.
  * @retval      RETCODE_TIMEOUT if a timeout occurred.
  */
-Retcode_T UART_SendPolling(struct MCU_UART_S* uart)
+Retcode_T UART_SendPolling(struct MCU_UART_S *uart)
 {
     uart->TxState = UART_STATE_TX;
     uint32_t timeout = UART_MIN_TIMEOUT_MS;
     if (uart->Datarate)
     {
-        timeout += ((uart->Transaction.TransmitSize * UART_CLOCK_CYCLES_PER_BYTE * UART_SAFETY_FACTOR)
-                        / (1 + uart->Datarate / UART_SECOND_TO_MILLI_MS));
+        timeout += ((uart->Transaction.TransmitSize * UART_CLOCK_CYCLES_PER_BYTE * UART_SAFETY_FACTOR) / (1 + uart->Datarate / UART_SECOND_TO_MILLI_MS));
     }
     HAL_StatusTypeDef status =
-            HAL_UART_Transmit(&uart->huart, uart->Transaction.pTransmitBuffer, uart->Transaction.TransmitSize, timeout);
+        HAL_UART_Transmit(&uart->huart, uart->Transaction.pTransmitBuffer, uart->Transaction.TransmitSize, timeout);
     uart->TxState = UART_STATE_READY;
     return MapHalRetToMcuRet(status);
 }
@@ -323,18 +322,17 @@ Retcode_T UART_SendPolling(struct MCU_UART_S* uart)
  * @retval      RETCODE_INCONSISTENT_STATE if an ongoing process is running on the STM32 HAL library level.
  * @retval      RETCODE_TIMEOUT if a timeout occurred.
  */
-Retcode_T UART_ReceivePolling(struct MCU_UART_S* uart)
+Retcode_T UART_ReceivePolling(struct MCU_UART_S *uart)
 {
     uart->RxState = UART_STATE_RX;
 
     uint32_t timeout = UART_MIN_TIMEOUT_MS;
     if (uart->Datarate)
     {
-        timeout +=((uart->Transaction.ReceivetSize * UART_CLOCK_CYCLES_PER_BYTE * UART_SAFETY_FACTOR)
-                        / (1 + uart->Datarate / UART_SECOND_TO_MILLI_MS));
+        timeout += ((uart->Transaction.ReceivetSize * UART_CLOCK_CYCLES_PER_BYTE * UART_SAFETY_FACTOR) / (1 + uart->Datarate / UART_SECOND_TO_MILLI_MS));
     }
     HAL_StatusTypeDef status =
-            HAL_UART_Receive(&uart->huart, uart->Transaction.pReceiveBuffer, uart->Transaction.ReceivetSize, timeout);
+        HAL_UART_Receive(&uart->huart, uart->Transaction.pReceiveBuffer, uart->Transaction.ReceivetSize, timeout);
     uart->RxState = UART_STATE_READY;
     return MapHalRetToMcuRet(status);
 }
@@ -350,12 +348,13 @@ Retcode_T UART_ReceivePolling(struct MCU_UART_S* uart)
  * @retval      RETCODE_INCONSISTENT_STATE if an ongoing process is running on the STM32 HAL library level.
  * @retval      RETCODE_FAILURE if an other error occurred.
  */
-Retcode_T UART_SendInt(struct MCU_UART_S* uart)
+Retcode_T UART_SendInt(struct MCU_UART_S *uart)
 {
     uart->TxState = UART_STATE_TX;
     HAL_StatusTypeDef status =
-            HAL_UART_Transmit_IT(&uart->huart, uart->Transaction.pTransmitBuffer, uart->Transaction.TransmitSize);
-    return MapHalRetToMcuRet(status);;
+        HAL_UART_Transmit_IT(&uart->huart, uart->Transaction.pTransmitBuffer, uart->Transaction.TransmitSize);
+    return MapHalRetToMcuRet(status);
+    ;
 }
 
 /**
@@ -369,12 +368,12 @@ Retcode_T UART_SendInt(struct MCU_UART_S* uart)
  * @retval      RETCODE_INCONSISTENT_STATE if an ongoing process is running on the STM32 HAL library level.
  * @retval      RETCODE_FAILURE if an other error occurred.
  */
-Retcode_T UART_ReceiveInt(struct MCU_UART_S* uart)
+Retcode_T UART_ReceiveInt(struct MCU_UART_S *uart)
 {
     uart->RxState = UART_STATE_RX;
     Retcode_T retcode = RETCODE_OK;
     HAL_StatusTypeDef status =
-            HAL_UART_Receive_IT(&uart->huart, uart->Transaction.pReceiveBuffer, uart->Transaction.ReceivetSize);
+        HAL_UART_Receive_IT(&uart->huart, uart->Transaction.pReceiveBuffer, uart->Transaction.ReceivetSize);
     retcode = MapHalRetToMcuRet(status);
     return retcode;
 }
@@ -390,11 +389,11 @@ Retcode_T UART_ReceiveInt(struct MCU_UART_S* uart)
  * @retval      RETCODE_INCONSISTENT_STATE if an ongoing process is running on the STM32 HAL library level.
  * @retval      RETCODE_FAILURE if an other error occurred.
  */
-Retcode_T UART_SendDMA(struct MCU_UART_S* uart)
+Retcode_T UART_SendDMA(struct MCU_UART_S *uart)
 {
     uart->TxState = UART_STATE_TX;
     HAL_StatusTypeDef status =
-            HAL_UART_Transmit_DMA(&uart->huart, uart->Transaction.pTransmitBuffer, uart->Transaction.TransmitSize);
+        HAL_UART_Transmit_DMA(&uart->huart, uart->Transaction.pTransmitBuffer, uart->Transaction.TransmitSize);
     return MapHalRetToMcuRet(status);
 }
 
@@ -409,11 +408,11 @@ Retcode_T UART_SendDMA(struct MCU_UART_S* uart)
  * @retval      RETCODE_INCONSISTENT_STATE if an ongoing process is running on the STM32 HAL library level.
  * @retval      RETCODE_FAILURE if an other error occurred.
  */
-Retcode_T UART_ReceiveDMA(struct MCU_UART_S* uart)
+Retcode_T UART_ReceiveDMA(struct MCU_UART_S *uart)
 {
     uart->RxState = UART_STATE_RX;
     HAL_StatusTypeDef status =
-            HAL_UART_Receive_DMA(&uart->huart, uart->Transaction.pReceiveBuffer, uart->Transaction.ReceivetSize);
+        HAL_UART_Receive_DMA(&uart->huart, uart->Transaction.pReceiveBuffer, uart->Transaction.ReceivetSize);
     return MapHalRetToMcuRet(status);
 }
 
@@ -421,9 +420,9 @@ Retcode_T UART_ReceiveDMA(struct MCU_UART_S* uart)
  * @brief       Aborts sending operation.
  * @param[in]   uart reference to the UART control block structure.
  */
-void UART_AbortSend(struct MCU_UART_S* uart)
+void UART_AbortSend(struct MCU_UART_S *uart)
 {
-    (void) HAL_UART_AbortTransmit(&uart->huart);
+    (void)HAL_UART_AbortTransmit(&uart->huart);
     uart->TxState = UART_STATE_READY;
 }
 
@@ -431,9 +430,9 @@ void UART_AbortSend(struct MCU_UART_S* uart)
  * @brief       Aborts receiving operation.
  * @param[in]   uart reference to the UART control block structure.
  */
-void UART_AbortReceive(struct MCU_UART_S* uart)
+void UART_AbortReceive(struct MCU_UART_S *uart)
 {
-    (void) HAL_UART_AbortReceive(&uart->huart);
+    (void)HAL_UART_AbortReceive(&uart->huart);
     uart->RxState = UART_STATE_READY;
 }
 
@@ -446,20 +445,20 @@ static Retcode_T MapHalRetToMcuRet(HAL_StatusTypeDef halRet)
     Retcode_T retcode;
     switch (halRet)
     {
-        case HAL_OK:
-            retcode = RETCODE_OK;
-            break;
-        case HAL_BUSY:
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
-            break;
-        case HAL_TIMEOUT:
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMEOUT);
-            break;
-        case HAL_ERROR:
-            /* Fall Through */
-        default:
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
-            break;
+    case HAL_OK:
+        retcode = RETCODE_OK;
+        break;
+    case HAL_BUSY:
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
+        break;
+    case HAL_TIMEOUT:
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMEOUT);
+        break;
+    case HAL_ERROR:
+        /* Fall Through */
+    default:
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+        break;
     }
     return retcode;
 }
@@ -470,7 +469,7 @@ static Retcode_T MapHalRetToMcuRet(HAL_StatusTypeDef halRet)
  */
 static void UART_IRQHandler(UART_T uart)
 {
-    struct MCU_UART_S* uart_ptr = (struct MCU_UART_S*) uart;
+    struct MCU_UART_S *uart_ptr = (struct MCU_UART_S *)uart;
     HAL_UART_IRQHandler(&uart_ptr->huart);
 }
 
@@ -480,7 +479,7 @@ static void UART_IRQHandler(UART_T uart)
  */
 static void UART_DMARxHandler(UART_T uart)
 {
-    struct MCU_UART_S* uart_ptr = (struct MCU_UART_S*) uart;
+    struct MCU_UART_S *uart_ptr = (struct MCU_UART_S *)uart;
     HAL_DMA_IRQHandler(uart_ptr->huart.hdmarx);
 }
 
@@ -490,7 +489,7 @@ static void UART_DMARxHandler(UART_T uart)
  */
 static void UART_DMATxHandler(UART_T uart)
 {
-    struct MCU_UART_S* uart_ptr = (struct MCU_UART_S*) uart;
+    struct MCU_UART_S *uart_ptr = (struct MCU_UART_S *)uart;
     HAL_DMA_IRQHandler(uart_ptr->huart.hdmatx);
 }
 
@@ -504,11 +503,11 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
     /* cast UART_HandleTypeDef pointer to MCU_UART_S pointer because the first member in the MCU_UART_S structure is
      * actually the UART_HandleTypeDef structure which results in an equal pointer (start address)
      */
-    struct MCU_UART_S* uart_ptr = (struct MCU_UART_S*) huart;
+    struct MCU_UART_S *uart_ptr = (struct MCU_UART_S *)huart;
     union MCU_UART_Event_U event;
     event.registerValue = 0;
     event.bitfield.TxComplete = 1;
-    uart_ptr->AppCallback((UART_T) uart_ptr, event.bitfield);
+    uart_ptr->AppCallback((UART_T)uart_ptr, event.bitfield);
     uart_ptr->TxState = UART_STATE_READY;
 }
 
@@ -522,13 +521,13 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     /* cast UART_HandleTypeDef pointer to MCU_UART_S pointer because the first member in the MCU_UART_S structure is
      * actually the UART_HandleTypeDef structure which results in an equal pointer (start address)
      */
-    struct MCU_UART_S* uart_ptr = (struct MCU_UART_S*) huart;
+    struct MCU_UART_S *uart_ptr = (struct MCU_UART_S *)huart;
     union MCU_UART_Event_U event;
 
     event.registerValue = 0;
     event.bitfield.RxComplete = 1;
     /* call app layer event handler */
-    uart_ptr->AppCallback((UART_T) uart_ptr, event.bitfield);
+    uart_ptr->AppCallback((UART_T)uart_ptr, event.bitfield);
     if (uart_ptr->RxState == UART_STATE_RX)
     {
         /* recall receive if we are still in receive mode */
@@ -550,7 +549,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
     /* cast UART_HandleTypeDef pointer to MCU_UART_S pointer because the first member in the MCU_UART_S structure is
      * actually the UART_HandleTypeDef structure which results in an equal pointer (start address)
      */
-    struct MCU_UART_S* uart_ptr = (struct MCU_UART_S*) huart;
+    struct MCU_UART_S *uart_ptr = (struct MCU_UART_S *)huart;
     union MCU_UART_Event_U event;
 
     event.registerValue = 0;
@@ -562,7 +561,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
         event.bitfield.RxAborted = 1;
     }
     /* call app layer event handler */
-    uart_ptr->AppCallback((UART_T) uart_ptr, event.bitfield);
+    uart_ptr->AppCallback((UART_T)uart_ptr, event.bitfield);
 }
 
 #endif /* KISO_FEATURE_UART */

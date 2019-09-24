@@ -42,13 +42,13 @@
 #include "Kiso_Retcode.h"
 #include "Kiso_CRC.h"
 
-#define XPROTOCOL_CRC_CCITT_POLY   0x1021U /**< Polynom for function crc16 */
-#define XPROTOCOL_SD               0xC0    /**< Start delimitter */
-#define XPROTOCOL_ED               0xC9    /**< End delimitter */
-#define XPROTOCOL_ESC              0xDB    /**< Escape character */
-#define XPROTOCOL_ESCAPED_SD       0xDC    /**< Escaped SD */
-#define XPROTOCOL_ESCAPED_ED       0xDE    /**< Escaped ED */
-#define XPROTOCOL_ESCAPED_ESC      0xDD    /**< Escaped ESC */
+#define XPROTOCOL_CRC_CCITT_POLY 0x1021U /**< Polynom for function crc16 */
+#define XPROTOCOL_SD 0xC0                /**< Start delimitter */
+#define XPROTOCOL_ED 0xC9                /**< End delimitter */
+#define XPROTOCOL_ESC 0xDB               /**< Escape character */
+#define XPROTOCOL_ESCAPED_SD 0xDC        /**< Escaped SD */
+#define XPROTOCOL_ESCAPED_ED 0xDE        /**< Escaped ED */
+#define XPROTOCOL_ESCAPED_ESC 0xDD       /**< Escaped ESC */
 
 static Retcode_T Escape_SpecialCharacters(uint8_t *frame, uint32_t *indicator, uint32_t maxFrameLength)
 {
@@ -87,7 +87,7 @@ static Retcode_T Escape_SpecialCharacters(uint8_t *frame, uint32_t *indicator, u
 }
 
 static void UnEscape_SpecialCharacters(const uint8_t *frame, uint32_t indicator,
-        uint8_t *data, uint32_t counter)
+                                       uint8_t *data, uint32_t counter)
 {
     if (XPROTOCOL_ESC == frame[indicator])
     {
@@ -119,7 +119,7 @@ Retcode_T XProtocol_Init(void)
 
 /*  The description of the function is available in Kiso_XProtocol.h */
 Retcode_T XProtocol_EncodeFrame(const uint8_t *data, uint32_t dataLength,
-        uint32_t maxFrameLength, uint8_t *frame, uint32_t *frameLength)
+                                uint32_t maxFrameLength, uint8_t *frame, uint32_t *frameLength)
 {
     uint32_t indicator = UINT32_C(0);
     uint16_t checksum = UINT16_C(0x0000);
@@ -136,7 +136,7 @@ Retcode_T XProtocol_EncodeFrame(const uint8_t *data, uint32_t dataLength,
      * ourselves.
      */
     /** \todo: Check for dataLength >= 0xFFFF because of the downcast */
-    (void) CRC_16(XPROTOCOL_CRC_CCITT_POLY, &checksum, data, (uint16_t) dataLength);
+    (void)CRC_16(XPROTOCOL_CRC_CCITT_POLY, &checksum, data, (uint16_t)dataLength);
 
     /* Create encoded frame byte per byte */
     /* Set start delimiter */
@@ -216,15 +216,14 @@ Retcode_T XProtocol_EncodeFrame(const uint8_t *data, uint32_t dataLength,
 
 /*  The description of the function is available in Kiso_XProtocol.h */
 Retcode_T XProtocol_GetPayloadLength(const uint8_t *frame, uint32_t frameLength,
-        uint32_t *payloadLength)
+                                     uint32_t *payloadLength)
 {
     uint32_t counter = UINT32_C(0);
     if (NULL == payloadLength || NULL == frame)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
     }
-    
-    
+
     /* check the number of checksum and payload bytes of frame after decoding */
     for (uint32_t x = UINT32_C(0); x < frameLength; x++)
     {
@@ -244,17 +243,17 @@ Retcode_T XProtocol_GetPayloadLength(const uint8_t *frame, uint32_t frameLength,
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_XPROTOCOL_INTEGRITY_FAILED);
     }
-    
+
     return RETCODE_OK;
 }
 
 /*  The description of the function is available in Kiso_XProtocol.h */
 Retcode_T XProtocol_DecodeFrame(const uint8_t *frame, uint32_t frameLength,
-        uint32_t maxDataLength, uint8_t *data, uint32_t *dataLength)
+                                uint32_t maxDataLength, uint8_t *data, uint32_t *dataLength)
 {
     uint16_t checksum = UINT16_C(0x0000);
     uint8_t chksmbuff[2] =
-    {   0};
+        {0};
 
     if (NULL == data || NULL == dataLength || NULL == frame)
     {
@@ -326,14 +325,14 @@ Retcode_T XProtocol_DecodeFrame(const uint8_t *frame, uint32_t frameLength,
     }
 
     /* Retrieve frame's checksum */
-    uint16_t cs = ((uint16_t) chksmbuff[0] << 8) | chksmbuff[1];
+    uint16_t cs = ((uint16_t)chksmbuff[0] << 8) | chksmbuff[1];
 
     /* Calculate payload's checksum based on CRC-CCITT (XModem)
      * ignoring the Retcode_T returning value. We know that it's
      * always returning RETCODE_OK because we check for NULL pointers
      * ourselves.
      */
-    (void) CRC_16(XPROTOCOL_CRC_CCITT_POLY, &checksum, data, (uint16_t)(counter));
+    (void)CRC_16(XPROTOCOL_CRC_CCITT_POLY, &checksum, data, (uint16_t)(counter));
 
     /* Check if calculated checksum is the same with retrieved (Network Byte Order) */
     if (checksum != cs)
@@ -347,7 +346,7 @@ Retcode_T XProtocol_DecodeFrame(const uint8_t *frame, uint32_t frameLength,
 
 /*  The description of the function is available in Kiso_XProtocol.h */
 Retcode_T XProtocol_IsCompleteFrame(const uint8_t *frame, uint32_t frameLength,
-        const uint8_t **lastCheckPosition)
+                                    const uint8_t **lastCheckPosition)
 {
     if (NULL == frame)
     {

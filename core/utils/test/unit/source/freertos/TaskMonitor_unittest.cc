@@ -44,40 +44,39 @@ extern "C"
 /* Include module under test */
 #include "TaskMonitor.c"
 
- /* End of global scope symbol and fake definitions section */
+    /* End of global scope symbol and fake definitions section */
 }
 
 TaskHandle_t Tasklist[KISO_TASKMONITOR_MAX_TASKS];
 uint32_t TaskTag[KISO_TASKMONITOR_MAX_TASKS];
 
-TaskHookFunction_t xTaskGetApplicationTaskTagCustom( TaskHandle_t xTask )
+TaskHookFunction_t xTaskGetApplicationTaskTagCustom(TaskHandle_t xTask)
 {
-	TaskHookFunction_t ret;
-	uint32_t loopcnt;
-	ret = (TaskHookFunction_t ) TaskTag[0];
+    TaskHookFunction_t ret;
+    uint32_t loopcnt;
+    ret = (TaskHookFunction_t)TaskTag[0];
 
-	for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
-	{
-		if(xTask == Tasklist[loopcnt])
-		{
-			ret = (TaskHookFunction_t ) TaskTag[loopcnt];
-			break;
-		}
-	}
+    for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
+    {
+        if (xTask == Tasklist[loopcnt])
+        {
+            ret = (TaskHookFunction_t)TaskTag[loopcnt];
+            break;
+        }
+    }
 
-	return ret;
+    return ret;
 }
 
-class TaskMonitor: public testing::Test
+class TaskMonitor : public testing::Test
 {
 protected:
-
     virtual void SetUp()
     {
-		RESET_FAKE(xTaskGetTickCount);
-		
+        RESET_FAKE(xTaskGetTickCount);
+
         FFF_RESET_HISTORY();
-	}
+    }
 };
 
 /* Specify test cases ******************************************************* */
@@ -90,8 +89,8 @@ TEST_F(TaskMonitor, TaskMonitor_InitializeTest)
 
     /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal;
-	TaskMonitor_TaskInfo_S taskMonitor;
-	taskMonitor.IsReg = false;
+    TaskMonitor_TaskInfo_S taskMonitor;
+    taskMonitor.IsReg = false;
     taskMonitor.Task = NULL;
     taskMonitor.UpperLimitTickTime = 0UL;
 
@@ -101,7 +100,6 @@ TEST_F(TaskMonitor, TaskMonitor_InitializeTest)
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(false, IsReg);
-
 }
 
 TEST_F(TaskMonitor, TaskMonitor_UpdateTest)
@@ -134,19 +132,19 @@ TEST_F(TaskMonitor, TaskMonitor_RegisterTest)
     /* reset the task monitor */
     task = (TaskHandle_t)&retVal;
     retVal = TaskMonitor_Initialize();
-	EXPECT_EQ(RETCODE_OK, retVal);
+    EXPECT_EQ(RETCODE_OK, retVal);
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
+    for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
     {
-       retVal = TaskMonitor_Register(task, (loopcnt+1));
-       /* VERIFY : Compare the expected with actual */
-       EXPECT_EQ(RETCODE_OK, retVal);
+        retVal = TaskMonitor_Register(task, (loopcnt + 1));
+        /* VERIFY : Compare the expected with actual */
+        EXPECT_EQ(RETCODE_OK, retVal);
     }
     /* Failure test case */
-    retVal = TaskMonitor_Register(task, (loopcnt+1));
+    retVal = TaskMonitor_Register(task, (loopcnt + 1));
     EXPECT_NE(RETCODE_OK, retVal);
 
-    retVal = TaskMonitor_Register(NULL, (loopcnt+1));
+    retVal = TaskMonitor_Register(NULL, (loopcnt + 1));
     EXPECT_NE(RETCODE_OK, retVal);
 
     retVal = TaskMonitor_Register(task, 0UL);
@@ -171,191 +169,188 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
     /* Reset the task monitor */
 
     retVal = TaskMonitor_Initialize();
-	EXPECT_EQ(RETCODE_OK, retVal);
-	memset(TaskTag, 0x00, sizeof(TaskTag));
+    EXPECT_EQ(RETCODE_OK, retVal);
+    memset(TaskTag, 0x00, sizeof(TaskTag));
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
+    for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
     {
-    	Tasklist[loopcnt] = (TaskHandle_t)&TaskTag[loopcnt];
-    	retVal = TaskMonitor_Register(Tasklist[loopcnt], 1UL);
-       /* VERIFY : Compare the expected with actual */
-       EXPECT_EQ(RETCODE_OK, retVal);
+        Tasklist[loopcnt] = (TaskHandle_t)&TaskTag[loopcnt];
+        retVal = TaskMonitor_Register(Tasklist[loopcnt], 1UL);
+        /* VERIFY : Compare the expected with actual */
+        EXPECT_EQ(RETCODE_OK, retVal);
 
-       TaskMonitor_Update(&TaskTag[loopcnt], 500UL);
+        TaskMonitor_Update(&TaskTag[loopcnt], 500UL);
     }
-
 
     xTaskGetTickCount_fake.return_val = 510;
     xTaskGetApplicationTaskTag_fake.custom_fake = &xTaskGetApplicationTaskTagCustom;
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     monitorCheck = TaskMonitor_Check();
-    if(monitorCheck == false)
+    if (monitorCheck == false)
     {
-    	retVal = RETCODE_OK;
+        retVal = RETCODE_OK;
     }
     else
     {
-    	retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
-
+        retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
     }
     EXPECT_EQ(RETCODE_OK, retVal);
 
     xTaskGetTickCount_fake.return_val = 490UL;
 
-	/* EXECISE: call relevant production code Interface with appropriate test inputs  */
-	monitorCheck = TaskMonitor_Check();
-    if(monitorCheck == false)
+    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
+    monitorCheck = TaskMonitor_Check();
+    if (monitorCheck == false)
     {
-    	retVal = RETCODE_OK;
+        retVal = RETCODE_OK;
     }
     else
     {
-    	retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
+        retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
     }
     EXPECT_NE(RETCODE_OK, retVal);
 
     xTaskGetTickCount_fake.return_val = 500UL;
 
-	/* EXECISE: call relevant production code Interface with appropriate test inputs  */
-	monitorCheck = TaskMonitor_Check();
-	if(monitorCheck == false)
-	{
-		retVal = RETCODE_OK;
-	}
-	else
-	{
-		retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
-	}
-	EXPECT_EQ(RETCODE_OK, retVal);
+    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
+    monitorCheck = TaskMonitor_Check();
+    if (monitorCheck == false)
+    {
+        retVal = RETCODE_OK;
+    }
+    else
+    {
+        retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
+    }
+    EXPECT_EQ(RETCODE_OK, retVal);
 
-	/* Task 6 is not executed with in 1 second */
-	xTaskGetTickCount_fake.return_val = 5000UL;
-	/* update all tasks execution time */
-	for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
-	{
-		TaskMonitor_Update(&TaskTag[loopcnt], 4500UL);
-	}
-	/* change task 6 execution time to test the failure condition  */
-	TaskMonitor_Update(&TaskTag[KISO_TASKMONITOR_MAX_TASKS -1], 2100UL);
-	monitorCheck = TaskMonitor_Check();
-	if(monitorCheck == false)
-	{
-		retVal = RETCODE_OK;
-	}
-	else
-	{
-		retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
-	}
-	EXPECT_NE(RETCODE_OK, retVal);
+    /* Task 6 is not executed with in 1 second */
+    xTaskGetTickCount_fake.return_val = 5000UL;
+    /* update all tasks execution time */
+    for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
+    {
+        TaskMonitor_Update(&TaskTag[loopcnt], 4500UL);
+    }
+    /* change task 6 execution time to test the failure condition  */
+    TaskMonitor_Update(&TaskTag[KISO_TASKMONITOR_MAX_TASKS - 1], 2100UL);
+    monitorCheck = TaskMonitor_Check();
+    if (monitorCheck == false)
+    {
+        retVal = RETCODE_OK;
+    }
+    else
+    {
+        retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
+    }
+    EXPECT_NE(RETCODE_OK, retVal);
 
-	/* test with current tick count souver flow condition */
-	xTaskGetTickCount_fake.return_val = 10UL; /* current time 10mS counter overflow*/
-	/* update all tasks execution time */
-	for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
-	{
-		TaskMonitor_Update(&TaskTag[loopcnt], UINT32_MAX-5);
-	}
+    /* test with current tick count souver flow condition */
+    xTaskGetTickCount_fake.return_val = 10UL; /* current time 10mS counter overflow*/
+    /* update all tasks execution time */
+    for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
+    {
+        TaskMonitor_Update(&TaskTag[loopcnt], UINT32_MAX - 5);
+    }
 
-	monitorCheck = TaskMonitor_Check();
-	if(monitorCheck == false)
-	{
-		retVal = RETCODE_OK;
-	}
-	else
-	{
-		retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
-	}
-	EXPECT_EQ(RETCODE_OK, retVal);
+    monitorCheck = TaskMonitor_Check();
+    if (monitorCheck == false)
+    {
+        retVal = RETCODE_OK;
+    }
+    else
+    {
+        retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
+    }
+    EXPECT_EQ(RETCODE_OK, retVal);
 
-	/* test : last task has failed to execute */
-	xTaskGetTickCount_fake.return_val = 150UL; /* current time 10mS counter overflow*/
-	/* update all tasks execution time */
-	for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
-	{
-		TaskMonitor_Update(&TaskTag[loopcnt], UINT32_MAX-5);
-	}
-	/* change last task execution time to test the failure condition  */
-	TaskMonitor_Update(&TaskTag[KISO_TASKMONITOR_MAX_TASKS-1], UINT32_MAX-1000);
-	monitorCheck = TaskMonitor_Check();
-	if(monitorCheck == false)
-	{
-		retVal = RETCODE_OK;
-	}
-	else
-	{
-		retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
-	}
-	EXPECT_NE(RETCODE_OK, retVal);
+    /* test : last task has failed to execute */
+    xTaskGetTickCount_fake.return_val = 150UL; /* current time 10mS counter overflow*/
+    /* update all tasks execution time */
+    for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
+    {
+        TaskMonitor_Update(&TaskTag[loopcnt], UINT32_MAX - 5);
+    }
+    /* change last task execution time to test the failure condition  */
+    TaskMonitor_Update(&TaskTag[KISO_TASKMONITOR_MAX_TASKS - 1], UINT32_MAX - 1000);
+    monitorCheck = TaskMonitor_Check();
+    if (monitorCheck == false)
+    {
+        retVal = RETCODE_OK;
+    }
+    else
+    {
+        retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
+    }
+    EXPECT_NE(RETCODE_OK, retVal);
 
-	/* test : last task has failed to execute */
-	xTaskGetTickCount_fake.return_val = 149UL; /* current time 10mS counter overflow*/
-	/* update all tasks execution time */
-	for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
-	{
-		TaskMonitor_Update(&TaskTag[loopcnt], 150UL);
-	}
-	monitorCheck = TaskMonitor_Check();
-	if(monitorCheck == false)
-	{
-		retVal = RETCODE_OK;
-	}
-	else
-	{
-		retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
-	}
-	EXPECT_EQ(RETCODE_OK, retVal);
+    /* test : last task has failed to execute */
+    xTaskGetTickCount_fake.return_val = 149UL; /* current time 10mS counter overflow*/
+    /* update all tasks execution time */
+    for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
+    {
+        TaskMonitor_Update(&TaskTag[loopcnt], 150UL);
+    }
+    monitorCheck = TaskMonitor_Check();
+    if (monitorCheck == false)
+    {
+        retVal = RETCODE_OK;
+    }
+    else
+    {
+        retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
+    }
+    EXPECT_EQ(RETCODE_OK, retVal);
 
-	/* test : last task has failed to execute */
-	xTaskGetTickCount_fake.return_val = 148UL; /* current time 10mS counter overflow*/
-	/* update all tasks execution time */
-	for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
-	{
-		TaskMonitor_Update(&TaskTag[loopcnt], 150UL);
-	}
-	monitorCheck = TaskMonitor_Check();
-	if(monitorCheck == false)
-	{
-		retVal = RETCODE_OK;
-	}
-	else
-	{
-		retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
-	}
-	EXPECT_EQ(RETCODE_OK, retVal);
+    /* test : last task has failed to execute */
+    xTaskGetTickCount_fake.return_val = 148UL; /* current time 10mS counter overflow*/
+    /* update all tasks execution time */
+    for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
+    {
+        TaskMonitor_Update(&TaskTag[loopcnt], 150UL);
+    }
+    monitorCheck = TaskMonitor_Check();
+    if (monitorCheck == false)
+    {
+        retVal = RETCODE_OK;
+    }
+    else
+    {
+        retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
+    }
+    EXPECT_EQ(RETCODE_OK, retVal);
 
-	/* test : last task has failed to execute */
-	xTaskGetTickCount_fake.return_val = 147UL; /* current time 10mS counter overflow*/
-	/* update all tasks execution time */
-	for(loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
-	{
-		TaskMonitor_Update(&TaskTag[loopcnt], 150UL);
-	}
-	monitorCheck = TaskMonitor_Check();
-	if(monitorCheck == false)
-	{
-		retVal = RETCODE_OK;
-	}
-	else
-	{
-		retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
-	}
-	EXPECT_NE(RETCODE_OK, retVal);
+    /* test : last task has failed to execute */
+    xTaskGetTickCount_fake.return_val = 147UL; /* current time 10mS counter overflow*/
+    /* update all tasks execution time */
+    for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
+    {
+        TaskMonitor_Update(&TaskTag[loopcnt], 150UL);
+    }
+    monitorCheck = TaskMonitor_Check();
+    if (monitorCheck == false)
+    {
+        retVal = RETCODE_OK;
+    }
+    else
+    {
+        retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
+    }
+    EXPECT_NE(RETCODE_OK, retVal);
 
-
-	/* Test : check the behavior if no tasks are registered to monitor */
-	retVal = TaskMonitor_Initialize();
-	EXPECT_EQ(RETCODE_OK, retVal);
-	monitorCheck = TaskMonitor_Check();
-	if(monitorCheck == false)
-	{
-		retVal = RETCODE_OK;
-	}
-	else
-	{
-		retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
-	}
-	EXPECT_EQ(RETCODE_OK, retVal);
+    /* Test : check the behavior if no tasks are registered to monitor */
+    retVal = TaskMonitor_Initialize();
+    EXPECT_EQ(RETCODE_OK, retVal);
+    monitorCheck = TaskMonitor_Check();
+    if (monitorCheck == false)
+    {
+        retVal = RETCODE_OK;
+    }
+    else
+    {
+        retVal = RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE);
+    }
+    EXPECT_EQ(RETCODE_OK, retVal);
 }
 #else
 }

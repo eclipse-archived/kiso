@@ -11,7 +11,7 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
- 
+
 #ifndef STM32L4XX_HAL_CORTEX_TH_HH_
 #define STM32L4XX_HAL_CORTEX_TH_HH_
 
@@ -32,7 +32,7 @@ FAKE_VOID_FUNC(HAL_NVIC_SystemReset)
 FAKE_VALUE_FUNC(uint32_t, HAL_SYSTICK_Config, uint32_t)
 
 FAKE_VALUE_FUNC(uint32_t, HAL_NVIC_GetPriorityGrouping)
-FAKE_VOID_FUNC(HAL_NVIC_GetPriority, IRQn_Type, uint32_t, uint32_t*, uint32_t*)
+FAKE_VOID_FUNC(HAL_NVIC_GetPriority, IRQn_Type, uint32_t, uint32_t *, uint32_t *)
 FAKE_VALUE_FUNC(uint32_t, HAL_NVIC_GetPendingIRQ, IRQn_Type)
 FAKE_VOID_FUNC(HAL_NVIC_SetPendingIRQ, IRQn_Type)
 FAKE_VOID_FUNC(HAL_NVIC_ClearPendingIRQ, IRQn_Type)

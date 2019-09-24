@@ -48,8 +48,8 @@
 enum KISO_HAL_InterfaceType_E
 {
     KISO_HAL_INTERFACE_NONE, /**< Undefined / Default / None of the bus communication interface is used */
-    KISO_HAL_INTERFACE_SPI, /**< SPI is used as the communication interface */
-    KISO_HAL_INTERFACE_I2C, /**< I2C is used as the communication interface */
+    KISO_HAL_INTERFACE_SPI,  /**< SPI is used as the communication interface */
+    KISO_HAL_INTERFACE_I2C,  /**< I2C is used as the communication interface */
     KISO_HAL_INTERFACE_UART, /**< UART is used as the communication interface */
 };
 
@@ -62,36 +62,38 @@ enum KISO_HAL_InterfaceType_E
 enum KISO_HAL_TransferMode_E
 {
     KISO_HAL_TRANSFER_MODE_POLLING = 1, /**< The transfer function implementation shall rely on polling for state change */
-    KISO_HAL_TRANSFER_MODE_INTERRUPT, /**< The transfer function implementation shall rely on interrupts on state change */
-    KISO_HAL_TRANSFER_MODE_DMA, /**< The transfer function implementation shall rely on DMA and completion interrupts */
+    KISO_HAL_TRANSFER_MODE_INTERRUPT,   /**< The transfer function implementation shall rely on interrupts on state change */
+    KISO_HAL_TRANSFER_MODE_DMA,         /**< The transfer function implementation shall rely on DMA and completion interrupts */
 };
 
 /**
  * @warning The below enums are provided for backward compatibility.
  * @note - Interface users are requested to not use this, since it will be removed going forward.
  */
-#define KISO_HAL_TRANSFER_MODE_BLOCKING (enum KISO_HAL_TransferMode_E) 1 /* The implementer shall use KISO_HAL_TRANSFER_MODE_POLLING instead */
-#define KISO_HAL_TRANSFER_MODE_INTERRUPT_RX_DMA_TX (enum KISO_HAL_TransferMode_E) 4 /* The implementer shall create different RxMode and TxMode in the handler */
-#define KISO_HAL_TRANSFER_MODE_INTERRUPT_TX_DMA_RX (enum KISO_HAL_TransferMode_E) 5 /* The implementer shall create different RxMode and TxMode in the handler */
+#define KISO_HAL_TRANSFER_MODE_BLOCKING (enum KISO_HAL_TransferMode_E)1            /* The implementer shall use KISO_HAL_TRANSFER_MODE_POLLING instead */
+#define KISO_HAL_TRANSFER_MODE_INTERRUPT_RX_DMA_TX (enum KISO_HAL_TransferMode_E)4 /* The implementer shall create different RxMode and TxMode in the handler */
+#define KISO_HAL_TRANSFER_MODE_INTERRUPT_TX_DMA_RX (enum KISO_HAL_TransferMode_E)5 /* The implementer shall create different RxMode and TxMode in the handler */
 
 /**
  * @brief       Declares an enumeration for various possible  API call modes.
  */
 enum KISO_HAL_CallMode_E
 {
-    KISO_HAL_CALL_MODE_BLOCKING = 1, /**< Blocks function return until operation finished */                                 //!< KISO_HAL_CALL_MODE_BLOCKING
-    KISO_HAL_CALL_MODE_NON_BLOCKING, /**< Returns before operation completed and caller expects a callback upon completion *///!< KISO_HAL_CALL_MODE_NON_BLOCKING
+    KISO_HAL_CALL_MODE_BLOCKING = 1,
+    /**< Blocks function return until operation finished */ //!< KISO_HAL_CALL_MODE_BLOCKING
+    KISO_HAL_CALL_MODE_NON_BLOCKING,
+    /**< Returns before operation completed and caller expects a callback upon completion */ //!< KISO_HAL_CALL_MODE_NON_BLOCKING
 };
 
 /**
  * @brief       Data type for a general purpose hardware handle.
  */
-typedef void * HWHandle_T;
+typedef void *HWHandle_T;
 
 /**
  * @brief       Data type for a general purpose software handle.
  */
-typedef void * SWHandle_T;
+typedef void *SWHandle_T;
 
 /**
  * @brief       Device specific handle
@@ -101,12 +103,12 @@ typedef void * SWHandle_T;
  */
 struct HAL_DeviceHandle_S
 {
-    int32_t const DeviceId; /**< An Id given by the BSP to this particular device */
+    int32_t const DeviceId;                            /**< An Id given by the BSP to this particular device */
     enum KISO_HAL_InterfaceType_E const InterfaceType; /**< The type of the communication interface used to communicate to the device */
-    HWHandle_T const BusHandle; /**< The Handle of the communication interface e.g. in I2C it would reference a variable of type struct MCU_SPI_Handle_T */
-    SWHandle_T const DeviceConfig; /**< An abstract type holding device specific configuration e.g in I2C this would hold the device address */
-    SWHandle_T volatile SWAttribute; /**< An OS aware driver would here hold a reference to a struct holding attributes needed to safely operate this particular communication bus e.g locks or synchronizing signals */
-    struct HAL_DeviceHandle_S * const NextDevice; /**< Pointer to the reference of the next device of the same type in the board */
+    HWHandle_T const BusHandle;                        /**< The Handle of the communication interface e.g. in I2C it would reference a variable of type struct MCU_SPI_Handle_T */
+    SWHandle_T const DeviceConfig;                     /**< An abstract type holding device specific configuration e.g in I2C this would hold the device address */
+    SWHandle_T volatile SWAttribute;                   /**< An OS aware driver would here hold a reference to a struct holding attributes needed to safely operate this particular communication bus e.g locks or synchronizing signals */
+    struct HAL_DeviceHandle_S *const NextDevice;       /**< Pointer to the reference of the next device of the same type in the board */
 };
 
 /**

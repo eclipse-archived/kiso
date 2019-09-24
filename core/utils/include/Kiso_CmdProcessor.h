@@ -65,7 +65,7 @@
 #include "Kiso_Retcode.h"
 
 /* public type and macro definitions */
-#define CMDPROCESSOR_MAX_NAME_LEN        UINT32_C(32)   /**< Maximum length of command processor task name including 0 termination char */
+#define CMDPROCESSOR_MAX_NAME_LEN UINT32_C(32) /**< Maximum length of command processor task name including 0 termination char */
 
 /**
  * @brief
@@ -83,15 +83,14 @@
  */
 typedef void (*CmdProcessor_Func_T)(void *param1, uint32_t param2);
 
-typedef void * cmdProcessorTaskHandle_t;
+typedef void *cmdProcessorTaskHandle_t;
 
-typedef void * cmdProcessorQueueHandle_t;
-
+typedef void *cmdProcessorQueueHandle_t;
 
 /* Structure contains task handle and queue handle as it members to access the queue and task easily.*/
 struct _CmdProcessor_S
 {
-	cmdProcessorTaskHandle_t task;
+    cmdProcessorTaskHandle_t task;
     cmdProcessorQueueHandle_t queue;
     int8_t name[CMDPROCESSOR_MAX_NAME_LEN];
 };
@@ -144,7 +143,7 @@ enum CmdProcessor_Retcode_E
  *      When the task or queue is not created
  * 
  */
-Retcode_T CmdProcessor_Initialize(CmdProcessor_T *cmdProcessor, const char* name, uint32_t taskPriority, uint32_t taskStackDepth, uint32_t queueSize);
+Retcode_T CmdProcessor_Initialize(CmdProcessor_T *cmdProcessor, const char *name, uint32_t taskPriority, uint32_t taskStackDepth, uint32_t queueSize);
 
 /**
  *  @brief
@@ -201,7 +200,6 @@ Retcode_T CmdProcessor_Enqueue(CmdProcessor_T *cmdProcessor, CmdProcessor_Func_T
  * 
  */
 Retcode_T CmdProcessor_EnqueueFromIsr(CmdProcessor_T *cmdProcessor, CmdProcessor_Func_T func, void *param1, uint32_t param2);
-
 
 /**
  * @brief

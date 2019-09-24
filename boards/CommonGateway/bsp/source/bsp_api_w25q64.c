@@ -38,55 +38,55 @@ void DMA1_Channel3_IRQHandler(void);
 /**
  * BSP State of the BLE module
  */
-static uint8_t bspState = (uint8_t) BSP_STATE_INIT;
+static uint8_t bspState = (uint8_t)BSP_STATE_INIT;
 
 /**
  * Static structure storing SPI handle for serial flash memory.
  */
 static struct MCU_SPI_S W25_SpiHandle =
-        {
-                .TransferMode = KISO_HAL_TRANSFER_MODE_DMA,
-                .hspi.Instance = SPI1,
-                .hspi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4,
-                .hspi.Init.Direction = SPI_DIRECTION_2LINES,
-                .hspi.Init.CLKPhase = SPI_PHASE_1EDGE,
-                .hspi.Init.CLKPolarity = SPI_POLARITY_LOW,
-                .hspi.Init.DataSize = SPI_DATASIZE_8BIT,
-                .hspi.Init.FirstBit = SPI_FIRSTBIT_MSB,
-                .hspi.Init.TIMode = SPI_TIMODE_DISABLE,
-                .hspi.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE,
-                .hspi.Init.CRCPolynomial = 7,
-                .hspi.Init.CRCLength = SPI_CRC_LENGTH_8BIT,
-                .hspi.Init.NSS = SPI_NSS_SOFT,
-                .hspi.Init.NSSPMode = SPI_NSS_PULSE_DISABLE,
-                .hspi.Init.Mode = SPI_MODE_MASTER,
-        };
+    {
+        .TransferMode = KISO_HAL_TRANSFER_MODE_DMA,
+        .hspi.Instance = SPI1,
+        .hspi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_4,
+        .hspi.Init.Direction = SPI_DIRECTION_2LINES,
+        .hspi.Init.CLKPhase = SPI_PHASE_1EDGE,
+        .hspi.Init.CLKPolarity = SPI_POLARITY_LOW,
+        .hspi.Init.DataSize = SPI_DATASIZE_8BIT,
+        .hspi.Init.FirstBit = SPI_FIRSTBIT_MSB,
+        .hspi.Init.TIMode = SPI_TIMODE_DISABLE,
+        .hspi.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE,
+        .hspi.Init.CRCPolynomial = 7,
+        .hspi.Init.CRCLength = SPI_CRC_LENGTH_8BIT,
+        .hspi.Init.NSS = SPI_NSS_SOFT,
+        .hspi.Init.NSSPMode = SPI_NSS_PULSE_DISABLE,
+        .hspi.Init.Mode = SPI_MODE_MASTER,
+};
 
 static DMA_HandleTypeDef W25_DMATxHandle =
-        {
-                .Instance = DMA1_Channel3,
-                .Init.Request = DMA_REQUEST_1,
-                .Init.Direction = DMA_MEMORY_TO_PERIPH,
-                .Init.PeriphInc = DMA_PINC_DISABLE,
-                .Init.MemInc = DMA_MINC_ENABLE,
-                .Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE,
-                .Init.MemDataAlignment = DMA_MDATAALIGN_BYTE,
-                .Init.Mode = DMA_NORMAL,
-                .Init.Priority = DMA_PRIORITY_LOW,
-        };
+    {
+        .Instance = DMA1_Channel3,
+        .Init.Request = DMA_REQUEST_1,
+        .Init.Direction = DMA_MEMORY_TO_PERIPH,
+        .Init.PeriphInc = DMA_PINC_DISABLE,
+        .Init.MemInc = DMA_MINC_ENABLE,
+        .Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE,
+        .Init.MemDataAlignment = DMA_MDATAALIGN_BYTE,
+        .Init.Mode = DMA_NORMAL,
+        .Init.Priority = DMA_PRIORITY_LOW,
+};
 
 static DMA_HandleTypeDef W25_DMARxHandle =
-        {
-                .Instance = DMA1_Channel2,
-                .Init.Request = DMA_REQUEST_1,
-                .Init.Direction = DMA_PERIPH_TO_MEMORY,
-                .Init.PeriphInc = DMA_PINC_DISABLE,
-                .Init.MemInc = DMA_MINC_ENABLE,
-                .Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE,
-                .Init.MemDataAlignment = DMA_MDATAALIGN_BYTE,
-                .Init.Mode = DMA_NORMAL,
-                .Init.Priority = DMA_PRIORITY_HIGH,
-        };
+    {
+        .Instance = DMA1_Channel2,
+        .Init.Request = DMA_REQUEST_1,
+        .Init.Direction = DMA_PERIPH_TO_MEMORY,
+        .Init.PeriphInc = DMA_PINC_DISABLE,
+        .Init.MemInc = DMA_MINC_ENABLE,
+        .Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE,
+        .Init.MemDataAlignment = DMA_MDATAALIGN_BYTE,
+        .Init.Mode = DMA_NORMAL,
+        .Init.Priority = DMA_PRIORITY_HIGH,
+};
 
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
 
@@ -99,16 +99,15 @@ Retcode_T BSP_Memory_W25_Connect(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_CONNECTED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_CONNECTED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
     if (RETCODE_OK == retcode)
     {
-        GPIO_InitTypeDef BSP_GPIOInitStruct = { 0 };
+        GPIO_InitTypeDef BSP_GPIOInitStruct = {0};
 
-        GPIO_OpenClockGate(GPIO_PORT_E, PINE_MEM_WP | PINE_MEM_HOLD | PINE_MEM_CS | PINE_MEM_SCK | PINE_MEM_MISO
-                                   | PINE_MEM_MOSI);
+        GPIO_OpenClockGate(GPIO_PORT_E, PINE_MEM_WP | PINE_MEM_HOLD | PINE_MEM_CS | PINE_MEM_SCK | PINE_MEM_MISO | PINE_MEM_MOSI);
         /* Configure output push pull pins */
         BSP_GPIOInitStruct.Pin = PINE_MEM_WP | PINE_MEM_HOLD | PINE_MEM_CS;
         BSP_GPIOInitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -124,7 +123,7 @@ Retcode_T BSP_Memory_W25_Connect(void)
         BSP_GPIOInitStruct.Alternate = GPIO_AF5_SPI1;
         HAL_GPIO_Init(GPIOB, &BSP_GPIOInitStruct);
 
-        bspState = (uint8_t) BSP_STATE_CONNECTED;
+        bspState = (uint8_t)BSP_STATE_CONNECTED;
     }
     return retcode;
 }
@@ -138,7 +137,7 @@ Retcode_T BSP_Memory_W25_Enable(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_ENABLED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_ENABLED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -151,8 +150,7 @@ Retcode_T BSP_Memory_W25_Enable(void)
     if (RETCODE_OK == retcode)
     {
         /* Enable the clock for the DMA resource */
-        __HAL_RCC_DMA1_CLK_ENABLE()
-                        ;
+        __HAL_RCC_DMA1_CLK_ENABLE();
         /* Configure the DMA handler for Transmission process */
         if (HAL_OK != HAL_DMA_Init(&W25_DMATxHandle))
         {
@@ -175,8 +173,7 @@ Retcode_T BSP_Memory_W25_Enable(void)
         /* Associate the initialized DMA handle to the the SPI handle */
         __HAL_LINKDMA(&(W25_SpiHandle.hspi), hdmarx, W25_DMARxHandle);
         /* Configure SPI resource */
-        __HAL_RCC_SPI1_CLK_ENABLE()
-                        ;
+        __HAL_RCC_SPI1_CLK_ENABLE();
         if (HAL_OK != HAL_SPI_Init(&(W25_SpiHandle.hspi)))
         {
             retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_FAILURE);
@@ -192,7 +189,7 @@ Retcode_T BSP_Memory_W25_Enable(void)
         HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 6, 0);
         HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
 
-        bspState = (uint8_t) BSP_STATE_ENABLED;
+        bspState = (uint8_t)BSP_STATE_ENABLED;
     }
     return retcode;
 }
@@ -206,15 +203,14 @@ Retcode_T BSP_Memory_W25_Disable(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_ENABLED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_ENABLED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
     if (RETCODE_OK == retcode)
     {
         HAL_SPI_StateTypeDef HalSpiState = W25_SpiHandle.hspi.State;
-        if (HalSpiState == HAL_SPI_STATE_BUSY || HalSpiState == HAL_SPI_STATE_BUSY_TX
-                || HalSpiState == HAL_SPI_STATE_BUSY_RX || HalSpiState == HAL_SPI_STATE_BUSY_TX_RX)
+        if (HalSpiState == HAL_SPI_STATE_BUSY || HalSpiState == HAL_SPI_STATE_BUSY_TX || HalSpiState == HAL_SPI_STATE_BUSY_RX || HalSpiState == HAL_SPI_STATE_BUSY_TX_RX)
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
         }
@@ -243,7 +239,7 @@ Retcode_T BSP_Memory_W25_Disable(void)
     }
     if (RETCODE_OK == retcode)
     {
-        bspState = (uint8_t) BSP_STATE_ENABLED;
+        bspState = (uint8_t)BSP_STATE_ENABLED;
     }
     return retcode;
 }
@@ -257,17 +253,16 @@ Retcode_T BSP_Memory_W25_Disconnect(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_DISCONNECTED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_DISCONNECTED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
     if (RETCODE_OK == retcode)
     {
         HAL_GPIO_DeInit(GPIOB, PINE_MEM_WP | PINE_MEM_HOLD | PINE_MEM_CS | PINE_MEM_SCK | PINE_MEM_MISO | PINE_MEM_MOSI);
-        GPIO_CloseClockGate(GPIO_PORT_E, PINE_MEM_WP | PINE_MEM_HOLD | PINE_MEM_CS | PINE_MEM_SCK | PINE_MEM_MISO
-                                    | PINE_MEM_MOSI);
+        GPIO_CloseClockGate(GPIO_PORT_E, PINE_MEM_WP | PINE_MEM_HOLD | PINE_MEM_CS | PINE_MEM_SCK | PINE_MEM_MISO | PINE_MEM_MOSI);
 
-        bspState = (uint8_t) BSP_STATE_DISCONNECTED;
+        bspState = (uint8_t)BSP_STATE_DISCONNECTED;
     }
     return retcode;
 }
@@ -278,7 +273,7 @@ Retcode_T BSP_Memory_W25_Disconnect(void)
  */
 HWHandle_T BSP_Memory_W25_GetHandle(void)
 {
-    return (HWHandle_T) &W25_SpiHandle;
+    return (HWHandle_T)&W25_SpiHandle;
 }
 
 /**
@@ -327,7 +322,6 @@ Retcode_T BSP_Memory_W25_SetHoldHigh(void)
         retcode = RETCODE_OK;
     }
     return retcode;
-
 }
 
 /**
@@ -376,7 +370,6 @@ Retcode_T BSP_Memory_W25_SetWPLow(void)
         retcode = RETCODE_OK;
     }
     return retcode;
-
 }
 
 /*---------------------- LOCAL FUNCTIONS IMPLEMENTATION -------------------------------------------------------------*/
@@ -388,7 +381,7 @@ void DMA1_Channel2_IRQHandler(void)
 {
     if (W25_SpiHandle.DmaRxCallback)
     {
-        W25_SpiHandle.DmaRxCallback((SPI_T) &W25_SpiHandle);
+        W25_SpiHandle.DmaRxCallback((SPI_T)&W25_SpiHandle);
     }
 }
 
@@ -399,9 +392,8 @@ void DMA1_Channel3_IRQHandler(void)
 {
     if (W25_SpiHandle.DmaTxCallback)
     {
-        W25_SpiHandle.DmaTxCallback((SPI_T) &W25_SpiHandle);
+        W25_SpiHandle.DmaTxCallback((SPI_T)&W25_SpiHandle);
     }
 }
 
 #endif /* KISO_FEATURE_BSP_MEMORY_W25 */
-

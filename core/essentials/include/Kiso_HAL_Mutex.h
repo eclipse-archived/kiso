@@ -35,12 +35,12 @@
 
 #include "Kiso_HAL.h"
 
-#define HAL_MUTEX_UNINITIALIZED		NULL
+#define HAL_MUTEX_UNINITIALIZED NULL
 
 /**
  * @brief Abstract type definition for mutex.
  * */
-typedef void * HAL_Mutex_T;
+typedef void *HAL_Mutex_T;
 
 /**
  * @brief       Type definition for the mutex hook function pointer.

@@ -58,24 +58,25 @@
  */
 #if KISO_TARGET_PLATFORM == efm32
 #include "em_msc.h"
-#define MCU_FLASH_PAGE_SIZE     (FLASH_PAGE_SIZE)
+#define MCU_FLASH_PAGE_SIZE (FLASH_PAGE_SIZE)
 #elif KISO_TARGET_PLATFORM == stm32
 #include "stm32l4xx_hal.h"
-#define MCU_FLASH_PAGE_SIZE     (FLASH_PAGE_SIZE)
+#define MCU_FLASH_PAGE_SIZE (FLASH_PAGE_SIZE)
 #else
-#define MCU_FLASH_PAGE_SIZE     (0)
+#define MCU_FLASH_PAGE_SIZE (0)
 #error MCU Flash: You have to define the correct device type!
 #endif
 
 #include "Kiso_Retcode.h"
 /**
  * @brief enumeration of special flash interface error return codes
- *//**< Flash write/erase successful. */
+ */
+/**< Flash write/erase successful. */
 enum RETCODE_HAL_UART_E
 {
     RETCODE_HAL_FLASH_INVALID_ADDRESS = RETCODE_FIRST_CUSTOM_CODE, /**< Invalid address. Write to an address that is not flash. */
-    RETCODE_HAL_FLASH_ADDRESS_LOCKED, /**< Flash address is locked. */
-    RETCODE_HAL_FLASH_TIMEOUT, /**< Timeout while writing to flash. */
+    RETCODE_HAL_FLASH_ADDRESS_LOCKED,                              /**< Flash address is locked. */
+    RETCODE_HAL_FLASH_TIMEOUT,                                     /**< Timeout while writing to flash. */
 };
 
 /**
@@ -118,7 +119,7 @@ uint32_t MCU_Flash_GetPageSize(void);
  *  memory.
  *  @see MCU_Flash_Erase
  */
-Retcode_T MCU_Flash_ErasePage(uint32_t * pageAddress);
+Retcode_T MCU_Flash_ErasePage(uint32_t *pageAddress);
 
 /**
  * @brief Erases multiple pages of internal flash
@@ -152,7 +153,7 @@ Retcode_T MCU_Flash_ErasePage(uint32_t * pageAddress);
  *  - A command to erase a page has timed out
  *  @see MCU_Flash_ErasePage
  */
-Retcode_T MCU_Flash_Erase(uint32_t* startAddress, uint32_t numPages);
+Retcode_T MCU_Flash_Erase(uint32_t *startAddress, uint32_t numPages);
 
 /**
  *  @brief Writes multiple byte values beginning at the specified target address.
@@ -186,7 +187,7 @@ Retcode_T MCU_Flash_Erase(uint32_t* startAddress, uint32_t numPages);
  *  @note Please note that the flash region to write must be erased before
  *  this function is executed.
  */
-Retcode_T MCU_Flash_Write( const uint8_t* targetAddress, const uint8_t* sourceAddress, uint32_t numBytes);
+Retcode_T MCU_Flash_Write(const uint8_t *targetAddress, const uint8_t *sourceAddress, uint32_t numBytes);
 /**
  *  @brief Reads multiple byte values beginning at the specified target address.
  *  @details Use the function to read multiple byte values from flash
@@ -217,7 +218,7 @@ Retcode_T MCU_Flash_Write( const uint8_t* targetAddress, const uint8_t* sourceAd
  *      - The provided targetAddress is not a valid flash address.
  *      - The operation timed out.
  */
-Retcode_T MCU_Flash_Read( uint8_t* readFrom, uint8_t* writeTo, uint32_t numBytes);
+Retcode_T MCU_Flash_Read(uint8_t *readFrom, uint8_t *writeTo, uint32_t numBytes);
 
 #endif /* KISO_FEATURE_FLASH */
 #endif /* KISO_MCU_Flash_H */

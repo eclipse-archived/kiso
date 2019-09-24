@@ -88,7 +88,7 @@ static Retcode_T checkAddressBounderies(uint32_t startAddress, uint32_t endAddre
     Retcode_T retcode = RETCODE_OK;
 
     if ((FLASH_BASE > startAddress) || (startAddress >= endAddress) ||
-            (endAddress > FLASH_BASE + FLASH_SIZE))
+        (endAddress > FLASH_BASE + FLASH_SIZE))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_MCU_FLASH_INTERN_ADDRESS_OUT_OF_BOUND);
     }
@@ -156,7 +156,6 @@ Retcode_T MCU_FlashIntern_Erase(uint32_t startAddress, uint32_t endAddress)
     Ret = checkAddressBounderies(startAddress, endAddress);
     if (RETCODE_OK != Ret)
         return Ret;
-
 
     /* Unlock flash */
     if (HAL_OK != HAL_FLASH_Unlock())
@@ -238,11 +237,11 @@ Retcode_T MCU_FlashIntern_Erase(uint32_t startAddress, uint32_t endAddress)
 }
 
 /* API documentation is in the interface header. */
-Retcode_T MCU_FlashIntern_Write(uint32_t startAddress, uint8_t* buffer, uint32_t length)
+Retcode_T MCU_FlashIntern_Write(uint32_t startAddress, uint8_t *buffer, uint32_t length)
 {
     Retcode_T Ret;
 
-    uint64_t* DoubleWordBuffer = (uint64_t*)buffer;
+    uint64_t *DoubleWordBuffer = (uint64_t *)buffer;
     uint32_t DoubleWordLength = length / FLASH_INTERN_MIN_RW_SIZE;
     uint32_t endAddress = startAddress + (DoubleWordLength * FLASH_INTERN_MIN_RW_SIZE);
 
@@ -270,7 +269,6 @@ Retcode_T MCU_FlashIntern_Write(uint32_t startAddress, uint8_t* buffer, uint32_t
     /* Clear error flag */
     ClearFlashFlag(FLASH_FLAG_ALL_ERRORS);
 
-
     for (uint32_t i = 0; i < DoubleWordLength; i++)
     {
         if (HAL_OK != HAL_FLASH_Program(FLASH_TYPEPROGRAM_DOUBLEWORD, startAddress + (FLASH_INTERN_MIN_RW_SIZE * i), DoubleWordBuffer[i]))
@@ -291,12 +289,12 @@ Retcode_T MCU_FlashIntern_Write(uint32_t startAddress, uint8_t* buffer, uint32_t
 }
 
 /* API documentation is in the interface header. */
-Retcode_T MCU_FlashIntern_Read(uint32_t startAddress, uint8_t* buffer, uint32_t length)
+Retcode_T MCU_FlashIntern_Read(uint32_t startAddress, uint8_t *buffer, uint32_t length)
 {
     Retcode_T Ret;
-    uint64_t* FlashArray;
+    uint64_t *FlashArray;
 
-    uint64_t* DoubleWordBuffer = (uint64_t*)buffer;
+    uint64_t *DoubleWordBuffer = (uint64_t *)buffer;
     uint32_t DoubleWordLength = length / FLASH_INTERN_MIN_RW_SIZE;
     uint32_t endAddress = startAddress + (DoubleWordLength * FLASH_INTERN_MIN_RW_SIZE);
 
@@ -316,7 +314,7 @@ Retcode_T MCU_FlashIntern_Read(uint32_t startAddress, uint8_t* buffer, uint32_t 
     }
 
     /* Copy memory into buffer */
-    FlashArray = (uint64_t*) startAddress;
+    FlashArray = (uint64_t *)startAddress;
 
     for (uint32_t i = 0; i < DoubleWordLength; i++)
     {

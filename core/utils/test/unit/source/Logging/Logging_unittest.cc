@@ -34,7 +34,7 @@ extern "C"
 /* Module includes */
 #include "Kiso_Utils.h"
 #undef KISO_MODULE_ID
-#define KISO_MODULE_ID  KISO_UTILS_MODULE_ID_LOGGING
+#define KISO_MODULE_ID KISO_UTILS_MODULE_ID_LOGGING
 
 #if KISO_FEATURE_LOGGING
 
@@ -47,7 +47,9 @@ extern "C"
 #include "Kiso_Queue_th.hh"
 #include "semphr_th.hh"
 #include "LogConfig.h"
-#define Queue_Purge(x) KISO_UNUSED(x);break;
+#define Queue_Purge(x) \
+    KISO_UNUSED(x);    \
+    break;
 
 #undef KISO_MODULE_ID
 #include "../../../../source/Logging/freertos/Logging_AsyncRecorder.c"
@@ -56,81 +58,81 @@ extern "C"
 #undef KISO_MODULE_ID
 #include "Logging.c"
 
-static Retcode_T AppenderInitFake = RETCODE_OK;
+    static Retcode_T AppenderInitFake = RETCODE_OK;
 
-static Retcode_T LogAppenderInitFake(void *wakeup)
-{
-    KISO_UNUSED(wakeup);
-    return AppenderInitFake;
-}
-
-static Retcode_T WriteResult = RETCODE_OK;
-
-static Retcode_T LogAppenderWriteFake(const char *message, uint32_t length)
-{
-    KISO_UNUSED(message);
-    KISO_UNUSED(length);
-    if (WriteResult != RETCODE_OK)
+    static Retcode_T LogAppenderInitFake(void *wakeup)
     {
-        WriteResult = RETCODE_OK;
-        return RETCODE_FAILURE;
+        KISO_UNUSED(wakeup);
+        return AppenderInitFake;
     }
-    return WriteResult;
-}
-Retcode_T RecordWriteFake(LogLevel_T level, uint8_t package, uint8_t module, const char *file, uint32_t line, const char *fmt, va_list args)
-{
-    KISO_UNUSED(level);
-    KISO_UNUSED(package);
-    KISO_UNUSED(file);
-    KISO_UNUSED(line);
-    KISO_UNUSED(fmt);
-    KISO_UNUSED(args);
-    KISO_UNUSED(module);
-    return RETCODE_OK;
-}
-static SemaphoreHandle_t FakeSemaphoreHandle = NULL;
 
-static SemaphoreHandle_t xSemaphoreCreateBinaryFake(void)
-{
-    return FakeSemaphoreHandle;
-}
+    static Retcode_T WriteResult = RETCODE_OK;
 
-static Retcode_T QueueGetResult = RETCODE_FAILURE;
-
-static Retcode_T Queue_GetFake(Queue_T *arg1, void **arg2, uint32_t*arg3, uint32_t arg4)
-{
-    KISO_UNUSED(arg1);
-    KISO_UNUSED(arg2);
-    KISO_UNUSED(arg3);
-    KISO_UNUSED(arg4);
-    if (RETCODE_FAILURE == QueueGetResult)
+    static Retcode_T LogAppenderWriteFake(const char *message, uint32_t length)
     {
-        QueueGetResult = RETCODE_OK;
-        return RETCODE_FAILURE;
+        KISO_UNUSED(message);
+        KISO_UNUSED(length);
+        if (WriteResult != RETCODE_OK)
+        {
+            WriteResult = RETCODE_OK;
+            return RETCODE_FAILURE;
+        }
+        return WriteResult;
     }
-    else
+    Retcode_T RecordWriteFake(LogLevel_T level, uint8_t package, uint8_t module, const char *file, uint32_t line, const char *fmt, va_list args)
     {
-        *arg3 = 1UL; /* Random Number */
+        KISO_UNUSED(level);
+        KISO_UNUSED(package);
+        KISO_UNUSED(file);
+        KISO_UNUSED(line);
+        KISO_UNUSED(fmt);
+        KISO_UNUSED(args);
+        KISO_UNUSED(module);
+        return RETCODE_OK;
     }
-    return QueueGetResult;
-}
+    static SemaphoreHandle_t FakeSemaphoreHandle = NULL;
 
-static BaseType_t xTaskPassed = pdFAIL;
+    static SemaphoreHandle_t xSemaphoreCreateBinaryFake(void)
+    {
+        return FakeSemaphoreHandle;
+    }
 
-static BaseType_t xTaskCreateFake(TaskHookFunction_t TaskFun, const char * arg1,
-        unsigned short arg2, void * arg3, UBaseType_t arg4, TaskHandle_t* arg5)
-{
-    KISO_UNUSED(TaskFun);
-    KISO_UNUSED(arg1);
-    KISO_UNUSED(arg2);
-    KISO_UNUSED(arg3);
-    KISO_UNUSED(arg4);
-    KISO_UNUSED(arg5);
+    static Retcode_T QueueGetResult = RETCODE_FAILURE;
 
-    return xTaskPassed;
-}
+    static Retcode_T Queue_GetFake(Queue_T *arg1, void **arg2, uint32_t *arg3, uint32_t arg4)
+    {
+        KISO_UNUSED(arg1);
+        KISO_UNUSED(arg2);
+        KISO_UNUSED(arg3);
+        KISO_UNUSED(arg4);
+        if (RETCODE_FAILURE == QueueGetResult)
+        {
+            QueueGetResult = RETCODE_OK;
+            return RETCODE_FAILURE;
+        }
+        else
+        {
+            *arg3 = 1UL; /* Random Number */
+        }
+        return QueueGetResult;
+    }
 
- /* End of global scope symbol and fake definitions section */
+    static BaseType_t xTaskPassed = pdFAIL;
+
+    static BaseType_t xTaskCreateFake(TaskHookFunction_t TaskFun, const char *arg1,
+                                      unsigned short arg2, void *arg3, UBaseType_t arg4, TaskHandle_t *arg5)
+    {
+        KISO_UNUSED(TaskFun);
+        KISO_UNUSED(arg1);
+        KISO_UNUSED(arg2);
+        KISO_UNUSED(arg3);
+        KISO_UNUSED(arg4);
+        KISO_UNUSED(arg5);
+
+        return xTaskPassed;
+    }
+
+    /* End of global scope symbol and fake definitions section */
 }
 
 FFF_DEFINITION_BLOCK_END
@@ -157,7 +159,7 @@ static Retcode_T LogAppenderWrite(const char *message, uint32_t length)
     {
         for (uint32_t i = 0; i < length; i++)
         {
-            (void) (message[i]);
+            (void)(message[i]);
         }
     }
 
@@ -165,18 +167,15 @@ static Retcode_T LogAppenderWrite(const char *message, uint32_t length)
 }
 
 static const LogAppender_T LogAppender =
-        {
-                .Init = LogAppenderInit,
-                .Write = LogAppenderWrite
-        };
+    {
+        .Init = LogAppenderInit,
+        .Write = LogAppenderWrite};
 
 const LogAppender_T *Logging_LogAppender = &LogAppender;
 
-
-class Logging: public testing::Test
+class Logging : public testing::Test
 {
 protected:
-
     virtual void SetUp()
     {
         FFF_RESET_HISTORY()
@@ -224,12 +223,12 @@ TEST_F(Logging, Logging_InitFail)
      * Verifying that a Retcode error code is returned when the logging functionality is
      * initialised with invalid parameters in the struct of the required recorder or appender.
      */
-    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(Logging_Init((LogRecorder_T*) NULL, (LogAppender_T*) NULL)));
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(Logging_Init((LogRecorder_T *)NULL, (LogAppender_T *)NULL)));
 
     LogAppender_T appender =
-    {   .Init = NULL, .Write = NULL};
+        {.Init = NULL, .Write = NULL};
     LogRecorder_T recorder =
-    { .Init = NULL, .Deinit = NULL, .Write = NULL, .Wakeup = NULL, .Appender = appender };
+        {.Init = NULL, .Deinit = NULL, .Write = NULL, .Wakeup = NULL, .Appender = appender};
 
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(Logging_Init(&recorder, NULL)));
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(Logging_Init(Logging_AsyncRecorder, NULL)));
@@ -240,7 +239,7 @@ TEST_F(Logging, Logging_InitFail)
     appender.Write = &LogAppenderWriteFake;
 
     EXPECT_EQ(RETCODE_OUT_OF_RESOURCES, Retcode_GetCode(Logging_Init(Logging_AsyncRecorder, &appender)));
-    FakeSemaphoreHandle = (SemaphoreHandle_t) 1;
+    FakeSemaphoreHandle = (SemaphoreHandle_t)1;
     EXPECT_EQ(RETCODE_OUT_OF_RESOURCES, Retcode_GetCode(Logging_Init(Logging_AsyncRecorder, &appender)));
     xTaskPassed = pdPASS;
     AppenderInitFake = RETCODE_FAILURE;
@@ -252,7 +251,6 @@ TEST_F(Logging, Logging_InitFail)
     recorder.Deinit = Logging_AsyncRecorder->Deinit;
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(Logging_Init(&recorder, &appender)));
     AppenderInitFake = RETCODE_OK;
-
 }
 
 TEST_F(Logging, Logging_InitPass)
@@ -264,9 +262,9 @@ TEST_F(Logging, Logging_InitPass)
      */
 
     LogAppender_T appender =
-    {   .Init = &LogAppenderInitFake, .Write = &LogAppenderWriteFake};
+        {.Init = &LogAppenderInitFake, .Write = &LogAppenderWriteFake};
 
-    FakeSemaphoreHandle = (SemaphoreHandle_t) 1;
+    FakeSemaphoreHandle = (SemaphoreHandle_t)1;
     xTaskPassed = pdPASS;
 
     EXPECT_EQ(RETCODE_OK, Logging_Init(Logging_AsyncRecorder, &appender));
@@ -337,7 +335,7 @@ TEST_F(Logging, Logging_FilterFail)
 
     EXPECT_EQ(RETCODE_NOT_SUPPORTED, Retcode_GetCode(Logging_Log(level, 1, module, file, line, fmt, arg)));
     EXPECT_EQ(RETCODE_NOT_SUPPORTED, Retcode_GetCode(Logging_Log(level, 2,
-            KISO_UTILS_MODULE_ID_LOGGING_FILTER, file, line, fmt, arg)));
+                                                                 KISO_UTILS_MODULE_ID_LOGGING_FILTER, file, line, fmt, arg)));
     EXPECT_EQ(RETCODE_OK, LogFilter_Delete(0U));
     EXPECT_EQ(RETCODE_NOT_SUPPORTED, Retcode_GetCode(Logging_Log(level, package, module, file, line, fmt, arg)));
 
@@ -347,7 +345,6 @@ TEST_F(Logging, Logging_FilterFail)
      */
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(LogFilter_Configure(255U, LOG_LEVEL_ERROR, package, module)));
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(LogFilter_Delete(255U)));
-
 }
 
 TEST_F(Logging, Logging_RecorderTask)
@@ -362,10 +359,9 @@ TEST_F(Logging, Logging_RecorderTask)
     QueueGetResult = RETCODE_OK;
 
     LogAppender_T Appender =
-    {   .Init = LogAppenderInitFake, .Write = LogAppenderWriteFake};
+        {.Init = LogAppenderInitFake, .Write = LogAppenderWriteFake};
     LogRecorder_T Recorder =
-    {   .Init = NULL, .Deinit = NULL, .Write = NULL, .Wakeup = Logging_AsyncRecorder->Wakeup,
-            .Appender = *Logging_LogAppender};
+        {.Init = NULL, .Deinit = NULL, .Write = NULL, .Wakeup = Logging_AsyncRecorder->Wakeup, .Appender = *Logging_LogAppender};
 
     AsyncRecorder_Task(&Recorder);
     Recorder.Appender = Appender;
@@ -399,9 +395,9 @@ TEST_F(Logging, Logging_AsyncRecorder_Task)
     uint8_t status = 0;
     wakeupStatus = &status;
     LogAppender_T Appender =
-        {   .Init = LogAppenderInitFake, .Write = LogAppenderWriteFake};
+        {.Init = LogAppenderInitFake, .Write = LogAppenderWriteFake};
     LogRecorder_T recorder =
-        { .Init = Logging_AsyncRecorder->Init, .Deinit = Logging_AsyncRecorder->Deinit, .Write = RecordWriteFake, .Wakeup = wakeupStatus, .Appender = Appender };
+        {.Init = Logging_AsyncRecorder->Init, .Deinit = Logging_AsyncRecorder->Deinit, .Write = RecordWriteFake, .Wakeup = wakeupStatus, .Appender = Appender};
     AsyncRecorder_Task(&recorder);
     EXPECT_EQ(3U, Queue_Get_fake.call_count);
 }
@@ -412,9 +408,9 @@ TEST_F(Logging, Logging_AsyncRecorder_TaskFail)
     uint8_t status = 0;
     wakeupStatus = &status;
     LogAppender_T Appender =
-        {   .Init = LogAppenderInitFake, .Write = NULL};
+        {.Init = LogAppenderInitFake, .Write = NULL};
     LogRecorder_T recorder =
-        { .Init = Logging_AsyncRecorder->Init, .Deinit = Logging_AsyncRecorder->Deinit, .Write = NULL, .Wakeup = wakeupStatus, .Appender = Appender };
+        {.Init = Logging_AsyncRecorder->Init, .Deinit = Logging_AsyncRecorder->Deinit, .Write = NULL, .Wakeup = wakeupStatus, .Appender = Appender};
     RESET_FAKE(Retcode_RaiseError);
     AsyncRecorder_Task(&recorder);
     EXPECT_EQ(1U, Retcode_RaiseError_fake.call_count);
@@ -425,7 +421,7 @@ TEST_F(Logging, Logging_AsyncRecorder_TaskFail)
 
 TEST_F(Logging, NULLTestinInitDeinit)
 {
-    Retcode_T retcode= RETCODE_OK;
+    Retcode_T retcode = RETCODE_OK;
     retcode = Logging_AsyncRecorder->Init(NULL);
     retcode = Retcode_GetCode(retcode);
     EXPECT_EQ(RETCODE_NULL_POINTER, retcode);
@@ -435,9 +431,9 @@ TEST_F(Logging, NULLTestinInitDeinit)
     EXPECT_EQ(RETCODE_NULL_POINTER, retcode);
 
     LogAppender_T Appender =
-        {   .Init = LogAppenderInitFake, .Write = NULL};
+        {.Init = LogAppenderInitFake, .Write = NULL};
     LogRecorder_T recorder =
-        { .Init = Logging_AsyncRecorder->Init, .Deinit = Logging_AsyncRecorder->Deinit, .Write = NULL, .Wakeup = NULL, .Appender = Appender };
+        {.Init = Logging_AsyncRecorder->Init, .Deinit = Logging_AsyncRecorder->Deinit, .Write = NULL, .Wakeup = NULL, .Appender = Appender};
     retcode = Logging_AsyncRecorder->Deinit(&recorder);
     retcode = Retcode_GetCode(retcode);
     EXPECT_EQ(RETCODE_NULL_POINTER, retcode);

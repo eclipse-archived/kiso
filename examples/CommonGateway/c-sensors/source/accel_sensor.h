@@ -40,6 +40,5 @@ Retcode_T Accelerometer_Init(I2cTranceiverHandlePtr_T i2cTransceiverRef);
 
 /*---------------------- GLOBAL VARIABLES DECLARATION ---------------------------------------------------------------*/
 
-
 #endif /* ACCEL_SENSOR_H_ */
 /**@}*/

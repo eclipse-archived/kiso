@@ -16,10 +16,10 @@
 #define CMSIS_GCC_TH_HH_
 
 #ifndef __STATIC_INLINE
-#define __STATIC_INLINE     inline
+#define __STATIC_INLINE inline
 #endif /* ifndef __STATIC_INLINE */
 #ifndef __ASM
-#define __ASM               asm
+#define __ASM asm
 #endif /* ifndef __ASM */
 
 /* include or ban the real interface header */
@@ -234,8 +234,8 @@
 #define __STRT_fake __STRT_fff_fake
 #define __STRT_reset __STRT_fff_reset
 
-#endif /* (__CORTEX_M >= 0x03U) || (__CORTEX_SC >= 300U) */
-#if (__CORTEX_M >= 0x04U)  /* only for Cortex-M4 and above */
+#endif                    /* (__CORTEX_M >= 0x03U) || (__CORTEX_SC >= 300U) */
+#if (__CORTEX_M >= 0x04U) /* only for Cortex-M4 and above */
 #define __SADD8 __SADD8_fff
 #define __SADD8_fake __SADD8_fff_fake
 #define __SADD8_reset __SADD8_fff_reset
@@ -513,26 +513,26 @@ FAKE_VALUE_FUNC(int32_t, __REVSH, int32_t)
 FAKE_VALUE_FUNC(uint32_t, __ROR, uint32_t, uint32_t)
 FAKE_VALUE_FUNC(uint32_t, __RBIT, uint32_t)
 #if (__CORTEX_M >= 0x03U) || (__CORTEX_SC >= 300U)
-FAKE_VALUE_FUNC(uint8_t, __LDREXB, volatile uint8_t*)
-FAKE_VALUE_FUNC(uint16_t, __LDREXH, volatile uint16_t*)
-FAKE_VALUE_FUNC(uint32_t, __LDREXW, volatile uint32_t*)
-FAKE_VALUE_FUNC(uint32_t, __STREXB, uint8_t, volatile uint8_t*)
-FAKE_VALUE_FUNC(uint32_t, __STREXH, uint16_t, volatile uint8_t*)
-FAKE_VALUE_FUNC(uint32_t, __STREXW, uint32_t, volatile uint32_t*)
+FAKE_VALUE_FUNC(uint8_t, __LDREXB, volatile uint8_t *)
+FAKE_VALUE_FUNC(uint16_t, __LDREXH, volatile uint16_t *)
+FAKE_VALUE_FUNC(uint32_t, __LDREXW, volatile uint32_t *)
+FAKE_VALUE_FUNC(uint32_t, __STREXB, uint8_t, volatile uint8_t *)
+FAKE_VALUE_FUNC(uint32_t, __STREXH, uint16_t, volatile uint8_t *)
+FAKE_VALUE_FUNC(uint32_t, __STREXW, uint32_t, volatile uint32_t *)
 FAKE_VOID_FUNC(__CLREX)
 #undef __SSAT
 FAKE_VALUE_FUNC(uint32_t, __SSAT, int32_t, int32_t)
 #undef __USAT
 FAKE_VALUE_FUNC(uint32_t, __USAT, uint32_t, uint32_t)
 FAKE_VALUE_FUNC(uint32_t, __RRX, uint32_t)
-FAKE_VALUE_FUNC(uint8_t, __LDRBT, volatile uint8_t*)
-FAKE_VALUE_FUNC(uint16_t, __LDRHT, volatile uint16_t*)
-FAKE_VALUE_FUNC(uint32_t, __LDRT, volatile uint32_t*)
-FAKE_VOID_FUNC(__STRBT, uint8_t, volatile uint8_t*)
-FAKE_VOID_FUNC(__STRHT, uint16_t, volatile uint16_t*)
-FAKE_VOID_FUNC(__STRT, uint32_t, volatile uint32_t*)
-#endif /* (__CORTEX_M >= 0x03U) || (__CORTEX_SC >= 300U) */
-#if (__CORTEX_M >= 0x04U)  /* only for Cortex-M4 and above */
+FAKE_VALUE_FUNC(uint8_t, __LDRBT, volatile uint8_t *)
+FAKE_VALUE_FUNC(uint16_t, __LDRHT, volatile uint16_t *)
+FAKE_VALUE_FUNC(uint32_t, __LDRT, volatile uint32_t *)
+FAKE_VOID_FUNC(__STRBT, uint8_t, volatile uint8_t *)
+FAKE_VOID_FUNC(__STRHT, uint16_t, volatile uint16_t *)
+FAKE_VOID_FUNC(__STRT, uint32_t, volatile uint32_t *)
+#endif                    /* (__CORTEX_M >= 0x03U) || (__CORTEX_SC >= 300U) */
+#if (__CORTEX_M >= 0x04U) /* only for Cortex-M4 and above */
 FAKE_VALUE_FUNC(uint32_t, __SADD8, uint32_t, uint32_t)
 FAKE_VALUE_FUNC(uint32_t, __QADD8, uint32_t, uint32_t)
 FAKE_VALUE_FUNC(uint32_t, __SHADD8, uint32_t, uint32_t)

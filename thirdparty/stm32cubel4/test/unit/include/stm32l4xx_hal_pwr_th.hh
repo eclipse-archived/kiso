@@ -17,7 +17,7 @@
  * Mock-up implementation for the stm32l4xx_hal_pwr module.
  */
 /*----------------------------------------------------------------------------*/
- 
+
 #ifndef STM32L4XX_HAL_PWR_TH_HH
 #define STM32L4XX_HAL_PWR_TH_HH
 
@@ -38,7 +38,7 @@ FAKE_VOID_FUNC(HAL_PWR_EnableBkUpAccess)
 
 FAKE_VOID_FUNC(HAL_PWR_DisableBkUpAccess)
 
-FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_PWR_ConfigPVD, PWR_PVDTypeDef*)
+FAKE_VALUE_FUNC(HAL_StatusTypeDef, HAL_PWR_ConfigPVD, PWR_PVDTypeDef *)
 
 FAKE_VOID_FUNC(HAL_PWR_EnablePVD)
 
@@ -62,4 +62,4 @@ FAKE_VOID_FUNC(HAL_PWR_EnableSEVOnPend)
 
 FAKE_VOID_FUNC(HAL_PWR_DisableSEVOnPend)
 
-# endif /* STM32L4XX_HAL_PWR_TH_HH */
+#endif /* STM32L4XX_HAL_PWR_TH_HH */

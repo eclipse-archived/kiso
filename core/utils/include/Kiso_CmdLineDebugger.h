@@ -108,14 +108,13 @@
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
 
-
 /**
  * Command Line Callback Definition
  *
  * @param[in] argc : Argument count. The amount of parameters inside the argument vector
  * @param[in] argv : Argument vector
  */
-typedef Retcode_T (*CmdLineDbg_Callback_T)(uint32_t argc, const char * const* argv);
+typedef Retcode_T (*CmdLineDbg_Callback_T)(uint32_t argc, const char *const *argv);
 
 /**
  * @brief Command Line List Element
@@ -126,8 +125,8 @@ typedef Retcode_T (*CmdLineDbg_Callback_T)(uint32_t argc, const char * const* ar
 struct CmdLineDbg_Element_S
 {
     const CmdLineDbg_Callback_T callback; /**< callback to execute */
-    const char * commandString; /**< command string for match */
-    struct CmdLineDbg_Element_S * next; /**< next element for linked-listing */
+    const char *commandString;            /**< command string for match */
+    struct CmdLineDbg_Element_S *next;    /**< next element for linked-listing */
 };
 
 /**
@@ -148,7 +147,7 @@ struct CmdLineDbg_Element_S
  * @retval #RETCODE_CMDLINE_DEBUGGER_COMMAND_NOT_FOUND when the command is not found
  * 
  */
-Retcode_T CmdLineDbg_Parse(struct CmdLineDbg_Element_S * list, char * input);
+Retcode_T CmdLineDbg_Parse(struct CmdLineDbg_Element_S *list, char *input);
 
 /**
  * @brief Register Command Into List
@@ -162,7 +161,7 @@ Retcode_T CmdLineDbg_Parse(struct CmdLineDbg_Element_S * list, char * input);
  * @retval #RETCODE_NULL_POINTER when any of the input parameter is NULL
  * 
  */
-Retcode_T CmdLineDbg_RegisterCmd(struct CmdLineDbg_Element_S * list, struct CmdLineDbg_Element_S * cmd);
+Retcode_T CmdLineDbg_RegisterCmd(struct CmdLineDbg_Element_S *list, struct CmdLineDbg_Element_S *cmd);
 
 /**
  * @brief Convert Command Element Array into Linked List
@@ -178,7 +177,7 @@ Retcode_T CmdLineDbg_RegisterCmd(struct CmdLineDbg_Element_S * list, struct CmdL
  * @retval #RETCODE_INVALID_PARAM when the amount of elements is equal to 0
  * 
  */
-Retcode_T CmdLineDbg_RegisterCmdArray(struct CmdLineDbg_Element_S * list, size_t nElements);
+Retcode_T CmdLineDbg_RegisterCmdArray(struct CmdLineDbg_Element_S *list, size_t nElements);
 
 #endif /* if KISO_FEATURE_CMDLINEDEBUGGER */
 

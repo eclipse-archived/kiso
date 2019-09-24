@@ -22,7 +22,7 @@
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
 
-Retcode_T CelToUbloxAddr(const Cellular_IpAddress_T* from, AT_UBlox_Address_T* to)
+Retcode_T CelToUbloxAddr(const Cellular_IpAddress_T *from, AT_UBlox_Address_T *to)
 {
     switch (from->Type)
     {
@@ -39,7 +39,7 @@ Retcode_T CelToUbloxAddr(const Cellular_IpAddress_T* from, AT_UBlox_Address_T* t
     }
 }
 
-Retcode_T UbloxToCelAddr(const AT_UBlox_Address_T* from, Cellular_IpAddress_T* to)
+Retcode_T UbloxToCelAddr(const AT_UBlox_Address_T *from, Cellular_IpAddress_T *to)
 {
     switch (from->Type)
     {

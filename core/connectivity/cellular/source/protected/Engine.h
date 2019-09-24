@@ -98,7 +98,7 @@ void Engine_SetFlukeCharFilterEnabled(bool flukeFilterEnabled);
  * @param len
  * Length of arbitrary parameter. May be zero.
  */
-void Engine_NotifyNewState(Cellular_State_T newState, void* param, uint32_t len);
+void Engine_NotifyNewState(Cellular_State_T newState, void *param, uint32_t len);
 
 /**
  * @brief Sends a command to the modem.
@@ -111,7 +111,7 @@ void Engine_NotifyNewState(Cellular_State_T newState, void* param, uint32_t len)
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-Retcode_T Engine_SendAtCommand(const uint8_t* buffer, uint32_t bufferLength);
+Retcode_T Engine_SendAtCommand(const uint8_t *buffer, uint32_t bufferLength);
 
 /**
  * @brief Sends a command to the modem and wait for its echo.
@@ -152,7 +152,7 @@ typedef Retcode_T (*CellularRequest_CallableFunction_T)(void *parameter, uint32_
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-Retcode_T Engine_Dispatch(CellularRequest_CallableFunction_T function, uint32_t timeout, void* parameter, uint32_t parameterLength);
+Retcode_T Engine_Dispatch(CellularRequest_CallableFunction_T function, uint32_t timeout, void *parameter, uint32_t parameterLength);
 
 /**
  * @brief Notify the engine transceiver in case echo mode is entered or exited.

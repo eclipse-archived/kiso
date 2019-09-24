@@ -30,9 +30,9 @@
 
 FAKE_VALUE_FUNC(Retcode_T, MCU_UART_Initialize, UART_T, MCU_UART_Callback_T)
 FAKE_VALUE_FUNC(Retcode_T, MCU_UART_Deinitialize, UART_T)
-FAKE_VALUE_FUNC(Retcode_T, MCU_UART_Send, UART_T, const uint8_t*, uint32_t)
-FAKE_VALUE_FUNC(Retcode_T, MCU_UART_Receive, UART_T, uint8_t*, uint32_t)
-FAKE_VALUE_FUNC(Retcode_T, MCU_UART_GetRxCount, UART_T, uint32_t*)
+FAKE_VALUE_FUNC(Retcode_T, MCU_UART_Send, UART_T, const uint8_t *, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_UART_Receive, UART_T, uint8_t *, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, MCU_UART_GetRxCount, UART_T, uint32_t *)
 
 #endif /* #if KISO_FEATURE_UART && UART_COUNT */
 #endif /* KISO_UART_TH_HH_ */

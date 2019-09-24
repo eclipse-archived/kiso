@@ -123,7 +123,7 @@ Retcode_T BSP_Charger_BQ2407X_Disconnect(void);
  * @retval      RETCODE_BSP_CHARGER_NOT_ENABLED in case of accessing before enabling the charger.
  *
  */
-Retcode_T BSP_Charger_BQ2407X_GetStatus(BSP_ChargeState_T* state);
+Retcode_T BSP_Charger_BQ2407X_GetStatus(BSP_ChargeState_T *state);
 
 /**
  * @brief       Measures the specified voltage signal
@@ -141,7 +141,7 @@ Retcode_T BSP_Charger_BQ2407X_GetStatus(BSP_ChargeState_T* state);
  * @retval      RETCODE_NULL_POINTER in case of NULL pointer passed.
  * @retval      RETCODE_BSP_CHARGER_NOT_ENABLED in case of accessing before enabling the charger.
  */
-Retcode_T BSP_Charger_BQ2407X_MeasureSignal(uint32_t signal, uint32_t* output);
+Retcode_T BSP_Charger_BQ2407X_MeasureSignal(uint32_t signal, uint32_t *output);
 
 /**
  * @brief       Returns the charging status of the battery.
@@ -157,7 +157,7 @@ Retcode_T BSP_Charger_BQ2407X_MeasureSignal(uint32_t signal, uint32_t* output);
  * @retval      RETCODE_OK in case of successfully getting the charge status.
  * @retval      RETCODE_NULL_POINTER in case of NULL pointer passed.
  */
-Retcode_T BSP_Charger_BQ2407X_CheckStatus(BSP_ChargeState_T* state, uint32_t BatteryVoltage);
+Retcode_T BSP_Charger_BQ2407X_CheckStatus(BSP_ChargeState_T *state, uint32_t BatteryVoltage);
 
 /**
  * @brief       Sets the sysoff pin to high voltage level.

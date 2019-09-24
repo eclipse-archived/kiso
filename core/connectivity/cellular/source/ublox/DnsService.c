@@ -27,13 +27,13 @@
 #include "Kiso_Retcode.h"
 #include "Kiso_Assert.h"
 
-#define CELLULAR_DNS_SHORT_ENQUEUE_TIMEOUT   (UINT32_C(1000))
+#define CELLULAR_DNS_SHORT_ENQUEUE_TIMEOUT (UINT32_C(1000))
 
 struct CellularDns_ResolveDomainParam_S
 {
-    const Cellular_DataContext_T* DataContext;
-    const char* Fqdn;
-    Cellular_IpAddress_T* Result;
+    const Cellular_DataContext_T *DataContext;
+    const char *Fqdn;
+    Cellular_IpAddress_T *Result;
 };
 
 /**
@@ -49,15 +49,15 @@ struct CellularDns_ResolveDomainParam_S
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-static Retcode_T ResolveDomain(void* param, uint32_t paramLen);
+static Retcode_T ResolveDomain(void *param, uint32_t paramLen);
 
-static Retcode_T ResolveDomain(void* param, uint32_t paramLen)
+static Retcode_T ResolveDomain(void *param, uint32_t paramLen)
 {
     KISO_UNUSED(paramLen);
     assert(NULL != param);
     assert(sizeof(struct CellularDns_ResolveDomainParam_S) == paramLen);
 
-    struct CellularDns_ResolveDomainParam_S* rslvParam = (struct CellularDns_ResolveDomainParam_S*) param;
+    struct CellularDns_ResolveDomainParam_S *rslvParam = (struct CellularDns_ResolveDomainParam_S *)param;
     Retcode_T retcode = RETCODE_OK;
     AT_UDNSRN_Param_T udnsrnParam;
     udnsrnParam.ResolutionType = AT_UDNSRN_RESOLUTIONTYPE_DOMAINTOIP;
@@ -75,13 +75,11 @@ static Retcode_T ResolveDomain(void* param, uint32_t paramLen)
 }
 
 Retcode_T CellularDns_ResolveDomain(
-        const Cellular_DataContext_T* dataContext,
-        const char* fqdn,
-        Cellular_IpAddress_T* result)
+    const Cellular_DataContext_T *dataContext,
+    const char *fqdn,
+    Cellular_IpAddress_T *result)
 {
-    if (NULL == dataContext
-            || NULL == fqdn
-            || NULL == result)
+    if (NULL == dataContext || NULL == fqdn || NULL == result)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
@@ -93,5 +91,4 @@ Retcode_T CellularDns_ResolveDomain(
         param.Result = result;
         return Engine_Dispatch(ResolveDomain, CELLULAR_DNS_SHORT_ENQUEUE_TIMEOUT, &param, sizeof(param));
     }
-
 }

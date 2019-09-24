@@ -12,7 +12,6 @@
 *
 ********************************************************************************/
 
-
 /**
  * @ingroup UTILS
  *
@@ -50,13 +49,12 @@
 
 #if KISO_FEATURE_CRC
 
-
 /* public interface declaration */
 
 /* public type and macro definitions */
-#define CRC32_EATH_STD_INIT(x)                  (x = (~0UL))
-#define CRC32_INVERSE(x)                        (x = x ^ (~0UL))
-#define CRC32_ETHERNET_REVERSE_POLYNOMIAL       UINT32_C(0xEDB88320)      /**< CRC32 polynomial for Ethernet standard IEEE 802.3 */
+#define CRC32_EATH_STD_INIT(x) (x = (~0UL))
+#define CRC32_INVERSE(x) (x = x ^ (~0UL))
+#define CRC32_ETHERNET_REVERSE_POLYNOMIAL UINT32_C(0xEDB88320) /**< CRC32 polynomial for Ethernet standard IEEE 802.3 */
 
 /* public function prototype declarations */
 
@@ -79,7 +77,7 @@
  *      When any of the input pointers is NULL
  * 
  */
-Retcode_T CRC_8(uint8_t poly, uint8_t * shifter, const uint8_t * data_p, uint16_t len);
+Retcode_T CRC_8(uint8_t poly, uint8_t *shifter, const uint8_t *data_p, uint16_t len);
 
 /**
  * @brief
@@ -101,7 +99,7 @@ Retcode_T CRC_8(uint8_t poly, uint8_t * shifter, const uint8_t * data_p, uint16_
  *      When any of the input pointers is NULL
  * 
  */
-Retcode_T CRC_16(uint16_t poly, uint16_t * shifter, const uint8_t * data_p, uint16_t len);
+Retcode_T CRC_16(uint16_t poly, uint16_t *shifter, const uint8_t *data_p, uint16_t len);
 
 /**
  * @brief
@@ -123,7 +121,7 @@ Retcode_T CRC_16(uint16_t poly, uint16_t * shifter, const uint8_t * data_p, uint
  *      When any of the input pointers is NULL
  * 
  */
-Retcode_T CRC_32(uint32_t poly, uint32_t * shifter, const uint8_t * data_p, uint16_t len);
+Retcode_T CRC_32(uint32_t poly, uint32_t *shifter, const uint8_t *data_p, uint16_t len);
 
 /**
  * @brief
@@ -150,7 +148,7 @@ Retcode_T CRC_32(uint32_t poly, uint32_t * shifter, const uint8_t * data_p, uint
  *      Call CRC32_INVERSE(shifter) macro for invert the final CRC32 value.
  * 
  */
-Retcode_T CRC_32_Reverse(uint32_t poly, uint32_t * shifter, const uint8_t * data_p, uint16_t len);
+Retcode_T CRC_32_Reverse(uint32_t poly, uint32_t *shifter, const uint8_t *data_p, uint16_t len);
 
 #endif /* if KISO_FEATURE_CRC */
 

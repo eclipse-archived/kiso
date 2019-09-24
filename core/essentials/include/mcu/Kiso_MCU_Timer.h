@@ -48,20 +48,20 @@
 
 #include "Kiso_HAL.h"
 
-#if( KISO_FEATURE_TIMER )
+#if (KISO_FEATURE_TIMER)
 
 /**
  * @brief       Timer Status
  */
 enum MCU_Timer_Status_E
 {
-    MCU_TIMER_STATUS_INVALID, /**< Invalid state */
+    MCU_TIMER_STATUS_INVALID,         /**< Invalid state */
     MCU_TIMER_STATUS_BSP_INITIALIZED, /**< Timer has been initialized by the BSP */
-    MCU_TIMER_STATUS_INITIALIZED, /**< Timer was initialized by the driver */
-    MCU_TIMER_STATUS_ACTIVE, /**< Timer is running */
-    MCU_TIMER_STATUS_IDLE, /**< Timer is idle */
-    MCU_TIMER_STATUS_DEINITIALIZED, /**<  Timer has been deinitialized */
-    MCU_TIMER_STATUS_ERROR, /**< Timer driver is in error state */
+    MCU_TIMER_STATUS_INITIALIZED,     /**< Timer was initialized by the driver */
+    MCU_TIMER_STATUS_ACTIVE,          /**< Timer is running */
+    MCU_TIMER_STATUS_IDLE,            /**< Timer is idle */
+    MCU_TIMER_STATUS_DEINITIALIZED,   /**<  Timer has been deinitialized */
+    MCU_TIMER_STATUS_ERROR,           /**< Timer driver is in error state */
 };
 
 typedef enum MCU_Timer_Status_E MCU_Timer_Status_T;
@@ -77,12 +77,12 @@ typedef HWHandle_T Timer_T;
 struct MCU_Timer_Event_S
 {
 
-    uint8_t CompareMatch :1; /**< A compare match has been detected on the compare channel. */
-    uint8_t Overflow :1; /**< An overflow has been detected */
-    uint8_t Underflow :1; /**< Underflow was detected */
-    uint8_t reserved :5;
-    uint32_t CompareChannel :8; /**< Which compare channel the event is related to. */
-    uint32_t ErrorCode :16; /**< an error has been detected */
+    uint8_t CompareMatch : 1; /**< A compare match has been detected on the compare channel. */
+    uint8_t Overflow : 1;     /**< An overflow has been detected */
+    uint8_t Underflow : 1;    /**< Underflow was detected */
+    uint8_t reserved : 5;
+    uint32_t CompareChannel : 8; /**< Which compare channel the event is related to. */
+    uint32_t ErrorCode : 16;     /**< an error has been detected */
 };
 
 /**
@@ -96,7 +96,7 @@ struct MCU_Timer_Event_S
  *
  * @param [in]  event : Structure containing actual event information.
  */
-typedef void ( * MCU_TIMER_Callback_T )(Timer_T timer, struct MCU_Timer_Event_S event);
+typedef void (*MCU_TIMER_Callback_T)(Timer_T timer, struct MCU_Timer_Event_S event);
 
 /**
  * @brief       This function initializes the timer and registers an event callback
@@ -146,7 +146,7 @@ Retcode_T MCU_Timer_GetCompareValue(Timer_T timer, uint32_t channel, uint32_t *v
  *
  * @return      RETCODE_OK in case of success, error code otherwise.
  */
-Retcode_T MCU_Timer_GetCountValue(Timer_T timer, uint32_t * countValue);
+Retcode_T MCU_Timer_GetCountValue(Timer_T timer, uint32_t *countValue);
 
 /**
  * @brief       This function returns the maximum count value possible by the HW
@@ -155,7 +155,7 @@ Retcode_T MCU_Timer_GetCountValue(Timer_T timer, uint32_t * countValue);
  *
  * @param[out]  maxCount : Maximum count value supported by the timer
  */
-Retcode_T MCU_Timer_GetMaxCount(Timer_T timer, uint32_t * maxCount);
+Retcode_T MCU_Timer_GetMaxCount(Timer_T timer, uint32_t *maxCount);
 
 /**
  * @brief       This function will start the timer (set to active state)
@@ -202,9 +202,8 @@ void MCU_Timer_Callback(Timer_T timer);
  *
  * @return      RETCODE_OK in case of success, error code otherwise.
  */
-Retcode_T MCU_Timer_GetClockFrequency(Timer_T timer, uint32_t * frequency);
+Retcode_T MCU_Timer_GetClockFrequency(Timer_T timer, uint32_t *frequency);
 
 #endif /* KISO_FEATURE_TIME */
 #endif /* KISO_MCU_Timer_H */
 /** @} */
-

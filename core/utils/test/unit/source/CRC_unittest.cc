@@ -42,17 +42,17 @@ extern "C"
 /* Include module under test */
 #include "CRC.c"
 
-/* End of global scope symbol and fake definitions section */
+    /* End of global scope symbol and fake definitions section */
 }
 
 /* Create test fixture initializing all variables automatically */
-class CRCRoutines: public testing::Test
+class CRCRoutines : public testing::Test
 {
 protected:
     /* Remember that SetUp() is run immediately before a test starts. */
     virtual void SetUp()
     {
-       ;
+        ;
     }
 
     /* TearDown() is invoked immediately after a test finishes. */
@@ -68,7 +68,7 @@ protected:
 
 /* Specify test cases ******************************************************* */
 
-TEST_F(CRCRoutines,testNullpointerAsMsg)
+TEST_F(CRCRoutines, testNullpointerAsMsg)
 {
     /** @testcase{CRCRoutines::NullpointerAsMsg: }
      * CRC_8 API is called to check the Null condition
@@ -86,7 +86,7 @@ TEST_F(CRCRoutines,testNullpointerAsMsg)
 
 TEST_F(CRCRoutines, testNullpointerInitValue)
 {
-   /** @testcase{CRCRoutines::NullpointerInitValue: }
+    /** @testcase{CRCRoutines::NullpointerInitValue: }
       * CRC_8 API is called to check the Null condition
       */
     /* SETUP: Declare and initialize local variables required only by this test case */
@@ -94,7 +94,7 @@ TEST_F(CRCRoutines, testNullpointerInitValue)
     Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_8(UINT8_C(0xba), NULL, msg, (uint16_t)(sizeof(msg)/sizeof(msg[0])));
+    retVal = CRC_8(UINT8_C(0xba), NULL, msg, (uint16_t)(sizeof(msg) / sizeof(msg[0])));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), retVal);
@@ -102,16 +102,16 @@ TEST_F(CRCRoutines, testNullpointerInitValue)
 
 TEST_F(CRCRoutines, testLengthAsZero)
 {
-   /** @testcase{CRCRoutines::testLengthAsZero }
+    /** @testcase{CRCRoutines::testLengthAsZero }
       * CRC_8 API is called to check the Null condition for buffer length
       */
     /* SETUP: Declare and initialize local variables required only by this test case */
     uint8_t msg[] = {0x00};
-    uint8_t crc8_calculated = UINT8_C(0X0) ;
+    uint8_t crc8_calculated = UINT8_C(0X0);
     Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated, msg,UINT16_C(0));
+    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated, msg, UINT16_C(0));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -129,7 +129,7 @@ TEST_F(CRCRoutines, testMsgLen1)
     uint8_t crc8_calculated = UINT8_C(0xaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated, msg, (uint16_t)(sizeof(msg)/sizeof(msg[0])));
+    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated, msg, (uint16_t)(sizeof(msg) / sizeof(msg[0])));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -147,11 +147,11 @@ TEST_F(CRCRoutines, testMsgLen2)
     uint8_t crc8_calculated = UINT8_C(0xaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated, msg, (uint16_t)(sizeof(msg)/sizeof(msg[0])));
+    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated, msg, (uint16_t)(sizeof(msg) / sizeof(msg[0])));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
-    EXPECT_EQ(UINT8_C(0X66),crc8_calculated);
+    EXPECT_EQ(UINT8_C(0X66), crc8_calculated);
 }
 
 TEST_F(CRCRoutines, testMsgLen5)
@@ -165,14 +165,14 @@ TEST_F(CRCRoutines, testMsgLen5)
     uint8_t crc8_calculated = UINT8_C(0xaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated , msg, (uint16_t)(sizeof(msg)/sizeof(msg[0])));
+    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated, msg, (uint16_t)(sizeof(msg) / sizeof(msg[0])));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT8_C(0x56), crc8_calculated);
 }
 
-TEST_F(CRCRoutines,testChangedPoly)
+TEST_F(CRCRoutines, testChangedPoly)
 {
     /** @testcase{CRCRoutines::ChangedPoly: }
        * CRC_8 API is called to check the crc When 5 bytes are passed to data buffer with a different poly value
@@ -183,96 +183,96 @@ TEST_F(CRCRoutines,testChangedPoly)
     uint8_t crc8_calculated = UINT8_C(0xaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_8(UINT8_C(0xff), &crc8_calculated , msg, (uint16_t)(sizeof(msg)/sizeof(msg[0])));
+    retVal = CRC_8(UINT8_C(0xff), &crc8_calculated, msg, (uint16_t)(sizeof(msg) / sizeof(msg[0])));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT8_C(0x5A), crc8_calculated);
 }
 
-TEST_F(CRCRoutines,testChangedInitValue)
+TEST_F(CRCRoutines, testChangedInitValue)
 {
     /** @testcase{CRCRoutines::testChangedInitValue: }
      * CRC_8 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t msg[] = {0x1,0x2};
+    uint8_t msg[] = {0x1, 0x2};
     Retcode_T retVal;
     uint8_t crc8_calculated = UINT8_C(0x33);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated , msg, (uint16_t)(sizeof(msg)/sizeof(msg[0])));
+    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated, msg, (uint16_t)(sizeof(msg) / sizeof(msg[0])));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT8_C(0x74), crc8_calculated);
 }
 
-TEST_F(CRCRoutines,testSpecialCharacter)
+TEST_F(CRCRoutines, testSpecialCharacter)
 {
     /** @testcase{CRCRoutines::testSpecialCharacter: }
      * CRC_8 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-     uint8_t msg[] = {'*','&','!','~','#'};
-     Retcode_T retVal;
-     uint8_t crc8_calculated = UINT8_C(0xaa);
-
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-      retVal = CRC_8(UINT8_C(0xba), &crc8_calculated , msg, (uint16_t)(sizeof(msg)/sizeof(msg[0])));
-
-    /* VERIFY : Compare the expected with actual */
-      EXPECT_EQ(RETCODE_OK, retVal);
-      EXPECT_EQ(UINT8_C(0x16), crc8_calculated);
-}
-
-TEST_F(CRCRoutines,testAlphabets)
-{
-    /** @testcase{CRCRoutines::testAlphabets: }
-     * CRC_8 API is called to check the crc of the bytes present in a buffer according to length
-     */
-    uint8_t msg[] = {'A','B','C'};
+    uint8_t msg[] = {'*', '&', '!', '~', '#'};
     Retcode_T retVal;
     uint8_t crc8_calculated = UINT8_C(0xaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated , msg, (uint16_t)(sizeof(msg)/sizeof(msg[0])));
+    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated, msg, (uint16_t)(sizeof(msg) / sizeof(msg[0])));
+
+    /* VERIFY : Compare the expected with actual */
+    EXPECT_EQ(RETCODE_OK, retVal);
+    EXPECT_EQ(UINT8_C(0x16), crc8_calculated);
+}
+
+TEST_F(CRCRoutines, testAlphabets)
+{
+    /** @testcase{CRCRoutines::testAlphabets: }
+     * CRC_8 API is called to check the crc of the bytes present in a buffer according to length
+     */
+    uint8_t msg[] = {'A', 'B', 'C'};
+    Retcode_T retVal;
+    uint8_t crc8_calculated = UINT8_C(0xaa);
+
+    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
+    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated, msg, (uint16_t)(sizeof(msg) / sizeof(msg[0])));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT8_C(0x62), crc8_calculated);
 }
 
-TEST_F(CRCRoutines,testSmallAlphabets)
+TEST_F(CRCRoutines, testSmallAlphabets)
 {
     /** @testcase{CRCRoutines::testSmallAlphabets: }
      * CRC_8 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t msg[] = {'a','b','c'};
+    uint8_t msg[] = {'a', 'b', 'c'};
     Retcode_T retVal;
     uint8_t crc8_calculated = UINT8_C(0xaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated , msg, (uint16_t)(sizeof(msg)/sizeof(msg[0])));
+    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated, msg, (uint16_t)(sizeof(msg) / sizeof(msg[0])));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT8_C(0x8E), crc8_calculated);
 }
 
-TEST_F(CRCRoutines,testWrongBytes)
+TEST_F(CRCRoutines, testWrongBytes)
 {
     /** @testcase{CRCRoutines::testWrongBytes: }
      * CRC_8 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t msg[] = {8,9,5,1,6};
+    uint8_t msg[] = {8, 9, 5, 1, 6};
     Retcode_T retVal;
     uint8_t crc8_calculated = UINT8_C(0xaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated , msg, (uint16_t)(sizeof(msg)/sizeof(msg[0])));
+    retVal = CRC_8(UINT8_C(0xba), &crc8_calculated, msg, (uint16_t)(sizeof(msg) / sizeof(msg[0])));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -289,7 +289,7 @@ TEST_F(CRCRoutines, testCRC16NullAsInitvalue)
     Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), NULL, msg,(uint16_t)(sizeof(msg)/sizeof(msg[0])));
+    retVal = CRC_16(UINT16_C(0xbaad), NULL, msg, (uint16_t)(sizeof(msg) / sizeof(msg[0])));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), retVal);
@@ -321,14 +321,14 @@ TEST_F(CRCRoutines, testCRC16NullAsLength)
     Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg,UINT16_C(0));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg, UINT16_C(0));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT16_C(0xaaaa), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC16MsgLen_1)
+TEST_F(CRCRoutines, testCRC16MsgLen_1)
 {
     /** @testcase{CRCRoutines::testCRC16MsgLen_1: }
        * CRC_16 API is called to check the crc of the bytes present in a buffer according to length
@@ -339,14 +339,14 @@ TEST_F(CRCRoutines,testCRC16MsgLen_1)
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg,(uint16_t) sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg, (uint16_t)sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT16_C(0x32e7), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC16MsgLenAs1)
+TEST_F(CRCRoutines, testCRC16MsgLenAs1)
 {
     /** @testcase{CRCRoutines::testCRC16MsgLenAs1: }
        * CRC_16 API is called to check the crc of the bytes present in a buffer according to length
@@ -357,7 +357,7 @@ TEST_F(CRCRoutines,testCRC16MsgLenAs1)
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg,(uint16_t) sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg, (uint16_t)sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -375,7 +375,7 @@ TEST_F(CRCRoutines, tesCRC16tMsgLen1)
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg,(uint16_t)sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg, (uint16_t)sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -393,7 +393,7 @@ TEST_F(CRCRoutines, testCRC16MsgLength_1)
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg,(uint16_t) sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg, (uint16_t)sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -412,7 +412,7 @@ TEST_F(CRCRoutines, testCRC16MsgLengthAs1)
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg,(uint16_t) sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg, (uint16_t)sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -430,7 +430,7 @@ TEST_F(CRCRoutines, testCRC16MsgLen_2)
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg, (uint16_t)sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg, (uint16_t)sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -448,7 +448,7 @@ TEST_F(CRCRoutines, testCRC16MsgLen2)
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg, (uint16_t)sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg, (uint16_t)sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -466,7 +466,7 @@ TEST_F(CRCRoutines, testCRC16MsgLength_2)
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg,(uint16_t) sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg, (uint16_t)sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -484,7 +484,7 @@ TEST_F(CRCRoutines, testCRC16MsgLengthAs2)
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg,(uint16_t) sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg, (uint16_t)sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -502,7 +502,7 @@ TEST_F(CRCRoutines, testCRC16MsgLengthAs_2)
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg,(uint16_t) sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg, (uint16_t)sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -524,93 +524,93 @@ TEST_F(CRCRoutines, tesCRC16tMsgLen_20)
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg,(uint16_t)sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, msg, (uint16_t)sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT16_C(0x84fd), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC16CharValue)
+TEST_F(CRCRoutines, testCRC16CharValue)
 {
     /** @testcase{CRCRoutines::testCRC16CharValue: }
      *CRC_16 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t dataBuffer[] = {'h','e','l','l','o','c','o','m','o'};
+    uint8_t dataBuffer[] = {'h', 'e', 'l', 'l', 'o', 'c', 'o', 'm', 'o'};
     Retcode_T retVal;
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer,(uint16_t)sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer, (uint16_t)sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT16_C(0xDDEA), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC16LengthGTFifty)
+TEST_F(CRCRoutines, testCRC16LengthGTFifty)
 {
     /** @testcase{CRCRoutines::testCRC16LengthGTFifty: }
      * CRC_16 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t dataBuffer[] = {0X1,0X2,0X3,0X4,0X5,0X6,0X7,0X8,0X9,0X10,0X11,0X12,0X13,0X14,0X15,0X16,0X17,0X18,0X19,0X20,0X21,0X22,0X23,0X24,0X25,0X26,0X27,0X28,0X29,0X30,0X31,0X32,0X33,
-            0X34,0X35,0X36,0X37,0X38,0X39,0X40,0X41,0X42,0X43,0X44,0X45,0X46,0X47,0X48,0X49,0X50,0X51,0X52,0X53,0X54,0X55};
+    uint8_t dataBuffer[] = {0X1, 0X2, 0X3, 0X4, 0X5, 0X6, 0X7, 0X8, 0X9, 0X10, 0X11, 0X12, 0X13, 0X14, 0X15, 0X16, 0X17, 0X18, 0X19, 0X20, 0X21, 0X22, 0X23, 0X24, 0X25, 0X26, 0X27, 0X28, 0X29, 0X30, 0X31, 0X32, 0X33,
+                            0X34, 0X35, 0X36, 0X37, 0X38, 0X39, 0X40, 0X41, 0X42, 0X43, 0X44, 0X45, 0X46, 0X47, 0X48, 0X49, 0X50, 0X51, 0X52, 0X53, 0X54, 0X55};
     Retcode_T retVal;
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer,(uint16_t)sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer, (uint16_t)sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT16_C(0x22BF), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC16LT100)
+TEST_F(CRCRoutines, testCRC16LT100)
 {
     /** @testcase{CRCRoutines::testCRC16LT100: }
      * CRC_16 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t dataBuffer[] = {0X1,0X2,0X3,0X4,0X5,0X6,0X7,0X8,0X9,0X10,0X11,0X12,0X13,0X14,0X15,0X16,0X17,0X18,0X19,0X20,0X21,0X22,0X23,0X24,0X25,0X26,0X27,0X28,0X29,0X30,0X31,0X32,0X33,
-            0X34,0X35,0X36,0X37,0X38,0X39,0X40,0X41,0X42,0X43,0X44,0X45,0X46,0X47,0X48,0X49,0X50,0X51,0X52,0X53,0X54,0X55,0X1,0X2,0X3,0X4,0X5,0X6,0X7,0X8,0X9,0X10,0X11,0X12,0X13,0X14,0X15,0X16,0X17,0X18,0X19,0X20,0X21,0X22,0X23,0X24,0X25,0X26,0X27,0X28,0X29,0X30};
+    uint8_t dataBuffer[] = {0X1, 0X2, 0X3, 0X4, 0X5, 0X6, 0X7, 0X8, 0X9, 0X10, 0X11, 0X12, 0X13, 0X14, 0X15, 0X16, 0X17, 0X18, 0X19, 0X20, 0X21, 0X22, 0X23, 0X24, 0X25, 0X26, 0X27, 0X28, 0X29, 0X30, 0X31, 0X32, 0X33,
+                            0X34, 0X35, 0X36, 0X37, 0X38, 0X39, 0X40, 0X41, 0X42, 0X43, 0X44, 0X45, 0X46, 0X47, 0X48, 0X49, 0X50, 0X51, 0X52, 0X53, 0X54, 0X55, 0X1, 0X2, 0X3, 0X4, 0X5, 0X6, 0X7, 0X8, 0X9, 0X10, 0X11, 0X12, 0X13, 0X14, 0X15, 0X16, 0X17, 0X18, 0X19, 0X20, 0X21, 0X22, 0X23, 0X24, 0X25, 0X26, 0X27, 0X28, 0X29, 0X30};
     Retcode_T retVal;
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer,(uint16_t)sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer, (uint16_t)sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT16_C(0x84B8), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC16Length200)
+TEST_F(CRCRoutines, testCRC16Length200)
 {
     /** @testcase{CRCRoutines::testCRC16Length200: }
      * CRC_16 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
 
-    uint8_t dataBuffer[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,
-            34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,
-            70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,
-            34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,
-            70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100};
+    uint8_t dataBuffer[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
+                            34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69,
+                            70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
+                            34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69,
+                            70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100};
     Retcode_T retVal;
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer,(uint16_t)sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer, (uint16_t)sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT16_C(0x69CD), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC16ChangePoly)
+TEST_F(CRCRoutines, testCRC16ChangePoly)
 {
     /** @testcase{CRCRoutines::testCRC16ChangePoly: }
      * CRC_16 API is called to check the crc of the bytes present in a buffer according to length
@@ -621,14 +621,14 @@ TEST_F(CRCRoutines,testCRC16ChangePoly)
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xaaaa), &crc16_calculated, dataBuffer, (uint16_t)sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_16(UINT16_C(0xaaaa), &crc16_calculated, dataBuffer, (uint16_t)sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT16_C(0xFF1C), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC16ChangeInitVal)
+TEST_F(CRCRoutines, testCRC16ChangeInitVal)
 {
     /** @testcase{CRCRoutines::testCRC16ChangeInitVal: }
      * CRC_16 API is called to check the crc of the bytes present in a buffer according to length
@@ -639,14 +639,14 @@ TEST_F(CRCRoutines,testCRC16ChangeInitVal)
     uint16_t crc16_calculated = UINT16_C(0xaa55);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer,(uint16_t)sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer, (uint16_t)sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT16_C(0x5CC2), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC16ChangeInitValPoly)
+TEST_F(CRCRoutines, testCRC16ChangeInitValPoly)
 {
     /** @testcase{CRCRoutines::testCRC16ChangeInitValPoly: }
      * CRC_16 API is called to check the crc of the bytes present in a buffer according to length
@@ -657,79 +657,79 @@ TEST_F(CRCRoutines,testCRC16ChangeInitValPoly)
     uint16_t crc16_calculated = UINT16_C(0x5555);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0x5a5a), &crc16_calculated, dataBuffer,(uint16_t)sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_16(UINT16_C(0x5a5a), &crc16_calculated, dataBuffer, (uint16_t)sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT16_C(0xDDB2), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC16SpecialCharacter)
+TEST_F(CRCRoutines, testCRC16SpecialCharacter)
 {
     /** @testcase{CRCRoutines::testCRC16SpecialCharacter: }
      * CRC_16 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t dataBuffer[] = {'@','$','^'};
+    uint8_t dataBuffer[] = {'@', '$', '^'};
     Retcode_T retVal;
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer,(uint16_t)sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer, (uint16_t)sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT16_C(0x3101), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC16Alphabets)
+TEST_F(CRCRoutines, testCRC16Alphabets)
 {
     /** @testcase{CRCRoutines::testCRC16Alphabets: }
      * CRC_16 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t dataBuffer[] = {'A','B','C'};
+    uint8_t dataBuffer[] = {'A', 'B', 'C'};
     Retcode_T retVal;
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer,(uint16_t)sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer, (uint16_t)sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT16_C(0x7D0F), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC16SmallAlphabets)
+TEST_F(CRCRoutines, testCRC16SmallAlphabets)
 {
     /** @testcase{CRCRoutines::testCRC16SmallAlphabets: }
      * CRC_16 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t dataBuffer[] = {'a','b','c'};
+    uint8_t dataBuffer[] = {'a', 'b', 'c'};
     Retcode_T retVal;
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer,(uint16_t)sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer, (uint16_t)sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT16_C(0xA76B), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC16WrongBytes)
+TEST_F(CRCRoutines, testCRC16WrongBytes)
 {
     /** @testcase{CRCRoutines::testCRC16WrongBytes: }
      * CRC_16 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t dataBuffer[] = {8,9,5,1,6};
+    uint8_t dataBuffer[] = {8, 9, 5, 1, 6};
     Retcode_T retVal;
     uint16_t crc16_calculated = UINT16_C(0xaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer,(uint16_t)sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_16(UINT16_C(0xbaad), &crc16_calculated, dataBuffer, (uint16_t)sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -746,13 +746,13 @@ TEST_F(CRCRoutines, testCRC32NullpointerInitvalue)
     Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), NULL, msg, (uint16_t)(sizeof(msg)/sizeof(msg[0])));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), NULL, msg, (uint16_t)(sizeof(msg) / sizeof(msg[0])));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), retVal);
 }
 
-TEST_F(CRCRoutines,testCRC32NullpointerMsg)
+TEST_F(CRCRoutines, testCRC32NullpointerMsg)
 {
     /** @testcase{CRCRoutines::testCRC32NullpointerMsg: }
        * CRC_32 API is called to check the Null condition
@@ -763,7 +763,7 @@ TEST_F(CRCRoutines,testCRC32NullpointerMsg)
     uint32_t crc32_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc32_calculated, 0, (uint16_t)(sizeof(msg)/sizeof(msg[0])));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc32_calculated, 0, (uint16_t)(sizeof(msg) / sizeof(msg[0])));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), retVal);
@@ -780,7 +780,7 @@ TEST_F(CRCRoutines, testCRC32NullAsLength)
     Retcode_T retVal;
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg,UINT16_C(0));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, UINT16_C(0));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -798,14 +798,14 @@ TEST_F(CRCRoutines, testCRC32MsgLength1)
     uint32_t crc32_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc32_calculated, msg, (uint16_t)(sizeof(msg)/sizeof(msg[0])));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc32_calculated, msg, (uint16_t)(sizeof(msg) / sizeof(msg[0])));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(0xA32DA3C2), crc32_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC32MsgLen_1)
+TEST_F(CRCRoutines, testCRC32MsgLen_1)
 {
     /** @testcase{CRCRoutines::testCRC32MsgLen_1: }
        * CRC_32 API is called to check the crc of the bytes present in a buffer according to length
@@ -816,14 +816,14 @@ TEST_F(CRCRoutines,testCRC32MsgLen_1)
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(0x323432e7), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC32MsgLenAs1)
+TEST_F(CRCRoutines, testCRC32MsgLenAs1)
 {
     /** @testcase{CRCRoutines::testCRC32MsgLenAs1: }
        * CRC_32 API is called to check the crc of the bytes present in a buffer according to length
@@ -834,7 +834,7 @@ TEST_F(CRCRoutines,testCRC32MsgLenAs1)
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -852,7 +852,7 @@ TEST_F(CRCRoutines, tesCRC32tMsgLen1)
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -870,7 +870,7 @@ TEST_F(CRCRoutines, testCRC32MsgLength_1)
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -889,7 +889,7 @@ TEST_F(CRCRoutines, testCRC32MsgLengthAs1)
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -907,7 +907,7 @@ TEST_F(CRCRoutines, testCRC32MsgLen_2)
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -925,7 +925,7 @@ TEST_F(CRCRoutines, testCRC32MsgLen2)
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -943,7 +943,7 @@ TEST_F(CRCRoutines, testCRC32MsgLength_2)
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -961,7 +961,7 @@ TEST_F(CRCRoutines, testCRC32MsgLengthAs2)
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -979,7 +979,7 @@ TEST_F(CRCRoutines, testCRC32MsgLengthAs_2)
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -992,12 +992,12 @@ TEST_F(CRCRoutines, testCRC32MsgLen_4)
        * CRC_32 API is called to check the crc of the bytes present in a buffer according to length
        */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t msg[] = {0x11, 0x88,0x11,0x88};
+    uint8_t msg[] = {0x11, 0x88, 0x11, 0x88};
     Retcode_T retVal;
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -1010,12 +1010,12 @@ TEST_F(CRCRoutines, testCRC32MsgLen4)
        *CRC_32 API is called to check the crc of the bytes present in a buffer according to length
        */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t msg[] = {0x00, 0x00,0x00,0x00};
+    uint8_t msg[] = {0x00, 0x00, 0x00, 0x00};
     Retcode_T retVal;
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -1028,12 +1028,12 @@ TEST_F(CRCRoutines, testCRC32MsgLength_4)
        * CRC_32 API is called to check the crc of the bytes present in a buffer according to length
        */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t msg[] = {0xff, 0xff,0xff,0xff};
+    uint8_t msg[] = {0xff, 0xff, 0xff, 0xff};
     Retcode_T retVal;
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -1046,12 +1046,12 @@ TEST_F(CRCRoutines, testCRC32MsgLengthAs4)
        * CRC_32 API is called to check the crc of the bytes present in a buffer according to length
        */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t msg[] = {0xaa, 0x55,0xaa,0x55};
+    uint8_t msg[] = {0xaa, 0x55, 0xaa, 0x55};
     Retcode_T retVal;
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -1064,12 +1064,12 @@ TEST_F(CRCRoutines, testCRC32MsgLengthAs_4)
        * CRC_32 API is called to check the crc of the bytes present in a buffer according to length
        */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t msg[] = {0x55, 0xaa,0x55,0xaa};
+    uint8_t msg[] = {0x55, 0xaa, 0x55, 0xaa};
     Retcode_T retVal;
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
-    
+
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
@@ -1091,93 +1091,93 @@ TEST_F(CRCRoutines, tesCRC32tMsgLen_20)
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg)/sizeof(msg[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, msg, sizeof(msg) / sizeof(msg[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(0xf8749e30), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC32CharValue)
+TEST_F(CRCRoutines, testCRC32CharValue)
 {
     /** @testcase{CRCRoutines::testCRC32CharValue: }
      *CRC_32 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t dataBuffer[] = {'h','e','l','l','o','c','o','m','o'};
+    uint8_t dataBuffer[] = {'h', 'e', 'l', 'l', 'o', 'c', 'o', 'm', 'o'};
     Retcode_T retVal;
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(0x07CBC613), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC32LengthGTFifty)
+TEST_F(CRCRoutines, testCRC32LengthGTFifty)
 {
     /** @testcase{CRCRoutines::testCRC32LengthGTFifty: }
      * CRC_32 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t dataBuffer[] = {0X1,0X2,0X3,0X4,0X5,0X6,0X7,0X8,0X9,0X10,0X11,0X12,0X13,0X14,0X15,0X16,0X17,0X18,0X19,0X20,0X21,0X22,0X23,0X24,0X25,0X26,0X27,0X28,0X29,0X30,0X31,0X32,0X33,
-            0X34,0X35,0X36,0X37,0X38,0X39,0X40,0X41,0X42,0X43,0X44,0X45,0X46,0X47,0X48,0X49,0X50,0X51,0X52,0X53,0X54,0X55};
+    uint8_t dataBuffer[] = {0X1, 0X2, 0X3, 0X4, 0X5, 0X6, 0X7, 0X8, 0X9, 0X10, 0X11, 0X12, 0X13, 0X14, 0X15, 0X16, 0X17, 0X18, 0X19, 0X20, 0X21, 0X22, 0X23, 0X24, 0X25, 0X26, 0X27, 0X28, 0X29, 0X30, 0X31, 0X32, 0X33,
+                            0X34, 0X35, 0X36, 0X37, 0X38, 0X39, 0X40, 0X41, 0X42, 0X43, 0X44, 0X45, 0X46, 0X47, 0X48, 0X49, 0X50, 0X51, 0X52, 0X53, 0X54, 0X55};
     Retcode_T retVal;
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(0xE643B297), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC32LT100)
+TEST_F(CRCRoutines, testCRC32LT100)
 {
     /** @testcase{CRCRoutines::testCRC32LT100: }
      * CRC_32 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t dataBuffer[] = {0X1,0X2,0X3,0X4,0X5,0X6,0X7,0X8,0X9,0X10,0X11,0X12,0X13,0X14,0X15,0X16,0X17,0X18,0X19,0X20,0X21,0X22,0X23,0X24,0X25,0X26,0X27,0X28,0X29,0X30,0X31,0X32,0X33,
-            0X34,0X35,0X36,0X37,0X38,0X39,0X40,0X41,0X42,0X43,0X44,0X45,0X46,0X47,0X48,0X49,0X50,0X51,0X52,0X53,0X54,0X55,0X1,0X2,0X3,0X4,0X5,0X6,0X7,0X8,0X9,0X10,0X11,0X12,0X13,0X14,0X15,0X16,0X17,0X18,0X19,0X20,0X21,0X22,0X23,0X24,0X25,0X26,0X27,0X28,0X29,0X30};
+    uint8_t dataBuffer[] = {0X1, 0X2, 0X3, 0X4, 0X5, 0X6, 0X7, 0X8, 0X9, 0X10, 0X11, 0X12, 0X13, 0X14, 0X15, 0X16, 0X17, 0X18, 0X19, 0X20, 0X21, 0X22, 0X23, 0X24, 0X25, 0X26, 0X27, 0X28, 0X29, 0X30, 0X31, 0X32, 0X33,
+                            0X34, 0X35, 0X36, 0X37, 0X38, 0X39, 0X40, 0X41, 0X42, 0X43, 0X44, 0X45, 0X46, 0X47, 0X48, 0X49, 0X50, 0X51, 0X52, 0X53, 0X54, 0X55, 0X1, 0X2, 0X3, 0X4, 0X5, 0X6, 0X7, 0X8, 0X9, 0X10, 0X11, 0X12, 0X13, 0X14, 0X15, 0X16, 0X17, 0X18, 0X19, 0X20, 0X21, 0X22, 0X23, 0X24, 0X25, 0X26, 0X27, 0X28, 0X29, 0X30};
     Retcode_T retVal;
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(0xF628BA09), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC32Length200)
+TEST_F(CRCRoutines, testCRC32Length200)
 {
     /** @testcase{CRCRoutines::testCRC32Length200: }
      * CRC_32 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
 
-    uint8_t dataBuffer[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,
-            34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,
-            70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,
-            34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,
-            70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100};
+    uint8_t dataBuffer[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
+                            34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69,
+                            70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33,
+                            34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69,
+                            70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100};
     Retcode_T retVal;
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(0xF039B77E), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC32ChangePoly)
+TEST_F(CRCRoutines, testCRC32ChangePoly)
 {
     /** @testcase{CRCRoutines::testCRC32ChangePoly: }
      * CRC_32 API is called to check the crc of the bytes present in a buffer according to length
@@ -1188,14 +1188,14 @@ TEST_F(CRCRoutines,testCRC32ChangePoly)
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xaaaaaaaa), &crc16_calculated, dataBuffer, sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_32(UINT32_C(0xaaaaaaaa), &crc16_calculated, dataBuffer, sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(0xFFFFFF1C), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC32ChangeInitVal)
+TEST_F(CRCRoutines, testCRC32ChangeInitVal)
 {
     /** @testcase{CRCRoutines::testCRC32ChangeInitVal: }
      * CRC_32 API is called to check the crc of the bytes present in a buffer according to length
@@ -1206,14 +1206,14 @@ TEST_F(CRCRoutines,testCRC32ChangeInitVal)
     uint32_t crc16_calculated = UINT32_C(0xaa55aa55);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(0x5C2D5CC2), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC32ChangeInitValPoly)
+TEST_F(CRCRoutines, testCRC32ChangeInitValPoly)
 {
     /** @testcase{CRCRoutines::testCRC32ChangeInitValPoly: }
      * CRC_32 API is called to check the crc of the bytes present in a buffer according to length
@@ -1224,92 +1224,92 @@ TEST_F(CRCRoutines,testCRC32ChangeInitValPoly)
     uint32_t crc16_calculated = UINT32_C(0x55555555);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0x5a5a5a5a), &crc16_calculated, dataBuffer, sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_32(UINT32_C(0x5a5a5a5a), &crc16_calculated, dataBuffer, sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(0xDDDDDDB2), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC32SpecialCharacter)
+TEST_F(CRCRoutines, testCRC32SpecialCharacter)
 {
     /** @testcase{CRCRoutines::testCRC32SpecialCharacter: }
      * CRC_32 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t dataBuffer[] = {'@','$','^'};
+    uint8_t dataBuffer[] = {'@', '$', '^'};
     Retcode_T retVal;
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(0x7C7EB750), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC32Alphabets)
+TEST_F(CRCRoutines, testCRC32Alphabets)
 {
     /** @testcase{CRCRoutines::testCRC32Alphabets: }
      * CRC_32 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t dataBuffer[] = {'A','B','C'};
+    uint8_t dataBuffer[] = {'A', 'B', 'C'};
     Retcode_T retVal;
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
-    EXPECT_EQ(UINT32_C(0xD70BFB5E),crc16_calculated);
+    EXPECT_EQ(UINT32_C(0xD70BFB5E), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC32SmallAlphabets)
+TEST_F(CRCRoutines, testCRC32SmallAlphabets)
 {
     /** @testcase{CRCRoutines::testCRC32SmallAlphabets: }
      * CRC_32 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t dataBuffer[] = {'a','b','c'};
+    uint8_t dataBuffer[] = {'a', 'b', 'c'};
     Retcode_T retVal;
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(UINT32_C(0x8A76441D), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,testCRC32WrongBytes)
+TEST_F(CRCRoutines, testCRC32WrongBytes)
 {
     /** @testcase{CRCRoutines::testCRC32WrongBytes: }
      * CRC_32 API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t dataBuffer[] = {8,9,5,1,6};
+    uint8_t dataBuffer[] = {8, 9, 5, 1, 6};
     Retcode_T retVal;
     uint32_t crc16_calculated = UINT32_C(0xaaaaaaaa);
 
     /* EXECISE: call relevant production code Interface with appropriate test inputs  */
-    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer)/sizeof(dataBuffer[0]));
+    retVal = CRC_32(UINT32_C(0xbaadbaad), &crc16_calculated, dataBuffer, sizeof(dataBuffer) / sizeof(dataBuffer[0]));
 
     /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_NE(UINT32_C(0x12345678), crc16_calculated);
 }
 
-TEST_F(CRCRoutines,CRC32EathStandardInvalidTest)
+TEST_F(CRCRoutines, CRC32EathStandardInvalidTest)
 {
     /** @testcase{CRCRoutines::TEST CRC32EathStandardInvalidTest: }
      * CRC_32BitEthernetStandard API is called to check invalid conditions like NULL parameters
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t dataBuffer[] = {8,119,20,25,85,51,125,220,52,69,97,200,166,188,98,20,32,16,199};
+    uint8_t dataBuffer[] = {8, 119, 20, 25, 85, 51, 125, 220, 52, 69, 97, 200, 166, 188, 98, 20, 32, 16, 199};
     Retcode_T retVal;
     uint32_t crc32_Utils;
 
@@ -1332,13 +1332,13 @@ TEST_F(CRCRoutines,CRC32EathStandardInvalidTest)
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retVal);
 }
 
-TEST_F(CRCRoutines,TestCRC32EathStandard)
+TEST_F(CRCRoutines, TestCRC32EathStandard)
 {
     /** @testcase{CRCRoutines::TEST TestCRC32EathStandard: }
      * CRC_32BitEthernetStandard API is called to check the crc of the bytes present in a buffer according to length
      */
     /* SETUP: Declare and initialize local variables required only by this test case */
-    uint8_t dataBuffer[] = {8,119,20,25,85,51,125,220,52,69,97,200,166,188,98,20,32,16,199};
+    uint8_t dataBuffer[] = {8, 119, 20, 25, 85, 51, 125, 220, 52, 69, 97, 200, 166, 188, 98, 20, 32, 16, 199};
     Retcode_T retVal;
     uint32_t crc32_Utils;
 

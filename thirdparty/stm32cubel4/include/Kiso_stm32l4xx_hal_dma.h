@@ -36,4 +36,3 @@
 void KISO_HAL_DMA_IRQHandler(DMA_HandleTypeDef *hdma, uint32_t channel);
 
 #endif /* KISO_STM32L4XX_HAL_DMA_H_ */
-

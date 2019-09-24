@@ -11,7 +11,7 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
- 
+
 #ifndef KISO_KISO_BSP_Accel_ADXL362_TH_HH
 #define KISO_KISO_BSP_Accel_ADXL362_TH_HH
 
@@ -39,8 +39,6 @@ FAKE_VALUE_FUNC(HWHandle_T, BSP_Accel_ADXL362_GetSPIHandle)
 FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_SetCSLow)
 FAKE_VALUE_FUNC(Retcode_T, BSP_Accel_ADXL362_SetCSHigh)
 
-
 #endif /* KISO_FEATURE_BSP_ACCEL_ADXL362 */
 
 #endif /* KISO_KISO_BSP_Accel_ADXL362_TH_HH */
-

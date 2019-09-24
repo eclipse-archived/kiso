@@ -68,7 +68,7 @@ static uint32_t NextIndexToWriteOn = 0;
  * is able to hold a fixed number of error logger entries. When the end of the
  * buffer is reached then writing starts over at the first entry.
  */
-static uint8_t DataFromUserPage[ERRORLOGGER_SIZE] = { 0 };
+static uint8_t DataFromUserPage[ERRORLOGGER_SIZE] = {0};
 
 /** Pointer on an array of MAXENTRIES log entries */
 static ErrorLogger_LogEntry_T (*pErrorEntries)[MAXENTRIES];
@@ -82,7 +82,7 @@ Retcode_T ErrorLogger_Init(ErrorLoggerConfig_T storageAgentHandle)
     ErrorLoggerHandle = storageAgentHandle;
 
     /* A pointer on an array of log entries */
-    pErrorEntries = (ErrorLogger_LogEntry_T (*)[MAXENTRIES]) DataFromUserPage; /* Point on first entry */
+    pErrorEntries = (ErrorLogger_LogEntry_T(*)[MAXENTRIES])DataFromUserPage; /* Point on first entry */
 
     /* Need to read out the entire error log in order to process it */
     nvmRetCode = ErrorLoggerHandle.ReadLogs(ErrorLoggerHandle.StorageMedium, DataFromUserPage, ErrorLoggerHandle.position, ErrorLoggerHandle.length);
@@ -108,7 +108,7 @@ Retcode_T ErrorLogger_Init(ErrorLoggerConfig_T storageAgentHandle)
         NextIndexToWriteOn = ErrorSeqNo % MAXENTRIES;
         return RETCODE_OK;
     }
-    
+
     return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
 }
 
@@ -120,7 +120,7 @@ Retcode_T ErrorLogger_LogError(Retcode_T Error)
     /* If error code is RETCODE_OK implies no error. So don't log */
     if (RETCODE_OK == Error)
     {
-        return RETCODE(RETCODE_SEVERITY_WARNING, (Retcode_T )RETCODE_INVALID_PARAM);
+        return RETCODE(RETCODE_SEVERITY_WARNING, (Retcode_T)RETCODE_INVALID_PARAM);
     }
     /* else do nothing */
 
@@ -131,16 +131,16 @@ Retcode_T ErrorLogger_LogError(Retcode_T Error)
     (*pErrorEntries)[NextIndexToWriteOn].SeqNo = ErrorSeqNo;
     (*pErrorEntries)[NextIndexToWriteOn].Reserved = 0x0;
 
-    nvmRet = ErrorLoggerHandle.WriteLogs(ErrorLoggerHandle.StorageMedium, (void *) pErrorEntries,ErrorLoggerHandle.position, ErrorLoggerHandle.length);
+    nvmRet = ErrorLoggerHandle.WriteLogs(ErrorLoggerHandle.StorageMedium, (void *)pErrorEntries, ErrorLoggerHandle.position, ErrorLoggerHandle.length);
     if (RETCODE_OK == nvmRet)
     {
         /* Recalculate write index */
         NextIndexToWriteOn = ErrorSeqNo % MAXENTRIES;
         return RETCODE_OK;
     }
-  	/* Userpage write is not success. So error is not updated to Userpage. */
+    /* Userpage write is not success. So error is not updated to Userpage. */
     ErrorSeqNo -= 1;
-  
+
     return nvmRet;
 }
 
@@ -174,8 +174,8 @@ Retcode_T ErrorLogger_GetLastErrorLog(ErrorLogger_LogEntry_T *LogEntry)
 Retcode_T ErrorLogger_HasError(Retcode_T Error)
 {
     /* Loop through the logged errors and search the error code passed */
-    Retcode_T retcode = RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T )RETCODE_FAILURE);
-    
+    Retcode_T retcode = RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T)RETCODE_FAILURE);
+
     if (ErrorSeqNo)
     {
         for (uint32_t i = 0; i < MAXENTRIES; i++)
@@ -183,7 +183,7 @@ Retcode_T ErrorLogger_HasError(Retcode_T Error)
             if ((*pErrorEntries)[i].ErrorCode == Error)
             {
                 retcode = RETCODE_OK;
-                break;  /* LEAVES THE LOOP */
+                break; /* LEAVES THE LOOP */
             }
         }
     }
@@ -214,7 +214,7 @@ uint8_t ErrorLogger_GetCurrentErrors(void)
 /*  The description of the function is available in Kiso_ErrorLogger.h */
 Retcode_T ErrorLogger_GetErrorAt(uint8_t index, ErrorLogger_LogEntry_T *LogEntry)
 {
-    Retcode_T retcode = RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T )RETCODE_INVALID_PARAM);
+    Retcode_T retcode = RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T)RETCODE_INVALID_PARAM);
     if (LogEntry && (index < MAXENTRIES))
     {
         if ((*pErrorEntries)[index].SeqNo)
@@ -225,7 +225,7 @@ Retcode_T ErrorLogger_GetErrorAt(uint8_t index, ErrorLogger_LogEntry_T *LogEntry
         else
         {
             /* Error at that index */
-            retcode = RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T )RETCODE_OUT_OF_RESOURCES);
+            retcode = RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T)RETCODE_OUT_OF_RESOURCES);
         }
     }
     return retcode;
@@ -239,8 +239,8 @@ Retcode_T ErrorLogger_ClearAllErrorLogs(void)
     memset(DataFromUserPage, 0, ErrorLoggerHandle.length);
 
     /* Write entire error cleared log to flash */
-    retcode = ErrorLoggerHandle.EraseLogs(ErrorLoggerHandle.StorageMedium, (void *) pErrorEntries, ErrorLoggerHandle.position, ErrorLoggerHandle.length);                                            //write activity here
-    
+    retcode = ErrorLoggerHandle.EraseLogs(ErrorLoggerHandle.StorageMedium, (void *)pErrorEntries, ErrorLoggerHandle.position, ErrorLoggerHandle.length); //write activity here
+
     if (RETCODE_OK == retcode)
     {
         /* Re-initialize stuff as all errors are cleared now*/

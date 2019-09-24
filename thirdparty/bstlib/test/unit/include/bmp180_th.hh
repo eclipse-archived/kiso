@@ -11,11 +11,10 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
- 
+
 /* header definition ******************************************************** */
 #ifndef KISO_BMP180_TH_HH_
 #define KISO_BMP180_TH_HH_
-
 
 #include "bmp180.h"
 

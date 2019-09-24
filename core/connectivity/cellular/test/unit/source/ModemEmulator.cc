@@ -48,20 +48,20 @@
 
 struct FakeAnswers_S
 {
-    const char* Trigger;
-    const char* Answer;
-    struct FakeAnswers_S* _Next;
+    const char *Trigger;
+    const char *Answer;
+    struct FakeAnswers_S *_Next;
 };
 
-static struct FakeAnswers_S* RootAnswer = NULL;
-static struct FakeAnswers_S* CurrentAnswer = RootAnswer;
+static struct FakeAnswers_S *RootAnswer = NULL;
+static struct FakeAnswers_S *CurrentAnswer = RootAnswer;
 
 bool ModemEmulator_EnableEcho = true;
 
 /* *** TEST HELPER ********************************************************** */
 #if TEST_VERBOSE_MODEM_EMULATOR
 
-void _printf_mask_cr_lf_(const char* fmt, ...)
+void _printf_mask_cr_lf_(const char *fmt, ...)
 {
     /* Make this buffer large enough to potentially  hold any AT echo/command*/
     char buffer[CELLULAR_AT_SEND_BUFFER_SIZE * 2];
@@ -70,7 +70,7 @@ void _printf_mask_cr_lf_(const char* fmt, ...)
     int len = vsprintf(buffer, fmt, args);
     va_end(args);
 
-    if (len > (int) sizeof(buffer))
+    if (len > (int)sizeof(buffer))
         exit(1);
 
     for (int i = 0; i < len; i++)
@@ -90,18 +90,20 @@ void _printf_mask_cr_lf_(const char* fmt, ...)
     }
 }
 
-#define TEST_PRINTF(fmt, ...) \
-    do \
-    { \
-        printf("\tMODEM-EMU|%s|", __func__); \
+#define TEST_PRINTF(fmt, ...)                  \
+    do                                         \
+    {                                          \
+        printf("\tMODEM-EMU|%s|", __func__);   \
         _printf_mask_cr_lf_(fmt, __VA_ARGS__); \
-        puts(""); \
-    } \
-    while(0)
+        puts("");                              \
+    } while (0)
 
 #else
 
-#define TEST_PRINTF(fmt, ...) do { } while(0)
+#define TEST_PRINTF(fmt, ...) \
+    do                        \
+    {                         \
+    } while (0)
 
 #endif
 
@@ -114,15 +116,15 @@ Retcode_T Custom_Engine_SendAtCommand(const uint8_t *buffer, uint32_t bufferLeng
     {
         /* Echo */
         TEST_PRINTF("Echo: %.*s", bufferLength, buffer);
-        (void) AtResponseParser_Parse((uint8_t*) buffer, bufferLength);
+        (void)AtResponseParser_Parse((uint8_t *)buffer, bufferLength);
     }
 
     if (NULL != CurrentAnswer)
     {
-        if (0 == strncmp(CurrentAnswer->Trigger, (const char*) buffer, bufferLength))
+        if (0 == strncmp(CurrentAnswer->Trigger, (const char *)buffer, bufferLength))
         {
             TEST_PRINTF("Answer: %s", CurrentAnswer->Answer);
-            (void) AtResponseParser_Parse((uint8_t*) CurrentAnswer->Answer, strlen(CurrentAnswer->Answer));
+            (void)AtResponseParser_Parse((uint8_t *)CurrentAnswer->Answer, strlen(CurrentAnswer->Answer));
         }
         CurrentAnswer = CurrentAnswer->_Next;
     }
@@ -130,7 +132,7 @@ Retcode_T Custom_Engine_SendAtCommand(const uint8_t *buffer, uint32_t bufferLeng
     return retcode;
 }
 
-Retcode_T Custom_Engine_SendAtCommandWaitEcho(const uint8_t* buffer, uint32_t bufferLength, uint32_t timeout)
+Retcode_T Custom_Engine_SendAtCommandWaitEcho(const uint8_t *buffer, uint32_t bufferLength, uint32_t timeout)
 {
     if (NULL == buffer)
     {
@@ -177,7 +179,7 @@ Retcode_T Custom_Queue_Delete(Queue_T *Queue)
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
     }
 
-    Queue->Lock = Queue->Wakeup = (xSemaphoreHandle) NULL;
+    Queue->Lock = Queue->Wakeup = (xSemaphoreHandle)NULL;
 
     return RETCODE_OK;
 }
@@ -193,12 +195,12 @@ Retcode_T Custom_Queue_Put(Queue_T *Queue, const void *Item, uint32_t ItemSize, 
 
     if ((Queue->PosWrite > Queue->PosRead) || 0 == Queue->Count)
     {
-        if (TotalSize <= (Queue->BufferSize - (uint32_t) (Queue->PosWrite - Queue->Buffer)))
+        if (TotalSize <= (Queue->BufferSize - (uint32_t)(Queue->PosWrite - Queue->Buffer)))
         {
             /* Write to back */
             pos = Queue->PosWrite;
         }
-        else if (TotalSize <= (uint32_t) (Queue->PosRead - Queue->Buffer))
+        else if (TotalSize <= (uint32_t)(Queue->PosRead - Queue->Buffer))
         {
             /* Write in front */
             pos = Queue->Buffer;
@@ -208,7 +210,7 @@ Retcode_T Custom_Queue_Put(Queue_T *Queue, const void *Item, uint32_t ItemSize, 
             return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
         }
     }
-    else if (Queue->PosWrite < Queue->PosRead && TotalSize <= (uint32_t) (Queue->PosRead - Queue->PosWrite))
+    else if (Queue->PosWrite < Queue->PosRead && TotalSize <= (uint32_t)(Queue->PosRead - Queue->PosWrite))
     {
         pos = Queue->PosWrite;
     }
@@ -223,7 +225,7 @@ Retcode_T Custom_Queue_Put(Queue_T *Queue, const void *Item, uint32_t ItemSize, 
         Queue->Last->Next = pos;
     }
 
-    Queue->Last = (QueueItem_T*) pos;
+    Queue->Last = (QueueItem_T *)pos;
 
     /* Add a message to queue */
     memcpy(pos, &m, sizeof(QueueItem_T));
@@ -255,7 +257,7 @@ Retcode_T Custom_Queue_Get(Queue_T *Queue, void **Data, uint32_t *DataSize, uint
         }
     }
 
-    QueueItem_T *m = (QueueItem_T*) Queue->PosRead;
+    QueueItem_T *m = (QueueItem_T *)Queue->PosRead;
     *Data = Queue->PosRead + sizeof(QueueItem_T);
     if (DataSize)
     {
@@ -272,7 +274,7 @@ Retcode_T Custom_Queue_Purge(Queue_T *Queue)
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
     }
 
-    QueueItem_T *m = (QueueItem_T*) Queue->PosRead;
+    QueueItem_T *m = (QueueItem_T *)Queue->PosRead;
     Queue->PosRead = m->Next;
     Queue->Count--;
 
@@ -321,12 +323,12 @@ void ConnectFakeModem(void)
 
 void DeleteFakeAnswers(void)
 {
-    struct FakeAnswers_S* cur = RootAnswer;
+    struct FakeAnswers_S *cur = RootAnswer;
     RootAnswer = NULL;
     CurrentAnswer = NULL;
     while (NULL != cur)
     {
-        struct FakeAnswers_S* next = cur->_Next;
+        struct FakeAnswers_S *next = cur->_Next;
         free(cur);
         cur = next;
     }
@@ -348,9 +350,9 @@ void DisconnectFakeModem(void)
     DeleteFakeAnswers();
 }
 
-void AddFakeAnswer(const char* trigger, const char* answer)
+void AddFakeAnswer(const char *trigger, const char *answer)
 {
-    struct FakeAnswers_S* newFakeAnswer = (struct FakeAnswers_S*) malloc(sizeof(struct FakeAnswers_S));
+    struct FakeAnswers_S *newFakeAnswer = (struct FakeAnswers_S *)malloc(sizeof(struct FakeAnswers_S));
     if (NULL == newFakeAnswer)
     {
         exit(1);
@@ -367,7 +369,7 @@ void AddFakeAnswer(const char* trigger, const char* answer)
     }
     else
     {
-        struct FakeAnswers_S* cur = RootAnswer;
+        struct FakeAnswers_S *cur = RootAnswer;
         while (NULL != cur->_Next)
         {
             cur = cur->_Next;
@@ -376,11 +378,11 @@ void AddFakeAnswer(const char* trigger, const char* answer)
     }
 }
 
-class TS_ModemTest: public testing::Test
+class TS_ModemTest : public testing::Test
 {
 protected:
-    char* Trigger;
-    char* Answer;
+    char *Trigger;
+    char *Answer;
 
     virtual void SetUp()
     {
@@ -409,23 +411,25 @@ protected:
         }
     }
 
-    virtual const char* FormatIntoNewBuffer(char** buffer, const char* fmt, ...)
+    virtual const char *FormatIntoNewBuffer(char **buffer, const char *fmt, ...)
     {
-        if (NULL != *buffer) exit(1);
+        if (NULL != *buffer)
+            exit(1);
 
         va_list args;
         va_start(args, fmt);
         int len = vsnprintf(NULL, 0, fmt, args);
         va_end(args);
-        if (len <= 0) exit(1);
+        if (len <= 0)
+            exit(1);
 
         va_start(args, fmt);
-        *buffer = (char*) malloc(len + 1);
-        if (NULL == *buffer) exit(1);
+        *buffer = (char *)malloc(len + 1);
+        if (NULL == *buffer)
+            exit(1);
         vsnprintf(*buffer, len + 1, fmt, args);
         va_end(args);
 
         return *buffer;
     }
 };
-

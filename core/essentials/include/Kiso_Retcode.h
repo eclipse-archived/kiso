@@ -32,7 +32,6 @@
 
 #include "Kiso_Basics.h"
 
-
 #ifndef KISO_PACKAGE_ID
 #warning "KISO_PACKAGE_ID not defined. The KISO_PACKAGE_ID is set to the default value 0"
 #define KISO_PACKAGE_ID 0
@@ -75,16 +74,16 @@ typedef uint32_t Retcode_T;
 enum Retcode_General_E
 {
     RETCODE_SUCCESS = 0,
-    RETCODE_FAILURE, /**< An unspecified failure has occurred e.g. error in third party code */
-    RETCODE_OUT_OF_RESOURCES, /**< System resources have been exhausted e.g. not enough RAM */
-    RETCODE_INVALID_PARAM, /**< One or more passed input parameters was invalid (e.g. passed a null pointing buffer) */
-    RETCODE_NOT_SUPPORTED, /**< The requested operation is not supported by the current implementation */
-    RETCODE_INCONSISTENT_STATE, /**< The module is in a state preventing it from executing the requested operation*/
-    RETCODE_UNINITIALIZED, /**< The module has not been initialized */
-    RETCODE_NULL_POINTER, /**< During function execution a null pointer has been encountered */
-    RETCODE_UNEXPECTED_BEHAVIOR, /**< The function has produced an unintended side effect*/
+    RETCODE_FAILURE,               /**< An unspecified failure has occurred e.g. error in third party code */
+    RETCODE_OUT_OF_RESOURCES,      /**< System resources have been exhausted e.g. not enough RAM */
+    RETCODE_INVALID_PARAM,         /**< One or more passed input parameters was invalid (e.g. passed a null pointing buffer) */
+    RETCODE_NOT_SUPPORTED,         /**< The requested operation is not supported by the current implementation */
+    RETCODE_INCONSISTENT_STATE,    /**< The module is in a state preventing it from executing the requested operation*/
+    RETCODE_UNINITIALIZED,         /**< The module has not been initialized */
+    RETCODE_NULL_POINTER,          /**< During function execution a null pointer has been encountered */
+    RETCODE_UNEXPECTED_BEHAVIOR,   /**< The function has produced an unintended side effect*/
     RETCODE_DOUBLE_INITIALIZATION, /**< Reinitializing the module may produce inconsistency */
-    RETCODE_TIMEOUT, /**< A timeout has occurred while waiting for the operation to complete */
+    RETCODE_TIMEOUT,               /**< A timeout has occurred while waiting for the operation to complete */
     RETCODE_TIMER_ERROR,
     RETCODE_SEMAPHORE_ERROR,
     RETCODE_QUEUE_ERROR,
@@ -98,14 +97,14 @@ enum Retcode_General_E
  */
 enum Retcode_Severity_E
 {
-    RETCODE_SEVERITY_NONE = 0,  /**< Reserved */
-    RETCODE_SEVERITY_FATAL,     /**< An unrecoverable error which could lead to system failure has occurred in the issuing
+    RETCODE_SEVERITY_NONE = 0, /**< Reserved */
+    RETCODE_SEVERITY_FATAL,    /**< An unrecoverable error which could lead to system failure has occurred in the issuing
                                 module. Only a full  module reset or a full MCU reset may resolve the issue.*/
-    RETCODE_SEVERITY_ERROR,     /**< The requested function could not successfully execute due to a recoverable error
+    RETCODE_SEVERITY_ERROR,    /**< The requested function could not successfully execute due to a recoverable error
                                 (e.g. wrong input parameters).*/
-    RETCODE_SEVERITY_WARNING,   /**< The requested function was successful but some trouble has been faced during execution
+    RETCODE_SEVERITY_WARNING,  /**< The requested function was successful but some trouble has been faced during execution
                                 (e.g. a response time longer than usual).*/
-    RETCODE_SEVERITY_INFO,      /**< Although the execution was fully successful, the function returns INFO to inform the
+    RETCODE_SEVERITY_INFO,     /**< Although the execution was fully successful, the function returns INFO to inform the
                                 API user about something */
 };
 
@@ -175,27 +174,27 @@ void Retcode_RaiseErrorFromIsr(Retcode_T error);
  *
  * @note        Do not use directly, use #RETCODE(Severity, Code) instead!
  */
-#define RETCODE_MK_PACKAGE(Package)    ( (Package & 0x000000FFUL) << 24UL )
+#define RETCODE_MK_PACKAGE(Package) ((Package & 0x000000FFUL) << 24UL)
 
 /**
  * @brief       A helper macro to make Module Id
  * @note        Do not use directly, use #RETCODE(Severity, Code) instead!
  */
-#define RETCODE_MK_MODULEID(ModuleID)  ( (ModuleID & 0x000000FFUL) << 16UL )
+#define RETCODE_MK_MODULEID(ModuleID) ((ModuleID & 0x000000FFUL) << 16UL)
 
 /**
  * @brief       A helper macro to make severity
  *
  * @note        Do not use directly, use #RETCODE(Severity, Code) instead!
  */
-#define RETCODE_MK_SEVERITY(Severity)  ( (Severity & 0x0000000FUL) << 12UL )
+#define RETCODE_MK_SEVERITY(Severity) ((Severity & 0x0000000FUL) << 12UL)
 
 /**
  * @brief       A helper macro to make code
  *
  * @note        Do not use directly, use #RETCODE(Severity, Code) instead!
  */
-#define RETOCDE_MK_CODE(Code)           (Code & 0x00000FFFUL)
+#define RETOCDE_MK_CODE(Code) (Code & 0x00000FFFUL)
 
 /**
  * @brief       This Macro composes a return code based on input parameters.
@@ -213,7 +212,7 @@ void Retcode_RaiseErrorFromIsr(Retcode_T error);
  * @note        Do not use directly, use #RETCODE(Severity, Code) instead!
  */
 #define RETCODE_COMPOSE(PackageID, ModuleID, Severity, Code) \
-            ( (Retcode_T) ( RETCODE_MK_PACKAGE(PackageID) | RETCODE_MK_MODULEID(ModuleID) | RETCODE_MK_SEVERITY(Severity) | RETOCDE_MK_CODE(Code) ) )
+    ((Retcode_T)(RETCODE_MK_PACKAGE(PackageID) | RETCODE_MK_MODULEID(ModuleID) | RETCODE_MK_SEVERITY(Severity) | RETOCDE_MK_CODE(Code)))
 
 /**
  * @brief       This macro should be used to compose a Retcode_T value.
@@ -240,7 +239,7 @@ void Retcode_RaiseErrorFromIsr(Retcode_T error);
  * @endcode
  */
 #define RETCODE(Severity, Code) \
-                (RETCODE_COMPOSE((uint32_t)KISO_PACKAGE_ID, (uint32_t)KISO_MODULE_ID, (uint32_t)Severity, (uint32_t)Code))
+    (RETCODE_COMPOSE((uint32_t)KISO_PACKAGE_ID, (uint32_t)KISO_MODULE_ID, (uint32_t)Severity, (uint32_t)Code))
 
 /**
  * @brief       A helper macro to return success.
@@ -248,7 +247,7 @@ void Retcode_RaiseErrorFromIsr(Retcode_T error);
  * @details     RETCODE_OK is used to inform about successful execution. It does not follow Retcode_T composition scheme
  *              i.e no package, module, nor severity is needed. It is defined as such to allow faster checks for success
  */
-#define RETCODE_OK                ((Retcode_T) RETCODE_SUCCESS)
+#define RETCODE_OK ((Retcode_T)RETCODE_SUCCESS)
 
 /**
  * @brief       Provides the Package ID from a return code.
@@ -261,7 +260,7 @@ void Retcode_RaiseErrorFromIsr(Retcode_T error);
  */
 static KISO_INLINE uint32_t Retcode_GetPackage(Retcode_T retcode)
 {
-    return (((uint32_t) retcode >> 24UL) & 0x000000FFUL);
+    return (((uint32_t)retcode >> 24UL) & 0x000000FFUL);
 }
 
 /**
@@ -275,7 +274,7 @@ static KISO_INLINE uint32_t Retcode_GetPackage(Retcode_T retcode)
  */
 static KISO_INLINE uint32_t Retcode_GetModuleId(Retcode_T retcode)
 {
-    return (((uint32_t) retcode >> 16UL) & 0x000000FFUL);
+    return (((uint32_t)retcode >> 16UL) & 0x000000FFUL);
 }
 
 /**
@@ -289,7 +288,7 @@ static KISO_INLINE uint32_t Retcode_GetModuleId(Retcode_T retcode)
  */
 static KISO_INLINE Retcode_Severity_T Retcode_GetSeverity(Retcode_T retcode)
 {
-    return ((Retcode_Severity_T) (((uint32_t) retcode >> 12UL) & 0x0000000FUL));
+    return ((Retcode_Severity_T)(((uint32_t)retcode >> 12UL) & 0x0000000FUL));
 }
 
 /**
@@ -303,7 +302,7 @@ static KISO_INLINE Retcode_Severity_T Retcode_GetSeverity(Retcode_T retcode)
  */
 static KISO_INLINE uint32_t Retcode_GetCode(Retcode_T retcode)
 {
-    return ((uint32_t) retcode & 0x00000FFFUL);
+    return ((uint32_t)retcode & 0x00000FFFUL);
 }
 
 static KISO_INLINE uint32_t Retcode_getPackage(Retcode_T retcode)
