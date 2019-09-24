@@ -26,7 +26,9 @@ SPDX-License-Identifier: EPL-2.0
 
 ## Third-party Content
 
-All third-party content is under 'thirdparty' folder in the project source code.
+Third-party content is mostly under 'thirdparty' folder in the project source
+code. There are other places where third party content exists, eg. third party
+configuration headers in 'config', third party tools in 'ci', etc.
 
 BST Sensor Drivers
 
@@ -56,12 +58,16 @@ CMSIS SVD files
 
  * License: Apache License 2.0
  
- CMake CodeCoverage utility
+CMake CodeCoverage utility
  
  * License: BSD-3-Clause
  
- ClangTidyToJunit pyhton script
+ClangTidyToJunit pyhton script
  
+ * License: MIT
+
+hugo-material-docs
+
  * License: MIT
 
 ## Cryptography
