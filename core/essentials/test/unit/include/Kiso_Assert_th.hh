@@ -34,7 +34,8 @@
 /* Helper macro - direct use is forbidden! */
 #define ASSERT_CONCAT(a, b) ASSERT_CONCAT_(a, b)
 
-#define static_assert(expression, message) enum {ASSERT_CONCAT(ASSERT_LINE_, __LINE__) = 1 / (!!(expression)) }
+#define static_assert(expression, message) enum { \
+    ASSERT_CONCAT(ASSERT_LINE_, __LINE__) = 1 / (!!(expression)) }
 
 /* additional interface header files */
 #include "Kiso_Retcode.h"

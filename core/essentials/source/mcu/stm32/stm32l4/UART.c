@@ -74,7 +74,7 @@ Retcode_T MCU_UART_Initialize(UART_T uart, MCU_UART_Callback_T callback)
     {
         if ((uart_ptr->TxState != UART_STATE_INIT) || (uart_ptr->RxState != UART_STATE_INIT))
         {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
         }
     }
     if (RETCODE_OK == retcode)
@@ -127,8 +127,9 @@ Retcode_T MCU_UART_Initialize(UART_T uart, MCU_UART_Callback_T callback)
         switch (uart_ptr->RxMode)
         {
         case KISO_HAL_TRANSFER_MODE_POLLING:
-            uart_ptr->SendFunc = UART_ReceivePolling;
-            uart_ptr->AbortSendFunc = UART_AbortReceive;
+            uart_ptr->ReceiveFunc = UART_ReceivePolling;
+            uart_ptr->AbortReceiveFunc = UART_AbortReceive;
+
             uart_ptr->RxState = UART_STATE_READY;
             break;
 
@@ -151,7 +152,7 @@ Retcode_T MCU_UART_Initialize(UART_T uart, MCU_UART_Callback_T callback)
             if (callback)
             {
                 uart_ptr->AppCallback = callback;
-                uart_ptr->SendFunc = UART_ReceiveDMA;
+                uart_ptr->ReceiveFunc = UART_ReceiveDMA;
                 uart_ptr->AbortReceiveFunc = UART_AbortReceive;
                 uart_ptr->IrqCallback = UART_IRQHandler;
                 uart_ptr->DmaRxCallback = UART_DMARxHandler;
@@ -217,12 +218,7 @@ Retcode_T MCU_UART_Send(UART_T uart, const uint8_t *data, uint32_t len)
         {
             if (uart_ptr->TxState == UART_STATE_READY)
             {
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdiscarded-qualifiers"
-#pragma GCC diagnostic ignored "-Wcast-qual"
-                // This eventually reaches the driver and adding const here doesn't help to clean it up
-                uart_ptr->Transaction.pTransmitBuffer = (uint8_t *)data;
-#pragma GCC diagnostic pop
+                uart_ptr->Transaction.pTransmitBuffer = data;
                 uart_ptr->Transaction.TransmitSize = (uint16_t)len;
                 retcode = uart_ptr->SendFunc(uart_ptr);
             }
@@ -298,7 +294,7 @@ Retcode_T MCU_UART_Receive(UART_T uart, uint8_t *buffer, uint32_t size)
  * @retval      RETCODE_INCONSISTENT_STATE if an ongoing process is running on the STM32 HAL library level.
  * @retval      RETCODE_TIMEOUT if a timeout occurred.
  */
-Retcode_T UART_SendPolling(struct MCU_UART_S *uart)
+static Retcode_T UART_SendPolling(struct MCU_UART_S *uart)
 {
     uart->TxState = UART_STATE_TX;
     uint32_t timeout = UART_MIN_TIMEOUT_MS;
@@ -306,9 +302,23 @@ Retcode_T UART_SendPolling(struct MCU_UART_S *uart)
     {
         timeout += ((uart->Transaction.TransmitSize * UART_CLOCK_CYCLES_PER_BYTE * UART_SAFETY_FACTOR) / (1 + uart->Datarate / UART_SECOND_TO_MILLI_MS));
     }
-    HAL_StatusTypeDef status =
-        HAL_UART_Transmit(&uart->huart, uart->Transaction.pTransmitBuffer, uart->Transaction.TransmitSize, timeout);
+    HAL_StatusTypeDef status = HAL_ERROR;
+// stm32CubeL4 does not consider transmit buffer as const and therefore we have to discard the const qualifier here
+#pragma GCC diagnostic push
+#ifdef __cplusplus
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#else
+#pragma GCC diagnostic ignored "-Wdiscarded-qualifiers"
+#pragma GCC diagnostic ignored "-Wcast-qual"
+
+#endif
+    status = HAL_UART_Transmit(&uart->huart, (uint8_t *)uart->Transaction.pTransmitBuffer, uart->Transaction.TransmitSize, timeout);
+
+#ifndef __cplusplus
+#pragma GCC diagnostic pop
+#endif
     uart->TxState = UART_STATE_READY;
+
     return MapHalRetToMcuRet(status);
 }
 
@@ -322,7 +332,7 @@ Retcode_T UART_SendPolling(struct MCU_UART_S *uart)
  * @retval      RETCODE_INCONSISTENT_STATE if an ongoing process is running on the STM32 HAL library level.
  * @retval      RETCODE_TIMEOUT if a timeout occurred.
  */
-Retcode_T UART_ReceivePolling(struct MCU_UART_S *uart)
+static Retcode_T UART_ReceivePolling(struct MCU_UART_S *uart)
 {
     uart->RxState = UART_STATE_RX;
 
@@ -351,10 +361,25 @@ Retcode_T UART_ReceivePolling(struct MCU_UART_S *uart)
 Retcode_T UART_SendInt(struct MCU_UART_S *uart)
 {
     uart->TxState = UART_STATE_TX;
+// stm32CubeL4 does not consider transmit buffer as const and therefore we have to discard the const qualifier here
+#pragma GCC diagnostic push
+#ifdef __cplusplus
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#else
+#pragma GCC diagnostic ignored "-Wdiscarded-qualifiers"
+#pragma GCC diagnostic ignored "-Wcast-qual"
+
+#endif
     HAL_StatusTypeDef status =
-        HAL_UART_Transmit_IT(&uart->huart, uart->Transaction.pTransmitBuffer, uart->Transaction.TransmitSize);
+        HAL_UART_Transmit_IT(&uart->huart, (uint8_t *)uart->Transaction.pTransmitBuffer, uart->Transaction.TransmitSize);
+#ifndef __cplusplus
+#pragma GCC diagnostic pop
+#endif
+    if (HAL_OK != status)
+    {
+        uart->TxState = UART_STATE_READY;
+    }
     return MapHalRetToMcuRet(status);
-    ;
 }
 
 /**
@@ -368,14 +393,16 @@ Retcode_T UART_SendInt(struct MCU_UART_S *uart)
  * @retval      RETCODE_INCONSISTENT_STATE if an ongoing process is running on the STM32 HAL library level.
  * @retval      RETCODE_FAILURE if an other error occurred.
  */
-Retcode_T UART_ReceiveInt(struct MCU_UART_S *uart)
+static Retcode_T UART_ReceiveInt(struct MCU_UART_S *uart)
 {
     uart->RxState = UART_STATE_RX;
-    Retcode_T retcode = RETCODE_OK;
     HAL_StatusTypeDef status =
         HAL_UART_Receive_IT(&uart->huart, uart->Transaction.pReceiveBuffer, uart->Transaction.ReceivetSize);
-    retcode = MapHalRetToMcuRet(status);
-    return retcode;
+    if (HAL_OK != status)
+    {
+        uart->RxState = UART_STATE_READY;
+    }
+    return MapHalRetToMcuRet(status);
 }
 
 /**
@@ -389,11 +416,28 @@ Retcode_T UART_ReceiveInt(struct MCU_UART_S *uart)
  * @retval      RETCODE_INCONSISTENT_STATE if an ongoing process is running on the STM32 HAL library level.
  * @retval      RETCODE_FAILURE if an other error occurred.
  */
-Retcode_T UART_SendDMA(struct MCU_UART_S *uart)
+static Retcode_T UART_SendDMA(struct MCU_UART_S *uart)
 {
     uart->TxState = UART_STATE_TX;
+// stm32CubeL4 does not consider transmit buffer as const and therefore we have to discard the const qualifier here
+#pragma GCC diagnostic push
+#ifdef __cplusplus
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#else
+#pragma GCC diagnostic ignored "-Wdiscarded-qualifiers"
+#pragma GCC diagnostic ignored "-Wcast-qual"
+
+#endif
     HAL_StatusTypeDef status =
-        HAL_UART_Transmit_DMA(&uart->huart, uart->Transaction.pTransmitBuffer, uart->Transaction.TransmitSize);
+        HAL_UART_Transmit_DMA(&uart->huart, (uint8_t *)uart->Transaction.pTransmitBuffer, uart->Transaction.TransmitSize);
+
+#ifndef __cplusplus
+#pragma GCC diagnostic pop
+#endif
+    if (HAL_OK != status)
+    {
+        uart->TxState = UART_STATE_READY;
+    }
     return MapHalRetToMcuRet(status);
 }
 
@@ -408,11 +452,15 @@ Retcode_T UART_SendDMA(struct MCU_UART_S *uart)
  * @retval      RETCODE_INCONSISTENT_STATE if an ongoing process is running on the STM32 HAL library level.
  * @retval      RETCODE_FAILURE if an other error occurred.
  */
-Retcode_T UART_ReceiveDMA(struct MCU_UART_S *uart)
+static Retcode_T UART_ReceiveDMA(struct MCU_UART_S *uart)
 {
     uart->RxState = UART_STATE_RX;
     HAL_StatusTypeDef status =
         HAL_UART_Receive_DMA(&uart->huart, uart->Transaction.pReceiveBuffer, uart->Transaction.ReceivetSize);
+    if (HAL_OK != status)
+    {
+        uart->RxState = UART_STATE_READY;
+    }
     return MapHalRetToMcuRet(status);
 }
 
@@ -554,7 +602,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 
     event.registerValue = 0;
     event.bitfield.RxError = 1;
-    if ((UART_HAL_ERROR_NON_RECOVERABLE & uart_ptr->huart.ErrorCode))
+    if ((UART_HAL_ERROR_NON_RECOVERABLE & huart->ErrorCode))
     {
         /* non recoverable error occurred, transfer cannot go on, the application is informed and the transfer is aborted */
         uart_ptr->AbortReceiveFunc(uart_ptr);

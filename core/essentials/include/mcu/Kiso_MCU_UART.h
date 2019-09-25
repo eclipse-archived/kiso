@@ -76,8 +76,10 @@ struct MCU_UART_Event_S
     uint32_t Dsr : 1;        /**< DSR (Data Set Ready) line state has changed. */
     uint32_t Dcd : 1;        /**< DCD (Data Carrier Detect) line state has changed. */
     uint32_t Ri : 1;         /**< RI (Ring Indicator) line state has changed. */
-    uint32_t Unused : 24;
+    uint32_t Unused : 23;
 };
+
+static_assert(sizeof(struct MCU_UART_Event_S) == 4, " MCU_UART_Event_S structure size greater than 32bits ? ");
 
 /**
  * @brief       Union grouping MCU_UART_Event_S structure to an uint32_t value

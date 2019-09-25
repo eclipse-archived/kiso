@@ -55,7 +55,7 @@ if(${ENABLE_TESTING})
    set(CMAKE_BUILD_TYPE Debug)
 
    # In the gtest lib there are problems with these warnings - disable them
-   add_compile_options(-Wno-unused-const-variable -Wno-missing-field-initializers -Wno-pedantic)
+   add_compile_options(-Wno-unused-const-variable -Wno-missing-field-initializers -Wno-pedantic -Wno-error=deprecated-declarations)
 
    enable_testing()
    if(${ENABLE_COVERAGE})

@@ -11,5 +11,7 @@ target_include_directories(gtest PUBLIC
    ${GTEST_DIR}
 )
 
+target_compile_definitions(gtest PUBLIC __STDC_FORMAT_MACROS)
+
 find_package(Threads REQUIRED)
 target_link_libraries(gtest ${CMAKE_THREAD_LIBS_INIT})

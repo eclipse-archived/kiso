@@ -1,92 +1,68 @@
-/********************************************************************************
-* Copyright (c) 2010-2019 Robert Bosch GmbH
-*
-* This program and the accompanying materials are made available under the
-* terms of the Eclipse Public License 2.0 which is available at
-* http://www.eclipse.org/legal/epl-2.0.
-*
-* SPDX-License-Identifier: EPL-2.0
-*
-* Contributors:
-*    Robert Bosch GmbH - initial contribution
-*
-********************************************************************************/
+/**********************************************************************************************************************
+ * Copyright (c) 2010-2019 Robert Bosch GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Robert Bosch GmbH - initial contribution
+ *
+ **********************************************************************************************************************/
 /**
  * @file
  *
  * @brief
- * Unittest for MCU STM32 UART
+ * Unittest for MCU STM32L4 UART
  *
  */
 #include <gtest.h>
 
+/* start of global scope symbol and fake definitions section */
+FFF_DEFINITION_BLOCK_START
 extern "C"
 {
 
-#include "Kiso_Basics.h"
+/* setup compile time configuration defines */
+/* include faked interfaces */
 #include "Kiso_HAL_th.hh"
 
 #if KISO_FEATURE_UART
 
-/* include faked interfaces */
+#include "stm32l4xx_th.hh"
 #include "stm32l4xx_hal_th.hh"
-#include "stm32l4xx_hal_dma_th.hh"
 #include "stm32l4xx_hal_uart_th.hh"
-#include "stm32l4xx_hal_cryp_th.hh"
+#include "stm32l4xx_hal_dma_th.hh"
 
-/* Include module under test */
+/* include module under test */
 #include "UART.c"
-
-    void HAL_UART_TxCpltCallback_Peripherals(UART_HandleTypeDef *huart)
-    {
-        KISO_UNUSED(huart);
-    }
-
-    void HAL_UART_RxCpltCallback_Peripherals(UART_HandleTypeDef *huart)
-    {
-        KISO_UNUSED(huart);
-    }
-
-    void HAL_UART_ErrorCallback_Peripherals(UART_HandleTypeDef *huart)
-    {
-        KISO_UNUSED(huart);
-    }
 
 } /* extern "C" */
 
 /* end of global scope symbol and fake definitions section */
+FFF_DEFINITION_BLOCK_END
+UART_T global_uart;
+struct MCU_UART_Event_S global_event;
 
-/*
- static Retcode_T FakeFailSend(struct MCU_UART_Driver_S* const element_ptr, uint8_t * data, uint32_t len)
- {
- KISO_UNUSED(element_ptr);
- KISO_UNUSED(data);
- KISO_UNUSED(len);
- return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
- }
- */
-
-//----------------------------------------------------------------------
-void AppTestCallbackFunction_XferCpltCallback(
-    struct __DMA_HandleTypeDef *hdma);
-void AppTestCallbackFunction_XferHalfCpltCallback(
-    struct __DMA_HandleTypeDef *hdma);
-void AppTestCallbackFunction_XferErrorCallback(
-    struct __DMA_HandleTypeDef *hdma);
-//----------------------------------------------------------------------
-
-class HalUartTest : public testing::Test
+class STM32L4_UART_Test : public testing::Test
 {
 public:
-    HalUartTest();
-    virtual ~HalUartTest();
+    STM32L4_UART_Test();
+    virtual ~STM32L4_UART_Test();
 
 protected:
     virtual void SetUp()
     {
-        for (int i = 0; i < 10; i++)
-        {
-        }
+        RESET_FAKE(HAL_UART_IRQHandler);
+        RESET_FAKE(HAL_DMA_IRQHandler);
+        RESET_FAKE(HAL_UART_Transmit);
+        RESET_FAKE(HAL_UART_Transmit_IT);
+        RESET_FAKE(HAL_UART_Transmit_DMA);
+        RESET_FAKE(HAL_UART_Receive);
+        RESET_FAKE(HAL_UART_Receive_IT);
+        RESET_FAKE(HAL_UART_Receive_DMA);
         FFF_RESET_HISTORY();
     }
 
@@ -95,46 +71,14 @@ protected:
     {
         ; /* nothing to do if clean up is not required */
     }
-
-public:
-    static const struct MCU_UART_Event_S m_EventInit;
-    static const struct MCU_UART_Event_S m_EventRxReady;
-    static const struct MCU_UART_Event_S m_EventRxError;
-    static const struct MCU_UART_Event_S m_EventRxComplete;
-    static const struct MCU_UART_Event_S m_EventTxError;
-    static const struct MCU_UART_Event_S m_EventTxComplete;
-
-    static bool m_isCalled_cbf;
-    static bool m_isCalled_XferCpltCallback;
-    static bool m_isCalled_XferHalfCpltCallback;
-    static bool m_isCalled_XferErrorCallback;
-    static uint32_t m_uart_cbf;
-    static struct MCU_UART_Event_S m_event_cbf;
 };
 
-const struct MCU_UART_Event_S HalUartTest::m_EventInit = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-const struct MCU_UART_Event_S HalUartTest::m_EventRxReady = {1, 0, 0, 0, 0, 0, 0, 0, 0};
-const struct MCU_UART_Event_S HalUartTest::m_EventRxError = {0, 1, 0, 0, 0, 0, 0, 0, 0};
-const struct MCU_UART_Event_S HalUartTest::m_EventRxComplete = {0, 0, 1, 0, 0, 0, 0, 0, 0};
-const struct MCU_UART_Event_S HalUartTest::m_EventTxError = {0, 0, 0, 1, 0, 0, 0, 0, 0};
-const struct MCU_UART_Event_S HalUartTest::m_EventTxComplete = {0, 0, 0, 0, 1, 0, 0, 0, 0};
-
-bool HalUartTest::m_isCalled_cbf = false;
-//-- dma
-bool HalUartTest::m_isCalled_XferCpltCallback = false;
-bool HalUartTest::m_isCalled_XferHalfCpltCallback = false;
-bool HalUartTest::m_isCalled_XferErrorCallback = false;
-
-uint32_t HalUartTest::m_uart_cbf = 0;
-struct MCU_UART_Event_S HalUartTest::m_event_cbf = m_EventInit;
-
-HalUartTest::HalUartTest()
+STM32L4_UART_Test::STM32L4_UART_Test()
 {
     ;
 }
 
-HalUartTest::~HalUartTest()
+STM32L4_UART_Test::~STM32L4_UART_Test()
 {
     ;
 }
@@ -147,7 +91,7 @@ public:
     UartDevice(enum KISO_HAL_TransferMode_E TransferMode);
     virtual ~UartDevice();
 
-    uint32_t m_UartInterfaceParam; /**< user interface handle, simple integer */
+    void *m_UartInterfaceParam; /**< user interface handle, simple integer */
 
     struct MCU_UART_S m_Uart; /**< handle of MUC which address is given to user interface in form UART_T m_uart */
 
@@ -155,29 +99,19 @@ public:
     DMA_HandleTypeDef m_hdmatx;
     DMA_HandleTypeDef m_hdmarx;
 
-    DMA_Channel_TypeDef m_DmaChannel;
-
-    uint32_t getAppInterfaceHandle();
+    void *getAppInterfaceHandle();
 };
 
 UartDevice::UartDevice(enum KISO_HAL_TransferMode_E TransferMode)
 {
-    m_Uart.TransferMode = TransferMode;
+    m_Uart.TxMode = TransferMode;
+    m_Uart.RxMode = TransferMode;
 
     m_Uart.huart.Instance = &m_Instance;
 
-    m_Uart.huart.pRxBuffPtr = NULL;
-    m_Uart.huart.pTxBuffPtr = NULL;
-    m_Uart.huart.RxXferCount = 0;
-    m_Uart.huart.RxXferSize = 0;
-    m_Uart.huart.TxXferCount = 0;
-    m_Uart.huart.TxXferSize = 0;
-    m_Uart.huart.Mask = 0;
-
-    m_Uart.RxUserSize = 0;
-    m_Uart.isReceiving = false;
-    m_Uart.isSending = false;
-
+    // m_Uart.RxUserSize = 0;
+    m_Uart.RxState = UART_STATE_INIT;
+    m_Uart.TxState = UART_STATE_INIT;
     m_Uart.AppCallback = NULL;
     m_Uart.IrqCallback = NULL;
 
@@ -186,32 +120,7 @@ UartDevice::UartDevice(enum KISO_HAL_TransferMode_E TransferMode)
     m_Uart.DmaRxCallback = NULL;
     m_Uart.DmaTxCallback = NULL;
 
-    m_Uart.IrqCallback = MCU_UART_IRQ_Callback;
-
-    switch (m_Uart.TransferMode)
-    {
-    case KISO_HAL_TRANSFER_MODE_DMA:
-        m_Uart.huart.hdmatx = (DMA_HandleTypeDef *)&m_hdmatx;
-        m_Uart.huart.hdmarx = (DMA_HandleTypeDef *)&m_hdmarx;
-        m_Uart.DmaRxCallback = MCU_UART_DMA_RX_Callback;
-        m_Uart.DmaTxCallback = MCU_UART_DMA_TX_Callback;
-        m_hdmatx.Instance = (DMA_Channel_TypeDef *)&m_DmaChannel;
-        m_hdmatx.Parent = (void *)&m_Uart.huart;
-        m_hdmatx.XferCpltCallback = AppTestCallbackFunction_XferCpltCallback;
-        m_hdmatx.XferErrorCallback = AppTestCallbackFunction_XferErrorCallback;
-        m_hdmatx.XferHalfCpltCallback = AppTestCallbackFunction_XferHalfCpltCallback;
-        m_hdmarx.XferCpltCallback = AppTestCallbackFunction_XferCpltCallback;
-        m_hdmarx.XferErrorCallback = AppTestCallbackFunction_XferErrorCallback;
-        m_hdmarx.XferHalfCpltCallback = AppTestCallbackFunction_XferHalfCpltCallback;
-        break;
-    case KISO_HAL_TRANSFER_MODE_INTERRUPT:
-        break;
-    case KISO_HAL_TRANSFER_MODE_BLOCKING:
-        break;
-    default:
-        break;
-    }
-    m_UartInterfaceParam = (intptr_t)&m_Uart;
+    m_UartInterfaceParam = (void *)&m_Uart;
 }
 
 UartDevice::~UartDevice()
@@ -219,241 +128,702 @@ UartDevice::~UartDevice()
     ;
 }
 
-uint32_t UartDevice::getAppInterfaceHandle()
+void *UartDevice::getAppInterfaceHandle()
 {
-    return m_UartInterfaceParam; // ((UART_T)&m_mcuHandle);
+    return m_UartInterfaceParam;
 }
 
-//----------------------------------------------------------------------
-
-/**
- * @brief   Test public UART MCU interface HalUart_MCU_UART_Power
- * @detail  callback signature: typedef void (*MCU_UART_Callback_T)(struct MCU_UART_Event_S event);
- */
-void AppTestCallbackFunction(UART_T uart, struct MCU_UART_Event_S event)
+static void UART_Callback(UART_T uart, struct MCU_UART_Event_S event)
 {
-    HalUartTest::m_uart_cbf = (intptr_t)uart;
-    HalUartTest::m_event_cbf = event;
-    /*
-     std::cout << "     --- Hello from AppTestCallbackFunction ---" << std::endl;
-     std::cout << "     --- uart: 0x" << std::hex << std::setw(8) << std::setfill('0') << (uint32_t) uart << std::endl;
-     std::cout << "     --- event: 0x" << std::hex << std::setw(8) << std::setfill('0')
-     << (uint32_t) *(uint32_t*) (struct MCU_UART_Event_S *) &event << std::endl;
-     std::cout << "     --- TransferError: " << std::dec << event.TransferError << std::endl;
-     std::cout << "     --- TransferComplete: " << std::dec << event.TransferComplete << std::endl;
-     std::cout << "     --- Cts: " << std::dec << event.Cts << std::endl;
-     std::cout << "     --- Dsr: " << std::dec << event.Dsr << std::endl;
-     std::cout << "     --- Dcd: " << std::dec << event.Dcd << std::endl;
-     std::cout << "     --- Ri: " << std::dec << event.Ri << std::endl;
-     */
-    HalUartTest::m_isCalled_cbf = true;
+    global_uart = uart;
+    global_event = event;
 }
-
-/*!< DMA transfer complete callback         */
-void AppTestCallbackFunction_XferCpltCallback(
-    struct __DMA_HandleTypeDef *hdma)
-{
-    KISO_UNUSED(hdma);
-    HalUartTest::m_isCalled_XferCpltCallback = true;
-}
-
-/*!< DMA Half transfer complete callback    */
-void AppTestCallbackFunction_XferHalfCpltCallback(
-    struct __DMA_HandleTypeDef *hdma)
-{
-    KISO_UNUSED(hdma);
-    HalUartTest::m_isCalled_XferHalfCpltCallback = true;
-}
-
-/*!< DMA transfer error callback            */
-void AppTestCallbackFunction_XferErrorCallback(
-    struct __DMA_HandleTypeDef *hdma)
-{
-    KISO_UNUSED(hdma);
-    HalUartTest::m_isCalled_XferErrorCallback = true;
-}
-
-//----------------------------------------------------------------------
-
 /* specify test cases ******************************************************* */
 
 /**
  * @brief   Test public MCU_UART_Initialize
  * @detail  Retcode_T MCU_UART_Initialize(UART_T uart, MCU_UART_Callback_T callback)
  */
-TEST_F(HalUartTest, test_MCU_UART_Initialize_001)
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Initialize_Invalid_Handle)
+{
+    Retcode_T rc;
+    rc = MCU_UART_Initialize(NULL, (MCU_UART_Callback_T)NULL);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Initialize_InvalidState)
+{
+    Retcode_T rc;
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+
+    Device01.m_Uart.TxState = UART_STATE_READY;
+    Device01.m_Uart.RxState = UART_STATE_READY;
+
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+
+    rc = MCU_UART_Initialize(uart01, (MCU_UART_Callback_T)NULL);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+
+    Device01.m_Uart.TxState = UART_STATE_TX;
+    Device01.m_Uart.RxState = UART_STATE_RX;
+
+    rc = MCU_UART_Initialize(uart01, (MCU_UART_Callback_T)NULL);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+
+    Device01.m_Uart.TxState = UART_STATE_INIT;
+    Device01.m_Uart.RxState = UART_STATE_RX;
+
+    rc = MCU_UART_Initialize(uart01, (MCU_UART_Callback_T)NULL);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+
+    Device01.m_Uart.TxState = UART_STATE_TX;
+    Device01.m_Uart.RxState = UART_STATE_INIT;
+
+    rc = MCU_UART_Initialize(uart01, (MCU_UART_Callback_T)NULL);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Initialize_InvalidCallback_int)
 {
     Retcode_T rc;
     UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
-    rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
-    EXPECT_EQ(RETCODE_OK, rc);
+    rc = MCU_UART_Initialize(uart01, (MCU_UART_Callback_T)NULL);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
 }
 
-TEST_F(HalUartTest, test_MCU_UART_Initialize_002)
-{
-    Retcode_T rc;
-    UART_T uart01 = 0;
-    rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
-    EXPECT_NE(RETCODE_OK, rc);
-}
-
-TEST_F(HalUartTest, test_MCU_UART_Initialize_003)
-{
-    Retcode_T rc;
-    UART_T uart01 = 0;
-    rc = MCU_UART_Initialize(uart01, NULL);
-    EXPECT_NE(RETCODE_OK, rc);
-}
-
-TEST_F(HalUartTest, test_MCU_UART_Initialize_004)
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Initialize_InvalidCallback_dma)
 {
     Retcode_T rc;
     UartDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
     UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_UART_Initialize(uart01, NULL);
-    EXPECT_NE(RETCODE_OK, rc);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Initialize_InvalidMode)
+{
+    Retcode_T rc;
+    UartDevice Device01((enum KISO_HAL_TransferMode_E)5);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, NULL);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Initialize_Polling_Tx_Int_Rx_Fail)
+{
+    Retcode_T rc;
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    Device01.m_Uart.RxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT;
+    rc = MCU_UART_Initialize(uart01, (MCU_UART_Callback_T)NULL);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Initialize_Polling_Tx_Dma_Rx_Fail)
+{
+    Retcode_T rc;
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    Device01.m_Uart.RxMode = KISO_HAL_TRANSFER_MODE_DMA;
+    rc = MCU_UART_Initialize(uart01, (MCU_UART_Callback_T)NULL);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Initialize_Polling_Tx_Invalid_Rx_Fail)
+{
+    Retcode_T rc;
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    Device01.m_Uart.RxMode = (enum KISO_HAL_TransferMode_E)5;
+    rc = MCU_UART_Initialize(uart01, (MCU_UART_Callback_T)NULL);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Initialize_Polling_Ok)
+{
+    Retcode_T rc;
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, (MCU_UART_Callback_T)NULL);
+    EXPECT_EQ(RETCODE_OK, rc);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Initialize_Int_Ok)
+{
+    Retcode_T rc;
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, UART_Callback);
+    EXPECT_EQ(RETCODE_OK, rc);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Initialize_DMA_Ok)
+{
+    Retcode_T rc;
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, UART_Callback);
+    EXPECT_EQ(RETCODE_OK, rc);
 }
 
 /**
  * @brief   Test public UART MCU interface MCU_UART_Deinitialize
  */
-TEST_F(HalUartTest, test_MCU_UART_Deinitialize_001)
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Deinitialize_Invalid_Handle)
 {
     Retcode_T rc;
-    UART_T uart01 = 0;
-    rc = MCU_UART_Deinitialize(uart01);
-    EXPECT_NE(RETCODE_OK, rc);
+    rc = MCU_UART_Deinitialize((UART_T)NULL);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
 }
 
-TEST_F(HalUartTest, test_MCU_UART_Deinitialize_002)
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Deinitialize_OK)
 {
     Retcode_T rc;
-    UART_T uart01 = (HWHandle_T)NULL;
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, (MCU_UART_Callback_T)NULL);
+    EXPECT_EQ(RETCODE_OK, rc);
     rc = MCU_UART_Deinitialize(uart01);
-    EXPECT_NE(RETCODE_OK, rc);
+    EXPECT_EQ(RETCODE_OK, rc);
 }
 
-TEST_F(HalUartTest, test_MCU_UART_Deinitialize_003)
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Deinitialize_Invalid_State)
 {
     Retcode_T rc;
     UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
-    rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
+    rc = MCU_UART_Initialize(uart01, UART_Callback);
     EXPECT_EQ(RETCODE_OK, rc);
+    Device01.m_Uart.TxState = UART_STATE_READY;
+    Device01.m_Uart.RxState = UART_STATE_RX;
     rc = MCU_UART_Deinitialize(uart01);
-    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+    Device01.m_Uart.TxState = UART_STATE_TX;
+    Device01.m_Uart.RxState = UART_STATE_READY;
+    rc = MCU_UART_Deinitialize(uart01);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+    Device01.m_Uart.TxState = UART_STATE_TX;
+    Device01.m_Uart.RxState = UART_STATE_RX;
+    rc = MCU_UART_Deinitialize(uart01);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
 }
 
-/**
- * @brief   Retcode_T MCU_UART_Send(UART_T uart, uint8_t * data, uint32_t len)
- */
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Send_Fail)
+{
+    const uint16_t size = 10;
+    Retcode_T rc;
+    uint8_t buffer[size];
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, (MCU_UART_Callback_T)NULL);
 
-TEST_F(HalUartTest, test_MCU_UART_Send_001)
+    rc = MCU_UART_Send((UART_T)NULL, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
+
+    rc = MCU_UART_Send(uart01, (uint8_t *)NULL, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
+
+    rc = MCU_UART_Send(uart01, buffer, UINT16_MAX + 1);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
+
+    Device01.m_Uart.TxState = UART_STATE_TX;
+
+    rc = MCU_UART_Send(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Send_Polling_Fail)
+{
+    const uint16_t size = 10;
+    Retcode_T rc;
+    uint8_t buffer[size];
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, (MCU_UART_Callback_T)NULL);
+
+    HAL_UART_Transmit_fake.return_val = HAL_BUSY;
+
+    rc = MCU_UART_Send(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+    EXPECT_EQ(Device01.m_Uart.TxState, UART_STATE_READY);
+
+    HAL_UART_Transmit_fake.return_val = HAL_TIMEOUT;
+
+    rc = MCU_UART_Send(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMEOUT), rc);
+    EXPECT_EQ(Device01.m_Uart.TxState, UART_STATE_READY);
+
+    HAL_UART_Transmit_fake.return_val = HAL_ERROR;
+
+    rc = MCU_UART_Send(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), rc);
+    EXPECT_EQ(Device01.m_Uart.TxState, UART_STATE_READY);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Send_Int_Fail)
 {
     const uint16_t size = 10;
     Retcode_T rc;
     uint8_t buffer[size];
     UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
-    rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
-    EXPECT_EQ(RETCODE_OK, rc);
+    rc = MCU_UART_Initialize(uart01, UART_Callback);
+
+    HAL_UART_Transmit_IT_fake.return_val = HAL_BUSY;
+
     rc = MCU_UART_Send(uart01, buffer, size);
-    EXPECT_EQ(RETCODE_OK, rc);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+    EXPECT_EQ(Device01.m_Uart.TxState, UART_STATE_READY);
+
+    HAL_UART_Transmit_IT_fake.return_val = HAL_TIMEOUT;
+
+    rc = MCU_UART_Send(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMEOUT), rc);
+    EXPECT_EQ(Device01.m_Uart.TxState, UART_STATE_READY);
+
+    HAL_UART_Transmit_IT_fake.return_val = HAL_ERROR;
+
+    rc = MCU_UART_Send(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), rc);
+    EXPECT_EQ(Device01.m_Uart.TxState, UART_STATE_READY);
 }
 
-TEST_F(HalUartTest, test_MCU_UART_Send_002)
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Send_DMA_Fail)
 {
     const uint16_t size = 10;
     Retcode_T rc;
     uint8_t buffer[size];
     UartDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
     UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
-    rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
-    EXPECT_EQ(RETCODE_OK, rc);
+    rc = MCU_UART_Initialize(uart01, UART_Callback);
+
+    HAL_UART_Transmit_DMA_fake.return_val = HAL_BUSY;
+
     rc = MCU_UART_Send(uart01, buffer, size);
-    EXPECT_EQ(RETCODE_OK, rc);
-}
 
-TEST_F(HalUartTest, test_MCU_UART_Send_003)
-{
-    const uint16_t size = 10;
-    Retcode_T rc;
-    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
-    rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
-    EXPECT_EQ(RETCODE_OK, rc);
-    rc = MCU_UART_Send(uart01, NULL, size);
-    EXPECT_NE(RETCODE_OK, rc);
-}
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+    EXPECT_EQ(Device01.m_Uart.TxState, UART_STATE_READY);
 
-TEST_F(HalUartTest, test_MCU_UART_Send_004)
-{
-    const uint16_t size = 10;
-    Retcode_T rc;
-    uint8_t buffer[size];
-    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
-    rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
-    EXPECT_EQ(RETCODE_OK, rc);
-    rc = MCU_UART_Send(uart01, buffer, 0); /* send cancel */
-    EXPECT_NE(RETCODE_OK, rc);
-}
+    HAL_UART_Transmit_DMA_fake.return_val = HAL_TIMEOUT;
 
-TEST_F(HalUartTest, test_MCU_UART_Send_005)
-{
-    const uint16_t size = 10;
-    Retcode_T rc;
-    uint8_t buffer[size];
-    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
-    rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
-    EXPECT_EQ(RETCODE_OK, rc);
-    Device01.m_Uart.isSending = true;
     rc = MCU_UART_Send(uart01, buffer, size);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UART_HAL_BUSY), rc);
-}
 
-TEST_F(HalUartTest, test_MCU_UART_Send_006)
-{
-    const uint16_t size = 10;
-    Retcode_T rc;
-    uint8_t buffer[size];
-    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMEOUT), rc);
+    EXPECT_EQ(Device01.m_Uart.TxState, UART_STATE_READY);
+
+    HAL_UART_Transmit_DMA_fake.return_val = HAL_ERROR;
+
     rc = MCU_UART_Send(uart01, buffer, size);
-    EXPECT_EQ(RETCODE_OK, rc);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), rc);
+    EXPECT_EQ(Device01.m_Uart.TxState, UART_STATE_READY);
 }
 
-TEST_F(HalUartTest, test_MCU_UART_Send_007)
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Send_Polling_OK)
 {
     const uint16_t size = 10;
     Retcode_T rc;
     uint8_t buffer[size];
-    UartDevice Device01(KISO_HAL_TRANSFER_MODE_BLOCKING);
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
     UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
     rc = MCU_UART_Initialize(uart01, NULL);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
+    EXPECT_EQ(RETCODE_OK, rc);
+    HAL_UART_Transmit_fake.return_val = HAL_OK;
+
     rc = MCU_UART_Send(uart01, buffer, size);
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_NOT_SUPPORTED), rc);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(Device01.m_Uart.TxState, UART_STATE_READY);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Send_Int_ok)
+{
+    const uint16_t size = 10;
+    Retcode_T rc;
+    uint8_t buffer[size];
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, UART_Callback);
+    EXPECT_EQ(RETCODE_OK, rc);
+    HAL_UART_Transmit_IT_fake.return_val = HAL_OK;
+
+    rc = MCU_UART_Send(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(Device01.m_Uart.TxState, UART_STATE_TX);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Send_And_Abort_Int_ok)
+{
+    const uint16_t size = 10;
+    Retcode_T rc;
+    uint8_t buffer[size];
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, UART_Callback);
+    EXPECT_EQ(RETCODE_OK, rc);
+    HAL_UART_Transmit_IT_fake.return_val = HAL_OK;
+
+    rc = MCU_UART_Send(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(Device01.m_Uart.TxState, UART_STATE_TX);
+
+    // Abort sending by sending zero
+    rc = MCU_UART_Send(uart01, buffer, 0);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(Device01.m_Uart.TxState, UART_STATE_READY);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Send_And_Abort_DMA_ok)
+{
+    const uint16_t size = 10;
+    Retcode_T rc;
+    uint8_t buffer[size];
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, UART_Callback);
+    EXPECT_EQ(RETCODE_OK, rc);
+    HAL_UART_Transmit_IT_fake.return_val = HAL_OK;
+
+    rc = MCU_UART_Send(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(Device01.m_Uart.TxState, UART_STATE_TX);
+
+    // Abort sending by sending zero
+    rc = MCU_UART_Send(uart01, buffer, 0);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(Device01.m_Uart.TxState, UART_STATE_READY);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Receive_Fail)
+{
+    const uint16_t size = 10;
+    Retcode_T rc;
+    uint8_t buffer[size];
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, (MCU_UART_Callback_T)NULL);
+
+    rc = MCU_UART_Receive((UART_T)NULL, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
+
+    rc = MCU_UART_Receive(uart01, (uint8_t *)NULL, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
+
+    rc = MCU_UART_Receive(uart01, buffer, UINT16_MAX + 1);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
+
+    Device01.m_Uart.RxState = UART_STATE_RX;
+
+    rc = MCU_UART_Receive(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Receive_Polling_Fail)
+{
+    const uint16_t size = 10;
+    Retcode_T rc;
+    uint8_t buffer[size];
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, (MCU_UART_Callback_T)NULL);
+
+    HAL_UART_Receive_fake.return_val = HAL_BUSY;
+
+    rc = MCU_UART_Receive(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+    EXPECT_EQ(Device01.m_Uart.RxState, UART_STATE_READY);
+
+    HAL_UART_Receive_fake.return_val = HAL_TIMEOUT;
+
+    rc = MCU_UART_Receive(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMEOUT), rc);
+    EXPECT_EQ(Device01.m_Uart.RxState, UART_STATE_READY);
+
+    HAL_UART_Receive_fake.return_val = HAL_ERROR;
+
+    rc = MCU_UART_Receive(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), rc);
+    EXPECT_EQ(Device01.m_Uart.RxState, UART_STATE_READY);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Receive_Int_Fail)
+{
+    const uint16_t size = 10;
+    Retcode_T rc;
+    uint8_t buffer[size];
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, UART_Callback);
+
+    HAL_UART_Receive_IT_fake.return_val = HAL_BUSY;
+
+    rc = MCU_UART_Receive(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+    EXPECT_EQ(Device01.m_Uart.RxState, UART_STATE_READY);
+
+    HAL_UART_Receive_IT_fake.return_val = HAL_TIMEOUT;
+
+    rc = MCU_UART_Receive(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMEOUT), rc);
+    EXPECT_EQ(Device01.m_Uart.RxState, UART_STATE_READY);
+
+    HAL_UART_Receive_IT_fake.return_val = HAL_ERROR;
+
+    rc = MCU_UART_Receive(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), rc);
+    EXPECT_EQ(Device01.m_Uart.RxState, UART_STATE_READY);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Receive_DMA_Fail)
+{
+    const uint16_t size = 10;
+    Retcode_T rc;
+    uint8_t buffer[size];
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, UART_Callback);
+
+    HAL_UART_Receive_DMA_fake.return_val = HAL_BUSY;
+
+    rc = MCU_UART_Receive(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+    EXPECT_EQ(Device01.m_Uart.RxState, UART_STATE_READY);
+
+    HAL_UART_Receive_DMA_fake.return_val = HAL_TIMEOUT;
+
+    rc = MCU_UART_Receive(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMEOUT), rc);
+    EXPECT_EQ(Device01.m_Uart.RxState, UART_STATE_READY);
+
+    HAL_UART_Receive_DMA_fake.return_val = HAL_ERROR;
+
+    rc = MCU_UART_Receive(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), rc);
+    EXPECT_EQ(Device01.m_Uart.RxState, UART_STATE_READY);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Receive_Polling_OK)
+{
+    const uint16_t size = 10;
+    Retcode_T rc;
+    uint8_t buffer[size];
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, NULL);
+    EXPECT_EQ(RETCODE_OK, rc);
+    HAL_UART_Receive_fake.return_val = HAL_OK;
+    rc = MCU_UART_Receive(uart01, buffer, size);
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(Device01.m_Uart.RxState, UART_STATE_READY);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Receive_And_Abort_Int_ok)
+{
+    const uint16_t size = 10;
+    Retcode_T rc;
+    uint8_t buffer[size];
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, UART_Callback);
+    EXPECT_EQ(RETCODE_OK, rc);
+    HAL_UART_Receive_IT_fake.return_val = HAL_OK;
+
+    rc = MCU_UART_Receive(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(Device01.m_Uart.RxState, UART_STATE_RX);
+
+    // Abort receiving by sending zero
+    rc = MCU_UART_Receive(uart01, buffer, 0);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(Device01.m_Uart.RxState, UART_STATE_READY);
+}
+
+TEST_F(STM32L4_UART_Test, test_MCU_UART_Receive_And_Cancel_DMA_ok)
+{
+    const uint16_t size = 10;
+    Retcode_T rc;
+    uint8_t buffer[size];
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, UART_Callback);
+    EXPECT_EQ(RETCODE_OK, rc);
+    HAL_UART_Receive_DMA_fake.return_val = HAL_OK;
+
+    rc = MCU_UART_Receive(uart01, buffer, size);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(Device01.m_Uart.RxState, UART_STATE_RX);
+
+    // Abort receiving by sending zero
+    rc = MCU_UART_Receive(uart01, buffer, 0);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(Device01.m_Uart.RxState, UART_STATE_READY);
 }
 
 /**
- * @brief   Retcode_T MCU_UART_Receive(UART_T uart, uint8_t *data, uint32_t len)
+ * @brief    Retcode_T MapHalRetToMcuRet(HAL_StatusTypeDef halRet)
  */
 
-TEST_F(HalUartTest, test_MCU_UART_Receive_001)
+TEST_F(STM32L4_UART_Test, test_MapHalRetToMcuRet)
+{
+    Retcode_T rc = MapHalRetToMcuRet(HAL_OK);
+    EXPECT_EQ(RETCODE_OK, rc);
+
+    rc = MapHalRetToMcuRet(HAL_BUSY);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+
+    rc = MapHalRetToMcuRet(HAL_TIMEOUT);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TIMEOUT), rc);
+
+    rc = MapHalRetToMcuRet(HAL_ERROR);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), rc);
+}
+/**
+ * @brief void UART_IRQHandler(UART_T huart)
+ */
+
+TEST_F(STM32L4_UART_Test, test_UART_IRQHandler)
+{
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    UART_IRQHandler(uart01);
+    EXPECT_EQ(HAL_UART_IRQHandler_fake.call_count, 1U);
+}
+
+/**
+ * @brief void UART_DMARxHandler(UART_T huart)
+ */
+
+TEST_F(STM32L4_UART_Test, test_UART_DMARxHandler)
+{
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    UART_DMARxHandler(uart01);
+    EXPECT_EQ(HAL_DMA_IRQHandler_fake.call_count, 1U);
+}
+
+/**
+ * @brief void UART_DMATxHandler(UART_T huart)
+ */
+
+TEST_F(STM32L4_UART_Test, test_UART_DMATxHandler)
+{
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    UART_DMATxHandler(uart01);
+    EXPECT_EQ(HAL_DMA_IRQHandler_fake.call_count, 1U);
+}
+
+/**
+ * @brief void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+ */
+
+TEST_F(STM32L4_UART_Test, test_HAL_UART_TxCpltCallback)
+{
+    MCU_UART_S uart;
+    uart.AppCallback = UART_Callback;
+    HAL_UART_TxCpltCallback(&uart.huart);
+    EXPECT_EQ(UART_STATE_READY, uart.TxState);
+}
+
+/**
+ * @brief void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+ */
+
+TEST_F(STM32L4_UART_Test, test_HAL_UART_RxCpltCallback)
 {
     const uint16_t size = 10;
     Retcode_T rc;
     uint8_t buffer[size];
     UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
     UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
-    rc = MCU_UART_Initialize(uart01, AppTestCallbackFunction);
+    rc = MCU_UART_Initialize(uart01, UART_Callback);
     EXPECT_EQ(RETCODE_OK, rc);
+    HAL_UART_Receive_IT_fake.return_val = HAL_OK;
     rc = MCU_UART_Receive(uart01, buffer, size);
+
+    global_event.RxComplete = 0;
+    HAL_UART_RxCpltCallback((UART_HandleTypeDef *)uart01);
+    EXPECT_EQ(1U, global_event.RxComplete);
+}
+
+/**
+ * @brief void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
+ */
+
+TEST_F(STM32L4_UART_Test, test_HAL_UART_ErrorCallback_simpleError)
+{
+    const uint16_t size = 10;
+    Retcode_T rc;
+    uint8_t buffer[size];
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, UART_Callback);
     EXPECT_EQ(RETCODE_OK, rc);
+    HAL_UART_Receive_IT_fake.return_val = HAL_OK;
+    rc = MCU_UART_Receive(uart01, buffer, size);
+    global_event.RxError = 0;
+    Device01.m_Uart.huart.ErrorCode = UART_HAL_ERROR_RECOVERABLE;
+
+    HAL_UART_ErrorCallback((UART_HandleTypeDef *)uart01);
+
+    EXPECT_EQ(1U, global_event.RxError);
 }
-#else
+/**
+ * @brief void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart))
+ */
+
+TEST_F(STM32L4_UART_Test, test_HAL_UART_ErrorCallback_nonRecoverableError)
+{
+    const uint16_t size = 10;
+    Retcode_T rc;
+    uint8_t buffer[size];
+    UartDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    UART_T uart01 = (HWHandle_T)Device01.getAppInterfaceHandle();
+    rc = MCU_UART_Initialize(uart01, UART_Callback);
+    EXPECT_EQ(RETCODE_OK, rc);
+    HAL_UART_Receive_IT_fake.return_val = HAL_OK;
+    rc = MCU_UART_Receive(uart01, buffer, size);
+    global_event.RxAborted = 0;
+    Device01.m_Uart.huart.ErrorCode = UART_HAL_ERROR_NON_RECOVERABLE;
+
+    HAL_UART_ErrorCallback((UART_HandleTypeDef *)uart01);
+
+    EXPECT_EQ(1U, global_event.RxAborted);
 }
-#endif /* KISO_FEATURE_UART */
+
+#endif
