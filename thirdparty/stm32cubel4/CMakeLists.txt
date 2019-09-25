@@ -65,8 +65,7 @@ if(${CMAKE_CROSSCOMPILING})
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_fmc.c
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_sdmmc.c
-      ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_usb.c
-      source/Kiso_stm32l4xx_hal_dma.c # DMA loockup faster then the original version
+      ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_usb.c     
    )
    # Newer arm-gcc versions have these enabled by default
    include(CheckCCompilerFlag)
