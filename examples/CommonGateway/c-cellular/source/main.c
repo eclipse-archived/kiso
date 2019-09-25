@@ -1,4 +1,14 @@
 /*
+ * Notice:
+ * The code snippet of prvGetRegistersFromStack in this file comes from
+ * freertos document, which is available under:
+ * https://www.freertos.org/Debugging-Hard-Faults-On-Cortex-M-Microcontrollers.html
+ * Copyright of this very code snippet does not belong to Robert Bosch GmbH.
+ *
+ * Apart from the stated code snippet the copyright/license header below applies.
+ */
+
+/*
  * Copyright (c) 2010-2019 Robert Bosch GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
