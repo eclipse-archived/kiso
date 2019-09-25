@@ -14,7 +14,7 @@
 
 /**
  * @file
- * 
+ *
  * @brief Module test specification for the Retcode_unittest module.
  *
  **/
@@ -204,5 +204,3 @@ TEST_F(Retcode, RetcodeRaiseFromIsr)
     EXPECT_EQ((uint32_t)1, numErrors);
     EXPECT_EQ(true, isFromInterrupt);
 }
-
-/*****************************************************************************************/

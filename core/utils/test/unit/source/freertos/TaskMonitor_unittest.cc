@@ -87,17 +87,14 @@ TEST_F(TaskMonitor, TaskMonitor_InitializeTest)
      * Successful initialization
      */
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal;
     TaskMonitor_TaskInfo_S taskMonitor;
     taskMonitor.IsReg = false;
     taskMonitor.Task = NULL;
     taskMonitor.UpperLimitTickTime = 0UL;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = TaskMonitor_Initialize();
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retVal);
     EXPECT_EQ(false, IsReg);
 }
@@ -108,14 +105,11 @@ TEST_F(TaskMonitor, TaskMonitor_UpdateTest)
      * Successful initialization
      */
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
     uint32_t *taskPtr;
     uint32_t data;
     taskPtr = &data;
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     TaskMonitor_Update(taskPtr, 0xFFFFUL);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(data, 0xFFFFUL);
 }
 
@@ -125,7 +119,6 @@ TEST_F(TaskMonitor, TaskMonitor_RegisterTest)
      * Test TaskMonitor register failures
      */
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal;
     TaskHandle_t task;
     uint32_t loopcnt;
@@ -133,7 +126,7 @@ TEST_F(TaskMonitor, TaskMonitor_RegisterTest)
     task = (TaskHandle_t)&retVal;
     retVal = TaskMonitor_Initialize();
     EXPECT_EQ(RETCODE_OK, retVal);
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
+
     for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
     {
         retVal = TaskMonitor_Register(task, (loopcnt + 1));
@@ -162,7 +155,6 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
     /** @testcase{ TaskMonitor::TaskMonitor_CheckTest: }
      */
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal;
     bool monitorCheck;
     uint32_t loopcnt;
@@ -172,7 +164,6 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
     EXPECT_EQ(RETCODE_OK, retVal);
     memset(TaskTag, 0x00, sizeof(TaskTag));
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
     {
         Tasklist[loopcnt] = (TaskHandle_t)&TaskTag[loopcnt];
@@ -185,7 +176,6 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
 
     xTaskGetTickCount_fake.return_val = 510;
     xTaskGetApplicationTaskTag_fake.custom_fake = &xTaskGetApplicationTaskTagCustom;
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     monitorCheck = TaskMonitor_Check();
     if (monitorCheck == false)
     {
@@ -199,7 +189,6 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
 
     xTaskGetTickCount_fake.return_val = 490UL;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     monitorCheck = TaskMonitor_Check();
     if (monitorCheck == false)
     {
@@ -213,7 +202,6 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
 
     xTaskGetTickCount_fake.return_val = 500UL;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     monitorCheck = TaskMonitor_Check();
     if (monitorCheck == false)
     {
@@ -245,7 +233,7 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
     }
     EXPECT_NE(RETCODE_OK, retVal);
 
-    /* test with current tick count souver flow condition */
+    /* Test with current tick count souver flow condition */
     xTaskGetTickCount_fake.return_val = 10UL; /* current time 10mS counter overflow*/
     /* update all tasks execution time */
     for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
@@ -264,7 +252,7 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
     }
     EXPECT_EQ(RETCODE_OK, retVal);
 
-    /* test : last task has failed to execute */
+    /* Test : last task has failed to execute */
     xTaskGetTickCount_fake.return_val = 150UL; /* current time 10mS counter overflow*/
     /* update all tasks execution time */
     for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
@@ -284,7 +272,7 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
     }
     EXPECT_NE(RETCODE_OK, retVal);
 
-    /* test : last task has failed to execute */
+    /* Test : last task has failed to execute */
     xTaskGetTickCount_fake.return_val = 149UL; /* current time 10mS counter overflow*/
     /* update all tasks execution time */
     for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
@@ -302,7 +290,7 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
     }
     EXPECT_EQ(RETCODE_OK, retVal);
 
-    /* test : last task has failed to execute */
+    /* Test : last task has failed to execute */
     xTaskGetTickCount_fake.return_val = 148UL; /* current time 10mS counter overflow*/
     /* update all tasks execution time */
     for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)
@@ -320,7 +308,7 @@ TEST_F(TaskMonitor, TaskMonitor_CheckTest)
     }
     EXPECT_EQ(RETCODE_OK, retVal);
 
-    /* test : last task has failed to execute */
+    /* Test : last task has failed to execute */
     xTaskGetTickCount_fake.return_val = 147UL; /* current time 10mS counter overflow*/
     /* update all tasks execution time */
     for (loopcnt = 0U; loopcnt < KISO_TASKMONITOR_MAX_TASKS; loopcnt++)

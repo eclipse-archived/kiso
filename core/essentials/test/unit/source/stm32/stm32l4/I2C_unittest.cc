@@ -19,10 +19,6 @@
 
 FFF_DEFINITION_BLOCK_START
 
-/* setup compile time configuration defines */
-//-- instead of Kiso_BSP_BoardConfig.h mock
-/* include faked interfaces */
-
 extern "C"
 {
 #include "Kiso_HAL.h"

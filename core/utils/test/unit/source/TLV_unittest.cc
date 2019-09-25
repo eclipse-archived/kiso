@@ -182,7 +182,6 @@ TEST_F(TLV, tlvGroupAdd)
     {
         TLV_GroupHandle_TP Handle;
 
-        /* set up test case */
         typedef struct parameterSet_s
         {
             void *Buffer;
@@ -197,10 +196,8 @@ TEST_F(TLV, tlvGroupAdd)
 
         for (uint8_t index = 0; index < (sizeof(parameterSet) / sizeof(parameterSet_t)); index++)
         {
-            /* call function under test */
             Handle = TLV_AddGroup(parameterSet[index].Buffer, parameterSet[index].bufferSize);
 
-            /* check test results */
             if (parameterSet[index].expectedResult)
             {
                 /* API call should return a valid Handle */
@@ -247,7 +244,6 @@ TEST_F(TLV, tlvElementAdd)
         TLV_Element_T *elementHandle;
         uint16_t testSpecificBufferSize;
 
-        /* set up test case */
         typedef struct parameterSet_s
         {
             tlvTestTypes_t Type;
@@ -300,15 +296,12 @@ TEST_F(TLV, tlvElementAdd)
 
         Handle = TLV_AddGroup(DataBuffer, testSpecificBufferSize);
 
-        /* stop test run if set up phase fails */
         ASSERT_NE((TLV_GroupHandle_TP)NULL, Handle);
 
         for (uint8_t index = 0; index < (sizeof(parameterSet) / sizeof(parameterSet_t)); index++)
         {
-            /* call function under test */
             elementHandle = TLV_AddElement(Handle, parameterSet[index].Type, parameterSet[index].Length, parameterSet[index].Value);
 
-            /* check test results */
             ASSERT_NE((TLV_Element_T *)NULL, elementHandle) << "Test set index: " << (char)('0' + index) << "";
             EXPECT_NE((uint8_t *)NULL, elementHandle->DataBuffer);
             EXPECT_EQ(parameterSet[index].Type, elementHandle->DataType);
@@ -349,10 +342,8 @@ TEST_F(TLV, tlvElementRemove)
     {
         TLV_GroupHandle_TP Handle;
 
-        /* set up test case */
         Handle = TLV_AddGroup(DataBuffer, dataBufferSize);
 
-        /* stop test run if set up phase fails */
         ASSERT_NE((TLV_GroupHandle_TP)NULL, Handle);
 
         /* add TLVs to the group */
@@ -367,7 +358,6 @@ TEST_F(TLV, tlvElementRemove)
         ASSERT_NE((TLV_Element_T *)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_6));
         ASSERT_NE((TLV_Element_T *)NULL, TLV_GetElement(Handle, TLV_TEST_TYPE_7));
 
-        /* call function under test */
         TLV_RemoveElement(Handle, TLV_TEST_TYPE_3);
         TLV_RemoveElement(Handle, TLV_TEST_TYPE_5);
         TLV_RemoveElement(Handle, TLV_TEST_TYPE_7);
@@ -399,7 +389,6 @@ TEST_F(TLV, tlvElementGet)
         TLV_GroupHandle_TP Handle;
         TLV_Element_T *elementHandle;
 
-        /* set up test case */
         Handle = TLV_AddGroup(DataBuffer, dataBufferSize);
 
         typedef struct parameterSet_s
@@ -415,7 +404,6 @@ TEST_F(TLV, tlvElementGet)
             {TLV_TEST_TYPE_8, true},
             {TLV_TEST_TYPE_9, false}};
 
-        /* stop test run if set up phase fails */
         ASSERT_NE((TLV_GroupHandle_TP)NULL, Handle);
 
         /* add TLVs to the group */
@@ -426,12 +414,10 @@ TEST_F(TLV, tlvElementGet)
         /* remove TLV TLV_TEST_TYPE_3 */
         TLV_RemoveElement(Handle, TLV_TEST_TYPE_3);
 
-        /* call function under test */
         for (uint8_t index = 0; index < (sizeof(parameterSet) / sizeof(parameterSet_t)); index++)
         {
             elementHandle = TLV_GetElement(Handle, parameterSet[index].Type);
 
-            /* check test results */
             if (parameterSet[index].expectedResult)
             {
                 /* API call should return a valid Handle */
@@ -479,7 +465,6 @@ TEST_F(TLV, GarbageCollectGroupTest)
     TLV_GroupHandle_TP Handle;
     uint16_t sizeLeft = 0;
 
-    /* set up test case */
     typedef struct parameterSet_s
     {
         void *Buffer;
@@ -490,7 +475,6 @@ TEST_F(TLV, GarbageCollectGroupTest)
     parameterSet_t parameterSet[] = {
         {DataBuffer, dataBufferSize, true},
     };
-    /* call function under test */
     Handle = TLV_AddGroup(parameterSet[0].Buffer, parameterSet[0].bufferSize);
     (void)TLV_AddElement(Handle, TLV_TEST_TYPE_0, 0, "");
 

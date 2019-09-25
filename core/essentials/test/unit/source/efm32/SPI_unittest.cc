@@ -139,23 +139,6 @@ void AppTestCallbackFunction(SPI_T spi, struct MCU_SPI_Event_S event)
     KISO_SPItest::m_isCalled_cbf = true;
 }
 
-TEST_F(KISO_SPItest, dummyTest)
-{
-    /** @testcase{ <FIXTURE_NAME>::<TEST_NAME>: }
-     *
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this
-	 * test case */
-
-    /* EXECISE: call relevant production code Interface with appropriate test
-	 * inputs  */
-
-    /* VERIFY : Compare the expected with actual */
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
-}
-
 /*************************** SPI TESTS *****************************/
 /**
  * @brief   Test public MCU_SPI_Initialize

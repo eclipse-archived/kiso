@@ -147,14 +147,11 @@ class KISO_ErrorLogger : public testing::Test
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_Init_Fail)
 {
-    /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
     testFlag = 1;
 
-    /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_Init(Log_Handle);
 
-    /* Verify : Compare the expected with actual    */
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, (Retcode_T)RETCODE_FAILURE), Retcode);
 }
 
@@ -164,13 +161,10 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_Init_Fail)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_Init_NoLogs)
 {
-    /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
 
-    /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_Init(Log_Handle);
 
-    /* Verify : Compare the expected with actual    */
     EXPECT_EQ(UINT32_C(0), ErrorSeqNo);
     EXPECT_EQ(UINT32_C(0), NextIndexToWriteOn);
     EXPECT_EQ(RETCODE_SUCCESS, Retcode);
@@ -182,7 +176,6 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_Init_NoLogs)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_Init_HalfLogsFilled)
 {
-    /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
 
     for (int i = 0; i < (int)MAXENTRIES / 2; i++)
@@ -190,10 +183,8 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_Init_HalfLogsFilled)
         ErrorLogger_LogError((Retcode_T)500 + i);
     }
 
-    /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_Init(Log_Handle);
 
-    /* Verify : Compare the expected with actual    */
     EXPECT_EQ(MAXENTRIES / 2, ErrorSeqNo);
     EXPECT_EQ((uint32_t)MAXENTRIES / 2, NextIndexToWriteOn);
     EXPECT_EQ(RETCODE_SUCCESS, Retcode);
@@ -205,7 +196,6 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_Init_HalfLogsFilled)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_Init_OneAndHalfTimesLogsFilled)
 {
-    /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
 
     for (int i = 0; i < (int)(MAXENTRIES + MAXENTRIES / 2); i++)
@@ -213,10 +203,8 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_Init_OneAndHalfTimesLogsFilled)
         ErrorLogger_LogError((Retcode_T)500 + i);
     }
 
-    /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_Init(Log_Handle);
 
-    /* Verify : Compare the expected with actual    */
     EXPECT_EQ((MAXENTRIES + MAXENTRIES / 2), ErrorSeqNo);
     EXPECT_EQ((uint32_t)MAXENTRIES / 2, NextIndexToWriteOn);
     EXPECT_EQ(RETCODE_SUCCESS, Retcode);
@@ -228,13 +216,8 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_Init_OneAndHalfTimesLogsFilled)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_LogError_RETCODEOK)
 {
-    /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
-
-    /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_LogError(RETCODE_OK);
-
-    /* Verify : Compare the expected with actual    */
     EXPECT_EQ(Retcode, RETCODE(RETCODE_SEVERITY_WARNING, (Retcode_T)RETCODE_INVALID_PARAM));
 }
 
@@ -244,13 +227,9 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_LogError_RETCODEOK)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_LogError_ONEError)
 {
-    /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
-
-    /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_LogError((Retcode_T)250);
 
-    /* Verify : Compare the expected with actual    */
     EXPECT_EQ(RETCODE_OK, Retcode);
     EXPECT_EQ(UINT32_C(1), ErrorSeqNo);
     EXPECT_EQ(UINT32_C(1), NextIndexToWriteOn);
@@ -262,14 +241,11 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_LogError_ONEError)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_LogError_FlushFail)
 {
-    /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
     testFlag = 1;
 
-    /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_LogError((Retcode_T)250);
 
-    /* Verify : Compare the expected with actual    */
     EXPECT_EQ(RETCODE_FAILURE, Retcode);
     EXPECT_EQ(UINT32_C(0), ErrorSeqNo);
     EXPECT_EQ(UINT32_C(0), NextIndexToWriteOn);
@@ -281,13 +257,8 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_LogError_FlushFail)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_GetLastErrorLog_NULLPTR)
 {
-    /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
-
-    /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_GetLastErrorLog(NULL);
-
-    /* Verify : Compare the expected with actual    */
     EXPECT_EQ(Retcode, RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T)RETCODE_INVALID_PARAM));
 }
 
@@ -297,14 +268,10 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetLastErrorLog_NULLPTR)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_GetLastErrorLog_NoError)
 {
-    /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
     ErrorLogger_LogEntry_T LogEntry;
 
-    /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_GetLastErrorLog(&LogEntry);
-
-    /* Verify : Compare the expected with actual    */
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T)RETCODE_OUT_OF_RESOURCES), Retcode);
 }
 
@@ -314,15 +281,12 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetLastErrorLog_NoError)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_GetLastErrorLog_OneError)
 {
-    /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
     ErrorLogger_LogEntry_T LogEntry;
     ErrorLogger_LogError((Retcode_T)250);
 
-    /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_GetLastErrorLog(&LogEntry);
 
-    /* Verify : Compare the expected with actual    */
     EXPECT_EQ(Retcode, RETCODE_OK);
     EXPECT_EQ((unsigned int)250, LogEntry.ErrorCode);
 }
@@ -333,15 +297,12 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetLastErrorLog_OneError)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_GetLastErrorLog_MultiError)
 {
-    /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
     ErrorLogger_LogEntry_T LogEntry;
     for (int i = 0; i < (int)(2 * MAXENTRIES); i++)
     {
-        /* Exercise: call relevant production code Interface with appropriate test inputs  */
         ErrorLogger_LogError((Retcode_T)200 + i);
         Retcode = ErrorLogger_GetLastErrorLog(&LogEntry);
-        /* Verify : Compare the expected with actual    */
         EXPECT_EQ(Retcode, RETCODE_OK);
         EXPECT_EQ((unsigned int)200 + i, LogEntry.ErrorCode);
     }
@@ -353,13 +314,8 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetLastErrorLog_MultiError)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_HasError_WithoutErrors)
 {
-    /* Declare and initialize local variable required only for this test case  */
     Retcode_T retcode;
-
-    /* Exercise: call relevant production code Interface with appropriate test inputs  */
     retcode = ErrorLogger_HasError(332);
-
-    /* Verify : Compare the expected with actual    */
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T)RETCODE_FAILURE), retcode);
 }
 
@@ -369,14 +325,11 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_HasError_WithoutErrors)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_HasError_WithAvailableErrors)
 {
-    /* Declare and initialize local variable required only for this test case  */
     Retcode_T retcode;
     for (int i = 0; i < (int)(2 * MAXENTRIES); i++)
     {
-        /* Exercise: call relevant production code Interface with appropriate test inputs  */
         ErrorLogger_LogError((Retcode_T)200 + i);
         retcode = ErrorLogger_HasError((Retcode_T)200 + i);
-        /* Verify : Compare the expected with actual    */
         EXPECT_EQ(retcode, (Retcode_T)RETCODE_SUCCESS);
     }
 }
@@ -387,7 +340,6 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_HasError_WithAvailableErrors)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_GetTotalErrors)
 {
-    /* Verify : Compare the expected with actual    */
     EXPECT_EQ(ErrorSeqNo, ErrorLogger_GetTotalErrors());
 }
 
@@ -397,17 +349,12 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetTotalErrors)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_GetCurrentErrors_LessMaxEntries)
 {
-    /* Declare and initialize local variable required only for this test case  */
     uint8_t Count;
     for (int i = 0; i < (int)(MAXENTRIES / 2); i++)
     {
         (void)ErrorLogger_LogError((Retcode_T)500 + i);
     }
-
-    /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Count = ErrorLogger_GetCurrentErrors();
-
-    /* Verify : Compare the expected with actual    */
     EXPECT_EQ(MAXENTRIES / 2, Count);
 }
 
@@ -417,15 +364,12 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetCurrentErrors_LessMaxEntries)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_GetCurrentErrors_OneAndHalfMaxEntries)
 {
-    /* Declare and initialize local variable required only for this test case  */
     uint8_t Count;
     for (int i = 0; i < (int)(MAXENTRIES + MAXENTRIES / 2); i++)
     {
         (void)ErrorLogger_LogError((Retcode_T)500 + i);
     }
-    /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Count = ErrorLogger_GetCurrentErrors();
-    /* Verify : Compare the expected with actual    */
     EXPECT_EQ(Count, (uint8_t)MAXENTRIES);
 }
 
@@ -435,11 +379,9 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetCurrentErrors_OneAndHalfMaxEntries)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_GetErrorAt)
 {
-    /* Declare and initialize local variable required only for this test case  */
     ErrorLogger_LogEntry_T LogEntry;
     Retcode_T Retcode;
 
-    /* Exercise: call relevant production code Interface with appropriate test inputs  */
     for (int i = 0; i < (int)MAXENTRIES; i++)
     {
         ErrorLogger_LogError((Retcode_T)500 + i);
@@ -449,12 +391,10 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetErrorAt)
     {
         Retcode = ErrorLogger_GetErrorAt(i, &LogEntry);
 
-        /* Verify : Compare the expected with actual    */
         EXPECT_EQ(Retcode, RETCODE_SUCCESS);
         EXPECT_EQ(LogEntry.ErrorCode, (Retcode_T)500 + i);
     }
     Retcode = ErrorLogger_GetErrorAt(MAXENTRIES + 2, &LogEntry);
-
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T)RETCODE_INVALID_PARAM), Retcode);
 }
 
@@ -464,13 +404,8 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetErrorAt)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_GetErrorAtFail)
 {
-    /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
-
-    /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_GetErrorAt(MAXENTRIES, NULL);
-
-    /* Verify : Compare the expected with actual    */
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T)RETCODE_INVALID_PARAM), Retcode);
 }
 /**
@@ -479,17 +414,14 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetErrorAtFail)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_ClearAllErrorLogs)
 {
-    /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
     for (int i = 0; i <= (int)MAXENTRIES; i++)
     {
         ErrorLogger_LogError((Retcode_T)500 + i);
     }
 
-    /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_ClearAllErrorLogs();
 
-    /* Verify : Compare the expected with actual    */
     EXPECT_EQ(Retcode, RETCODE_SUCCESS);
     EXPECT_EQ(NextIndexToWriteOn, (uint32_t)0);
     EXPECT_EQ(ErrorSeqNo, (uint16_t)0);
@@ -501,7 +433,6 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_ClearAllErrorLogs)
  */
 TEST_F(KISO_ErrorLogger, ErrorLogger_ClearAllErrorLogsFail)
 {
-    /* Declare and initialize local variable required only for this test case  */
     Retcode_T Retcode;
     testFlag = 1;
     for (int i = 0; i <= (int)MAXENTRIES; i++)
@@ -509,10 +440,7 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_ClearAllErrorLogsFail)
         ErrorLogger_LogError((Retcode_T)500 + i);
     }
 
-    /* Exercise: call relevant production code Interface with appropriate test inputs  */
     Retcode = ErrorLogger_ClearAllErrorLogs();
-
-    /* Verify : Compare the expected with actual    */
     EXPECT_EQ(Retcode, RETCODE_FAILURE);
     EXPECT_EQ(NextIndexToWriteOn, (uint32_t)0);
     EXPECT_EQ(ErrorSeqNo, (uint16_t)0);

@@ -97,18 +97,14 @@ TEST_F(AtResponseParser, AtrpTrimWhitespaceAllContent)
      * Tests the successful execution of the parser reset.
      */
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
     const char *buffer = "\r\r\r   \n\r\n \r\n\r \n\n\n  ";
     uint32_t NewLength = strlen(buffer);
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     uint8_t *TrimmedBuffer = AtrpTrimWhitespace((uint8_t *)buffer, NewLength, &NewLength);
+
     KISO_UNUSED(TrimmedBuffer);
 
-    /* VERIFY: Compare the expected with actual */
     EXPECT_EQ(0U, NewLength);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(AtResponseParser, AtResponseParserResetSuccess)
@@ -118,18 +114,13 @@ TEST_F(AtResponseParser, AtResponseParserResetSuccess)
      * Tests the successful execution of the parser reset.
      */
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
     state.BufferPosition = 123;
     state.StateCallback = (AtrpStateCallback_T)1;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     AtResponseParser_Reset();
 
-    /* VERIFY: Compare the expected with actual */
     EXPECT_EQ(0U, state.BufferPosition);
     EXPECT_EQ((AtrpStateCallback_T)AtrpStateRoot, state.StateCallback);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(AtResponseParser, InternationalMobileSubscriberIdentification)
@@ -139,27 +130,22 @@ TEST_F(AtResponseParser, InternationalMobileSubscriberIdentification)
      * Tests the successful parsing of a simple response (AT+CIMI\r\r\n+310170230316694\r\n\r\nOK\r\n).
      */
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
     const char *AtResponse = "AT+CIMI\r\r\n310170230316694\r\n\r\nOK\r\n";
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
 
-    /* VERIFY: Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(1U, CallbackCmdEcho_fake.call_count);
     EXPECT_EQ(strlen("AT+CIMI"), CallbackCmdEcho_fake.arg1_val);
 
-    EXPECT_EQ(4U, CallbackMisc_fake.call_count);                                 /* FIXME: should we really handle \n as individual events? */
-    EXPECT_EQ(strlen("310170230316694\r\n"), CallbackMisc_fake.arg1_history[1]); /* should be the second misc, event incl. whitespace ... for now */
+    EXPECT_EQ(4U, CallbackMisc_fake.call_count);                                 /** \todo: FIXME: should we really handle \n as individual events? */
+    EXPECT_EQ(strlen("310170230316694\r\n"), CallbackMisc_fake.arg1_history[1]); /** should be the second misc, event incl. whitespace ... for now */
 
     // Unfortunately the cmdEcho_fake.arg0_val is lost by the AtrpResetBuffer-function inside AtResponseParser_Parse.
     EXPECT_EQ(1U, CallbackResponseCode_fake.call_count);
     EXPECT_EQ(AT_RESPONSE_CODE_OK, CallbackResponseCode_fake.arg0_val);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(AtResponseParser, ReportMobileTerminationError)
@@ -169,15 +155,12 @@ TEST_F(AtResponseParser, ReportMobileTerminationError)
      * Tests the successful parsing of a simple response (AT+CMEE?\r\r\n+CMEE: 0\r\n\r\nOK\r\n).
      */
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
     const char *AtResponse = "AT+CMEE?\r\r\n+CMEE: 0\r\n\r\nOK\r\n";
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
 
-    /* VERIFY: Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(1U, CallbackCmdEcho_fake.call_count);
     EXPECT_EQ(strlen("AT+CMEE?"), CallbackCmdEcho_fake.arg1_val);
@@ -192,8 +175,6 @@ TEST_F(AtResponseParser, ReportMobileTerminationError)
     //      AtResponseParser_Parse.
     EXPECT_EQ(1U, CallbackResponseCode_fake.call_count);
     EXPECT_EQ(AT_RESPONSE_CODE_OK, CallbackResponseCode_fake.arg0_val);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(AtResponseParser, RequestCompleteCapabilitiesList)
@@ -203,15 +184,12 @@ TEST_F(AtResponseParser, RequestCompleteCapabilitiesList)
      * Tests the successful parsing of a simple response (AT+GCAP\r\n\r\n+GCAP: +FCLASS, +CGSM\r\n\r\nOK\r\n).
      */
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
     const char *AtResponse = "AT+GCAP\r\n\r\n+GCAP: +FCLASS, +CGSM\r\n\r\nOK\r\n";
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
 
-    /* VERIFY: Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(1U, CallbackCmdEcho_fake.call_count);
     EXPECT_EQ(strlen("AT+GCAP"), CallbackCmdEcho_fake.arg1_val);
@@ -229,8 +207,6 @@ TEST_F(AtResponseParser, RequestCompleteCapabilitiesList)
     //      AtResponseParser_Parse.
     EXPECT_EQ(1U, CallbackResponseCode_fake.call_count);
     EXPECT_EQ(AT_RESPONSE_CODE_OK, CallbackResponseCode_fake.arg0_val);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(AtResponseParser, UrcNetworkSelectionControl)
@@ -240,22 +216,17 @@ TEST_F(AtResponseParser, UrcNetworkSelectionControl)
      * Tests the successful parsing of a simple response (\r\nPACSP1\r\n).
      */
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
     const char *AtResponse = "\r\n+PACSP1\r\n";
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
 
-    /* VERIFY: Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0U, CallbackError_fake.call_count);
 
     EXPECT_EQ(1U, CallbackCmd_fake.call_count);
     EXPECT_EQ(strlen("PACSP1"), CallbackCmd_fake.arg1_val);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(AtResponseParser, UrcNetworkSelectionControlFollowedByCmd)
@@ -265,15 +236,12 @@ TEST_F(AtResponseParser, UrcNetworkSelectionControlFollowedByCmd)
      * Tests the successful parsing of a simple response (\r\n+PACSP1\r\n\r\n+UMWI: 1\r\n).
      */
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
     const char *AtResponse = "\r\n+PACSP1\r\n\r\n+UMWI: 1\r\n";
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
 
-    /* VERIFY: Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0U, CallbackError_fake.call_count);
 
@@ -282,8 +250,6 @@ TEST_F(AtResponseParser, UrcNetworkSelectionControlFollowedByCmd)
     EXPECT_EQ(strlen("UMWI"), CallbackCmd_fake.arg1_history[1]);
 
     EXPECT_EQ(1U, CallbackCmdArg_fake.call_count);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(AtResponseParser, AtCommandEchoTerminatedByS3)
@@ -293,23 +259,18 @@ TEST_F(AtResponseParser, AtCommandEchoTerminatedByS3)
      * Tests the successful parsing of an AT command echo (AT+PACSP\r) which is terminated only by an S3 character.
      */
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
     const char *AtResponse = "AT+PACSP\r";
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
 
-    /* VERIFY: Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0U, CallbackMisc_fake.call_count);
     EXPECT_EQ(0U, CallbackError_fake.call_count);
 
     EXPECT_EQ(1U, CallbackCmdEcho_fake.call_count);
     EXPECT_EQ(strlen("AT+PACSP"), CallbackCmdEcho_fake.arg1_history[0]);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(AtResponseParser, AtResponseParserBufferOutOfSpace)
@@ -319,17 +280,14 @@ TEST_F(AtResponseParser, AtResponseParserBufferOutOfSpace)
      * Tests buffer out of space condition.
      */
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
     uint8_t resp[ATRP_INTERNAL_BUFFER_LEN + 1];
     memset(resp, (int)'A', sizeof(resp));
     resp[sizeof(resp) - 1] = '\n';
     state.BufferPosition = 0;
     state.StateCallback = AtrpStateCmdEcho;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     Retcode_T retcode = AtResponseParser_Parse(resp, sizeof(resp));
 
-    /* VERIFY: Compare the expected with actual */
     EXPECT_EQ(AT_RESPONSE_PARSER_PARSE_ERROR, Retcode_GetCode(retcode));
 }
 
@@ -386,7 +344,6 @@ TEST_P(AtResponseParserParsingIncomplete, ParseIncomplete00)
     Retcode_T retcode00 = RETCODE_OK;
     Retcode_T retcode01 = RETCODE_OK;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retcode00 = AtResponseParser_Parse((uint8_t *)AtResponseParserParsingIncompleteResonseFull,
                                        split);
     retcode01 = AtResponseParser_Parse(

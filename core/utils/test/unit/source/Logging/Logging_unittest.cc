@@ -16,10 +16,10 @@
  *
  * @brief
  *      Module test specification for the Logging_unittest.cc module.
- * 
+ *
  * @detail
  *      The unit test file template follows the Four-Phase test pattern.
- * 
+ *
  * @file
  **/
 
@@ -52,7 +52,7 @@ extern "C"
     break;
 
 #undef KISO_MODULE_ID
-#include "../../../../source/Logging/freertos/Logging_AsyncRecorder.c"
+#include "Logging_AsyncRecorder.c"
 #undef KISO_MODULE_ID
 #include "Filter.c"
 #undef KISO_MODULE_ID
@@ -219,7 +219,7 @@ TEST_F(Logging, Logging_LogFail)
 TEST_F(Logging, Logging_InitFail)
 {
     /** @testcase{ Logging, Logging_InitFail }
-     * 
+     *
      * Verifying that a Retcode error code is returned when the logging functionality is
      * initialised with invalid parameters in the struct of the required recorder or appender.
      */

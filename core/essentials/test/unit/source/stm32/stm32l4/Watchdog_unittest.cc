@@ -64,18 +64,14 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_Init_success)
      * Successful MCU_Watchdog_Init() test case.
      */
 
-    /* SETUP: Declare and initialize the test condition required by this test case. */
     WdgHandle_ptr = NULL;
     WdgHandle_T wdgHandle = &testWatchogHandle;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     Retcode_T retcode = MCU_Watchdog_Init(wdgHandle);
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(&testWatchogHandle, WdgHandle_ptr);
 
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
     WdgHandle_ptr = NULL;
 }
 
@@ -85,10 +81,8 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_Init_failure_invalid_param)
      * MCU_Watchdog_Init() failing test case.
      */
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     Retcode_T retcode = MCU_Watchdog_Init(NULL);
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
 }
@@ -103,19 +97,15 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_Enable_success)
      * Successful MCU_Watchdog_Enable() test case.
      */
 
-    /* SETUP: Declare and initialize the test condition required by this test case. */
     WdgHandle_ptr = &testWatchogHandle;
     HAL_IWDG_Init_fake.return_val = HAL_OK;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     Retcode_T retcode = MCU_Watchdog_Enable();
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(UINT32_C(1), HAL_IWDG_Init_fake.call_count);
     EXPECT_EQ(WdgHandle_ptr, HAL_IWDG_Init_fake.arg0_val);
 
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
     RESET_FAKE(HAL_IWDG_Init);
     WdgHandle_ptr = NULL;
 }
@@ -126,13 +116,10 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_Enable_failure_uninitializedState)
      * MCU_Watchdog_Enable() failing test case.
      */
 
-    /* SETUP: Declare and initialize the test condition required by this test case. */
     WdgHandle_ptr = NULL;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     Retcode_T retcode = MCU_Watchdog_Enable();
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
     EXPECT_EQ(RETCODE_UNINITIALIZED, Retcode_GetCode(retcode));
 }
@@ -143,18 +130,14 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_Enable_errorPropagationTest)
      * Error propagation test when the APIs called from within MCU_Watchdog_Enable return an error
      */
 
-    /* SETUP: Declare and initialize the test condition required by this test case. */
     WdgHandle_ptr = &testWatchogHandle;
     HAL_IWDG_Init_fake.return_val = HAL_ERROR;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     Retcode_T retcode = MCU_Watchdog_Enable();
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
     RESET_FAKE(HAL_IWDG_Init);
     WdgHandle_ptr = NULL;
 }
@@ -169,19 +152,15 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_Feed_success)
      * Successful MCU_Watchdog_Feed() test case.
      */
 
-    /* SETUP: Declare and initialize the test condition required by this test case. */
     WdgHandle_ptr = &testWatchogHandle;
     HAL_IWDG_Refresh_fake.return_val = HAL_OK;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     Retcode_T retcode = MCU_Watchdog_Feed();
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(UINT32_C(1), HAL_IWDG_Refresh_fake.call_count);
     EXPECT_EQ(WdgHandle_ptr, HAL_IWDG_Refresh_fake.arg0_val);
 
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
     RESET_FAKE(HAL_IWDG_Refresh);
     WdgHandle_ptr = NULL;
 }
@@ -192,13 +171,10 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_Feed_failure_uninitializedState)
      * MCU_Watchdog_Feed() failing test case.
      */
 
-    /* SETUP: Declare and initialize the test condition required by this test case. */
     WdgHandle_ptr = NULL;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     Retcode_T retcode = MCU_Watchdog_Feed();
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
     EXPECT_EQ(RETCODE_UNINITIALIZED, Retcode_GetCode(retcode));
 }
@@ -212,14 +188,11 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_Feed_errorPropagationTest)
     WdgHandle_ptr = &testWatchogHandle;
     HAL_IWDG_Refresh_fake.return_val = HAL_ERROR;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     Retcode_T retcode = MCU_Watchdog_Feed();
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_EQ(RETCODE_SEVERITY_FATAL, Retcode_GetSeverity(retcode));
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
     RESET_FAKE(HAL_IWDG_Refresh);
     WdgHandle_ptr = NULL;
 }
@@ -234,17 +207,13 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_IsResetCausedByWatchdog_success_dueToRe
      * Successful MCU_Watchdog_IsResetCausedByWatchdog() test case.
      */
 
-    /* SETUP: Declare and initialize the test condition required by this test case. */
     __HAL_RCC_GET_FLAG_fake.return_val = RESET;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     bool retcode = MCU_Watchdog_IsResetCausedByWatchdog();
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_FALSE(retcode);
     EXPECT_EQ(UINT32_C(1), __HAL_RCC_GET_FLAG_fake.call_count);
     EXPECT_EQ(UINT32_C(0), __HAL_RCC_CLEAR_RESET_FLAGS_fake.call_count);
 
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
     RESET_FAKE(__HAL_RCC_GET_FLAG);
 }
 
@@ -254,18 +223,14 @@ TEST_F(STM32_WATCHDOG_TEST, MCU_Watchdog_IsResetCausedByWatchdog_success_notDueT
      * Successful MCU_Watchdog_IsResetCausedByWatchdog() test case.
      */
 
-    /* SETUP: Declare and initialize the test condition required by this test case. */
     __HAL_RCC_GET_FLAG_fake.return_val = ~RESET;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     bool retcode = MCU_Watchdog_IsResetCausedByWatchdog();
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_TRUE(retcode);
     EXPECT_EQ(UINT32_C(1), __HAL_RCC_GET_FLAG_fake.call_count);
     EXPECT_EQ(UINT32_C(1), __HAL_RCC_CLEAR_RESET_FLAGS_fake.call_count);
 
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
     RESET_FAKE(__HAL_RCC_GET_FLAG);
     RESET_FAKE(__HAL_RCC_CLEAR_RESET_FLAGS);
 }

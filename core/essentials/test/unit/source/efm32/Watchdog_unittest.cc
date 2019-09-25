@@ -59,7 +59,6 @@ TEST_F(EFM32_WATCHDOG_TEST, MCU_Watchdog_Init_Configure)
      * Successful MCU_Watchdog_Init() test case with application watchdog configuration
      */
 
-    /* SETUP: Declare and initialize the test condition required by this test case. */
     WDOG_Init_fake.call_count = 0;
 
     wdgInitStruct.WdgCallback = NULL;
@@ -67,10 +66,8 @@ TEST_F(EFM32_WATCHDOG_TEST, MCU_Watchdog_Init_Configure)
     wdgInitStruct.RunOnCpuHalt = false;
     wdgInitStruct.Timeout = 6002;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     Retcode_T retcode = MCU_Watchdog_Init((WdgHandle_T)&wdgInitStruct);
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(UINT32_C(1), WDOG_Init_fake.call_count);
 }
@@ -81,13 +78,10 @@ TEST_F(EFM32_WATCHDOG_TEST, MCU_Watchdog_Init_NULL)
      * Successful MCU_Watchdog_Init() test case with NULL parameter
      */
 
-    /* SETUP: Declare and initialize the test condition required by this test case. */
     WDOG_Init_fake.call_count = 0;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     Retcode_T retcode = MCU_Watchdog_Init(NULL);
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_EQ(RETCODE_UNINITIALIZED, Retcode_GetCode(retcode));
     EXPECT_EQ(UINT32_C(0), WDOG_Init_fake.call_count);
 }
@@ -98,7 +92,6 @@ TEST_F(EFM32_WATCHDOG_TEST, MCU_Watchdog_Init_InvalidTimeout)
      * Successful MCU_Watchdog_Init() test case with invalid timeout parameter
      */
 
-    /* SETUP: Declare and initialize the test condition required by this test case. */
     WDOG_Init_fake.call_count = 0;
 
     wdgInitStruct.WdgCallback = NULL;
@@ -106,10 +99,8 @@ TEST_F(EFM32_WATCHDOG_TEST, MCU_Watchdog_Init_InvalidTimeout)
     wdgInitStruct.RunOnCpuHalt = false;
     wdgInitStruct.Timeout = 256001;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     Retcode_T retcode = MCU_Watchdog_Init((WdgHandle_T)&wdgInitStruct);
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
     EXPECT_EQ(UINT32_C(0), WDOG_Init_fake.call_count);
 }
@@ -120,7 +111,6 @@ TEST_F(EFM32_WATCHDOG_TEST, MCU_Watchdog_Init_ResetOff)
      * Successful MCU_Watchdog_Init() test case with invalid timeout parameter
      */
 
-    /* SETUP: Declare and initialize the test condition required by this test case. */
     WDOG_Init_fake.call_count = 0;
 
     wdgInitStruct.WdgCallback = NULL;
@@ -128,10 +118,8 @@ TEST_F(EFM32_WATCHDOG_TEST, MCU_Watchdog_Init_ResetOff)
     wdgInitStruct.RunOnCpuHalt = false;
     wdgInitStruct.Timeout = 256001;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     Retcode_T retcode = MCU_Watchdog_Init((WdgHandle_T)&wdgInitStruct);
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_EQ(RETCODE_NOT_SUPPORTED, Retcode_GetCode(retcode));
     EXPECT_EQ(UINT32_C(0), WDOG_Init_fake.call_count);
 }
@@ -144,13 +132,10 @@ TEST_F(EFM32_WATCHDOG_TEST, MCU_Watchdog_Enable)
      * Successful MCU_Watchdog_Enable() test case after MCU_Watchdog_Init
      */
 
-    /* SETUP: Declare and initialize the test condition required by this test case. */
     WDOG_Enable_fake.call_count = 0;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     Retcode_T retcode = MCU_Watchdog_Enable();
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(UINT32_C(1), WDOG_Enable_fake.call_count);
 }
@@ -161,14 +146,11 @@ TEST_F(EFM32_WATCHDOG_TEST, MCU_Watchdog_Enable_WithoutInit)
      * Successful MCU_Watchdog_Enable() test case before MCU_Watchdog_Init
      */
 
-    /* SETUP: Declare and initialize the test condition required by this test case. */
     WDOG_Enable_fake.call_count = 0;
     wdgInitFlag = false;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     Retcode_T retcode = MCU_Watchdog_Enable();
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_EQ(RETCODE_UNINITIALIZED, Retcode_GetCode(retcode));
     EXPECT_EQ(UINT32_C(0), WDOG_Enable_fake.call_count);
 }
@@ -182,13 +164,10 @@ TEST_F(EFM32_WATCHDOG_TEST, MCU_Watchdog_Feed)
      * Successful MCU_Watchdog_Feed() test case after MCU_Watchdog_Enable
      */
 
-    /* SETUP: Declare and initialize the test condition required by this test case. */
     WDOG_Feed_fake.call_count = 0;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     Retcode_T retcode = MCU_Watchdog_Feed();
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(UINT32_C(1), WDOG_Feed_fake.call_count);
 }
@@ -202,13 +181,10 @@ TEST_F(EFM32_WATCHDOG_TEST, MCU_Watchdog_IsResetCausedByWatchdog)
      * MCU_Watchdog_IsResetCausedByWatchdog gives status of watchdog reset
      */
 
-    /* SETUP: Declare and initialize the test condition required by this test case. */
     RMU_ResetCauseGet_fake.return_val = RMU_RSTCAUSE_WDOGRST;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     bool wdgResetFlag = MCU_Watchdog_IsResetCausedByWatchdog();
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_TRUE(wdgResetFlag);
 }
 
@@ -218,13 +194,10 @@ TEST_F(EFM32_WATCHDOG_TEST, MCU_Watchdog_IsResetCausedByPowerOnReset)
      * MCU_Watchdog_IsResetCausedByWatchdog gives status of watchdog reset
      */
 
-    /* SETUP: Declare and initialize the test condition required by this test case. */
     RMU_ResetCauseGet_fake.return_val = RMU_RSTCAUSE_PORST;
 
-    /* EXECISE: calls relevant code Interface with the corresponding test inputs.  */
     bool wdgResetFlag = MCU_Watchdog_IsResetCausedByWatchdog();
 
-    /* VERIFY : Compare the expected value with the actual one. */
     EXPECT_FALSE(wdgResetFlag);
 }
 

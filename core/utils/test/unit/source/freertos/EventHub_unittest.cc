@@ -113,15 +113,12 @@ TEST_F(eventHub, EventHubInitializeSuccess)
      * Test EventHub init success
       */
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
     EventHub_T eventHub;
     Retcode_T retVal = RETCODE_FAILURE;
     xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t)1;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Initialize(&eventHub);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_NULL_POINTER, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_SEMAPHORE_ERROR, Retcode_GetCode(retVal));
     EXPECT_EQ(RETCODE_OK, Retcode_GetCode(retVal));
@@ -135,14 +132,11 @@ TEST_F(eventHub, EventHubInitializeFailure)
       * Test EventHub init failures
       */
 
-    /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal = RETCODE_OK;
     xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t)1;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Initialize(NULL);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_SEMAPHORE_ERROR, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_EQ(RETCODE_NULL_POINTER, Retcode_GetCode(retVal));
@@ -154,19 +148,15 @@ TEST_F(eventHub, EventHubObserverSuccess)
     /** @testcase{ eventHub::EventHubObserverSuccess: }
      * Test EventHub observe success
      */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
     EventHub_T eventHub;
     Retcode_T retVal = RETCODE_FAILURE;
     xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t)1;
     xSemaphoreTake_fake.return_val = (uint32_t)1;
     xSemaphoreGive_fake.return_val = (uint32_t)1;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Initialize(&eventHub);
     retVal = EventHub_Observe(&eventHub, TestObserver_A, (TaskEvent_T)gTestEvent);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_EQ(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_NULL_POINTER, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_SEMAPHORE_ERROR, Retcode_GetCode(retVal));
@@ -180,14 +170,10 @@ TEST_F(eventHub, EventHubObserverHubNull)
     /** @testcase{ eventHub::EventHubObserverHubNull: }
      * Test EventHub observe failures
      */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal = RETCODE_OK;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Observe(NULL, TestObserver_A, (TaskEvent_T)gTestEvent);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_SEMAPHORE_ERROR, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_UNINITIALIZED, Retcode_GetCode(retVal));
@@ -200,15 +186,11 @@ TEST_F(eventHub, EventHubObserverHandlerNull)
     /** @testcase{ eventHub::EventHubObserverHandlerNull: }
      * Test EventHub observe failures
      */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal = RETCODE_OK;
     EventHub_T eventHub;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Observe(&eventHub, NULL, (TaskEvent_T)gTestEvent);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_SEMAPHORE_ERROR, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_UNINITIALIZED, Retcode_GetCode(retVal));
@@ -221,17 +203,13 @@ TEST_F(eventHub, EventHubObserverHubLockNull)
     /** @testcase{ eventHub::EventHubObserverHubLockNull: }
      * Test EventHub observe failures
      */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal = RETCODE_OK;
     EventHub_T eventHub;
     eventHub.lock = (SemaphoreHandle_t)0;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Initialize(&eventHub);
     retVal = EventHub_Observe(&eventHub, TestObserver_A, (TaskEvent_T)gTestEvent);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_SEMAPHORE_ERROR, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_OUT_OF_RESOURCES, Retcode_GetCode(retVal));
@@ -244,8 +222,6 @@ TEST_F(eventHub, EventHubObserverNotNullHubObserverCount)
     /** @testcase{ eventHub::EventHubObserverNotNullHubObserverCount: }
      * Test EventHub observe failures
      */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
     EventHub_T eventHub;
     Retcode_T retVal = RETCODE_OK;
     xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t)1;
@@ -253,10 +229,8 @@ TEST_F(eventHub, EventHubObserverNotNullHubObserverCount)
     xSemaphoreGive_fake.return_val = (uint32_t)1;
     eventHub.observerCount = CONFIG_EVENTHUB_MAX_OBSERVERS;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Observe(&eventHub, TestObserver_A, (TaskEvent_T)gTestEvent);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_SEMAPHORE_ERROR, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_UNINITIALIZED, Retcode_GetCode(retVal));
@@ -272,19 +246,15 @@ TEST_F(eventHub, EventHubObserverSemTakeNotPass)
     /** @testcase{ eventHub::EventHubObserverSemTakeNotPass: }
      * Test EventHub observe failures
      */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal = RETCODE_OK;
     EventHub_T eventHub;
     eventHub.observerCount = 0;
     xSemaphoreTake_fake.return_val = (uint32_t)1;
     xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t)1;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Initialize(&eventHub);
     retVal = EventHub_Observe(&eventHub, TestObserver_A, (TaskEvent_T)gTestEvent);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_UNINITIALIZED, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_NULL_POINTER, Retcode_GetCode(retVal));
@@ -298,19 +268,15 @@ TEST_F(eventHub, EventHubObserveSemGiveNotPass)
     /** @testcase{ eventHub::EventHubObserveSemGiveNotPass: }
      * Test EventHub observe failures
      */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal = RETCODE_OK;
     EventHub_T eventHub;
     xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t)1;
     xSemaphoreTake_fake.return_val = (uint32_t)1;
     xSemaphoreGive_fake.return_val = (uint32_t)0;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Initialize(&eventHub);
     retVal = EventHub_Observe(&eventHub, TestObserver_A, (TaskEvent_T)gTestEvent);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_UNINITIALIZED, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_NULL_POINTER, Retcode_GetCode(retVal));
@@ -330,19 +296,15 @@ TEST_F(eventHub, EventHubObserveAllSuccess)
     xSemaphoreTake_fake.return_val = (uint32_t)1;
     xSemaphoreGive_fake.return_val = (uint32_t)1;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Initialize(&eventHub);
     retVal = EventHub_ObserveAll(&eventHub, TestObserver_A);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_NULL_POINTER, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_UNINITIALIZED, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_SEMAPHORE_ERROR, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_OUT_OF_RESOURCES, Retcode_GetCode(retVal));
     EXPECT_EQ(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_EQ((uint32_t)1, eventHub.observerCount);
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(eventHub, EventHubObserverAllHubNull)
@@ -353,11 +315,9 @@ TEST_F(eventHub, EventHubObserverAllHubNull)
     Retcode_T retVal = RETCODE_OK;
     EventHub_T eventHub;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Initialize(&eventHub);
     retVal = EventHub_ObserveAll(NULL, TestObserver_A);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_UNINITIALIZED, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_SEMAPHORE_ERROR, Retcode_GetCode(retVal));
@@ -373,11 +333,9 @@ TEST_F(eventHub, EventHubObserverAllHandlerNull)
     Retcode_T retVal = RETCODE_OK;
     EventHub_T eventHub;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Initialize(&eventHub);
     retVal = EventHub_ObserveAll(&eventHub, NULL);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_UNINITIALIZED, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_SEMAPHORE_ERROR, Retcode_GetCode(retVal));
@@ -394,11 +352,9 @@ TEST_F(eventHub, EventHubObserverAllHubLockNull)
     EventHub_T eventHub;
     eventHub.lock = (SemaphoreHandle_t)0;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Initialize(&eventHub);
     retVal = EventHub_ObserveAll(&eventHub, TestObserver_A);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_SEMAPHORE_ERROR, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_OUT_OF_RESOURCES, Retcode_GetCode(retVal));
@@ -411,8 +367,6 @@ TEST_F(eventHub, EventHubObserverAllNotNullHubObserverCount)
     /** @testcase{ eventHub::EventHubObserverAllNotNullHubObserverCount: }
      * Test EventHub observe failures
      */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
     EventHub_T eventHub;
     Retcode_T retVal = RETCODE_OK;
     xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t)1;
@@ -421,10 +375,8 @@ TEST_F(eventHub, EventHubObserverAllNotNullHubObserverCount)
     eventHub.lock = (SemaphoreHandle_t)1;
     eventHub.observerCount = CONFIG_EVENTHUB_MAX_OBSERVERS;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_ObserveAll(&eventHub, TestObserver_A);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_SEMAPHORE_ERROR, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_NULL_POINTER, Retcode_GetCode(retVal));
@@ -440,19 +392,15 @@ TEST_F(eventHub, EventHubObserverAllSemTakeNotPass)
     /** @testcase{ eventHub::EventHubObserverAllSemTakeNotPass: }
      * Test EventHub observe failures
      */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal = RETCODE_OK;
     EventHub_T eventHub;
     eventHub.observerCount = 0;
     xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t)1;
     xSemaphoreTake_fake.return_val = (uint32_t)1;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Initialize(&eventHub);
     retVal = EventHub_ObserveAll(&eventHub, TestObserver_A);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_UNINITIALIZED, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_NULL_POINTER, Retcode_GetCode(retVal));
@@ -466,19 +414,15 @@ TEST_F(eventHub, EventHubObserverAllSemGiveNotPass)
     /** @testcase{ eventHub::EventHubObserverAllSemGiveNotPass: }
      * Test EventHub observe failures
      */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
     Retcode_T retVal = RETCODE_OK;
     EventHub_T eventHub;
     xSemaphoreCreateMutex_fake.return_val = (SemaphoreHandle_t)1;
     xSemaphoreTake_fake.return_val = (uint32_t)1;
     xSemaphoreGive_fake.return_val = (uint32_t)0;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Initialize(&eventHub);
     retVal = EventHub_ObserveAll(&eventHub, TestObserver_A);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_OK, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_NULL_POINTER, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_UNINITIALIZED, Retcode_GetCode(retVal));
@@ -493,7 +437,6 @@ TEST_F(eventHub, EventHub_Notify_Success)
      * Test EventHub notify success
      */
 
-    /* SETUP: Declare local variables required only by this test case */
     EventHub_T eventHub;
     Retcode_T rc;
     uint32_t expectedObservers = 0;
@@ -532,8 +475,6 @@ TEST_F(eventHub, EventHub_Notify_Success)
     EXPECT_EQ(true, eventReceived_All);
     EXPECT_EQ(true, dataCorrect_All);
 #endif
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
 }
 
 TEST_F(eventHub, EventHubNotifyHubNull)
@@ -541,8 +482,6 @@ TEST_F(eventHub, EventHubNotifyHubNull)
     /** @testcase{ eventHub::EventHubNotifyHubNull: }
      * Test EventHub notify failures
      */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
     EventHub_T eventHub;
     Retcode_T retVal = RETCODE_OK;
     eventReceived_A = false;
@@ -550,12 +489,10 @@ TEST_F(eventHub, EventHubNotifyHubNull)
     xSemaphoreTake_fake.return_val = (uint32_t)1;
     xSemaphoreGive_fake.return_val = (uint32_t)1;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Initialize(&eventHub);
     retVal = EventHub_Observe(&eventHub, TestObserver_A, (TaskEvent_T)gTestEvent);
     retVal = EventHub_Notify(NULL, (TaskEvent_T)gTestEvent, NULL);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_UNINITIALIZED, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_SEMAPHORE_ERROR, Retcode_GetCode(retVal));
     EXPECT_EQ(RETCODE_NULL_POINTER, Retcode_GetCode(retVal));
@@ -569,18 +506,14 @@ TEST_F(eventHub, EventHubNotifyHubLockNull)
     /** @testcase{ eventHub::EventHubNotifyHubLockNull: }
      * Test EventHub notify failures
      */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
     EventHub_T eventHub;
     Retcode_T retVal = RETCODE_OK;
     eventHub.lock = (SemaphoreHandle_t)0;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Initialize(&eventHub);
     retVal = EventHub_Observe(&eventHub, TestObserver_A, (TaskEvent_T)gTestEvent);
     retVal = EventHub_Notify(&eventHub, (TaskEvent_T)gTestEvent, NULL);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_SEMAPHORE_ERROR, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_NULL_POINTER, Retcode_GetCode(retVal));
     EXPECT_EQ(RETCODE_UNINITIALIZED, Retcode_GetCode(retVal));
@@ -591,18 +524,14 @@ TEST_F(eventHub, EventHubNotifySemTakeNotPass)
     /** @testcase{ eventHub::EventHubNotifySemTakeNotPass: }
      * Test EventHub notify failures
      */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
     EventHub_T eventHub;
     Retcode_T retVal = RETCODE_OK;
     eventReceived_A = false;
     eventHub.observerCount = 0;
     xSemaphoreTake_fake.return_val = (uint32_t)1;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Notify(&eventHub, (TaskEvent_T)gTestEvent, NULL);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_UNINITIALIZED, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_NULL_POINTER, Retcode_GetCode(retVal));
     EXPECT_EQ(RETCODE_SEMAPHORE_ERROR, Retcode_GetCode(retVal));
@@ -615,17 +544,13 @@ TEST_F(eventHub, EventHubNotifySemGiveNotPass)
     /** @testcase{ eventHub::EventHubNotifySemGiveNotPass: }
      * Test EventHub notify failures
      */
-
-    /* SETUP: Declare and initialize local variables required only by this test case */
     EventHub_T eventHub;
     Retcode_T retVal = RETCODE_OK;
     xSemaphoreTake_fake.return_val = (uint32_t)1;
     xSemaphoreGive_fake.return_val = (uint32_t)0;
 
-    /* EXECISE: call relevant production code Interface with appropriate test inputs  */
     retVal = EventHub_Notify(&eventHub, (TaskEvent_T)gTestEvent, NULL);
 
-    /* VERIFY : Compare the expected with actual */
     EXPECT_NE(RETCODE_NULL_POINTER, Retcode_GetCode(retVal));
     EXPECT_NE(RETCODE_UNINITIALIZED, Retcode_GetCode(retVal));
     EXPECT_EQ(RETCODE_SEMAPHORE_ERROR, Retcode_GetCode(retVal));

@@ -125,6 +125,8 @@ TEST_F(TS_SmokeTest, NoEchoSendThenReceivePass)
 
     retcode = AtResponseQueue_WaitForArbitraryCmdArg(0U, &buf, &bufLen);
     EXPECT_EQ(RETCODE_OK, retcode);
+
     EXPECT_STREQ("0", (char *)buf);
+
     AtResponseQueue_MarkBufferAsUnused();
 }

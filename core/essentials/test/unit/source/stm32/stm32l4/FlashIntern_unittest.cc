@@ -36,12 +36,6 @@ extern "C"
 #undef FLASH_SIZE
 #define FLASH_SIZE UINT32_C(0x00080000)
 
-/* Put constant and variable definitions here */
-
-/* Put private function declarations here */
-
-/* Put function implementations here */
-
 /* include module under test */
 #include "FlashIntern.c"
 
@@ -73,9 +67,6 @@ protected:
 
 /* specify test cases ******************************************************* */
 
-/**
- * This test case evaluates the functionality of checkAddressBounderies()
- */
 TEST_F(MCU_FlashIntern, checkAddressBounderies)
 {
     /* StartAddress out of bound */
@@ -109,9 +100,6 @@ TEST_F(MCU_FlashIntern, checkAddressBounderies)
     EXPECT_EQ(RETCODE_OK, checkAddressBounderies(StartAddress, StartAddress + Length));
 }
 
-/**
- * This test case evaluates the functionality of checkParamAlignment()
- */
 TEST_F(MCU_FlashIntern, checkParamAlignment)
 {
     /* StartAddress unaligned */
@@ -137,9 +125,6 @@ TEST_F(MCU_FlashIntern, checkParamAlignment)
     EXPECT_EQ(RETCODE_OK, checkParamAlignment(StartAddress, Length));
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Initialize()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Initialize)
 {
     MCU_FlashIntern_T flashInternInitStruct;
@@ -147,9 +132,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Initialize)
     EXPECT_EQ(RETCODE_OK, MCU_FlashIntern_Initialize(flashInternInitStruct));
 }
 
-/**
- * This test case evaluates the functionality of FlashIntern_Erase()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase)
 {
     uint32_t StartAddress = UINT32_C(0x00000000);
@@ -168,9 +150,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase)
     EXPECT_EQ(0u, HAL_FLASH_Lock_fake.call_count);
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Erase()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase2)
 {
     uint32_t StartAddress = UINT32_C(0x08000000);
@@ -189,9 +168,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase2)
     EXPECT_EQ(0u, HAL_FLASH_Lock_fake.call_count);
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Erase()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase3)
 {
     uint32_t StartAddress = UINT32_C(0x08000000);
@@ -210,9 +186,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase3)
     EXPECT_EQ(0u, HAL_FLASH_Lock_fake.call_count);
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Erase()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase4)
 {
     uint32_t StartAddress = UINT32_C(0x08000000);
@@ -231,9 +204,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase4)
     EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Erase()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase5)
 {
     uint32_t StartAddress = UINT32_C(0x08000000);
@@ -252,9 +222,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase5)
     EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Erase()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase6)
 {
     uint32_t StartAddress = UINT32_C(0x08000000);
@@ -273,9 +240,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase6)
     EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Erase()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase7)
 {
     uint32_t StartAddress = UINT32_C(0x08000000);
@@ -292,9 +256,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase7)
     EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Erase()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase8)
 {
     uint32_t StartAddress = UINT32_C(0x08000000);
@@ -313,9 +274,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase8)
     EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Erase()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase9)
 {
     uint32_t StartAddress = UINT32_C(0x08000000);
@@ -336,9 +294,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase9)
     EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Erase()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase10)
 {
     uint32_t StartAddress = UINT32_C(0x09000000);
@@ -357,9 +312,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Erase10)
     EXPECT_EQ(0u, HAL_FLASH_Lock_fake.call_count);
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Read()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Read)
 {
     uint32_t StartAddress = UINT32_C(0x00000000);
@@ -373,9 +325,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Read)
                              Length));
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Read()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Read1)
 {
     uint32_t StartAddress = UINT32_C(0x00000000);
@@ -387,9 +336,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Read1)
         MCU_FlashIntern_Read(StartAddress, NULL, Length));
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Read()
- */
 /* Not executed, because reading from the start address will crash the gtest */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Read2)
 {
@@ -399,9 +345,7 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Read2)
     //uint32_t Length = sizeof(Buffer) / sizeof(uint8_t);
     //EXPECT_EQ( RETCODE_OK, MCU_FlashIntern_Read(StartAddress, Buffer, Length));
 }
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Read()
- */
+
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Read3)
 {
     uint32_t StartAddress = UINT32_C(0x08080000);
@@ -411,9 +355,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Read3)
         MCU_FlashIntern_Read(StartAddress, NULL, 0));
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Read()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Read4)
 {
     uint32_t StartAddress = UINT32_C(0x08060000);
@@ -426,9 +367,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Read4)
         MCU_FlashIntern_Read(StartAddress, Buffer, Length));
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Read()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Read5)
 {
     uint32_t StartAddress = UINT32_C(0x08060000);
@@ -440,9 +378,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Read5)
         MCU_FlashIntern_Read(StartAddress, NULL, Length));
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Write()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Write)
 {
     uint32_t StartAddress = UINT32_C(0);
@@ -455,9 +390,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Write)
                               Length));
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Write()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Write2)
 {
     uint32_t StartAddress = UINT32_C(0x08000000);
@@ -469,9 +401,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Write2)
         MCU_FlashIntern_Write(StartAddress, Buffer, Length));
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Write()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Write3)
 {
     uint32_t StartAddress = UINT32_C(0x08000000);
@@ -482,9 +411,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Write3)
         MCU_FlashIntern_Write(StartAddress, NULL, Length));
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Write()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Write4)
 {
     uint32_t StartAddress = UINT32_C(0x08000000);
@@ -504,9 +430,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Write4)
     EXPECT_EQ(0u, HAL_FLASH_Lock_fake.call_count);
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Write()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Write5)
 {
     uint32_t StartAddress = UINT32_C(0x08000000);
@@ -526,9 +449,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Write5)
     EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Write()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Write6)
 {
     uint32_t StartAddress = UINT32_C(0x08000000);
@@ -548,9 +468,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Write6)
     EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Write()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Write7)
 {
     uint32_t StartAddress = UINT32_C(0x08000000);
@@ -569,9 +486,6 @@ TEST_F(MCU_FlashIntern, MCU_FlashIntern_Write7)
     EXPECT_EQ(1u, HAL_FLASH_Lock_fake.call_count);
 }
 
-/**
- * This test case evaluates the functionality of MCU_FlashIntern_Write()
- */
 TEST_F(MCU_FlashIntern, MCU_FlashIntern_Write8)
 {
     uint32_t StartAddress = UINT32_C(0x09000000);

@@ -131,23 +131,6 @@ void AppTestCallbackFunction(I2C_T i2c, struct MCU_I2C_Event_S event)
     KISO_I2Ctest::m_isCalled_cbf = true;
 }
 
-TEST_F(KISO_I2Ctest, dummyTest)
-{
-    /** @testcase{ <FIXTURE_NAME>::<TEST_NAME>: }
-     *
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this
-	 * test case */
-
-    /* EXECISE: call relevant production code Interface with appropriate test
-	 * inputs  */
-
-    /* VERIFY : Compare the expected with actual */
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
-}
-
 /*************************** I2C TESTS *****************************/
 /**
  * @brief   Test public MCU_I2C_Initialize

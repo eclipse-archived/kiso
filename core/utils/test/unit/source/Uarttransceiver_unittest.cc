@@ -148,7 +148,7 @@ void UartCallback(struct MCU_UART_Event_S event)
 
 /**
  *  @brief
- *   
+ *
  */
 TEST_F(UARTTransceiverTest, UartTransceiverInitialize_SUCCESS)
 {

@@ -16,10 +16,10 @@
  *
  * @brief
  *      Module test specification for the RingBuffer_unittest.cc module.
- * 
+ *
  * @details
  *      The unit test file template follows the Four-Phase test pattern.
- * 
+ *
  * @file
  **/
 
@@ -93,14 +93,13 @@ protected:
 /**
  *  @brief
  *      Initialize the buffer and ensure zero values.
- *  
- *   
+ *
+ *
  */
 TEST_F(UartRingBuffer_InitTest, BufferInit)
 {
     RingBuffer_Initialize(&ringBuffer, localBuffer, sizeof(localBuffer));
 
-    /* Validate implementation internal details*/
     EXPECT_EQ(localBuffer, ringBuffer.Base);
     EXPECT_EQ(UINT32_C(0), ringBuffer.ReadIndex);
     EXPECT_EQ(UINT32_C(0), ringBuffer.WriteIndex);
@@ -111,28 +110,24 @@ TEST_F(UartRingBuffer_InitTest, BufferInitNullCheck)
 {
     RingBuffer_Initialize(NULL, localBuffer, sizeof(localBuffer));
 
-    /* Validate implementation internal details*/
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM), RunTimeError);
     EXPECT_EQ(1U, Retcode_RaiseError_fake.call_count);
     RESET_FAKE(Retcode_RaiseError);
 
     RingBuffer_Initialize(&ringBuffer, NULL, sizeof(localBuffer));
 
-    /* Validate implementation internal details*/
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM), RunTimeError);
     EXPECT_EQ(1U, Retcode_RaiseError_fake.call_count);
     RESET_FAKE(Retcode_RaiseError);
 
     RingBuffer_Initialize(&ringBuffer, NULL, sizeof(localBuffer));
 
-    /* Validate implementation internal details*/
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM), RunTimeError);
     EXPECT_EQ(1U, Retcode_RaiseError_fake.call_count);
     RESET_FAKE(Retcode_RaiseError);
 
     RingBuffer_Initialize(&ringBuffer, localBuffer, 0U);
 
-    /* Validate implementation internal details*/
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_INVALID_PARAM), RunTimeError);
     EXPECT_EQ(1U, Retcode_RaiseError_fake.call_count);
     RESET_FAKE(Retcode_RaiseError);

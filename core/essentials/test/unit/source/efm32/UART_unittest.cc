@@ -166,23 +166,6 @@ void AppTestCallbackFunction(UART_T uart, struct MCU_UART_Event_S event)
     KISO_UARTtest::m_isCalled_cbf = true;
 }
 
-TEST_F(KISO_UARTtest, dummyTest)
-{
-    /** @testcase{ <FIXTURE_NAME>::<TEST_NAME>: }
-     *
-     */
-
-    /* SETUP: Declare and initialize local variables required only by this
-	 * test case */
-
-    /* EXECISE: call relevant production code Interface with appropriate test
-	 * inputs  */
-
-    /* VERIFY : Compare the expected with actual */
-
-    /* CLEAN UP: Perform dynamic memory deallocation steps and similar. */
-}
-
 /*************************** UART TESTS *****************************/
 /**
  * @brief   Test public MCU_UART_Initialize
