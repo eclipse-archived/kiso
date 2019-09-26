@@ -530,6 +530,269 @@ TEST_F(TS_HexToBin, InvalidChar4_Fail)
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
 }
 
+TEST_F(TS_HexToBin, InvalidChar5_Fail)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    uint8_t data[2];
+    data[0] = 'z';
+    data[1] = '1';
+    uint8_t bin[1];
+    uint32_t binLength = sizeof(bin);
+
+    retcode = HexToBin((const uint8_t *)data, bin, binLength);
+
+    EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
+}
+
+class TS_PrepareSendingWithBaseEncoding : public testing::Test
+{
+protected:
+    virtual void SetUp()
+    {
+        FFF_RESET_HISTORY();
+    }
+};
+
+TEST_F(TS_PrepareSendingWithBaseEncoding, Pass)
+{
+    uint32_t socket = 1U;
+    std::string payload = "HELLO WORLD";
+    std::stringstream ss;
+    ss << "AT+USOWR=" << socket << "," << payload.length() << ","
+       << "\"" << payload << "\""
+       << "\r\n";
+    std::string expSendBuffer = ss.str();
+    char sendBuffer[expSendBuffer.length() + 1];
+    AT_USOWR_Param_T usowr;
+    usowr.Data = reinterpret_cast<const uint8_t *>(payload.c_str());
+    usowr.Length = payload.length();
+    usowr.Encoding = AT_UBLOX_PAYLOADENCODING_BASE;
+    usowr.Socket = socket;
+    uint32_t actLen = 0;
+
+    Retcode_T rc = PrepareSendingWithBaseEncoding(sendBuffer, sizeof(sendBuffer), &usowr, &actLen);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(expSendBuffer.length(), actLen);
+    EXPECT_STREQ(expSendBuffer.c_str(), sendBuffer);
+}
+
+TEST_F(TS_PrepareSendingWithBaseEncoding, InsufficientBufferLen_Fail)
+{
+    uint32_t socket = 1U;
+    std::string payload = "HELLO WORLD";
+    std::stringstream ss;
+    ss << "AT+USOWR=" << socket << "," << payload.length() << ","
+       << "\"" << payload << "\""
+       << "\r\n";
+    std::string expSendBuffer = ss.str();
+    char sendBuffer[expSendBuffer.length()];
+    AT_USOWR_Param_T usowr;
+    usowr.Data = reinterpret_cast<const uint8_t *>(payload.c_str());
+    usowr.Length = payload.length();
+    usowr.Encoding = AT_UBLOX_PAYLOADENCODING_BASE;
+    usowr.Socket = socket;
+    uint32_t actLen = 0;
+
+    Retcode_T rc = PrepareSendingWithBaseEncoding(sendBuffer, sizeof(sendBuffer), &usowr, &actLen);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES), rc);
+    EXPECT_EQ(0U, actLen);
+}
+
+class TS_PrepareSendToWithBaseEncoding : public testing::Test
+{
+protected:
+    virtual void SetUp()
+    {
+        FFF_RESET_HISTORY();
+    }
+
+    void SetIPv4(AT_UBlox_Address_T &address, const uint8_t bytes[4])
+    {
+        address.Type = AT_UBLOX_ADDRESSTYPE_IPV4;
+        address.Address.IPv4[0] = bytes[3];
+        address.Address.IPv4[1] = bytes[2];
+        address.Address.IPv4[2] = bytes[1];
+        address.Address.IPv4[3] = bytes[0];
+    }
+
+    std::string IPToString(const AT_UBlox_Address_T &address)
+    {
+        std::stringstream ss;
+        ss << '"';
+        switch (address.Type)
+        {
+        case AT_UBLOX_ADDRESSTYPE_IPV4:
+            for (ssize_t i = 3; i >= 0; --i)
+            {
+                ss << std::dec << (uint32_t)address.Address.IPv4[i];
+                if (i > 0)
+                    ss << '.';
+            }
+            break;
+        case AT_UBLOX_ADDRESSTYPE_IPV6:
+            for (ssize_t i = 7; i >= 0; --i)
+            {
+                ss << std::hex << (uint32_t)address.Address.IPv6[i];
+                if (i > 0)
+                    ss << ':';
+            }
+            break;
+        default:
+            std::cerr << "Unexpected address type" << std::endl;
+            exit(1);
+        }
+        ss << '"';
+        return ss.str();
+    }
+};
+
+TEST_F(TS_PrepareSendToWithBaseEncoding, Pass)
+{
+    uint32_t socket = 1U;
+    uint8_t expIp[] = {10, 42, 0, 1};
+    uint16_t expPort = 1337;
+    std::string payload = "HELLO WORLD";
+    std::stringstream ss;
+    AT_USOST_Param_T usost;
+    usost.Data = reinterpret_cast<const uint8_t *>(payload.c_str());
+    usost.Length = payload.length();
+    usost.Encoding = AT_UBLOX_PAYLOADENCODING_BASE;
+    usost.RemotePort = expPort;
+    this->SetIPv4(usost.RemoteIp, expIp);
+    ss << "AT+USOST=" << socket << "," << IPToString(usost.RemoteIp) << "," << expPort << "," << payload.length() << ","
+       << "\"" << payload << "\""
+       << "\r\n";
+    std::string expSendBuffer = ss.str();
+    char sendBuffer[expSendBuffer.length() + 1];
+    usost.Socket = socket;
+    uint32_t actLen = 0;
+
+    Retcode_T rc = PrepareSendToWithBaseEncoding(sendBuffer, sizeof(sendBuffer), &usost, &actLen);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(expSendBuffer.length(), actLen);
+    EXPECT_STREQ(expSendBuffer.c_str(), sendBuffer);
+}
+
+TEST_F(TS_PrepareSendToWithBaseEncoding, InsufficientBufferLen_Fail)
+{
+    uint32_t socket = 1U;
+    uint8_t expIp[] = {10, 42, 0, 1};
+    uint16_t expPort = 1337;
+    std::string payload = "HELLO WORLD";
+    std::stringstream ss;
+    AT_USOST_Param_T usost;
+    usost.Data = reinterpret_cast<const uint8_t *>(payload.c_str());
+    usost.Length = payload.length();
+    usost.Encoding = AT_UBLOX_PAYLOADENCODING_BASE;
+    usost.RemotePort = expPort;
+    this->SetIPv4(usost.RemoteIp, expIp);
+    ss << "AT+USOST=" << socket << "," << IPToString(usost.RemoteIp) << "," << expPort << "," << payload.length() << ","
+       << "\"" << payload << "\""
+       << "\r\n";
+    std::string expSendBuffer = ss.str();
+    char sendBuffer[expSendBuffer.length()];
+    usost.Socket = socket;
+    uint32_t actLen = 0;
+
+    Retcode_T rc = PrepareSendToWithBaseEncoding(sendBuffer, sizeof(sendBuffer), &usost, &actLen);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES), rc);
+}
+
+TEST_F(TS_PrepareSendToWithBaseEncoding, InvalidIpType_Fail)
+{
+    uint32_t socket = 1U;
+    uint16_t expPort = 1337;
+    std::string payload = "HELLO WORLD";
+    std::stringstream ss;
+    AT_USOST_Param_T usost;
+    usost.Data = reinterpret_cast<const uint8_t *>(payload.c_str());
+    usost.Length = payload.length();
+    usost.Encoding = AT_UBLOX_PAYLOADENCODING_BASE;
+    usost.RemotePort = expPort;
+    usost.RemoteIp.Type = AT_UBLOX_ADDRESSTYPE_INVALID;
+    ss << "AT+USOST=" << socket << ",\"10.42.0.1\"," << expPort << "," << payload.length() << ","
+       << "\"" << payload << "\""
+       << "\r\n";
+    std::string expSendBuffer = ss.str();
+    char sendBuffer[expSendBuffer.length() + 1];
+    usost.Socket = socket;
+    uint32_t actLen = 0;
+
+    Retcode_T rc = PrepareSendToWithBaseEncoding(sendBuffer, sizeof(sendBuffer), &usost, &actLen);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
+}
+
+class TS_PrepareSendingWithHexEncoding : public testing::Test
+{
+protected:
+    virtual void SetUp()
+    {
+        FFF_RESET_HISTORY();
+    }
+
+    std::string ToHexStr(const std::string &s)
+    {
+        std::stringstream ss;
+        for (const char &c : s)
+            ss << std::hex << std::uppercase << (uint32_t)c;
+        return ss.str();
+    }
+};
+
+TEST_F(TS_PrepareSendingWithHexEncoding, Pass)
+{
+    uint32_t socket = 1U;
+    std::string payload = "HELLO WORLD";
+    std::stringstream ss;
+    ss << "AT+USOWR=" << socket << "," << payload.length() << ","
+       << "\"" << ToHexStr(payload) << "\""
+       << "\r\n";
+    std::string expSendBuffer = ss.str();
+    char sendBuffer[expSendBuffer.length() + 1];
+    AT_USOWR_Param_T usowr;
+    usowr.Data = reinterpret_cast<const uint8_t *>(payload.c_str());
+    usowr.Length = payload.length();
+    usowr.Encoding = AT_UBLOX_PAYLOADENCODING_BASE;
+    usowr.Socket = socket;
+    uint32_t actLen = 0;
+
+    Retcode_T rc = PrepareSendingWithHexEncoding(sendBuffer, sizeof(sendBuffer), &usowr, &actLen);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(expSendBuffer.length(), actLen);
+    sendBuffer[sizeof(sendBuffer) - 1] = '\0';
+    EXPECT_STREQ(expSendBuffer.c_str(), sendBuffer);
+}
+
+TEST_F(TS_PrepareSendingWithHexEncoding, InsufficientBufferLen_Fail)
+{
+    uint32_t socket = 1U;
+    std::string payload = "HELLO WORLD";
+    std::stringstream ss;
+    ss << "AT+USOWR=" << socket << "," << payload.length() << ","
+       << "\"" << payload << "\""
+       << "\r\n";
+    std::string expSendBuffer = ss.str();
+    char sendBuffer[expSendBuffer.length()];
+    AT_USOWR_Param_T usowr;
+    usowr.Data = reinterpret_cast<const uint8_t *>(payload.c_str());
+    usowr.Length = payload.length();
+    usowr.Encoding = AT_UBLOX_PAYLOADENCODING_BASE;
+    usowr.Socket = socket;
+    uint32_t actLen = 0;
+
+    Retcode_T rc = PrepareSendingWithHexEncoding(sendBuffer, sizeof(sendBuffer), &usowr, &actLen);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES), rc);
+    EXPECT_EQ(0U, actLen);
+}
+
 class TS_EncodePayloadAsHex : public testing::Test
 {
 protected:
@@ -1045,7 +1308,7 @@ TEST_F(TS_ParseIPv6LeftToRight, Full_Pass)
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
 }
 
-TEST_F(TS_ParseIPv6LeftToRight, 1SkippedMiddle_Pass)
+TEST_F(TS_ParseIPv6LeftToRight, OneSkippedMiddle_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
     AT_UBlox_Address_T expAddr;
@@ -1074,7 +1337,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 1SkippedMiddle_Pass)
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
 }
 
-TEST_F(TS_ParseIPv6LeftToRight, 2SkippedMiddle_Pass)
+TEST_F(TS_ParseIPv6LeftToRight, TwoSkippedMiddle_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
     AT_UBlox_Address_T expAddr;
@@ -1103,7 +1366,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 2SkippedMiddle_Pass)
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
 }
 
-TEST_F(TS_ParseIPv6LeftToRight, 4SkippedMiddle_Pass)
+TEST_F(TS_ParseIPv6LeftToRight, FourSkippedMiddle_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
     AT_UBlox_Address_T expAddr;
@@ -1132,7 +1395,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 4SkippedMiddle_Pass)
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
 }
 
-TEST_F(TS_ParseIPv6LeftToRight, 6SkippedMiddle_Pass)
+TEST_F(TS_ParseIPv6LeftToRight, SixSkippedMiddle_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
     AT_UBlox_Address_T expAddr;
@@ -1161,7 +1424,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 6SkippedMiddle_Pass)
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
 }
 
-TEST_F(TS_ParseIPv6LeftToRight, 1SkippedEnd_Pass)
+TEST_F(TS_ParseIPv6LeftToRight, OneSkippedEnd_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
     AT_UBlox_Address_T expAddr;
@@ -1190,7 +1453,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 1SkippedEnd_Pass)
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
 }
 
-TEST_F(TS_ParseIPv6LeftToRight, 5SkippedEnd_Pass)
+TEST_F(TS_ParseIPv6LeftToRight, FiveSkippedEnd_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
     AT_UBlox_Address_T expAddr;
@@ -1219,7 +1482,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 5SkippedEnd_Pass)
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
 }
 
-TEST_F(TS_ParseIPv6LeftToRight, 7SkippedEnd_Pass)
+TEST_F(TS_ParseIPv6LeftToRight, SevenSkippedEnd_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
     AT_UBlox_Address_T expAddr;
@@ -1248,7 +1511,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 7SkippedEnd_Pass)
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
 }
 
-TEST_F(TS_ParseIPv6LeftToRight, 1SkippedStart_Pass)
+TEST_F(TS_ParseIPv6LeftToRight, OneSkippedStart_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
     AT_UBlox_Address_T expAddr;
@@ -1277,7 +1540,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 1SkippedStart_Pass)
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
 }
 
-TEST_F(TS_ParseIPv6LeftToRight, 3SkippedStart_Pass)
+TEST_F(TS_ParseIPv6LeftToRight, ThreeSkippedStart_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
     AT_UBlox_Address_T expAddr;
@@ -1306,7 +1569,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 3SkippedStart_Pass)
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
 }
 
-TEST_F(TS_ParseIPv6LeftToRight, 7SkippedStart_Pass)
+TEST_F(TS_ParseIPv6LeftToRight, SevenSkippedStart_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
     AT_UBlox_Address_T expAddr;
@@ -1393,7 +1656,7 @@ TEST_F(TS_ParseIPv6LeftToRight, Full_Quotes_Pass)
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
 }
 
-TEST_F(TS_ParseIPv6LeftToRight, 1SkippedMiddle_Quotes_Pass)
+TEST_F(TS_ParseIPv6LeftToRight, OneSkippedMiddle_Quotes_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
     AT_UBlox_Address_T expAddr;
@@ -1422,7 +1685,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 1SkippedMiddle_Quotes_Pass)
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
 }
 
-TEST_F(TS_ParseIPv6LeftToRight, 7SkippedEnd_Quotes_Pass)
+TEST_F(TS_ParseIPv6LeftToRight, SevenSkippedEnd_Quotes_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
     AT_UBlox_Address_T expAddr;
@@ -1451,7 +1714,7 @@ TEST_F(TS_ParseIPv6LeftToRight, 7SkippedEnd_Quotes_Pass)
     EXPECT_EQ(0, memcmp(expAddr.Address.IPv6, addr.Address.IPv6, sizeof(expAddr.Address.IPv6)));
 }
 
-TEST_F(TS_ParseIPv6LeftToRight, 7SkippedStart_Quotes_Pass)
+TEST_F(TS_ParseIPv6LeftToRight, SevenSkippedStart_Quotes_Pass)
 {
     Retcode_T retcode = RETCODE_OK;
     AT_UBlox_Address_T expAddr;
@@ -1565,6 +1828,19 @@ TEST_F(TS_ParseIPv6LeftToRight, GroupTooBig2_Quotes_Fail)
 {
     Retcode_T retcode = RETCODE_OK;
     const char *ipToParse = "\"0123F:4567:89AB:CDEF:0123:4567:89AB:CDEF\"";
+    AT_UBlox_Address_T addr;
+    addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
+    memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
+
+    retcode = ParseIPv6LeftToRight((const uint8_t *)ipToParse, (uint32_t)strlen(ipToParse), &addr);
+
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
+}
+
+TEST_F(TS_ParseIPv6LeftToRight, GroupTooBig3_Quotes_Fail)
+{
+    Retcode_T retcode = RETCODE_OK;
+    const char *ipToParse = "\"0123:4567:89AB:CDEF::0123F\"";
     AT_UBlox_Address_T addr;
     addr.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
     memset(addr.Address.IPv6, 0, sizeof(addr.Address.IPv6));
@@ -2717,4 +2993,208 @@ TEST_F(TS_At_Set_UDNSRN, IPv6ToDomain_Pass)
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_STREQ(expDomain, resp.DomainIpString.Domain);
+}
+
+class TS_At_Set_UHTTP : public TS_ModemTest
+{
+protected:
+    const char *FormatTrigger(const AT_UHTTP_Param_T *param)
+    {
+        switch (param->OpCode)
+        {
+        case AT_UHTTP_OPCODE_SERVER_IP:
+        case AT_UHTTP_OPCODE_SERVER_NAME:
+        case AT_UHTTP_OPCODE_USERNAME:
+        case AT_UHTTP_OPCODE_PASSWORD:
+        case AT_UHTTP_OPCODE_CUSTOM_HEADER:
+            return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUHTTP2_FMT,
+                                       param->ProfileId, param->OpCode, param->Value.String);
+        case AT_UHTTP_OPCODE_AUTH_TYPE:
+        case AT_UHTTP_OPCODE_SERVER_PORT:
+        case AT_UHTTP_OPCODE_SECURE_OPTION:
+            return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUHTTP3_FMT,
+                                       param->ProfileId, param->OpCode, param->Value.Numeric);
+        case AT_UHTTP_OPCODE_RESERVED0:
+        case AT_UHTTP_OPCODE_RESERVED1:
+        case AT_UHTTP_OPCODE_INVALID:
+        default:
+            exit(1);
+            return NULL;
+        }
+    }
+};
+
+TEST_F(TS_At_Set_UHTTP, ServerIp_Pass)
+{
+    AT_UHTTP_Param_T param;
+    param.ProfileId = AT_UHTTP_PROFILE_ID_1;
+    param.OpCode = AT_UHTTP_OPCODE_SERVER_IP;
+    param.Value.String = "127.0.0.1";
+
+    AddFakeAnswer(FormatTrigger(&param), TEST_AT_RESPONSE_OK);
+
+    Retcode_T rc = At_Set_UHTTP(&param);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+}
+
+TEST_F(TS_At_Set_UHTTP, ServerName_Pass)
+{
+    AT_UHTTP_Param_T param;
+    param.ProfileId = AT_UHTTP_PROFILE_ID_1;
+    param.OpCode = AT_UHTTP_OPCODE_SERVER_NAME;
+    param.Value.String = "bosch.com";
+
+    AddFakeAnswer(FormatTrigger(&param), TEST_AT_RESPONSE_OK);
+
+    Retcode_T rc = At_Set_UHTTP(&param);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+}
+
+TEST_F(TS_At_Set_UHTTP, ServerPort_Pass)
+{
+    AT_UHTTP_Param_T param;
+    param.ProfileId = AT_UHTTP_PROFILE_ID_1;
+    param.OpCode = AT_UHTTP_OPCODE_SERVER_PORT;
+    param.Value.Numeric = 1337;
+
+    AddFakeAnswer(FormatTrigger(&param), TEST_AT_RESPONSE_OK);
+
+    Retcode_T rc = At_Set_UHTTP(&param);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+}
+
+class TS_At_Set_UHTTPC : public TS_ModemTest
+{
+protected:
+    const char *FormatTrigger(const AT_UHTTPC_Param_T *param)
+    {
+        switch (param->Command)
+        {
+        case AT_UHTTPC_COMMAND_HEAD:
+        case AT_UHTTPC_COMMAND_GET:
+        case AT_UHTTPC_COMMAND_DELETE:
+            return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUHTTPC1_FMT,
+                                       param->ProfileId, param->Command,
+                                       param->PathOnServer,
+                                       param->ResponseFilename);
+        case AT_UHTTPC_COMMAND_PUT:
+        case AT_UHTTPC_COMMAND_POST_FILE:
+        case AT_UHTTPC_COMMAND_POST_DATA:
+        case AT_UHTTPC_COMMAND_GET_FOTA:
+            return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUHTTPC2_FMT,
+                                       param->ProfileId, param->Command,
+                                       param->PathOnServer,
+                                       param->ResponseFilename,
+                                       param->Payload,
+                                       param->ContentType);
+        case AT_UHTTPC_COMMAND_INVALID:
+        default:
+            exit(1);
+            return NULL;
+        }
+    }
+};
+
+TEST_F(TS_At_Set_UHTTPC, GET_Pass)
+{
+    AT_UHTTPC_Param_T param;
+    param.ProfileId = AT_UHTTP_PROFILE_ID_3;
+    param.Command = AT_UHTTPC_COMMAND_GET;
+    param.PathOnServer = "/some/resource";
+    param.ResponseFilename = "response.dat";
+    param.Payload = NULL;
+    param.ContentType = AT_UHTTPC_CONTENT_INVALID;
+
+    AddFakeAnswer(FormatTrigger(&param), TEST_AT_RESPONSE_OK);
+
+    Retcode_T rc = At_Set_UHTTPC(&param);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+}
+
+TEST_F(TS_At_Set_UHTTPC, POSTFile_Pass)
+{
+    AT_UHTTPC_Param_T param;
+    param.ProfileId = AT_UHTTP_PROFILE_ID_3;
+    param.Command = AT_UHTTPC_COMMAND_POST_DATA;
+    param.PathOnServer = "/some/resource";
+    param.ResponseFilename = "response.dat";
+    param.Payload = "HELLO WORLD!";
+    param.ContentType = AT_UHTTPC_CONTENT_TEXT_PLAIN;
+
+    AddFakeAnswer(FormatTrigger(&param), TEST_AT_RESPONSE_OK);
+
+    Retcode_T rc = At_Set_UHTTPC(&param);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+}
+
+TEST_F(TS_At_Set_UHTTPC, PUT_Pass)
+{
+    AT_UHTTPC_Param_T param;
+    param.ProfileId = AT_UHTTP_PROFILE_ID_3;
+    param.Command = AT_UHTTPC_COMMAND_PUT;
+    param.PathOnServer = "/some/resource";
+    param.ResponseFilename = "response.dat";
+    param.Payload = "uploadme.txt";
+    param.ContentType = AT_UHTTPC_CONTENT_TEXT_PLAIN;
+
+    AddFakeAnswer(FormatTrigger(&param), TEST_AT_RESPONSE_OK);
+
+    Retcode_T rc = At_Set_UHTTPC(&param);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+}
+
+class TS_At_HandleUrc_UUHTTPCR : public TS_ModemTest
+{
+protected:
+    virtual void SetUp() override
+    {
+        TS_ModemTest::SetUp();
+
+        RESET_FAKE(HttpService_NotifyResult);
+    }
+};
+
+TEST_F(TS_At_HandleUrc_UUHTTPCR, Pass)
+{
+    AT_UHTTP_ProfileId_T profileId = static_cast<AT_UHTTP_ProfileId_T>(rand() % (AT_UHTTP_PROFILE_ID_3 + 1));
+    AT_UHTTPC_Command_T command = static_cast<AT_UHTTPC_Command_T>(rand() % (AT_UHTTPC_COMMAND_POST_DATA + 1));
+    bool result = true;
+    std::stringstream ss;
+    ss << '+' << CMD_UBLOX_ATUUHTTPCR << ':' << (int)profileId << ',' << (int)command << ',' << (int)result << "\r\n";
+    std::string atResponse = ss.str();
+    (void)AtResponseParser_Parse(reinterpret_cast<const uint8_t *>(atResponse.c_str()), atResponse.length());
+
+    Retcode_T rc = At_HandleUrc_UUHTTPCR();
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(1U, HttpService_NotifyResult_fake.call_count);
+    EXPECT_EQ(profileId, HttpService_NotifyResult_fake.arg0_val);
+    EXPECT_EQ(command, HttpService_NotifyResult_fake.arg1_val);
+    EXPECT_EQ(result, HttpService_NotifyResult_fake.arg2_val);
+}
+
+class TS_At_Set_UTEST : public TS_ModemTest
+{
+protected:
+    const char *FormatTrigger(uint32_t param)
+    {
+        return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUTEST_FMT, (int)param);
+    }
+};
+
+TEST_F(TS_At_Set_UTEST, Pass)
+{
+    uint32_t mode = rand() % 2;
+
+    AddFakeAnswer(FormatTrigger(mode), TEST_AT_RESPONSE_OK);
+
+    Retcode_T rc = At_Set_UTEST(mode);
+
+    EXPECT_EQ(RETCODE_OK, rc);
 }

@@ -68,10 +68,10 @@
 #define CMD_UBLOX_SET_ATUHTTP3_FMT ("AT+" CMD_UBLOX_ATUHTTP "=%d,%d,%d\r\n")
 
 #define CMD_UBLOX_ATUHTTPC "UHTTPC"
-#define CMD_UBLOX_ATUHTTPCR "UUHTTPCR"
+#define CMD_UBLOX_ATUUHTTPCR "UUHTTPCR"
 #define CMD_UBLOX_SET_ATUHTTPC1_FMT ("AT+" CMD_UBLOX_ATUHTTPC "=%d,%d,\"%s\",\"%s\"\r\n")
 #define CMD_UBLOX_SET_ATUHTTPC2_FMT ("AT+" CMD_UBLOX_ATUHTTPC "=%d,%d,\"%s\",\"%s\",\"%s\",%d\r\n")
-#define CMD_UBLOX_SET_ATUHTTPC3_FMT ("AT+" CMD_UBLOX_ATUHTTPC "=%d,%d,\"%s\",\"%s\",\"%s\",%d\r\n")
+#define CMD_UBLOX_SET_ATUHTTPC3_FMT ("AT+" CMD_UBLOX_ATUHTTPC "=%d,%d,\"%s\",\"%s\",\"%s\",%d,\"%s\"\r\n")
 
 #define CMD_UBLOX_ATURAT "URAT"
 #define CMD_UBLOX_SET_ATURAT1_FMT ("AT+" CMD_UBLOX_ATURAT "=%d\r\n")
@@ -330,7 +330,7 @@ static Retcode_T PrepareSendingWithBaseEncoding(char *sendBuffer,
                        (int)param->Length,
                        (int)param->Length,
                        param->Data);
-        if ((size_t)len > sendBufferLength || len < 0)
+        if ((size_t)len >= sendBufferLength || len < 0)
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
         }
@@ -386,7 +386,7 @@ static Retcode_T PrepareSendToWithBaseEncoding(char *sendBuffer,
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
             break;
         }
-        if ((RETCODE_OK == retcode) && ((size_t)len > sendBufferLength || len < 0))
+        if ((RETCODE_OK == retcode) && ((size_t)len >= sendBufferLength || len < 0))
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
         }
@@ -413,7 +413,7 @@ static Retcode_T PrepareSendingWithHexEncoding(char *sendBuffer,
                    &payloadPos,
                    0,
                    "");
-    if ((size_t)len > sendBufferLength || len < 0)
+    if ((size_t)len >= sendBufferLength || len < 0)
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
     }
@@ -1219,7 +1219,7 @@ Retcode_T At_Set_UHTTP(const AT_UHTTP_Param_T *param)
     case AT_UHTTP_OPCODE_USERNAME:
     case AT_UHTTP_OPCODE_PASSWORD:
         len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUHTTP2_FMT,
-                       (int)param->ProfileId, param->OpCode, param->StringParam);
+                       (int)param->ProfileId, param->OpCode, param->Value.String);
         if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
@@ -1228,7 +1228,7 @@ Retcode_T At_Set_UHTTP(const AT_UHTTP_Param_T *param)
     case AT_UHTTP_OPCODE_SERVER_PORT:
     case AT_UHTTP_OPCODE_SECURE_OPTION:
         len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUHTTP3_FMT,
-                       (int)param->ProfileId, param->OpCode, (int)param->NumericParam);
+                       (int)param->ProfileId, param->OpCode, (int)param->Value.Numeric);
         if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
@@ -1260,8 +1260,9 @@ Retcode_T At_Set_UHTTPC(const AT_UHTTPC_Param_T *param)
     {
     case AT_UHTTPC_COMMAND_HEAD:
     case AT_UHTTPC_COMMAND_GET:
+    case AT_UHTTPC_COMMAND_DELETE:
         len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUHTTPC1_FMT,
-                       (int)param->ProfileId, param->Command, param->ServerPath, param->FileName);
+                       (int)param->ProfileId, param->Command, param->PathOnServer, param->ResponseFilename);
         if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
@@ -1269,8 +1270,9 @@ Retcode_T At_Set_UHTTPC(const AT_UHTTPC_Param_T *param)
         break;
     case AT_UHTTPC_COMMAND_POST_DATA:
     case AT_UHTTPC_COMMAND_POST_FILE:
+    case AT_UHTTPC_COMMAND_PUT:
         len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUHTTPC2_FMT,
-                       (int)param->ProfileId, param->Command, param->ServerPath, param->FileName, param->data, param->ContentType);
+                       (int)param->ProfileId, param->Command, param->PathOnServer, param->ResponseFilename, param->Payload, param->ContentType);
         if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
@@ -2545,7 +2547,7 @@ Retcode_T At_HandleUrc_UUHTTPCR(void)
     uint32_t response[3];
     uint32_t argCnt;
 
-    retcode = AtResponseQueue_WaitForNamedCmd(0, (const uint8_t *)CMD_UBLOX_ATUHTTPCR, (uint32_t)strlen(CMD_UBLOX_ATUHTTPCR));
+    retcode = AtResponseQueue_WaitForNamedCmd(0, (const uint8_t *)CMD_UBLOX_ATUUHTTPCR, (uint32_t)strlen(CMD_UBLOX_ATUUHTTPCR));
     argCnt = 0;
 
     while (retcode == RETCODE_OK && argCnt < 3)

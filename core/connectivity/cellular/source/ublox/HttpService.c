@@ -294,29 +294,28 @@ static AT_UHTTPC_Content_T HttpService_HttpContentToUbloxContent(CellularHttp_Co
 
 static Retcode_T HttpService_SetupHttp(const CellularHttp_Request_T *httpRequest)
 {
-
     assert(httpRequest != NULL);
     Retcode_T retcode;
     AT_UHTTP_Param_T uhttpParam;
 
     uhttpParam.ProfileId = AT_UHTTP_PROFILE_ID_0;
     uhttpParam.OpCode = AT_UHTTP_OPCODE_SERVER_NAME;
-    uhttpParam.StringParam = httpRequest->Server;
+    uhttpParam.Value.String = httpRequest->Server;
     retcode = Engine_Dispatch(HttpService_uhttp, 1000, &uhttpParam, 0);
 
     uhttpParam.OpCode = AT_UHTTP_OPCODE_SECURE_OPTION;
     if (httpRequest->IsSecure)
     {
-        uhttpParam.NumericParam = 1;
+        uhttpParam.Value.Numeric = 1;
     }
     else
     {
-        uhttpParam.NumericParam = 0;
+        uhttpParam.Value.Numeric = 0;
     }
     retcode = Engine_Dispatch(HttpService_uhttp, 1000, &uhttpParam, 0);
 
     uhttpParam.OpCode = AT_UHTTP_OPCODE_SERVER_PORT;
-    uhttpParam.NumericParam = httpRequest->Port;
+    uhttpParam.Value.Numeric = httpRequest->Port;
 
     retcode = Engine_Dispatch(HttpService_uhttp, 1000, &uhttpParam, 0);
     return retcode;
@@ -324,7 +323,6 @@ static Retcode_T HttpService_SetupHttp(const CellularHttp_Request_T *httpRequest
 
 static Retcode_T HttpService_StartHttpRequest(const CellularHttp_Request_T *httpRequest)
 {
-
     assert(httpRequest != NULL);
     Retcode_T retcode;
     AT_UHTTPC_Param_T uhttpcParam;
@@ -332,9 +330,9 @@ static Retcode_T HttpService_StartHttpRequest(const CellularHttp_Request_T *http
     uhttpcParam.ProfileId = AT_UHTTP_PROFILE_ID_0;
     uhttpcParam.Command = HttpService_HttpMethodToUbloxCommand(httpRequest->Method);
     uhttpcParam.ContentType = HttpService_HttpContentToUbloxContent(httpRequest->ContentType);
-    uhttpcParam.ServerPath = httpRequest->Path;
-    uhttpcParam.FileName = (uint8_t *)CELLULAR_HTTP_RESULT_FILE;
-    uhttpcParam.data = (uint8_t *)CELLULAR_HTTP_POST_FILE;
+    uhttpcParam.PathOnServer = httpRequest->Path;
+    uhttpcParam.ResponseFilename = CELLULAR_HTTP_RESULT_FILE;
+    uhttpcParam.Payload = CELLULAR_HTTP_POST_FILE;
 
     retcode = Engine_Dispatch(HttpService_uhttpc, 1000, &uhttpcParam, 0);
 

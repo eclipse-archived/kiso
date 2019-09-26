@@ -100,7 +100,7 @@ typedef void (*AtrpEventCallback_T)(void);
 /**
  * @brief Event callback for events with char content
  */
-typedef void (*AtrpEventWithDataCallback_T)(uint8_t *cmd, uint32_t len);
+typedef void (*AtrpEventWithDataCallback_T)(const uint8_t *cmd, uint32_t len);
 
 /**
  * @brief Event callback for events without char content
@@ -112,7 +112,7 @@ typedef void (*AtrpEventWithResponseCodeCallback_T)(AtResponseCode_T code);
  *
  * @return The number of consumed characters, or -1 if there was a parser error
  */
-typedef int32_t (*AtrpStateCallback_T)(uint8_t *buffer, uint32_t len);
+typedef int32_t (*AtrpStateCallback_T)(const uint8_t *buffer, uint32_t len);
 
 /**
  * @brief The AT response parser state struct
@@ -215,6 +215,6 @@ void AtResponseParser_Reset(void);
 /**
  * @brief Main interface to the AT response parser.
  */
-Retcode_T AtResponseParser_Parse(uint8_t *buffer, uint32_t len);
+Retcode_T AtResponseParser_Parse(const uint8_t *buffer, uint32_t len);
 
 #endif /* AT_RESPONSE_PARSER_H_ */

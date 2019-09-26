@@ -75,8 +75,8 @@ typedef struct CellularHttp_Data_S CellularHttp_Data_T;
 struct CellularHttp_Request_S
 {
     CellularHttp_Method_T Method;           //!< the http method (CellularHttp_Method_E) to be used
-    const uint8_t *Server;                  //!< server IP address or name server
-    const uint8_t *Path;                    //!< path of the resource to access
+    const char *Server;                     //!< server IP address or name server
+    const char *Path;                       //!< path of the resource to access
     uint16_t Port;                          //!< server port to be used
     bool IsSecure;                          //!< use a secure connection
     CellularHttp_ContentType_T ContentType; //!< content type specification (CellularHttp_ContentType_E)

@@ -52,10 +52,10 @@ extern "C"
 }
 
 FAKE_VOID_FUNC(CallbackResponseCode, AtResponseCode_T)
-FAKE_VOID_FUNC(CallbackCmdEcho, uint8_t *, uint32_t)
-FAKE_VOID_FUNC(CallbackCmd, uint8_t *, uint32_t)
-FAKE_VOID_FUNC(CallbackCmdArg, uint8_t *, uint32_t)
-FAKE_VOID_FUNC(CallbackMisc, uint8_t *, uint32_t)
+FAKE_VOID_FUNC(CallbackCmdEcho, const uint8_t *, uint32_t)
+FAKE_VOID_FUNC(CallbackCmd, const uint8_t *, uint32_t)
+FAKE_VOID_FUNC(CallbackCmdArg, const uint8_t *, uint32_t)
+FAKE_VOID_FUNC(CallbackMisc, const uint8_t *, uint32_t)
 
 FFF_DEFINITION_BLOCK_END
 
@@ -100,7 +100,7 @@ TEST_F(AtResponseParser, AtrpTrimWhitespaceAllContent)
     const char *buffer = "\r\r\r   \n\r\n \r\n\r \n\n\n  ";
     uint32_t NewLength = strlen(buffer);
 
-    uint8_t *TrimmedBuffer = AtrpTrimWhitespace((uint8_t *)buffer, NewLength, &NewLength);
+    const uint8_t *TrimmedBuffer = AtrpTrimWhitespace((const uint8_t *)buffer, NewLength, &NewLength);
 
     KISO_UNUSED(TrimmedBuffer);
 
@@ -134,7 +134,7 @@ TEST_F(AtResponseParser, InternationalMobileSubscriberIdentification)
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
-    retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
+    retcode = AtResponseParser_Parse((const uint8_t *)AtResponse, AtResponseLength);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(1U, CallbackCmdEcho_fake.call_count);
@@ -159,7 +159,7 @@ TEST_F(AtResponseParser, ReportMobileTerminationError)
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
-    retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
+    retcode = AtResponseParser_Parse((const uint8_t *)AtResponse, AtResponseLength);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(1U, CallbackCmdEcho_fake.call_count);
@@ -188,7 +188,7 @@ TEST_F(AtResponseParser, RequestCompleteCapabilitiesList)
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
-    retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
+    retcode = AtResponseParser_Parse((const uint8_t *)AtResponse, AtResponseLength);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(1U, CallbackCmdEcho_fake.call_count);
@@ -220,7 +220,7 @@ TEST_F(AtResponseParser, UrcNetworkSelectionControl)
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
-    retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
+    retcode = AtResponseParser_Parse((const uint8_t *)AtResponse, AtResponseLength);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0U, CallbackError_fake.call_count);
@@ -240,7 +240,7 @@ TEST_F(AtResponseParser, UrcNetworkSelectionControlFollowedByCmd)
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
-    retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
+    retcode = AtResponseParser_Parse((const uint8_t *)AtResponse, AtResponseLength);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0U, CallbackError_fake.call_count);
@@ -263,7 +263,7 @@ TEST_F(AtResponseParser, AtCommandEchoTerminatedByS3)
     uint32_t AtResponseLength = strlen(AtResponse);
     Retcode_T retcode = RETCODE_OK;
 
-    retcode = AtResponseParser_Parse((uint8_t *)AtResponse, AtResponseLength);
+    retcode = AtResponseParser_Parse((const uint8_t *)AtResponse, AtResponseLength);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(0U, CallbackMisc_fake.call_count);
@@ -344,10 +344,10 @@ TEST_P(AtResponseParserParsingIncomplete, ParseIncomplete00)
     Retcode_T retcode00 = RETCODE_OK;
     Retcode_T retcode01 = RETCODE_OK;
 
-    retcode00 = AtResponseParser_Parse((uint8_t *)AtResponseParserParsingIncompleteResonseFull,
+    retcode00 = AtResponseParser_Parse((const uint8_t *)AtResponseParserParsingIncompleteResonseFull,
                                        split);
     retcode01 = AtResponseParser_Parse(
-        (uint8_t *)AtResponseParserParsingIncompleteResonseFull + split,
+        (const uint8_t *)AtResponseParserParsingIncompleteResonseFull + split,
         strlen(AtResponseParserParsingIncompleteResonseFull) - split);
 
     EXPECT_EQ(RETCODE_OK, retcode00);

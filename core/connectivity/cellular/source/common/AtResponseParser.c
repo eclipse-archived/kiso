@@ -59,7 +59,7 @@
 #define AT_RESPONSE_CODE_NAME_NO_ANSWER "NO ANSWER"
 #define AT_RESPONSE_CODE_NAME_ABORTED "ABORTED"
 
-static int32_t AtrpStateRoot(uint8_t *buffer, uint32_t len);
+static int32_t AtrpStateRoot(const uint8_t *buffer, uint32_t len);
 
 typedef enum
 {
@@ -79,7 +79,7 @@ static AtResponseParserState_T state = {
     .StateCallback = AtrpStateRoot};
 #endif /* GTEST */
 
-static AtrpBufferResult_t AtrpAppendToBuffer(uint8_t *buffer, uint32_t len)
+static AtrpBufferResult_t AtrpAppendToBuffer(const uint8_t *buffer, uint32_t len)
 {
     if (0 == len)
     {
@@ -128,10 +128,10 @@ static void AtrpSwitchState(AtrpStateCallback_T NewCallback)
  *
  * @return A pointer to the trimmed string.
  */
-static uint8_t *AtrpTrimWhitespace(uint8_t *buffer, uint32_t bufferLength, uint32_t *newBufferLength)
+static const uint8_t *AtrpTrimWhitespace(const uint8_t *buffer, uint32_t bufferLength, uint32_t *newBufferLength)
 {
     uint32_t ResultBufferLength = bufferLength;
-    uint8_t *ResultBuffer = buffer;
+    const uint8_t *ResultBuffer = buffer;
 
     for (uint8_t c = *ResultBuffer; ResultBufferLength > 0 && (' ' == c || AT_DEFAULT_S3_CHARACTER == c || AT_DEFAULT_S4_CHARACTER == c); c = *ResultBuffer)
     {
@@ -148,7 +148,7 @@ static uint8_t *AtrpTrimWhitespace(uint8_t *buffer, uint32_t bufferLength, uint3
     return ResultBuffer;
 }
 
-static uint8_t *AtrpStrChrN(uint8_t *buffer, uint32_t len, uint8_t delimiter)
+static const uint8_t *AtrpStrChrN(const uint8_t *buffer, uint32_t len, uint8_t delimiter)
 {
     if (NULL_CHAR == delimiter)
     {
@@ -167,17 +167,17 @@ static uint8_t *AtrpStrChrN(uint8_t *buffer, uint32_t len, uint8_t delimiter)
     return NULL;
 }
 
-static int32_t AtrpConsumeUntil(uint8_t *buffer, uint32_t len, char delimiterA, char delimiterB, uint32_t *status)
+static int32_t AtrpConsumeUntil(const uint8_t *buffer, uint32_t len, char delimiterA, char delimiterB, uint32_t *status)
 {
     int32_t result = ATRP_PARSE_FAILURE_RETVAL;
     *status = 0;
 
     // search for end of argument which is delimited by either delimiter
-    uint8_t *EndOfConsumptionA = AtrpStrChrN(buffer, len, delimiterA);
-    uint8_t *EndOfConsumptionB = AtrpStrChrN(buffer, len, delimiterB);
+    const uint8_t *EndOfConsumptionA = AtrpStrChrN(buffer, len, delimiterA);
+    const uint8_t *EndOfConsumptionB = AtrpStrChrN(buffer, len, delimiterB);
 
     // let's see which delimiter was found first
-    uint8_t *EndOfConsumption;
+    const uint8_t *EndOfConsumption;
     if (NULL != EndOfConsumptionA && NULL != EndOfConsumptionB)
     {
         if (EndOfConsumptionA < EndOfConsumptionB)
@@ -244,7 +244,7 @@ static int32_t AtrpConsumeUntil(uint8_t *buffer, uint32_t len, char delimiterA, 
 
 /* *** PARSER STATE HANDLERS ************************************************ */
 
-static int32_t AtrpStateError(uint8_t *buffer, uint32_t len)
+static int32_t AtrpStateError(const uint8_t *buffer, uint32_t len)
 {
     KISO_UNUSED(buffer);
     KISO_UNUSED(len);
@@ -257,7 +257,7 @@ static int32_t AtrpStateError(uint8_t *buffer, uint32_t len)
     return 0;
 }
 
-static int32_t AtrpStateCmdarg(uint8_t *buffer, uint32_t len)
+static int32_t AtrpStateCmdarg(const uint8_t *buffer, uint32_t len)
 {
     /*
      * This state parses until a ',' or AT_DEFAULT_S4_CHARACTER is found.
@@ -276,7 +276,7 @@ static int32_t AtrpStateCmdarg(uint8_t *buffer, uint32_t len)
         if (NULL != ATRP_CMDARG_EVENT)
         {
             uint32_t NewLength;
-            uint8_t *NewBuffer = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
+            const uint8_t *NewBuffer = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
             if (NewLength)
             {
                 ATRP_CMDARG_EVENT(NewBuffer, NewLength);
@@ -299,7 +299,7 @@ static int32_t AtrpStateCmdarg(uint8_t *buffer, uint32_t len)
     return result;
 }
 
-static int32_t AtrpStateCmdEcho(uint8_t *buffer, uint32_t len)
+static int32_t AtrpStateCmdEcho(const uint8_t *buffer, uint32_t len)
 {
     uint32_t status = 0;
     int32_t result = AtrpConsumeUntil(buffer, len, AT_DEFAULT_S4_CHARACTER, AT_DEFAULT_S3_CHARACTER, &status);
@@ -313,7 +313,7 @@ static int32_t AtrpStateCmdEcho(uint8_t *buffer, uint32_t len)
         if (NULL != ATRP_CMD_ECHO_EVENT)
         {
             uint32_t NewLength;
-            uint8_t *NewBuffer = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
+            const uint8_t *NewBuffer = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
             ATRP_CMD_ECHO_EVENT(NewBuffer, NewLength);
         }
         AtrpResetBuffer();
@@ -323,7 +323,7 @@ static int32_t AtrpStateCmdEcho(uint8_t *buffer, uint32_t len)
     return result;
 }
 
-static int32_t AtrpStateCmd(uint8_t *buffer, uint32_t len)
+static int32_t AtrpStateCmd(const uint8_t *buffer, uint32_t len)
 {
     uint32_t status = 0;
     int32_t result = AtrpConsumeUntil(buffer, len, ':', AT_DEFAULT_S4_CHARACTER, &status);
@@ -335,7 +335,7 @@ static int32_t AtrpStateCmd(uint8_t *buffer, uint32_t len)
         if (NULL != ATRP_CMD_EVENT)
         {
             uint32_t NewLength;
-            uint8_t *NewBuffer = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
+            const uint8_t *NewBuffer = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
             ATRP_CMD_EVENT(NewBuffer, NewLength);
         }
         AtrpResetBuffer();
@@ -353,7 +353,7 @@ static int32_t AtrpStateCmd(uint8_t *buffer, uint32_t len)
  * Our implementation is according to spec, where OK has a higher priority than
  * misc content, yet this is a source of problems/errors.
  */
-static int32_t AtrpStateResponseCode(uint8_t *buffer, uint32_t len)
+static int32_t AtrpStateResponseCode(const uint8_t *buffer, uint32_t len)
 {
     uint32_t status = 0;
     int32_t result = AtrpConsumeUntil(buffer, len, AT_DEFAULT_S3_CHARACTER, AT_DEFAULT_S4_CHARACTER, &status);
@@ -365,7 +365,7 @@ static int32_t AtrpStateResponseCode(uint8_t *buffer, uint32_t len)
     if (status & (ATRP_CONSUME_STATUS_FOUND_DELIMITERA | ATRP_CONSUME_STATUS_FOUND_DELIMITERB))
     {
         uint32_t NewLength;
-        uint8_t *ResponseCodeName = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
+        const uint8_t *ResponseCodeName = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
         if (0 == strncmp(AT_RESPONSE_CODE_NAME_ABORTED, (const char *)ResponseCodeName, NewLength))
         {
             if (NULL != ATRP_RESPONSE_CODE_EVENT)
@@ -428,7 +428,7 @@ static int32_t AtrpStateResponseCode(uint8_t *buffer, uint32_t len)
  * \todo: if the buffer overflows within one MISC message, we go to the error
  * state. Instead, we should trigger the MISC event and reset the buffer.
  */
-static int32_t AtrpStateMiscContent(uint8_t *buffer, uint32_t len)
+static int32_t AtrpStateMiscContent(const uint8_t *buffer, uint32_t len)
 {
     /*
      * This state parses until AT_DEFAULT_S4_CHARACTER is found.
@@ -458,7 +458,7 @@ static int32_t AtrpStateMiscContent(uint8_t *buffer, uint32_t len)
     return result;
 }
 
-static int32_t AtrpStateRoot(uint8_t *buffer, uint32_t len)
+static int32_t AtrpStateRoot(const uint8_t *buffer, uint32_t len)
 {
     uint32_t status = 0;
     int32_t result = AtrpConsumeUntil(buffer, len, '+', AT_DEFAULT_S4_CHARACTER, &status);
@@ -471,7 +471,7 @@ static int32_t AtrpStateRoot(uint8_t *buffer, uint32_t len)
     {
         // found a command echo or a command response
         uint32_t NewLength;
-        uint8_t *NewBuffer = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
+        const uint8_t *NewBuffer = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
         if (0 == strncmp("AT", (const char *)NewBuffer, 2))
         {
             // found a cmd echo
@@ -503,7 +503,7 @@ static int32_t AtrpStateRoot(uint8_t *buffer, uint32_t len)
 
         // found end of line - maybe this is a response code
         uint32_t NewLength;
-        uint8_t *ResponseCodeName = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
+        const uint8_t *ResponseCodeName = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
         uint8_t isResponseCode = (0 == strncmp(AT_RESPONSE_CODE_NAME_ABORTED, (const char *)ResponseCodeName, NewLength)) || (0 == strncmp(AT_RESPONSE_CODE_NAME_BUSY, (const char *)ResponseCodeName, NewLength)) || (0 == strncmp(AT_RESPONSE_CODE_NAME_CONNECT, (const char *)ResponseCodeName, NewLength)) || (0 == strncmp(AT_RESPONSE_CODE_NAME_ERROR, (const char *)ResponseCodeName, NewLength)) || (0 == strncmp(AT_RESPONSE_CODE_NAME_NO_ANSWER, (const char *)ResponseCodeName, NewLength)) || (0 == strncmp(AT_RESPONSE_CODE_NAME_NO_CARRIER, (const char *)ResponseCodeName, NewLength)) || (0 == strncmp(AT_RESPONSE_CODE_NAME_NO_DIALTONE, (const char *)ResponseCodeName, NewLength)) || (0 == strncmp(AT_RESPONSE_CODE_NAME_OK, (const char *)ResponseCodeName, NewLength)) || (0 == strncmp(AT_RESPONSE_CODE_NAME_RING, (const char *)ResponseCodeName, NewLength));
 
         if (0 == NewLength)
@@ -547,7 +547,7 @@ static int32_t AtrpStateRoot(uint8_t *buffer, uint32_t len)
     return result;
 }
 
-Retcode_T AtResponseParser_Parse(uint8_t *buffer, uint32_t len)
+Retcode_T AtResponseParser_Parse(const uint8_t *buffer, uint32_t len)
 {
     if (!ATRP_IS_INITIALIZED)
     {

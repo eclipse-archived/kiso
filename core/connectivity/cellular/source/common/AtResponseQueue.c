@@ -121,7 +121,7 @@ static Retcode_T AtResponseQueue_WaitForContent(uint32_t timeout, AtEventType_T 
     return retcode;
 }
 
-void AtResponseQueue_EnqueueEvent(AtEventType_T EventType, uint8_t *arg, uint32_t len)
+void AtResponseQueue_EnqueueEvent(AtEventType_T EventType, const uint8_t *arg, uint32_t len)
 {
     AtResponseQueueEntry_T entry = {
         .Type = EventType,
@@ -140,22 +140,22 @@ void AtResponseQueue_EnqueueEvent(AtEventType_T EventType, uint8_t *arg, uint32_
     }
 }
 
-static void AtResponseQueue_CallbackCmdEcho(uint8_t *cmd, uint32_t len)
+static void AtResponseQueue_CallbackCmdEcho(const uint8_t *cmd, uint32_t len)
 {
     AtResponseQueue_EnqueueEvent(AT_EVENT_TYPE_COMMAND_ECHO, cmd, len);
 }
 
-static void AtResponseQueue_CallbackCmd(uint8_t *cmd, uint32_t len)
+static void AtResponseQueue_CallbackCmd(const uint8_t *cmd, uint32_t len)
 {
     AtResponseQueue_EnqueueEvent(AT_EVENT_TYPE_COMMAND, cmd, len);
 }
 
-static void AtResponseQueue_CallbackCmdArg(uint8_t *cmd, uint32_t len)
+static void AtResponseQueue_CallbackCmdArg(const uint8_t *cmd, uint32_t len)
 {
     AtResponseQueue_EnqueueEvent(AT_EVENT_TYPE_COMMAND_ARG, cmd, len);
 }
 
-static void AtResponseQueue_CallbackMiscContent(uint8_t *cmd, uint32_t len)
+static void AtResponseQueue_CallbackMiscContent(const uint8_t *cmd, uint32_t len)
 {
     AtResponseQueue_EnqueueEvent(AT_EVENT_TYPE_MISC, cmd, len);
 }

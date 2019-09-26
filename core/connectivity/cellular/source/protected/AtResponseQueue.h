@@ -401,7 +401,7 @@ uint32_t AtResponseQueue_GetEventCount(void);
  * @param[in] arg The \0 terminated payload of the event or NULL if there is none
  * @param[in] len The length of the event payload
  */
-void AtResponseQueue_EnqueueEvent(AtEventType_T EventType, uint8_t *arg, uint32_t len);
+void AtResponseQueue_EnqueueEvent(AtEventType_T EventType, const uint8_t *arg, uint32_t len);
 
 /**
  * @brief set the event mask of the at response queue

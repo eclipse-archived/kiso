@@ -37,7 +37,7 @@ FAKE_VALUE_FUNC(Retcode_T, AtResponseQueue_IgnoreEvent, uint32_t)
 FAKE_VALUE_FUNC(Retcode_T, AtResponseQueue_GetEvent, uint32_t, AtResponseQueueEntry_T **)
 FAKE_VOID_FUNC(AtResponseQueue_MarkBufferAsUnused)
 FAKE_VALUE_FUNC(uint32_t, AtResponseQueue_GetEventCount)
-FAKE_VOID_FUNC(AtResponseQueue_EnqueueEvent, AtEventType_T, uint8_t *, uint32_t)
+FAKE_VOID_FUNC(AtResponseQueue_EnqueueEvent, AtEventType_T, const uint8_t *, uint32_t)
 FAKE_VOID_FUNC(AtResponseQueue_Clear)
 
 #endif /* ATRESPONSEQUEUE_TH_HH_ */

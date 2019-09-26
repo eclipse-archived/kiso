@@ -58,7 +58,7 @@ enum AT_UHTTP_Opcode_E
 typedef enum AT_UHTTP_Opcode_E AT_UHTTP_Opcode_T;
 
 /**
- * @brief u-blox specific HTTP parameters
+ * @brief u-blox specific UHTTP parameters
  */
 struct AT_UHTTP_Param_S
 {
@@ -71,8 +71,15 @@ struct AT_UHTTP_Param_S
      * @brief Indicates OpCode (config item) to set
      */
     AT_UHTTP_Opcode_T OpCode;
-    const uint8_t *StringParam;
-    uint32_t NumericParam;
+
+    /**
+     * @brief Value to be set. Either c-string or numeric value depending on
+     * OpCode.
+     */
+    union {
+        const char *String;
+        uint32_t Numeric;
+    } Value;
 };
 typedef struct AT_UHTTP_Param_S AT_UHTTP_Param_T;
 
@@ -119,26 +126,57 @@ enum AT_UHTTPC_Content_E
 typedef enum AT_UHTTPC_Content_E AT_UHTTPC_Content_T;
 
 /**
- * @brief u-blox specific HTTPC parameters
+ * @brief u-blox specific UHTTPC parameters
  */
 struct AT_UHTTPC_Param_S
 {
     /**
-     * @brief Indicates http profile to use
+     * @brief Sets which HTTP profile should use.
      */
     AT_UHTTP_ProfileId_T ProfileId;
 
     /**
-     * @brief
-     * is selected.
+     * @brief Selects the HTTP request type.
      */
     AT_UHTTPC_Command_T Command;
-    const uint8_t *ServerPath;
-    const uint8_t *FileName;
-    uint8_t *data;
-    uint32_t DataLength;
-    uint32_t NumericParam;
+
+    /**
+     * @brief Path of the resource on the HTTP server. Path is relative to the
+     * server root.
+     *
+     * E.g. "/index.html" points to http://<server-ip>:<server-port>/index.html
+     */
+    const char *PathOnServer;
+
+    /**
+     * @brief Path to the file which shall contain the HTTP response received
+     * received from the HTTP server. Path is relative to the modems internal
+     * flash.
+     */
+    const char *ResponseFilename;
+
+    /**
+     * @brief In case of PUT and POST (file-mode) points to a file on the modem
+     * flash. The file must exists before invoking this command. If POST
+     * (data-mode) is selected, points to a string that shall be out as the
+     * request payload. Care must be taken that the payload does not break the
+     * AT command structure.
+     */
+    const char *Payload;
+
+    /**
+     * @brief HTTP content-type associated with the transferred payload. Only
+     * applicable for request type POST or PUT.
+     */
     AT_UHTTPC_Content_T ContentType;
+
+    /**
+     * @brief Custom HTTP content-type outside the range known types. Only
+     * applicable if ContentType is set to AT_UHTTPC_CONTENT_USER_DEFINED.
+     *
+     * @note: Currently not supported.
+     */
+    const char *UserDefinedContentType;
 };
 typedef struct AT_UHTTPC_Param_S AT_UHTTPC_Param_T;
 
