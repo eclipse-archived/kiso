@@ -110,13 +110,13 @@ Retcode_T CellularHttp_GetResponseSize(uint32_t *size)
     if (size != NULL)
     {
 
-        ulstFileParam.filename = CELLULAR_HTTP_RESULT_FILE;
-        ulstFileParam.opcode = AT_ULSTFILE_OPCODE_SIZE;
+        ulstFileParam.Filename = CELLULAR_HTTP_RESULT_FILE;
+        ulstFileParam.Opcode = AT_ULSTFILE_OPCODE_SIZE;
 
         retcode = Engine_Dispatch(HttpService_ulstFile, 1000, &ulstFileParam, 0);
         if (RETCODE_OK == retcode)
         {
-            *size = ulstFileParam.filesize;
+            *size = ulstFileParam.Filesize;
         }
     }
     else
@@ -299,11 +299,11 @@ static Retcode_T HttpService_SetupHttp(const CellularHttp_Request_T *httpRequest
     AT_UHTTP_Param_T uhttpParam;
 
     uhttpParam.ProfileId = AT_UHTTP_PROFILE_ID_0;
-    uhttpParam.OpCode = AT_UHTTP_OPCODE_SERVER_NAME;
+    uhttpParam.Opcode = AT_UHTTP_OPCODE_SERVER_NAME;
     uhttpParam.Value.String = httpRequest->Server;
     retcode = Engine_Dispatch(HttpService_uhttp, 1000, &uhttpParam, 0);
 
-    uhttpParam.OpCode = AT_UHTTP_OPCODE_SECURE_OPTION;
+    uhttpParam.Opcode = AT_UHTTP_OPCODE_SECURE_OPTION;
     if (httpRequest->IsSecure)
     {
         uhttpParam.Value.Numeric = 1;
@@ -314,7 +314,7 @@ static Retcode_T HttpService_SetupHttp(const CellularHttp_Request_T *httpRequest
     }
     retcode = Engine_Dispatch(HttpService_uhttp, 1000, &uhttpParam, 0);
 
-    uhttpParam.OpCode = AT_UHTTP_OPCODE_SERVER_PORT;
+    uhttpParam.Opcode = AT_UHTTP_OPCODE_SERVER_PORT;
     uhttpParam.Value.Numeric = httpRequest->Port;
 
     retcode = Engine_Dispatch(HttpService_uhttp, 1000, &uhttpParam, 0);
@@ -347,11 +347,11 @@ static Retcode_T HttpService_WritePostData(const CellularHttp_Data_T *postData)
 
     if (postData != NULL)
     {
-        udelFileParam.filename = CELLULAR_HTTP_POST_FILE;
-        udwnFileParam.filename = CELLULAR_HTTP_POST_FILE;
+        udelFileParam.Filename = CELLULAR_HTTP_POST_FILE;
+        udwnFileParam.Filename = CELLULAR_HTTP_POST_FILE;
         retcode = Engine_Dispatch(HttpService_udelFile, 1000, &udelFileParam, 0);
-        udwnFileParam.buffer = postData->Buffer;
-        udwnFileParam.filesize = postData->BufferLength;
+        udwnFileParam.Data = postData->Buffer;
+        udwnFileParam.DataSize = postData->BufferLength;
         retcode = Engine_Dispatch(HttpService_udwnFile, 1000, &udwnFileParam, 0);
     }
     else

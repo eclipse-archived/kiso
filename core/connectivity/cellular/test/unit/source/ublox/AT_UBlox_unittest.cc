@@ -60,6 +60,10 @@ FFF_DEFINITION_BLOCK_END
 #define TEST_SET_ATUDNS_RESPONSE_FMT1 ("+%s:\"%d.%d.%d.%d\"\r\n%s")
 #define TEST_SET_ATUDNS_RESPONSE_FMT2 ("+%s:\"%x:%x:%x:%x:%x:%x:%x:%x\"\r\n%s")
 #define TEST_SET_ATUDNS_RESPONSE_FMT3 ("+%s:\"%s\"\r\n%s")
+#define TEST_SET_ATUDWNFILE_RESPONSE_FMT (">%.*s")
+#define TEST_SET_ATULSTFILE_RESPONSE_FMT1 ("+%s:\"%s\"\r\n%s")
+#define TEST_SET_ATULSTFILE_RESPONSE_FMT2 ("+%s:%d\r\n%s")
+#define TEST_SET_ATURDBLOCK_RESPONSE_FMT ("+%s:\"%s\",%d,\"%.*s\"\r\n%s")
 #define TEST_URC_ATUSOLI_FMTIPV4IPV4 ("+%s:%" PRIu32 ",\"%d.%d.%d.%d\",%" PRIu32 ",%d,\"%d.%d.%d.%d\",%d\r\n")
 #define TEST_URC_ATUSOLI_FMTIPV6IPV4 ("+%s:%" PRIu32 ",\"%x:%x:%x:%x:%x:%x:%x:%x\",%" PRIu32 ",%d,\"%d.%d.%d.%d\",%d\r\n")
 #define TEST_URC_ATUSOLI_FMTIPV4IPV6 ("+%s:%" PRIu32 ",\"%d.%d.%d.%d\",%" PRIu32 ",%d,\"%x:%x:%x:%x:%x:%x:%x:%x\",%d\r\n")
@@ -3000,7 +3004,7 @@ class TS_At_Set_UHTTP : public TS_ModemTest
 protected:
     const char *FormatTrigger(const AT_UHTTP_Param_T *param)
     {
-        switch (param->OpCode)
+        switch (param->Opcode)
         {
         case AT_UHTTP_OPCODE_SERVER_IP:
         case AT_UHTTP_OPCODE_SERVER_NAME:
@@ -3008,12 +3012,12 @@ protected:
         case AT_UHTTP_OPCODE_PASSWORD:
         case AT_UHTTP_OPCODE_CUSTOM_HEADER:
             return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUHTTP2_FMT,
-                                       param->ProfileId, param->OpCode, param->Value.String);
+                                       param->ProfileId, param->Opcode, param->Value.String);
         case AT_UHTTP_OPCODE_AUTH_TYPE:
         case AT_UHTTP_OPCODE_SERVER_PORT:
         case AT_UHTTP_OPCODE_SECURE_OPTION:
             return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUHTTP3_FMT,
-                                       param->ProfileId, param->OpCode, param->Value.Numeric);
+                                       param->ProfileId, param->Opcode, param->Value.Numeric);
         case AT_UHTTP_OPCODE_RESERVED0:
         case AT_UHTTP_OPCODE_RESERVED1:
         case AT_UHTTP_OPCODE_INVALID:
@@ -3028,7 +3032,7 @@ TEST_F(TS_At_Set_UHTTP, ServerIp_Pass)
 {
     AT_UHTTP_Param_T param;
     param.ProfileId = AT_UHTTP_PROFILE_ID_1;
-    param.OpCode = AT_UHTTP_OPCODE_SERVER_IP;
+    param.Opcode = AT_UHTTP_OPCODE_SERVER_IP;
     param.Value.String = "127.0.0.1";
 
     AddFakeAnswer(FormatTrigger(&param), TEST_AT_RESPONSE_OK);
@@ -3042,7 +3046,7 @@ TEST_F(TS_At_Set_UHTTP, ServerName_Pass)
 {
     AT_UHTTP_Param_T param;
     param.ProfileId = AT_UHTTP_PROFILE_ID_1;
-    param.OpCode = AT_UHTTP_OPCODE_SERVER_NAME;
+    param.Opcode = AT_UHTTP_OPCODE_SERVER_NAME;
     param.Value.String = "bosch.com";
 
     AddFakeAnswer(FormatTrigger(&param), TEST_AT_RESPONSE_OK);
@@ -3056,7 +3060,7 @@ TEST_F(TS_At_Set_UHTTP, ServerPort_Pass)
 {
     AT_UHTTP_Param_T param;
     param.ProfileId = AT_UHTTP_PROFILE_ID_1;
-    param.OpCode = AT_UHTTP_OPCODE_SERVER_PORT;
+    param.Opcode = AT_UHTTP_OPCODE_SERVER_PORT;
     param.Value.Numeric = 1337;
 
     AddFakeAnswer(FormatTrigger(&param), TEST_AT_RESPONSE_OK);
@@ -3197,4 +3201,286 @@ TEST_F(TS_At_Set_UTEST, Pass)
     Retcode_T rc = At_Set_UTEST(mode);
 
     EXPECT_EQ(RETCODE_OK, rc);
+}
+
+class TS_At_Set_UDWNFILE : public TS_ModemTest
+{
+protected:
+    const char *FormatTrigger(const AT_UDWNFILE_Param_T &param)
+    {
+        return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUDWNFILE_FMT,
+                                   param.Filename, param.DataSize);
+    }
+    const char *ForamtAnswer(const AT_UDWNFILE_Param_T &param)
+    {
+        return FormatIntoNewBuffer(&Answer, TEST_SET_ATUDWNFILE_RESPONSE_FMT,
+                                   (int)param.DataSize, (const char *)param.Data);
+    }
+};
+
+TEST_F(TS_At_Set_UDWNFILE, SingleLine_Pass)
+{
+    std::string data = "HELLO WORLD";
+    AT_UDWNFILE_Param_T param;
+    param.Filename = "test.txt";
+    param.Data = (const uint8_t *)data.c_str();
+    param.DataSize = data.length();
+
+    AddFakeAnswer(FormatTrigger(param), ForamtAnswer(param));
+
+    Retcode_T rc = At_Set_UDWNFILE(&param);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ((uint32_t)(AT_EVENT_TYPE_ALL - AT_EVENT_TYPE_MISC), AtResponseQueue_GetEventMask());
+}
+
+TEST_F(TS_At_Set_UDWNFILE, MultiLineLf_Pass)
+{
+    std::string data = "HELLO WORLD\nTHIS IS THE SECOND LINE\n\nTHE FORUTH\nTHREE IS EMPTY!";
+    AT_UDWNFILE_Param_T param;
+    param.Filename = "test.txt";
+    param.Data = (const uint8_t *)data.c_str();
+    param.DataSize = data.length();
+
+    AddFakeAnswer(FormatTrigger(param), ForamtAnswer(param));
+
+    Retcode_T rc = At_Set_UDWNFILE(&param);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ((uint32_t)(AT_EVENT_TYPE_ALL - AT_EVENT_TYPE_MISC), AtResponseQueue_GetEventMask());
+}
+
+TEST_F(TS_At_Set_UDWNFILE, MultiLineCrLf_Pass)
+{
+    std::string data = "HELLO WORLD\r\nTHIS IS THE SECOND LINE\r\n\r\nTHE FORUTH\r\nTHREE IS EMPTY!";
+    AT_UDWNFILE_Param_T param;
+    param.Filename = "test.txt";
+    param.Data = (const uint8_t *)data.c_str();
+    param.DataSize = data.length();
+
+    AddFakeAnswer(FormatTrigger(param), ForamtAnswer(param));
+
+    Retcode_T rc = At_Set_UDWNFILE(&param);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ((uint32_t)(AT_EVENT_TYPE_ALL - AT_EVENT_TYPE_MISC), AtResponseQueue_GetEventMask());
+}
+
+class TS_At_Set_UDELFILE : public TS_ModemTest
+{
+protected:
+    const char *FormatTrigger(const AT_UDELFILE_Param_T &param)
+    {
+        return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATUDELFILE_FMT,
+                                   param.Filename);
+    }
+};
+
+TEST_F(TS_At_Set_UDELFILE, Pass)
+{
+    AT_UDELFILE_Param_T param;
+    param.Filename = "test.txt";
+
+    AddFakeAnswer(FormatTrigger(param), TEST_AT_RESPONSE_OK);
+
+    Retcode_T rc = At_Set_UDELFILE(&param);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+}
+
+class TS_At_Set_ULSTFILE : public TS_ModemTest
+{
+protected:
+    const char *FormatTrigger(const AT_ULSTFILE_Param_T &param)
+    {
+        switch (param.Opcode)
+        {
+        case AT_ULSTFILE_OPCODE_LIST:
+        case AT_ULSTFILE_OPCODE_FREE:
+            return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATULSTFILE_FMT1,
+                                       param.Opcode);
+        case AT_ULSTFILE_OPCODE_SIZE:
+            return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATULSTFILE_FMT2,
+                                       param.Opcode, param.Filename);
+        default:
+            std::cerr << "not supported!" << std::endl;
+            exit(1);
+            return NULL;
+        }
+    }
+
+    const char *FormatAnswer(const AT_ULSTFILE_Param_T &param, uint32_t value)
+    {
+        switch (param.Opcode)
+        {
+        case AT_ULSTFILE_OPCODE_FREE:
+        case AT_ULSTFILE_OPCODE_SIZE:
+            return FormatIntoNewBuffer(&Answer, TEST_SET_ATULSTFILE_RESPONSE_FMT2,
+                                       CMD_UBLOX_ATULSTFILE, (int)value, TEST_AT_RESPONSE_OK);
+        case AT_ULSTFILE_OPCODE_LIST:
+        default:
+            std::cerr << "not supported!" << std::endl;
+            exit(1);
+            return NULL;
+        }
+    }
+};
+
+TEST_F(TS_At_Set_ULSTFILE, Size_Pass)
+{
+    AT_ULSTFILE_Param_T param;
+    param.Opcode = AT_ULSTFILE_OPCODE_SIZE;
+    param.Filename = "test.txt";
+    param.Filesize = 0;
+    uint32_t expFilesize = (uint32_t)rand();
+
+    AddFakeAnswer(FormatTrigger(param), FormatAnswer(param, expFilesize));
+
+    Retcode_T rc = At_Set_ULSTFILE(&param);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(expFilesize, param.Filesize);
+}
+
+TEST_F(TS_At_Set_ULSTFILE, Free_NotSupported)
+{
+    AT_ULSTFILE_Param_T param;
+    param.Opcode = AT_ULSTFILE_OPCODE_FREE;
+    param.Filename = NULL;
+    param.Filesize = 0;
+
+    Retcode_T rc = At_Set_ULSTFILE(&param);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
+}
+
+TEST_F(TS_At_Set_ULSTFILE, List_NotSupported)
+{
+    AT_ULSTFILE_Param_T param;
+    param.Opcode = AT_ULSTFILE_OPCODE_LIST;
+    param.Filename = NULL;
+    param.Filesize = 0;
+
+    Retcode_T rc = At_Set_ULSTFILE(&param);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
+}
+
+class TS_At_Set_URDBLOCK : public TS_ModemTest
+{
+protected:
+    const char *FormatTrigger(const AT_URDBLOCK_Param_T &param)
+    {
+        return FormatIntoNewBuffer(&Trigger, CMD_UBLOX_SET_ATURDBLOCK_FMT,
+                                   param.Filename, param.Offset, param.Size);
+    }
+
+    const char *FormatAnswer(const AT_URDBLOCK_Param_T &param, const void *data)
+    {
+        return FormatIntoNewBuffer(&Answer, TEST_SET_ATURDBLOCK_RESPONSE_FMT,
+                                   CMD_UBLOX_ATURDBLOCK, param.Filename,
+                                   (int)param.Size,
+                                   (int)param.Size, data,
+                                   TEST_AT_RESPONSE_OK);
+    }
+};
+
+TEST_F(TS_At_Set_URDBLOCK, SingleLineFullRead_Pass)
+{
+    std::string expPayload = "HELLO WOLRD";
+    uint8_t payloadBuffer[expPayload.length() + 1];
+    memset(payloadBuffer, '\0', sizeof(payloadBuffer));
+
+    AT_URDBLOCK_Param_T param;
+    param.Filename = "test.txt";
+    param.Offset = 0; //(uint32_t)rand()) % expPayload.length();
+    param.Size = expPayload.length() - param.Offset;
+    AT_URDBLOCK_Resp_T resp;
+    memset(resp.Filename, '\0', sizeof(resp.Filename));
+    resp.Size = 0;
+    resp.Data = payloadBuffer;
+
+    AddFakeAnswer(FormatTrigger(param), FormatAnswer(param, expPayload.c_str() + param.Offset));
+
+    Retcode_T rc = At_Set_URDBLOCK(&param, &resp);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_GE(param.Size, resp.Size);
+    payloadBuffer[sizeof(payloadBuffer) - 1] = '\0';
+    EXPECT_STREQ(expPayload.c_str() + param.Offset, (const char *)payloadBuffer);
+}
+
+TEST_F(TS_At_Set_URDBLOCK, SingleLinePartialRead_Pass)
+{
+    std::string expPayload = "HELLO WOLRD";
+    uint8_t payloadBuffer[expPayload.length() + 1];
+    memset(payloadBuffer, '\0', sizeof(payloadBuffer));
+
+    AT_URDBLOCK_Param_T param;
+    param.Filename = "test.txt";
+    param.Offset = 0;
+    param.Size = (expPayload.length() - param.Offset) / 2;
+    AT_URDBLOCK_Resp_T resp;
+    memset(resp.Filename, '\0', sizeof(resp.Filename));
+    resp.Size = 0;
+    resp.Data = payloadBuffer;
+
+    AddFakeAnswer(FormatTrigger(param), FormatAnswer(param, expPayload.c_str() + param.Offset));
+
+    Retcode_T rc = At_Set_URDBLOCK(&param, &resp);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_GE(param.Size, resp.Size);
+    payloadBuffer[sizeof(payloadBuffer) - 1] = '\0';
+    EXPECT_STREQ(expPayload.substr(param.Offset, resp.Size).c_str(), (const char *)payloadBuffer);
+}
+
+TEST_F(TS_At_Set_URDBLOCK, MultiLineFullRead_Pass)
+{
+    std::string expPayload = "HELLO WOLRD\r\nthis is the second line\r\nnow the third\r\nlet's drop in an empty one as well\r\n\r\ndone";
+    uint8_t payloadBuffer[expPayload.length() + 1];
+    memset(payloadBuffer, '\0', sizeof(payloadBuffer));
+
+    AT_URDBLOCK_Param_T param;
+    param.Filename = "test.txt";
+    param.Offset = 0;
+    param.Size = expPayload.length() - param.Offset;
+    AT_URDBLOCK_Resp_T resp;
+    memset(resp.Filename, '\0', sizeof(resp.Filename));
+    resp.Size = 0;
+    resp.Data = payloadBuffer;
+
+    AddFakeAnswer(FormatTrigger(param), FormatAnswer(param, expPayload.c_str() + param.Offset));
+
+    Retcode_T rc = At_Set_URDBLOCK(&param, &resp);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_GE(param.Size, resp.Size);
+    payloadBuffer[sizeof(payloadBuffer) - 1] = '\0';
+    EXPECT_STREQ(expPayload.substr(param.Offset, resp.Size).c_str(), (const char *)payloadBuffer);
+}
+
+TEST_F(TS_At_Set_URDBLOCK, MultiLinePartialRead_Pass)
+{
+    std::string expPayload = "HELLO WOLRD\r\nthis is the second line\r\nnow the third\r\nlet's drop in an empty one as well\r\n\r\ndone";
+    uint8_t payloadBuffer[expPayload.length() + 1];
+    memset(payloadBuffer, '\0', sizeof(payloadBuffer));
+
+    AT_URDBLOCK_Param_T param;
+    param.Filename = "test.txt";
+    param.Offset = 0;
+    param.Size = (expPayload.length() - param.Offset) / 2;
+    AT_URDBLOCK_Resp_T resp;
+    memset(resp.Filename, '\0', sizeof(resp.Filename));
+    resp.Size = 0;
+    resp.Data = payloadBuffer;
+
+    AddFakeAnswer(FormatTrigger(param), FormatAnswer(param, expPayload.c_str() + param.Offset));
+
+    Retcode_T rc = At_Set_URDBLOCK(&param, &resp);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_GE(param.Size, resp.Size);
+    payloadBuffer[sizeof(payloadBuffer) - 1] = '\0';
+    EXPECT_STREQ(expPayload.substr(param.Offset, resp.Size).c_str(), (const char *)payloadBuffer);
 }

@@ -48,7 +48,8 @@
 #define AT_UBLOX_EMPTY_DATA ("\"\"")
 
 #define CMD_UBLOX_ATULSTFILE "ULSTFILE"
-#define CMD_UBLOX_SET_ATULSTFILE_FMT ("AT+" CMD_UBLOX_ATULSTFILE "=%d,\"%s\"\r\n")
+#define CMD_UBLOX_SET_ATULSTFILE_FMT1 ("AT+" CMD_UBLOX_ATULSTFILE "=%d\r\n")
+#define CMD_UBLOX_SET_ATULSTFILE_FMT2 ("AT+" CMD_UBLOX_ATULSTFILE "=%d,\"%s\"\r\n")
 
 #define CMD_UBLOX_ATUDELFILE "UDELFILE"
 #define CMD_UBLOX_SET_ATUDELFILE_FMT ("AT+" CMD_UBLOX_ATUDELFILE "=\"%s\"\r\n")
@@ -1210,7 +1211,7 @@ Retcode_T At_Set_UHTTP(const AT_UHTTP_Param_T *param)
     Retcode_T retcode = RETCODE_OK;
     int32_t len = 0;
     uint32_t timeout = CMD_UBLOX_SHORT_TIMEOUT;
-    switch (param->OpCode)
+    switch (param->Opcode)
     {
     case AT_UHTTP_OPCODE_SERVER_NAME:
         timeout = CMD_UBLOX_DNS_TIMEOUT;
@@ -1219,7 +1220,7 @@ Retcode_T At_Set_UHTTP(const AT_UHTTP_Param_T *param)
     case AT_UHTTP_OPCODE_USERNAME:
     case AT_UHTTP_OPCODE_PASSWORD:
         len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUHTTP2_FMT,
-                       (int)param->ProfileId, param->OpCode, param->Value.String);
+                       (int)param->ProfileId, param->Opcode, param->Value.String);
         if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
@@ -1228,7 +1229,7 @@ Retcode_T At_Set_UHTTP(const AT_UHTTP_Param_T *param)
     case AT_UHTTP_OPCODE_SERVER_PORT:
     case AT_UHTTP_OPCODE_SECURE_OPTION:
         len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUHTTP3_FMT,
-                       (int)param->ProfileId, param->OpCode, (int)param->Value.Numeric);
+                       (int)param->ProfileId, param->Opcode, (int)param->Value.Numeric);
         if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
@@ -1430,7 +1431,7 @@ Retcode_T At_Set_UDWNFILE(const AT_UDWNFILE_Param_T *param)
     assert(NULL != param);
 
     len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUDWNFILE_FMT,
-                   param->filename, (int)param->filesize);
+                   param->Filename, (int)param->DataSize);
     if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
@@ -1444,7 +1445,7 @@ Retcode_T At_Set_UDWNFILE(const AT_UDWNFILE_Param_T *param)
     }
     if (RETCODE_OK == retcode)
     {
-        retcode = Engine_SendAtCommand(param->buffer, param->filesize);
+        retcode = Engine_SendAtCommand(param->Data, param->DataSize);
     }
 
     /* we wait some time in order to fill up the queue with responses*/
@@ -1473,7 +1474,7 @@ Retcode_T At_Set_UDELFILE(const AT_UDELFILE_Param_T *param)
     int32_t len;
     assert(NULL != param);
     len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUDELFILE_FMT,
-                   param->filename);
+                   param->Filename);
     if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
@@ -1499,11 +1500,11 @@ Retcode_T At_Set_ULSTFILE(AT_ULSTFILE_Param_T *param)
     uint32_t bufferLen;
 
     assert(NULL != param);
-    switch (param->opcode)
+    switch (param->Opcode)
     {
     case AT_ULSTFILE_OPCODE_SIZE:
-        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATULSTFILE_FMT,
-                       (int)param->opcode, param->filename);
+        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATULSTFILE_FMT2,
+                       (int)param->Opcode, param->Filename);
         if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
@@ -1536,7 +1537,7 @@ Retcode_T At_Set_ULSTFILE(AT_ULSTFILE_Param_T *param)
     {
         int32_t tmp = 0;
         retcode = Utils_Strtol(buffer, bufferLen, &tmp);
-        param->filesize = (uint32_t)tmp;
+        param->Filesize = (uint32_t)tmp;
         AtResponseQueue_MarkBufferAsUnused();
     }
 
@@ -1597,7 +1598,7 @@ Retcode_T At_Set_URDBLOCK(const AT_URDBLOCK_Param_T *param, AT_URDBLOCK_Resp_T *
             {
                 memcpy(resp->Filename, buffer + 1, bufferLen - 1);
                 /* ensure zero terminaltion, account for the " at the beginning. */
-                resp->Filename[bufferLen - 1] = '\0';
+                resp->Filename[bufferLen - 2] = '\0';
             }
         };
         AtResponseQueue_MarkBufferAsUnused();
@@ -1622,7 +1623,7 @@ Retcode_T At_Set_URDBLOCK(const AT_URDBLOCK_Param_T *param, AT_URDBLOCK_Resp_T *
         if (RETCODE_OK == retcode)
         {
             /* FIXME: This is right now very HTTP specific! */
-            if (param->Size > bufferLen)
+            if (param->Size > bufferLen - 1)
             {
                 memcpy(resp->Data, buffer + 1, bufferLen - 1);
                 readLength = bufferLen - 1;
@@ -1649,7 +1650,8 @@ Retcode_T At_Set_URDBLOCK(const AT_URDBLOCK_Param_T *param, AT_URDBLOCK_Resp_T *
     while (retcode == RETCODE_OK && readLength < param->Size)
     {
         retcode = AtResponseQueue_WaitForMiscContent(10000, &buffer, &bufferLen);
-        memcpy(resp->Data + readLength, buffer, bufferLen);
+        uint32_t readLimit = param->Size - readLength;
+        memcpy(resp->Data + readLength, buffer, bufferLen > readLimit ? readLimit : bufferLen);
         AtResponseQueue_MarkBufferAsUnused();
         readLength += bufferLen;
     }

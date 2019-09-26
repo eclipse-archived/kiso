@@ -68,13 +68,13 @@ struct AT_UHTTP_Param_S
     AT_UHTTP_ProfileId_T ProfileId;
 
     /**
-     * @brief Indicates OpCode (config item) to set
+     * @brief Indicates Opcode (config item) to set
      */
-    AT_UHTTP_Opcode_T OpCode;
+    AT_UHTTP_Opcode_T Opcode;
 
     /**
      * @brief Value to be set. Either c-string or numeric value depending on
-     * OpCode.
+     * Opcode.
      */
     union {
         const char *String;
@@ -278,18 +278,18 @@ typedef enum AT_UMNOPROF_Mno_E AT_UMNOPROF_Mno_T;
  */
 enum AT_ULSTFILE_Opcode_E
 {
-    AT_ULSTFILE_OPCODE_DEFAULT = 0,  //!<  default (list a files for a given tag)
-    AT_ULSTFILE_OPCODE_FREE = 1,     //!<  get free space for a given tag
-    AT_ULSTFILE_OPCODE_SIZE = 2,     //!<  get size of a given tag
-    AT_ULSTFILE_OPCODE_INVALID = 255 //!<  Invalid <OPCODE> value, used to signal that parameter not present
+    AT_ULSTFILE_OPCODE_LIST = 0,     //!< list files for a given tag
+    AT_ULSTFILE_OPCODE_FREE = 1,     //!< get free space for a given tag
+    AT_ULSTFILE_OPCODE_SIZE = 2,     //!< get size of a given tag
+    AT_ULSTFILE_OPCODE_INVALID = 255 //!< Invalid <op_code> value, used to signal that parameter not present
 };
 typedef enum AT_ULSTFILE_Opcode_E AT_ULSTFILE_Opcode_T;
 
 struct AT_ULSTFILE_Param_S
 {
-    AT_ULSTFILE_Opcode_T opcode;
-    const char *filename;
-    uint32_t filesize;
+    AT_ULSTFILE_Opcode_T Opcode;
+    const char *Filename;
+    uint32_t Filesize;
 };
 typedef struct AT_ULSTFILE_Param_S AT_ULSTFILE_Param_T;
 
@@ -311,23 +311,23 @@ typedef struct AT_URDBLOCK_Resp_S AT_URDBLOCK_Resp_T;
 
 struct AT_URDFILE_Param_S
 {
-    const char *filename;
-    uint32_t filesize;
-    uint8_t *buffer;
+    const char *Filename;
+    uint8_t *Data;
+    uint32_t DataSize;
 };
 typedef struct AT_URDFILE_Param_S AT_URDFILE_Param_T;
 
 struct AT_UDWNFILE_Param_S
 {
-    const char *filename;
-    uint32_t filesize;
-    const uint8_t *buffer;
+    const char *Filename;
+    const uint8_t *Data;
+    uint32_t DataSize;
 };
 typedef struct AT_UDWNFILE_Param_S AT_UDWNFILE_Param_T;
 
 struct AT_UDELFILE_Param_S
 {
-    const char *filename;
+    const char *Filename;
 };
 typedef struct AT_UDELFILE_Param_S AT_UDELFILE_Param_T;
 
