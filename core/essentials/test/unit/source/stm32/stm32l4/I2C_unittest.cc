@@ -48,7 +48,21 @@ protected:
 
     virtual void TearDown()
     {
-        ; /* nothing to do if clean up is not required */
+        RESET_FAKE(__HAL_I2C_GET_FLAG);
+        RESET_FAKE(HAL_I2C_GetState);
+        RESET_FAKE(HAL_GetTick);
+        RESET_FAKE(HAL_I2C_Master_Transmit);
+        RESET_FAKE(HAL_I2C_Master_Transmit_IT);
+        RESET_FAKE(HAL_I2C_Master_Transmit_DMA);
+        RESET_FAKE(HAL_I2C_Master_Seq_Transmit_IT);
+        RESET_FAKE(HAL_I2C_Master_Receive);
+        RESET_FAKE(HAL_I2C_Master_Receive_IT);
+        RESET_FAKE(HAL_I2C_Master_Receive_DMA);
+        RESET_FAKE(HAL_I2C_EV_IRQHandler);
+        RESET_FAKE(HAL_I2C_ER_IRQHandler);
+        RESET_FAKE(HAL_DMA_IRQHandler);
+        RESET_FAKE(HAL_I2C_GetError);
+        m_isCalled_cbf = false;
     }
 
     void DeInit()
@@ -62,6 +76,7 @@ public:
     static uint32_t m_I2C_cbf;
     static struct MCU_I2C_Event_S m_event_cbf;
     I2C_TypeDef m_testInstance = {};
+    static uint32_t m_adressingMode;
 };
 
 const struct MCU_I2C_Event_S KISO_I2CTest::m_EventInit = {0, 0, 0, 0};
@@ -86,13 +101,19 @@ public:
     void setState(MCU_I2C_State_T state);
 
     void setSTM32Instance(I2C_TypeDef *instance);
+
+    void setAddressingMode(uint32_t mode);
+
+    void setDataRate(void);
 };
 
 I2CDevice::I2CDevice(enum KISO_HAL_TransferMode_E TransferMode)
 {
     m_I2C.hi2c.Instance = NULL;
+    m_I2C.hi2c.Init.AddressingMode = ~I2C_ADDRESSINGMODE_7BIT;
     m_I2C.TransferMode = TransferMode;
     m_I2C.State = I2C_STATE_INIT;
+    m_I2C.DataRate = 0;
 }
 
 I2CDevice::~I2CDevice()
@@ -108,6 +129,16 @@ HWHandle_T I2CDevice::BSP_Device_GetHandle()
 void I2CDevice::setSTM32Instance(I2C_TypeDef *instance)
 {
     m_I2C.hi2c.Instance = instance;
+}
+
+void I2CDevice::setAddressingMode(uint32_t mode)
+{
+    m_I2C.hi2c.Init.AddressingMode = mode;
+}
+
+void I2CDevice::setDataRate(void)
+{
+    m_I2C.DataRate = 100000U;
 }
 
 MCU_I2C_State_T I2CDevice::getState()
@@ -217,7 +248,7 @@ TEST_F(KISO_I2CTest, MCU_I2C_Initialize_Fail_InvalidTransferMode)
 {
     Retcode_T rc;
     I2CDevice Device01((enum KISO_HAL_TransferMode_E)0);
-    Device01.setSTM32Instance(I2C1);
+    Device01.setSTM32Instance(I2C2);
     I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
     rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_NOT_SUPPORTED, Retcode_GetCode(rc));
@@ -228,7 +259,7 @@ TEST_F(KISO_I2CTest, MCU_I2C_Initialize_Fail_Interrupt_No_Callback)
 {
     Retcode_T rc;
     I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
-    Device01.setSTM32Instance(I2C1);
+    Device01.setSTM32Instance(I2C3);
     I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
     rc = MCU_I2C_Initialize(I2C01, NULL);
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(rc));
@@ -328,7 +359,6 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_ok_polling)
     __HAL_I2C_GET_FLAG_fake.custom_fake = Fake___HAL_I2C_GET_FLAG;
     HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
     HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
-
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
@@ -341,6 +371,8 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_ok_polling)
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     rc = ~RETCODE_OK;
     Device01.setSTM32Instance(&m_testInstance);
+    Device01.setAddressingMode(I2C_ADDRESSINGMODE_7BIT);
+    Device01.setDataRate();
     rc = MCU_I2C_Send(I2C01, addr, buffer, size);
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
@@ -357,7 +389,11 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_ok_Interrupt)
     I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
     rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
+
+    Device01.setAddressingMode(I2C_ADDRESSINGMODE_7BIT);
+    Device01.setDataRate();
     HAL_I2C_Master_Transmit_IT_fake.return_val = HAL_OK;
+
     rc = MCU_I2C_Send(I2C01, addr, buffer, size);
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_TX, Device01.getState());
@@ -374,9 +410,77 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_ok_DMA)
     I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
     rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
+    Device01.setAddressingMode(I2C_ADDRESSINGMODE_7BIT);
+    Device01.setDataRate();
     HAL_I2C_Master_Transmit_DMA_fake.return_val = HAL_OK;
+
     rc = MCU_I2C_Send(I2C01, addr, buffer, size);
+
     EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(I2C_STATE_TX, Device01.getState());
+}
+
+TEST_F(KISO_I2CTest, test_MCU_I2C_Send_Cancel_polling)
+{
+    __HAL_I2C_GET_FLAG_fake.custom_fake = Fake___HAL_I2C_GET_FLAG;
+    HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
+    HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
+
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, NULL);
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(I2C_STATE_READY, Device01.getState());
+
+    rc = MCU_I2C_Send(I2C01, addr, buffer, 0);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+    Device01.setState(I2C_STATE_TX);
+
+    rc = MCU_I2C_Send(I2C01, addr, buffer, 0);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(I2C_STATE_TX, Device01.getState());
+}
+
+TEST_F(KISO_I2CTest, test_MCU_I2C_Send_cancel_Interrupt)
+{
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
+    EXPECT_EQ(RETCODE_OK, rc);
+    Device01.setState(I2C_STATE_TX);
+
+    rc = MCU_I2C_Send(I2C01, addr, buffer, 0);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
+    EXPECT_EQ(I2C_STATE_TX, Device01.getState());
+}
+
+TEST_F(KISO_I2CTest, test_MCU_I2C_Send_cancel_DMA)
+{
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
+    EXPECT_EQ(RETCODE_OK, rc);
+    Device01.setState(I2C_STATE_TX);
+    rc = MCU_I2C_Send(I2C01, addr, buffer, 0);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
     EXPECT_EQ(I2C_STATE_TX, Device01.getState());
 }
 
@@ -498,6 +602,28 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_Fail_State_Sending)
     EXPECT_EQ(I2C_STATE_TX, Device01.getState());
 }
 
+TEST_F(KISO_I2CTest, test_MCU_I2C_Send_ok_polling_size_gt_I2C_MAX_NBYTES)
+{
+    __HAL_I2C_GET_FLAG_fake.custom_fake = Fake___HAL_I2C_GET_FLAG;
+    HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
+    HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
+    uint16_t addr = 0x01234;
+    const uint32_t size = 600;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, NULL);
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(I2C_STATE_READY, Device01.getState());
+    rc = ~RETCODE_OK;
+    Device01.setSTM32Instance(&m_testInstance);
+    rc = MCU_I2C_Send(I2C01, addr, buffer, size);
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(I2C_STATE_READY, Device01.getState());
+}
+
 TEST_F(KISO_I2CTest, test_MCU_I2C_Send_Interrupt_Fail_HAL_Failure)
 {
     uint16_t addr = 0x01234;
@@ -510,7 +636,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_Interrupt_Fail_HAL_Failure)
     rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
 
-    HAL_I2C_Master_Transmit_IT_fake.return_val = (HAL_StatusTypeDef)(~HAL_OK);
+    HAL_I2C_Master_Transmit_IT_fake.return_val = HAL_ERROR;
 
     rc = MCU_I2C_Send(I2C01, addr, buffer, size);
 
@@ -524,13 +650,13 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Send_DMA_Fail_HAL_Failure)
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
     uint8_t buffer[size] = {0x01};
-    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
     rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
 
-    HAL_I2C_Master_Transmit_DMA_fake.return_val = (HAL_StatusTypeDef)(~HAL_OK);
+    HAL_I2C_Master_Transmit_DMA_fake.return_val = HAL_ERROR;
 
     rc = MCU_I2C_Send(I2C01, addr, buffer, size);
 
@@ -550,7 +676,8 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_Polling_Success)
     rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     EXPECT_EQ(RETCODE_OK, rc);
-
+    Device01.setAddressingMode(I2C_ADDRESSINGMODE_7BIT);
+    Device01.setDataRate();
     HAL_I2C_Master_Transmit_fake.return_val = HAL_OK;
     HAL_I2C_Master_Receive_fake.return_val = HAL_OK;
 
@@ -572,7 +699,8 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_Interrupt_Success)
     rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     EXPECT_EQ(RETCODE_OK, rc);
-
+    Device01.setAddressingMode(I2C_ADDRESSINGMODE_7BIT);
+    Device01.setDataRate();
     HAL_I2C_Master_Receive_IT_fake.return_val = HAL_OK;
 
     rc = MCU_I2C_Receive(I2C01, addr, buffer, size);
@@ -593,12 +721,68 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_DMA_Success)
     rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     EXPECT_EQ(RETCODE_OK, rc);
-
+    Device01.setAddressingMode(I2C_ADDRESSINGMODE_7BIT);
+    Device01.setDataRate();
     HAL_I2C_Master_Receive_DMA_fake.return_val = HAL_OK;
 
     rc = MCU_I2C_Receive(I2C01, addr, buffer, size);
 
     EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(I2C_STATE_RX, Device01.getState());
+}
+
+TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_Cancel_polling)
+{
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, NULL);
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(I2C_STATE_READY, Device01.getState());
+
+    rc = MCU_I2C_Receive(I2C01, addr, buffer, 0);
+
+    Device01.setState(I2C_STATE_RX);
+    rc = MCU_I2C_Receive(I2C01, addr, buffer, 0);
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(I2C_STATE_RX, Device01.getState());
+}
+
+TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_cancel_Interrupt)
+{
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
+    EXPECT_EQ(RETCODE_OK, rc);
+    Device01.setState(I2C_STATE_RX);
+    rc = MCU_I2C_Receive(I2C01, addr, buffer, 0);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
+    EXPECT_EQ(I2C_STATE_RX, Device01.getState());
+}
+
+TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_cancel_DMA)
+{
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
+    EXPECT_EQ(RETCODE_OK, rc);
+    Device01.setState(I2C_STATE_RX);
+    rc = MCU_I2C_Receive(I2C01, addr, buffer, 0);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
     EXPECT_EQ(I2C_STATE_RX, Device01.getState());
 }
 
@@ -725,8 +909,8 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_Polling_Fail_HAL_Failure)
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     EXPECT_EQ(RETCODE_OK, rc);
 
-    HAL_I2C_Master_Transmit_fake.return_val = (HAL_StatusTypeDef)(~HAL_OK);
-    HAL_I2C_Master_Receive_fake.return_val = (HAL_StatusTypeDef)(~HAL_OK);
+    HAL_I2C_Master_Transmit_fake.return_val = HAL_ERROR;
+    HAL_I2C_Master_Receive_fake.return_val = HAL_ERROR;
 
     rc = MCU_I2C_Receive(I2C01, addr, buffer, size);
 
@@ -746,7 +930,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_Interrupt_Fail_HAL_Failure)
     rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     EXPECT_EQ(RETCODE_OK, rc);
-    HAL_I2C_Master_Receive_IT_fake.return_val = (HAL_StatusTypeDef)(~HAL_OK);
+    HAL_I2C_Master_Receive_IT_fake.return_val = HAL_ERROR;
 
     rc = MCU_I2C_Receive(I2C01, addr, buffer, size);
 
@@ -766,7 +950,7 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_Receive_DMA_Fail_HAL_Failure)
     rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     EXPECT_EQ(RETCODE_OK, rc);
-    HAL_I2C_Master_Receive_DMA_fake.return_val = (HAL_StatusTypeDef)(~HAL_OK);
+    HAL_I2C_Master_Receive_DMA_fake.return_val = HAL_ERROR;
 
     rc = MCU_I2C_Receive(I2C01, addr, buffer, size);
 
@@ -791,7 +975,8 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_ok_polling)
     rc = MCU_I2C_Initialize(I2C01, NULL);
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
-    rc = ~RETCODE_OK;
+    Device01.setAddressingMode(I2C_ADDRESSINGMODE_7BIT);
+    Device01.setDataRate();
     Device01.setSTM32Instance(&m_testInstance);
     rc = MCU_I2C_WriteRegister(I2C01, addr, reg, buffer, size);
     EXPECT_EQ(RETCODE_OK, rc);
@@ -800,6 +985,9 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_ok_polling)
 
 TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_ok_Interrupt)
 {
+    __HAL_I2C_GET_FLAG_fake.custom_fake = Fake___HAL_I2C_GET_FLAG;
+    HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
+    HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
@@ -810,8 +998,12 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_ok_Interrupt)
     I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
     rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
+    Device01.setAddressingMode(I2C_ADDRESSINGMODE_7BIT);
+    Device01.setDataRate();
     HAL_I2C_Master_Transmit_IT_fake.return_val = HAL_OK;
+
     rc = MCU_I2C_WriteRegister(I2C01, addr, reg, buffer, size);
+
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_TX, Device01.getState());
 }
@@ -829,6 +1021,8 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_ok_DMA)
     rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
+    Device01.setAddressingMode(I2C_ADDRESSINGMODE_7BIT);
+    Device01.setDataRate();
     HAL_I2C_Master_Transmit_DMA_fake.return_val = HAL_OK;
 
     rc = MCU_I2C_WriteRegister(I2C01, addr, reg, buffer, size);
@@ -837,12 +1031,71 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_ok_DMA)
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
 }
 
+TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Cancel_polling)
+{
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, NULL);
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(I2C_STATE_READY, Device01.getState());
+
+    rc = MCU_I2C_WriteRegister(I2C01, addr, 0, buffer, 0);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+
+    Device01.setState(I2C_STATE_TX);
+
+    rc = MCU_I2C_WriteRegister(I2C01, addr, 0, buffer, 0);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(I2C_STATE_TX, Device01.getState());
+}
+
+TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_cancel_Interrupt)
+{
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
+    EXPECT_EQ(RETCODE_OK, rc);
+    Device01.setState(I2C_STATE_TX);
+
+    rc = MCU_I2C_WriteRegister(I2C01, addr, 0, buffer, 0);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
+    EXPECT_EQ(I2C_STATE_TX, Device01.getState());
+}
+
+TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_cancel_DMA)
+{
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
+    EXPECT_EQ(RETCODE_OK, rc);
+    Device01.setState(I2C_STATE_TX);
+
+    rc = MCU_I2C_WriteRegister(I2C01, addr, 0, buffer, 0);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
+    EXPECT_EQ(I2C_STATE_TX, Device01.getState());
+}
+
 TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Fail_InvalidSize)
 {
-    __HAL_I2C_GET_FLAG_fake.custom_fake = Fake___HAL_I2C_GET_FLAG;
-    HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
-    HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
-
     uint16_t addr = 0x01234;
     const uint32_t size = UINT16_MAX + 1;
     Retcode_T rc = RETCODE_OK;
@@ -865,10 +1118,6 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Fail_InvalidSize)
 
 TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Fail_InvalidHandle)
 {
-    __HAL_I2C_GET_FLAG_fake.custom_fake = Fake___HAL_I2C_GET_FLAG;
-    HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
-    HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
-
     uint16_t addr = 0x01234;
     const uint32_t size = UINT16_MAX + 1;
     Retcode_T rc = RETCODE_OK;
@@ -891,10 +1140,6 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Fail_InvalidHandle)
 
 TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Fail_InvalidBuffer)
 {
-    __HAL_I2C_GET_FLAG_fake.custom_fake = Fake___HAL_I2C_GET_FLAG;
-    HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
-    HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
-
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
@@ -916,10 +1161,6 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Fail_InvalidBuffer)
 
 TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Fail_Not_Initialized)
 {
-    __HAL_I2C_GET_FLAG_fake.custom_fake = Fake___HAL_I2C_GET_FLAG;
-    HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
-    HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
-
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
@@ -948,21 +1189,14 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Fail_State_Sending)
     Device01.setSTM32Instance(I2C1);
     I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
     rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
-    EXPECT_EQ(RETCODE_OK, rc);
-    HAL_I2C_Master_Transmit_IT_fake.return_val = HAL_OK;
-
-    rc = MCU_I2C_WriteRegister(I2C01, addr, reg, buffer, size);
-
-    EXPECT_EQ(RETCODE_OK, rc);
-    EXPECT_EQ(I2C_STATE_TX, Device01.getState());
+    Device01.setState(I2C_STATE_TX);
     rc = MCU_I2C_WriteRegister(I2C01, addr, reg, buffer, size);
     EXPECT_EQ(RETCODE_INCONSISTENT_STATE, Retcode_GetCode(rc));
     EXPECT_EQ(I2C_STATE_TX, Device01.getState());
 }
 
-TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Interrupt_Fail_HAL_Failure)
+TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Interrupt_Fail_HAL_Failure_first_call)
 {
-    /*
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
@@ -974,13 +1208,36 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Interrupt_Fail_HAL_Failure)
     rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
 
-    HAL_I2C_Master_Sequential_Transmit_IT_fake.return_val = (HAL_StatusTypeDef)(~HAL_OK);
+    HAL_I2C_Master_Seq_Transmit_IT_fake.return_val = HAL_ERROR;
 
     rc = MCU_I2C_WriteRegister(I2C01, addr, reg, buffer, size);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(rc));
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
-*/
+}
+
+TEST_F(KISO_I2CTest, test_MCU_I2C_WriteRegister_Interrupt_Fail_HAL_Failure_second_call)
+{
+    __HAL_I2C_GET_FLAG_fake.custom_fake = Fake___HAL_I2C_GET_FLAG;
+    HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
+    HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t reg = 0;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
+    EXPECT_EQ(RETCODE_OK, rc);
+    HAL_StatusTypeDef returnSequence[2] = {HAL_OK, HAL_ERROR};
+    SET_RETURN_SEQ(HAL_I2C_Master_Seq_Transmit_IT, returnSequence, 2)
+
+    rc = MCU_I2C_WriteRegister(I2C01, addr, reg, buffer, size);
+
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(rc));
+    EXPECT_EQ(I2C_STATE_READY, Device01.getState());
 }
 
 TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_ok_polling)
@@ -1001,10 +1258,14 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_ok_polling)
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
     rc = ~RETCODE_OK;
+    Device01.setAddressingMode(I2C_ADDRESSINGMODE_7BIT);
+    Device01.setDataRate();
     Device01.setSTM32Instance(&m_testInstance);
     HAL_I2C_Master_Transmit_fake.return_val = HAL_OK;
     HAL_I2C_Master_Receive_fake.return_val = HAL_OK;
+
     rc = MCU_I2C_ReadRegister(I2C01, addr, reg, buffer, size);
+
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
 }
@@ -1021,9 +1282,13 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_ok_Interrupt)
     I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
     rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
+    Device01.setAddressingMode(I2C_ADDRESSINGMODE_7BIT);
+    Device01.setDataRate();
     HAL_I2C_Master_Transmit_fake.return_val = HAL_OK;
     HAL_I2C_Master_Receive_IT_fake.return_val = HAL_OK;
+
     rc = MCU_I2C_ReadRegister(I2C01, addr, reg, buffer, size);
+
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_RX, Device01.getState());
 }
@@ -1041,7 +1306,8 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_ok_DMA)
     rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
-
+    Device01.setAddressingMode(I2C_ADDRESSINGMODE_7BIT);
+    Device01.setDataRate();
     HAL_I2C_Master_Transmit_fake.return_val = HAL_OK;
     HAL_I2C_Master_Receive_DMA_fake.return_val = HAL_OK;
 
@@ -1051,12 +1317,83 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_ok_DMA)
     EXPECT_EQ(I2C_STATE_RX, Device01.getState());
 }
 
+TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Cancel_polling_invalid_state)
+{
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, NULL);
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(I2C_STATE_READY, Device01.getState());
+
+    rc = MCU_I2C_ReadRegister(I2C01, addr, 0, buffer, 0);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE), rc);
+}
+
+TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Cancel_polling)
+{
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, NULL);
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(I2C_STATE_READY, Device01.getState());
+    Device01.setState(I2C_STATE_RX);
+
+    rc = MCU_I2C_ReadRegister(I2C01, addr, 0, buffer, 0);
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(I2C_STATE_RX, Device01.getState());
+}
+
+TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_cancel_Interrupt)
+{
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
+    EXPECT_EQ(RETCODE_OK, rc);
+    Device01.setState(I2C_STATE_RX);
+
+    rc = MCU_I2C_ReadRegister(I2C01, addr, 0, buffer, 0);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
+    EXPECT_EQ(I2C_STATE_RX, Device01.getState());
+}
+
+TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_cancel_DMA)
+{
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
+    EXPECT_EQ(RETCODE_OK, rc);
+    Device01.setState(I2C_STATE_RX);
+
+    rc = MCU_I2C_ReadRegister(I2C01, addr, 0, buffer, 0);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), rc);
+    EXPECT_EQ(I2C_STATE_RX, Device01.getState());
+}
+
 TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Fail_InvalidSize)
 {
-    __HAL_I2C_GET_FLAG_fake.custom_fake = Fake___HAL_I2C_GET_FLAG;
-    HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
-    HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
-
     uint16_t addr = 0x01234;
     const uint32_t size = UINT16_MAX + 1;
     Retcode_T rc = RETCODE_OK;
@@ -1079,10 +1416,6 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Fail_InvalidSize)
 
 TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Fail_InvalidHandle)
 {
-    __HAL_I2C_GET_FLAG_fake.custom_fake = Fake___HAL_I2C_GET_FLAG;
-    HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
-    HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
-
     uint16_t addr = 0x01234;
     const uint32_t size = UINT16_MAX + 1;
     Retcode_T rc = RETCODE_OK;
@@ -1105,10 +1438,6 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Fail_InvalidHandle)
 
 TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Fail_InvalidBuffer)
 {
-    __HAL_I2C_GET_FLAG_fake.custom_fake = Fake___HAL_I2C_GET_FLAG;
-    HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
-    HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
-
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
@@ -1130,10 +1459,6 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Fail_InvalidBuffer)
 
 TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Fail_Not_Initialized)
 {
-    __HAL_I2C_GET_FLAG_fake.custom_fake = Fake___HAL_I2C_GET_FLAG;
-    HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
-    HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
-
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
     Retcode_T rc = RETCODE_OK;
@@ -1177,7 +1502,29 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Fail_State_Receiving)
     EXPECT_EQ(I2C_STATE_RX, Device01.getState());
 }
 
-TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Interrupt_Fail_HAL_Failure)
+TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Polling_Fail_HAL_Failure)
+{
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t buffer[size] = {0x00};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_POLLING);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
+    EXPECT_EQ(I2C_STATE_READY, Device01.getState());
+    EXPECT_EQ(RETCODE_OK, rc);
+
+    HAL_I2C_Master_Transmit_fake.return_val = HAL_ERROR;
+    HAL_I2C_Master_Receive_fake.return_val = HAL_ERROR;
+
+    rc = MCU_I2C_ReadRegister(I2C01, addr, 0, buffer, size);
+
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(rc));
+    EXPECT_EQ(I2C_STATE_READY, Device01.getState());
+}
+
+TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Interrupt_Fail_HAL_Master_Receive_Failure)
 {
     uint16_t addr = 0x01234;
     const uint32_t size = 1;
@@ -1190,13 +1537,184 @@ TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Interrupt_Fail_HAL_Failure)
     rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
     EXPECT_EQ(RETCODE_OK, rc);
 
-    HAL_I2C_Master_Transmit_fake.return_val = (HAL_StatusTypeDef)(~HAL_OK);
-    HAL_I2C_Master_Receive_IT_fake.return_val = (HAL_StatusTypeDef)(~HAL_OK);
+    HAL_I2C_Master_Transmit_fake.return_val = HAL_OK;
+    HAL_I2C_Master_Receive_IT_fake.return_val = HAL_ERROR;
 
     rc = MCU_I2C_ReadRegister(I2C01, addr, reg, buffer, size);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(rc));
     EXPECT_EQ(I2C_STATE_READY, Device01.getState());
+}
+
+TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_Interrupt_Fail_HAL_Master_Transmit_Failure)
+{
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t reg = 0;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
+    EXPECT_EQ(RETCODE_OK, rc);
+
+    HAL_I2C_Master_Transmit_fake.return_val = HAL_ERROR;
+    HAL_I2C_Master_Receive_IT_fake.return_val = HAL_OK;
+
+    rc = MCU_I2C_ReadRegister(I2C01, addr, reg, buffer, size);
+
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(rc));
+    EXPECT_EQ(I2C_STATE_READY, Device01.getState());
+}
+
+TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_DMA_Fail_HAL_Master_Receive_Failure)
+{
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t reg = 0;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
+    EXPECT_EQ(RETCODE_OK, rc);
+
+    HAL_I2C_Master_Transmit_fake.return_val = HAL_OK;
+    HAL_I2C_Master_Receive_DMA_fake.return_val = HAL_ERROR;
+
+    rc = MCU_I2C_ReadRegister(I2C01, addr, reg, buffer, size);
+
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(rc));
+    EXPECT_EQ(I2C_STATE_READY, Device01.getState());
+}
+
+TEST_F(KISO_I2CTest, test_MCU_I2C_ReadRegister_DMA_Fail_HAL_Master_Transmit_Failure)
+{
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t reg = 0;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_DMA);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
+    EXPECT_EQ(RETCODE_OK, rc);
+
+    HAL_I2C_Master_Transmit_fake.return_val = HAL_ERROR;
+    HAL_I2C_Master_Receive_DMA_fake.return_val = HAL_OK;
+
+    rc = MCU_I2C_ReadRegister(I2C01, addr, reg, buffer, size);
+
+    EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(rc));
+    EXPECT_EQ(I2C_STATE_READY, Device01.getState());
+}
+
+TEST_F(KISO_I2CTest, test_I2C_EventCallback)
+{
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    I2C_EventCallback(I2C01);
+    EXPECT_EQ(HAL_I2C_EV_IRQHandler_fake.call_count, 1U);
+}
+
+TEST_F(KISO_I2CTest, test_I2C_ErrorCallback)
+{
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    I2C_ErrorCallback(I2C01);
+    EXPECT_EQ(HAL_I2C_ER_IRQHandler_fake.call_count, 1U);
+}
+
+TEST_F(KISO_I2CTest, test_I2C_DmaRxHandler)
+{
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    I2C_DmaRxHandler(I2C01);
+    EXPECT_EQ(HAL_DMA_IRQHandler_fake.call_count, 1U);
+}
+
+TEST_F(KISO_I2CTest, test_I2C_DmaTxHandler)
+{
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    I2C_DmaTxHandler(I2C01);
+    EXPECT_EQ(HAL_DMA_IRQHandler_fake.call_count, 1U);
+}
+
+TEST_F(KISO_I2CTest, test_HAL_I2C_ErrorCallback)
+{
+    Retcode_T rc = RETCODE_OK;
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
+    EXPECT_EQ(RETCODE_OK, rc);
+    HAL_I2C_GetError_fake.return_val = ~HAL_I2C_ERROR_NONE;
+
+    HAL_I2C_ErrorCallback((I2C_HandleTypeDef *)I2C01);
+
+    EXPECT_EQ(m_event_cbf.TransferError, 1U);
+}
+
+TEST_F(KISO_I2CTest, test_HAL_I2C_MasterTxCpltCallback_PrependRegAddr_true)
+{
+    __HAL_I2C_GET_FLAG_fake.custom_fake = Fake___HAL_I2C_GET_FLAG;
+    HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
+    HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t reg = 0;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
+    EXPECT_EQ(RETCODE_OK, rc);
+    HAL_I2C_Master_Transmit_IT_fake.return_val = HAL_OK;
+    rc = MCU_I2C_WriteRegister(I2C01, addr, reg, buffer, size);
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(I2C_STATE_TX, Device01.getState());
+
+    HAL_I2C_MasterTxCpltCallback((I2C_HandleTypeDef *)I2C01);
+    //first callback will only reset register writing flag no application callback should trigger
+    EXPECT_EQ(m_isCalled_cbf, false);
+    HAL_I2C_MasterTxCpltCallback((I2C_HandleTypeDef *)I2C01);
+    //second callback will only call application
+    EXPECT_EQ(m_isCalled_cbf, true);
+    EXPECT_EQ(m_event_cbf.TxComplete, 1U);
+}
+
+TEST_F(KISO_I2CTest, test_HAL_I2C_MasterRxCpltCallback)
+{
+    __HAL_I2C_GET_FLAG_fake.custom_fake = Fake___HAL_I2C_GET_FLAG;
+    HAL_I2C_GetState_fake.custom_fake = Fake_HAL_I2C_GetState;
+    HAL_GetTick_fake.custom_fake = Fake_HAL_GetTick;
+    uint16_t addr = 0x01234;
+    const uint32_t size = 1;
+    Retcode_T rc = RETCODE_OK;
+    uint8_t reg = 0;
+    uint8_t buffer[size] = {0x01};
+    I2CDevice Device01(KISO_HAL_TRANSFER_MODE_INTERRUPT);
+    Device01.setSTM32Instance(I2C1);
+    I2C_T I2C01 = (I2C_T)Device01.BSP_Device_GetHandle();
+    rc = MCU_I2C_Initialize(I2C01, AppTestCallbackFunction);
+    EXPECT_EQ(RETCODE_OK, rc);
+    HAL_I2C_Master_Receive_IT_fake.return_val = HAL_OK;
+    rc = MCU_I2C_ReadRegister(I2C01, addr, reg, buffer, size);
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(I2C_STATE_RX, Device01.getState());
+
+    HAL_I2C_MasterRxCpltCallback((I2C_HandleTypeDef *)I2C01);
+    EXPECT_EQ(m_isCalled_cbf, true);
+    EXPECT_EQ(m_event_cbf.RxComplete, 1U);
 }
 
 #endif

@@ -222,7 +222,7 @@ Retcode_T MCU_I2C_Send(I2C_T i2c, uint16_t slaveAddr, uint8_t *data, uint32_t le
         {
             if (pI2C->State == I2C_STATE_TX)
             {
-                pI2C->CancelFunPtr(pI2C);
+                retcode = pI2C->CancelFunPtr(pI2C);
             }
             else
             {
@@ -265,7 +265,7 @@ Retcode_T MCU_I2C_Receive(I2C_T i2c, uint16_t slaveAddr, uint8_t *buffer, uint32
         {
             if (pI2C->State == I2C_STATE_RX)
             {
-                pI2C->CancelFunPtr(pI2C);
+                retcode = pI2C->CancelFunPtr(pI2C);
             }
             else
             {
@@ -305,9 +305,9 @@ Retcode_T MCU_I2C_WriteRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerA
         }
         else
         {
-            if (pI2C->State == I2C_STATE_RX)
+            if (pI2C->State == I2C_STATE_TX)
             {
-                pI2C->CancelFunPtr(pI2C);
+                retcode = pI2C->CancelFunPtr(pI2C);
             }
             else
             {
@@ -350,7 +350,7 @@ Retcode_T MCU_I2C_ReadRegister(I2C_T i2c, uint16_t slaveAddr, uint8_t registerAd
         {
             if (pI2C->State == I2C_STATE_RX)
             {
-                pI2C->CancelFunPtr(pI2C);
+                retcode = pI2C->CancelFunPtr(pI2C);
             }
             else
             {
@@ -622,7 +622,7 @@ Retcode_T I2C_WriteRegisterIntMode(struct MCU_I2C_S *pI2C)
     {
         slaveAddr = slaveAddr << 1; /**< 7bit Adressing Mode */
     }
-    if (HAL_OK != HAL_I2C_Master_Sequential_Transmit_IT(&pI2C->hi2c, slaveAddr, &pI2C->Transaction.RegisterAddr, 1, I2C_RELOAD_MODE))
+    if (HAL_OK != HAL_I2C_Master_Seq_Transmit_IT(&pI2C->hi2c, slaveAddr, &pI2C->Transaction.RegisterAddr, 1, I2C_RELOAD_MODE))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
     }
@@ -634,7 +634,7 @@ Retcode_T I2C_WriteRegisterIntMode(struct MCU_I2C_S *pI2C)
     }
     if (RETCODE_OK == retcode)
     {
-        if (HAL_OK != HAL_I2C_Master_Sequential_Transmit_IT(&pI2C->hi2c, slaveAddr, pI2C->Transaction.pDataBuffer, pI2C->Transaction.Size, I2C_LAST_FRAME))
+        if (HAL_OK != HAL_I2C_Master_Seq_Transmit_IT(&pI2C->hi2c, slaveAddr, pI2C->Transaction.pDataBuffer, pI2C->Transaction.Size, I2C_LAST_FRAME))
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
         }
