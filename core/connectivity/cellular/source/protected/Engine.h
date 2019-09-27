@@ -166,15 +166,6 @@ Retcode_T Engine_Dispatch(CellularRequest_CallableFunction_T function, uint32_t 
 void Engine_EchoModeEnabled(bool echoMode);
 
 /**
- * @brief Handles response queue events, removes unhandled.
- *
- * @retval RETCODE_OK                       If any event has been handled by the URC handler.
- * @retval RETCODE_CELLULAR_URC_NOT_PRESENT If an unhandled event has been received.
- *
- */
-Retcode_T Engine_HandleEvents(void);
-
-/**
  * @brief Utility buffer which can be used by the AT command handlers for
  * generating their AT strings and send via #Engine_SendAtCommand() or
  * #Engine_SendAtCommandWaitEcho(). This way all command generators share a

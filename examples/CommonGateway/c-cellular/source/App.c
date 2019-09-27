@@ -450,8 +450,8 @@ static Retcode_T HttpGet(void)
 
     CellularHttp_Request_T req;
     req.Method = CELLULAR_HTTP_METHOD_GET;
-    req.Server = (const uint8_t *)"httpbin.org";
-    req.Path = (const uint8_t *)"/get";
+    req.Server = "httpbin.org";
+    req.Path = "/get";
     req.Port = 80;
     req.ContentType = CELLULAR_HTTP_CONTENTTYPE_TEXT_PLAIN;
     req.Data = NULL;

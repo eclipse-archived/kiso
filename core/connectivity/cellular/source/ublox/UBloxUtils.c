@@ -31,10 +31,11 @@ Retcode_T CelToUbloxAddr(const Cellular_IpAddress_T *from, AT_UBlox_Address_T *t
         memcpy(to->Address.IPv4, from->Address.IPv4, sizeof(to->Address.IPv4));
         return RETCODE_OK;
     case CELLULAR_IPADDRESSTYPE_IPV6:
-        return AT_UBLOX_ADDRESSTYPE_IPV6;
+        to->Type = AT_UBLOX_ADDRESSTYPE_IPV6;
         memcpy(to->Address.IPv6, from->Address.IPv6, sizeof(to->Address.IPv6));
         return RETCODE_OK;
     default:
+        to->Type = AT_UBLOX_ADDRESSTYPE_INVALID;
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNEXPECTED_BEHAVIOR);
     }
 }
@@ -52,6 +53,7 @@ Retcode_T UbloxToCelAddr(const AT_UBlox_Address_T *from, Cellular_IpAddress_T *t
         memcpy(to->Address.IPv6, from->Address.IPv6, sizeof(to->Address.IPv6));
         return RETCODE_OK;
     default:
+        to->Type = CELLULAR_IPADDRESSTYPE_MAX;
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNEXPECTED_BEHAVIOR);
     }
 }

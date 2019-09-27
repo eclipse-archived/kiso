@@ -24,18 +24,10 @@
 
 Retcode_T Cellular_Initialize(Cellular_StateChanged_T onStateChanged)
 {
-    Retcode_T retcode = RETCODE_OK;
-
-    retcode = Engine_Initialize(onStateChanged);
-
-    return retcode;
+    return Engine_Initialize(onStateChanged);
 }
 
 Retcode_T Cellular_Deinitialize(void)
 {
-    Retcode_T retcode = RETCODE_OK;
-
-    retcode = Engine_Deinitialize();
-
-    return retcode;
+    return Engine_Deinitialize();
 }

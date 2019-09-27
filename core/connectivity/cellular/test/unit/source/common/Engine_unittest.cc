@@ -587,22 +587,22 @@ TEST_F(TS_Engine_Dispatch, LockTimeout_Failure)
     EXPECT_EQ(0U, xSemaphoreGive_fake.call_count);
 }
 
-std::array<AtResponseQueueEntry_T *, 6> TS_Engine_HandleEvents_GetEventVals;
-size_t TS_Engine_HandleEvents_GetEventVals_Index = 0;
+std::array<AtResponseQueueEntry_T *, 6> TS_SkipEventsUntilCommand_GetEventVals;
+size_t TS_SkipEventsUntilCommand_GetEventVals_Index = 0;
 
-void TS_Engine_HandleEvents_DummyMarkUnused(void)
+void TS_SkipEventsUntilCommand_DummyMarkUnused(void)
 {
-    TS_Engine_HandleEvents_GetEventVals_Index = (TS_Engine_HandleEvents_GetEventVals_Index + 1) % TS_Engine_HandleEvents_GetEventVals.size();
+    TS_SkipEventsUntilCommand_GetEventVals_Index = (TS_SkipEventsUntilCommand_GetEventVals_Index + 1) % TS_SkipEventsUntilCommand_GetEventVals.size();
 }
 
-Retcode_T TS_Engine_HandleEvents_DummyGetEvent(uint32_t, AtResponseQueueEntry_T **entry)
+Retcode_T TS_SkipEventsUntilCommand_DummyGetEvent(uint32_t, AtResponseQueueEntry_T **entry)
 {
-    *entry = TS_Engine_HandleEvents_GetEventVals[TS_Engine_HandleEvents_GetEventVals_Index];
+    *entry = TS_SkipEventsUntilCommand_GetEventVals[TS_SkipEventsUntilCommand_GetEventVals_Index];
 
     return RETCODE_OK;
 }
 
-class TS_Engine_HandleEvents : public testing::Test
+class TS_SkipEventsUntilCommand : public testing::Test
 {
 protected:
     void CreateQueueEntry(AtResponseQueueEntry_T **entry, AtEventType_T type, AtResponseCode_T code, size_t len)
@@ -633,22 +633,22 @@ protected:
         RESET_FAKE(AtResponseQueue_GetEvent);
         RESET_FAKE(AtResponseQueue_MarkBufferAsUnused);
 
-        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[0], AT_EVENT_TYPE_COMMAND_ECHO, (AtResponseCode_T)666, std::min(rand() % 16, 2));
-        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[1], AT_EVENT_TYPE_COMMAND_ARG, (AtResponseCode_T)667, std::min(rand() % 16, 2));
-        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[2], AT_EVENT_TYPE_ERROR, (AtResponseCode_T)669, 0);
-        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[3], AT_EVENT_TYPE_MISC, (AtResponseCode_T)670, std::min(rand() % 32, 2));
-        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[4], AT_EVENT_TYPE_RESPONSE_CODE, AT_RESPONSE_CODE_OK, 0);
-        CreateQueueEntry(&TS_Engine_HandleEvents_GetEventVals[5], AT_EVENT_TYPE_COMMAND, (AtResponseCode_T)668, std::min(rand() % 16, 2));
-        TS_Engine_HandleEvents_GetEventVals_Index = 0;
+        CreateQueueEntry(&TS_SkipEventsUntilCommand_GetEventVals[0], AT_EVENT_TYPE_COMMAND_ECHO, (AtResponseCode_T)666, std::min(rand() % 16, 2));
+        CreateQueueEntry(&TS_SkipEventsUntilCommand_GetEventVals[1], AT_EVENT_TYPE_COMMAND_ARG, (AtResponseCode_T)667, std::min(rand() % 16, 2));
+        CreateQueueEntry(&TS_SkipEventsUntilCommand_GetEventVals[2], AT_EVENT_TYPE_ERROR, (AtResponseCode_T)669, 0);
+        CreateQueueEntry(&TS_SkipEventsUntilCommand_GetEventVals[3], AT_EVENT_TYPE_MISC, (AtResponseCode_T)670, std::min(rand() % 32, 2));
+        CreateQueueEntry(&TS_SkipEventsUntilCommand_GetEventVals[4], AT_EVENT_TYPE_RESPONSE_CODE, AT_RESPONSE_CODE_OK, 0);
+        CreateQueueEntry(&TS_SkipEventsUntilCommand_GetEventVals[5], AT_EVENT_TYPE_COMMAND, (AtResponseCode_T)668, std::min(rand() % 16, 2));
+        TS_SkipEventsUntilCommand_GetEventVals_Index = 0;
 
-        AtResponseQueue_GetEventCount_fake.return_val = TS_Engine_HandleEvents_GetEventVals.size();
-        AtResponseQueue_GetEvent_fake.custom_fake = TS_Engine_HandleEvents_DummyGetEvent;
-        AtResponseQueue_MarkBufferAsUnused_fake.custom_fake = TS_Engine_HandleEvents_DummyMarkUnused;
+        AtResponseQueue_GetEventCount_fake.return_val = TS_SkipEventsUntilCommand_GetEventVals.size();
+        AtResponseQueue_GetEvent_fake.custom_fake = TS_SkipEventsUntilCommand_DummyGetEvent;
+        AtResponseQueue_MarkBufferAsUnused_fake.custom_fake = TS_SkipEventsUntilCommand_DummyMarkUnused;
         Urc_HandleResponses_fake.return_val = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_URC_NOT_PRESENT);
     }
     virtual void TearDown()
     {
-        for (auto *val : TS_Engine_HandleEvents_GetEventVals)
+        for (auto *val : TS_SkipEventsUntilCommand_GetEventVals)
         {
             free(val);
             val = nullptr;
@@ -656,20 +656,14 @@ protected:
     }
 };
 
-TEST_F(TS_Engine_HandleEvents, Success)
+TEST_F(TS_SkipEventsUntilCommand, Success)
 {
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
 
-    rc = Engine_HandleEvents();
+    rc = SkipEventsUntilCommand();
 
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_URC_NOT_PRESENT), rc);
-    EXPECT_EQ(1U, AtResponseQueue_GetEventCount_fake.call_count);
-    EXPECT_EQ(1U, Urc_HandleResponses_fake.call_count);
-#if KISO_LOGGING
-    EXPECT_EQ((AtResponseQueue_GetEventCount_fake.return_val - 1) * 2, AtResponseQueue_GetEvent_fake.call_count);
-#else
+    EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(AtResponseQueue_GetEventCount_fake.return_val, AtResponseQueue_GetEvent_fake.call_count);
-#endif
     EXPECT_EQ(AtResponseQueue_GetEventCount_fake.return_val - 1, AtResponseQueue_MarkBufferAsUnused_fake.call_count);
 }
 

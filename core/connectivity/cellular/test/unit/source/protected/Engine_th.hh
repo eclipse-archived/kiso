@@ -27,7 +27,6 @@ FAKE_VALUE_FUNC(Retcode_T, Engine_SendAtCommand, const uint8_t *, uint32_t)
 FAKE_VALUE_FUNC(Retcode_T, Engine_SendAtCommandWaitEcho, const uint8_t *, uint32_t, uint32_t)
 FAKE_VALUE_FUNC(Retcode_T, Engine_Dispatch, CellularRequest_CallableFunction_T, uint32_t, void *, uint32_t)
 FAKE_VOID_FUNC(Engine_EchoModeEnabled, bool)
-FAKE_VALUE_FUNC(Retcode_T, Engine_HandleEvents)
 FAKE_VALUE_FUNC(Retcode_T, Engine_ReadData, uint8_t *, uint32_t, uint32_t *)
 
 char Engine_AtSendBuffer[CELLULAR_AT_SEND_BUFFER_SIZE];

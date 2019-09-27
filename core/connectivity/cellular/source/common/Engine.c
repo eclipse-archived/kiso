@@ -57,6 +57,14 @@
  */
 #define CELLULAR_RESPONSE_QUEUE_WAIT_TIME (UINT32_C(25) / portTICK_PERIOD_MS)
 
+/**
+ * @brief Skip through AT response queue events and remove events until, and
+ * excluding, the next COMMAND type event is found, or until the queue is empty.
+ *
+ * @retval RETCODE_OK   If COMMAND event encountered, or queue is empty.
+ */
+static Retcode_T SkipEventsUntilCommand(void);
+
 static StaticSemaphore_t AtResponseParser_RxWakeupBuffer;        //!< Semaphore storage for rx data ready signalling
 static SemaphoreHandle_t AtResponseParser_RxWakeupHandle = NULL; //!< Handle for rx data ready semaphore
 
@@ -231,60 +239,66 @@ static void CellularDriver_Task(void *param)
 
         (void)xSemaphoreTake(CellularDriver_RequestLock, portMAX_DELAY);
         /* handle urc events */
-        (void)Engine_HandleEvents();
-        /* check if socket data bytes available for reading */
-        //        CellularSocket_NotifyDataReceived();
+        (void)Urc_HandleResponses();
+        (void)SkipEventsUntilCommand();
+
         (void)xSemaphoreGive(CellularDriver_RequestLock);
     }
 }
 
-Retcode_T Engine_HandleEvents(void)
+static Retcode_T SkipEventsUntilCommand(void)
 {
-    uint32_t count = AtResponseQueue_GetEventCount();
-    Retcode_T retcode = Urc_HandleResponses();
-
-    /* remove unhandled events, till next command event */
-    if (0 != count && RETCODE_OK != retcode)
+    Retcode_T retcode = RETCODE_OK;
+    while (RETCODE_OK == retcode)
     {
-        for (uint32_t i = 0; i < count; i++)
-        {
-            AtResponseQueueEntry_T *event;
-#if KISO_LOGGING
-            if (RETCODE_OK == AtResponseQueue_GetEvent(0, &event))
-            {
-                switch (event->Type)
-                {
-                case AT_EVENT_TYPE_COMMAND_ECHO:
-                    LOG_WARNING("Removing COMMAND_ECHO-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer);
-                    break;
-                case AT_EVENT_TYPE_COMMAND:
-                    LOG_WARNING("Removing COMMAND-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer);
-                    break;
-                case AT_EVENT_TYPE_COMMAND_ARG:
-                    LOG_WARNING("Removing COMMAND_ARG-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer);
-                    break;
-                case AT_EVENT_TYPE_RESPONSE_CODE:
-                    LOG_WARNING("Removing RESPONSE_CODE-event (%d) from AtResponseQueue!", (int)event->ResponseCode);
-                    break;
-                case AT_EVENT_TYPE_MISC:
-                    LOG_WARNING("Removing MISC-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer);
-                    break;
-                case AT_EVENT_TYPE_ERROR:
-                    LOG_WARNING("Removing ERROR-event from AtResponseQueue!");
-                    break;
-                default:
-                    LOG_ERROR("Unexpected event type!");
-                    break;
-                }
-            }
-#endif
-            AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueueEntry_T *event;
+        retcode = AtResponseQueue_GetEvent(0, &event);
 
-            if (RETCODE_OK != AtResponseQueue_GetEvent(0, &event) || AT_EVENT_TYPE_COMMAND == event->Type)
+        if (RETCODE_OK == retcode)
+        {
+#if KISO_LOGGING
+            switch (event->Type)
             {
+            case AT_EVENT_TYPE_COMMAND_ECHO:
+                LOG_WARNING("Removing COMMAND_ECHO-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer);
+                break;
+            case AT_EVENT_TYPE_COMMAND:
+                LOG_INFO("Found COMMAND-event (%.*s), resuming!", event->BufferLength, event->Buffer);
+                break;
+            case AT_EVENT_TYPE_COMMAND_ARG:
+                LOG_WARNING("Removing COMMAND_ARG-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer);
+                break;
+            case AT_EVENT_TYPE_RESPONSE_CODE:
+                LOG_WARNING("Removing RESPONSE_CODE-event (%d) from AtResponseQueue!", (int)event->ResponseCode);
+                break;
+            case AT_EVENT_TYPE_MISC:
+                LOG_WARNING("Removing MISC-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer);
+                break;
+            case AT_EVENT_TYPE_ERROR:
+                LOG_WARNING("Removing ERROR-event from AtResponseQueue!");
+                break;
+            default:
+                LOG_ERROR("Unexpected event type!");
                 break;
             }
+#endif
+            if (AT_EVENT_TYPE_COMMAND == event->Type)
+            {
+                /* If event type COMMAND, do not remove from queue! Instead
+                     * return to caller and let them handle the command
+                     * (presumably the beginning of a new URC). */
+                break;
+            }
+
+            AtResponseQueue_MarkBufferAsUnused();
         }
+    }
+
+    if (RETCODE_AT_RESPONSE_QUEUE_TIMEOUT == Retcode_GetCode(retcode))
+    {
+        /* We ignore errors that indicate that the queue was empty. That simply
+         * means there's currently no COMMAND event in the queue. */
+        retcode = RETCODE_OK;
     }
 
     return retcode;
