@@ -23,8 +23,6 @@ add_compile_options(
 		-Wno-error=int-to-pointer-cast)
 
 # TODO: Enable later - not working for now
-# Need little attention
-list(FILTER TEST_CODE EXCLUDE REGEX ".*SPI_unittest.cc$")
 # Unknown
 list(FILTER TEST_CODE EXCLUDE REGEX ".*efm32/Flash_unittest.cc$")
 list(FILTER TEST_CODE EXCLUDE REGEX ".*efm32/Timer_unittest.cc$")

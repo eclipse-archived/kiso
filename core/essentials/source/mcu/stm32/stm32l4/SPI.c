@@ -323,7 +323,7 @@ Retcode_T MCU_SPI_Transfer(SPI_T spi, uint8_t *data_out, uint8_t *data_in, uint3
         }
         else
         {
-            if (SPI_STATE_RX == pSPI->State)
+            if (SPI_STATE_TX_RX == pSPI->State)
             {
                 /* Application wants to cancel ongoing sending which is signaled by length == 0 */
                 retcode = pSPI->CancelFunPtr(pSPI);
@@ -344,17 +344,15 @@ uint32_t MCU_SPI_GetDataCount(SPI_T spi)
     struct MCU_SPI_S *pSPI = (struct MCU_SPI_S *)spi;
     if (pSPI)
     {
-        HAL_SPI_StateTypeDef halState = HAL_SPI_GetState(&pSPI->hspi);
-
-        switch (halState)
+        switch (pSPI->State)
         {
-        case HAL_SPI_STATE_BUSY_TX:
+        case SPI_STATE_TX:
             dataCount = pSPI->hspi.TxXferCount;
             break;
-        case HAL_SPI_STATE_BUSY_RX:
+        case SPI_STATE_RX:
             dataCount = pSPI->hspi.RxXferCount;
             break;
-        case HAL_SPI_STATE_BUSY_TX_RX:
+        case SPI_STATE_TX_RX:
             dataCount = pSPI->hspi.RxXferCount;
             break;
         default:
