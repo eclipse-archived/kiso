@@ -1,5 +1,4 @@
 # Kiso #
-**Note**: Not available for product development yet.
 ![alt text](./docs/doxygen/Kiso-logo.png)
 
 ## Introduction ##
@@ -20,19 +19,6 @@ Please take a look at [documentation](documentation_link_anker)
 ## Kiso doxygen documentation ##
 Please take a look at [doxygen documentation](doxygen_documentation_link_anker)
 
-## Supported hardwares ##
-* XDK
+## Supported hardware ##
+* CommonGateway
 * ... more to come
-
-## Changelog ##
-
-### v0.1.0 ###
-* Improvement documentation
-* Cellular added
-
-### pre_v0.1.0 ###
-* Initial Kiso code drop
-* Add BSP for CommonGateway
-* Cleanup modules to optimize UX for BCX
-* Improve documentation
-* Add build-possibilities with Makefiles

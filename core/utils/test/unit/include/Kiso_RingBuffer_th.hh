@@ -15,11 +15,11 @@
 /**
  * @ingroup UTILS
  *
- * @defgroup RINGBUFFER RingBuffer
+ * @defgroup RINGBUFFER_TESTS RingBuffer Unit Tests
  * @{
  *
  * @brief
- *      Mockup implementation for the Kiso_RingBuffer_th.hh module
+ *      Mockup implementation for the @ref RINGBUFFER module
  *
  * @details
  *

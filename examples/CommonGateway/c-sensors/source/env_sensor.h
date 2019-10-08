@@ -13,15 +13,15 @@
 **********************************************************************************************************************/
 
 /**
- * @file
- * @defgroup    NON_GROUPED
- * @ingroup     NON_GROUPED
+ * @ingroup     KISO_C_EXAMPLE_SENSORS
+ * @defgroup    ENV_SENSOR Environment sensor
  * @{
  *
- * @brief       Put brief description here.
+ * @brief       Environment sensor code for the sensors example.
  *
  * @details
- * Put detailed description here.
+ *              Demonstrates usage of environment sensor in Kiso for CommonGateway board.
+ * @file
  */
 
 #ifndef ENV_SENSOR_H_

@@ -15,11 +15,11 @@
 /**
  * @ingroup UTILS
  *
- * @defgroup TASKMONITOR TaskMonitor
+ * @defgroup TASKMONITOR_TESTS TaskMonitor Unit Tests
  * @{
  *
  * @brief
- *      Mockup implementation for the Kiso_TaskMonitor_th.hh module
+ *      Mockup implementation for the @ref TASKMONITOR module
  *
  * @details
  *

@@ -195,7 +195,7 @@ Retcode_T BSP_MAX44009_IntEnable(int32_t deviceId, BSP_MAX44009_InterruptCallbac
  */
 Retcode_T BSP_MAX44009_IntDisable(int32_t deviceId);
 
-/**@}*/
-
 #endif /*KISO_FEATURE_BSP_MAX44009*/
 #endif /* KISO_BSP_MAX44009_H_ */
+
+/**@}*/

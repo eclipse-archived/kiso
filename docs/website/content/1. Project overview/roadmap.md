@@ -10,5 +10,3 @@ menu:
     identifier: roadmap
     weight: 2
 ---
-
-Provide link to the right wiki-page? Or keep here as truth.

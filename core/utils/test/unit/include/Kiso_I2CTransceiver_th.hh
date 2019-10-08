@@ -15,11 +15,11 @@
 /**
  * @ingroup UTILS
  *
- * @defgroup I2CTRANCEIVER I2cTranceiver
+ * @defgroup I2CTRANSCEIVER_TESTS I2CTransceiver Unit Tests
  * @{
  *
  * @brief
- *      Mockup implementation for the Kiso_I2CTransceiver_th.hh module
+ *      Mockup implementation for the @ref I2CTRANSCEIVER module
  *
  * @details
  *

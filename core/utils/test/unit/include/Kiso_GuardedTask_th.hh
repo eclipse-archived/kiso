@@ -15,11 +15,11 @@
 /**
  * @ingroup UTILS
  *
- * @defgroup GUARDEDTASK GuardedTask
+ * @defgroup GUARDEDTASK_TESTS GuardedTask Unit Tests
  * @{
  *
  * @brief
- *      Mockup implementation for the Kiso_GuardedTask_th.hh module
+ *      Mockup implementation for the @ref GUARDEDTASK module
  *
  * @details
  *

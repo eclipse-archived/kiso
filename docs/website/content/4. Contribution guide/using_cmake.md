@@ -160,8 +160,6 @@ In addition to the `CMakeLists.txt`, each library's subdirectory also contains:
 - `source` and `include` directories - custom patches or modifications on the library
 - a `test` directory - unit testing mockups
 
-**TODO: TBD: How do we do versioning of 3rd-party libraries?**
-
 ### Examples
 Examples are small applications that use the Kiso infrastructure (essentials/utils), BSP and MCU interfaces and show a basic concept for working with the APIs. They are used to demonstrate how the devices on the board are interfaced with, how to setup peripherals, how to read sensor values, etc. Their `CMakeLists.txt` is very simple and almost identical for all example applications. This is the only CMake file that defines building actual executables - one that can be used with a debugger and one that can be directly flashed to the target board.
 

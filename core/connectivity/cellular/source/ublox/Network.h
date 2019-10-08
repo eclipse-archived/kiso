@@ -309,7 +309,7 @@ typedef struct CellularNetwork_RegistrationStatus_S CellularNetwork_Registration
  * * 133: one shot serving cell and neighbour cells without the tags
  * * 134: periodic serving cell and neighbour cells refreshed without the tags
  *
- * @see  Ref 2, p 106, 7.21�Cell environment description +CGED
+ * @see  Ref 2, p 106, 7.21 Cell environment description +CGED
  */
 enum CellularNetwork_CellEnvironmentDescription_E
 {
@@ -326,7 +326,7 @@ typedef enum CellularNetwork_CellEnvironmentDescription_E CellularNetwork_CellEn
  * mode CELLULAR_NETWORK_CELL_ENV_MODE_ONESHOT_SERVCELL
  * MCC and MNC are given by modem as decimal number string, LAC and CI are given as hexadecimal number string
  *
- * @see  MMC, MNC, LAC, CI: see Ref 2, p 111 ch 7.21�Cell environment description +CGED
+ * @see  MMC, MNC, LAC, CI: see Ref 2, p 111 ch 7.21 Cell environment description +CGED
  */
 struct Cellular_CellEnvironmentData_S
 {
@@ -568,7 +568,7 @@ void CellularNetwork_RegisterUrcCregCallback(CellularNetwork_UrcCregCallback_T C
  * @param[out] data, cell information
  * @return RETCODE_OK The network status was retrieved correctly
  * @return RETCODE_CELLULAR_NOT_RESPONSIVE The modem did not respond to the network status query
- * @see Ref 2, p 106, ch 7.21�Cell environment description +CGED
+ * @see Ref 2, p 106, ch 7.21 Cell environment description +CGED
  */
 Retcode_T CellularNetwork_QueryCellEnvironment(Cellular_CellEnvironmentData_T *data); //-- AT+CGED=3
 

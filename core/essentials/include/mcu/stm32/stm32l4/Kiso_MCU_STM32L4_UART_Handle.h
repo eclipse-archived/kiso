@@ -38,7 +38,7 @@ typedef enum MCU_UART_State_E
 } MCU_UART_State_T;
 
 /**
- * @struct       Structure holding the current transaction parameters.
+ * Structure holding the current transaction parameters.
  */
 struct MCU_UART_Transcation_S
 {
@@ -51,7 +51,7 @@ struct MCU_UART_Transcation_S
 /* forward structure declaration */
 struct MCU_UART_S;
 /**
- * @struct       Structure holding the UART control block.
+ * Structure holding the UART control block.
  */
 struct MCU_UART_S
 {

@@ -15,7 +15,6 @@ target_include_directories(app_config
 INTERFACE
    ${CURRENT_CONFIG_DIR}
    ${CURRENT_CONFIG_DIR}/Cellular
-   ${CURRENT_CONFIG_DIR}/SeggerRTT
    ${CURRENT_CONFIG_DIR}/Utils
 )
 

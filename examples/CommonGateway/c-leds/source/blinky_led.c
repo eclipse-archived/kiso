@@ -13,16 +13,8 @@
 ********************************************************************************/
 
 /**
- * @ingroup
- *
- * @defgroup
- * @{
- *
- * @brief Blinky LED example
- *
- * @details Demo application demonstrates how to use the LED API from KISO.
- *
- **/
+ * @file
+ */
 
 /* own header files */
 #include "AppInfo.h"
@@ -42,14 +34,13 @@
 #include "timers.h"
 #include "Kiso_Logging.h"
 
-void blink_led(void *param1, uint32_t param2);
-
-/*Application Command Processor Instance */
+/**
+ * @brief Application Command Processor Instance
+ */
 CmdProcessor_T *AppCmdProcessor;
 
 /**
  * @brief This is a template function where the user can write his custom application.
- *
  */
 void appInitSystem(void *CmdProcessorHandle, uint32_t param2)
 {
@@ -85,16 +76,16 @@ void appInitSystem(void *CmdProcessorHandle, uint32_t param2)
         printf("Successful Initialize of BLINKY LED APPLICATION \n ");
     }
 }
-
+/**
+ * @brief Toggles an LED on/off and enqueues itself in the commandprocessor after delay
+ */
 void blink_led(void *param1, uint32_t param2)
 {
-    (void)param1;
     (void)param2;
     BSP_LED_Switch(COMMONGATEWAY_LED_BLUE_ID, COMMONGATEWAY_LED_COMMAND_TOGGLE);
     LOG_DEBUG("Led switch");
     vTaskDelay(500);
     CmdProcessor_Enqueue((CmdProcessor_T *)param1, blink_led, param1, 0);
 }
-/**@} */
 
 /** ************************************************************************* */

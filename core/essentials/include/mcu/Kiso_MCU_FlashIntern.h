@@ -175,3 +175,5 @@ uint32_t MCU_FlashIntern_GetMinRWSize(void);
 
 #endif /* KISO_FEATURE_FLASH_INTERN */
 #endif /* KISO_MCU_FLASH_INTERN_H_ */
+
+/** @} */

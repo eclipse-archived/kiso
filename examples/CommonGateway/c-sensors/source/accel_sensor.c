@@ -20,7 +20,7 @@
 #include "sensors_common.h"
 #include "accel_sensor.h"
 
-#include "../../../../boards/CommonGateway/bsp/include/BSP_CommonGateway.h"
+#include "BSP_CommonGateway.h"
 #include "Kiso_BSP_BMA280.h"
 #include "Kiso_BSP_Board.h"
 #include "Kiso_I2CTransceiver.h"

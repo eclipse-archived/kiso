@@ -15,11 +15,11 @@
 /**
  * @ingroup UTILS
  *
- * @defgroup EVENTHUB EventHub
+ * @defgroup EVENTHUB_TESTS EventHub Unit Tests
  * @{
  *
  * @brief
- *      Mockup implementation for the Kiso_EventHub_th.hh module
+ *      Mockup implementation for the @ref EVENTHUB module
  *
  * @details
  *

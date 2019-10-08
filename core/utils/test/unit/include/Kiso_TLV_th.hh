@@ -15,11 +15,11 @@
 /**
  * @ingroup UTILS
  *
- * @defgroup TLV TLV
+ * @defgroup TLV_TESTS TLV Unit Tests
  * @{
  *
  * @brief
- *      Mockup implementation for the Kiso_TLV_th.hh module
+ *      Mockup implementation for the @ref TLV module
  *
  * @details
  *

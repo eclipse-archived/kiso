@@ -15,11 +15,11 @@
 /**
  * @ingroup UTILS
  *
- * @defgroup PIPEANDFILTER PipeAndFilter
+ * @defgroup PIPEANDFILTER_TESTS PipeAndFilter Unit Tests
  * @{
  *
  * @brief
- *      Mockup implementation for the Kiso_PipeAndFilter_th.hh module
+ *      Mockup implementation for the @ref PIPEANDFILTER module
  *
  * @details
  *

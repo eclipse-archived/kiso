@@ -13,7 +13,6 @@
 ********************************************************************************/
 
 /**
- * @ingroup     BSP_COMMONGATEWAY
  * @defgroup    BSP_COMMONGATEWAY  Common Gateway BSP
  * @{
  * @brief       Common Gateway Board Support Package

@@ -13,8 +13,14 @@
 ********************************************************************************/
 
 /**
- * @file 
- */
+ * @defgroup    KISO_C_EXAMPLE_BLINKY Blinky LED Example
+ * @{
+ *
+ * @brief Blinky LED example
+ *
+ * @details Demo application demonstrates how to use the LED API from KISO.
+ * @file
+ **/
 
 #ifndef BLINKY_LED_H_
 #define BLINKY_LED_H_
@@ -35,4 +41,18 @@
  */
 void appInitSystem(void *CmdProcessorHandle, uint32_t param2);
 
+/**
+ * @brief Toggles an LED on/off and enqueues itself in the commandprocessor after delay
+ *
+ * @param[in] param1 Handle of the main commandprocessor
+ *
+ * @param[in] param2 Unused
+ *
+ */
+void blink_led(void *param1, uint32_t param2);
+
 #endif /* BLINKY_LED_H_ */
+
+/**
+ * @}
+ */

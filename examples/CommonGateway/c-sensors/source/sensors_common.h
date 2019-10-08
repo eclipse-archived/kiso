@@ -13,15 +13,15 @@
 **********************************************************************************************************************/
 
 /**
- * @file
- * @defgroup    NON_GROUPED
- * @ingroup     NON_GROUPED
+ * @defgroup    KISO_C_EXAMPLE_SENSORS Sensors Example
  * @{
  *
- * @brief       Put brief description here.
+ * @brief       Demo application featuring basic usage of sensors.
  *
- * @details
- * Put detailed description here.
+ * @details     Demonstrates usage of Kiso APIs for working with accelerometer and environment sensors 
+ *              in CommonGateway board.
+ * 
+ * @file
  */
 
 #ifndef SENSORS_COMMON_H_
@@ -48,4 +48,6 @@
 void appInitSystem(void *CmdProcessorHandle, uint32_t param2);
 
 #endif /* SENSORS_COMMON_H_ */
-/**@}*/
+/**
+ * @}
+ */

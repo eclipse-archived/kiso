@@ -13,7 +13,7 @@
 ********************************************************************************/
 
 /**
- * @file Function.c
+ * @file Functions.c
  *
  * @brief Diverse useful Functions e.g. Cmsis Functions for upper Modules
  *

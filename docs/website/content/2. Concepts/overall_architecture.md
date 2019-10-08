@@ -24,8 +24,8 @@ Kiso was build to answer the challenges that comes with the development of the I
 
 The key challenges in defining the architecture were:
 
-- How can we design enough abstraction from the hardware to have generic applications running on specific hardwares?
-- How can we design Kiso in a way to support application development but not enforce some behaviors (How to stream data, FOTA,...)
+- How can we design enough abstraction from the hardware to have generic applications running on specific hardware?
+- How can we design Kiso in a way that supports application development but does enforce strict behaviour patterns (How to stream data, etc.)
 - What should be Kiso code, what should be application code?
 - Which components should exist within Kiso, what do they contain?
 
@@ -49,14 +49,11 @@ Each component, besides their outside dependencies, are free to choose its archi
 
 ### Base components (Essentials, Utils)
 ![base_layer_component-kiso-error](/images/base_layer_component.png)
-{{< note title="" >}}
-Please take a look at [the hardware abstraction concept]({{< ref "hardware_abstraction.md" >}}) to understand how we manage to have here an abstraction.
-{{< /note >}}
 
 ### Low layer components (Drivers, Cellular, ...)
 ![low_layer_component-kiso-error](/images/low_layer_component.png)
 
-### High layer components (ServalPAL, FOTA, ...)
+### High layer components (ServalPAL)
 ![high_layer_component-kiso-error](/images/high_layer_component.png)
 
 

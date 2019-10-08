@@ -13,8 +13,8 @@
 ********************************************************************************/
 
 /**
- * @file
  * @brief Implemented first application function main() here.
+ * @file
  */
 
 #include "AppInfo.h"
@@ -90,6 +90,9 @@ int main(void)
 }
 
 /*---------------------- LOCAL FUNCTIONS IMPLEMENTATION -------------------------------------------------------------*/
+/**
+ * @brief Callback to execute when an error is raised by Retcode module
+ */
 void ErrorHandler(Retcode_T error, bool isfromIsr)
 {
     if (false == isfromIsr)
@@ -113,6 +116,7 @@ void ErrorHandler(Retcode_T error, bool isfromIsr)
 }
 
 #ifndef NDEBUG /* valid only for debug builds */
+
 /**
  * @brief This API is called when function enters an assert
  *
@@ -120,7 +124,6 @@ void ErrorHandler(Retcode_T error, bool isfromIsr)
  * @param[in] file : file name which is asserted
  *
  */
-
 void assertIndicationMapping(const unsigned long line, const unsigned char *const file)
 {
     /* Switch on the LEDs */
@@ -137,6 +140,9 @@ void assertIndicationMapping(const unsigned long line, const unsigned char *cons
 }
 #endif
 
+/**
+ * @brief Initializes the board and required peripherals
+ */
 Retcode_T systemStartup(void)
 {
     Retcode_T returnValue = RETCODE_OK;
@@ -171,12 +177,14 @@ Retcode_T systemStartup(void)
 }
 
 /**
- * @brief This function is SysTick Handler.
- * This is called when ever the IRQ is hit.
- * This is a temporary implementation where
- * the SysTick_Handler() is not directly mapped
- * to xPortSysTickHandler(). Instead it is only
- * called if the scheduler has started.
+ * @brief
+ *      This function is SysTick Handler.
+ * @details
+ *      This is called when ever the IRQ is hit.
+ *      This is a temporary implementation where
+ *      the SysTick_Handler() is not directly mapped
+ *      to xPortSysTickHandler(). Instead it is only
+ *      called if the scheduler has started.
  */
 static void SysTickPreCallback(void)
 {
@@ -191,6 +199,14 @@ static void SysTickPreCallback(void)
 static StaticTask_t xIdleTaskTCBBuffer;
 static StackType_t xIdleStack[IDLE_TASK_SIZE];
 
+/**
+ * @brief
+ *      If static allocation is supported then the application must provide
+ *      the following callback function
+ * @details
+ *      Enables the application to optionally provide the memory that
+ *      will be used by the idle task as the task's stack and TCB.
+ */
 void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize)
 {
     *ppxIdleTaskTCBBuffer = &xIdleTaskTCBBuffer;
@@ -203,10 +219,14 @@ void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackTyp
 static StaticTask_t xTimerTaskTCBBuffer;
 static StackType_t xTimerStack[configTIMER_TASK_STACK_DEPTH];
 
-/* If static allocation is supported then the application must provide the
-   following callback function - which enables the application to optionally
-   provide the memory that will be used by the timer task as the task's stack
-   and TCB. */
+/**
+ * @brief
+ *      If static allocation and timers are supported then the application
+ *      must provide the following callback function
+ * @detail
+ *      Enables the application to optionally provide the memory that
+ *      will be used by the timer task as the task's stack and TCB.
+ */
 void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize)
 {
     *ppxTimerTaskTCBBuffer = &xTimerTaskTCBBuffer;

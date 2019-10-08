@@ -15,11 +15,11 @@
 /**
  * @ingroup UTILS
  *
- * @defgroup LOGGING Logging
+ * @defgroup LOGGING_TESTS Logging Unit Tests
  * @{
  *
  * @brief
- *      Mockup implementation for the Kiso_Logging_th.hh module
+ *      Mockup implementation for the @ref LOGGING module
  *
  * @details
  *

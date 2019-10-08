@@ -79,7 +79,7 @@
  * @{
  *
  * @brief This module is used to initialize, connect, disconnect, uninitialize and get modem status.
- * 		  \image html Cellular-overview.png
+ *        \image html Cellular-overview.png
  *
  */
 #ifndef KISO_CELLULAR_H_
@@ -550,3 +550,5 @@ Retcode_T Cellular_Deinitialize(void);
 Cellular_State_T Cellular_GetState(void);
 
 #endif /* KISO_CELLULAR_H_ */
+
+/**@}*/

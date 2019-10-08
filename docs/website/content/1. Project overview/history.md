@@ -10,5 +10,3 @@ menu:
     identifier: history
     weight: 1
 ---
-
-## Blabla

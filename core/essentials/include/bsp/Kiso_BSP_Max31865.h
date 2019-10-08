@@ -31,7 +31,7 @@
  * MCU resources into disabled state.
  *
  * BSP_Max31865_Disconnect() will put the GPIO pins to the lowest power consumption and risk free configuration.
- * e.g. high impedance. 
+ * e.g. high impedance.
  *
  * BSP_Max31865_GetHandle() will return a pointer to the MCU resource structure created and initialized by the BSP
  * implementation. This structure is MCU specific and its proper initialization is mandatory for the proper function of
@@ -115,7 +115,7 @@ HWHandle_T BSP_Max31865_GetSPIHandle(void);
 
 /**
  * @brief       Sets the Max31865 chip select pin to voltage level high.
- * 
+ *
  * @details     This function sets the chip select line to high voltage level as seen by the device in order to 
  *              deselect from the SPI bus.
  *
@@ -127,7 +127,7 @@ Retcode_T BSP_Max31865_SetCSHigh(void);
 
 /**
  * @brief       Sets the Max31865 chip select pin to voltage level low.
- * 
+ *
  * @details     This function sets the chip select line to low voltage level as seen by the device in order to 
  *              select it for an SPI transaction.
  *
@@ -149,3 +149,5 @@ Retcode_T BSP_Max31865_GetStatus(uint8_t *isConnected);
 #endif // KISO_FEATURE_BSP_MAX31865
 
 #endif /* KISO_BSP_MAX31865_H */
+
+/**@}*/

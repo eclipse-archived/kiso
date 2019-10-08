@@ -14,25 +14,26 @@
 
 /**
  * @file
- * @defgroup
- * @ingroup
+ * @defgroup KISO_HAL_BSP_TestInterface TestInterface
+ * @ingroup KISO_HAL_BSP_IF
  * @{
- * @brief
+ * @brief BSP API for Test Interface of a device exposing SPI, USB, UART, LEUART
  *
  * @details
  * After reset, the microcontroller GPIOs are mostly tristated. Once the device is requested a call to
- * BSP_Mem_S25FL116K_Connect() function is required to map its GPIOs to their desired function (input, output, SPI, etc).
+ * BSP_TestInterface_Connect() function is required to map its GPIOs to their desired function (input, output, SPI, etc).
  *
- * A call to BSP_Mem_S25FL116K_Enable() will execute the required sequence to enable the device and its dedicated
+ * A call to BSP_TestInterface_Enable() will execute the required sequence to enable the device and its dedicated
  * MCU resources (e.g. SPI). The Device is then **controllable** through the microcontroller.
  *
- * BSP_Mem_S25FL116K_Disable() will revert back what the BSP_Mem_S25FL116K_Enable() has done and set the device and its related
+ * BSP_TestInterface_Disable() will revert back what the BSP_TestInterface_Enable() has done and set the device and its related
  * MCU resources into disabled state.
  *
- * BSP_Mem_S25FL116K_Disconnect() will put the GPIO pins to the lowest power consumption and risk free configuration.
- * e.g. high impedance. 
+ * BSP_TestInterface_Disconnect() will put the GPIO pins to the lowest power consumption and risk free configuration.
+ * e.g. high impedance.
  *
- * BSP_Mem_S25FL116K_GetHandle() will return a pointer to the MCU resource structure created and initialized by the BSP
+ * BSP_TestInterface_GetLEUARTHandle(), BSP_TestInterface_GetUARTHandle(), BSP_TestInterface_GetUSBHandle() and BSP_TestInterface_GetSPIHandle()
+ * will return a pointer to the MCU resource structure created and initialized by the BSP
  * implementation. This structure is MCU specific and its proper initialization is mandatory for the proper function of
  * the device. The Handle is the only contract between MCU layer and BSP layer.
  *
@@ -40,13 +41,13 @@
  * @dot
  * digraph state_diagram {
  *      INIT[color="blue", shape=record]
- *      INIT -> CONNECTED[style="dashed", label="BSP_Mem_S25FL116K_Connect()"]
- *      CONNECTED -> DISCONNECTED [label="BSP_Mem_S25FL116K_Disconnect()"]
- *      DISCONNECTED -> CONNECTED [label="BSP_Mem_S25FL116K_Connect()"]
- *      CONNECTED -> ENABLED [label="BSP_Mem_S25FL116K_Enable()"]
- *      ENABLED -> DISABLED [label="BSP_Mem_S25FL116K_Disable()"]
- *      DISABLED -> ENABLED [label="BSP_Mem_S25FL116K_Enable()"]
- *      DISABLED -> DISCONNECTED [label="BSP_Mem_S25FL116K_Disconnect()"]
+ *      INIT -> CONNECTED[style="dashed", label="BSP_TestInterface_Connect()"]
+ *      CONNECTED -> DISCONNECTED [label="BSP_TestInterface_Disconnect()"]
+ *      DISCONNECTED -> CONNECTED [label="BSP_TestInterface_Connect()"]
+ *      CONNECTED -> ENABLED [label="BSP_TestInterface_Enable()"]
+ *      ENABLED -> DISABLED [label="BSP_TestInterface_Disable()"]
+ *      DISABLED -> ENABLED [label="BSP_TestInterface_Enable()"]
+ *      DISABLED -> DISCONNECTED [label="BSP_TestInterface_Disconnect()"]
  *  }
  * @enddot
  */

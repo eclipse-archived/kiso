@@ -15,11 +15,11 @@
 /**
  * @ingroup UTILS
  *
- * @defgroup UARTTRANSCEIVER UartTransceiver
+ * @defgroup UARTTRANSCEIVER_TESTS UartTransceiver Unit Tests
  * @{
  *
  * @brief
- *      Mockup implementation for the Kiso_TaskMonitor_th.hh module
+ *      Mockup implementation for the @ref UARTTRANSCEIVER module
  *
  * @details
  *

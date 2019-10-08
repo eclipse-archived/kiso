@@ -31,7 +31,7 @@
  * MCU resources into disabled state.
  *
  * BSP_Mem_S25FL116K_Disconnect() will put the GPIO pins to the lowest power consumption and risk free configuration.
- * e.g. high impedance. 
+ * e.g. high impedance.
  *
  * BSP_Mem_S25FL116K_GetHandle() will return a pointer to the MCU resource structure created and initialized by the BSP
  * implementation. This structure is MCU specific and its proper initialization is mandatory for the proper function of

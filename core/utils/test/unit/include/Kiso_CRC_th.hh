@@ -15,11 +15,11 @@
 /**
  * @ingroup UTILS
  *
- * @defgroup CRC CRC
+ * @defgroup CRC_TESTS CRC Unit Tests
  * @{
  *
  * @brief
- *      Mockup implementation for the Kiso_CRC_th.hh module
+ *      Mockup implementation for the @ref CRC module
  *
  * @details
  *

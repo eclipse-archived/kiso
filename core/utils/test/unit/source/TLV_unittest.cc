@@ -104,7 +104,7 @@ const string_t tlvTestValuesTable[] =
         STRING_LITERAL("!%/!/(/=(/=(!%=!%/+/!%=!%"),
         STRING_LITERAL("                ")};
 
-class TLV : public testing::Test
+class TLVTest : public testing::Test
 {
 protected:
     /* Remember that SetUp() is run immediately before a test starts. */
@@ -167,7 +167,7 @@ protected:
  * - shall support only 32 bit architectures
  */
 
-TEST_F(TLV, tlvGroupAdd)
+TEST_F(TLVTest, tlvGroupAdd)
 {
     /**
      * @testcase{TLV::tlvGroupAdd: }
@@ -215,7 +215,7 @@ TEST_F(TLV, tlvGroupAdd)
     }
 }
 
-TEST_F(TLV, tlvGroupRemove)
+TEST_F(TLVTest, tlvGroupRemove)
 {
     /**
      * @testcase{TLV::tlvGroupRemove: }
@@ -227,7 +227,7 @@ TEST_F(TLV, tlvGroupRemove)
     /* N/A */
 }
 
-TEST_F(TLV, tlvElementAdd)
+TEST_F(TLVTest, tlvElementAdd)
 {
     /**
      * @testcase{TLV::tlvElementAdd: }
@@ -330,7 +330,7 @@ TEST_F(TLV, tlvElementAdd)
     }
 }
 
-TEST_F(TLV, tlvElementRemove)
+TEST_F(TLVTest, tlvElementRemove)
 {
     /**
      * @testcase{TLV::tlvElementRemove: }
@@ -374,7 +374,7 @@ TEST_F(TLV, tlvElementRemove)
     }
 }
 
-TEST_F(TLV, tlvElementGet)
+TEST_F(TLVTest, tlvElementGet)
 {
     /**
      * @testcase{TLV::tlvElementGet: }
@@ -440,7 +440,7 @@ TEST_F(TLV, tlvElementGet)
     }
 }
 
-TEST_F(TLV, IsElementValidFail)
+TEST_F(TLVTest, IsElementValidFail)
 {
     /**
      * @testcase{TLV::IsElementValidFail: }
@@ -455,7 +455,7 @@ TEST_F(TLV, IsElementValidFail)
     status = IsElementValid(&element);
     EXPECT_EQ(0U, status);
 }
-TEST_F(TLV, GarbageCollectGroupTest)
+TEST_F(TLVTest, GarbageCollectGroupTest)
 {
     /**
      * @testcase{TLV::GarbageCollectGroupTest: }

@@ -15,11 +15,11 @@
 /**
  * @ingroup UTILS
  *
- * @defgroup CMDPROCESSOR CmdProcessor
+ * @defgroup CMDPROCESSOR_TESTS CmdProcessor Unit Tests
  * @{
  *
  * @brief
- *      Mockup implementation for the Kiso_CmdProcessor_th.hh module
+ *      Mockup implementation for the @ref CMDPROCESSOR module
  *
  * @details
  *

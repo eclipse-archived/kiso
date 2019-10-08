@@ -13,8 +13,9 @@
 ********************************************************************************/
 
 /**
+ * @ingroup  KISO_C_EXAMPLE_SENSORS
+ * @brief    This File represents the Module IDs for the Application C modules
  * @file
- * @brief This File represents the Module IDs for the Application C modules
  *
  */
 

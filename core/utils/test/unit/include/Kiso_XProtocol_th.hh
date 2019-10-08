@@ -15,11 +15,11 @@
 /**
  * @ingroup UTILS
  *
- * @defgroup XPROTOCOL XProtocol
+ * @defgroup XPROTOCOL_TESTS XProtocol Unit Tests
  * @{
  *
  * @brief
- *      Mockup implementation for the Kiso_XProtocol_th.hh module
+ *      Mockup implementation for the @ref XPROTOCOL module
  *
  * @details
  *

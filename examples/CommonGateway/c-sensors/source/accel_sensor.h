@@ -13,15 +13,15 @@
 **********************************************************************************************************************/
 
 /**
- * @file
- * @defgroup    NON_GROUPED
- * @ingroup     NON_GROUPED
+ * @ingroup     KISO_C_EXAMPLE_SENSORS
+ * @defgroup    ACCEL_SENSOR Accelerometer sensor
  * @{
  *
- * @brief       Put brief description here.
+ * @brief       Accelerometer sensor code for the sensors example.
  *
  * @details
- * Put detailed description here.
+ *              Demonstrates usage of accelerometer sensor in Kiso for CommonGateway board.
+ * @file
  */
 
 #ifndef ACCEL_SENSOR_H_

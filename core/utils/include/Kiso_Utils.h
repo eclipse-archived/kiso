@@ -18,10 +18,13 @@
  * @{
  *
  * @brief
- *      Utility module
+ *      Kiso Utilities package - commonly used application concepts
  *
  * @details
- *
+ *      The Kiso utilities package provides commonly used modules in application development
+ *      like Logging (@ref LOGGING), Task Monitoring (@ref TASKMONITOR), CRC checking (@ref CRC), etc.
+ *      These modules can be individually enabled or disabled per application via
+ *      Kiso_UtilsConfig.cmake in the config directory of the application.
  * @file
  */
 
@@ -63,15 +66,15 @@ enum Utils_Retcode_E
 /**
  * @brief
  *      KISO_MODULE_ID for each Utils C module
- * 
+ *
  * @details
  *      Usage:
- * 
+ *
  * @code{.c}
  *      #undef KISO_MODULE_ID
  *      #define KISO_MODULE_ID KISO_UTILS_MODULE_ID_xxx
  * @endcode
- * 
+ *
  */
 enum KISO_UTILS_ModuleID_E
 {

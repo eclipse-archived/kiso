@@ -244,7 +244,7 @@ Retcode_T BSP_BMM150_SetCSHigh(int32_t deviceId);
  */
 Retcode_T BSP_BMM150_SetCSLow(int32_t deviceId);
 
-/**@}*/ /* KISO_HAL_BSP_BMM150 */
-
 #endif /*KISO_FEATURE_BSP_BMM150*/
 #endif /* KISO_BSP_BMM150_H_ */
+
+/**@}*/ /* KISO_HAL_BSP_BMM150 */

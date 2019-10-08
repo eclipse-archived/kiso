@@ -19,7 +19,7 @@
  * @{
  *
  * @brief
- *      Advanced API functions for sending and reveiving via UART and LEUART
+ *      Advanced API functions for sending and receiving via UART and LEUART
  *
  * @details
  *      The UARTTransceiver encapsulates the handling of buffers
@@ -128,7 +128,9 @@ enum UARTTransceiver_Mode_E
     UART_TRANSCEIVER_MODE_SYNCH,
     UART_TRANSCEIVER_MODE_ASYNCH,
 };
-
+/**
+ * Structure representing an UART Transceiver instance
+ */
 struct _UARTTransceiver_S
 {
     /* UART Handle used by the UART driver in HAL/MCU */
@@ -203,7 +205,6 @@ typedef struct _UARTTransceiver_S UARTTransceiver_T;
  *      and #UARTTransceiver_T.RxSemaphore)
  * @retval #RETCODE_DOPPLE_INITIALIZATION
  *      If you are trying to initialized the transceiver again
- * 
  */
 Retcode_T UARTTransceiver_Initialize(
     UARTTransceiver_T *transceiver,
@@ -224,7 +225,6 @@ Retcode_T UARTTransceiver_Initialize(
  *      If successfully deinitialize
  * @retval #RETCODE_INVALID_PARAM
  *      If the transceiver pointer parameter is NULL
- * 
  */
 Retcode_T UARTTransceiver_Deinitialize(UARTTransceiver_T *transceiver);
 
@@ -248,7 +248,6 @@ Retcode_T UARTTransceiver_Deinitialize(UARTTransceiver_T *transceiver);
  * @retval #RETCODE_INCONSITENT_STATE
  *       If the transceiver is not in an initialized
  *       state (see #UARTTransceiver_State_E)
- * 
  */
 Retcode_T UARTTransceiver_Start(
     UARTTransceiver_T *transceiver,
@@ -281,7 +280,6 @@ Retcode_T UARTTransceiver_Start(
  * @retval #RETCODE_INCONSITENT_STATE
  *      If the transceiver is not in an initialized
  *      state (see #UARTTransceiver_State_E)
- * 
  */
 Retcode_T UARTTransceiver_StartInAsyncMode(
     UARTTransceiver_T *transceiver,
@@ -306,7 +304,6 @@ Retcode_T UARTTransceiver_StartInAsyncMode(
  * @retval #RETCODE_INCONSITENT_STATE
  *      If the transceiver is not in an active
  *      state (see #UARTTransceiver_State_E)
- * 
  */
 Retcode_T UARTTransceiver_Suspend(UARTTransceiver_T *transceiver);
 
@@ -327,7 +324,6 @@ Retcode_T UARTTransceiver_Suspend(UARTTransceiver_T *transceiver);
  * @retval #RETCODE_INCONSITENT_STATE
  *      If the transceiver is not in an suspended
  *      state (see #UARTTransceiver_State_E)
- * 
  */
 Retcode_T UARTTransceiver_Resume(UARTTransceiver_T *transceiver);
 
@@ -351,7 +347,6 @@ Retcode_T UARTTransceiver_Resume(UARTTransceiver_T *transceiver);
  * @retval #RETCODE_INCONSITENT_STATE
  *      If the transceiver is not in an active or
  *      already suspended state (see #UARTTransceiver_State_E)
- * 
  */
 Retcode_T UARTTransceiver_Stop(UARTTransceiver_T *transceiver);
 
@@ -400,7 +395,6 @@ Retcode_T UARTTransceiver_Stop(UARTTransceiver_T *transceiver);
  * @retval #RETCODE_SEMAPHORE_ERROR
  *      If semaphore could not be taken with given timeout
  *      (see #UARTTransceiver_T.RxSemaphore)
- * 
  */
 Retcode_T UARTTransceiver_ReadData(
     UARTTransceiver_T *transceiver,
@@ -440,7 +434,6 @@ Retcode_T UARTTransceiver_ReadData(
  * @retval #RETCODE_SEMAPHORE_ERROR
  *      If semaphore could not be taken with given timeout
  *      (see #UARTTransceiver_T.TxSemaphore)
- * 
  */
 Retcode_T UARTTransceiver_WriteData(
     UARTTransceiver_T *transceiver,
@@ -467,7 +460,6 @@ Retcode_T UARTTransceiver_WriteData(
  *
  * @param[in] event
  *      The event which is notified by the callback
- * 
  */
 void UARTTransceiver_LoopCallback(
     UARTTransceiver_T *transceiver,
@@ -486,7 +478,6 @@ void UARTTransceiver_LoopCallback(
  * @param[in] transceiver
  *      The variable name of the transceiver. It must be a pointer to
  *      the context structure but the context structure itself.
- * 
  */
 #define UART_TRANSCEIVER_DECLARE_LOOP_CALLBACK(transceiver)                                                \
     static KISO_ALWAYS_INLINE void UARTTransceiverLoopCallback(UART_T uart, struct MCU_UART_Event_S event) \
@@ -516,7 +507,6 @@ void UARTTransceiver_LoopCallback(
  *
  * @param[in] event
  *      The event which is notified by the callback
- * 
  */
 void UARTTransceiver_LoopCallbackLE(
     UARTTransceiver_T *transceiver,
@@ -535,7 +525,6 @@ void UARTTransceiver_LoopCallbackLE(
  * @param[in] transceiver
  *      The variable name of the transceiver. It must be a pointer to
  *      the context structure but the context structure itself.
- * 
  */
 #define UART_TRANSCEIVER_DECLARE_LOOP_CALLBACK_LE(transceiver)                                                     \
     static KISO_ALWAYS_INLINE void UARTTransceiverLoopCallbackLE(LEUART_T leuart, struct MCU_LEUART_Event_S event) \

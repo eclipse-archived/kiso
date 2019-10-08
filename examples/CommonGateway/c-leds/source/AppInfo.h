@@ -13,8 +13,9 @@
 ********************************************************************************/
 
 /**
- * @file
+ * @ingroup KISO_C_EXAMPLE_BLINKY
  * @brief This File represents the Module IDs for the Application C modules
+ * @file
  *
  */
 

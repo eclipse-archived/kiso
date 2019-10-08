@@ -15,11 +15,11 @@
 /**
  * @ingroup UTILS
  *
- * @defgroup ERRORLOGGER ErrorLogger
+ * @defgroup ERRORLOGGER_TESTS ErrorLogger Unit Tests
  * @{
  *
  * @brief
- *      Mockup implementation for the Kiso_ErrorLogger_th.hh module
+ *      Mockup implementation for the @ref ERRORLOGGER module
  *
  * @details
  *

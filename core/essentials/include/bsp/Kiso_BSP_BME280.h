@@ -175,7 +175,7 @@ Retcode_T BSP_BME280_SetCSHigh(int32_t deviceId);
  */
 Retcode_T BSP_BME280_SetCSLow(int32_t deviceId);
 
-/**@}*/ /* KISO_HAL_BSP_BME280 */
-
 #endif /*KISO_FEATURE_BSP_BME280*/
 #endif /* KISO_BSP_BME280_H_ */
+
+/**@}*/ /* KISO_HAL_BSP_BME280 */

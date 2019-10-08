@@ -1,4 +1,4 @@
-The disclaimer is already party of LICENSE file, however, to draw your attention on this topic, here it is addressed again.
+# Disclaimer
 
 NO WARRANTY
 EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT PERMITTED BY APPLICABLE LAW, THE PROGRAM IS PROVIDED ON AN
