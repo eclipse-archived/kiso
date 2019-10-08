@@ -63,6 +63,42 @@ static TaskHandle_t Custom_xTaskCreateStatic(TaskFunction_t fun, const char *, u
     return (TaskHandle_t)fun;
 }
 
+class TS_Engine_Tasks : public testing::Test
+{
+protected:
+    virtual void SetUp()
+    {
+        srand(time(NULL));
+
+        FFF_RESET_HISTORY();
+
+        RESET_FAKE(RingBuffer_Read);
+
+        IsFlukeFilterEnabled = false;
+    }
+};
+
+TEST_F(TS_Engine_Tasks, ReadData_ZeroLength)
+{
+    RingBuffer_Read_fake.return_val = 0;
+    AtResponseParser_TaskLoop();
+}
+
+TEST_F(TS_Engine_Tasks, ReadData_OneByte)
+{
+    uint32_t readReturns[2] = {1, 0};
+    SET_RETURN_SEQ(RingBuffer_Read, readReturns, 2);
+    AtResponseParser_TaskLoop();
+}
+
+TEST_F(TS_Engine_Tasks, ReadData_OneByteFlukeFilter)
+{
+    uint32_t readReturns[2] = {1, 0};
+    SET_RETURN_SEQ(RingBuffer_Read, readReturns, 2);
+    IsFlukeFilterEnabled = true;
+    AtResponseParser_TaskLoop();
+}
+
 class TS_Engine_Initialize : public testing::Test
 {
 protected:
@@ -79,6 +115,8 @@ protected:
         RESET_FAKE(AtResponseQueue_RegisterWithResponseParser);
         RESET_FAKE(xSemaphoreCreateMutexStatic);
         RESET_FAKE(xTaskCreateStatic);
+        RESET_FAKE(AtResponseQueue_Deinit);
+        RESET_FAKE(Hardware_Deinitialize);
 
         xSemaphoreCreateBinaryStatic_fake.custom_fake = Custom_xSemaphoreCreateBinaryStatic;
         xSemaphoreCreateMutexStatic_fake.custom_fake = Custom_xSemaphoreCreateMutexStatic;
@@ -231,6 +269,26 @@ TEST_F(TS_Engine_Initialize, AtQueueInit_Failure)
     EXPECT_EQ(NULL, OnStateChanged);
     EXPECT_EQ(CELLULAR_STATE_MAX, State);
     EXPECT_FALSE(EchoModeEnabled);
+}
+
+TEST_F(TS_Engine_Initialize, Engine_Deinitialize_Sucess)
+{
+    Retcode_T rc = Engine_Deinitialize();
+    EXPECT_EQ(RETCODE_OK, rc);
+}
+
+TEST_F(TS_Engine_Initialize, Engine_Deinitialize_AtQueueDeinit_Fail)
+{
+    AtResponseQueue_Deinit_fake.return_val = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_QUEUE_ERROR);
+    Retcode_T rc = Engine_Deinitialize();
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_QUEUE_ERROR), rc);
+}
+
+TEST_F(TS_Engine_Initialize, Engine_Deinitialize_HardwareDeinitialize_Fail)
+{
+    Hardware_Deinitialize_fake.return_val = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_QUEUE_ERROR);
+    Retcode_T rc = Engine_Deinitialize();
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_QUEUE_ERROR), rc);
 }
 
 class TS_Engine_EchoModeEnabled : public testing::Test
@@ -463,6 +521,17 @@ TEST_F(TS_Engine_SendAtCommandWaitEcho, EchoDisabled_Success)
     EXPECT_EQ(0U, AtResponseQueue_WaitForNamedCmdEcho_fake.call_count);
 }
 
+TEST_F(TS_Engine_SendAtCommandWaitEcho, EngineSendAtCommand_Fail)
+{
+    Retcode_T rc = RETCODE_OK;
+    uint8_t *buffer = NULL;
+    uint32_t expTimeout = rand();
+    EchoModeEnabled = false;
+
+    rc = Engine_SendAtCommandWaitEcho(buffer, 0, expTimeout);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
+}
+
 FAKE_VOID_FUNC(TS_Engine_NotifyNewState_DummyCallback, Cellular_State_T, Cellular_State_T, void *, uint32_t)
 
 class TS_Engine_NotifyNewState : public testing::Test
@@ -587,7 +656,7 @@ TEST_F(TS_Engine_Dispatch, LockTimeout_Failure)
     EXPECT_EQ(0U, xSemaphoreGive_fake.call_count);
 }
 
-std::array<AtResponseQueueEntry_T *, 6> TS_SkipEventsUntilCommand_GetEventVals;
+std::array<AtResponseQueueEntry_T *, 7> TS_SkipEventsUntilCommand_GetEventVals;
 size_t TS_SkipEventsUntilCommand_GetEventVals_Index = 0;
 
 void TS_SkipEventsUntilCommand_DummyMarkUnused(void)
@@ -607,7 +676,7 @@ class TS_SkipEventsUntilCommand : public testing::Test
 protected:
     void CreateQueueEntry(AtResponseQueueEntry_T **entry, AtEventType_T type, AtResponseCode_T code, size_t len)
     {
-        if (AT_EVENT_TYPE_OUT_OF_RANGE == type)
+        if (AT_EVENT_TYPE_OUT_OF_RANGE < type)
         {
             std::cerr << "Error during test-setup: Invalid EventType '" << type << "'" << std::endl;
             exit(1);
@@ -638,7 +707,9 @@ protected:
         CreateQueueEntry(&TS_SkipEventsUntilCommand_GetEventVals[2], AT_EVENT_TYPE_ERROR, (AtResponseCode_T)669, 0);
         CreateQueueEntry(&TS_SkipEventsUntilCommand_GetEventVals[3], AT_EVENT_TYPE_MISC, (AtResponseCode_T)670, std::min(rand() % 32, 2));
         CreateQueueEntry(&TS_SkipEventsUntilCommand_GetEventVals[4], AT_EVENT_TYPE_RESPONSE_CODE, AT_RESPONSE_CODE_OK, 0);
-        CreateQueueEntry(&TS_SkipEventsUntilCommand_GetEventVals[5], AT_EVENT_TYPE_COMMAND, (AtResponseCode_T)668, std::min(rand() % 16, 2));
+        CreateQueueEntry(&TS_SkipEventsUntilCommand_GetEventVals[5], AT_EVENT_TYPE_OUT_OF_RANGE, (AtResponseCode_T)668, std::min(rand() % 16, 2));
+        CreateQueueEntry(&TS_SkipEventsUntilCommand_GetEventVals[6], AT_EVENT_TYPE_COMMAND, (AtResponseCode_T)668, std::min(rand() % 16, 2));
+
         TS_SkipEventsUntilCommand_GetEventVals_Index = 0;
 
         AtResponseQueue_GetEventCount_fake.return_val = TS_SkipEventsUntilCommand_GetEventVals.size();
@@ -659,6 +730,18 @@ protected:
 TEST_F(TS_SkipEventsUntilCommand, Success)
 {
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+
+    rc = SkipEventsUntilCommand();
+
+    EXPECT_EQ(RETCODE_OK, rc);
+    EXPECT_EQ(AtResponseQueue_GetEventCount_fake.return_val, AtResponseQueue_GetEvent_fake.call_count);
+    EXPECT_EQ(AtResponseQueue_GetEventCount_fake.return_val - 1, AtResponseQueue_MarkBufferAsUnused_fake.call_count);
+}
+
+TEST_F(TS_SkipEventsUntilCommand, AtResonsequeue_Timeout)
+{
+    Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    AtResponseQueue_GetEvent_fake.return_val = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_AT_RESPONSE_QUEUE_TIMEOUT);
 
     rc = SkipEventsUntilCommand();
 
@@ -767,4 +850,22 @@ TEST_F(TS_HandleMcuIsrCallback, RxNonS4Char_Success)
     EXPECT_EQ(1U, RingBuffer_Write_fake.call_count);
     EXPECT_EQ(1U, RingBuffer_Write_fake.arg2_val);
     EXPECT_EQ(0U, Retcode_RaiseErrorFromIsr_fake.call_count);
+}
+
+TEST_F(TS_HandleMcuIsrCallback, Ringbuffer_Write_Fail)
+{
+    struct MCU_UART_Event_S event;
+    memset(&event, 0U, sizeof(event));
+    event.RxComplete = 1;
+    UART_T uart = (UART_T)1;
+    UartRxByte = '0';
+
+    RingBuffer_Write_fake.return_val = 0;
+
+    HandleMcuIsrCallback(uart, event);
+
+    EXPECT_EQ(0U, xSemaphoreGiveFromISR_fake.call_count);
+    EXPECT_EQ(1U, RingBuffer_Write_fake.call_count);
+    EXPECT_EQ(1U, RingBuffer_Write_fake.arg2_val);
+    EXPECT_EQ(1U, Retcode_RaiseErrorFromIsr_fake.call_count);
 }

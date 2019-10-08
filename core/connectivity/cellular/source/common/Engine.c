@@ -173,60 +173,64 @@ static const char *TrimWhitespace(uint8_t *buf, size_t len, size_t *trimmedLen)
 }
 #endif
 
-static void AtResponseParser_Task(void *param)
+static void AtResponseParser_TaskLoop(void)
 {
-    KISO_UNUSED(param);
 
     uint32_t bytesRead, flukeFreeBytesRead;
     uint8_t *flukeRxReadBuffer;
     Retcode_T status = RETCODE_OK;
     uint8_t rxReadBuffer[CELLULAR_RX_READ_BUFFER_SIZE];
 
+    // wait for the RX IRQ to wake us up
+    (void)xSemaphoreTake(AtResponseParser_RxWakeupHandle, portMAX_DELAY);
+
     while (1)
     {
-        // wait for the RX IRQ to wake us up
-        (void)xSemaphoreTake(AtResponseParser_RxWakeupHandle, portMAX_DELAY);
-
-        while (1)
-        {
 #if CELLULAR_ENABLE_TRACING
-            /* We add a delay to hopefully grab a bigger chunk of data.
-             * Better tracability but we could lose some bytes if we wait too
-             * long.
-             */
-            vTaskDelay(50);
+        /* We add a delay to hopefully grab a bigger chunk of data.
+         * Better tracability but we could lose some bytes if we wait too
+         * long.
+         */
+        vTaskDelay(50);
 #endif
-            status = ReadData(rxReadBuffer, sizeof(rxReadBuffer), &bytesRead);
-            if ((RETCODE_OK != status) || (UINT32_C(0) == bytesRead))
-            {
-                break;
-            }
-            if (IsFlukeFilterEnabled)
-            {
-                flukeRxReadBuffer = Utils_TrimFlukeCharacters(rxReadBuffer, bytesRead, &flukeFreeBytesRead);
-            }
-            else
-            {
-                flukeRxReadBuffer = rxReadBuffer;
-                flukeFreeBytesRead = bytesRead;
-            }
-#if CELLULAR_ENABLE_TRACING
-            size_t traceLen = 0;
-            const char *trace = TrimWhitespace(flukeRxReadBuffer, flukeFreeBytesRead, &traceLen);
-            if (traceLen)
-                LOG_DEBUG("Cellular-COM [%d]: %.*s", traceLen, traceLen, trace);
-#endif
-            (void)AtResponseParser_Parse(flukeRxReadBuffer, flukeFreeBytesRead);
-        }
-
-        if (RETCODE_OK != status)
+        status = ReadData(rxReadBuffer, sizeof(rxReadBuffer), &bytesRead);
+        if ((RETCODE_OK != status) || (UINT32_C(0) == bytesRead))
         {
-            LOG_ERROR("Error during Cellular response handling (0x%08x), resetting response parser!", (int)status);
-            AtResponseParser_Reset();
+            break;
         }
+        if (IsFlukeFilterEnabled)
+        {
+            flukeRxReadBuffer = Utils_TrimFlukeCharacters(rxReadBuffer, bytesRead, &flukeFreeBytesRead);
+        }
+        else
+        {
+            flukeRxReadBuffer = rxReadBuffer;
+            flukeFreeBytesRead = bytesRead;
+        }
+#if CELLULAR_ENABLE_TRACING
+        size_t traceLen = 0;
+        const char *trace = TrimWhitespace(flukeRxReadBuffer, flukeFreeBytesRead, &traceLen);
+        if (traceLen)
+        {
+            LOG_DEBUG("Cellular-COM [%d]: %.*s", traceLen, traceLen, trace);
+        }
+#endif
+        (void)AtResponseParser_Parse(flukeRxReadBuffer, flukeFreeBytesRead);
     }
 }
 
+//LCOV_EXCL_START
+static void AtResponseParser_Task(void *param)
+{
+    KISO_UNUSED(param);
+    while (1)
+    {
+        AtResponseParser_TaskLoop();
+    }
+}
+//LCOV_EXCL_STOP
+
+//LCOV_EXCL_START
 static void CellularDriver_Task(void *param)
 {
     KISO_UNUSED(param);
@@ -245,6 +249,7 @@ static void CellularDriver_Task(void *param)
         (void)xSemaphoreGive(CellularDriver_RequestLock);
     }
 }
+//LCOV_EXCL_STOP
 
 static Retcode_T SkipEventsUntilCommand(void)
 {
