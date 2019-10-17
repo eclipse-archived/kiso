@@ -67,8 +67,58 @@
  *      instances may co-exist in the same application. However, they must operate on
  *      different UART or LEUART ports.
  *
+ * @code{.c}
+ * #include "KISO_UARTTransceiver.h"
+ *
+ * // Transceiver instance to be used
+ * UARTTransceiver_T LogTransceiver;
+ *
+ * // Receive buffer
+ * #define BUFFER_SIZE      (UINT16_C(1))
+ * uint8_t buffer[BUFFER_SIZE];
+ *
+ * // Install a UART callback handler that will propagate the callback to trancsceiver instance
+ * static void UartCallback(UART_T uart, struct MCU_UART_Event_S event)
+ * {
+ *     (void)uart;
+ *     UARTTransceiver_LoopCallback(&LogTransceiver, event);
+ * }
+ *
+ * // Transceiver callback
+ * bool CheckEndFrameFunc(uint8_t lastByte)
+ * {
+ *     (void)lastByte;
+ *     return false;
+ * }
+ *
+ * int main(void)
+ * {
+ *     // Obtain UART handle from communication component XYZ   
+ *     HWHandle_T uartHandle = BSP_XYZ_GetUARTHandle();
+ *
+ *     Retcode_T retcode = MCU_UART_Initialize(uartHandle, UartCallback);
+ *     }
+ *     if (RETCODE_OK == retcode)
+ *     {
+ *         retcode = UARTTransceiver_Initialize(&LogTransceiver, uartHandle, buffer, BUFFER_SIZE, UART_TRANSCEIVER_UART_TYPE_UART);
+ *     }
+ *     if (RETCODE_OK == retcode)
+ *     {
+ *         // Enable communication component
+ *     }
+ *     if (RETCODE_OK == retcode)
+ *     {
+ *        retcode = UARTTransceiver_Start(&LogTransceiver,CheckEndFrameFunc);
+ *     }
+ *
+ *     // Write some data to UART
+ *     UARTTransceiver_WriteData(&LogTransceiver, (uint8_t *)message, length, UART_TIMEOUT);
+ * }
+ *
+ * @endcode
+ *
  * @file
- */
+ **/
 
 #ifndef UARTTRANSCEIVER_H_
 #define UARTTRANSCEIVER_H_
@@ -89,9 +139,6 @@
 #if KISO_FEATURE_UART && KISO_FEATURE_LEUART
 #error "UARTransceiver is supporting any of the Uart. it is enabled only for Uart module"
 #endif
-
-#include "FreeRTOS.h"
-#include "semphr.h"
 
 #if KISO_FEATURE_UART
 
@@ -159,10 +206,11 @@ struct _UARTTransceiver_S
     uint8_t LastByte;
 
     /*semaphore used to synchronize the send process*/
-    SemaphoreHandle_t TxSemaphore;
+    void *TxSemaphore;
 
     /*semaphore used to synchronize the error handling process*/
-    SemaphoreHandle_t RxSemaphore;
+    void *RxSemaphore;
+
 #if KISO_FEATURE_UART
     union MCU_UART_Event_U AsyncEvent;
 #elif KISO_FEATURE_LEUART
