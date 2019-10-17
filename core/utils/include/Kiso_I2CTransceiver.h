@@ -21,6 +21,41 @@
  * @brief
  *      Advanced API functions for sending and receiving via I2C
  *
+ *@code{.c}
+ * #include "KISO_I2CTransceiver.h"
+ *
+ * // Transceiver instance to be used
+ * I2cTranceiverHandle_T i2cTransceiverStruct;
+ *
+ * Install a I2C callback handler that will propagate the callback to transceiver instance
+ * void I2CCallback(I2C_T i2c, struct MCU_I2C_Event_S event)
+ * {
+ *     (void)i2c;
+ *     I2CTransceiver_LoopCallback(&i2cTransceiverStruct, event);
+ * }
+ *
+ * int main(void)
+ * {
+ *     // Obtain I2C handle from communication component XYZ
+ *     I2C_T i2cHandle = BSP_XYZ_GetI2CHandle();
+ *
+ *     Retcode_T retcode = MCU_I2C_Initialize(i2cHandle, I2CCallback);
+ *     }
+ *     if (RETCODE_OK == retcode)
+ *     {
+ *         retcode = I2CTransceiver_Init(&i2cTransceiverStruct, i2cHandle);
+ *     }
+ *     if (RETCODE_OK == retcode)
+ *     {
+ *         // Enable communication component
+ *     }
+ *
+ *     // Write some data to I2C
+ *     I2CTransceiver_Write(&i2cTransceiverStruct, i2cDeviceAddr, registerAddr, buffer, bytesToWrite);
+ * }
+ *
+ * @endcode
+ *
  * @file
  */
 #ifndef KISO_I2CTRANSCEIVER_H_
@@ -35,10 +70,6 @@
 #if KISO_FEATURE_I2C
 #include "Kiso_MCU_I2C.h"
 
-/* FreeRTOS header files */
-#include "FreeRTOS.h"
-#include "semphr.h"
-
 /** Struct holding the I2C related configuration */
 struct I2cTranceiverHandle_S
 {
@@ -46,9 +77,9 @@ struct I2cTranceiverHandle_S
     /* I2C Handle used by the I2C driver in Essentials */
     I2C_T I2CHandle;
     /*semaphore used to synchronize the read/write process*/
-    xSemaphoreHandle I2CBusSync;
+    void *I2CBusSync;
     /*mutex used to synchronize the access of read/write process*/
-    xSemaphoreHandle I2CMutexLock;
+    void *I2CMutexLock;
     /* status of I2C transfer*/
     int8_t I2cTransferStatusFlag;
 };

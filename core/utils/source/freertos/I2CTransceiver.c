@@ -38,6 +38,10 @@
 /* Include Kiso_I2CTransceiver interface header */
 #include "Kiso_I2CTransceiver.h"
 
+/* FreeRTOS header files */
+#include "FreeRTOS.h"
+#include "semphr.h"
+
 #if KISO_FEATURE_I2C
 
 #define CANCEL_I2C_TRANSMISSION UINT32_C(0)
