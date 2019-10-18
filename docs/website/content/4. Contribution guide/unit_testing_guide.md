@@ -32,7 +32,7 @@ Let's look at the `utils` package for example:
     - CMakeLists.txt
 
 For each module in a package we have one header containing the mock-ups that other modules use during testing and one source file with all the tests for that module.
-[The naming pattern]({{< relref "c_coding_guidelines/#test-files" >}}) of the files is mandatory as given in the above example - *<module name>* followed by either *_th.hh* for test headers or *_unittest.cc* for test code.
+[The naming pattern]({{< relref "c_coding_guidelines#test-files" >}}) of the files is mandatory as given in the above example - *<module name>* followed by either *_th.hh* for test headers or *_unittest.cc* for test code.
 
 ## Frameworks
 The unit tests are written in C++ using the [Googletest Framework](https://github.com/google/googletest) and [Fake Function Framework (FFF)](https://github.com/meekrosoft/fff) for the mock-ups.
@@ -232,7 +232,7 @@ We try to verify as much of the branches and lines as possible, with a minimum Ð
 
 ## Compiling and running unit tests
 The unit tests are built and run on the host machine, without the need for a running target. You would need GCC (and G++) installed for your host architecture and optionally gcov/lcov for coverage reports.
-You can see how to configure a build tree for unit testing with CMake in the [Using CMake guide]({{< relref "using_cmake/#building-unit-tests" >}}).
+You can see how to configure a build tree for unit testing with CMake in the [Using CMake guide]({{< relref "using_cmake#building-unit-tests" >}}).
 
 CMake creates a target for each unittest file found with a prefix of it's package. In this example we created the `CmdProcessor_unittest.cc` file which translates to target `utils_CmdProcessor_unittest` when CMake is done configuring. The target could be built by itself, as a part of the `utils_tests` target, or the coverage targets (if coverage is enabled) - `utils_cov` and `coverage`. If a coverage target is built, the tests in the unittest file are executed automatically and coverage reports are available in HTML format. You can open `<build_root>/<package>_cov/index.html` in your browser to see the coverage report for the utils, essentials and cellular packages.
 
