@@ -23,7 +23,6 @@
  *      - EventHub_Observe()
  *      - EventHub_ObserveAll()
  *      - EventHub_Notify()
- * 
  * @file
  **/
 
@@ -147,7 +146,7 @@ Retcode_T EventHub_ObserveAll(EventHub_T *hub, EventHandler_T handler)
 }
 
 /*  The description of the function is available in Kiso_EventHub.h */
-Retcode_T EventHub_Notify(EventHub_T *hub, TaskEvent_T event, void *data)
+Retcode_T EventHub_Notify(EventHub_T *hub, TaskEvent_T event, const void *data)
 {
     if (NULL == hub)
     {

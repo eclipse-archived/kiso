@@ -18,7 +18,6 @@ file(GLOB TEST_CODE
 
 # TODO: Exclude for now
 list(FILTER TEST_CODE EXCLUDE REGEX ".*TaskMonitor_unittest.cc$")
-list(FILTER TEST_CODE EXCLUDE REGEX ".*EventHub_unittest.cc$")
 list(FILTER TEST_CODE EXCLUDE REGEX ".*Logging_unittest.cc$")
 
 include_directories(

@@ -74,26 +74,26 @@ bool dataCorrect_B;
 bool eventReceived_All;
 bool dataCorrect_All;
 
-void TestObserver_A(TaskEvent_T event, void *data)
+void TestObserver_A(TaskEvent_T event, const void *data)
 {
     eventReceived_A = (gTestEvent == event);
     dataCorrect_A = (gTestDataPtr == data);
 }
 
-void TestObserver_B(TaskEvent_T event, void *data)
+void TestObserver_B(TaskEvent_T event, const void *data)
 {
     eventReceived_B = (gTestEvent == event);
     dataCorrect_B = (gTestDataPtr == data);
 }
 
-void TestObserver_All(TaskEvent_T event, void *data)
+void TestObserver_All(TaskEvent_T event, const void *data)
 {
     KISO_UNUSED(event);
     eventReceived_All = true;
     dataCorrect_All = (gTestDataPtr == data);
 }
 
-class eventHub : public testing::Test
+class EventHubTest : public testing::Test
 {
 protected:
     virtual void SetUp()
@@ -107,7 +107,7 @@ protected:
     }
 };
 
-TEST_F(eventHub, EventHubInitializeSuccess)
+TEST_F(EventHubTest, EventHubInitializeSuccess)
 {
     /** @testcase{ eventHub::EventHubInitializeSuccess: }
      * Test EventHub init success
@@ -126,7 +126,7 @@ TEST_F(eventHub, EventHubInitializeSuccess)
     EXPECT_EQ(UINT32_C(1), xSemaphoreCreateMutex_fake.call_count);
 }
 
-TEST_F(eventHub, EventHubInitializeFailure)
+TEST_F(EventHubTest, EventHubInitializeFailure)
 {
     /** @testcase{ eventHub::EventHubInitializeFailure: }
       * Test EventHub init failures
@@ -143,7 +143,7 @@ TEST_F(eventHub, EventHubInitializeFailure)
     EXPECT_EQ(UINT32_C(0), xSemaphoreCreateMutex_fake.call_count);
 }
 
-TEST_F(eventHub, EventHubObserverSuccess)
+TEST_F(EventHubTest, EventHubObserverSuccess)
 {
     /** @testcase{ eventHub::EventHubObserverSuccess: }
      * Test EventHub observe success
@@ -165,7 +165,7 @@ TEST_F(eventHub, EventHubObserverSuccess)
     EXPECT_EQ(UINT32_C(1), eventHub.observerCount);
 }
 
-TEST_F(eventHub, EventHubObserverHubNull)
+TEST_F(EventHubTest, EventHubObserverHubNull)
 {
     /** @testcase{ eventHub::EventHubObserverHubNull: }
      * Test EventHub observe failures
@@ -181,7 +181,7 @@ TEST_F(eventHub, EventHubObserverHubNull)
     EXPECT_EQ(RETCODE_NULL_POINTER, Retcode_GetCode(retVal));
 }
 
-TEST_F(eventHub, EventHubObserverHandlerNull)
+TEST_F(EventHubTest, EventHubObserverHandlerNull)
 {
     /** @testcase{ eventHub::EventHubObserverHandlerNull: }
      * Test EventHub observe failures
@@ -198,7 +198,7 @@ TEST_F(eventHub, EventHubObserverHandlerNull)
     EXPECT_EQ(RETCODE_NULL_POINTER, Retcode_GetCode(retVal));
 }
 
-TEST_F(eventHub, EventHubObserverHubLockNull)
+TEST_F(EventHubTest, EventHubObserverHubLockNull)
 {
     /** @testcase{ eventHub::EventHubObserverHubLockNull: }
      * Test EventHub observe failures
@@ -217,7 +217,7 @@ TEST_F(eventHub, EventHubObserverHubLockNull)
     EXPECT_EQ(RETCODE_UNINITIALIZED, Retcode_GetCode(retVal));
 }
 
-TEST_F(eventHub, EventHubObserverNotNullHubObserverCount)
+TEST_F(EventHubTest, EventHubObserverNotNullHubObserverCount)
 {
     /** @testcase{ eventHub::EventHubObserverNotNullHubObserverCount: }
      * Test EventHub observe failures
@@ -241,7 +241,7 @@ TEST_F(eventHub, EventHubObserverNotNullHubObserverCount)
     EXPECT_EQ(UINT32_C(0), xSemaphoreCreateMutex_fake.call_count);
 }
 
-TEST_F(eventHub, EventHubObserverSemTakeNotPass)
+TEST_F(EventHubTest, EventHubObserverSemTakeNotPass)
 {
     /** @testcase{ eventHub::EventHubObserverSemTakeNotPass: }
      * Test EventHub observe failures
@@ -263,7 +263,7 @@ TEST_F(eventHub, EventHubObserverSemTakeNotPass)
     EXPECT_EQ(UINT32_C(1), xSemaphoreTake_fake.call_count);
 }
 
-TEST_F(eventHub, EventHubObserveSemGiveNotPass)
+TEST_F(EventHubTest, EventHubObserveSemGiveNotPass)
 {
     /** @testcase{ eventHub::EventHubObserveSemGiveNotPass: }
      * Test EventHub observe failures
@@ -285,7 +285,7 @@ TEST_F(eventHub, EventHubObserveSemGiveNotPass)
     EXPECT_EQ(UINT32_C(1), xSemaphoreGive_fake.call_count);
 }
 
-TEST_F(eventHub, EventHubObserveAllSuccess)
+TEST_F(EventHubTest, EventHubObserveAllSuccess)
 {
     /** @testcase{ eventHub::EventHubObserveAllSuccess: }
      * Test EventHub observe all events success
@@ -307,7 +307,7 @@ TEST_F(eventHub, EventHubObserveAllSuccess)
     EXPECT_EQ((uint32_t)1, eventHub.observerCount);
 }
 
-TEST_F(eventHub, EventHubObserverAllHubNull)
+TEST_F(EventHubTest, EventHubObserverAllHubNull)
 {
     /** @testcase{ eventHub::EventHubObserverAllHubNull: }
      * Test EventHub observe all events failures
@@ -325,7 +325,7 @@ TEST_F(eventHub, EventHubObserverAllHubNull)
     EXPECT_EQ(RETCODE_NULL_POINTER, Retcode_GetCode(retVal));
 }
 
-TEST_F(eventHub, EventHubObserverAllHandlerNull)
+TEST_F(EventHubTest, EventHubObserverAllHandlerNull)
 {
     /** @testcase{ eventHub::EventHubObserverAllHandlerNull: }
      * Test EventHub observe all events failures
@@ -343,7 +343,7 @@ TEST_F(eventHub, EventHubObserverAllHandlerNull)
     EXPECT_EQ(RETCODE_NULL_POINTER, Retcode_GetCode(retVal));
 }
 
-TEST_F(eventHub, EventHubObserverAllHubLockNull)
+TEST_F(EventHubTest, EventHubObserverAllHubLockNull)
 {
     /** @testcase{ eventHub::EventHubObserverAllHubLockNull: }
      * Test EventHub observe all events failures
@@ -362,7 +362,7 @@ TEST_F(eventHub, EventHubObserverAllHubLockNull)
     EXPECT_EQ(RETCODE_UNINITIALIZED, Retcode_GetCode(retVal));
 }
 
-TEST_F(eventHub, EventHubObserverAllNotNullHubObserverCount)
+TEST_F(EventHubTest, EventHubObserverAllNotNullHubObserverCount)
 {
     /** @testcase{ eventHub::EventHubObserverAllNotNullHubObserverCount: }
      * Test EventHub observe failures
@@ -387,7 +387,7 @@ TEST_F(eventHub, EventHubObserverAllNotNullHubObserverCount)
     EXPECT_EQ(UINT32_C(0), xSemaphoreCreateMutex_fake.call_count);
 }
 
-TEST_F(eventHub, EventHubObserverAllSemTakeNotPass)
+TEST_F(EventHubTest, EventHubObserverAllSemTakeNotPass)
 {
     /** @testcase{ eventHub::EventHubObserverAllSemTakeNotPass: }
      * Test EventHub observe failures
@@ -409,7 +409,7 @@ TEST_F(eventHub, EventHubObserverAllSemTakeNotPass)
     EXPECT_EQ(UINT32_C(1), xSemaphoreTake_fake.call_count);
 }
 
-TEST_F(eventHub, EventHubObserverAllSemGiveNotPass)
+TEST_F(EventHubTest, EventHubObserverAllSemGiveNotPass)
 {
     /** @testcase{ eventHub::EventHubObserverAllSemGiveNotPass: }
      * Test EventHub observe failures
@@ -431,7 +431,7 @@ TEST_F(eventHub, EventHubObserverAllSemGiveNotPass)
     EXPECT_EQ(UINT32_C(1), xSemaphoreGive_fake.call_count);
 }
 
-TEST_F(eventHub, EventHub_Notify_Success)
+TEST_F(EventHubTest, EventHub_Notify_Success)
 {
     /** @testcase{ eventHub::EventHub_Notify_Success: }
      * Test EventHub notify success
@@ -462,7 +462,7 @@ TEST_F(eventHub, EventHub_Notify_Success)
     (void)EventHub_ObserveAll(&eventHub, TestObserver_All);
     expectedObservers++;
 #endif
-    rc = EventHub_Notify(&eventHub, (TaskEvent_T)gTestEvent, (void *)gTestDataPtr);
+    rc = EventHub_Notify(&eventHub, (TaskEvent_T)gTestEvent, (const void *)gTestDataPtr);
     EXPECT_EQ(RETCODE_OK, Retcode_GetCode(rc));
     EXPECT_EQ(expectedObservers, eventHub.observerCount);
     EXPECT_EQ(true, eventReceived_A);
@@ -477,7 +477,7 @@ TEST_F(eventHub, EventHub_Notify_Success)
 #endif
 }
 
-TEST_F(eventHub, EventHubNotifyHubNull)
+TEST_F(EventHubTest, EventHubNotifyHubNull)
 {
     /** @testcase{ eventHub::EventHubNotifyHubNull: }
      * Test EventHub notify failures
@@ -501,7 +501,7 @@ TEST_F(eventHub, EventHubNotifyHubNull)
     EXPECT_EQ(UINT32_C(1), xSemaphoreCreateMutex_fake.call_count);
 }
 
-TEST_F(eventHub, EventHubNotifyHubLockNull)
+TEST_F(EventHubTest, EventHubNotifyHubLockNull)
 {
     /** @testcase{ eventHub::EventHubNotifyHubLockNull: }
      * Test EventHub notify failures
@@ -519,7 +519,7 @@ TEST_F(eventHub, EventHubNotifyHubLockNull)
     EXPECT_EQ(RETCODE_UNINITIALIZED, Retcode_GetCode(retVal));
 }
 
-TEST_F(eventHub, EventHubNotifySemTakeNotPass)
+TEST_F(EventHubTest, EventHubNotifySemTakeNotPass)
 {
     /** @testcase{ eventHub::EventHubNotifySemTakeNotPass: }
      * Test EventHub notify failures
@@ -539,13 +539,14 @@ TEST_F(eventHub, EventHubNotifySemTakeNotPass)
     EXPECT_EQ(UINT32_C(1), xSemaphoreTake_fake.call_count);
 }
 
-TEST_F(eventHub, EventHubNotifySemGiveNotPass)
+TEST_F(EventHubTest, EventHubNotifySemGiveNotPass)
 {
     /** @testcase{ eventHub::EventHubNotifySemGiveNotPass: }
      * Test EventHub notify failures
      */
     EventHub_T eventHub;
     Retcode_T retVal = RETCODE_OK;
+    eventHub.observerCount = 0;
     xSemaphoreTake_fake.return_val = (uint32_t)1;
     xSemaphoreGive_fake.return_val = (uint32_t)0;
 

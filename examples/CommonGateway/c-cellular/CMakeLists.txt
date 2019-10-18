@@ -38,6 +38,7 @@ configure_file(${KISO_CENTRAL_CONFIG_DIR}/Cellular/Kiso_CellularConfig.h ${CURRE
 include(${APP_CONFIG_DIR}/Utils/Kiso_UtilsConfig.cmake)
 configure_file(${KISO_CENTRAL_CONFIG_DIR}/Utils/LogConfig.h ${CURRENT_CONFIG_DIR}/Utils/LogConfig.h COPYONLY)
 configure_file(${KISO_CENTRAL_CONFIG_DIR}/Utils/PipeAndFilterConfig.h ${CURRENT_CONFIG_DIR}/Utils/PipeAndFilterConfig.h COPYONLY)
+configure_file(${KISO_CENTRAL_CONFIG_DIR}/Utils/Kiso_EventHubConfig.h ${CURRENT_CONFIG_DIR}/Utils/Kiso_EventHubConfig.h COPYONLY)
 configure_file(${KISO_CENTRAL_CONFIG_DIR}/FreeRTOSConfig.h ${CURRENT_CONFIG_DIR}/FreeRTOSConfig.h COPYONLY)
 
 # Generate/copy app-specific config

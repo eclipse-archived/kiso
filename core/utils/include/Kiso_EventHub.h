@@ -41,15 +41,11 @@
 /* KISO interface header files */
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
-
-/* May be overridden by the project makefile */
-#ifndef CONFIG_EVENTHUB_MAX_OBSERVERS
-#define CONFIG_EVENTHUB_MAX_OBSERVERS (16)
-#endif
+#include "Kiso_EventHubConfig.h"
 
 typedef uint32_t TaskEvent_T;
 
-typedef void (*EventHandler_T)(TaskEvent_T event, void *data);
+typedef void (*EventHandler_T)(TaskEvent_T event, const void *data);
 
 struct EventObserver_S
 {
@@ -80,7 +76,6 @@ typedef struct EventHub_S EventHub_T;
  *      When the hub parameter pointer is NULL
  * @retval #RETCODE_SEMAPHORE_ERROR
  *      When the associated lock is not created successfully
- * 
  */
 Retcode_T EventHub_Initialize(EventHub_T *hub);
 
@@ -107,7 +102,6 @@ Retcode_T EventHub_Initialize(EventHub_T *hub);
  * @retval #RETCODE_OUT_OF_RESOURCES
  *      When the maximum number of observation is already reached
  *      (see #CONFIG_EVENTHUB_MAX_OBSERVERS)
- * 
  */
 Retcode_T EventHub_Observe(EventHub_T *hub, EventHandler_T handler, TaskEvent_T event);
 
@@ -125,7 +119,6 @@ Retcode_T EventHub_Observe(EventHub_T *hub, EventHandler_T handler, TaskEvent_T 
  *      When observations for all event are added successfully
  * @retval #RETCODE_NULL_POINTER
  *      When hub or handler pointer is NULL
- * 
  */
 Retcode_T EventHub_ObserveAll(EventHub_T *hub, EventHandler_T handler);
 
@@ -151,9 +144,8 @@ Retcode_T EventHub_ObserveAll(EventHub_T *hub, EventHandler_T handler);
  *      When the hub has not been initialized previously
  * @retval #RETCODE_SEMAPHORE_ERROR
  *      When the hub lock can't be taken or released successfully
- * 
  */
-Retcode_T EventHub_Notify(EventHub_T *hub, TaskEvent_T Event, void *data);
+Retcode_T EventHub_Notify(EventHub_T *hub, TaskEvent_T Event, const void *data);
 
 #endif /* if KISO_FEATURE_EVENTHUB */
 
