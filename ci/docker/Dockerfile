@@ -33,3 +33,6 @@ RUN apt-get install -y gcc-arm-none-eabi gcc g++
 
 # Get xmllint
 RUN apt-get install -y libxml2-utils
+
+# Get Hugo for website verification
+RUN apt-get install -y hugo

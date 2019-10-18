@@ -5,7 +5,7 @@ pipeline
         docker
         {
             label 'RT-Z0KHU'
-            image 'rb-dtr.de.bosch.com/software-campus/kiso-toolchain:v0.4.2'
+            image 'rb-dtr.de.bosch.com/software-campus/kiso-toolchain:v0.4.3'
             registryUrl 'https://rb-dtr.de.bosch.com'
             registryCredentialsId 'docker-registry'
         }
@@ -97,8 +97,19 @@ pipeline
                     {
                         script
                         {
-                            echo "generate doxygen"
+                            echo "Generate Doxygen"
                             sh 'cmake --build builddir-debug --target docs'
+                        }
+                    }
+                }
+                stage('Hugo Documentation')
+                {
+                    steps
+                    {
+                        script
+                        {
+                            echo "Generate Hugo Website"
+                            sh 'hugo -s docs/website'
                         }
                     }
                 }
