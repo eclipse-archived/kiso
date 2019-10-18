@@ -96,7 +96,7 @@ TEST_F(TaskMonitor, TaskMonitor_InitializeTest)
     retVal = TaskMonitor_Initialize();
 
     EXPECT_EQ(RETCODE_OK, retVal);
-    EXPECT_EQ(false, IsReg);
+    EXPECT_EQ(false, taskMonitor.IsReg);
 }
 
 TEST_F(TaskMonitor, TaskMonitor_UpdateTest)

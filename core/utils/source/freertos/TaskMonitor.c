@@ -78,7 +78,7 @@ Retcode_T TaskMonitor_Initialize(void)
 }
 
 /*  The description of the function is available in Kiso_TaskMonitor.h */
-Retcode_T TaskMonitor_Register(TaskHandle_t task, uint32_t upperLimit)
+Retcode_T TaskMonitor_Register(void *task, uint32_t upperLimit)
 {
     uint32_t loopcnt;
     Retcode_T ret = RETCODE_OK;
@@ -88,7 +88,7 @@ Retcode_T TaskMonitor_Register(TaskHandle_t task, uint32_t upperLimit)
         {
             if (true != TaskInfo[loopcnt].IsReg)
             {
-                TaskInfo[loopcnt].Task = task;
+                TaskInfo[loopcnt].Task = (TaskHandle_t)task;
                 TaskInfo[loopcnt].UpperLimitTickTime = ((upperLimit * 1000) / portTICK_RATE_MS);
                 TaskInfo[loopcnt].IsReg = true;
                 break;
@@ -129,7 +129,7 @@ bool TaskMonitor_Check(void)
         if (TaskInfo[loopcnt].IsReg)
         {
             const TaskHookFunction_t taskTag = xTaskGetApplicationTaskTag(TaskInfo[loopcnt].Task);
-            taskTagValue[loopcnt] = (uint32_t)taskTag;
+            taskTagValue[loopcnt] = *(const uint32_t *)&taskTag;
         }
     }
     currentTickTime = xTaskGetTickCount();

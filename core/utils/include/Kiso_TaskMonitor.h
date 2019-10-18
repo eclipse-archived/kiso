@@ -35,10 +35,6 @@
 /* Interface dependency checks */
 #include "Kiso_Retcode.h"
 
-/* FreeRTOS header files */
-#include "FreeRTOS.h"
-#include "task.h"
-
 /**
  * @brief
  *      Initialize the Task monitor.
@@ -47,14 +43,13 @@
  *
  * @retval #RETCODE_OK
  *      Task Monitor is initialized successfully
- * 
+ *
  */
 Retcode_T TaskMonitor_Initialize(void);
 
 /**
  * @brief
  *      Register the task for monitoring
- *
  *
  * @param[in] task
  *      Task handler for given task
@@ -68,26 +63,25 @@ Retcode_T TaskMonitor_Initialize(void);
  *      Task is not registered.
  * @retval #RETCODE_INVALID_PARAM
  *      Task handler is NULL or upperLimit is zero
- * 
+ *
  */
-
-Retcode_T TaskMonitor_Register(TaskHandle_t task, uint32_t upperLimit);
+Retcode_T TaskMonitor_Register(void *task, uint32_t upperLimit);
 
 /**
  * @brief
- *      Update the time stamp while exiting from task execution. 
- *      This function is mapped with traceTASK_SWITCHED_OUT() to call from Freertos kernel 
+ *      Update the time stamp while exiting from task execution.
+ *      This function is mapped with traceTASK_SWITCHED_OUT() to call from Freertos kernel
  *
  * @note
  *      This function is called at every task exit. Hence execution time should be very minimal.
- *		Usage #define traceTASK_SWITCHED_OUT()	TaskMonitor_Update(&pxCurrentTCB->pxTaskTag, xTickCount)
+ *      Usage #define traceTASK_SWITCHED_OUT() TaskMonitor_Update(&pxCurrentTCB->pxTaskTag, xTickCount)
  *
- *			Data types is added as "unsigned int" to avoid compilation warning in FreeRTOSConfig.h file
+ *      Data types is added as "unsigned int" to avoid compilation warning in FreeRTOSConfig.h file
  *
  * @param[out] taskTag
  * 	    Current Tasks's task tag pointer to update the tickcount
  *
- * @param[in] tickCount 
+ * @param[in] tickCount
  * 	    Count of ticks since vTaskStartScheduler was called
  *
  */
@@ -104,21 +98,21 @@ void TaskMonitor_Update(unsigned int *taskTag, unsigned int tickCount);
  *      Anyone of the task execution fail
  * @retval False
  *      All task are executed successfully
- * 
+ *
  * @details
  *      Usage
- * 
+ *
  * @code{.c}
  *      void vApplicationIdleHook(void)
- *	    {
- *		    bool rc;
+ *      {
+ *          bool rc;
  *
- *		    rc = TaskMonitor_Check();
- *		    if(rc)
- *		    {
- *			    //Handle Error
- *		    }
- *	    }
+ *          rc = TaskMonitor_Check();
+ *          if(rc)
+ *          {
+ *               //Handle Error
+ *          }
+ *      }
  * @endcode
  *
  */
