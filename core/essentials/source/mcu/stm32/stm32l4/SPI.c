@@ -22,7 +22,7 @@
 #include "Kiso_MCU_SPI.h"
 
 #if KISO_FEATURE_SPI
-#include "Kiso_MCU_SPI_Handle.h"
+#include "Kiso_MCU_STM32L4_SPI_Handle.h"
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
 #undef KISO_MODULE_ID

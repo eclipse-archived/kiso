@@ -22,7 +22,7 @@
 
 #include "Kiso_MCU_UART.h"
 #if KISO_FEATURE_UART
-#include "Kiso_MCU_UART_Handle.h"
+#include "Kiso_MCU_STM32L4_UART_Handle.h"
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
 #undef KISO_MODULE_ID

@@ -22,7 +22,7 @@
 
 #if KISO_FEATURE_I2C
 
-#include "Kiso_MCU_I2C_Handle.h"
+#include "Kiso_MCU_STM32L4_I2C_Handle.h"
 #include "stm32l4xx_hal.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
