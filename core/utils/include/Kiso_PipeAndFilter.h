@@ -19,18 +19,18 @@
  * @{
  *
  * @brief
- *     This file allows you to create a pipe and filter architecture pattern
- *
- * @details
- *     We have here an implementation of the pipe and filter architectural pattern
+ *     This is an implementation of a pipe and filter architecture pattern
  *
  * @par Overview
- *     The component looks like bla...
+ *     The Pipe-filter architectural pattern provides a structure for systems
+ *     that produce a stream of data. Each processing step is encapsulated in
+ *     a filter component. Data is passed through pipes. The pipes may be used
+ *     for buffering or for synchronization.
  * @par Utilization
  *     Please refer directly to the functions to understand how to use it.
  * @par Extension
  *     You are free to propose a different implementation for this API. We will try to have per OS a specific implementation.
- *     You could also have it on your application.
+ *     The different implementations will be saved under source/<OS name>/.
  *
  * @file
  **/

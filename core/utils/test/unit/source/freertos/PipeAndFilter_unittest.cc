@@ -45,16 +45,13 @@ extern "C"
 /* Ensure the filter-task will not run anymore */
 #define RUN_FILTER_ALWAYS 0
 
+/* Include the configuration */
+#include "PipeAndFilterConfig.h"
 /* Include module under test */
 #include "PipeAndFilter.c"
 
     /* End of global scope symbol and fake definitions section */
 }
-
-/* Setup compile time configuration defines */
-#define PIPE_SIZE 100
-#define FILTER_STACK_SIZE 500
-#define FILTER_PRIORITY 1
 
 FAKE_VALUE_FUNC(Retcode_T, functionA, uint8_t *, uint32_t, uint8_t *, uint32_t *)
 
