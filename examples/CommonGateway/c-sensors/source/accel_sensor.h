@@ -29,6 +29,7 @@
 
 /*---------------------- INCLUDED HEADERS ---------------------------------------------------------------------------*/
 #include "Kiso_I2CTransceiver.h"
+#include "bma2x2.h"
 
 /*---------------------- MACRO DEFINITIONS --------------------------------------------------------------------------*/
 
@@ -36,7 +37,8 @@
 
 /*---------------------- FUNCTION DECLARATIONS ----------------------------------------------------------------------*/
 
-Retcode_T Accelerometer_Init(I2cTranceiverHandlePtr_T i2cTransceiverRef);
+Retcode_T SensorAccelerometer_Init(I2cTranceiverHandlePtr_T i2cTransceiverRef);
+Retcode_T SensorAccelerometer_Read(struct bma2x2_accel_data *data);
 
 /*---------------------- GLOBAL VARIABLES DECLARATION ---------------------------------------------------------------*/
 

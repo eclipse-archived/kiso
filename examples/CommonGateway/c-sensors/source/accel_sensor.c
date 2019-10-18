@@ -29,14 +29,14 @@
 #include "Kiso_Assert.h"
 #include "FreeRTOS.h"
 #include "timers.h"
-#include "bma2x2.h"
+
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID CGW_APP_MODULE_ACCEL_SENSOR
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
-
+static void Delay(BMA2x2_MDELAY_DATA_TYPE delay);
 s8 bma280_Write(u8 address, u8 reg, u8 *data, u8 len);
 s8 bma280_Read(u8 address, u8 reg, u8 *data, u8 len);
 
@@ -45,14 +45,14 @@ s8 bma280_Read(u8 address, u8 reg, u8 *data, u8 len);
 struct bma2x2_t bma280Struct = {
     .bus_read = bma280_Read,
     .bus_write = bma280_Write,
-    .delay_msec = BSP_Board_Delay,
+    .delay_msec = Delay,
     .dev_addr = COMMONGATEWAY_BMA280_I2CADDRESS,
 };
 
 static I2cTranceiverHandlePtr_T accelSensorTransceiver = NULL;
 
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
-Retcode_T Accelerometer_Init(I2cTranceiverHandlePtr_T i2cTransceiverRef)
+Retcode_T SensorAccelerometer_Init(I2cTranceiverHandlePtr_T i2cTransceiverRef)
 {
     Retcode_T retcode;
     retcode = BSP_BMA280_Connect(COMMONGATEWAY_BMA280_ID);
@@ -76,10 +76,33 @@ Retcode_T Accelerometer_Init(I2cTranceiverHandlePtr_T i2cTransceiverRef)
         }
         BSP_Board_Delay(100);
     }
+
     return retcode;
 }
 
+Retcode_T SensorAccelerometer_Read(struct bma2x2_accel_data *data)
+{
+    if (0 != bma2x2_read_accel_xyz(data))
+    {
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    }
+
+    return RETCODE_OK;
+}
+
 /*---------------------- LOCAL FUNCTIONS IMPLEMENTATION -------------------------------------------------------------*/
+static void Delay(BMA2x2_MDELAY_DATA_TYPE delay)
+{
+    if (xTaskGetSchedulerState() != taskSCHEDULER_RUNNING)
+    {
+        BSP_Board_Delay(delay);
+    }
+    else
+    {
+        vTaskDelay(delay);
+    }
+}
+
 s8 bma280_Write(u8 address, u8 reg, u8 *data, u8 len)
 {
     Retcode_T retcode = I2CTransceiver_Write(accelSensorTransceiver, address, reg, data, len);

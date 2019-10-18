@@ -18,7 +18,7 @@ endif()
 
 ## Libs configuration
 # Additional thirdparty libraries for the board
-set(KISO_BOARD_LIBS stm32cubel4)
+set(KISO_BOARD_LIBS stm32cubel4 bstlib)
 
 ## Board definitions
 # Compile definitions for all subprojects after this call

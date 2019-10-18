@@ -29,12 +29,14 @@
 
 /*---------------------- INCLUDED HEADERS ---------------------------------------------------------------------------*/
 #include "Kiso_I2CTransceiver.h"
+#include "bme280.h"
 
 /*---------------------- MACRO DEFINITIONS --------------------------------------------------------------------------*/
 /*---------------------- TYPE DEFINITIONS ---------------------------------------------------------------------------*/
 /*---------------------- FUNCTION DECLARATIONS ----------------------------------------------------------------------*/
 
-Retcode_T Environmental_Init(I2cTranceiverHandlePtr_T i2cTransceiverRef);
+Retcode_T SensorEnvironment_Init(I2cTranceiverHandlePtr_T i2cTransceiverRef);
+Retcode_T SensorEnvironment_Read(struct bme280_data *data);
 
 /*---------------------- GLOBAL VARIABLES DECLARATION ---------------------------------------------------------------*/
 

@@ -22,6 +22,7 @@
  *              in CommonGateway board.
  * 
  * @file
+
  */
 
 #ifndef SENSORS_COMMON_H_
