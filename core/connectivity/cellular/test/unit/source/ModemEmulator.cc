@@ -12,13 +12,8 @@
 *
 ********************************************************************************/
 
-/* Include all headers which are needed by this file in the following order:
- * Own public header
- * Own protected header
- * Own private header
- * System header (if necessary)
- * Other headers
- */
+/** LCOV_EXCL_START : start of section where code coverage is ignored. */
+
 #include "Kiso_Basics.h"
 
 #include "Kiso_Retcode_th.hh"
@@ -433,3 +428,5 @@ protected:
         return *buffer;
     }
 };
+
+/** LCOV_EXCL_STOP : end of section where code coverage is ignored. */

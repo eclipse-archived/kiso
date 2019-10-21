@@ -436,7 +436,7 @@ Retcode_T Cellular_SetAirPlaneMode(bool airPlanModeOn);
  * will be copied into this buffer. This function does not guarantee
  * zero-termination.
  *
- * @param[in,out] len
+ * @param[in,out] iccidLen
  * On call: must contain the number of writable bytes in @e iccid buffer.
  * If smaller than needed by the internals, a warning will be associated with
  * the #Retcode_T return value and the ICCID may be cropped.

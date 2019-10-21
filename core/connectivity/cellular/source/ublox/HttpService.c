@@ -66,7 +66,7 @@ void HttpService_NotifyResult(AT_UHTTP_ProfileId_T profileId, AT_UHTTPC_Command_
 
 Retcode_T CellularHttp_Initialize(CellularHttp_ResultCallback_T callback)
 {
-    Retcode_T retcode = RETCODE_OK;
+    Retcode_T retcode;
     if (NULL != callback)
     {
         CellularHttp_resultCallback = callback;

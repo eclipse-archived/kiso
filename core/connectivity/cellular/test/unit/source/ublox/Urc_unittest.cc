@@ -30,7 +30,7 @@ extern "C"
 #include "Urc.c"
 }
 
-class TS_Smoke : public testing::Test
+class TS_URC : public testing::Test
 {
 protected:
     virtual void SetUp()
@@ -39,6 +39,36 @@ protected:
     }
 };
 
-TEST_F(TS_Smoke, Compile_Success)
+TEST_F(TS_URC, Urc_HandleResponses_Success)
 {
+    Retcode_T retcode;
+    AtResponseQueue_WaitForNamedCmd_fake.return_val = RETCODE_OK;
+    At_HandleUrc_CGREG_fake.return_val = RETCODE_OK;
+    At_HandleUrc_CEREG_fake.return_val = RETCODE_OK;
+    At_HandleUrc_UUSOCL_fake.return_val = RETCODE_OK;
+    At_HandleUrc_UUSOLI_fake.return_val = RETCODE_OK;
+    At_HandleUrc_UUSORD_fake.return_val = RETCODE_OK;
+    At_HandleUrc_UUSORF_fake.return_val = RETCODE_OK;
+    At_HandleUrc_UUHTTPCR_fake.return_val = RETCODE_OK;
+
+    retcode = Urc_HandleResponses();
+
+    EXPECT_EQ(RETCODE_OK, retcode);
+}
+
+TEST_F(TS_URC, Urc_HandleResponses_Fail)
+{
+    Retcode_T retcode;
+    AtResponseQueue_WaitForNamedCmd_fake.return_val = (Retcode_T)~RETCODE_OK;
+    At_HandleUrc_CGREG_fake.return_val = (Retcode_T)~RETCODE_OK;
+    At_HandleUrc_CEREG_fake.return_val = (Retcode_T)~RETCODE_OK;
+    At_HandleUrc_UUSOCL_fake.return_val = (Retcode_T)~RETCODE_OK;
+    At_HandleUrc_UUSOLI_fake.return_val = (Retcode_T)~RETCODE_OK;
+    At_HandleUrc_UUSORD_fake.return_val = (Retcode_T)~RETCODE_OK;
+    At_HandleUrc_UUSORF_fake.return_val = (Retcode_T)~RETCODE_OK;
+    At_HandleUrc_UUHTTPCR_fake.return_val = (Retcode_T)~RETCODE_OK;
+
+    retcode = Urc_HandleResponses();
+
+    EXPECT_NE(RETCODE_OK, retcode);
 }

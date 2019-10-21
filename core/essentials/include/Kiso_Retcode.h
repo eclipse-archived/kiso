@@ -11,7 +11,6 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
-
 /**
  *  @ingroup    KISO_ESSENTIALS
  *  @defgroup   KISO_RETCODE Retcode
@@ -29,6 +28,8 @@
 
 #ifndef KISO_RETCODE_H_
 #define KISO_RETCODE_H_
+
+/** LCOV_EXCL_START : start of section where code coverage is ignored. */
 
 #include "Kiso_Basics.h"
 

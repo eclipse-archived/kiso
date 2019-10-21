@@ -1,25 +1,27 @@
-/********************************************************************************
-* Copyright (c) 2010-2019 Robert Bosch GmbH
-*
-* This program and the accompanying materials are made available under the
-* terms of the Eclipse Public License 2.0 which is available at
-* http://www.eclipse.org/legal/epl-2.0.
-*
-* SPDX-License-Identifier: EPL-2.0
-*
-* Contributors:
-*    Robert Bosch GmbH - initial contribution
-*
-********************************************************************************/
+/**********************************************************************************************************************
+ * Copyright (c) 2010-2019 Robert Bosch GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Robert Bosch GmbH - initial contribution
+ *
+ **********************************************************************************************************************/
 
 /**
  * @file
  *
- * @brief Provides functionality for the modem interaction with the network
+ * @brief       Provides functionality for the modem interaction with the network
  */
-
+/*###################### INCLUDED HEADERS ---------------------------------------------------------------------------*/
 #include "Kiso_CellularModules.h"
+#undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_NETWORK
+#include "Kiso_Cellular.h"
 
 #include "Kiso_CellularConfig.h"
 #include "Engine.h"
@@ -30,12 +32,15 @@
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
 #include "Kiso_Assert.h"
-
 #include "Kiso_Logging.h"
 
 #include <limits.h>
+/*###################### MACROS DEFINITION ###########################################################################*/
 
 #define CELLULAR_NETWORK_SHORT_ENQUEUE_TIMEOUT (UINT32_C(1000))
+#define UBLOX_NETWORK_ONLY_BIT_SET(val, mask) (!((val) & ~(mask)) && ((val) & (mask)))
+
+/*###################### TYPES DEFINITION  ###########################################################################*/
 
 /**
  * @brief Internal structure for passing arguments through the Engine
@@ -67,6 +72,119 @@ struct CellularNetwork_QueryIccidParam_S
     uint32_t *IccidLen;
 };
 
+/*###################### LOCAL FUNCTIONS DECLARATION #################################################################*/
+
+static Retcode_T SelectLteRat(const AT_URAT_Param_T *urat);
+static Retcode_T RegisterOnNetwork(void *param, uint32_t len);
+static Retcode_T TranslateToUbloxAcT(const Cellular_NetworkParameters_T *netParam, AT_URAT_Param_T *uRatParam);
+static Retcode_T DeregisterFromNetwork(void *param, uint32_t len);
+static Retcode_T ConfigureDataContext(void *param, uint32_t len);
+static Retcode_T ActivateDataContext(void *param, uint32_t len);
+static Retcode_T DeactivateDataContext(void *param, uint32_t len);
+static Retcode_T QueryIccid(void *param, uint32_t paramLen);
+
+/*###################### VARIABLES DECLARATION #######################################################################*/
+
+static Cellular_DataContext_T DataContexts[CELLULAR_DATACTX_COUNT];
+
+/*###################### EXPOSED FUNCTIONS IMPLEMENTATION ############################################################*/
+
+Retcode_T Cellular_ConfigureDataContext(uint32_t cid, const Cellular_DataContextParameters_T *parameters)
+{
+    if (CELLULAR_DATACTX_COUNT <= cid || NULL == parameters)
+    {
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+    }
+    else
+    {
+        struct CellularNetwork_CfgDataCtxParam_S param;
+        param.Cid = cid + 1;
+        param.Parameters = parameters;
+        return Engine_Dispatch(ConfigureDataContext, CELLULAR_NETWORK_SHORT_ENQUEUE_TIMEOUT, (void *)&param, sizeof(param)); //LCOV_EXCL_BR_LINE
+    }
+}
+
+Retcode_T Cellular_RegisterOnNetwork(const Cellular_NetworkParameters_T *networkParameters)
+{
+    if (NULL == networkParameters)
+    {
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+    }
+    else
+    {
+        return Engine_Dispatch(RegisterOnNetwork, CELLULAR_NETWORK_SHORT_ENQUEUE_TIMEOUT, (void *)networkParameters, sizeof(Cellular_NetworkParameters_T)); //LCOV_EXCL_BR_LINE
+    }
+}
+
+Retcode_T Cellular_ActivateDataContext(uint32_t cid, const Cellular_DataContext_T **ctx)
+{
+    if (CELLULAR_DATACTX_COUNT <= cid || NULL == ctx)
+    {
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+    }
+    else
+    {
+        struct CellularNetwork_ActDataCtxParam_S param;
+        param.Cid = cid + 1;
+        param.Ctx = ctx;
+        return Engine_Dispatch(ActivateDataContext, CELLULAR_NETWORK_SHORT_ENQUEUE_TIMEOUT, (void *)&param, sizeof(param)); //LCOV_EXCL_BR_LINE
+    }
+}
+
+Retcode_T Cellular_DeactivateDataContext(uint32_t cid)
+{
+    if (CELLULAR_DATACTX_COUNT <= cid)
+    {
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+    }
+    else
+    {
+        assert(cid < UINT8_MAX);
+        uint8_t ubloxCid = (uint8_t)cid + 1;
+        return Engine_Dispatch(DeactivateDataContext, CELLULAR_NETWORK_SHORT_ENQUEUE_TIMEOUT, (void *)&ubloxCid, sizeof(ubloxCid)); //LCOV_EXCL_BR_LINE
+    }
+}
+
+Retcode_T Cellular_QueryIccid(char *iccid, uint32_t *iccidLen)
+{
+    if (NULL == iccid || NULL == iccidLen || *iccidLen > AT_CCID_TYPE_20CHAR + 1)
+    {
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+    }
+    else
+    {
+        struct CellularNetwork_QueryIccidParam_S param;
+        param.Iccid = iccid;
+        param.IccidLen = iccidLen;
+        return Engine_Dispatch(QueryIccid, CELLULAR_NETWORK_SHORT_ENQUEUE_TIMEOUT, &param, sizeof(param)); //LCOV_EXCL_BR_LINE
+    }
+}
+
+Retcode_T Cellular_QueryNetworkInfo(Cellular_NetworkInfo_T *networkInfo)
+{
+    KISO_UNUSED(networkInfo);
+    Retcode_T retcode = RETCODE_OK;
+
+    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
+
+    return retcode;
+}
+
+Retcode_T Cellular_DisconnectFromNetwork(void)
+{
+    return Engine_Dispatch(DeregisterFromNetwork, CELLULAR_NETWORK_SHORT_ENQUEUE_TIMEOUT, NULL, 0);
+}
+
+Retcode_T Cellular_SetAirPlaneMode(bool airPlanModeOn)
+{
+    KISO_UNUSED(airPlanModeOn);
+    /** \todo: Implement 3GPP 27.007 commands for AT+CFUN=4 (disable rx/tx) and
+     * AT+CFUN=1 (enable rx/tx). */
+    return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
+}
+
+/*###################### LOCAL FUNCTIONS IMPLEMENTATION ##############################################################*/
+
 /**
  * @brief Perform LTE specific RAT change. This involves checking the
  * MNO-profile, band-mask and perhaps having to soft-reset the modem if one of
@@ -77,115 +195,6 @@ struct CellularNetwork_QueryIccidParam_S
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
-static Retcode_T SelectLteRat(const AT_URAT_Param_T *urat);
-
-/**
- * @brief Register to the cellular network.
- *
- * To be encapsulated by via #Engine_Dispatch().
- *
- * @param[in] param
- * @param[in] len
- *
- * @return A #Retcode_T indicating the result of the procedure.
- */
-static Retcode_T RegisterOnNetwork(void *param, uint32_t len);
-
-/**
- * @brief Will translate the high level Cellular AcT and FallbackAcT parameters
- * to u-blox specific URAT parameters.
- *
- * @param[in] netParam
- * Pointer to a valid structure containing the high level AcT settings.
- *
- * @param[out] uRatParam
- * Will contain the associated URAT parameters for netParam.
- *
- * @return A #Retcode_T indicating the result of the procedure.
- */
-static Retcode_T TranslateToUbloxAcT(const Cellular_NetworkParameters_T *netParam, AT_URAT_Param_T *uRatParam);
-
-/**
- * @brief Tell the modem to deregister from the network. The module will remain
- * idle and will not attempt a reconnect until #RegisterOnNetwork() is being
- * called.
- *
- * To be encapsulated by via #Engine_Dispatch().
- *
- * @param param Ignored.
- * @param len Ignored.
- *
- * @return A #Retcode_T indicating the result of the procedure.
- */
-static Retcode_T DeregisterFromNetwork(void *param, uint32_t len);
-
-/**
- * @brief Configure a given data-context.
- *
- * To be encapsulated by via #Engine_Dispatch().
- *
- * @param[in] param
- * A valid #CellularNetwork_CfgDataCtxParam_S pointer carrying the configuration
- * details.
- *
- * @param[in] len
- * Length of param.
- *
- * @return A #Retcode_T indicating the result of the procedure.
- */
-static Retcode_T ConfigureDataContext(void *param, uint32_t len);
-
-/**
- * @brief Activate a given data-context.
- *
- * To be encapsulated by via #Engine_Dispatch().
- *
- * @param[in,out] param
- * A valid #CellularNetwork_ActDataCtxParam_S pointer carrying the activation
- * details.
- *
- * @param[in] len
- * Length of param.
- *
- * @return A #Retcode_T indicating the result of the procedure.
- */
-static Retcode_T ActivateDataContext(void *param, uint32_t len);
-
-/**
- * @brief Deactivate a data-context.
- *
- * To be encapsulated by via #Engine_Dispatch().
- *
- * @param[in] param
- * A valid #uint8_t pointer pointing to the id of the context to deactivate.
- *
- * @param[in] len
- * Length of param.
- *
- * @return A #Retcode_T indicating the result of the procedure.
- */
-static Retcode_T DeactivateDataContext(void *param, uint32_t len);
-
-/**
- * @brief Query the ICCID from the SIM-card.
- *
- * To be encapsulated by via #Engine_Dispatch().
- *
- * @param[in,out] param
- * A valid #CellularNetwork_QueryIccidParam_S pointer to be filled with the
- * query result.
- *
- * @param[in] paramLen
- * Length of #CellularNetwork_QueryIccidParam_S structure.
- *
- * @return A #Retcode_T indicating the result of the procedure.
- */
-static Retcode_T QueryIccid(void *param, uint32_t paramLen);
-
-#define UBLOX_NETWORK_ONLY_BIT_SET(val, mask) (!((val) & ~(mask)) && ((val) & (mask)))
-
-static Cellular_DataContext_T DataContexts[CELLULAR_DATACTX_COUNT];
-
 static Retcode_T SelectLteRat(const AT_URAT_Param_T *urat)
 {
     AT_UBANDMASK_Param_T ubandmask;
@@ -224,6 +233,18 @@ static Retcode_T SelectLteRat(const AT_URAT_Param_T *urat)
     return retcode;
 }
 
+/**
+ * @brief Will translate the high level Cellular AcT and FallbackAcT parameters
+ * to u-blox specific URAT parameters.
+ *
+ * @param[in] netParam
+ * Pointer to a valid structure containing the high level AcT settings.
+ *
+ * @param[out] uRatParam
+ * Will contain the associated URAT parameters for netParam.
+ *
+ * @return A #Retcode_T indicating the result of the procedure.
+ */
 static Retcode_T TranslateToUbloxAcT(const Cellular_NetworkParameters_T *netParam, AT_URAT_Param_T *uRatParam)
 {
     assert(NULL != netParam);
@@ -303,6 +324,16 @@ static Retcode_T TranslateToUbloxAcT(const Cellular_NetworkParameters_T *netPara
     return retcode;
 }
 
+/**
+ * @brief Register to the cellular network.
+ *
+ * To be encapsulated by via #Engine_Dispatch().
+ *
+ * @param[in] param
+ * @param[in] len
+ *
+ * @return A #Retcode_T indicating the result of the procedure.
+ */
 static Retcode_T RegisterOnNetwork(void *param, uint32_t len)
 {
     KISO_UNUSED(len);
@@ -354,6 +385,20 @@ static Retcode_T RegisterOnNetwork(void *param, uint32_t len)
     return retcode;
 }
 
+/**
+ * @brief Configure a given data-context.
+ *
+ * To be encapsulated by via #Engine_Dispatch().
+ *
+ * @param[in] param
+ * A valid #CellularNetwork_CfgDataCtxParam_S pointer carrying the configuration
+ * details.
+ *
+ * @param[in] len
+ * Length of param.
+ *
+ * @return A #Retcode_T indicating the result of the procedure.
+ */
 static Retcode_T ConfigureDataContext(void *param, uint32_t len)
 {
     KISO_UNUSED(len);
@@ -381,6 +426,20 @@ static Retcode_T ConfigureDataContext(void *param, uint32_t len)
     return At_Set_CGDCONT(&cgdcont);
 }
 
+/**
+ * @brief Activate a given data-context.
+ *
+ * To be encapsulated by via #Engine_Dispatch().
+ *
+ * @param[in,out] param
+ * A valid #CellularNetwork_ActDataCtxParam_S pointer carrying the activation
+ * details.
+ *
+ * @param[in] len
+ * Length of param.
+ *
+ * @return A #Retcode_T indicating the result of the procedure.
+ */
 static Retcode_T ActivateDataContext(void *param, uint32_t len)
 {
     KISO_UNUSED(len);
@@ -440,6 +499,19 @@ static Retcode_T ActivateDataContext(void *param, uint32_t len)
     return retcode;
 }
 
+/**
+ * @brief Deactivate a data-context.
+ *
+ * To be encapsulated by via #Engine_Dispatch().
+ *
+ * @param[in] param
+ * A valid #uint8_t pointer pointing to the id of the context to deactivate.
+ *
+ * @param[in] len
+ * Length of param.
+ *
+ * @return A #Retcode_T indicating the result of the procedure.
+ */
 static Retcode_T DeactivateDataContext(void *param, uint32_t len)
 {
     KISO_UNUSED(len);
@@ -468,6 +540,20 @@ static Retcode_T DeactivateDataContext(void *param, uint32_t len)
     return retcode;
 }
 
+/**
+ * @brief Query the ICCID from the SIM-card.
+ *
+ * To be encapsulated by via #Engine_Dispatch().
+ *
+ * @param[in,out] param
+ * A valid #CellularNetwork_QueryIccidParam_S pointer to be filled with the
+ * query result.
+ *
+ * @param[in] paramLen
+ * Length of #CellularNetwork_QueryIccidParam_S structure.
+ *
+ * @return A #Retcode_T indicating the result of the procedure.
+ */
 static Retcode_T QueryIccid(void *param, uint32_t paramLen)
 {
     KISO_UNUSED(paramLen);
@@ -486,6 +572,7 @@ static Retcode_T QueryIccid(void *param, uint32_t paramLen)
         memset(query->Iccid, 0, *query->IccidLen);
 
         uint32_t bytesToCopy = *query->IccidLen > (uint32_t)ccid.Type ? (uint32_t)ccid.Type : *query->IccidLen;
+
         memcpy(query->Iccid, ccid.Iccid, bytesToCopy);
 
         if (*query->IccidLen < bytesToCopy)
@@ -501,6 +588,18 @@ static Retcode_T QueryIccid(void *param, uint32_t paramLen)
     return retcode;
 }
 
+/**
+ * @brief Tell the modem to deregister from the network. The module will remain
+ * idle and will not attempt a reconnect until #RegisterOnNetwork() is being
+ * called.
+ *
+ * To be encapsulated by via #Engine_Dispatch().
+ *
+ * @param param Ignored.
+ * @param len Ignored.
+ *
+ * @return A #Retcode_T indicating the result of the procedure.
+ */
 static Retcode_T DeregisterFromNetwork(void *param, uint32_t len)
 {
     KISO_UNUSED(param);
@@ -523,99 +622,4 @@ static Retcode_T DeregisterFromNetwork(void *param, uint32_t len)
     }
 
     return retcode;
-}
-
-Retcode_T Cellular_ConfigureDataContext(uint32_t cid, const Cellular_DataContextParameters_T *parameters)
-{
-    if (CELLULAR_DATACTX_COUNT <= cid || NULL == parameters)
-    {
-        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-    }
-    else
-    {
-        struct CellularNetwork_CfgDataCtxParam_S param;
-        param.Cid = cid + 1;
-        param.Parameters = parameters;
-        return Engine_Dispatch(ConfigureDataContext, CELLULAR_NETWORK_SHORT_ENQUEUE_TIMEOUT, (void *)&param, sizeof(param));
-    }
-}
-
-Retcode_T Cellular_RegisterOnNetwork(const Cellular_NetworkParameters_T *networkParameters)
-{
-    if (NULL == networkParameters)
-    {
-        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-    }
-    else
-    {
-        return Engine_Dispatch(RegisterOnNetwork, CELLULAR_NETWORK_SHORT_ENQUEUE_TIMEOUT, (void *)networkParameters, sizeof(Cellular_NetworkParameters_T));
-    }
-}
-
-Retcode_T Cellular_ActivateDataContext(uint32_t cid, const Cellular_DataContext_T **ctx)
-{
-    if (CELLULAR_DATACTX_COUNT <= cid || NULL == ctx)
-    {
-        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-    }
-    else
-    {
-        struct CellularNetwork_ActDataCtxParam_S param;
-        param.Cid = cid + 1;
-        param.Ctx = ctx;
-        return Engine_Dispatch(ActivateDataContext, CELLULAR_NETWORK_SHORT_ENQUEUE_TIMEOUT, (void *)&param, sizeof(param));
-    }
-}
-
-Retcode_T Cellular_DeactivateDataContext(uint32_t cid)
-{
-    if (CELLULAR_DATACTX_COUNT <= cid)
-    {
-        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-    }
-    else
-    {
-        assert(cid < UINT8_MAX);
-        uint8_t ubloxCid = (uint8_t)cid + 1;
-        return Engine_Dispatch(DeactivateDataContext, CELLULAR_NETWORK_SHORT_ENQUEUE_TIMEOUT, (void *)&ubloxCid, sizeof(ubloxCid));
-    }
-}
-
-Retcode_T Cellular_QueryIccid(char *iccid, uint32_t *iccidLen)
-{
-    if (NULL == iccid || NULL == iccidLen)
-    {
-        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-    }
-    else
-    {
-        struct CellularNetwork_QueryIccidParam_S param;
-        param.Iccid = iccid;
-        param.IccidLen = iccidLen;
-        return Engine_Dispatch(QueryIccid, CELLULAR_NETWORK_SHORT_ENQUEUE_TIMEOUT, &param, sizeof(param));
-    }
-}
-
-Retcode_T Cellular_QueryNetworkInfo(Cellular_NetworkInfo_T *networkInfo)
-{
-    KISO_UNUSED(networkInfo);
-    Retcode_T retcode = RETCODE_OK;
-
-    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
-
-    return retcode;
-}
-
-Retcode_T Cellular_DisconnectFromNetwork(void)
-{
-    return Engine_Dispatch(DeregisterFromNetwork, CELLULAR_NETWORK_SHORT_ENQUEUE_TIMEOUT, NULL, 0);
-}
-
-Retcode_T Cellular_SetAirPlaneMode(bool airPlanModeOn)
-{
-    KISO_UNUSED(airPlanModeOn);
-    /* Currently not supported, sorry! ... maybe your first PR? :) */
-    /** \todo: Implement 3GPP 27.007 commands for AT+CFUN=4 (disable rx/tx) and
-     * AT+CFUN=1 (enable rx/tx). */
-    return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
 }
