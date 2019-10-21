@@ -323,7 +323,7 @@ static Retcode_T CheckCellular(void *parameter, uint32_t parameterLength)
     if (IsPoweredOn)
     {
         retcode = ProbeForResponsiveness();
-        *isPoweredOn = RETCODE_OK == retcode;
+        *isPoweredOn = (RETCODE_OK == retcode);
     }
     else
     {
