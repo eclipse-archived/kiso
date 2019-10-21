@@ -47,8 +47,48 @@
  *      | ED     | 0xC9      | ESC_ED        | 0xDBDE    |
  *      | ESC    | 0xDB      | ESC_ESC       | 0xDBDD    |
  *
- *      The complete protocol definition can be found here:
- *      https://kiso01.de.bosch.com/wiki/display/BSA/xProtocol
+
+ * @code{.c}
+ * #include "Kiso_XProtocol.h"
+ *
+ * int main(void)
+ * {
+ *     uint8_t initialBuff[] = {"XProtocol test!"};
+ *     uint8_t encodedBuff[sizeof(initialBuff) * 2] = {0};
+ *     uint8_t decodedBuff[sizeof(initialBuff) * 2] = {0};
+ *     uint32_t frameLength = 0;
+ *     uint32_t dataLength = 0;
+
+ *     // On both sides: Init the XProtocol module.
+ *     Retcode_T retcode = XProtocol_Init();
+
+ *     // On sending side: Encode the message.
+ *     if (RETCODE_OK == retcode)
+ *     {
+ *         retcode = XProtocol_EncodeFrame(initialBuff, sizeof(initialBuff), sizeof(encodedBuff), encodedBuff, &frameLength);
+ *     }
+
+ *     // On receiving side: For each received byte check if entire encoded message was received.
+ *     if (RETCODE_OK == retcode)
+ *     {
+ *         retcode = XProtocol_IsCompleteFrame(encodedBuff, frameLength, NULL);
+ *     }
+
+ *     // On receiving side: Get the length of required buffer to decode received message.
+ *     if (RETCODE_OK == retcode)
+ *     {
+ *         retcode = XProtocol_GetPayloadLength(encodedBuff, frameLength, &dataLength);
+ *     }
+
+ *     // On receiving side: Decode the received message.
+ *     // Do this only when entire encoded message was received
+ *     // or expect RETCODE_XPROTOCOL_END_DELIMITER_MISSING for incomplete message.
+ *     if (RETCODE_OK == retcode)
+ *     {
+ *         retcode = XProtocol_DecodeFrame(encodedBuff, frameLength, sizeof(decodedBuff), decodedBuff, &dataLength);
+ *     }
+ * }
+ * @endcode
  *
  * @file
  */
