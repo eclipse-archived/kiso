@@ -22,6 +22,15 @@
  *      Ring Buffer Interface
  *
  * @details
+ *      This module represents optimized for speed circular buffer implementation,
+ *      intended to be used as transport for data between ISR and user code.
+ *      Read and Write functions may handle data only partially, depending of fill-level
+ *      of the buffer, so corresponding calls may need to be retried.
+ *
+ * @note
+ *      For optimization purposes, error handling is minimized and responsibility
+ *      for parameter correctness is transfered to user code. Also some code constructions
+ *      may not follow expected patterns.
  *
  * @file
  **/
