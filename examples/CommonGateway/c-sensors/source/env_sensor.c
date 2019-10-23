@@ -14,26 +14,17 @@
 
 /*---------------------- INCLUDED HEADERS ---------------------------------------------------------------------------*/
 #include "AppInfo.h"
-#include <stdio.h>
-#include <inttypes.h>
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_APP_MODULE_ENV_SENSOR
 
-#include "sensors_common.h"
 #include "env_sensor.h"
-
 #include "BSP_CommonGateway.h"
+#include "Kiso_Retcode.h"
 #include "Kiso_BSP_BME280.h"
 #include "Kiso_BSP_Board.h"
 #include "Kiso_I2CTransceiver.h"
 
-#include "Kiso_CmdProcessor.h"
-#include "Kiso_Assert.h"
-#include "FreeRTOS.h"
-#include "timers.h"
-
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
-
-#undef KISO_MODULE_ID
-#define KISO_MODULE_ID CGW_APP_MODULE_ENV_SENSOR
 
 // clang-format off
 /* Status register (0xF3) */
@@ -78,7 +69,7 @@ Retcode_T SensorEnvironment_Init(I2cTranceiverHandlePtr_T i2cTransceiverRef)
 
         if (BME280_OK != bme280_init(&bme280Struct))
         {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_APP_BME280_INIT_FAILED);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
         }
     }
     if (RETCODE_OK == retcode)
@@ -100,7 +91,7 @@ Retcode_T SensorEnvironment_Init(I2cTranceiverHandlePtr_T i2cTransceiverRef)
         // clang-format on
         if (BME280_OK != bme280_set_sensor_settings(desired_settings, &bme280Struct))
         {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_APP_BME280_INIT_FAILED);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
         }
         BSP_Board_Delay(100);
     }
@@ -108,7 +99,7 @@ Retcode_T SensorEnvironment_Init(I2cTranceiverHandlePtr_T i2cTransceiverRef)
     {
         if (BME280_OK != bme280_set_sensor_mode(BME280_SLEEP_MODE, &bme280Struct))
         {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_APP_BME280_INIT_FAILED);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
         }
         BSP_Board_Delay(100);
     }
@@ -123,7 +114,7 @@ Retcode_T SensorEnvironment_Read(struct bme280_data *data)
 
     if (BME280_OK != bme280_set_sensor_mode(BME280_FORCED_MODE, &bme280Struct))
     {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_APP_BME280_INIT_FAILED);
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
     }
 
     if (RETCODE_OK == retcode)

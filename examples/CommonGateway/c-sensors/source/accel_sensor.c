@@ -14,26 +14,19 @@
 
 /*---------------------- INCLUDED HEADERS ---------------------------------------------------------------------------*/
 #include "AppInfo.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_APP_MODULE_ACCEL_SENSOR
 
-#include <stdio.h>
-
-#include "sensors_common.h"
 #include "accel_sensor.h"
-
 #include "BSP_CommonGateway.h"
+#include "Kiso_Retcode.h"
 #include "Kiso_BSP_BMA280.h"
 #include "Kiso_BSP_Board.h"
 #include "Kiso_I2CTransceiver.h"
-
-#include "Kiso_CmdProcessor.h"
-#include "Kiso_Assert.h"
 #include "FreeRTOS.h"
 #include "timers.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
-
-#undef KISO_MODULE_ID
-#define KISO_MODULE_ID CGW_APP_MODULE_ACCEL_SENSOR
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 static void Delay(BMA2x2_MDELAY_DATA_TYPE delay);
@@ -65,14 +58,14 @@ Retcode_T SensorAccelerometer_Init(I2cTranceiverHandlePtr_T i2cTransceiverRef)
         accelSensorTransceiver = i2cTransceiverRef;
         if (SUCCESS != bma2x2_init(&bma280Struct))
         {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_APP_BMA280_INIT_FAILED);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
         }
     }
     if (RETCODE_OK == retcode)
     {
         if (SUCCESS != bma2x2_set_bw(BMA2x2_BW_500HZ))
         {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_APP_BMA280_INIT_FAILED);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
         }
         BSP_Board_Delay(100);
     }

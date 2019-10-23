@@ -13,24 +13,28 @@
 **********************************************************************************************************************/
 
 /**
+ * @brief
+ *      Implemented first application function main() here.
+ *
  * @file
- * @brief Implemented first application function main() here.
- */
+**/
 
 #include "AppInfo.h"
+#undef KISO_MODULE_ID
+#define KISO_MODULE_ID KISO_APP_MODULE_MAIN
+
+#include <stdio.h>
+#include "sensors_common.h"
+#include "BSP_CommonGateway.h"
+#include "Kiso_Retcode.h"
 #include "Kiso_BSP_LED.h"
 #include "Kiso_BSP_Board.h"
-#include <stdio.h>
-#include "BSP_CommonGateway.h"
 #include "Kiso_Basics.h"
 #include "Kiso_CmdProcessor.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "sensors_common.h"
-/*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef KISO_MODULE_ID /* Module ID define before including Basics package*/
-#define KISO_MODULE_ID CGW_APP_MODULE_MAIN
+/*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 

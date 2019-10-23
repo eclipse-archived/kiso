@@ -15,12 +15,13 @@
 /*---------------------- INCLUDED HEADERS ---------------------------------------------------------------------------*/
 #include "AppInfo.h"
 #undef KISO_MODULE_ID
-#define KISO_MODULE_ID CGW_APP_MODULE_ENV_SENSOR
-#include "sensors_common.h"
+#define KISO_MODULE_ID KISO_APP_MODULE_SENSORS_COMMON
 
-#include "BSP_CommonGateway.h"
+#include "sensors_common.h"
 #include "accel_sensor.h"
 #include "env_sensor.h"
+#include "BSP_CommonGateway.h"
+#include "Kiso_Retcode.h"
 #include "Kiso_BSP_BME280.h"
 #include "Kiso_BSP_BMA280.h"
 #include "Kiso_BSP_LED.h"
@@ -29,12 +30,7 @@
 #include "Kiso_I2CTransceiver.h"
 #include "Kiso_BSP_Board.h"
 
-#include <stdio.h>
-
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
-
-#undef KISO_MODULE_ID
-#define KISO_MODULE_ID CGW_APP_MODULE_ENV_SENSOR
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 void appPeriodicTest(void *CmdProcessorHandle, uint32_t param2);
@@ -67,7 +63,7 @@ void appInitSystem(void *CmdProcessorHandle, uint32_t param2)
         }
         if (NULL == i2cHandle)
         {
-            returnValue = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_APP_I2C_HANDLE_DOES_NOT_EXIST);
+            returnValue = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
         }
     }
     if (RETCODE_OK == returnValue)
