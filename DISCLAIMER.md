@@ -1,16 +1,7 @@
-# Disclaimer
+Warranty, Limitation of Liability, Responsibilities
 
-NO WARRANTY
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT PERMITTED BY APPLICABLE LAW, THE PROGRAM IS PROVIDED ON AN
-“AS IS” BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED INCLUDING, WITHOUT LIMITATION, ANY WARR
-ANTIES OR CONDITIONS OF TITLE, NON-INFRINGEMENT, MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. Each Recipient is solely
- responsible for determining the appropriateness of using and distributing the Program and assumes all risks associated with i
-ts exercise of rights under this Agreement, including but not limited to the risks and costs of program errors, compliance wit
-h applicable laws, damage to or loss of data, programs or equipment, and unavailability or interruption of operations.
+Kiso and its documentation is provided “as is” and BOSCH does not grant any warranty that Kiso is error-free or will operate without interruption. Bosch grants no warranty regarding the use of Kiso or the results there-from including but not limited to its correctness, accuracy or reliability. BOSCH does not warrant the merchantability or fitness of Kiso for any particular use. BOSCH therefore excludes to the extent permitted by applicable law all other warranties with respect to Kiso, either express or implied, including but not limited to any infringement of third party rights based on the use of Kiso by the customer.
 
-DISCLAIMER OF LIABILITY
-EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, AND TO THE EXTENT PERMITTED BY APPLICABLE LAW, NEITHER RECIPIENT NOR ANY CONT
-RIBUTORS SHALL HAVE ANY LIABILITY FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDIN
-G WITHOUT LIMITATION LOST PROFITS), HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR T
-ORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OR DISTRIBUTION OF THE PROGRAM OR THE EXERCISE OF AN
-Y RIGHTS GRANTED HEREUNDER, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+The Liability of BOSCH is – irrespective of its legal grounds – limited as follows: BOSCH shall be liable without limitation in case of intent and gross negligence or under a guarantee granted by Bosch. Unless expressly set out before the liability of BOSCH is excluded. This includes but is not limited to any liability for any direct, indirect, incidental, consequential or other damage including but not limited to any loss of data.
+
+The Customer shall be responsible for conducting the integration of Kiso taking account of the state of the art in technology and all applicable statutory regulations and provisions. Moreover, the Customer shall be responsible to sufficiently validate and test its Customer Applications containing Kiso and shall make sure that the Customer Applications do not poses any hazards.
