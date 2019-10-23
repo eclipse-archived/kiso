@@ -27,6 +27,49 @@
  *      Userpage, SD card etc. Each time the ErrorLogger_LogError() is called, error will be logged
  *      with time stamp following the ring buffer model.
  *
+ * @code{.c}
+ * #include "Kiso_ErrorLogger.h"
+ *
+ * // Provide your own storage driver functions
+ * Retcode_T Logger_ReadFunc(ErrorLogger_StorageMedium_T storageSelect, void *value, uint32_t StartAddr, uint32_t numOfBytes)
+ * {
+ *     // Read buffer from persistent storage
+ *     return RETCODE_OK;
+ * }
+ *
+ * Retcode_T Logger_WriteFunc(ErrorLogger_StorageMedium_T storageSelect, void *value, uint32_t StartAddr, uint32_t numOfBytes)
+ * {
+ *     // Write buffer to persistent storage
+ *     return RETCODE_OK;
+ * }
+ *
+ * uint32_t Logger_GetTime(void)
+ * {
+ *     static uint32_t timeStamp = 0;
+ *     return timeStamp++;
+ * }
+ *
+ * int main(void)
+ * {
+ *     ErrorLoggerConfig_T logger = {
+ *             .StorageMedium = STORAGE_TYPE_OTHERS,
+ *             .ReadLogs = Logger_ReadFunc,
+ *             .WriteLogs = Logger_WriteFunc,
+ *             .EraseLogs = Logger_WriteFunc,
+ *             .Time_Stamp = Logger_GetTime,
+ *             .position = 0,
+ *             .length = ERRORLOGGER_BUFFER_SIZE,
+ *     };
+ *
+ *     Retcode_T retcode = ErrorLogger_Init(logger);
+ *
+ *     if (RETCODE_OK == retcode)
+ *     {
+ *         retcode = ErrorLogger_LogError(retcode);
+ *     }
+ * }
+ * @endcode
+ *
  * @file
  **/
 
@@ -38,6 +81,7 @@
 
 #if KISO_FEATURE_ERRORLOGGER
 
+#include "ErrorLoggerConfig.h"
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
 
@@ -55,12 +99,11 @@ struct ErrorLogger_LogEntry_S
 
 typedef struct ErrorLogger_LogEntry_S ErrorLogger_LogEntry_T;
 
-/** @Warning This item needs to be updated whenever the log entry structure changes!! */
-#define SIZEOF_LOGENTRY (UINT8_C(12))
-
-#define ERRORLOGGER_SIZE (UINT8_C(120))
-
-#define MAXENTRIES (ERRORLOGGER_SIZE / SIZEOF_LOGENTRY)
+/**
+ * @brief
+ *       Size in bytes of buffer into which the error logger data is stored 
+ */
+#define ERRORLOGGER_BUFFER_SIZE (UINT16_C(ERRORLOGGER_MAXENTRIES * (sizeof(struct ErrorLogger_LogEntry_S))))
 
 /**
  * @brief

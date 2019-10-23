@@ -178,15 +178,15 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_Init_HalfLogsFilled)
 {
     Retcode_T Retcode;
 
-    for (int i = 0; i < (int)MAXENTRIES / 2; i++)
+    for (int i = 0; i < (int)ERRORLOGGER_MAXENTRIES / 2; i++)
     {
         ErrorLogger_LogError((Retcode_T)500 + i);
     }
 
     Retcode = ErrorLogger_Init(Log_Handle);
 
-    EXPECT_EQ(MAXENTRIES / 2, ErrorSeqNo);
-    EXPECT_EQ((uint32_t)MAXENTRIES / 2, NextIndexToWriteOn);
+    EXPECT_EQ(ERRORLOGGER_MAXENTRIES / 2, ErrorSeqNo);
+    EXPECT_EQ((uint32_t)ERRORLOGGER_MAXENTRIES / 2, NextIndexToWriteOn);
     EXPECT_EQ(RETCODE_SUCCESS, Retcode);
 }
 
@@ -198,15 +198,15 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_Init_OneAndHalfTimesLogsFilled)
 {
     Retcode_T Retcode;
 
-    for (int i = 0; i < (int)(MAXENTRIES + MAXENTRIES / 2); i++)
+    for (int i = 0; i < (int)(ERRORLOGGER_MAXENTRIES + ERRORLOGGER_MAXENTRIES / 2); i++)
     {
         ErrorLogger_LogError((Retcode_T)500 + i);
     }
 
     Retcode = ErrorLogger_Init(Log_Handle);
 
-    EXPECT_EQ((MAXENTRIES + MAXENTRIES / 2), ErrorSeqNo);
-    EXPECT_EQ((uint32_t)MAXENTRIES / 2, NextIndexToWriteOn);
+    EXPECT_EQ((ERRORLOGGER_MAXENTRIES + ERRORLOGGER_MAXENTRIES / 2), ErrorSeqNo);
+    EXPECT_EQ((uint32_t)ERRORLOGGER_MAXENTRIES / 2, NextIndexToWriteOn);
     EXPECT_EQ(RETCODE_SUCCESS, Retcode);
 }
 
@@ -299,7 +299,7 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetLastErrorLog_MultiError)
 {
     Retcode_T Retcode;
     ErrorLogger_LogEntry_T LogEntry;
-    for (int i = 0; i < (int)(2 * MAXENTRIES); i++)
+    for (int i = 0; i < (int)(2 * ERRORLOGGER_MAXENTRIES); i++)
     {
         ErrorLogger_LogError((Retcode_T)200 + i);
         Retcode = ErrorLogger_GetLastErrorLog(&LogEntry);
@@ -326,7 +326,7 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_HasError_WithoutErrors)
 TEST_F(KISO_ErrorLogger, ErrorLogger_HasError_WithAvailableErrors)
 {
     Retcode_T retcode;
-    for (int i = 0; i < (int)(2 * MAXENTRIES); i++)
+    for (int i = 0; i < (int)(2 * ERRORLOGGER_MAXENTRIES); i++)
     {
         ErrorLogger_LogError((Retcode_T)200 + i);
         retcode = ErrorLogger_HasError((Retcode_T)200 + i);
@@ -350,12 +350,12 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetTotalErrors)
 TEST_F(KISO_ErrorLogger, ErrorLogger_GetCurrentErrors_LessMaxEntries)
 {
     uint8_t Count;
-    for (int i = 0; i < (int)(MAXENTRIES / 2); i++)
+    for (int i = 0; i < (int)(ERRORLOGGER_MAXENTRIES / 2); i++)
     {
         (void)ErrorLogger_LogError((Retcode_T)500 + i);
     }
     Count = ErrorLogger_GetCurrentErrors();
-    EXPECT_EQ(MAXENTRIES / 2, Count);
+    EXPECT_EQ(ERRORLOGGER_MAXENTRIES / 2, Count);
 }
 
 /**
@@ -365,12 +365,12 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetCurrentErrors_LessMaxEntries)
 TEST_F(KISO_ErrorLogger, ErrorLogger_GetCurrentErrors_OneAndHalfMaxEntries)
 {
     uint8_t Count;
-    for (int i = 0; i < (int)(MAXENTRIES + MAXENTRIES / 2); i++)
+    for (int i = 0; i < (int)(ERRORLOGGER_MAXENTRIES + ERRORLOGGER_MAXENTRIES / 2); i++)
     {
         (void)ErrorLogger_LogError((Retcode_T)500 + i);
     }
     Count = ErrorLogger_GetCurrentErrors();
-    EXPECT_EQ(Count, (uint8_t)MAXENTRIES);
+    EXPECT_EQ(Count, (uint8_t)ERRORLOGGER_MAXENTRIES);
 }
 
 /**
@@ -382,19 +382,19 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetErrorAt)
     ErrorLogger_LogEntry_T LogEntry;
     Retcode_T Retcode;
 
-    for (int i = 0; i < (int)MAXENTRIES; i++)
+    for (int i = 0; i < (int)ERRORLOGGER_MAXENTRIES; i++)
     {
         ErrorLogger_LogError((Retcode_T)500 + i);
     }
 
-    for (int i = 0; i < (int)MAXENTRIES; i++)
+    for (int i = 0; i < (int)ERRORLOGGER_MAXENTRIES; i++)
     {
         Retcode = ErrorLogger_GetErrorAt(i, &LogEntry);
 
         EXPECT_EQ(Retcode, RETCODE_SUCCESS);
         EXPECT_EQ(LogEntry.ErrorCode, (Retcode_T)500 + i);
     }
-    Retcode = ErrorLogger_GetErrorAt(MAXENTRIES + 2, &LogEntry);
+    Retcode = ErrorLogger_GetErrorAt(ERRORLOGGER_MAXENTRIES + 2, &LogEntry);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T)RETCODE_INVALID_PARAM), Retcode);
 }
 
@@ -405,7 +405,7 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetErrorAt)
 TEST_F(KISO_ErrorLogger, ErrorLogger_GetErrorAtFail)
 {
     Retcode_T Retcode;
-    Retcode = ErrorLogger_GetErrorAt(MAXENTRIES, NULL);
+    Retcode = ErrorLogger_GetErrorAt(ERRORLOGGER_MAXENTRIES, NULL);
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T)RETCODE_INVALID_PARAM), Retcode);
 }
 /**
@@ -415,7 +415,7 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_GetErrorAtFail)
 TEST_F(KISO_ErrorLogger, ErrorLogger_ClearAllErrorLogs)
 {
     Retcode_T Retcode;
-    for (int i = 0; i <= (int)MAXENTRIES; i++)
+    for (int i = 0; i <= (int)ERRORLOGGER_MAXENTRIES; i++)
     {
         ErrorLogger_LogError((Retcode_T)500 + i);
     }
@@ -435,7 +435,7 @@ TEST_F(KISO_ErrorLogger, ErrorLogger_ClearAllErrorLogsFail)
 {
     Retcode_T Retcode;
     testFlag = 1;
-    for (int i = 0; i <= (int)MAXENTRIES; i++)
+    for (int i = 0; i <= (int)ERRORLOGGER_MAXENTRIES; i++)
     {
         ErrorLogger_LogError((Retcode_T)500 + i);
     }

@@ -68,10 +68,10 @@ static uint32_t NextIndexToWriteOn = 0;
  * is able to hold a fixed number of error logger entries. When the end of the
  * buffer is reached then writing starts over at the first entry.
  */
-static uint8_t DataFromUserPage[ERRORLOGGER_SIZE] = {0};
+static uint8_t DataFromUserPage[ERRORLOGGER_BUFFER_SIZE] = {0};
 
-/** Pointer on an array of MAXENTRIES log entries */
-static ErrorLogger_LogEntry_T (*pErrorEntries)[MAXENTRIES];
+/** Pointer on an array of ERRORLOGGER_MAXENTRIES log entries */
+static ErrorLogger_LogEntry_T (*pErrorEntries)[ERRORLOGGER_MAXENTRIES];
 
 ErrorLoggerConfig_T ErrorLoggerHandle;
 
@@ -82,7 +82,7 @@ Retcode_T ErrorLogger_Init(ErrorLoggerConfig_T storageAgentHandle)
     ErrorLoggerHandle = storageAgentHandle;
 
     /* A pointer on an array of log entries */
-    pErrorEntries = (ErrorLogger_LogEntry_T(*)[MAXENTRIES])DataFromUserPage; /* Point on first entry */
+    pErrorEntries = (ErrorLogger_LogEntry_T(*)[ERRORLOGGER_MAXENTRIES])DataFromUserPage; /* Point on first entry */
 
     /* Need to read out the entire error log in order to process it */
     nvmRetCode = ErrorLoggerHandle.ReadLogs(ErrorLoggerHandle.StorageMedium, DataFromUserPage, ErrorLoggerHandle.position, ErrorLoggerHandle.length);
@@ -93,7 +93,7 @@ Retcode_T ErrorLogger_Init(ErrorLoggerConfig_T storageAgentHandle)
         /* Then loop through the entries and search the entry with containing
          * the highest sequence number to determine the next write index
          */
-        for (uint32_t i = 0; i < MAXENTRIES; i++)
+        for (uint32_t i = 0; i < ERRORLOGGER_MAXENTRIES; i++)
         {
             if ((*pErrorEntries)[i].SeqNo >= highestSeq)
             {
@@ -105,7 +105,7 @@ Retcode_T ErrorLogger_Init(ErrorLoggerConfig_T storageAgentHandle)
          * consecutively incremented with each new entry so that the first
          * entry starts with a sequence number of 1.
          */
-        NextIndexToWriteOn = ErrorSeqNo % MAXENTRIES;
+        NextIndexToWriteOn = ErrorSeqNo % ERRORLOGGER_MAXENTRIES;
         return RETCODE_OK;
     }
 
@@ -135,7 +135,7 @@ Retcode_T ErrorLogger_LogError(Retcode_T Error)
     if (RETCODE_OK == nvmRet)
     {
         /* Recalculate write index */
-        NextIndexToWriteOn = ErrorSeqNo % MAXENTRIES;
+        NextIndexToWriteOn = ErrorSeqNo % ERRORLOGGER_MAXENTRIES;
         return RETCODE_OK;
     }
     /* Userpage write is not success. So error is not updated to Userpage. */
@@ -159,7 +159,7 @@ Retcode_T ErrorLogger_GetLastErrorLog(ErrorLogger_LogEntry_T *LogEntry)
             }
             else
             {
-                LastIndexWritten = (MAXENTRIES - 1);
+                LastIndexWritten = (ERRORLOGGER_MAXENTRIES - 1);
             }
             *LogEntry = (*pErrorEntries)[LastIndexWritten];
             return RETCODE_OK;
@@ -178,7 +178,7 @@ Retcode_T ErrorLogger_HasError(Retcode_T Error)
 
     if (ErrorSeqNo)
     {
-        for (uint32_t i = 0; i < MAXENTRIES; i++)
+        for (uint32_t i = 0; i < ERRORLOGGER_MAXENTRIES; i++)
         {
             if ((*pErrorEntries)[i].ErrorCode == Error)
             {
@@ -200,9 +200,9 @@ uint16_t ErrorLogger_GetTotalErrors(void)
 uint8_t ErrorLogger_GetCurrentErrors(void)
 {
     uint8_t ErrorCount;
-    if (ErrorSeqNo >= MAXENTRIES)
+    if (ErrorSeqNo >= ERRORLOGGER_MAXENTRIES)
     {
-        ErrorCount = MAXENTRIES;
+        ErrorCount = ERRORLOGGER_MAXENTRIES;
     }
     else
     {
@@ -215,7 +215,7 @@ uint8_t ErrorLogger_GetCurrentErrors(void)
 Retcode_T ErrorLogger_GetErrorAt(uint8_t index, ErrorLogger_LogEntry_T *LogEntry)
 {
     Retcode_T retcode = RETCODE(RETCODE_SEVERITY_INFO, (Retcode_T)RETCODE_INVALID_PARAM);
-    if (LogEntry && (index < MAXENTRIES))
+    if (LogEntry && (index < ERRORLOGGER_MAXENTRIES))
     {
         if ((*pErrorEntries)[index].SeqNo)
         {
