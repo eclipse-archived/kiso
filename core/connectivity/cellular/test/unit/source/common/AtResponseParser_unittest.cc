@@ -420,34 +420,34 @@ TEST_F(AtResponseParser, TestAtrpStateResponseCode)
 TEST_F(AtResponseParser, TestRegisterCallback)
 {
     AtResponseParser_RegisterResponseCodeCallback(NULL);
-    EXPECT_EQ(ATRP_RESPONSE_CODE_EVENT, (void *)NULL);
+    EXPECT_EQ(state.EventResponseCodeCallback, (void *)NULL);
     AtResponseParser_RegisterResponseCodeCallback(CallbackResponseCode);
-    EXPECT_EQ(ATRP_RESPONSE_CODE_EVENT, (void *)CallbackResponseCode);
+    EXPECT_EQ(state.EventResponseCodeCallback, (void *)CallbackResponseCode);
 
     AtResponseParser_RegisterErrorCallback(NULL);
-    EXPECT_EQ(ATRP_ERROR_EVENT, (void *)NULL);
+    EXPECT_EQ(state.EventErrorCallback, (void *)NULL);
     AtResponseParser_RegisterErrorCallback(AtrpTestErrorHandler);
-    EXPECT_EQ(ATRP_ERROR_EVENT, (void *)AtrpTestErrorHandler);
+    EXPECT_EQ(state.EventErrorCallback, (void *)AtrpTestErrorHandler);
 
     AtResponseParser_RegisterCmdEchoCallback(NULL);
-    EXPECT_EQ(ATRP_CMD_ECHO_EVENT, (void *)NULL);
+    EXPECT_EQ(state.EventCmdEchoCallback, (void *)NULL);
     AtResponseParser_RegisterCmdEchoCallback(CallbackCmdEcho);
-    EXPECT_EQ(ATRP_CMD_ECHO_EVENT, (void *)CallbackCmdEcho);
+    EXPECT_EQ(state.EventCmdEchoCallback, (void *)CallbackCmdEcho);
 
     AtResponseParser_RegisterCmdCallback(NULL);
-    EXPECT_EQ(ATRP_CMD_EVENT, (void *)NULL);
+    EXPECT_EQ(state.EventCmdCallback, (void *)NULL);
     AtResponseParser_RegisterCmdCallback(CallbackCmd);
-    EXPECT_EQ(ATRP_CMD_EVENT, (void *)CallbackCmd);
+    EXPECT_EQ(state.EventCmdCallback, (void *)CallbackCmd);
 
     AtResponseParser_RegisterCmdArgCallback(NULL);
-    EXPECT_EQ(ATRP_CMDARG_EVENT, (void *)NULL);
+    EXPECT_EQ(state.EventCmdArgCallback, (void *)NULL);
     AtResponseParser_RegisterCmdArgCallback(CallbackCmdArg);
-    EXPECT_EQ(ATRP_CMDARG_EVENT, (void *)CallbackCmdArg);
+    EXPECT_EQ(state.EventCmdArgCallback, (void *)CallbackCmdArg);
 
     AtResponseParser_RegisterMiscCallback(NULL);
-    EXPECT_EQ(ATRP_MISC_EVENT, (void *)NULL);
+    EXPECT_EQ(state.EventMiscCallback, (void *)NULL);
     AtResponseParser_RegisterMiscCallback(CallbackMisc);
-    EXPECT_EQ(ATRP_MISC_EVENT, (void *)CallbackMisc);
+    EXPECT_EQ(state.EventMiscCallback, (void *)CallbackMisc);
 
     AtrpSwitchState(NULL);
     EXPECT_EQ(state.StateCallback, (void *)NULL);

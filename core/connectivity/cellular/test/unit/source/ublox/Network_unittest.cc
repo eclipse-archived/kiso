@@ -47,6 +47,7 @@ protected:
         RESET_FAKE(At_Set_CGACT);
         RESET_FAKE(At_Set_CGPADDR);
         RESET_FAKE(At_Get_CCID);
+        RESET_FAKE(At_Set_UMNOPROF);
         FFF_RESET_HISTORY();
     }
 };
@@ -292,6 +293,20 @@ TEST_F(TS_Network, Cellular_RegisterOnNetwork_Fail_InalidParam)
     retcode = Cellular_RegisterOnNetwork(&nwParam);
 
     EXPECT_EQ(RETCODE_NOT_SUPPORTED, Retcode_GetCode(retcode));
+}
+
+TEST_F(TS_Network, Cellular_RegisterOnNetwork_Fail_At_Set_UMNOPROF)
+{
+    Retcode_T retcode;
+    Cellular_NetworkParameters_T nwParam;
+    nwParam.AcT = (Cellular_RadioAccessTechnology_T)(CELLULAR_RAT_LTE_CAT_M1);
+    nwParam.FallbackAcT = CELLULAR_RAT_DEFAULT;
+    At_Set_UMNOPROF_fake.return_val = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+    Engine_Dispatch_fake.custom_fake = Engine_Dispatch_fakedfunc;
+
+    retcode = Cellular_RegisterOnNetwork(&nwParam);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE), retcode);
 }
 
 /*######################################################################################################################

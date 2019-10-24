@@ -97,17 +97,6 @@ static uint8_t UartRxByte;                                //!< single byte rx bu
 
 char Engine_AtSendBuffer[CELLULAR_AT_SEND_BUFFER_SIZE]; //!< At engine TX buffer
 
-static Retcode_T ReadData(uint8_t *data, uint32_t dataLength, uint32_t *dataRead)
-{
-    if ((NULL == data) || (NULL == dataRead))
-    {
-        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
-    }
-
-    *dataRead = RingBuffer_Read(&UartRxBufDescr, data, dataLength);
-    return RETCODE_OK;
-}
-
 static void HandleMcuIsrCallback(UART_T uart, struct MCU_UART_Event_S event)
 {
     KISO_UNUSED(uart);
@@ -117,7 +106,7 @@ static void HandleMcuIsrCallback(UART_T uart, struct MCU_UART_Event_S event)
     {
         /* all bytes have been transmitted, signal semaphore */
         BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-        (void)xSemaphoreGiveFromISR(CellularDriver_TxWakeupHandle, &xHigherPriorityTaskWoken);
+        (void)xSemaphoreGiveFromISR(CellularDriver_TxWakeupHandle, &xHigherPriorityTaskWoken); //LCOV_EXCL_BR_LINE
         portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
     }
 
@@ -134,7 +123,7 @@ static void HandleMcuIsrCallback(UART_T uart, struct MCU_UART_Event_S event)
         {
             //-- Wake up task to trigger AT command response parser
             BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-            (void)xSemaphoreGiveFromISR(AtResponseParser_RxWakeupHandle, &xHigherPriorityTaskWoken);
+            (void)xSemaphoreGiveFromISR(AtResponseParser_RxWakeupHandle, &xHigherPriorityTaskWoken); //LCOV_EXCL_BR_LINE
             portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
         }
     }
@@ -178,11 +167,10 @@ static void AtResponseParser_TaskLoop(void)
 
     uint32_t bytesRead, flukeFreeBytesRead;
     uint8_t *flukeRxReadBuffer;
-    Retcode_T status = RETCODE_OK;
     uint8_t rxReadBuffer[CELLULAR_RX_READ_BUFFER_SIZE];
 
     // wait for the RX IRQ to wake us up
-    (void)xSemaphoreTake(AtResponseParser_RxWakeupHandle, portMAX_DELAY);
+    (void)xSemaphoreTake(AtResponseParser_RxWakeupHandle, portMAX_DELAY); //LCOV_EXCL_BR_LINE
 
     while (1)
     {
@@ -193,14 +181,14 @@ static void AtResponseParser_TaskLoop(void)
          */
         vTaskDelay(50);
 #endif
-        status = ReadData(rxReadBuffer, sizeof(rxReadBuffer), &bytesRead);
-        if ((RETCODE_OK != status) || (UINT32_C(0) == bytesRead))
+        bytesRead = RingBuffer_Read(&UartRxBufDescr, rxReadBuffer, sizeof(rxReadBuffer)); //LCOV_EXCL_BR_LINE
+        if ((UINT32_C(0) == bytesRead))
         {
             break;
         }
         if (IsFlukeFilterEnabled)
         {
-            flukeRxReadBuffer = Utils_TrimFlukeCharacters(rxReadBuffer, bytesRead, &flukeFreeBytesRead);
+            flukeRxReadBuffer = Utils_TrimFlukeCharacters(rxReadBuffer, bytesRead, &flukeFreeBytesRead); //LCOV_EXCL_BR_LINE
         }
         else
         {
@@ -212,10 +200,10 @@ static void AtResponseParser_TaskLoop(void)
         const char *trace = TrimWhitespace(flukeRxReadBuffer, flukeFreeBytesRead, &traceLen);
         if (traceLen)
         {
-            LOG_DEBUG("Cellular-COM [%d]: %.*s", traceLen, traceLen, trace);
+            LOG_DEBUG("Cellular-COM [%d]: %.*s", traceLen, traceLen, trace); //LCOV_EXCL_BR_LINE
         }
 #endif
-        (void)AtResponseParser_Parse(flukeRxReadBuffer, flukeFreeBytesRead);
+        (void)AtResponseParser_Parse(flukeRxReadBuffer, flukeFreeBytesRead); //LCOV_EXCL_BR_LINE
     }
 }
 
@@ -257,7 +245,7 @@ static Retcode_T SkipEventsUntilCommand(void)
     while (RETCODE_OK == retcode)
     {
         AtResponseQueueEntry_T *event;
-        retcode = AtResponseQueue_GetEvent(0, &event);
+        retcode = AtResponseQueue_GetEvent(0, &event); //LCOV_EXCL_BR_LINE
 
         if (RETCODE_OK == retcode)
         {
@@ -265,25 +253,25 @@ static Retcode_T SkipEventsUntilCommand(void)
             switch (event->Type)
             {
             case AT_EVENT_TYPE_COMMAND_ECHO:
-                LOG_WARNING("Removing COMMAND_ECHO-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer);
+                LOG_WARNING("Removing COMMAND_ECHO-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer); //LCOV_EXCL_BR_LINE
                 break;
             case AT_EVENT_TYPE_COMMAND:
-                LOG_INFO("Found COMMAND-event (%.*s), resuming!", event->BufferLength, event->Buffer);
+                LOG_INFO("Found COMMAND-event (%.*s), resuming!", event->BufferLength, event->Buffer); //LCOV_EXCL_BR_LINE
                 break;
             case AT_EVENT_TYPE_COMMAND_ARG:
-                LOG_WARNING("Removing COMMAND_ARG-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer);
+                LOG_WARNING("Removing COMMAND_ARG-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer); //LCOV_EXCL_BR_LINE
                 break;
             case AT_EVENT_TYPE_RESPONSE_CODE:
-                LOG_WARNING("Removing RESPONSE_CODE-event (%d) from AtResponseQueue!", (int)event->ResponseCode);
+                LOG_WARNING("Removing RESPONSE_CODE-event (%d) from AtResponseQueue!", (int)event->ResponseCode); //LCOV_EXCL_BR_LINE
                 break;
             case AT_EVENT_TYPE_MISC:
-                LOG_WARNING("Removing MISC-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer);
+                LOG_WARNING("Removing MISC-event (%.*s) from AtResponseQueue!", event->BufferLength, event->Buffer); //LCOV_EXCL_BR_LINE
                 break;
             case AT_EVENT_TYPE_ERROR:
-                LOG_WARNING("Removing ERROR-event from AtResponseQueue!");
+                LOG_WARNING("Removing ERROR-event from AtResponseQueue!"); //LCOV_EXCL_BR_LINE
                 break;
             default:
-                LOG_ERROR("Unexpected event type!");
+                LOG_ERROR("Unexpected event type!"); //LCOV_EXCL_BR_LINE
                 break;
             }
 #endif
@@ -295,7 +283,7 @@ static Retcode_T SkipEventsUntilCommand(void)
                 break;
             }
 
-            AtResponseQueue_MarkBufferAsUnused();
+            AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
         }
     }
 
@@ -334,14 +322,14 @@ Retcode_T Engine_Initialize(Cellular_StateChanged_T onStateChanged)
     status = Hardware_Initialize(HandleMcuIsrCallback, &UartRxByte);
     if (RETCODE_OK != status)
     {
-        LOG_FATAL("Failed to initialize Hardware!");
+        LOG_FATAL("Failed to initialize Hardware!"); //LCOV_EXCL_BR_LINE
         return status;
     }
 
     status = Hardware_GetCommunicationChannel(&CellularSerialDevice);
     if (RETCODE_OK != status)
     {
-        LOG_FATAL("Failed to obtain communications-channel!");
+        LOG_FATAL("Failed to obtain communications-channel!"); //LCOV_EXCL_BR_LINE
         return status;
     }
 
@@ -349,7 +337,7 @@ Retcode_T Engine_Initialize(Cellular_StateChanged_T onStateChanged)
     status = AtResponseQueue_Init();
     if (RETCODE_OK != status)
     {
-        LOG_FATAL("Failed to initialize AtResponseQueue!");
+        LOG_FATAL("Failed to initialize AtResponseQueue!"); //LCOV_EXCL_BR_LINE
         return status;
     }
 
@@ -387,26 +375,27 @@ Retcode_T Engine_SendAtCommand(const uint8_t *buffer, uint32_t bufferLength)
     }
 
     /* ensure the semaphore is NOT signaled as we begin to send */
-    (void)xSemaphoreTake(CellularDriver_TxWakeupHandle, 0);
+    (void)xSemaphoreTake(CellularDriver_TxWakeupHandle, 0); //LCOV_EXCL_BR_LINE
 
-    ret = MCU_UART_Send(CellularSerialDevice, (uint8_t *)buffer, bufferLength);
+    ret = MCU_UART_Send(CellularSerialDevice, (uint8_t *)buffer, bufferLength); //LCOV_EXCL_BR_LINE
     if (RETCODE_OK != ret)
     {
         return ret;
     }
 
     /* wait the end of serial transfer */
-    if (pdPASS != xSemaphoreTake(CellularDriver_TxWakeupHandle, CELLULAR_SEND_AT_COMMAND_WAIT_TIME))
+    BaseType_t result = xSemaphoreTake(CellularDriver_TxWakeupHandle, CELLULAR_SEND_AT_COMMAND_WAIT_TIME); //LCOV_EXCL_BR_LINE
+    if (pdPASS != result)
     {
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_SEMAPHORE_ERROR);
     }
 
     /* wait for any response */
     AtResponseQueueEntry_T *entry;
-    (void)AtResponseQueue_GetEvent(CELLULAR_RESPONSE_QUEUE_WAIT_TIME, &entry);
+    (void)AtResponseQueue_GetEvent(CELLULAR_RESPONSE_QUEUE_WAIT_TIME, &entry); //LCOV_EXCL_BR_LINE
 
     /* handle URC responses */
-    (void)Urc_HandleResponses();
+    (void)Urc_HandleResponses(); //LCOV_EXCL_BR_LINE
 
     return RETCODE_OK;
 }
@@ -416,7 +405,7 @@ Retcode_T Engine_SendAtCommandWaitEcho(const uint8_t *buffer, uint32_t bufferLen
     Retcode_T retcode = Engine_SendAtCommand(buffer, bufferLength);
     if (RETCODE_OK != retcode)
     {
-        LOG_ERROR("Failed to send command: %x", (unsigned int)retcode);
+        LOG_ERROR("Failed to send command: %x", (unsigned int)retcode); //LCOV_EXCL_BR_LINE
         return retcode;
     }
 
@@ -462,7 +451,7 @@ Retcode_T Engine_Dispatch(CellularRequest_CallableFunction_T function, uint32_t 
 
     if (pdPASS != xSemaphoreTake(CellularDriver_RequestLock, timeout))
     {
-        LOG_ERROR("Unable to get lock within %d ms, driver is busy", (int)timeout);
+        LOG_ERROR("Unable to get lock within %d ms, driver is busy", (int)timeout); //LCOV_EXCL_BR_LINE
         return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_DRIVER_BUSY);
     }
 
@@ -497,14 +486,14 @@ Retcode_T Engine_Deinitialize(void)
     ret = AtResponseQueue_Deinit();
     if (RETCODE_OK != ret)
     {
-        LOG_FATAL("Cellular engine deinit failed: AtResponseQueue_Deinit");
+        LOG_FATAL("Cellular engine deinit failed: AtResponseQueue_Deinit"); //LCOV_EXCL_BR_LINE
         return ret;
     }
 
     ret = Hardware_Deinitialize();
     if (RETCODE_OK != ret)
     {
-        LOG_FATAL("Cellular engine deinit failed: CellularBsp_Deinit");
+        LOG_FATAL("Cellular engine deinit failed: CellularBsp_Deinit"); //LCOV_EXCL_BR_LINE
         return ret;
     }
 

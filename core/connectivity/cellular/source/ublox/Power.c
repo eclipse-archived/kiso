@@ -133,7 +133,7 @@ Retcode_T Power_SetupModem(void)
         cops.Oper.Numeric = 0;
         cops.AcT = AT_COPS_ACT_INVALID;
         LOG_DEBUG("Deregistering from network after startup.");
-        retcode = At_Set_COPS(&cops);
+        retcode = At_Set_COPS(&cops); //LCOV_EXCL_BR_LINE
         if (RETCODE_OK != retcode)
         {
             LOG_ERROR("Failed to deregister from network.");
@@ -178,7 +178,7 @@ Retcode_T Power_SetupModem(void)
         AT_UDCONF_Param_T udconf;
         udconf.Config = AT_UDCONF_CONFIG_HEXMODE;
         udconf.Value = &useHexMode;
-        retcode = At_Set_UDCONF(&udconf);
+        retcode = At_Set_UDCONF(&udconf); //LCOV_EXCL_BR_LINE
         if (RETCODE_OK != retcode)
         {
             LOG_ERROR("Failed to enable HEX-mode.");
@@ -195,31 +195,31 @@ Retcode_T Power_SoftReset(void)
     AT_CFUN_Param_T cfun;
     cfun.Fun = UBLOX_CFUN_FUN_SILENTRESET;
     cfun.Rst = AT_CFUN_RST_INVALID;
-    retcode = At_Set_CFUN(&cfun);
+    retcode = At_Set_CFUN(&cfun); //LCOV_EXCL_BR_LINE
 
-    Engine_SetFlukeCharFilterEnabled(true);
+    Engine_SetFlukeCharFilterEnabled(true); //LCOV_EXCL_BR_LINE
 
     /* The modem takes some time to actually power down */
-    vTaskDelay(pdMS_TO_TICKS(CELLULAR_POWER_SOFT_RESET_PERIOD));
+    vTaskDelay(pdMS_TO_TICKS(CELLULAR_POWER_SOFT_RESET_PERIOD)); //LCOV_EXCL_BR_LINE
 
     if (RETCODE_OK == retcode)
     {
         uint32_t attempt = 0;
         do
         {
-            retcode = ProbeForResponsiveness();
-            vTaskDelay(pdMS_TO_TICKS(CELLULAR_POWER_STARTUP_RETRY_PERIOD));
+            retcode = ProbeForResponsiveness();                             //LCOV_EXCL_BR_LINE
+            vTaskDelay(pdMS_TO_TICKS(CELLULAR_POWER_STARTUP_RETRY_PERIOD)); //LCOV_EXCL_BR_LINE
         } while (RETCODE_OK != retcode && attempt++ < CELLULAR_POWER_STARTUP_MAX_RETRY_COUNT);
     }
 
     if (RETCODE_OK == retcode)
     {
-        retcode = Power_SetupModem();
+        retcode = Power_SetupModem(); //LCOV_EXCL_BR_LINE
     }
 
     /* It appears that during soft-reset two '\0's are received on the UART. We
      * want to skip these. */
-    Engine_SetFlukeCharFilterEnabled(false);
+    Engine_SetFlukeCharFilterEnabled(false); //LCOV_EXCL_BR_LINE
 
     return retcode;
 }
@@ -434,13 +434,13 @@ Retcode_T Cellular_PowerOn(const Cellular_PowerUpParameters_T *parameters)
     }
     else
     {
-        return Engine_Dispatch(StartupCellular, CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT, (void *)parameters, sizeof(Cellular_PowerUpParameters_T));
+        return Engine_Dispatch(StartupCellular, CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT, (void *)parameters, sizeof(Cellular_PowerUpParameters_T)); //LCOV_EXL_BR_LINE
     }
 }
 
 Retcode_T Cellular_PowerOff(void)
 {
-    return Engine_Dispatch(ShutdownCellular, CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT, NULL, 0);
+    return Engine_Dispatch(ShutdownCellular, CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT, NULL, 0); //LCOV_EXL_BR_LINE
 }
 
 Retcode_T Cellular_Reset(const Cellular_PowerUpParameters_T *parameters)
@@ -451,7 +451,7 @@ Retcode_T Cellular_Reset(const Cellular_PowerUpParameters_T *parameters)
     }
     else
     {
-        return Engine_Dispatch(ResetCellular, CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT, (void *)parameters, sizeof(Cellular_PowerUpParameters_T));
+        return Engine_Dispatch(ResetCellular, CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT, (void *)parameters, sizeof(Cellular_PowerUpParameters_T)); //LCOV_EXL_BR_LINE
     }
 }
 
@@ -463,6 +463,6 @@ Retcode_T Cellular_IsPoweredOn(bool *isPoweredOn)
     }
     else
     {
-        return Engine_Dispatch(CheckCellular, CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT, isPoweredOn, sizeof(isPoweredOn));
+        return Engine_Dispatch(CheckCellular, CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT, isPoweredOn, sizeof(isPoweredOn)); //LCOV_EXL_BR_LINE
     }
 }

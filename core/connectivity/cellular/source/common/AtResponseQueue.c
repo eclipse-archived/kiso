@@ -11,6 +11,7 @@
 *    Robert Bosch GmbH - initial contribution
 *
 ********************************************************************************/
+/*###################### INCLUDED HEADERS ###########################################################################*/
 
 #include "Kiso_CellularModules.h"
 #define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_ATQUEUE
@@ -25,12 +26,224 @@
 
 #include "Kiso_Logging.h"
 
-/* Response event queue with dedicated buffer */
-static Queue_T EventQueue;
-static uint8_t EventQueueBuffer[AT_RESPONSE_QUEUE_BUFFER_SIZE];
+/*###################### MACROS DEFINITION ##########################################################################*/
 
-/*response queue event mask*/
-static AtEventType_T AtEventMask = (AtEventType_T)0;
+/*###################### LOCAL_TYPES DEFINITION #####################################################################*/
+
+/*###################### LOCAL FUNCTIONS DECLARATION ################################################################*/
+
+static Retcode_T AtResponseQueue_WaitForEntry(uint32_t timeout, AtEventType_T EventType, AtResponseQueueEntry_T **entry);
+static Retcode_T AtResponseQueue_WaitFor(uint32_t timeout, AtEventType_T EventType, uint8_t **BufferOutPtr, uint32_t *BufferOutLen);
+static Retcode_T AtResponseQueue_WaitForContent(uint32_t timeout, AtEventType_T EventType, const uint8_t *buffer, uint32_t BufferLength);
+static void AtResponseQueue_CallbackCmdEcho(const uint8_t *cmd, uint32_t len);
+static void AtResponseQueue_CallbackCmd(const uint8_t *cmd, uint32_t len);
+static void AtResponseQueue_CallbackCmdArg(const uint8_t *cmd, uint32_t len);
+static void AtResponseQueue_CallbackMiscContent(const uint8_t *cmd, uint32_t len);
+static void AtResponseQueue_CallbackError(void);
+static void AtResponseQueue_CallbackResponseCode(AtResponseCode_T response);
+
+/*###################### VARIABLES DECLARATION ######################################################################*/
+
+static Queue_T EventQueue;                                      /* Response event queue*/
+static uint8_t EventQueueBuffer[AT_RESPONSE_QUEUE_BUFFER_SIZE]; /* Response event queue buffer */
+static AtEventType_T AtEventMask = (AtEventType_T)0;            /*response queue event mask*/
+/*###################### EXPOSED FUNCTIONS IMPLEMENTATION ###########################################################*/
+
+Retcode_T AtResponseQueue_Init(void)
+{
+    AtResponseQueue_SetEventMask(AT_EVENT_TYPE_ALL - AT_EVENT_TYPE_MISC);
+
+    return Queue_Create(&EventQueue, EventQueueBuffer, sizeof(EventQueueBuffer));
+}
+
+Retcode_T AtResponseQueue_Deinit(void)
+{
+    Retcode_T ret = RETCODE_OK;
+
+    ret = Queue_Delete(&EventQueue);
+
+    if (RETCODE_OK == ret)
+    {
+        memset(EventQueueBuffer, UINT8_C(0), sizeof(EventQueueBuffer));
+
+        AtResponseParser_RegisterResponseCodeCallback(NULL);
+        AtResponseParser_RegisterErrorCallback(NULL);
+        AtResponseParser_RegisterCmdEchoCallback(NULL);
+        AtResponseParser_RegisterCmdCallback(NULL);
+        AtResponseParser_RegisterCmdArgCallback(NULL);
+        AtResponseParser_RegisterMiscCallback(NULL);
+    }
+
+    return ret;
+}
+
+void AtResponseQueue_RegisterWithResponseParser(void)
+{
+    AtResponseParser_RegisterResponseCodeCallback(AtResponseQueue_CallbackResponseCode);
+    AtResponseParser_RegisterErrorCallback(AtResponseQueue_CallbackError);
+    AtResponseParser_RegisterCmdEchoCallback(AtResponseQueue_CallbackCmdEcho);
+    AtResponseParser_RegisterCmdCallback(AtResponseQueue_CallbackCmd);
+    AtResponseParser_RegisterCmdArgCallback(AtResponseQueue_CallbackCmdArg);
+    AtResponseParser_RegisterMiscCallback(AtResponseQueue_CallbackMiscContent);
+}
+
+void AtResponseQueue_Reset(void)
+{
+    AtResponseParser_Reset();
+    AtResponseQueue_Clear();
+}
+
+Retcode_T AtResponseQueue_SetEventMask(uint32_t eventMask)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    /* check if the mask is in the possible range*/
+    if (eventMask < AT_EVENT_TYPE_OUT_OF_RANGE)
+    {
+        retcode = RETCODE_OK;
+        AtEventMask = (AtEventType_T)eventMask;
+    }
+    else
+    {
+        /* input value eventMask is out of range */
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+    }
+    return retcode;
+}
+
+uint32_t AtResponseQueue_GetEventMask(void)
+{
+    return AtEventMask;
+}
+
+Retcode_T AtResponseQueue_WaitForNamedCmdEcho(uint32_t timeout, const uint8_t *buffer, uint32_t BufferLength)
+{
+    return AtResponseQueue_WaitForContent(timeout, AT_EVENT_TYPE_COMMAND_ECHO, buffer, BufferLength);
+}
+
+Retcode_T AtResponseQueue_WaitForArbitraryCmdEcho(uint32_t timeout, uint8_t **BufferPtr, uint32_t *BufferLen)
+{
+    return AtResponseQueue_WaitFor(timeout, AT_EVENT_TYPE_COMMAND_ECHO, BufferPtr, BufferLen);
+}
+
+Retcode_T AtResponseQueue_WaitForNamedCmd(uint32_t timeout, const uint8_t *buffer, uint32_t BufferLength)
+{
+    return AtResponseQueue_WaitForContent(timeout, AT_EVENT_TYPE_COMMAND, buffer, BufferLength);
+}
+
+Retcode_T AtResponseQueue_WaitForArbitraryCmd(uint32_t timeout, uint8_t **BufferPtr, uint32_t *BufferLen)
+{
+    return AtResponseQueue_WaitFor(timeout, AT_EVENT_TYPE_COMMAND, BufferPtr, BufferLen);
+}
+
+Retcode_T AtResponseQueue_WaitForNamedCmdArg(uint32_t timeout, const uint8_t *buffer, uint32_t BufferLength)
+{
+    return AtResponseQueue_WaitForContent(timeout, AT_EVENT_TYPE_COMMAND_ARG, buffer, BufferLength);
+}
+
+Retcode_T AtResponseQueue_WaitForArbitraryCmdArg(uint32_t timeout, uint8_t **BufferPtr, uint32_t *BufferLen)
+{
+    return AtResponseQueue_WaitFor(timeout, AT_EVENT_TYPE_COMMAND_ARG, BufferPtr, BufferLen);
+}
+
+Retcode_T AtResponseQueue_WaitForNamedResponseCode(uint32_t timeout, AtResponseCode_T response)
+{
+    AtResponseQueueEntry_T *entry;
+    Retcode_T retcode = AtResponseQueue_WaitForEntry(timeout, AT_EVENT_TYPE_RESPONSE_CODE, &entry); //LCOV_EXCL_BR_LINE
+
+    if (RETCODE_OK == retcode)
+    {
+        if (entry->ResponseCode != response)
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_AT_RESPONSE_QUEUE_WRONG_RESPONSE);
+        }
+        else
+        {
+            (void)Queue_Purge(&EventQueue); //LCOV_EXCL_BR_LINE
+        }
+    }
+    return retcode;
+}
+
+Retcode_T AtResponseQueue_WaitForArbitraryResponseCode(uint32_t timeout, AtResponseCode_T *response)
+{
+    AtResponseQueueEntry_T *entry;
+    Retcode_T retcode = AtResponseQueue_WaitForEntry(timeout, AT_EVENT_TYPE_RESPONSE_CODE, &entry); //LCOV_EXCL_BR_LINE
+
+    if (RETCODE_OK == retcode)
+    {
+        *response = entry->ResponseCode;
+        (void)Queue_Purge(&EventQueue); //LCOV_EXCL_BR_LINE
+    }
+
+    return retcode;
+}
+
+Retcode_T AtResponseQueue_WaitForMiscContent(uint32_t timeout, uint8_t **BufferPtr, uint32_t *BufferLen)
+{
+    return AtResponseQueue_WaitFor(timeout, AT_EVENT_TYPE_MISC, BufferPtr, BufferLen);
+}
+
+Retcode_T AtResponseQueue_IgnoreEvent(uint32_t timeout)
+{
+    AtResponseQueueEntry_T *entry;
+    Retcode_T retcode = Queue_Get(&EventQueue, (void **)&entry, NULL, timeout); //LCOV_EXCL_BR_LINE
+
+    if (RETCODE_OK != retcode)
+    {
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_AT_RESPONSE_QUEUE_TIMEOUT);
+    }
+    return Queue_Purge(&EventQueue); //LCOV_EXCL_BR_LINE
+}
+
+Retcode_T AtResponseQueue_GetEvent(uint32_t timeout, AtResponseQueueEntry_T **entry)
+{
+    Retcode_T retcode = Queue_Get(&EventQueue, (void **)entry, NULL, timeout);
+    if (RETCODE_OK != retcode)
+    {
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_AT_RESPONSE_QUEUE_TIMEOUT);
+    }
+
+    return retcode;
+}
+
+void AtResponseQueue_MarkBufferAsUnused(void)
+{
+    /* Don't care if message is already purged */
+    (void)Queue_Purge(&EventQueue);
+    return;
+}
+
+uint32_t AtResponseQueue_GetEventCount(void)
+{
+    return Queue_Count(&EventQueue);
+}
+
+void AtResponseQueue_Clear(void)
+{
+    Queue_Clear(&EventQueue);
+}
+
+void AtResponseQueue_EnqueueEvent(AtEventType_T EventType, const uint8_t *arg, uint32_t len)
+{
+    AtResponseQueueEntry_T entry = {
+        .Type = EventType,
+        .ResponseCode = AT_RESPONSE_CODE_OK,
+        .BufferLength = len};
+
+    if (AtEventMask & EventType)
+    {
+
+        Retcode_T retcode = Queue_Put(&EventQueue, &entry, sizeof(entry), arg, len); //LCOV_EXCL_BR_LINE
+
+        if (RETCODE_OK != retcode)
+        {
+            Retcode_RaiseError(retcode); //LCOV_EXCL_BR_LINE
+        }
+    }
+}
+
+/*###################### LOCAL FUNCTIONS IMPLEMENTATION #############################################################*/
 
 static Retcode_T AtResponseQueue_WaitForEntry(uint32_t timeout, AtEventType_T EventType, AtResponseQueueEntry_T **entry)
 {
@@ -100,7 +313,7 @@ static Retcode_T AtResponseQueue_WaitFor(uint32_t timeout, AtEventType_T EventTy
 static Retcode_T AtResponseQueue_WaitForContent(uint32_t timeout, AtEventType_T EventType, const uint8_t *buffer, uint32_t BufferLength)
 {
     AtResponseQueueEntry_T *entry;
-    Retcode_T retcode = AtResponseQueue_WaitForEntry(timeout, EventType, &entry);
+    Retcode_T retcode = AtResponseQueue_WaitForEntry(timeout, EventType, &entry); //LCOV_EXCL_BR_LINE
 
     /*
      *  Check if the entry received matches what we expect.
@@ -110,7 +323,7 @@ static Retcode_T AtResponseQueue_WaitForContent(uint32_t timeout, AtEventType_T 
     {
         if (BufferLength == entry->BufferLength && 0 == memcmp(entry->Buffer, buffer, entry->BufferLength))
         {
-            (void)Queue_Purge(&EventQueue);
+            (void)Queue_Purge(&EventQueue); //LCOV_EXCL_BR_LINE
         }
         else
         {
@@ -119,25 +332,6 @@ static Retcode_T AtResponseQueue_WaitForContent(uint32_t timeout, AtEventType_T 
     }
 
     return retcode;
-}
-
-void AtResponseQueue_EnqueueEvent(AtEventType_T EventType, const uint8_t *arg, uint32_t len)
-{
-    AtResponseQueueEntry_T entry = {
-        .Type = EventType,
-        .ResponseCode = AT_RESPONSE_CODE_OK,
-        .BufferLength = len};
-
-    if (AtEventMask & EventType)
-    {
-
-        Retcode_T retcode = Queue_Put(&EventQueue, &entry, sizeof(entry), arg, len);
-
-        if (RETCODE_OK != retcode)
-        {
-            Retcode_RaiseError(retcode);
-        }
-    }
 }
 
 static void AtResponseQueue_CallbackCmdEcho(const uint8_t *cmd, uint32_t len)
@@ -177,181 +371,6 @@ static void AtResponseQueue_CallbackResponseCode(AtResponseCode_T response)
 
     if (RETCODE_OK != retcode)
     {
-        Retcode_RaiseError(retcode);
+        Retcode_RaiseError(retcode); //LCOV_EXCL_BR_LINE
     }
-}
-
-Retcode_T AtResponseQueue_Init(void)
-{
-    AtResponseQueue_SetEventMask(AT_EVENT_TYPE_ALL - AT_EVENT_TYPE_MISC);
-
-    return Queue_Create(&EventQueue, EventQueueBuffer, sizeof(EventQueueBuffer));
-}
-
-void AtResponseQueue_RegisterWithResponseParser(void)
-{
-    AtResponseParser_RegisterResponseCodeCallback(AtResponseQueue_CallbackResponseCode);
-    AtResponseParser_RegisterErrorCallback(AtResponseQueue_CallbackError);
-    AtResponseParser_RegisterCmdEchoCallback(AtResponseQueue_CallbackCmdEcho);
-    AtResponseParser_RegisterCmdCallback(AtResponseQueue_CallbackCmd);
-    AtResponseParser_RegisterCmdArgCallback(AtResponseQueue_CallbackCmdArg);
-    AtResponseParser_RegisterMiscCallback(AtResponseQueue_CallbackMiscContent);
-}
-
-Retcode_T AtResponseQueue_SetEventMask(uint32_t eventMask)
-{
-    Retcode_T retcode = RETCODE_OK;
-
-    /* check if the mask is in the possible range*/
-    if (eventMask < AT_EVENT_TYPE_OUT_OF_RANGE)
-    {
-        retcode = RETCODE_OK;
-        AtEventMask = (AtEventType_T)eventMask;
-    }
-    else
-    {
-        /* input value eventMask is out of range */
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-    }
-    return retcode;
-}
-
-uint32_t AtResponseQueue_GetEventMask(void)
-{
-    return AtEventMask;
-}
-
-void AtResponseQueue_Reset(void)
-{
-    AtResponseParser_Reset();
-    AtResponseQueue_Clear();
-}
-
-Retcode_T AtResponseQueue_WaitForNamedCmdEcho(uint32_t timeout, const uint8_t *buffer, uint32_t BufferLength)
-{
-    return AtResponseQueue_WaitForContent(timeout, AT_EVENT_TYPE_COMMAND_ECHO, buffer, BufferLength);
-}
-
-Retcode_T AtResponseQueue_WaitForArbitraryCmdEcho(uint32_t timeout, uint8_t **BufferPtr, uint32_t *BufferLen)
-{
-    return AtResponseQueue_WaitFor(timeout, AT_EVENT_TYPE_COMMAND_ECHO, BufferPtr, BufferLen);
-}
-
-Retcode_T AtResponseQueue_WaitForNamedCmd(uint32_t timeout, const uint8_t *buffer, uint32_t BufferLength)
-{
-    return AtResponseQueue_WaitForContent(timeout, AT_EVENT_TYPE_COMMAND, buffer, BufferLength);
-}
-
-Retcode_T AtResponseQueue_WaitForArbitraryCmd(uint32_t timeout, uint8_t **BufferPtr, uint32_t *BufferLen)
-{
-    return AtResponseQueue_WaitFor(timeout, AT_EVENT_TYPE_COMMAND, BufferPtr, BufferLen);
-}
-
-Retcode_T AtResponseQueue_WaitForNamedCmdArg(uint32_t timeout, const uint8_t *buffer, uint32_t BufferLength)
-{
-    return AtResponseQueue_WaitForContent(timeout, AT_EVENT_TYPE_COMMAND_ARG, buffer, BufferLength);
-}
-
-Retcode_T AtResponseQueue_WaitForArbitraryCmdArg(uint32_t timeout, uint8_t **BufferPtr, uint32_t *BufferLen)
-{
-    return AtResponseQueue_WaitFor(timeout, AT_EVENT_TYPE_COMMAND_ARG, BufferPtr, BufferLen);
-}
-
-Retcode_T AtResponseQueue_WaitForNamedResponseCode(uint32_t timeout, AtResponseCode_T response)
-{
-    AtResponseQueueEntry_T *entry;
-    Retcode_T retcode = AtResponseQueue_WaitForEntry(timeout, AT_EVENT_TYPE_RESPONSE_CODE, &entry);
-
-    if (RETCODE_OK == retcode)
-    {
-        if (entry->ResponseCode != response)
-        {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_AT_RESPONSE_QUEUE_WRONG_RESPONSE);
-        }
-        else
-        {
-            (void)Queue_Purge(&EventQueue);
-        }
-    }
-    return retcode;
-}
-
-Retcode_T AtResponseQueue_WaitForArbitraryResponseCode(uint32_t timeout, AtResponseCode_T *response)
-{
-    AtResponseQueueEntry_T *entry;
-    Retcode_T retcode = AtResponseQueue_WaitForEntry(timeout, AT_EVENT_TYPE_RESPONSE_CODE, &entry);
-
-    if (RETCODE_OK == retcode)
-    {
-        *response = entry->ResponseCode;
-        (void)Queue_Purge(&EventQueue);
-    }
-
-    return retcode;
-}
-
-Retcode_T AtResponseQueue_WaitForMiscContent(uint32_t timeout, uint8_t **BufferPtr, uint32_t *BufferLen)
-{
-    return AtResponseQueue_WaitFor(timeout, AT_EVENT_TYPE_MISC, BufferPtr, BufferLen);
-}
-
-Retcode_T AtResponseQueue_IgnoreEvent(uint32_t timeout)
-{
-    AtResponseQueueEntry_T *entry;
-    Retcode_T retcode = Queue_Get(&EventQueue, (void **)&entry, NULL, timeout);
-
-    if (RETCODE_OK != retcode)
-    {
-        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_AT_RESPONSE_QUEUE_TIMEOUT);
-    }
-    return Queue_Purge(&EventQueue);
-}
-
-Retcode_T AtResponseQueue_GetEvent(uint32_t timeout, AtResponseQueueEntry_T **entry)
-{
-    Retcode_T retcode = Queue_Get(&EventQueue, (void **)entry, NULL, timeout);
-    if (RETCODE_OK != retcode)
-    {
-        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_AT_RESPONSE_QUEUE_TIMEOUT);
-    }
-
-    return retcode;
-}
-
-void AtResponseQueue_MarkBufferAsUnused(void)
-{
-    /* Don't care if message is already purged */
-    (void)Queue_Purge(&EventQueue);
-    return;
-}
-
-uint32_t AtResponseQueue_GetEventCount(void)
-{
-    return Queue_Count(&EventQueue);
-}
-
-void AtResponseQueue_Clear(void)
-{
-    Queue_Clear(&EventQueue);
-}
-
-Retcode_T AtResponseQueue_Deinit(void)
-{
-    Retcode_T ret = RETCODE_OK;
-
-    ret = Queue_Delete(&EventQueue);
-
-    if (RETCODE_OK == ret)
-    {
-        memset(EventQueueBuffer, UINT8_C(0), sizeof(EventQueueBuffer));
-
-        AtResponseParser_RegisterResponseCodeCallback(NULL);
-        AtResponseParser_RegisterErrorCallback(NULL);
-        AtResponseParser_RegisterCmdEchoCallback(NULL);
-        AtResponseParser_RegisterCmdCallback(NULL);
-        AtResponseParser_RegisterCmdArgCallback(NULL);
-        AtResponseParser_RegisterMiscCallback(NULL);
-    }
-
-    return ret;
 }

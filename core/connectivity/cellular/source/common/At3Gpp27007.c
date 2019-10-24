@@ -109,8 +109,7 @@ static Retcode_T ExtractCxregN(const uint8_t *data, uint32_t length,
     }
 
     *value = AT_CXREG_N_INVALID;
-    LOG_ERROR("AT_3GPP_27007 ExtractCregN value %" PRIi32 " out of range",
-              number);
+    LOG_ERROR("AT_3GPP_27007 ExtractCregN value %" PRIi32 " out of range", number); //LCOV_EXCL_BR_LINE
     return RETCODE(RETCODE_SEVERITY_ERROR,
                    RETCODE_CELLULAR_RESPONSE_UNEXPECTED);
 }
@@ -138,8 +137,7 @@ static Retcode_T ExtractCxregStat(const uint8_t *data, uint32_t length,
     }
 
     *value = AT_CXREG_STAT_INVALID;
-    LOG_ERROR("AT_3GPP_27007 ExtractCregStat value %" PRIi32 " out of range",
-              number);
+    LOG_ERROR("AT_3GPP_27007 ExtractCregStat value %" PRIi32 " out of range", number); //LCOV_EXCL_BR_LINE
     return RETCODE(RETCODE_SEVERITY_ERROR,
                    RETCODE_CELLULAR_RESPONSE_UNEXPECTED);
 }
@@ -224,8 +222,7 @@ static Retcode_T ExtractCxregAct(const uint8_t *data, uint32_t length,
         }
     }
 
-    LOG_ERROR("AT_3GPP_27007 ExtractCregAct value %" PRIi32 " out of range",
-              number);
+    LOG_ERROR("AT_3GPP_27007 ExtractCregAct value %" PRIi32 " out of range", number); //LCOV_EXCL_BR_LINE
     return RETCODE(RETCODE_SEVERITY_ERROR,
                    RETCODE_CELLULAR_RESPONSE_UNEXPECTED);
 }
@@ -384,7 +381,7 @@ static Retcode_T Send_Get_CXREG(const char *atcmd, const char *cmd)
     retcode = Engine_SendAtCommandWaitEcho((uint8_t *)atcmd, (uint32_t)strlen(atcmd), CMD_3GPP_27007_SHORT_TIMEOUT);
     if (RETCODE_OK == retcode)
     {
-        retcode = AtResponseQueue_WaitForNamedCmd(CMD_3GPP_27007_SHORT_TIMEOUT, (uint8_t *)cmd, strlen(cmd));
+        retcode = AtResponseQueue_WaitForNamedCmd(CMD_3GPP_27007_SHORT_TIMEOUT, (uint8_t *)cmd, strlen(cmd)); //LCOV_EXCL_BR_LINE
     }
 
     return retcode;
@@ -397,12 +394,12 @@ static Retcode_T Handle_Get_CXREG_N(AT_CXREG_N_T *n)
     uint8_t *buffer = NULL;
     uint32_t bufferLen = 0;
 
-    retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_SHORT_TIMEOUT, &buffer, &bufferLen);
+    retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_SHORT_TIMEOUT, &buffer, &bufferLen); //LCOV_EXCL_BR_LINE
     if (RETCODE_OK == retcode)
     {
         retcode = ExtractCxregN(buffer, bufferLen, n);
 
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
     }
     else
     {
@@ -418,12 +415,12 @@ static Retcode_T Handle_Get_CXREG_Stat(AT_CXREG_Stat_T *stat)
     uint8_t *buffer = NULL;
     uint32_t bufferLen = 0;
 
-    retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_SHORT_TIMEOUT, &buffer, &bufferLen);
+    retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_SHORT_TIMEOUT, &buffer, &bufferLen); //LCOV_EXCL_BR_LINE
     if (RETCODE_OK == retcode)
     {
-        retcode = ExtractCxregStat(buffer, bufferLen, stat);
+        retcode = ExtractCxregStat(buffer, bufferLen, stat); //LCOV_EXCL_BR_LINE
 
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
     }
     else
     {
@@ -439,12 +436,12 @@ static Retcode_T Handle_Get_CXREG_Lac(uint16_t *lac)
     uint8_t *buffer = NULL;
     uint32_t bufferLen = 0;
 
-    retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_SHORT_TIMEOUT, &buffer, &bufferLen);
+    retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_SHORT_TIMEOUT, &buffer, &bufferLen); //LCOV_EXCL_BR_LINE
     if (RETCODE_OK == retcode)
     {
         retcode = ExtractCxregLac(buffer, bufferLen, lac);
 
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
     }
     else
     {
@@ -460,12 +457,12 @@ static Retcode_T Handle_Get_CXREG_Ci(uint32_t *ci)
     uint8_t *buffer = NULL;
     uint32_t bufferLen = 0;
 
-    retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_SHORT_TIMEOUT, &buffer, &bufferLen);
+    retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_SHORT_TIMEOUT, &buffer, &bufferLen); //LCOV_EXCL_BR_LINE
     if (RETCODE_OK == retcode)
     {
         retcode = ExtractCxregCi(buffer, bufferLen, ci);
 
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
     }
     else
     {
@@ -484,9 +481,9 @@ static Retcode_T Handle_Get_CXREG_AcT(AT_CXREG_AcT_T *act)
     retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_SHORT_TIMEOUT, &buffer, &bufferLen);
     if (RETCODE_OK == retcode)
     {
-        retcode = ExtractCxregAct(buffer, bufferLen, act);
+        retcode = ExtractCxregAct(buffer, bufferLen, act); //LCOV_EXCL_BR_LINE
 
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
     }
     else
     {
@@ -502,12 +499,12 @@ static Retcode_T Handle_Get_CGREG_Rac(uint8_t *rac)
     uint8_t *buffer = NULL;
     uint32_t bufferLen = 0;
 
-    retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_SHORT_TIMEOUT, &buffer, &bufferLen);
+    retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_SHORT_TIMEOUT, &buffer, &bufferLen); //LCOV_EXCL_BR_LINE
     if (RETCODE_OK == retcode)
     {
         retcode = ExtractCgregRac(buffer, bufferLen, rac);
 
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
     }
     else
     {
@@ -523,12 +520,12 @@ static Retcode_T Handle_Get_CEREG_Tac(uint16_t *tac)
     uint8_t *buffer = NULL;
     uint32_t bufferLen = 0;
 
-    retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_SHORT_TIMEOUT, &buffer, &bufferLen);
+    retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_SHORT_TIMEOUT, &buffer, &bufferLen); //LCOV_EXCL_BR_LINE
     if (RETCODE_OK == retcode)
     {
         retcode = ExtractCeregTac(buffer, bufferLen, tac);
 
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
     }
     else
     {
@@ -904,20 +901,23 @@ Retcode_T At_Set_CGPADDR(const AT_CGPADDR_Param_T *param, AT_CGPADDR_Resp_T *res
 
     if (RETCODE_OK == retcode)
     {
-        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_3GPP_27007_SHORT_TIMEOUT);
+        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_3GPP_27007_SHORT_TIMEOUT); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
+        //LCOV_EXCL_BR_START
         retcode = AtResponseQueue_WaitForNamedCmd(CMD_3GPP_27007_SHORT_TIMEOUT,
-                                                  (uint8_t *)CMD_3GPP_27007_ATCGPADDR, (uint32_t)strlen(CMD_3GPP_27007_ATCGPADDR));
+                                                  (uint8_t *)CMD_3GPP_27007_ATCGPADDR,
+                                                  (uint32_t)strlen(CMD_3GPP_27007_ATCGPADDR));
+        //LCOV_EXCL_BR_STOP
     }
 
     if (RETCODE_OK == retcode)
     {
         /* Wait for cid in response. */
         retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_SHORT_TIMEOUT,
-                                                         &rxBuffer, &rxBufferLen);
+                                                         &rxBuffer, &rxBufferLen); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
@@ -929,26 +929,27 @@ Retcode_T At_Set_CGPADDR(const AT_CGPADDR_Param_T *param, AT_CGPADDR_Resp_T *res
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_RESPONSE_UNEXPECTED);
         }
 
-        AtResponseQueue_MarkBufferAsUnused(); /* clear cid from queue */
+        AtResponseQueue_MarkBufferAsUnused(); /* clear cid from queue */ //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
-        /* Wait for PDP_addr1 in response. */
+        /* Wait for PDP_addr1 in response. */ //LCOV_EXCL_BR_START
         retOptional = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_SHORT_TIMEOUT,
-                                                             &rxBuffer, &rxBufferLen);
+                                                             &rxBuffer, &rxBufferLen); //LCOV_EXCL_BR_STOP
         if (RETCODE_OK == retOptional)
         {
-            retcode = ExtractCgpaddrAddress(rxBuffer, rxBufferLen, &resp->Address1);
-            AtResponseQueue_MarkBufferAsUnused(); /* clear PDP_addr from queue */
+            retcode = ExtractCgpaddrAddress(rxBuffer, rxBufferLen, &resp->Address1); //LCOV_EXCL_BR_LINE
+            AtResponseQueue_MarkBufferAsUnused(); /* clear PDP_addr from queue */    //LCOV_EXCL_BR_LINE
 
             /* Wait for PDP_addr2 in response. */
+            //LCOV_EXCL_BR_START
             retOptional = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_SHORT_TIMEOUT,
-                                                                 &rxBuffer, &rxBufferLen);
+                                                                 &rxBuffer, &rxBufferLen); //LCOV_EXCL_BR_STOP
             if (RETCODE_OK == retOptional)
             {
                 retcode = ExtractCgpaddrAddress(rxBuffer, rxBufferLen, &resp->Address2);
-                AtResponseQueue_MarkBufferAsUnused(); /* clear PDP_addr from queue */
+                AtResponseQueue_MarkBufferAsUnused(); /* clear PDP_addr from queue */ //LCOV_EXCL_BR_LINE
             }
             else
             {
@@ -1045,7 +1046,7 @@ Retcode_T At_Test_AT(void)
         {
             retcode = RETCODE_OK;
         }
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
     }
 
     return retcode;
@@ -1138,19 +1139,19 @@ Retcode_T At_Get_CFUN(AT_CFUN_Resp_T *resp)
 
     if (RETCODE_OK == retcode)
     {
-        retcode = AtResponseQueue_WaitForNamedCmd(CMD_3GPP_27007_CFUN_TIMEOUT, (const uint8_t *)CMD_3GPP_27007_ATCFUN, strlen(CMD_3GPP_27007_ATCFUN));
+        retcode = AtResponseQueue_WaitForNamedCmd(CMD_3GPP_27007_CFUN_TIMEOUT, (const uint8_t *)CMD_3GPP_27007_ATCFUN, strlen(CMD_3GPP_27007_ATCFUN)); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_CFUN_TIMEOUT, &arg, &argLen);
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_3GPP_27007_CFUN_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
         retcode = Utils_StrtolBounds(arg, argLen, (int32_t *)&resp->Fun, AT_CFUN_FUN_MINIMUM, AT_CFUN_FUN_PREPARESHUTDOWN);
 
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
@@ -1183,14 +1184,14 @@ Retcode_T At_HandleUrc_CREG(void)
     uint32_t lengthCmdArg = 0;
 
     ret = AtResponseQueue_WaitForNamedCmd(0, (const uint8_t *)CMD_3GPP_27007_ATCREG,
-                                          strlen(CMD_3GPP_27007_ATCREG));
+                                          strlen(CMD_3GPP_27007_ATCREG)); //LCOV_EXCL_BR_LINE
 
     if (RETCODE_OK == ret)
     {
         memset(&data, 0, sizeof(data));
         urcFound = true;
         ret = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT,
-                                                     &cmdArg, &lengthCmdArg); //-- stat
+                                                     &cmdArg, &lengthCmdArg); //-- stat//LCOV_EXCL_BR_LINE
     }
     if (RETCODE_OK == ret)
     {
@@ -1222,19 +1223,19 @@ Retcode_T At_HandleUrc_CREG(void)
             }
         }
 
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
         cmdArg = NULL;
         lengthCmdArg = 0;
-        retOptional = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT, &cmdArg, &lengthCmdArg); //-- lac
+        retOptional = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT, &cmdArg, &lengthCmdArg); //-- lac//LCOV_EXCL_BR_LINE
         if (RETCODE_OK == retOptional)
         {
             retLac = ExtractCxregLac(cmdArg, lengthCmdArg, &data.Lac);
             if (RETCODE_OK != retLac)
                 data.Lac = AT_INVALID_LAC;
-            AtResponseQueue_MarkBufferAsUnused();
+            AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
             cmdArg = NULL;
             lengthCmdArg = 0;
-            retOptional = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT, &cmdArg, &lengthCmdArg); //-- ci
+            retOptional = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT, &cmdArg, &lengthCmdArg); //-- ci//LCOV_EXCL_BR_LINE
             if (RETCODE_OK == retOptional)
             {
                 retCi = ExtractCxregCi(cmdArg, lengthCmdArg, &data.Ci);
@@ -1243,13 +1244,13 @@ Retcode_T At_HandleUrc_CREG(void)
                 AtResponseQueue_MarkBufferAsUnused();
                 cmdArg = NULL;
                 lengthCmdArg = 0;
-                retOptional = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT, &cmdArg, &lengthCmdArg); //-- AcT
+                retOptional = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT, &cmdArg, &lengthCmdArg); //-- AcT//LCOV_EXCL_BR_LINE
                 if (RETCODE_OK == retOptional)
                 {
                     retAcT = ExtractCxregAct(cmdArg, lengthCmdArg, &data.AcT);
                     if (RETCODE_OK != retAcT)
                         data.AcT = AT_CXREG_ACT_INVALID;
-                    AtResponseQueue_MarkBufferAsUnused();
+                    AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
                 }
             }
         }
@@ -1268,12 +1269,11 @@ Retcode_T At_HandleUrc_CREG(void)
     {
         if (AT_INVALID_LAC != data.Lac && AT_INVALID_CI != data.Ci)
         {
-            LOG_DEBUG("CREG stat:%d lac:%" PRIu32 " ci:%" PRIu32 " AcT:%d",
-                      (int)data.Stat, data.Lac, data.Ci, data.AcT);
+            LOG_DEBUG("CREG stat:%d lac:%" PRIu32 " ci:%" PRIu32 " AcT:%d", (int)data.Stat, data.Lac, data.Ci, data.AcT); //LCOV_EXCL_BR_LINE
         }
         else
         {
-            LOG_DEBUG("CREG stat:%d", (int)data.Stat);
+            LOG_DEBUG("CREG stat:%d", (int)data.Stat); //LCOV_EXCL_BR_LINE
         }
     }
     ret = Utils_ConvertAtResponseRetcodeToCellularRetcode(ret);
@@ -1300,19 +1300,17 @@ Retcode_T At_HandleUrc_CGREG(void)
     uint8_t *cmdArg = NULL;
     uint32_t lengthCmdArg = 0;
 
-    ret = AtResponseQueue_WaitForNamedCmd(0, (const uint8_t *)CMD_3GPP_27007_ATCGREG,
-                                          strlen(CMD_3GPP_27007_ATCGREG));
+    ret = AtResponseQueue_WaitForNamedCmd(0, (const uint8_t *)CMD_3GPP_27007_ATCGREG, strlen(CMD_3GPP_27007_ATCGREG)); //LCOV_EXCL_BR_LINE
 
     if (RETCODE_OK == ret)
     {
         memset(&data, 0, sizeof(data));
         urcFound = true;
-        ret = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT,
-                                                     &cmdArg, &lengthCmdArg); //-- stat
+        ret = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT, &cmdArg, &lengthCmdArg); //-- stat//LCOV_EXCL_BR_LINE
     }
     if (RETCODE_OK == ret)
     {
-        retStat = ExtractCxregStat(cmdArg, lengthCmdArg, &data.Stat);
+        retStat = ExtractCxregStat(cmdArg, lengthCmdArg, &data.Stat); //LCOV_EXCL_BR_LINE
         if (RETCODE_OK == retStat)
         {
             switch (data.Stat)
@@ -1324,15 +1322,15 @@ Retcode_T At_HandleUrc_CGREG(void)
                 /* set device status and notify event */
                 /** \todo Propagate type of CxREG to client-callback via
                  * param. */
-                Engine_NotifyNewState(CELLULAR_STATE_REGISTERED, NULL, 0);
+                Engine_NotifyNewState(CELLULAR_STATE_REGISTERED, NULL, 0); //LCOV_EXCL_BR_LINE
                 break;
             case AT_CXREG_STAT_NOT:
             case AT_CXREG_STAT_DENIED:
-                Engine_NotifyNewState(CELLULAR_STATE_POWERON, NULL, 0);
+                Engine_NotifyNewState(CELLULAR_STATE_POWERON, NULL, 0); //LCOV_EXCL_BR_LINE
                 break;
             case AT_CXREG_STAT_NOT_AND_SEARCH:
             case AT_CXREG_STAT_UNKNOWN:
-                Engine_NotifyNewState(CELLULAR_STATE_REGISTERING, NULL, 0);
+                Engine_NotifyNewState(CELLULAR_STATE_REGISTERING, NULL, 0); //LCOV_EXCL_BR_LINE
                 break;
             default:
                 /* do nothing */
@@ -1344,43 +1342,43 @@ Retcode_T At_HandleUrc_CGREG(void)
 
         cmdArg = NULL;
         lengthCmdArg = 0;
-        retOptional = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT, &cmdArg, &lengthCmdArg); //-- lac
+        retOptional = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT, &cmdArg, &lengthCmdArg); //-- lac//LCOV_EXCL_BR_LINE
         if (RETCODE_OK == retOptional)
         {
             retLac = ExtractCxregLac(cmdArg, lengthCmdArg, &data.Lac);
             if (RETCODE_OK != retLac)
                 data.Lac = AT_INVALID_LAC;
-            AtResponseQueue_MarkBufferAsUnused();
+            AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
 
             cmdArg = NULL;
             lengthCmdArg = 0;
-            retOptional = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT, &cmdArg, &lengthCmdArg); //-- ci
+            retOptional = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT, &cmdArg, &lengthCmdArg); //-- ci//LCOV_EXCL_BR_LINE
             if (RETCODE_OK == retOptional)
             {
                 retCi = ExtractCxregCi(cmdArg, lengthCmdArg, &data.Ci);
                 if (RETCODE_OK != retCi)
                     data.Ci = AT_INVALID_CI;
-                AtResponseQueue_MarkBufferAsUnused();
+                AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
 
                 cmdArg = NULL;
                 lengthCmdArg = 0;
-                retOptional = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT, &cmdArg, &lengthCmdArg); //-- AcT
+                retOptional = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT, &cmdArg, &lengthCmdArg); //-- AcT//LCOV_EXCL_BR_LINE
                 if (RETCODE_OK == retOptional)
                 {
                     retAcT = ExtractCxregAct(cmdArg, lengthCmdArg, &data.AcT);
                     if (RETCODE_OK != retAcT)
                         data.AcT = AT_CXREG_ACT_INVALID;
-                    AtResponseQueue_MarkBufferAsUnused();
+                    AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
 
                     cmdArg = NULL;
                     lengthCmdArg = 0;
-                    retOptional = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT, &cmdArg, &lengthCmdArg); // Rac
+                    retOptional = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT, &cmdArg, &lengthCmdArg); // Rac//LCOV_EXCL_BR_LINE
                     if (RETCODE_OK == retOptional)
                     {
                         retRac = ExtractCgregRac(cmdArg, lengthCmdArg, &data.Rac);
                         if (RETCODE_OK == retRac)
                             data.Rac = AT_INVALID_RAC;
-                        AtResponseQueue_MarkBufferAsUnused();
+                        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
                     }
                 }
             }
@@ -1400,12 +1398,11 @@ Retcode_T At_HandleUrc_CGREG(void)
     {
         if (AT_INVALID_LAC != data.Lac && AT_INVALID_CI != data.Ci)
         {
-            LOG_DEBUG("CGREG stat:%d lac:%" PRIu32 " ci:%" PRIu32 " AcT:%d",
-                      (int)data.Stat, data.Lac, data.Ci, data.AcT);
+            LOG_DEBUG("CGREG stat:%d lac:%" PRIu32 " ci:%" PRIu32 " AcT:%d", (int)data.Stat, data.Lac, data.Ci, data.AcT); //LCOV_EXCL_BR_LINE
         }
         else
         {
-            LOG_DEBUG("CGREG stat:%d", (int)data.Stat);
+            LOG_DEBUG("CGREG stat:%d", (int)data.Stat); //LCOV_EXCL_BR_LINE
         }
     }
     ret = Utils_ConvertAtResponseRetcodeToCellularRetcode(ret);
@@ -1431,14 +1428,14 @@ Retcode_T At_HandleUrc_CEREG(void)
     uint32_t lengthCmdArg = 0;
 
     ret = AtResponseQueue_WaitForNamedCmd(0, (const uint8_t *)CMD_3GPP_27007_ATCEREG,
-                                          strlen(CMD_3GPP_27007_ATCEREG));
+                                          strlen(CMD_3GPP_27007_ATCEREG)); //LCOV_EXCL_BR_LINE
 
     if (RETCODE_OK == ret)
     {
         memset(&data, 0, sizeof(data));
         urcFound = true;
         ret = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT,
-                                                     &cmdArg, &lengthCmdArg); //-- stat
+                                                     &cmdArg, &lengthCmdArg); //-- stat//LCOV_EXCL_BR_LINE
     }
     if (RETCODE_OK == ret)
     {
@@ -1469,7 +1466,7 @@ Retcode_T At_HandleUrc_CEREG(void)
             }
         }
 
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
 
         cmdArg = NULL;
         lengthCmdArg = 0;
@@ -1479,7 +1476,7 @@ Retcode_T At_HandleUrc_CEREG(void)
             retTac = ExtractCeregTac(cmdArg, lengthCmdArg, &data.Tac);
             if (RETCODE_OK != retTac)
                 data.Tac = AT_INVALID_TAC;
-            AtResponseQueue_MarkBufferAsUnused();
+            AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
 
             cmdArg = NULL;
             lengthCmdArg = 0;
@@ -1489,17 +1486,17 @@ Retcode_T At_HandleUrc_CEREG(void)
                 retCi = ExtractCxregCi(cmdArg, lengthCmdArg, &data.Ci);
                 if (RETCODE_OK != retCi)
                     data.Ci = AT_INVALID_CI;
-                AtResponseQueue_MarkBufferAsUnused();
+                AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
 
                 cmdArg = NULL;
                 lengthCmdArg = 0;
-                retOptional = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT, &cmdArg, &lengthCmdArg); //-- AcT
+                retOptional = AtResponseQueue_WaitForArbitraryCmdArg(URC_3GPP_27007_TIMEOUT, &cmdArg, &lengthCmdArg); //-- AcT//LCOV_EXCL_BR_LINE
                 if (RETCODE_OK == retOptional)
                 {
                     retAcT = ExtractCxregAct(cmdArg, lengthCmdArg, &data.AcT);
                     if (RETCODE_OK == retAcT)
                         data.AcT = AT_CXREG_ACT_INVALID;
-                    AtResponseQueue_MarkBufferAsUnused();
+                    AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
                 }
             }
         }
@@ -1519,12 +1516,11 @@ Retcode_T At_HandleUrc_CEREG(void)
     {
         if (AT_INVALID_TAC != data.Tac && AT_INVALID_CI != data.Ci)
         {
-            LOG_DEBUG("CEREG stat:%d tac:%" PRIu32 " ci:%" PRIu32 " AcT:%d",
-                      (int)data.Stat, data.Tac, data.Ci, data.AcT);
+            LOG_DEBUG("CEREG stat:%d tac:%" PRIu32 " ci:%" PRIu32 " AcT:%d", (int)data.Stat, data.Tac, data.Ci, data.AcT); //LCOV_EXCL_BR_LINE
         }
         else
         {
-            LOG_DEBUG("CEREG stat:%d", (int)data.Stat);
+            LOG_DEBUG("CEREG stat:%d", (int)data.Stat); //LCOV_EXCL_BR_LINE
         }
     }
     ret = Utils_ConvertAtResponseRetcodeToCellularRetcode(ret);

@@ -16,7 +16,6 @@
 #define SOCKETSERVICE_TH_HH_
 
 #include "SocketService.h"
-
 #include "gtest.h"
 
 FAKE_VOID_FUNC(SocketService_NotifySocketDataReceived, uint32_t, uint32_t)

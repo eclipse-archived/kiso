@@ -12,6 +12,15 @@
 *
 ********************************************************************************/
 
+/**
+ * @file
+ *
+ * @brief
+ * Implements Ublox specific AT commands
+ */
+
+/*###################### INCLUDED HEADERS ###########################################################################*/
+
 #include "Kiso_CellularModules.h"
 #define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_AT_UBLOX
 
@@ -35,6 +44,7 @@
 #include <limits.h>
 #include <ctype.h>
 
+/*###################### MACROS DEFINITION ##########################################################################*/
 #define CMD_UBLOX_SHORT_TIMEOUT (UINT32_C(120))  /* msec */
 #define CMD_UBLOX_FILE_TIMEOUT (UINT32_C(1000))  /* msec */
 #define CMD_UBLOX_SIM_TIMEOUT (UINT32_C(1000))   /* msec */
@@ -135,101 +145,1456 @@
 #define CMD_UBLOX_SET_ATUDNSRN_FMT2 ("AT+" CMD_UBLOX_ATUDNSRN "=%d,\"%d.%d.%d.%d\"\r\n")
 #define CMD_UBLOX_SET_ATUDNSRN_FMT3 ("AT+" CMD_UBLOX_ATUDNSRN "=%d,\"%x:%x:%x:%x:%x:%x:%x:%x\"\r\n")
 
-static Retcode_T ExtractUmnoprofMno(const uint8_t *data, uint32_t length,
-                                    AT_UMNOPROF_Mno_T *value);
+/*###################### LOCAL FUNCTIONS DECLARATION ################################################################*/
 
-static Retcode_T ExtractUbloxAddress(const uint8_t *addressBuff, uint32_t addressBuffLen,
-                                     AT_UBlox_Address_T *parsedAddress);
-
+static Retcode_T ExtractUmnoprofMno(const uint8_t *data, uint32_t length, AT_UMNOPROF_Mno_T *value);
+static Retcode_T ExtractUbloxAddress(const uint8_t *addressBuff, uint32_t addressBuffLen, AT_UBlox_Address_T *parsedAddress);
 static Retcode_T HandleDomainToIpUDNSRN(const AT_UDNSRN_Param_T *param, AT_UDNSRN_Resp_T *resp);
-
 static Retcode_T HandleIpToDomainUDNSRN(const AT_UDNSRN_Param_T *param, AT_UDNSRN_Resp_T *resp);
-
-/**
- * @brief Converts a number to a single character representing a hexadecimal
- * number.
- * @param quintetIndex
- * @param byte
- * @return
- */
 static uint8_t ToHexChar(uint8_t quintetIndex, uint8_t byte);
-
-/**
- * @brief Converts a single character representing a hexadecimal number to the
- * number. If the character is not a valid hex char, 0xFF is returned.
- */
 static uint8_t FromHexChar(uint8_t HexChar);
-
-/**
- * @brief Encode the given input data as ASCII HEX string according to u-blox
- * specification.
- *
- * @note To properly fit the ASCII HEX string outLength has to be at least twice the
- * size of inLength.
- *
- * @param[in] binData
- * Input data to encode.
- *
- * @param[in] binLength
- * Length of input data.
- *
- * @param[out] hexData
- * Output buffer to store the encoded bytes.
- *
- * @param[in] hexLength
- * Length of the output buffer.
- *
- * @return A #Retcode_T indicating the result of the requested action.
- */
-static Retcode_T EncodePayloadAsHex(const uint8_t *binData, uint32_t binLength,
-                                    char *hexData, uint32_t hexLength);
-
-/**
- * @brief Inspect the given buffer for illegal AT characters.
- *
- * @note This is used to verify the contents of the payload when sending via
- * #AT_UBLOX_PAYLOADENCODING_BASE encoding.
- *
- * @param[in] data
- * Data to verify.
- *
- * @param[in] length
- * Length of data.
- *
- * @return A #Retcode_T indicating the result of the requested action. In case
- * an illegal character is found, a #RETCODE_INVALID_PARAM will be returned.
- */
+static Retcode_T EncodePayloadAsHex(const uint8_t *binData, uint32_t binLength, char *hexData, uint32_t hexLength);
 static Retcode_T CheckForIllegalCharacters(const uint8_t *data, uint32_t length);
-
-static Retcode_T PrepareSendingWithBaseEncoding(char *sendBuffer,
-                                                uint32_t sendBufferLength, const AT_USOWR_Param_T *param, uint32_t *length);
-
-static Retcode_T PrepareSendToWithBaseEncoding(char *sendBuffer,
-                                               uint32_t sendBufferLength, const AT_USOST_Param_T *param, uint32_t *length);
-
-static Retcode_T PrepareSendingWithHexEncoding(char *sendBuffer,
-                                               uint32_t sendBufferLength, const AT_USOWR_Param_T *param, uint32_t *length);
-
-static Retcode_T PrepareSendToWithHexEncoding(char *sendBuffer,
-                                              uint32_t sendBufferLength, const AT_USOST_Param_T *param, uint32_t *length);
-
+static Retcode_T PrepareSendingWithBaseEncoding(char *sendBuffer, uint32_t sendBufferLength, const AT_USOWR_Param_T *param, uint32_t *length);
+static Retcode_T PrepareSendToWithBaseEncoding(char *sendBuffer, uint32_t sendBufferLength, const AT_USOST_Param_T *param, uint32_t *length);
+static Retcode_T PrepareSendingWithHexEncoding(char *sendBuffer, uint32_t sendBufferLength, const AT_USOWR_Param_T *param, uint32_t *length);
+static Retcode_T PrepareSendToWithHexEncoding(char *sendBuffer, uint32_t sendBufferLength, const AT_USOST_Param_T *param, uint32_t *length);
 static Retcode_T HandleHexModeUSORD(const AT_USORD_Param_T *param, AT_USORD_Resp_T *resp);
-
 static Retcode_T HandleHexModeUSORF(const AT_USORF_Param_T *param, AT_USORF_Resp_T *resp);
-
-static Retcode_T ParseIPv6RightToLeft(const uint8_t *addressBuff, uint32_t addressBuffLen,
-                                      AT_UBlox_Address_T *parsedAddress, uint32_t alreadyParsedGroups);
-
-static Retcode_T ParseIPv6LeftToRight(const uint8_t *addressBuff, uint32_t addressBuffLen,
-                                      AT_UBlox_Address_T *parsedAddress);
-
-static Retcode_T ParseIPv4(const uint8_t *addressBuff, uint32_t addressBuffLen,
-                           AT_UBlox_Address_T *parsedAddress);
-
+static Retcode_T ParseIPv6RightToLeft(const uint8_t *addressBuff, uint32_t addressBuffLen, AT_UBlox_Address_T *parsedAddress, uint32_t alreadyParsedGroups);
+static Retcode_T ParseIPv6LeftToRight(const uint8_t *addressBuff, uint32_t addressBuffLen, AT_UBlox_Address_T *parsedAddress);
+static Retcode_T ParseIPv4(const uint8_t *addressBuff, uint32_t addressBuffLen, AT_UBlox_Address_T *parsedAddress);
 static Retcode_T HandleUrcUUSORX(const char *cmd);
 
-static Retcode_T ExtractUmnoprofMno(const uint8_t *data, uint32_t length,
-                                    AT_UMNOPROF_Mno_T *value)
+/*###################### VARIABLES DECLARATION ######################################################################*/
+
+/*###################### EXPOSED FUNCTIONS IMPLEMENTATION ###########################################################*/
+
+Retcode_T At_Set_UHTTP(const AT_UHTTP_Param_T *param)
+{
+    assert(NULL != param);
+
+    Retcode_T retcode = RETCODE_OK;
+    int32_t len = 0;
+    uint32_t timeout = CMD_UBLOX_SHORT_TIMEOUT;
+    switch (param->Opcode)
+    {
+    case AT_UHTTP_OPCODE_SERVER_NAME:
+        timeout = CMD_UBLOX_DNS_TIMEOUT;
+        // intentional fall through
+    case AT_UHTTP_OPCODE_SERVER_IP:
+    case AT_UHTTP_OPCODE_USERNAME:
+    case AT_UHTTP_OPCODE_PASSWORD:
+        len = snprintf(Engine_AtSendBuffer,
+                       sizeof(Engine_AtSendBuffer),
+                       CMD_UBLOX_SET_ATUHTTP2_FMT,
+                       (int)param->ProfileId,
+                       param->Opcode,
+                       param->Value.String);
+        if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+        }
+        break;
+    case AT_UHTTP_OPCODE_SERVER_PORT:
+    case AT_UHTTP_OPCODE_SECURE_OPTION:
+        len = snprintf(Engine_AtSendBuffer,
+                       sizeof(Engine_AtSendBuffer),
+                       CMD_UBLOX_SET_ATUHTTP3_FMT,
+                       (int)param->ProfileId,
+                       param->Opcode,
+                       (int)param->Value.Numeric);
+        if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+        }
+        break;
+    default:
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+        break;
+    }
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_LONG_TIMEOUT);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(timeout, retcode);
+    }
+    return retcode;
+}
+
+Retcode_T At_Set_UHTTPC(const AT_UHTTPC_Param_T *param)
+{
+    assert(NULL != param);
+
+    Retcode_T retcode = RETCODE_OK;
+    int32_t len = 0;
+    switch (param->Command)
+    {
+    case AT_UHTTPC_COMMAND_HEAD:
+    case AT_UHTTPC_COMMAND_GET:
+    case AT_UHTTPC_COMMAND_DELETE:
+        len = snprintf(Engine_AtSendBuffer,
+                       sizeof(Engine_AtSendBuffer),
+                       CMD_UBLOX_SET_ATUHTTPC1_FMT,
+                       (int)param->ProfileId, param->Command,
+                       param->PathOnServer,
+                       param->ResponseFilename);
+        if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+        }
+        break;
+    case AT_UHTTPC_COMMAND_POST_DATA:
+    case AT_UHTTPC_COMMAND_POST_FILE:
+    case AT_UHTTPC_COMMAND_PUT:
+        len = snprintf(Engine_AtSendBuffer,
+                       sizeof(Engine_AtSendBuffer),
+                       CMD_UBLOX_SET_ATUHTTPC2_FMT,
+                       (int)param->ProfileId,
+                       param->Command,
+                       param->PathOnServer,
+                       param->ResponseFilename,
+                       param->Payload,
+                       param->ContentType);
+        if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+        }
+        break;
+
+    default:
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+        break;
+    }
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, 2 * CMD_UBLOX_SHORT_TIMEOUT);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(5000, retcode);
+    }
+    return retcode;
+}
+
+Retcode_T At_Set_URAT(const AT_URAT_Param_T *param)
+{
+    assert(NULL != param);
+
+    Retcode_T retcode = RETCODE_OK;
+    int32_t len = 0;
+
+    switch (param->SelectedAcT)
+    {
+    case AT_URAT_SELECTEDACT_GSM_GPRS_EGPRS:
+    case AT_URAT_SELECTEDACT_UMTS:
+    case AT_URAT_SELECTEDACT_LTE:
+    case AT_URAT_SELECTEDACT_LTEM1:
+    case AT_URAT_SELECTEDACT_LTENB1:
+    case AT_URAT_SELECTEDACT_GPRS_EGPRS:
+        /* single mode */
+        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATURAT1_FMT,
+                       (int)param->SelectedAcT);
+        if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+        }
+        break;
+    case AT_URAT_SELECTEDACT_GSM_UMTS:
+    case AT_URAT_SELECTEDACT_GSM_LTE:
+    case AT_URAT_SELECTEDACT_UMTS_LTE:
+        /* dual mode */
+        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATURAT2_FMT,
+                       (int)param->SelectedAcT, (int)param->PreferredAcT);
+        if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+        }
+        break;
+    case AT_URAT_SELECTEDACT_GSM_UMTS_LTE:
+        /* tri mode */
+        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATURAT3_FMT,
+                       (int)param->SelectedAcT, (int)param->PreferredAcT, (int)param->SecondPreferredAcT);
+        if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+        }
+        break;
+    case AT_URAT_SELECTEDACT_INVALID:
+    default:
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+        break;
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Set_UMNOPROF(AT_UMNOPROF_Mno_T mno)
+{
+    Retcode_T retcode = RETCODE_OK;
+    int32_t len = 0;
+
+    len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUMNOPROF_FMT,
+                   (int)mno);
+    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Get_UMNOPROF(AT_UMNOPROF_Mno_T *mno)
+{
+    assert(NULL != mno);
+
+    Retcode_T retcode = RETCODE_OK;
+    uint8_t *buffer = NULL;
+    uint32_t bufferLen = 0;
+    //LCOV_EXCL_BR_START
+    retcode = Engine_SendAtCommandWaitEcho((uint8_t *)CMD_UBLOX_GET_ATUMNOPROF,
+                                           (uint32_t)strlen(CMD_UBLOX_GET_ATUMNOPROF), CMD_UBLOX_SHORT_TIMEOUT); //LCOV_EXCL_BR_STOP
+
+    if (RETCODE_OK == retcode)
+    {
+        //LCOV_EXCL_BR_START
+        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SHORT_TIMEOUT,
+                                                  (const uint8_t *)CMD_UBLOX_ATUMNOPROF,
+                                                  (uint32_t)strlen(CMD_UBLOX_ATUMNOPROF)); //LCOV_EXCL_BR_STOP
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &buffer, &bufferLen); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+
+        retcode = ExtractUmnoprofMno(buffer, bufferLen, mno);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode); //LCOV_EXCL_BR_LINE
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Set_UDWNFILE(const AT_UDWNFILE_Param_T *param)
+{
+    Retcode_T retcode = RETCODE_OK;
+    int32_t len;
+    AtResponseQueueEntry_T *entry;
+    uint32_t eventCount;
+    uint32_t i;
+    assert(NULL != param);
+
+    len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUDWNFILE_FMT,
+                   param->Filename, (int)param->DataSize);
+    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+    }
+
+    AtResponseQueue_SetEventMask(AT_EVENT_TYPE_ALL);
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_FILE_TIMEOUT); //LCOV_EXCL_BR_LINE
+    }
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommand(param->Data, param->DataSize); //LCOV_EXCL_BR_LINE
+    }
+
+    /* we wait some time in order to fill up the queue with responses*/
+    vTaskDelay(2 * CMD_UBLOX_FILE_TIMEOUT);
+
+    eventCount = AtResponseQueue_GetEventCount(); //LCOV_EXCL_BR_LINE
+    for (i = 0; i < eventCount; i++)
+    {
+        retcode = AtResponseQueue_GetEvent(1000, &entry); //LCOV_EXCL_BR_LINE
+        if (entry->Type == AT_EVENT_TYPE_MISC)
+        {
+            AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+        }
+        else
+        {
+            retcode = Utils_WaitForAndHandleResponseCode(4 * CMD_UBLOX_FILE_TIMEOUT, retcode); //LCOV_EXCL_BR_LINE
+        }
+    }
+    AtResponseQueue_SetEventMask(AT_EVENT_TYPE_ALL - AT_EVENT_TYPE_MISC);
+    return retcode;
+}
+
+Retcode_T At_Set_UDELFILE(const AT_UDELFILE_Param_T *param)
+{
+    Retcode_T retcode = RETCODE_OK;
+    int32_t len;
+    assert(NULL != param);
+    len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUDELFILE_FMT,
+                   param->Filename);
+    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_FILE_TIMEOUT);
+    }
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_FILE_TIMEOUT, retcode);
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Set_ULSTFILE(AT_ULSTFILE_Param_T *param)
+{
+    Retcode_T retcode = RETCODE_OK;
+    int32_t len;
+    uint8_t *buffer;
+    uint32_t bufferLen;
+
+    assert(NULL != param);
+    switch (param->Opcode)
+    {
+    case AT_ULSTFILE_OPCODE_SIZE:
+        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATULSTFILE_FMT2,
+                       (int)param->Opcode, param->Filename);
+        if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+        }
+
+        break;
+
+    default:
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
+        break;
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SHORT_TIMEOUT,
+                                                  (const uint8_t *)CMD_UBLOX_ATULSTFILE, (uint32_t)strlen(CMD_UBLOX_ATULSTFILE)); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT,
+                                                         &buffer, &bufferLen); //LCOV_EXCL_BR_LINE
+    }
+    if (RETCODE_OK == retcode)
+    {
+        int32_t tmp = 0;
+        retcode = Utils_Strtol(buffer, bufferLen, &tmp);
+        param->Filesize = (uint32_t)tmp;
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode); //LCOV_EXCL_BR_LINE
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Set_URDBLOCK(const AT_URDBLOCK_Param_T *param, AT_URDBLOCK_Resp_T *resp)
+{
+    Retcode_T retcode = RETCODE_OK;
+    uint8_t *buffer;
+    uint32_t bufferLen;
+    int32_t len = 0;
+    uint32_t readLength = 0;
+    AtResponseQueueEntry_T *entry;
+
+    len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATURDBLOCK_FMT,
+                   param->Filename, (int)param->Offset, (int)param->Size);
+    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+    }
+
+    AtResponseQueue_SetEventMask(AT_EVENT_TYPE_ALL);
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_FILE_TIMEOUT); //LCOV_EXCL_BR_LINE
+    }
+
+    retcode = AtResponseQueue_GetEvent(1000, &entry); //LCOV_EXCL_BR_LINE
+    if (entry->Type == AT_EVENT_TYPE_MISC)
+    {
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_FILE_TIMEOUT,
+                                                  (const uint8_t *)CMD_UBLOX_ATURDBLOCK, (uint32_t)strlen(CMD_UBLOX_ATURDBLOCK)); //LCOV_EXCL_BR_LINE
+    }
+    // here we read back the Filename:
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT,
+                                                         &buffer, &bufferLen); //LCOV_EXCL_BR_LINE
+        if (RETCODE_OK == retcode)
+        {
+            if (bufferLen > UBLOX_MAX_FILE_NAME_LENGTH + 2 || bufferLen <= 2) /* filename + two " */
+            {
+                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNEXPECTED_BEHAVIOR);
+            }
+            else
+            {
+                memcpy(resp->Filename, buffer + 1, bufferLen - 1);
+                /* ensure zero terminaltion, account for the " at the beginning. */
+                resp->Filename[bufferLen - 2] = '\0';
+            }
+        };
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+    }
+    // here we read back the length:
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT,
+                                                         &buffer, &bufferLen); //LCOV_EXCL_BR_LINE
+        if (RETCODE_OK == retcode)
+        {
+            int32_t size = 0;
+            retcode = Utils_Strtol(buffer, bufferLen, &size);
+            resp->Size = (uint32_t)size;
+        }
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+    }
+    // here we read back the first line of data
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_FILE_TIMEOUT, &buffer, &bufferLen); //LCOV_EXCL_BR_LINE
+        if (RETCODE_OK == retcode)
+        {
+            /* FIXME: This is right now very HTTP specific! */
+            if (param->Size > bufferLen - 1)
+            {
+                memcpy(resp->Data, buffer + 1, bufferLen - 1);
+                readLength = bufferLen - 1;
+                if (bufferLen - param->Size >= 1)
+                {
+                    resp->Data[bufferLen - 1] = '\r';
+                    readLength++;
+                }
+                if (bufferLen - param->Size >= 2)
+                {
+                    resp->Data[bufferLen] = '\n';
+                    readLength++;
+                }
+            }
+            else
+            {
+                memcpy(resp->Data, buffer + 1, param->Size);
+                readLength = param->Size;
+            }
+        }
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+    }
+    // here we read back the rest of the data
+    while (retcode == RETCODE_OK && readLength < param->Size)
+    {
+        retcode = AtResponseQueue_WaitForMiscContent(10000, &buffer, &bufferLen); //LCOV_EXCL_BR_LINE
+        uint32_t readLimit = param->Size - readLength;
+        memcpy(resp->Data + readLength, buffer, bufferLen > readLimit ? readLimit : bufferLen);
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+        readLength += bufferLen;
+    }
+    retcode = AtResponseQueue_GetEvent(1000, &entry);
+    if (entry->Type == AT_EVENT_TYPE_MISC)
+    {
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_FILE_TIMEOUT, retcode);
+    }
+
+    AtResponseQueue_SetEventMask(AT_EVENT_TYPE_ALL - AT_EVENT_TYPE_MISC);
+
+    return retcode;
+}
+
+Retcode_T At_Set_UBANDMASK(const AT_UBANDMASK_Param_T *param)
+{
+    Retcode_T retcode = RETCODE_OK;
+    int32_t len = 0;
+
+    len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUBANDMASK_FMT,
+                   (int)param->Rat, (int)param->Bitmask1 & 0xFFFFFFFF, (int)param->Bitmask2 & 0xFFFFFFFF);
+    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Set_USOCR(const AT_USOCR_Param_T *param, uint32_t *socketId)
+{
+    assert(NULL != param);
+    assert(NULL != socketId);
+
+    Retcode_T retcode = RETCODE_OK;
+    uint8_t *arg = NULL;
+    uint32_t argLen = 0;
+    int32_t len = 0;
+
+    len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUSOCR_FMT,
+                   (int)param->Protocol, (int)param->LocalPort);
+    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SHORT_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATUSOCR, (uint32_t)strlen(CMD_UBLOX_ATUSOCR)); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        int32_t tmp = 0;
+        retcode = Utils_Strtol(arg, argLen, &tmp);
+        *socketId = (uint32_t)tmp;
+
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode); //LCOV_EXCL_BR_LINE
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Set_USOCO(const AT_USOCO_Param_T *param)
+{
+    Retcode_T retcode = RETCODE_OK;
+    int32_t len = 0;
+
+    switch (param->RemoteAddr.Type)
+    {
+    case AT_UBLOX_ADDRESSTYPE_IPV4:
+        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUSOCO_FMTIPV4,
+                       (int)param->Socket,
+                       (int)param->RemoteAddr.Address.IPv4[3],
+                       (int)param->RemoteAddr.Address.IPv4[2],
+                       (int)param->RemoteAddr.Address.IPv4[1],
+                       (int)param->RemoteAddr.Address.IPv4[0],
+                       (int)param->RemotePort);
+        break;
+    case AT_UBLOX_ADDRESSTYPE_IPV6:
+        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUSOCO_FMTIPV6,
+                       (int)param->Socket,
+                       (int)param->RemoteAddr.Address.IPv6[7],
+                       (int)param->RemoteAddr.Address.IPv6[6],
+                       (int)param->RemoteAddr.Address.IPv6[5],
+                       (int)param->RemoteAddr.Address.IPv6[4],
+                       (int)param->RemoteAddr.Address.IPv6[3],
+                       (int)param->RemoteAddr.Address.IPv6[2],
+                       (int)param->RemoteAddr.Address.IPv6[1],
+                       (int)param->RemoteAddr.Address.IPv6[0],
+                       (int)param->RemotePort);
+        break;
+    default:
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+        break;
+    }
+    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_LONG_TIMEOUT);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Set_USOWR(const AT_USOWR_Param_T *param, AT_USOWR_Resp_T *resp)
+{
+    assert(NULL != param);
+    assert(NULL != resp);
+
+    Retcode_T retcode = RETCODE_OK;
+    uint32_t len = 0;
+    uint8_t *arg = NULL;
+    uint32_t argLen = 0;
+
+    if (0 >= param->Length)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        switch (param->Encoding)
+        {
+        case AT_UBLOX_PAYLOADENCODING_BASE:
+            retcode = PrepareSendingWithBaseEncoding(
+                Engine_AtSendBuffer,
+                sizeof(Engine_AtSendBuffer),
+                param,
+                &len);
+            break;
+        case AT_UBLOX_PAYLOADENCODING_HEX:
+            retcode = PrepareSendingWithHexEncoding(
+                Engine_AtSendBuffer,
+                sizeof(Engine_AtSendBuffer),
+                param,
+                &len);
+            break;
+        case AT_UBLOX_PAYLOADENCODING_BINARY:
+            /* Currently not supported, sorry! ... maybe your first PR? :) */
+            /** \todo: u-blox out-of-AT sender mode (initiated by '@' during sending)
+             * needs to be implemented. One idea would be to introduce a new
+             * AT-parser state which triggers on the '@' char. Other vendors rely
+             * this out-of-AT mode (e.g. Quectel) to send data over sockets. */
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
+            break;
+        default:
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+            break;
+        }
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SHORT_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATUSOWR, (uint32_t)strlen(CMD_UBLOX_ATUSOWR)); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        int32_t tmp = 0;
+        retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, INT32_MAX);
+
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+
+        resp->Socket = (uint32_t)tmp;
+        assert(resp->Socket == param->Socket);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        int32_t tmp = 0;
+        retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, INT32_MAX);
+
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+
+        resp->Length = (uint32_t)tmp;
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode); //LCOV_EXCL_BR_LINE
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Set_USOST(const AT_USOST_Param_T *param, AT_USOST_Resp_T *resp)
+{
+    assert(NULL != param);
+    assert(NULL != resp);
+
+    Retcode_T retcode = RETCODE_OK;
+    uint32_t len = 0;
+    uint8_t *arg = NULL;
+    uint32_t argLen = 0;
+
+    if (0 >= param->Length)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        switch (param->Encoding)
+        {
+        case AT_UBLOX_PAYLOADENCODING_BASE:
+            retcode = PrepareSendToWithBaseEncoding(
+                Engine_AtSendBuffer,
+                sizeof(Engine_AtSendBuffer),
+                param,
+                &len);
+            break;
+        case AT_UBLOX_PAYLOADENCODING_HEX:
+            retcode = PrepareSendToWithHexEncoding(
+                Engine_AtSendBuffer,
+                sizeof(Engine_AtSendBuffer),
+                param,
+                &len);
+            break;
+        case AT_UBLOX_PAYLOADENCODING_BINARY:
+            /* Currently not supported, sorry! ... maybe your first PR? :) */
+            /** \todo: u-blox out-of-AT sender mode (initiated by '@' during sending)
+             * needs to be implemented. One idea would be to introduce a new
+             * AT-parser state which triggers on the '@' char. Other vendors rely
+             * this out-of-AT mode (e.g. Quectel) to send data over sockets. */
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
+            break;
+        default:
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+            break;
+        }
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SHORT_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATUSOST, (uint32_t)strlen(CMD_UBLOX_ATUSOST)); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        int32_t tmp = 0;
+        retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, INT32_MAX);
+
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+
+        resp->Socket = (uint32_t)tmp;
+        assert(resp->Socket == param->Socket);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        int32_t tmp = 0;
+        retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, INT32_MAX);
+
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+
+        resp->Length = (uint32_t)tmp;
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode); //LCOV_EXCL_BR_LINE
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Set_USORD(const AT_USORD_Param_T *param, AT_USORD_Resp_T *resp)
+{
+    assert(NULL != param);
+    assert(NULL != resp);
+    assert(NULL != resp->Data || 0 >= param->Length);
+
+    Retcode_T retcode = RETCODE_OK;
+
+    switch (param->Encoding)
+    {
+    case AT_UBLOX_PAYLOADENCODING_HEX:
+        retcode = HandleHexModeUSORD(param, resp);
+        break;
+    case AT_UBLOX_PAYLOADENCODING_BINARY:
+        /* Currently not supported, sorry! ... maybe your first PR? :) */
+        /** \todo: The current parser does not support arbitrary ASCII
+         * characters [0x00,0xFF]. */
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
+        break;
+    default:
+    case AT_UBLOX_PAYLOADENCODING_BASE:
+        /* Not applicable for receiving, rx bytes are always considered
+         * binary. */
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+        break;
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Set_USORF(const AT_USORF_Param_T *param, AT_USORF_Resp_T *resp)
+{
+    assert(NULL != param);
+    assert(NULL != resp);
+    assert(NULL != resp->Data || 0 >= param->Length);
+
+    Retcode_T retcode = RETCODE_OK;
+
+    switch (param->Encoding)
+    {
+    case AT_UBLOX_PAYLOADENCODING_HEX:
+        retcode = HandleHexModeUSORF(param, resp);
+        break;
+    case AT_UBLOX_PAYLOADENCODING_BINARY:
+        /* Currently not supported, sorry! ... maybe your first PR? :) */
+        /** \todo: The current parser does not support arbitrary ASCII
+         * characters [0x00,0xFF]. */
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
+        break;
+    default:
+    case AT_UBLOX_PAYLOADENCODING_BASE:
+        /* Not applicable for receiving, rx bytes are always considered
+         * binary. */
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+        break;
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Set_USOLI(const AT_USOLI_Param_T *param)
+{
+    assert(NULL != param);
+
+    Retcode_T retcode = RETCODE_OK;
+
+    int32_t len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUSOLI_FMT,
+                           (int)param->Socket,
+                           (int)param->Port);
+    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Set_USOCL(const AT_USOCL_Param_T *param)
+{
+    assert(NULL != param);
+
+    Retcode_T retcode = RETCODE_OK;
+
+    int32_t len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUSOCL_FMT,
+                           (int)param->Socket);
+    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_LONG_TIMEOUT);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Set_UDCONF(const AT_UDCONF_Param_T *param)
+{
+    assert(NULL != param);
+    assert(NULL != param->Value);
+
+    Retcode_T retcode = RETCODE_OK;
+    int32_t len = 0;
+
+    switch (param->Config)
+    {
+    case AT_UDCONF_CONFIG_HEXMODE:
+        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUDCONF_FMTHEXMODE,
+                       (int)param->Config,
+                       (int)*((bool *)param->Value));
+        break;
+    case AT_UDCONF_CONFIG_INVALID:
+    default:
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+    }
+    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Get_UDCONF(AT_UDCONF_Param_T *param)
+{
+    assert(NULL != param);
+    assert(NULL != param->Value);
+
+    Retcode_T retcode = RETCODE_OK;
+    uint8_t *arg = NULL;
+    uint32_t argLen = 0;
+
+    int32_t len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_GET_ATUDCONF_FMT,
+                           (int)param->Config);
+    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SHORT_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATUDCONF, strlen(CMD_UBLOX_ATUDCONF)); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        switch (param->Config)
+        {
+        case AT_UDCONF_CONFIG_HEXMODE:
+            retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
+
+            if (RETCODE_OK == retcode)
+            {
+                int32_t tmp = 0;
+                retcode = Utils_Strtol(arg, argLen, &tmp);
+                if (RETCODE_OK == retcode && tmp != (int32_t)param->Config)
+                {
+                    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_RESPONSE_UNEXPECTED);
+                }
+
+                AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+            }
+
+            if (RETCODE_OK == retcode)
+            {
+                retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
+            }
+
+            if (RETCODE_OK == retcode)
+            {
+                int32_t tmp = 0;
+                retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, 1);
+                *((bool *)param->Value) = (bool)tmp;
+
+                AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+            }
+            break;
+        case AT_UDCONF_CONFIG_INVALID:
+        default:
+            return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+        }
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode); //LCOV_EXCL_BR_LINE
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Get_CCID(AT_CCID_Resp_T *resp)
+{
+    assert(NULL != resp);
+
+    Retcode_T retcode = RETCODE_OK;
+    uint8_t *arg = NULL;
+    uint32_t argLen = 0;
+
+    retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)CMD_UBLOX_GET_ATCCID, strlen(CMD_UBLOX_GET_ATCCID), CMD_UBLOX_SIM_TIMEOUT); //LCOV_EXCL_BR_LINE
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SIM_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATCCID, strlen(CMD_UBLOX_ATCCID)); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SIM_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        memset(resp->Iccid, 0, sizeof(resp->Iccid));
+        switch (argLen)
+        {
+        case AT_CCID_TYPE_19CHAR:
+            resp->Type = AT_CCID_TYPE_19CHAR;
+            memcpy(resp->Iccid, arg, (size_t)resp->Type);
+            break;
+        case AT_CCID_TYPE_20CHAR:
+            resp->Type = AT_CCID_TYPE_20CHAR;
+            memcpy(resp->Iccid, arg, (size_t)resp->Type);
+            break;
+        default:
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_RESPONSE_UNEXPECTED);
+            break;
+        }
+
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SIM_TIMEOUT, retcode); //LCOV_EXCL_BR_LINE
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Set_UDNSRN(const AT_UDNSRN_Param_T *param, AT_UDNSRN_Resp_T *resp)
+{
+    assert(NULL != param);
+    assert(NULL != resp);
+
+    switch (param->ResolutionType)
+    {
+    case AT_UDNSRN_RESOLUTIONTYPE_DOMAINTOIP:
+        return HandleDomainToIpUDNSRN(param, resp);
+    case AT_UDNSRN_RESOLUTIONTYPE_IPTODOMAIN:
+        return HandleIpToDomainUDNSRN(param, resp);
+    case AT_UDNSRN_RESOLUTIONTYPE_INVALID:
+    default:
+        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+    }
+}
+
+/* *** URC HANDLERS ********************************************************* */
+
+Retcode_T At_HandleUrc_UUSORD(void)
+{
+    return HandleUrcUUSORX(CMD_UBLOX_ATUUSORD);
+}
+
+Retcode_T At_HandleUrc_UUSORF(void)
+{
+    return HandleUrcUUSORX(CMD_UBLOX_ATUUSORF);
+}
+
+Retcode_T At_HandleUrc_UUSOLI(void)
+{
+    Retcode_T retcode = RETCODE_OK;
+    bool urcFound = false;
+    uint8_t *arg = NULL;
+    uint32_t argLen = 0;
+    uint32_t createdSocketId = 0;
+    AT_UBlox_Address_T remoteIp;
+    remoteIp.Type = AT_UBLOX_ADDRESSTYPE_INVALID;
+    uint16_t remotePort = 0;
+    uint32_t listeningSocketId = 0;
+    AT_UBlox_Address_T localIp;
+    localIp.Type = AT_UBLOX_ADDRESSTYPE_INVALID;
+    uint16_t listeningPort = 0;
+
+    retcode = AtResponseQueue_WaitForNamedCmd(0, (const uint8_t *)CMD_UBLOX_ATUUSOLI, (uint32_t)strlen(CMD_UBLOX_ATUUSOLI)); //LCOV_EXCL_BR_LINE
+
+    if (RETCODE_OK == retcode)
+    {
+        urcFound = true;
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        /* Parse <socket> */
+        int32_t tmp = 0;
+        retcode = Utils_Strtol(arg, argLen, &tmp);
+        createdSocketId = (uint32_t)tmp;
+
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        /* Parse <ip_address> */
+        retcode = ExtractUbloxAddress(arg, argLen, &remoteIp);
+
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        /* Parse <port> */
+        int32_t tmp = 0;
+        retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, UINT16_MAX);
+        remotePort = (uint16_t)tmp;
+
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        /* Parse <listening_socket> */
+        int32_t tmp = 0;
+        retcode = Utils_Strtol(arg, argLen, &tmp);
+        listeningSocketId = (uint32_t)tmp;
+
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        /* Parse <local_ip_address> */
+        retcode = ExtractUbloxAddress(arg, argLen, &localIp);
+
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        /* Parse <listening_port> */
+        int32_t tmp = 0;
+        retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, UINT16_MAX);
+        listeningPort = (uint32_t)tmp;
+
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        switch (remoteIp.Type)
+        {
+        case AT_UBLOX_ADDRESSTYPE_IPV4:
+            switch (localIp.Type)
+            {
+            case AT_UBLOX_ADDRESSTYPE_IPV4:
+                //LCOV_EXCL_BR_START
+                LOG_DEBUG("UUSOLI socket:%d "
+                          "ip_address:\"%d.%d.%d.%d\" port:%d "
+                          "listening_socket:%d local_ip_address:\"%d.%d.%d.%d\" listening_port:%d",
+                          (int)createdSocketId,
+                          (int)remoteIp.Address.IPv4[3],
+                          (int)remoteIp.Address.IPv4[2],
+                          (int)remoteIp.Address.IPv4[1],
+                          (int)remoteIp.Address.IPv4[0],
+                          (int)remotePort,
+                          (int)listeningSocketId,
+                          (int)localIp.Address.IPv4[3],
+                          (int)localIp.Address.IPv4[2],
+                          (int)localIp.Address.IPv4[1],
+                          (int)localIp.Address.IPv4[0],
+                          (int)listeningPort); //LCOV_EXCL_BR_STOP
+                break;
+            case AT_UBLOX_ADDRESSTYPE_IPV6:
+                //LCOV_EXCL_BR_START
+                LOG_DEBUG("UUSOLI socket:%d "
+                          "ip_address:\"%d.%d.%d.%d\" port:%d "
+                          "listening_socket:%d local_ip_address:\"%d:%d:%d:%d:%d:%d:%d:%d\" listening_port:%d",
+                          (int)createdSocketId,
+                          (int)remoteIp.Address.IPv4[3],
+                          (int)remoteIp.Address.IPv4[2],
+                          (int)remoteIp.Address.IPv4[1],
+                          (int)remoteIp.Address.IPv4[0],
+                          (int)remotePort,
+                          (int)listeningSocketId,
+                          (int)localIp.Address.IPv6[7],
+                          (int)localIp.Address.IPv6[6],
+                          (int)localIp.Address.IPv6[5],
+                          (int)localIp.Address.IPv6[4],
+                          (int)localIp.Address.IPv6[3],
+                          (int)localIp.Address.IPv6[2],
+                          (int)localIp.Address.IPv6[1],
+                          (int)localIp.Address.IPv6[0],
+                          (int)listeningPort); //LCOV_EXCL_BR_STOP
+                break;
+            default:
+                break;
+            }
+            break;
+        case AT_UBLOX_ADDRESSTYPE_IPV6:
+            switch (localIp.Type)
+            {
+            case AT_UBLOX_ADDRESSTYPE_IPV4:
+                //LCOV_EXCL_BR_START
+                LOG_DEBUG("UUSOLI socket:%d "
+                          "ip_address:\"%d:%d:%d:%d:%d:%d:%d:%d\" port:%d "
+                          "listening_socket:%d local_ip_address:\"%d.%d.%d.%d\" listening_port:%d",
+                          (int)createdSocketId,
+                          (int)remoteIp.Address.IPv4[3],
+                          (int)remoteIp.Address.IPv4[2],
+                          (int)remoteIp.Address.IPv4[1],
+                          (int)remoteIp.Address.IPv4[0],
+                          (int)remotePort,
+                          (int)listeningSocketId,
+                          (int)localIp.Address.IPv4[3],
+                          (int)localIp.Address.IPv4[2],
+                          (int)localIp.Address.IPv4[1],
+                          (int)localIp.Address.IPv4[0],
+                          (int)listeningPort); //LCOV_EXCL_BR_STOP
+                break;
+            case AT_UBLOX_ADDRESSTYPE_IPV6:
+                //LCOV_EXCL_BR_START
+                LOG_DEBUG("UUSOLI socket:%d "
+                          "ip_address:\"%d:%d:%d:%d:%d:%d:%d:%d\" port:%d "
+                          "listening_socket:%d local_ip_address:\"%d:%d:%d:%d:%d:%d:%d:%d\" listening_port:%d",
+                          (int)createdSocketId,
+                          (int)remoteIp.Address.IPv4[3],
+                          (int)remoteIp.Address.IPv4[2],
+                          (int)remoteIp.Address.IPv4[1],
+                          (int)remoteIp.Address.IPv4[0],
+                          (int)remotePort,
+                          (int)listeningSocketId,
+                          (int)localIp.Address.IPv6[7],
+                          (int)localIp.Address.IPv6[6],
+                          (int)localIp.Address.IPv6[5],
+                          (int)localIp.Address.IPv6[4],
+                          (int)localIp.Address.IPv6[3],
+                          (int)localIp.Address.IPv6[2],
+                          (int)localIp.Address.IPv6[1],
+                          (int)localIp.Address.IPv6[0],
+                          (int)listeningPort); //LCOV_EXCL_BR_STOP
+                break;
+            default:
+                break;
+            }
+            break;
+        default:
+            break;
+        }
+
+        SocketService_NotifySocketAccepted(createdSocketId, &remoteIp, remotePort, listeningSocketId, &localIp, listeningPort);
+    }
+
+    if (!urcFound)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_INFO, RETCODE_CELLULAR_URC_NOT_PRESENT);
+    }
+
+    return Utils_ConvertAtResponseRetcodeToCellularRetcode(retcode);
+}
+
+Retcode_T At_HandleUrc_UUSOCL(void)
+{
+    Retcode_T retcode = RETCODE_OK;
+    bool urcFound = false;
+    uint8_t *arg = NULL;
+    uint32_t argLen = 0;
+    uint32_t socketId = 0;
+
+    retcode = AtResponseQueue_WaitForNamedCmd(0, (const uint8_t *)CMD_UBLOX_ATUUSOCL, (uint32_t)strlen(CMD_UBLOX_ATUUSOCL)); //LCOV_EXCL_BR_LINE
+
+    if (RETCODE_OK == retcode)
+    {
+        urcFound = true;
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        int32_t tmp = 0;
+        retcode = Utils_Strtol(arg, argLen, &tmp);
+        socketId = (uint32_t)tmp;
+
+        AtResponseQueue_MarkBufferAsUnused();
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        LOG_DEBUG("UUSOCL socket:%d", (int)socketId);
+        SocketService_NotifySocketClosed(socketId);
+    }
+
+    if (!urcFound)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_INFO, RETCODE_CELLULAR_URC_NOT_PRESENT);
+    }
+
+    return Utils_ConvertAtResponseRetcodeToCellularRetcode(retcode);
+}
+
+Retcode_T At_HandleUrc_UUHTTPCR(void)
+{
+    Retcode_T retcode = RETCODE_OK;
+    uint8_t *arg = NULL;
+    uint32_t argLen = 0;
+    uint32_t response[3];
+    uint32_t argCnt;
+
+    retcode = AtResponseQueue_WaitForNamedCmd(0, (const uint8_t *)CMD_UBLOX_ATUUHTTPCR, (uint32_t)strlen(CMD_UBLOX_ATUUHTTPCR)); //LCOV_EXCL_BR_LINE
+    argCnt = 0;
+
+    while (retcode == RETCODE_OK && argCnt < 3)
+    {
+
+        if (RETCODE_OK == retcode)
+        {
+            retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
+        }
+
+        /* read cmd args 1,2,3 */
+        if (RETCODE_OK == retcode)
+        {
+            int32_t tmp = 0;
+            retcode = Utils_Strtol(arg, argLen, &tmp);
+            response[argCnt++] = (uint32_t)tmp;
+            AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
+        }
+    }
+    if (retcode == RETCODE_OK)
+    {
+        /* report the result */
+        HttpService_NotifyResult((AT_UHTTP_ProfileId_T)response[0], (AT_UHTTPC_Command_T)response[1], (AT_UHTTPC_Result_T)response[2]); //LCOV_EXCL_BR_LINE
+    }
+
+    return retcode;
+}
+
+Retcode_T At_Set_UTEST(uint32_t param)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    int32_t len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUTEST_FMT,
+                           (int)param);
+    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
+    }
+
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
+    }
+
+    return retcode;
+}
+
+/*###################### LOCAL FUNCTIONS IMPLEMENTATION #############################################################*/
+
+static Retcode_T ExtractUmnoprofMno(const uint8_t *data, uint32_t length, AT_UMNOPROF_Mno_T *value)
 {
     int32_t tmp = 0;
     Retcode_T retcode = Utils_StrtolBounds(data, length, &tmp, AT_UMNOPROF_MNO_DEFAULT, AT_UMNOPROF_MNO_CT);
@@ -239,7 +1604,13 @@ static Retcode_T ExtractUmnoprofMno(const uint8_t *data, uint32_t length,
 
     return retcode;
 }
-
+/**
+ * @brief Converts a number to a single character representing a hexadecimal
+ * number.
+ * @param quintetIndex
+ * @param byte
+ * @return
+ */
 static uint8_t ToHexChar(uint8_t quintetIndex, uint8_t byte)
 {
     const uint8_t *hexChars = (const uint8_t *)"0123456789ABCDEF";
@@ -250,6 +1621,10 @@ static uint8_t ToHexChar(uint8_t quintetIndex, uint8_t byte)
     return hexChars[quintet];
 }
 
+/**
+ * @brief Converts a single character representing a hexadecimal number to the
+ * number. If the character is not a valid hex char, 0xFF is returned.
+ */
 static uint8_t FromHexChar(uint8_t HexChar)
 {
     uint8_t result;
@@ -291,6 +1666,27 @@ static Retcode_T HexToBin(const uint8_t *hex, uint8_t *bin, uint32_t binLength)
     return RETCODE_OK;
 }
 
+/**
+ * @brief Encode the given input data as ASCII HEX string according to u-blox
+ * specification.
+ *
+ * @note To properly fit the ASCII HEX string outLength has to be at least twice the
+ * size of inLength.
+ *
+ * @param[in] binData
+ * Input data to encode.
+ *
+ * @param[in] binLength
+ * Length of input data.
+ *
+ * @param[out] hexData
+ * Output buffer to store the encoded bytes.
+ *
+ * @param[in] hexLength
+ * Length of the output buffer.
+ *
+ * @return A #Retcode_T indicating the result of the requested action.
+ */
 static Retcode_T EncodePayloadAsHex(const uint8_t *binData, uint32_t binLength,
                                     char *hexData, uint32_t hexLength)
 {
@@ -305,7 +1701,21 @@ static Retcode_T EncodePayloadAsHex(const uint8_t *binData, uint32_t binLength,
     }
     return RETCODE_OK;
 }
-
+/**
+ * @brief Inspect the given buffer for illegal AT characters.
+ *
+ * @note This is used to verify the contents of the payload when sending via
+ * #AT_UBLOX_PAYLOADENCODING_BASE encoding.
+ *
+ * @param[in] data
+ * Data to verify.
+ *
+ * @param[in] length
+ * Length of data.
+ *
+ * @return A #Retcode_T indicating the result of the requested action. In case
+ * an illegal character is found, a #RETCODE_INVALID_PARAM will be returned.
+ */
 static Retcode_T CheckForIllegalCharacters(const uint8_t *data, uint32_t length)
 {
     for (uint32_t i = 0; i < length; ++i)
@@ -806,30 +2216,30 @@ static Retcode_T HandleDomainToIpUDNSRN(const AT_UDNSRN_Param_T *param, AT_UDNSR
 
     if (RETCODE_OK == retcode)
     {
-        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_LONG_TIMEOUT);
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_LONG_TIMEOUT); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
-        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_LONG_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATUDNSRN, strlen(CMD_UBLOX_ATUDNSRN));
+        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_LONG_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATUDNSRN, strlen(CMD_UBLOX_ATUDNSRN)); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
         /* Wait for <resolved_ip_address> */
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_LONG_TIMEOUT, &arg, &argLen);
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_LONG_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
         retcode = ExtractUbloxAddress(arg, argLen, &resp->DomainIpString.Ip);
 
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_LONG_TIMEOUT, retcode);
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_LONG_TIMEOUT, retcode); //LCOV_EXCL_BR_LINE
     }
 
     return retcode;
@@ -880,18 +2290,18 @@ static Retcode_T HandleIpToDomainUDNSRN(const AT_UDNSRN_Param_T *param, AT_UDNSR
 
     if (RETCODE_OK == retcode)
     {
-        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_LONG_TIMEOUT);
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_LONG_TIMEOUT); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
-        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_LONG_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATUDNSRN, strlen(CMD_UBLOX_ATUDNSRN));
+        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_LONG_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATUDNSRN, strlen(CMD_UBLOX_ATUDNSRN)); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
         /* Wait for <resolved_domain_name> */
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_LONG_TIMEOUT, &arg, &argLen);
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_LONG_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
@@ -908,12 +2318,12 @@ static Retcode_T HandleIpToDomainUDNSRN(const AT_UDNSRN_Param_T *param, AT_UDNSR
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_RESPONSE_UNEXPECTED);
         }
 
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_LONG_TIMEOUT, retcode);
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_LONG_TIMEOUT, retcode); //LCOV_EXCL_BR_LINE
     }
 
     return retcode;
@@ -935,18 +2345,18 @@ static Retcode_T HandleHexModeUSORD(const AT_USORD_Param_T *param, AT_USORD_Resp
 
     if (RETCODE_OK == retcode)
     {
-        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
-        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SHORT_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATUSORD, (uint32_t)strlen(CMD_UBLOX_ATUSORD));
+        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SHORT_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATUSORD, (uint32_t)strlen(CMD_UBLOX_ATUSORD)); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
         /* Wait for <socket> */
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
@@ -954,7 +2364,7 @@ static Retcode_T HandleHexModeUSORD(const AT_USORD_Param_T *param, AT_USORD_Resp
         int32_t tmp = 0;
         retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, INT32_MAX);
 
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
 
         resp->Socket = (uint32_t)tmp;
         assert(resp->Socket == param->Socket);
@@ -963,7 +2373,7 @@ static Retcode_T HandleHexModeUSORD(const AT_USORD_Param_T *param, AT_USORD_Resp
     if (RETCODE_OK == retcode)
     {
         /* Wait for <length> or <data> ("") if no data is available */
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
@@ -994,26 +2404,26 @@ static Retcode_T HandleHexModeUSORD(const AT_USORD_Param_T *param, AT_USORD_Resp
             }
         }
 
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode && 0U < param->Length && 0U < resp->Length)
     {
         /* Wait for <data> */
-        optRetcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
+        optRetcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
 
         if (RETCODE_OK == optRetcode)
         {
             /* Skip '"' in arg (arg+1) */
             retcode = HexToBin(arg + 1, resp->Data, resp->Length);
 
-            AtResponseQueue_MarkBufferAsUnused();
+            AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
         }
     }
 
     if (RETCODE_OK == retcode)
     {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode); //LCOV_EXCL_BR_LINE
     }
 
     return retcode;
@@ -1035,18 +2445,18 @@ static Retcode_T HandleHexModeUSORF(const AT_USORF_Param_T *param, AT_USORF_Resp
 
     if (RETCODE_OK == retcode)
     {
-        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
-        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SHORT_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATUSORF, (uint32_t)strlen(CMD_UBLOX_ATUSORF));
+        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SHORT_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATUSORF, (uint32_t)strlen(CMD_UBLOX_ATUSORF)); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
         /* Wait for <socket> */
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
@@ -1054,7 +2464,7 @@ static Retcode_T HandleHexModeUSORF(const AT_USORF_Param_T *param, AT_USORF_Resp
         int32_t tmp = 0;
         retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, INT32_MAX);
 
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
 
         resp->Socket = (uint32_t)tmp;
         assert(resp->Socket == param->Socket);
@@ -1063,7 +2473,7 @@ static Retcode_T HandleHexModeUSORF(const AT_USORF_Param_T *param, AT_USORF_Resp
     if (RETCODE_OK == retcode && 0U < param->Length)
     {
         /* Wait for <remote_ip_addr> or <data> ("") if no data is available */
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
 
         if (RETCODE_OK == retcode)
         {
@@ -1092,13 +2502,13 @@ static Retcode_T HandleHexModeUSORF(const AT_USORF_Param_T *param, AT_USORF_Resp
                 }
             }
 
-            AtResponseQueue_MarkBufferAsUnused();
+            AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
         }
 
         if (RETCODE_OK == retcode && AT_UBLOX_ADDRESSTYPE_INVALID != resp->RemoteIp.Type)
         {
             /* Wait for <remote_port> */
-            retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
+            retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
 
             if (RETCODE_OK == retcode)
             {
@@ -1106,7 +2516,7 @@ static Retcode_T HandleHexModeUSORF(const AT_USORF_Param_T *param, AT_USORF_Resp
                 retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, UINT16_MAX);
                 resp->RemotePort = (uint16_t)tmp;
 
-                AtResponseQueue_MarkBufferAsUnused();
+                AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
             }
         }
     }
@@ -1114,14 +2524,14 @@ static Retcode_T HandleHexModeUSORF(const AT_USORF_Param_T *param, AT_USORF_Resp
     if (RETCODE_OK == retcode && (0 == param->Length || AT_UBLOX_ADDRESSTYPE_INVALID != resp->RemoteIp.Type))
     {
         /* Wait for <length> */
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
 
         if (RETCODE_OK == retcode)
         {
             int32_t tmp = 0;
             retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, INT32_MAX);
 
-            AtResponseQueue_MarkBufferAsUnused();
+            AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
 
             resp->Length = (uint32_t)tmp;
             assert(0 == param->Length || resp->Length <= param->Length);
@@ -1130,21 +2540,21 @@ static Retcode_T HandleHexModeUSORF(const AT_USORF_Param_T *param, AT_USORF_Resp
         if (RETCODE_OK == retcode && 0U < param->Length)
         {
             /* Wait for <data> */
-            retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
+            retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
 
             if (RETCODE_OK == retcode)
             {
                 /* Skip '"' in arg (arg+1) */
                 retcode = HexToBin(arg + 1, resp->Data, resp->Length);
 
-                AtResponseQueue_MarkBufferAsUnused();
+                AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
             }
         }
     }
 
     if (RETCODE_OK == retcode)
     {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
+        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode); //LCOV_EXCL_BR_LINE
     }
 
     return retcode;
@@ -1159,12 +2569,12 @@ static Retcode_T HandleUrcUUSORX(const char *cmd)
     uint32_t socketId = 0;
     uint32_t length = 0;
 
-    retcode = AtResponseQueue_WaitForNamedCmd(0, (const uint8_t *)cmd, (uint32_t)strlen(cmd));
+    retcode = AtResponseQueue_WaitForNamedCmd(0, (const uint8_t *)cmd, (uint32_t)strlen(cmd)); //LCOV_EXCL_BR_LINE
 
     if (RETCODE_OK == retcode)
     {
         urcFound = true;
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
@@ -1173,12 +2583,12 @@ static Retcode_T HandleUrcUUSORX(const char *cmd)
         retcode = Utils_Strtol(arg, argLen, &tmp);
         socketId = (uint32_t)tmp;
 
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
+        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
@@ -1187,13 +2597,13 @@ static Retcode_T HandleUrcUUSORX(const char *cmd)
         retcode = Utils_Strtol(arg, argLen, &tmp);
         length = (uint32_t)tmp;
 
-        AtResponseQueue_MarkBufferAsUnused();
+        AtResponseQueue_MarkBufferAsUnused(); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
-        LOG_DEBUG("%s socket:%d length:%d", cmd, (int)socketId, (int)length);
-        SocketService_NotifySocketDataReceived(socketId, length);
+        LOG_DEBUG("%s socket:%d length:%d", cmd, (int)socketId, (int)length); //LCOV_EXCL_BR_LINE
+        SocketService_NotifySocketDataReceived(socketId, length);             //LCOV_EXCL_BR_LINE
     }
 
     if (!urcFound)
@@ -1202,1402 +2612,4 @@ static Retcode_T HandleUrcUUSORX(const char *cmd)
     }
 
     return Utils_ConvertAtResponseRetcodeToCellularRetcode(retcode);
-}
-
-Retcode_T At_Set_UHTTP(const AT_UHTTP_Param_T *param)
-{
-    assert(NULL != param);
-
-    Retcode_T retcode = RETCODE_OK;
-    int32_t len = 0;
-    uint32_t timeout = CMD_UBLOX_SHORT_TIMEOUT;
-    switch (param->Opcode)
-    {
-    case AT_UHTTP_OPCODE_SERVER_NAME:
-        timeout = CMD_UBLOX_DNS_TIMEOUT;
-        // intentional fall through
-    case AT_UHTTP_OPCODE_SERVER_IP:
-    case AT_UHTTP_OPCODE_USERNAME:
-    case AT_UHTTP_OPCODE_PASSWORD:
-        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUHTTP2_FMT,
-                       (int)param->ProfileId, param->Opcode, param->Value.String);
-        if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-        {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-        }
-        break;
-    case AT_UHTTP_OPCODE_SERVER_PORT:
-    case AT_UHTTP_OPCODE_SECURE_OPTION:
-        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUHTTP3_FMT,
-                       (int)param->ProfileId, param->Opcode, (int)param->Value.Numeric);
-        if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-        {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-        }
-        break;
-    default:
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-        break;
-    }
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_LONG_TIMEOUT);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(timeout, retcode);
-    }
-    return retcode;
-}
-
-Retcode_T At_Set_UHTTPC(const AT_UHTTPC_Param_T *param)
-{
-    assert(NULL != param);
-
-    Retcode_T retcode = RETCODE_OK;
-    int32_t len = 0;
-    switch (param->Command)
-    {
-    case AT_UHTTPC_COMMAND_HEAD:
-    case AT_UHTTPC_COMMAND_GET:
-    case AT_UHTTPC_COMMAND_DELETE:
-        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUHTTPC1_FMT,
-                       (int)param->ProfileId, param->Command, param->PathOnServer, param->ResponseFilename);
-        if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-        {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-        }
-        break;
-    case AT_UHTTPC_COMMAND_POST_DATA:
-    case AT_UHTTPC_COMMAND_POST_FILE:
-    case AT_UHTTPC_COMMAND_PUT:
-        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUHTTPC2_FMT,
-                       (int)param->ProfileId, param->Command, param->PathOnServer, param->ResponseFilename, param->Payload, param->ContentType);
-        if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-        {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-        }
-        break;
-
-    default:
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-        break;
-    }
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, 2 * CMD_UBLOX_SHORT_TIMEOUT);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(5000, retcode);
-    }
-    return retcode;
-}
-
-Retcode_T At_Set_URAT(const AT_URAT_Param_T *param)
-{
-    assert(NULL != param);
-
-    Retcode_T retcode = RETCODE_OK;
-    int32_t len = 0;
-
-    switch (param->SelectedAcT)
-    {
-    case AT_URAT_SELECTEDACT_GSM_GPRS_EGPRS:
-    case AT_URAT_SELECTEDACT_UMTS:
-    case AT_URAT_SELECTEDACT_LTE:
-    case AT_URAT_SELECTEDACT_LTEM1:
-    case AT_URAT_SELECTEDACT_LTENB1:
-    case AT_URAT_SELECTEDACT_GPRS_EGPRS:
-        /* single mode */
-        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATURAT1_FMT,
-                       (int)param->SelectedAcT);
-        if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-        {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-        }
-        break;
-    case AT_URAT_SELECTEDACT_GSM_UMTS:
-    case AT_URAT_SELECTEDACT_GSM_LTE:
-    case AT_URAT_SELECTEDACT_UMTS_LTE:
-        /* dual mode */
-        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATURAT2_FMT,
-                       (int)param->SelectedAcT, (int)param->PreferredAcT);
-        if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-        {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-        }
-        break;
-    case AT_URAT_SELECTEDACT_GSM_UMTS_LTE:
-        /* tri mode */
-        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATURAT3_FMT,
-                       (int)param->SelectedAcT, (int)param->PreferredAcT, (int)param->SecondPreferredAcT);
-        if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-        {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-        }
-        break;
-    case AT_URAT_SELECTEDACT_INVALID:
-    default:
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-        break;
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Set_UMNOPROF(AT_UMNOPROF_Mno_T mno)
-{
-    Retcode_T retcode = RETCODE_OK;
-    int32_t len = 0;
-
-    len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUMNOPROF_FMT,
-                   (int)mno);
-    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-    {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Get_UMNOPROF(AT_UMNOPROF_Mno_T *mno)
-{
-    assert(NULL != mno);
-
-    Retcode_T retcode = RETCODE_OK;
-    uint8_t *buffer = NULL;
-    uint32_t bufferLen = 0;
-
-    retcode = Engine_SendAtCommandWaitEcho((uint8_t *)CMD_UBLOX_GET_ATUMNOPROF,
-                                           (uint32_t)strlen(CMD_UBLOX_GET_ATUMNOPROF), CMD_UBLOX_SHORT_TIMEOUT);
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SHORT_TIMEOUT,
-                                                  (const uint8_t *)CMD_UBLOX_ATUMNOPROF, (uint32_t)strlen(CMD_UBLOX_ATUMNOPROF));
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT,
-                                                         &buffer, &bufferLen);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        AtResponseQueue_MarkBufferAsUnused();
-
-        retcode = ExtractUmnoprofMno(buffer, bufferLen, mno);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Set_UDWNFILE(const AT_UDWNFILE_Param_T *param)
-{
-    Retcode_T retcode = RETCODE_OK;
-    int32_t len;
-    AtResponseQueueEntry_T *entry;
-    uint32_t eventCount;
-    uint32_t i;
-    assert(NULL != param);
-
-    len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUDWNFILE_FMT,
-                   param->Filename, (int)param->DataSize);
-    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-    {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-    }
-
-    AtResponseQueue_SetEventMask(AT_EVENT_TYPE_ALL);
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_FILE_TIMEOUT);
-    }
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommand(param->Data, param->DataSize);
-    }
-
-    /* we wait some time in order to fill up the queue with responses*/
-    vTaskDelay(2 * CMD_UBLOX_FILE_TIMEOUT);
-
-    eventCount = AtResponseQueue_GetEventCount();
-    for (i = 0; i < eventCount; i++)
-    {
-        retcode = AtResponseQueue_GetEvent(1000, &entry);
-        if (entry->Type == AT_EVENT_TYPE_MISC)
-        {
-            AtResponseQueue_MarkBufferAsUnused();
-        }
-        else
-        {
-            retcode = Utils_WaitForAndHandleResponseCode(4 * CMD_UBLOX_FILE_TIMEOUT, retcode);
-        }
-    }
-    AtResponseQueue_SetEventMask(AT_EVENT_TYPE_ALL - AT_EVENT_TYPE_MISC);
-    return retcode;
-}
-
-Retcode_T At_Set_UDELFILE(const AT_UDELFILE_Param_T *param)
-{
-    Retcode_T retcode = RETCODE_OK;
-    int32_t len;
-    assert(NULL != param);
-    len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUDELFILE_FMT,
-                   param->Filename);
-    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-    {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_FILE_TIMEOUT);
-    }
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_FILE_TIMEOUT, retcode);
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Set_ULSTFILE(AT_ULSTFILE_Param_T *param)
-{
-    Retcode_T retcode = RETCODE_OK;
-    int32_t len;
-    uint8_t *buffer;
-    uint32_t bufferLen;
-
-    assert(NULL != param);
-    switch (param->Opcode)
-    {
-    case AT_ULSTFILE_OPCODE_SIZE:
-        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATULSTFILE_FMT2,
-                       (int)param->Opcode, param->Filename);
-        if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-        {
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-        }
-
-        break;
-
-    default:
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
-        break;
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SHORT_TIMEOUT,
-                                                  (const uint8_t *)CMD_UBLOX_ATULSTFILE, (uint32_t)strlen(CMD_UBLOX_ATULSTFILE));
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT,
-                                                         &buffer, &bufferLen);
-    }
-    if (RETCODE_OK == retcode)
-    {
-        int32_t tmp = 0;
-        retcode = Utils_Strtol(buffer, bufferLen, &tmp);
-        param->Filesize = (uint32_t)tmp;
-        AtResponseQueue_MarkBufferAsUnused();
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Set_URDBLOCK(const AT_URDBLOCK_Param_T *param, AT_URDBLOCK_Resp_T *resp)
-{
-    Retcode_T retcode = RETCODE_OK;
-    uint8_t *buffer;
-    uint32_t bufferLen;
-    int32_t len = 0;
-    uint32_t readLength = 0;
-    AtResponseQueueEntry_T *entry;
-
-    len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATURDBLOCK_FMT,
-                   param->Filename, (int)param->Offset, (int)param->Size);
-    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-    {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-    }
-
-    AtResponseQueue_SetEventMask(AT_EVENT_TYPE_ALL);
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_FILE_TIMEOUT);
-    }
-
-    retcode = AtResponseQueue_GetEvent(1000, &entry);
-    if (entry->Type == AT_EVENT_TYPE_MISC)
-    {
-        AtResponseQueue_MarkBufferAsUnused();
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_FILE_TIMEOUT,
-                                                  (const uint8_t *)CMD_UBLOX_ATURDBLOCK, (uint32_t)strlen(CMD_UBLOX_ATURDBLOCK));
-    }
-    // here we read back the Filename:
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT,
-                                                         &buffer, &bufferLen);
-        if (RETCODE_OK == retcode)
-        {
-            if (bufferLen > UBLOX_MAX_FILE_NAME_LENGTH + 2 || bufferLen <= 2) /* filename + two " */
-            {
-                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNEXPECTED_BEHAVIOR);
-            }
-            else
-            {
-                memcpy(resp->Filename, buffer + 1, bufferLen - 1);
-                /* ensure zero terminaltion, account for the " at the beginning. */
-                resp->Filename[bufferLen - 2] = '\0';
-            }
-        };
-        AtResponseQueue_MarkBufferAsUnused();
-    }
-    // here we read back the length:
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT,
-                                                         &buffer, &bufferLen);
-        if (RETCODE_OK == retcode)
-        {
-            int32_t size = 0;
-            retcode = Utils_Strtol(buffer, bufferLen, &size);
-            resp->Size = (uint32_t)size;
-        }
-        AtResponseQueue_MarkBufferAsUnused();
-    }
-    // here we read back the first line of data
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_FILE_TIMEOUT, &buffer, &bufferLen);
-        if (RETCODE_OK == retcode)
-        {
-            /* FIXME: This is right now very HTTP specific! */
-            if (param->Size > bufferLen - 1)
-            {
-                memcpy(resp->Data, buffer + 1, bufferLen - 1);
-                readLength = bufferLen - 1;
-                if (bufferLen - param->Size >= 1)
-                {
-                    resp->Data[bufferLen - 1] = '\r';
-                    readLength++;
-                }
-                if (bufferLen - param->Size >= 2)
-                {
-                    resp->Data[bufferLen] = '\n';
-                    readLength++;
-                }
-            }
-            else
-            {
-                memcpy(resp->Data, buffer + 1, param->Size);
-                readLength = param->Size;
-            }
-        }
-        AtResponseQueue_MarkBufferAsUnused();
-    }
-    // here we read back the rest of the data
-    while (retcode == RETCODE_OK && readLength < param->Size)
-    {
-        retcode = AtResponseQueue_WaitForMiscContent(10000, &buffer, &bufferLen);
-        uint32_t readLimit = param->Size - readLength;
-        memcpy(resp->Data + readLength, buffer, bufferLen > readLimit ? readLimit : bufferLen);
-        AtResponseQueue_MarkBufferAsUnused();
-        readLength += bufferLen;
-    }
-    retcode = AtResponseQueue_GetEvent(1000, &entry);
-    if (entry->Type == AT_EVENT_TYPE_MISC)
-    {
-        AtResponseQueue_MarkBufferAsUnused();
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_FILE_TIMEOUT, retcode);
-    }
-
-    AtResponseQueue_SetEventMask(AT_EVENT_TYPE_ALL - AT_EVENT_TYPE_MISC);
-
-    return retcode;
-}
-
-Retcode_T At_Set_UBANDMASK(const AT_UBANDMASK_Param_T *param)
-{
-    Retcode_T retcode = RETCODE_OK;
-    int32_t len = 0;
-
-    len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUBANDMASK_FMT,
-                   (int)param->Rat, (int)param->Bitmask1 & 0xFFFFFFFF, (int)param->Bitmask2 & 0xFFFFFFFF);
-    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-    {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Set_USOCR(const AT_USOCR_Param_T *param, uint32_t *socketId)
-{
-    assert(NULL != param);
-    assert(NULL != socketId);
-
-    Retcode_T retcode = RETCODE_OK;
-    uint8_t *arg = NULL;
-    uint32_t argLen = 0;
-    int32_t len = 0;
-
-    len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUSOCR_FMT,
-                   (int)param->Protocol, (int)param->LocalPort);
-    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-    {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SHORT_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATUSOCR, (uint32_t)strlen(CMD_UBLOX_ATUSOCR));
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        int32_t tmp = 0;
-        retcode = Utils_Strtol(arg, argLen, &tmp);
-        *socketId = (uint32_t)tmp;
-
-        AtResponseQueue_MarkBufferAsUnused();
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Set_USOCO(const AT_USOCO_Param_T *param)
-{
-    Retcode_T retcode = RETCODE_OK;
-    int32_t len = 0;
-
-    switch (param->RemoteAddr.Type)
-    {
-    case AT_UBLOX_ADDRESSTYPE_IPV4:
-        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUSOCO_FMTIPV4,
-                       (int)param->Socket,
-                       (int)param->RemoteAddr.Address.IPv4[3],
-                       (int)param->RemoteAddr.Address.IPv4[2],
-                       (int)param->RemoteAddr.Address.IPv4[1],
-                       (int)param->RemoteAddr.Address.IPv4[0],
-                       (int)param->RemotePort);
-        break;
-    case AT_UBLOX_ADDRESSTYPE_IPV6:
-        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUSOCO_FMTIPV6,
-                       (int)param->Socket,
-                       (int)param->RemoteAddr.Address.IPv6[7],
-                       (int)param->RemoteAddr.Address.IPv6[6],
-                       (int)param->RemoteAddr.Address.IPv6[5],
-                       (int)param->RemoteAddr.Address.IPv6[4],
-                       (int)param->RemoteAddr.Address.IPv6[3],
-                       (int)param->RemoteAddr.Address.IPv6[2],
-                       (int)param->RemoteAddr.Address.IPv6[1],
-                       (int)param->RemoteAddr.Address.IPv6[0],
-                       (int)param->RemotePort);
-        break;
-    default:
-        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-        break;
-    }
-    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-    {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_LONG_TIMEOUT);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Set_USOWR(const AT_USOWR_Param_T *param, AT_USOWR_Resp_T *resp)
-{
-    assert(NULL != param);
-    assert(NULL != resp);
-
-    Retcode_T retcode = RETCODE_OK;
-    uint32_t len = 0;
-    uint8_t *arg = NULL;
-    uint32_t argLen = 0;
-
-    if (0 >= param->Length)
-    {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        switch (param->Encoding)
-        {
-        case AT_UBLOX_PAYLOADENCODING_BASE:
-            retcode = PrepareSendingWithBaseEncoding(
-                Engine_AtSendBuffer,
-                sizeof(Engine_AtSendBuffer),
-                param,
-                &len);
-            break;
-        case AT_UBLOX_PAYLOADENCODING_HEX:
-            retcode = PrepareSendingWithHexEncoding(
-                Engine_AtSendBuffer,
-                sizeof(Engine_AtSendBuffer),
-                param,
-                &len);
-            break;
-        case AT_UBLOX_PAYLOADENCODING_BINARY:
-            /* Currently not supported, sorry! ... maybe your first PR? :) */
-            /** \todo: u-blox out-of-AT sender mode (initiated by '@' during sending)
-             * needs to be implemented. One idea would be to introduce a new
-             * AT-parser state which triggers on the '@' char. Other vendors rely
-             * this out-of-AT mode (e.g. Quectel) to send data over sockets. */
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
-            break;
-        default:
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-            break;
-        }
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SHORT_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATUSOWR, (uint32_t)strlen(CMD_UBLOX_ATUSOWR));
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        int32_t tmp = 0;
-        retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, INT32_MAX);
-
-        AtResponseQueue_MarkBufferAsUnused();
-
-        resp->Socket = (uint32_t)tmp;
-        assert(resp->Socket == param->Socket);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        int32_t tmp = 0;
-        retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, INT32_MAX);
-
-        AtResponseQueue_MarkBufferAsUnused();
-
-        resp->Length = (uint32_t)tmp;
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Set_USOST(const AT_USOST_Param_T *param, AT_USOST_Resp_T *resp)
-{
-    assert(NULL != param);
-    assert(NULL != resp);
-
-    Retcode_T retcode = RETCODE_OK;
-    uint32_t len = 0;
-    uint8_t *arg = NULL;
-    uint32_t argLen = 0;
-
-    if (0 >= param->Length)
-    {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        switch (param->Encoding)
-        {
-        case AT_UBLOX_PAYLOADENCODING_BASE:
-            retcode = PrepareSendToWithBaseEncoding(
-                Engine_AtSendBuffer,
-                sizeof(Engine_AtSendBuffer),
-                param,
-                &len);
-            break;
-        case AT_UBLOX_PAYLOADENCODING_HEX:
-            retcode = PrepareSendToWithHexEncoding(
-                Engine_AtSendBuffer,
-                sizeof(Engine_AtSendBuffer),
-                param,
-                &len);
-            break;
-        case AT_UBLOX_PAYLOADENCODING_BINARY:
-            /* Currently not supported, sorry! ... maybe your first PR? :) */
-            /** \todo: u-blox out-of-AT sender mode (initiated by '@' during sending)
-             * needs to be implemented. One idea would be to introduce a new
-             * AT-parser state which triggers on the '@' char. Other vendors rely
-             * this out-of-AT mode (e.g. Quectel) to send data over sockets. */
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
-            break;
-        default:
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-            break;
-        }
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SHORT_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATUSOST, (uint32_t)strlen(CMD_UBLOX_ATUSOST));
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        int32_t tmp = 0;
-        retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, INT32_MAX);
-
-        AtResponseQueue_MarkBufferAsUnused();
-
-        resp->Socket = (uint32_t)tmp;
-        assert(resp->Socket == param->Socket);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        int32_t tmp = 0;
-        retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, INT32_MAX);
-
-        AtResponseQueue_MarkBufferAsUnused();
-
-        resp->Length = (uint32_t)tmp;
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Set_USORD(const AT_USORD_Param_T *param, AT_USORD_Resp_T *resp)
-{
-    assert(NULL != param);
-    assert(NULL != resp);
-    assert(NULL != resp->Data || 0 >= param->Length);
-
-    Retcode_T retcode = RETCODE_OK;
-
-    switch (param->Encoding)
-    {
-    case AT_UBLOX_PAYLOADENCODING_HEX:
-        retcode = HandleHexModeUSORD(param, resp);
-        break;
-    case AT_UBLOX_PAYLOADENCODING_BINARY:
-        /* Currently not supported, sorry! ... maybe your first PR? :) */
-        /** \todo: The current parser does not support arbitrary ASCII
-         * characters [0x00,0xFF]. */
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
-        break;
-    default:
-    case AT_UBLOX_PAYLOADENCODING_BASE:
-        /* Not applicable for receiving, rx bytes are always considered
-         * binary. */
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-        break;
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Set_USORF(const AT_USORF_Param_T *param, AT_USORF_Resp_T *resp)
-{
-    assert(NULL != param);
-    assert(NULL != resp);
-    assert(NULL != resp->Data || 0 >= param->Length);
-
-    Retcode_T retcode = RETCODE_OK;
-
-    switch (param->Encoding)
-    {
-    case AT_UBLOX_PAYLOADENCODING_HEX:
-        retcode = HandleHexModeUSORF(param, resp);
-        break;
-    case AT_UBLOX_PAYLOADENCODING_BINARY:
-        /* Currently not supported, sorry! ... maybe your first PR? :) */
-        /** \todo: The current parser does not support arbitrary ASCII
-         * characters [0x00,0xFF]. */
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED);
-        break;
-    default:
-    case AT_UBLOX_PAYLOADENCODING_BASE:
-        /* Not applicable for receiving, rx bytes are always considered
-         * binary. */
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-        break;
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Set_USOLI(const AT_USOLI_Param_T *param)
-{
-    assert(NULL != param);
-
-    Retcode_T retcode = RETCODE_OK;
-
-    int32_t len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUSOLI_FMT,
-                           (int)param->Socket,
-                           (int)param->Port);
-    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-    {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Set_USOCL(const AT_USOCL_Param_T *param)
-{
-    assert(NULL != param);
-
-    Retcode_T retcode = RETCODE_OK;
-
-    int32_t len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUSOCL_FMT,
-                           (int)param->Socket);
-    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-    {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_LONG_TIMEOUT);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Set_UDCONF(const AT_UDCONF_Param_T *param)
-{
-    assert(NULL != param);
-    assert(NULL != param->Value);
-
-    Retcode_T retcode = RETCODE_OK;
-    int32_t len = 0;
-
-    switch (param->Config)
-    {
-    case AT_UDCONF_CONFIG_HEXMODE:
-        len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUDCONF_FMTHEXMODE,
-                       (int)param->Config,
-                       (int)*((bool *)param->Value));
-        break;
-    case AT_UDCONF_CONFIG_INVALID:
-    default:
-        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-    }
-    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-    {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Get_UDCONF(AT_UDCONF_Param_T *param)
-{
-    assert(NULL != param);
-    assert(NULL != param->Value);
-
-    Retcode_T retcode = RETCODE_OK;
-    uint8_t *arg = NULL;
-    uint32_t argLen = 0;
-
-    int32_t len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_GET_ATUDCONF_FMT,
-                           (int)param->Config);
-    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-    {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SHORT_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATUDCONF, strlen(CMD_UBLOX_ATUDCONF));
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        switch (param->Config)
-        {
-        case AT_UDCONF_CONFIG_HEXMODE:
-            retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
-
-            if (RETCODE_OK == retcode)
-            {
-                int32_t tmp = 0;
-                retcode = Utils_Strtol(arg, argLen, &tmp);
-                if (RETCODE_OK == retcode && tmp != (int32_t)param->Config)
-                {
-                    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_RESPONSE_UNEXPECTED);
-                }
-
-                AtResponseQueue_MarkBufferAsUnused();
-            }
-
-            if (RETCODE_OK == retcode)
-            {
-                retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
-            }
-
-            if (RETCODE_OK == retcode)
-            {
-                int32_t tmp = 0;
-                retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, 1);
-                *((bool *)param->Value) = (bool)tmp;
-
-                AtResponseQueue_MarkBufferAsUnused();
-            }
-            break;
-        case AT_UDCONF_CONFIG_INVALID:
-        default:
-            return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-        }
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Get_CCID(AT_CCID_Resp_T *resp)
-{
-    assert(NULL != resp);
-
-    Retcode_T retcode = RETCODE_OK;
-    uint8_t *arg = NULL;
-    uint32_t argLen = 0;
-
-    retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)CMD_UBLOX_GET_ATCCID, strlen(CMD_UBLOX_GET_ATCCID), CMD_UBLOX_SIM_TIMEOUT);
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForNamedCmd(CMD_UBLOX_SIM_TIMEOUT, (const uint8_t *)CMD_UBLOX_ATCCID, strlen(CMD_UBLOX_ATCCID));
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SIM_TIMEOUT, &arg, &argLen);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        memset(resp->Iccid, 0, sizeof(resp->Iccid));
-        switch (argLen)
-        {
-        case AT_CCID_TYPE_19CHAR:
-            resp->Type = AT_CCID_TYPE_19CHAR;
-            memcpy(resp->Iccid, arg, (size_t)resp->Type);
-            break;
-        case AT_CCID_TYPE_20CHAR:
-            resp->Type = AT_CCID_TYPE_20CHAR;
-            memcpy(resp->Iccid, arg, (size_t)resp->Type);
-            break;
-        default:
-            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_CELLULAR_RESPONSE_UNEXPECTED);
-            break;
-        }
-
-        AtResponseQueue_MarkBufferAsUnused();
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SIM_TIMEOUT, retcode);
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Set_UDNSRN(const AT_UDNSRN_Param_T *param, AT_UDNSRN_Resp_T *resp)
-{
-    assert(NULL != param);
-    assert(NULL != resp);
-
-    switch (param->ResolutionType)
-    {
-    case AT_UDNSRN_RESOLUTIONTYPE_DOMAINTOIP:
-        return HandleDomainToIpUDNSRN(param, resp);
-    case AT_UDNSRN_RESOLUTIONTYPE_IPTODOMAIN:
-        return HandleIpToDomainUDNSRN(param, resp);
-    case AT_UDNSRN_RESOLUTIONTYPE_INVALID:
-    default:
-        return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-    }
-}
-
-/* *** URC HANDLERS ********************************************************* */
-
-Retcode_T At_HandleUrc_UUSORD(void)
-{
-    return HandleUrcUUSORX(CMD_UBLOX_ATUUSORD);
-}
-
-Retcode_T At_HandleUrc_UUSORF(void)
-{
-    return HandleUrcUUSORX(CMD_UBLOX_ATUUSORF);
-}
-
-Retcode_T At_HandleUrc_UUSOLI(void)
-{
-    Retcode_T retcode = RETCODE_OK;
-    bool urcFound = false;
-    uint8_t *arg = NULL;
-    uint32_t argLen = 0;
-    uint32_t createdSocketId = 0;
-    AT_UBlox_Address_T remoteIp;
-    remoteIp.Type = AT_UBLOX_ADDRESSTYPE_INVALID;
-    uint16_t remotePort = 0;
-    uint32_t listeningSocketId = 0;
-    AT_UBlox_Address_T localIp;
-    localIp.Type = AT_UBLOX_ADDRESSTYPE_INVALID;
-    uint16_t listeningPort = 0;
-
-    retcode = AtResponseQueue_WaitForNamedCmd(0, (const uint8_t *)CMD_UBLOX_ATUUSOLI, (uint32_t)strlen(CMD_UBLOX_ATUUSOLI));
-
-    if (RETCODE_OK == retcode)
-    {
-        urcFound = true;
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        /* Parse <socket> */
-        int32_t tmp = 0;
-        retcode = Utils_Strtol(arg, argLen, &tmp);
-        createdSocketId = (uint32_t)tmp;
-
-        AtResponseQueue_MarkBufferAsUnused();
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        /* Parse <ip_address> */
-        retcode = ExtractUbloxAddress(arg, argLen, &remoteIp);
-
-        AtResponseQueue_MarkBufferAsUnused();
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        /* Parse <port> */
-        int32_t tmp = 0;
-        retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, UINT16_MAX);
-        remotePort = (uint16_t)tmp;
-
-        AtResponseQueue_MarkBufferAsUnused();
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        /* Parse <listening_socket> */
-        int32_t tmp = 0;
-        retcode = Utils_Strtol(arg, argLen, &tmp);
-        listeningSocketId = (uint32_t)tmp;
-
-        AtResponseQueue_MarkBufferAsUnused();
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        /* Parse <local_ip_address> */
-        retcode = ExtractUbloxAddress(arg, argLen, &localIp);
-
-        AtResponseQueue_MarkBufferAsUnused();
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        /* Parse <listening_port> */
-        int32_t tmp = 0;
-        retcode = Utils_StrtolBounds(arg, argLen, &tmp, 0, UINT16_MAX);
-        listeningPort = (uint32_t)tmp;
-
-        AtResponseQueue_MarkBufferAsUnused();
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        switch (remoteIp.Type)
-        {
-        case AT_UBLOX_ADDRESSTYPE_IPV4:
-            switch (localIp.Type)
-            {
-            case AT_UBLOX_ADDRESSTYPE_IPV4:
-                LOG_DEBUG("UUSOLI socket:%d "
-                          "ip_address:\"%d.%d.%d.%d\" port:%d "
-                          "listening_socket:%d local_ip_address:\"%d.%d.%d.%d\" listening_port:%d",
-                          (int)createdSocketId,
-                          (int)remoteIp.Address.IPv4[3],
-                          (int)remoteIp.Address.IPv4[2],
-                          (int)remoteIp.Address.IPv4[1],
-                          (int)remoteIp.Address.IPv4[0],
-                          (int)remotePort,
-                          (int)listeningSocketId,
-                          (int)localIp.Address.IPv4[3],
-                          (int)localIp.Address.IPv4[2],
-                          (int)localIp.Address.IPv4[1],
-                          (int)localIp.Address.IPv4[0],
-                          (int)listeningPort);
-                break;
-            case AT_UBLOX_ADDRESSTYPE_IPV6:
-                LOG_DEBUG("UUSOLI socket:%d "
-                          "ip_address:\"%d.%d.%d.%d\" port:%d "
-                          "listening_socket:%d local_ip_address:\"%d:%d:%d:%d:%d:%d:%d:%d\" listening_port:%d",
-                          (int)createdSocketId,
-                          (int)remoteIp.Address.IPv4[3],
-                          (int)remoteIp.Address.IPv4[2],
-                          (int)remoteIp.Address.IPv4[1],
-                          (int)remoteIp.Address.IPv4[0],
-                          (int)remotePort,
-                          (int)listeningSocketId,
-                          (int)localIp.Address.IPv6[7],
-                          (int)localIp.Address.IPv6[6],
-                          (int)localIp.Address.IPv6[5],
-                          (int)localIp.Address.IPv6[4],
-                          (int)localIp.Address.IPv6[3],
-                          (int)localIp.Address.IPv6[2],
-                          (int)localIp.Address.IPv6[1],
-                          (int)localIp.Address.IPv6[0],
-                          (int)listeningPort);
-                break;
-            default:
-                break;
-            }
-            break;
-        case AT_UBLOX_ADDRESSTYPE_IPV6:
-            switch (localIp.Type)
-            {
-            case AT_UBLOX_ADDRESSTYPE_IPV4:
-                LOG_DEBUG("UUSOLI socket:%d "
-                          "ip_address:\"%d:%d:%d:%d:%d:%d:%d:%d\" port:%d "
-                          "listening_socket:%d local_ip_address:\"%d.%d.%d.%d\" listening_port:%d",
-                          (int)createdSocketId,
-                          (int)remoteIp.Address.IPv4[3],
-                          (int)remoteIp.Address.IPv4[2],
-                          (int)remoteIp.Address.IPv4[1],
-                          (int)remoteIp.Address.IPv4[0],
-                          (int)remotePort,
-                          (int)listeningSocketId,
-                          (int)localIp.Address.IPv4[3],
-                          (int)localIp.Address.IPv4[2],
-                          (int)localIp.Address.IPv4[1],
-                          (int)localIp.Address.IPv4[0],
-                          (int)listeningPort);
-                break;
-            case AT_UBLOX_ADDRESSTYPE_IPV6:
-                LOG_DEBUG("UUSOLI socket:%d "
-                          "ip_address:\"%d:%d:%d:%d:%d:%d:%d:%d\" port:%d "
-                          "listening_socket:%d local_ip_address:\"%d:%d:%d:%d:%d:%d:%d:%d\" listening_port:%d",
-                          (int)createdSocketId,
-                          (int)remoteIp.Address.IPv4[3],
-                          (int)remoteIp.Address.IPv4[2],
-                          (int)remoteIp.Address.IPv4[1],
-                          (int)remoteIp.Address.IPv4[0],
-                          (int)remotePort,
-                          (int)listeningSocketId,
-                          (int)localIp.Address.IPv6[7],
-                          (int)localIp.Address.IPv6[6],
-                          (int)localIp.Address.IPv6[5],
-                          (int)localIp.Address.IPv6[4],
-                          (int)localIp.Address.IPv6[3],
-                          (int)localIp.Address.IPv6[2],
-                          (int)localIp.Address.IPv6[1],
-                          (int)localIp.Address.IPv6[0],
-                          (int)listeningPort);
-                break;
-            default:
-                break;
-            }
-            break;
-        default:
-            break;
-        }
-
-        SocketService_NotifySocketAccepted(createdSocketId, &remoteIp, remotePort, listeningSocketId, &localIp, listeningPort);
-    }
-
-    if (!urcFound)
-    {
-        retcode = RETCODE(RETCODE_SEVERITY_INFO, RETCODE_CELLULAR_URC_NOT_PRESENT);
-    }
-
-    return Utils_ConvertAtResponseRetcodeToCellularRetcode(retcode);
-}
-
-Retcode_T At_HandleUrc_UUSOCL(void)
-{
-    Retcode_T retcode = RETCODE_OK;
-    bool urcFound = false;
-    uint8_t *arg = NULL;
-    uint32_t argLen = 0;
-    uint32_t socketId = 0;
-
-    retcode = AtResponseQueue_WaitForNamedCmd(0, (const uint8_t *)CMD_UBLOX_ATUUSOCL, (uint32_t)strlen(CMD_UBLOX_ATUUSOCL));
-
-    if (RETCODE_OK == retcode)
-    {
-        urcFound = true;
-        retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        int32_t tmp = 0;
-        retcode = Utils_Strtol(arg, argLen, &tmp);
-        socketId = (uint32_t)tmp;
-
-        AtResponseQueue_MarkBufferAsUnused();
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        LOG_DEBUG("UUSOCL socket:%d", (int)socketId);
-        SocketService_NotifySocketClosed(socketId);
-    }
-
-    if (!urcFound)
-    {
-        retcode = RETCODE(RETCODE_SEVERITY_INFO, RETCODE_CELLULAR_URC_NOT_PRESENT);
-    }
-
-    return Utils_ConvertAtResponseRetcodeToCellularRetcode(retcode);
-}
-
-Retcode_T At_HandleUrc_UUHTTPCR(void)
-{
-    Retcode_T retcode = RETCODE_OK;
-    uint8_t *arg = NULL;
-    uint32_t argLen = 0;
-    uint32_t response[3];
-    uint32_t argCnt;
-
-    retcode = AtResponseQueue_WaitForNamedCmd(0, (const uint8_t *)CMD_UBLOX_ATUUHTTPCR, (uint32_t)strlen(CMD_UBLOX_ATUUHTTPCR));
-    argCnt = 0;
-
-    while (retcode == RETCODE_OK && argCnt < 3)
-    {
-
-        if (RETCODE_OK == retcode)
-        {
-            retcode = AtResponseQueue_WaitForArbitraryCmdArg(CMD_UBLOX_SHORT_TIMEOUT, &arg, &argLen);
-        }
-
-        /* read cmd args 1,2,3 */
-        if (RETCODE_OK == retcode)
-        {
-            int32_t tmp = 0;
-            retcode = Utils_Strtol(arg, argLen, &tmp);
-            response[argCnt++] = (uint32_t)tmp;
-            AtResponseQueue_MarkBufferAsUnused();
-        }
-    }
-    if (retcode == RETCODE_OK)
-    {
-        /* report the result */
-        HttpService_NotifyResult((AT_UHTTP_ProfileId_T)response[0], (AT_UHTTPC_Command_T)response[1], (AT_UHTTPC_Result_T)response[2]);
-    }
-
-    return retcode;
-}
-
-Retcode_T At_Set_UTEST(uint32_t param)
-{
-    Retcode_T retcode = RETCODE_OK;
-
-    int32_t len = snprintf(Engine_AtSendBuffer, sizeof(Engine_AtSendBuffer), CMD_UBLOX_SET_ATUTEST_FMT,
-                           (int)param);
-    if ((size_t)len > sizeof(Engine_AtSendBuffer) || len < 0)
-    {
-        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_OUT_OF_RESOURCES);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_UBLOX_SHORT_TIMEOUT);
-    }
-
-    if (RETCODE_OK == retcode)
-    {
-        retcode = Utils_WaitForAndHandleResponseCode(CMD_UBLOX_SHORT_TIMEOUT, retcode);
-    }
-
-    return retcode;
 }

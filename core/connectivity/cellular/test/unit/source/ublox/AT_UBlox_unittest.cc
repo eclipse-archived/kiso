@@ -24,8 +24,8 @@ extern "C"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_AT_UBLOX
 #define GTEST
-
 /* include faked interfaces */
+#include "Kiso_MCU_UART_th.hh"
 #include "SocketService_th.hh"
 #include "HttpService_th.hh"
 #include "Kiso_Logging_th.hh"
@@ -70,7 +70,6 @@ FFF_DEFINITION_BLOCK_END
 #define TEST_URC_ATUSOLI_FMTIPV6IPV6 ("+%s:%" PRIu32 ",\"%x:%x:%x:%x:%x:%x:%x:%x\",%" PRIu32 ",%d,\"%x:%x:%x:%x:%x:%x:%x:%x\",%d\r\n")
 #define TEST_URC_ATUSOCL_FMT ("+%s:%" PRIu32 "\r\n")
 #define TEST_URC_ATUSORX_FMT ("+%s:%" PRIu32 ",%" PRIu32 "\r\n")
-
 class TS_At_Set_URAT : public TS_ModemTest
 {
 protected:
@@ -183,6 +182,19 @@ TEST_F(TS_At_Set_URAT, UmtsLtePass)
     EXPECT_EQ(RETCODE_OK, retcode);
 }
 
+TEST_F(TS_At_Set_URAT, Fail_invalidACT)
+{
+    Retcode_T retcode = RETCODE_OK;
+    AT_URAT_Param_T param;
+    param.SelectedAcT = AT_URAT_SELECTEDACT_INVALID;
+    param.PreferredAcT = AT_URAT_PREFERREDACT_LTE;
+    param.SecondPreferredAcT = AT_URAT_SECONDPREFERREDACT_UTRAN;
+
+    retcode = At_Set_URAT(&param);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), retcode);
+}
+
 TEST_F(TS_At_Set_URAT, GprsUmtsLtePass)
 {
     Retcode_T retcode = RETCODE_OK;
@@ -282,6 +294,16 @@ TEST_F(TS_At_Get_UMNOPROF, InvalidMnoFail)
 
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
 }
+
+// TEST_F(TS_At_Get_UMNOPROF, FailFunction)
+// {
+//     Retcode_T retcode;
+//     AT_UMNOPROF_Mno_T mno = AT_UMNOPROF_MNO_INVALID;
+
+//     retcode = At_Get_UMNOPROF(&mno);
+
+//     EXPECT_NE(RETCODE_OK, retcode);
+// }
 
 class TS_At_Set_UBANDMASK : public TS_ModemTest
 {
@@ -431,6 +453,17 @@ TEST_F(TS_At_Set_USOCO, IPv6_Pass)
     retcode = At_Set_USOCO(&param);
 
     EXPECT_EQ(RETCODE_OK, retcode);
+}
+
+TEST_F(TS_At_Set_USOCO, Fail_InvalidIPType)
+{
+    Retcode_T retcode = RETCODE_OK;
+    AT_USOCO_Param_T param;
+    param.RemoteAddr.Type = AT_UBLOX_ADDRESSTYPE_INVALID;
+
+    retcode = At_Set_USOCO(&param);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), retcode);
 }
 
 class TS_HexToBin : public testing::Test
@@ -951,6 +984,50 @@ TEST_F(TS_At_Set_USOWR, HexEncoding_BigPacket_Pass)
     EXPECT_EQ(param.Length, resp.Length);
 }
 
+TEST_F(TS_At_Set_USOWR, InvalidPayload)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    uint8_t data[CELLULAR_AT_SEND_BUFFER_SIZE / 3]; /* 1/3 the AT send buffer size */
+    memset(data, 'A', sizeof(data));
+
+    AT_USOWR_Param_T param;
+    param.Socket = 5;
+    param.Encoding = AT_UBLOX_PAYLOADENCODING_INVALID;
+    param.Data = data;
+    param.Length = sizeof(data);
+
+    AT_USOWR_Resp_T resp;
+    resp.Socket = 0;
+    resp.Length = 0;
+
+    retcode = At_Set_USOWR(&param, &resp);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), retcode);
+}
+
+TEST_F(TS_At_Set_USOWR, NotSupportedPayload)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    uint8_t data[CELLULAR_AT_SEND_BUFFER_SIZE / 3]; /* 1/3 the AT send buffer size */
+    memset(data, 'A', sizeof(data));
+
+    AT_USOWR_Param_T param;
+    param.Socket = 5;
+    param.Encoding = AT_UBLOX_PAYLOADENCODING_BINARY;
+    param.Data = data;
+    param.Length = sizeof(data);
+
+    AT_USOWR_Resp_T resp;
+    resp.Socket = 0;
+    resp.Length = 0;
+
+    retcode = At_Set_USOWR(&param, &resp);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), retcode);
+}
+
 class TS_At_Set_USORD : public TS_ModemTest
 {
 protected:
@@ -1067,6 +1144,48 @@ TEST_F(TS_At_Set_USORD, NoData_SetLength_Pass)
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(param.Socket, resp.Socket);
     EXPECT_EQ(expLength, resp.Length);
+}
+
+TEST_F(TS_At_Set_USORD, InvalidEncoding)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    uint8_t respData[10]; /* some non-zero length buffer */
+
+    AT_USORD_Param_T param;
+    param.Socket = 3;
+    param.Length = sizeof(respData);
+    param.Encoding = AT_UBLOX_PAYLOADENCODING_INVALID;
+
+    AT_USORD_Resp_T resp;
+    resp.Socket = 0;
+    resp.Length = 100;
+    resp.Data = respData;
+
+    retcode = At_Set_USORD(&param, &resp);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), retcode);
+}
+
+TEST_F(TS_At_Set_USORD, UnsupportedEncoding)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    uint8_t respData[10]; /* some non-zero length buffer */
+
+    AT_USORD_Param_T param;
+    param.Socket = 3;
+    param.Length = sizeof(respData);
+    param.Encoding = AT_UBLOX_PAYLOADENCODING_BINARY;
+
+    AT_USORD_Resp_T resp;
+    resp.Socket = 0;
+    resp.Length = 100;
+    resp.Data = respData;
+
+    retcode = At_Set_USORD(&param, &resp);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), retcode);
 }
 
 class TS_At_Set_USORF : public TS_ModemTest
@@ -1244,6 +1363,48 @@ TEST_F(TS_At_Set_USORF, NoData_Pass)
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(param.Socket, resp.Socket);
     EXPECT_EQ(expLength, resp.Length);
+}
+
+TEST_F(TS_At_Set_USORF, InvalidEncoding)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    uint8_t respData[10]; /* some non-zero length buffer */
+
+    AT_USORF_Param_T param;
+    param.Socket = 3;
+    param.Length = sizeof(respData);
+    param.Encoding = AT_UBLOX_PAYLOADENCODING_INVALID;
+
+    AT_USORF_Resp_T resp;
+    resp.Socket = 0;
+    resp.Length = 100;
+    resp.Data = respData;
+
+    retcode = At_Set_USORF(&param, &resp);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), retcode);
+}
+
+TEST_F(TS_At_Set_USORF, NotSupportedEncoding)
+{
+    Retcode_T retcode = RETCODE_OK;
+
+    uint8_t respData[10]; /* some non-zero length buffer */
+
+    AT_USORF_Param_T param;
+    param.Socket = 3;
+    param.Length = sizeof(respData);
+    param.Encoding = AT_UBLOX_PAYLOADENCODING_BINARY;
+
+    AT_USORF_Resp_T resp;
+    resp.Socket = 0;
+    resp.Length = 100;
+    resp.Data = respData;
+
+    retcode = At_Set_USORF(&param, &resp);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), retcode);
 }
 
 TEST_F(TS_At_Set_USORF, NoData_SetLength_Pass)
@@ -2289,6 +2450,38 @@ TEST_F(TS_At_Set_USOST, HexIPv6_Pass)
     EXPECT_EQ(param.Length, resp.Length);
 }
 
+TEST_F(TS_At_Set_USOST, InvalidEncoding)
+{
+    Retcode_T retcode = RETCODE_OK;
+    AT_USOST_Param_T param;
+    param.RemoteIp.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
+    param.RemotePort = 1337;
+    param.Data = (const uint8_t *)"HELLO";
+    param.Length = strlen((const char *)param.Data);
+    param.Encoding = AT_UBLOX_PAYLOADENCODING_INVALID;
+    AT_USOST_Resp_T resp;
+
+    retcode = At_Set_USOST(&param, &resp);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), retcode);
+}
+
+TEST_F(TS_At_Set_USOST, UnsupportedEncoding)
+{
+    Retcode_T retcode = RETCODE_OK;
+    AT_USOST_Param_T param;
+    param.RemoteIp.Type = AT_UBLOX_ADDRESSTYPE_IPV6;
+    param.RemotePort = 1337;
+    param.Data = (const uint8_t *)"HELLO";
+    param.Length = strlen((const char *)param.Data);
+    param.Encoding = AT_UBLOX_PAYLOADENCODING_BINARY;
+    AT_USOST_Resp_T resp;
+
+    retcode = At_Set_USOST(&param, &resp);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NOT_SUPPORTED), retcode);
+}
+
 class TS_At_Set_USOLI : public TS_ModemTest
 {
 protected:
@@ -2376,6 +2569,19 @@ TEST_F(TS_At_Set_UDCONF, HexMode_Disable_Pass)
     retcode = At_Set_UDCONF(&param);
 
     EXPECT_EQ(RETCODE_OK, retcode);
+}
+
+TEST_F(TS_At_Set_UDCONF, InvalidConfig)
+{
+    Retcode_T retcode = RETCODE_OK;
+    bool enable = false;
+    AT_UDCONF_Param_T param;
+    param.Config = AT_UDCONF_CONFIG_INVALID;
+    param.Value = &enable;
+
+    retcode = At_Set_UDCONF(&param);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), retcode);
 }
 
 class TS_At_Get_UDCONF : public TS_ModemTest
@@ -2999,6 +3205,18 @@ TEST_F(TS_At_Set_UDNSRN, IPv6ToDomain_Pass)
     EXPECT_STREQ(expDomain, resp.DomainIpString.Domain);
 }
 
+TEST_F(TS_At_Set_UDNSRN, FailInvalidResolution)
+{
+    Retcode_T retcode = RETCODE_OK;
+    AT_UDNSRN_Param_T param;
+    param.ResolutionType = AT_UDNSRN_RESOLUTIONTYPE_INVALID;
+    AT_UDNSRN_Resp_T resp;
+
+    retcode = At_Set_UDNSRN(&param, &resp);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), retcode);
+}
+
 class TS_At_Set_UHTTP : public TS_ModemTest
 {
 protected:
@@ -3068,6 +3286,18 @@ TEST_F(TS_At_Set_UHTTP, ServerPort_Pass)
     Retcode_T rc = At_Set_UHTTP(&param);
 
     EXPECT_EQ(RETCODE_OK, rc);
+}
+
+TEST_F(TS_At_Set_UHTTP, fail_invalid_opcode)
+{
+    AT_UHTTP_Param_T param;
+    param.ProfileId = AT_UHTTP_PROFILE_ID_1;
+    param.Opcode = AT_UHTTP_OPCODE_INVALID;
+    param.Value.Numeric = 1337;
+
+    Retcode_T rc = At_Set_UHTTP(&param);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
 }
 
 class TS_At_Set_UHTTPC : public TS_ModemTest
@@ -3151,6 +3381,21 @@ TEST_F(TS_At_Set_UHTTPC, PUT_Pass)
     Retcode_T rc = At_Set_UHTTPC(&param);
 
     EXPECT_EQ(RETCODE_OK, rc);
+}
+
+TEST_F(TS_At_Set_UHTTPC, Fail_Invalid_Command)
+{
+    AT_UHTTPC_Param_T param;
+    param.ProfileId = AT_UHTTP_PROFILE_ID_3;
+    param.Command = AT_UHTTPC_COMMAND_INVALID;
+    param.PathOnServer = "/some/resource";
+    param.ResponseFilename = "response.dat";
+    param.Payload = "uploadme.txt";
+    param.ContentType = AT_UHTTPC_CONTENT_TEXT_PLAIN;
+
+    Retcode_T rc = At_Set_UHTTPC(&param);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), rc);
 }
 
 class TS_At_HandleUrc_UUHTTPCR : public TS_ModemTest

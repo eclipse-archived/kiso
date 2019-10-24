@@ -113,7 +113,7 @@ Retcode_T CellularHttp_GetResponseSize(uint32_t *size)
         ulstFileParam.Filename = CELLULAR_HTTP_RESULT_FILE;
         ulstFileParam.Opcode = AT_ULSTFILE_OPCODE_SIZE;
 
-        retcode = Engine_Dispatch(HttpService_ulstFile, 1000, &ulstFileParam, 0);
+        retcode = Engine_Dispatch(HttpService_ulstFile, 1000, &ulstFileParam, 0); //LCOV_EXCL_BR_LINE
         if (RETCODE_OK == retcode)
         {
             *size = ulstFileParam.Filesize;
@@ -138,7 +138,7 @@ Retcode_T CellularHttp_GetResponse(CellularHttp_Data_T *response)
         param.param.Size = response->BufferSize;
         param.resp.Size = 0; /* will be overwritten by modem response */
         param.resp.Data = response->Buffer;
-        retcode = Engine_Dispatch(HttpService_urdBlock, 1000, &param, sizeof(param));
+        retcode = Engine_Dispatch(HttpService_urdBlock, 1000, &param, sizeof(param)); //LCOV_EXCL_BR_LINE
         if (RETCODE_OK == retcode)
         {
             response->BufferLength = param.resp.Size;
@@ -301,7 +301,7 @@ static Retcode_T HttpService_SetupHttp(const CellularHttp_Request_T *httpRequest
     uhttpParam.ProfileId = AT_UHTTP_PROFILE_ID_0;
     uhttpParam.Opcode = AT_UHTTP_OPCODE_SERVER_NAME;
     uhttpParam.Value.String = httpRequest->Server;
-    retcode = Engine_Dispatch(HttpService_uhttp, 1000, &uhttpParam, 0);
+    retcode = Engine_Dispatch(HttpService_uhttp, 1000, &uhttpParam, 0); //LCOV_EXCL_BR_LINE
 
     uhttpParam.Opcode = AT_UHTTP_OPCODE_SECURE_OPTION;
     if (httpRequest->IsSecure)
@@ -312,12 +312,12 @@ static Retcode_T HttpService_SetupHttp(const CellularHttp_Request_T *httpRequest
     {
         uhttpParam.Value.Numeric = 0;
     }
-    retcode = Engine_Dispatch(HttpService_uhttp, 1000, &uhttpParam, 0);
+    retcode = Engine_Dispatch(HttpService_uhttp, 1000, &uhttpParam, 0); //LCOV_EXCL_BR_LINE
 
     uhttpParam.Opcode = AT_UHTTP_OPCODE_SERVER_PORT;
     uhttpParam.Value.Numeric = httpRequest->Port;
 
-    retcode = Engine_Dispatch(HttpService_uhttp, 1000, &uhttpParam, 0);
+    retcode = Engine_Dispatch(HttpService_uhttp, 1000, &uhttpParam, 0); //LCOV_EXCL_BR_LINE
     return retcode;
 }
 
@@ -334,7 +334,7 @@ static Retcode_T HttpService_StartHttpRequest(const CellularHttp_Request_T *http
     uhttpcParam.ResponseFilename = CELLULAR_HTTP_RESULT_FILE;
     uhttpcParam.Payload = CELLULAR_HTTP_POST_FILE;
 
-    retcode = Engine_Dispatch(HttpService_uhttpc, 1000, &uhttpcParam, 0);
+    retcode = Engine_Dispatch(HttpService_uhttpc, 1000, &uhttpcParam, 0); //LCOV_EXCL_BR_LINE
 
     return retcode;
 }
@@ -349,10 +349,10 @@ static Retcode_T HttpService_WritePostData(const CellularHttp_Data_T *postData)
     {
         udelFileParam.Filename = CELLULAR_HTTP_POST_FILE;
         udwnFileParam.Filename = CELLULAR_HTTP_POST_FILE;
-        retcode = Engine_Dispatch(HttpService_udelFile, 1000, &udelFileParam, 0);
+        retcode = Engine_Dispatch(HttpService_udelFile, 1000, &udelFileParam, 0); //LCOV_EXCL_BR_LINE
         udwnFileParam.Data = postData->Buffer;
         udwnFileParam.DataSize = postData->BufferLength;
-        retcode = Engine_Dispatch(HttpService_udwnFile, 1000, &udwnFileParam, 0);
+        retcode = Engine_Dispatch(HttpService_udwnFile, 1000, &udwnFileParam, 0); //LCOV_EXCL_BR_LINE
     }
     else
     {

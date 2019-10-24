@@ -64,7 +64,7 @@ static Retcode_T ResolveDomain(void *param, uint32_t paramLen)
     udnsrnParam.DomainIpString.Domain = rslvParam->Fqdn;
     AT_UDNSRN_Resp_T udnsrnResp;
 
-    retcode = At_Set_UDNSRN(&udnsrnParam, &udnsrnResp);
+    retcode = At_Set_UDNSRN(&udnsrnParam, &udnsrnResp); //LCOV_EXCL_BR_LINE
 
     if (RETCODE_OK == retcode)
     {
@@ -89,6 +89,6 @@ Retcode_T CellularDns_ResolveDomain(
         param.DataContext = dataContext;
         param.Fqdn = fqdn;
         param.Result = result;
-        return Engine_Dispatch(ResolveDomain, CELLULAR_DNS_SHORT_ENQUEUE_TIMEOUT, &param, sizeof(param));
+        return Engine_Dispatch(ResolveDomain, CELLULAR_DNS_SHORT_ENQUEUE_TIMEOUT, &param, sizeof(param)); //LCOV_EXCL_BR_LINE
     }
 }

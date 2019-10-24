@@ -172,7 +172,7 @@ Retcode_T Cellular_QueryNetworkInfo(Cellular_NetworkInfo_T *networkInfo)
 
 Retcode_T Cellular_DisconnectFromNetwork(void)
 {
-    return Engine_Dispatch(DeregisterFromNetwork, CELLULAR_NETWORK_SHORT_ENQUEUE_TIMEOUT, NULL, 0);
+    return Engine_Dispatch(DeregisterFromNetwork, CELLULAR_NETWORK_SHORT_ENQUEUE_TIMEOUT, NULL, 0); //LCOV_EXCL_BR_LINE
 }
 
 Retcode_T Cellular_SetAirPlaneMode(bool airPlanModeOn)
@@ -199,18 +199,18 @@ static Retcode_T SelectLteRat(const AT_URAT_Param_T *urat)
 {
     AT_UBANDMASK_Param_T ubandmask;
 
-    Retcode_T retcode = At_Set_UMNOPROF(CELLULAR_MNO_PROFILE);
+    Retcode_T retcode = At_Set_UMNOPROF(CELLULAR_MNO_PROFILE); //LCOV_EXCL_BR_LINE
 
     if (RETCODE_OK == retcode)
     {
-        retcode = At_Set_URAT(urat);
+        retcode = At_Set_URAT(urat); //LCOV_EXCL_BR_LINE
     }
     if (RETCODE_OK == retcode)
     {
         ubandmask.Rat = AT_UBANDMASK_RAT_LTECATM1;
         ubandmask.Bitmask1 = CELLULAR_LTEM1_BAND_BITMASK1;
         ubandmask.Bitmask2 = CELLULAR_LTEM1_BAND_BITMASK2;
-        retcode = At_Set_UBANDMASK(&ubandmask);
+        retcode = At_Set_UBANDMASK(&ubandmask); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
@@ -218,7 +218,7 @@ static Retcode_T SelectLteRat(const AT_URAT_Param_T *urat)
         ubandmask.Rat = AT_UBANDMASK_RAT_LTECATNB1;
         ubandmask.Bitmask1 = CELLULAR_LTENBIOT_BAND_BITMASK1;
         ubandmask.Bitmask2 = CELLULAR_LTENBIOT_BAND_BITMASK2;
-        retcode = At_Set_UBANDMASK(&ubandmask);
+        retcode = At_Set_UBANDMASK(&ubandmask); //LCOV_EXCL_BR_LINE
     }
 
     /* To use LTE Cat. M1 and LTE Cat. NB-IoT it is vital to
@@ -227,7 +227,7 @@ static Retcode_T SelectLteRat(const AT_URAT_Param_T *urat)
      * We use AT+CFUN=15 for that. */
     if (RETCODE_OK == retcode)
     {
-        retcode = Power_SoftReset();
+        retcode = Power_SoftReset(); //LCOV_EXCL_BR_LINE
     }
 
     return retcode;
@@ -355,11 +355,11 @@ static Retcode_T RegisterOnNetwork(void *param, uint32_t len)
     {
         if (AT_URAT_SELECTEDACT_LTEM1 == urat.SelectedAcT || AT_URAT_SELECTEDACT_LTENB1 == urat.SelectedAcT)
         {
-            retcode = SelectLteRat(&urat);
+            retcode = SelectLteRat(&urat); //LCOV_EXCL_BR_LINE
         }
         else
         {
-            retcode = At_Set_URAT(&urat);
+            retcode = At_Set_URAT(&urat); //LCOV_EXCL_BR_LINE
         }
     }
 
@@ -374,12 +374,12 @@ static Retcode_T RegisterOnNetwork(void *param, uint32_t len)
         cops.Oper.Numeric = 0;
         cops.AcT = AT_COPS_ACT_INVALID;
 
-        retcode = At_Set_COPS(&cops);
+        retcode = At_Set_COPS(&cops); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
-        Engine_NotifyNewState(CELLULAR_STATE_REGISTERING, NULL, 0);
+        Engine_NotifyNewState(CELLULAR_STATE_REGISTERING, NULL, 0); //LCOV_EXCL_BR_LINE
     }
 
     return retcode;
@@ -423,7 +423,7 @@ static Retcode_T ConfigureDataContext(void *param, uint32_t len)
     /** \todo: Make PDP_Type configurable. */
     cgdcont.PdpType = AT_CGDCONT_PDPTYPE_IP;
     cgdcont.Apn = cfg->Parameters->ApnSettings.ApnName;
-    return At_Set_CGDCONT(&cgdcont);
+    return At_Set_CGDCONT(&cgdcont); //LCOV_EXCL_BR_LINE
 }
 
 /**
@@ -455,7 +455,7 @@ static Retcode_T ActivateDataContext(void *param, uint32_t len)
     AT_CGACT_Param_T cgact;
     cgact.Cid = act->Cid;
     cgact.State = AT_CGACT_STATE_ACTIVATED;
-    retcode = At_Set_CGACT(&cgact);
+    retcode = At_Set_CGACT(&cgact); //LCOV_EXCL_BR_LINE
 
     AT_CGPADDR_Resp_T cgpaddrResp;
     cgpaddrResp.Address1.Type = AT_CGPADDR_ADDRESSTYPE_INVALID;
@@ -467,7 +467,7 @@ static Retcode_T ActivateDataContext(void *param, uint32_t len)
         AT_CGPADDR_Param_T cgpaddrParam;
         cgpaddrParam.Cid = act->Cid;
 
-        retcode = At_Set_CGPADDR(&cgpaddrParam, &cgpaddrResp);
+        retcode = At_Set_CGPADDR(&cgpaddrParam, &cgpaddrResp); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
@@ -493,7 +493,7 @@ static Retcode_T ActivateDataContext(void *param, uint32_t len)
             break;
         }
         *(act->Ctx) = ctx;
-        Engine_NotifyNewState(CELLULAR_STATE_DATAACTIVE, NULL, 0);
+        Engine_NotifyNewState(CELLULAR_STATE_DATAACTIVE, NULL, 0); //LCOV_EXCL_BR_LINE
     }
 
     return retcode;
@@ -527,14 +527,14 @@ static Retcode_T DeactivateDataContext(void *param, uint32_t len)
     cgact.Cid = cid;
     cgact.State = AT_CGACT_STATE_DEACTIVATED;
 
-    retcode = At_Set_CGACT(&cgact);
+    retcode = At_Set_CGACT(&cgact); //LCOV_EXCL_BR_LINE
 
     if (RETCODE_OK == retcode)
     {
         DataContexts[cid].Id = 0;
         DataContexts[cid].IpAddress.Type = CELLULAR_IPADDRESSTYPE_MAX;
         DataContexts[cid].Type = CELLULAR_DATACONTEXTTYPE_MAX;
-        Engine_NotifyNewState(CELLULAR_STATE_REGISTERED, NULL, 0);
+        Engine_NotifyNewState(CELLULAR_STATE_REGISTERED, NULL, 0); //LCOV_EXCL_BR_LINE
     }
 
     return retcode;
@@ -566,7 +566,7 @@ static Retcode_T QueryIccid(void *param, uint32_t paramLen)
     Retcode_T retcode = RETCODE_OK;
 
     AT_CCID_Resp_T ccid;
-    retcode = At_Get_CCID(&ccid);
+    retcode = At_Get_CCID(&ccid); //LCOV_EXCL_BR_LINE
     if (RETCODE_OK == retcode)
     {
         memset(query->Iccid, 0, *query->IccidLen);
@@ -614,11 +614,11 @@ static Retcode_T DeregisterFromNetwork(void *param, uint32_t len)
     cops.Oper.Numeric = 0;
     cops.AcT = AT_COPS_ACT_INVALID;
 
-    retcode = At_Set_COPS(&cops);
+    retcode = At_Set_COPS(&cops); //LCOV_EXCL_BR_LINE
 
     if (RETCODE_OK == retcode)
     {
-        Engine_NotifyNewState(CELLULAR_STATE_POWERON, NULL, 0);
+        Engine_NotifyNewState(CELLULAR_STATE_POWERON, NULL, 0); //LCOV_EXCL_BR_LINE
     }
 
     return retcode;

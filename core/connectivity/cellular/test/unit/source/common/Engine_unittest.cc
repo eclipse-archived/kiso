@@ -34,6 +34,11 @@ extern "C"
 #include "Kiso_Assert_th.hh"
 #include "Kiso_RingBuffer_th.hh"
 #include "Kiso_Logging_th.hh"
+#undef LOG_DEBUG
+#define LOG_DEBUG(...) \
+    do                 \
+    {                  \
+    } while (0)
 
 #include "FreeRTOS_th.hh"
 #include "task_th.hh"
@@ -748,44 +753,6 @@ TEST_F(TS_SkipEventsUntilCommand, AtResonsequeue_Timeout)
     EXPECT_EQ(RETCODE_OK, rc);
     EXPECT_EQ(AtResponseQueue_GetEventCount_fake.return_val, AtResponseQueue_GetEvent_fake.call_count);
     EXPECT_EQ(AtResponseQueue_GetEventCount_fake.return_val - 1, AtResponseQueue_MarkBufferAsUnused_fake.call_count);
-}
-
-class TS_ReadData : public testing::Test
-{
-protected:
-    uint8_t data[128];
-    uint32_t expDataRead;
-    virtual void SetUp()
-    {
-        srand(time(NULL));
-
-        FFF_RESET_HISTORY();
-
-        RESET_FAKE(RingBuffer_Read);
-
-        RingBuffer_Read_fake.return_val = std::min(rand() % sizeof(data), (size_t)2);
-    }
-};
-
-TEST_F(TS_ReadData, Success)
-{
-    uint32_t dataRead;
-    Retcode_T rc = ReadData(this->data, sizeof(this->data), &dataRead);
-
-    EXPECT_EQ(RETCODE_OK, rc);
-    EXPECT_EQ(1U, RingBuffer_Read_fake.call_count);
-    EXPECT_EQ(data, RingBuffer_Read_fake.arg1_val);
-    EXPECT_EQ(sizeof(data), RingBuffer_Read_fake.arg2_val);
-    EXPECT_EQ(RingBuffer_Read_fake.return_val, dataRead);
-}
-
-TEST_F(TS_ReadData, InvalidData_Failure)
-{
-    uint32_t dataRead;
-    Retcode_T rc = ReadData(NULL, sizeof(this->data), &dataRead);
-
-    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), rc);
-    EXPECT_EQ(0U, RingBuffer_Read_fake.call_count);
 }
 
 class TS_HandleMcuIsrCallback : public testing::Test

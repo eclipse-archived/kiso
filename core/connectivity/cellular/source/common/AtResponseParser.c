@@ -1,4 +1,4 @@
-/********************************************************************************
+/**********************************************************************************************************************
 * Copyright (c) 2010-2019 Robert Bosch GmbH
 *
 * This program and the accompanying materials are made available under the
@@ -10,13 +10,15 @@
 * Contributors:
 *    Robert Bosch GmbH - initial contribution
 *
-********************************************************************************/
+**********************************************************************************************************************/
 
 /**
  * @file AtResponseParser.c
  *
  * @brief Implements AT Response Parser.
  */
+
+/*###################### INCLUDED HEADERS ###########################################################################*/
 
 #include "Kiso_CellularModules.h"
 #define KISO_MODULE_ID KISO_CELLULAR_MODULE_ID_ATPARSER
@@ -30,25 +32,12 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#define ATRP_IS_INITIALIZED (NULL != state.StateCallback)
-#define ATRP_RESPONSE_CODE_EVENT (state.EventResponseCodeCallback)
-#define ATRP_ERROR_EVENT (state.EventErrorCallback)
-#define ATRP_CMD_ECHO_EVENT (state.EventCmdEchoCallback)
-#define ATRP_CMD_EVENT (state.EventCmdCallback)
-#define ATRP_CMDARG_EVENT (state.EventCmdArgCallback)
-#define ATRP_MISC_EVENT (state.EventMiscCallback)
+/*###################### MACROS DEFINITION ##########################################################################*/
+
 #define ATRP_PARSE_FAILURE_RETVAL -1
 #define ATRP_CONSUME_STATUS_FOUND_DELIMITERA 0x01
 #define ATRP_CONSUME_STATUS_FOUND_DELIMITERB 0x02
-
-/**
- * @brief The C string terminating NULL char
- */
-#define NULL_CHAR ('\0')
-
-/**
- * @brief The response code names
- */
+#define NULL_CHAR ('\0') //The C string terminating NULL char
 #define AT_RESPONSE_CODE_NAME_OK "OK"
 #define AT_RESPONSE_CODE_NAME_CONNECT "CONNECT"
 #define AT_RESPONSE_CODE_NAME_RING "RING"
@@ -59,25 +48,125 @@
 #define AT_RESPONSE_CODE_NAME_NO_ANSWER "NO ANSWER"
 #define AT_RESPONSE_CODE_NAME_ABORTED "ABORTED"
 
-static int32_t AtrpStateRoot(const uint8_t *buffer, uint32_t len);
-
+/*###################### LOCAL_TYPES ################################################################################*/
 typedef enum
 {
     ATRP_BUFFER_OUT_OF_SPACE,
     ATRP_BUFFER_OK
 } AtrpBufferResult_t;
 
+/*###################### LOCAL FUNCTIONS DECLARATION ################################################################*/
+
+static int32_t AtrpStateRoot(const uint8_t *buffer, uint32_t len);
+static AtrpBufferResult_t AtrpAppendToBuffer(const uint8_t *buffer, uint32_t len);
+static void AtrpRollbackBuffer(uint32_t len);
+static const uint8_t *AtrpTrimWhitespace(const uint8_t *buffer, uint32_t bufferLength, uint32_t *newBufferLength);
+static void AtrpResetBuffer(void);
+static void AtrpSwitchState(AtrpStateCallback_T NewCallback);
+static const uint8_t *AtrpStrChrN(const uint8_t *buffer, uint32_t len, uint8_t delimiter);
+static int32_t AtrpConsumeUntil(const uint8_t *buffer, uint32_t len, char delimiterA, char delimiterB, uint32_t *status);
+static int32_t AtrpStateError(const uint8_t *buffer, uint32_t len);
+static int32_t AtrpStateCmdarg(const uint8_t *buffer, uint32_t len);
+static int32_t AtrpStateCmdEcho(const uint8_t *buffer, uint32_t len);
+static int32_t AtrpStateCmd(const uint8_t *buffer, uint32_t len);
+static int32_t AtrpStateCmd(const uint8_t *buffer, uint32_t len);
+static int32_t AtrpStateResponseCode(const uint8_t *buffer, uint32_t len);
+
+/*###################### VARIABLES DECLARATION ######################################################################*/
+
 #ifdef GTEST
 static AtResponseParserState_T state;
 #else
-static AtResponseParserState_T state = {
-    .EventResponseCodeCallback = NULL,
-    .EventCmdEchoCallback = NULL,
-    .EventCmdCallback = NULL,
-    .EventCmdArgCallback = NULL,
-    .EventMiscCallback = NULL,
-    .StateCallback = AtrpStateRoot};
-#endif /* GTEST */
+static AtResponseParserState_T state =
+    {
+        .EventResponseCodeCallback = NULL,
+        .EventCmdEchoCallback = NULL,
+        .EventCmdCallback = NULL,
+        .EventCmdArgCallback = NULL,
+        .EventMiscCallback = NULL,
+        .StateCallback = AtrpStateRoot};
+#endif
+
+/*###################### EXPOSED FUNCTIONS IMPLEMENTATION ###########################################################*/
+
+Retcode_T AtResponseParser_Parse(const uint8_t *buffer, uint32_t len)
+{
+    if (NULL == state.StateCallback)
+    {
+        return RETCODE(RETCODE_SEVERITY_ERROR, AT_RESPONSE_PARSER_NOT_INITIALIZED);
+    }
+    else if (len < 1)
+    {
+        return RETCODE(RETCODE_SEVERITY_ERROR, AT_RESPONSE_PARSER_INPUT_TOO_SHORT);
+    }
+
+    Retcode_T result = RETCODE_OK;
+
+    while (len > 0)
+    {
+        // call the parser state and check if a state switch happened
+        int32_t ConsumedCharacters = state.StateCallback(buffer, len);
+
+        if (ATRP_PARSE_FAILURE_RETVAL == ConsumedCharacters)
+        {
+            // last state failed, let's move to error state and let the user recover from this
+            AtrpSwitchState(AtrpStateError);
+            result = RETCODE(RETCODE_SEVERITY_ERROR, AT_RESPONSE_PARSER_PARSE_ERROR);
+            break;
+        }
+        else
+        {
+            // maybe we didn't consume all characters. So let's try again
+            assert(ConsumedCharacters <= (int32_t)len); // "Consumed more characters than the buffer held. This should not happen."
+
+            buffer = buffer + ConsumedCharacters;
+            len = len - ConsumedCharacters;
+            result = RETCODE_OK;
+        }
+    }
+
+    return result;
+}
+
+void AtResponseParser_Reset(void)
+{
+    taskENTER_CRITICAL();
+    AtrpResetBuffer();
+    state.StateCallback = AtrpStateRoot;
+    taskEXIT_CRITICAL();
+}
+
+void AtResponseParser_RegisterResponseCodeCallback(AtrpEventWithResponseCodeCallback_T ResponseCodeCallback)
+{
+    state.EventResponseCodeCallback = ResponseCodeCallback;
+}
+
+void AtResponseParser_RegisterErrorCallback(AtrpEventCallback_T ErrorCallback)
+{
+    state.EventErrorCallback = ErrorCallback;
+}
+
+void AtResponseParser_RegisterCmdEchoCallback(AtrpEventWithDataCallback_T CmdEchoCallback)
+{
+    state.EventCmdEchoCallback = CmdEchoCallback;
+}
+
+void AtResponseParser_RegisterCmdCallback(AtrpEventWithDataCallback_T CmdCallback)
+{
+    state.EventCmdCallback = CmdCallback;
+}
+
+void AtResponseParser_RegisterCmdArgCallback(AtrpEventWithDataCallback_T CmdArgCallback)
+{
+    state.EventCmdArgCallback = CmdArgCallback;
+}
+
+void AtResponseParser_RegisterMiscCallback(AtrpEventWithDataCallback_T MiscCallback)
+{
+    state.EventMiscCallback = MiscCallback;
+}
+
+/*###################### LOCAL FUNCTIONS IMPLEMENTATION #############################################################*/
 
 static AtrpBufferResult_t AtrpAppendToBuffer(const uint8_t *buffer, uint32_t len)
 {
@@ -249,9 +338,9 @@ static int32_t AtrpStateError(const uint8_t *buffer, uint32_t len)
     KISO_UNUSED(buffer);
     KISO_UNUSED(len);
 
-    if (NULL != ATRP_ERROR_EVENT)
+    if (NULL != state.EventErrorCallback)
     {
-        ATRP_ERROR_EVENT();
+        state.EventErrorCallback();
     }
 
     return 0;
@@ -273,13 +362,13 @@ static int32_t AtrpStateCmdarg(const uint8_t *buffer, uint32_t len)
 
     if (status & (ATRP_CONSUME_STATUS_FOUND_DELIMITERA | ATRP_CONSUME_STATUS_FOUND_DELIMITERB))
     {
-        if (NULL != ATRP_CMDARG_EVENT)
+        if (NULL != state.EventCmdArgCallback)
         {
             uint32_t NewLength;
             const uint8_t *NewBuffer = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
             if (NewLength)
             {
-                ATRP_CMDARG_EVENT(NewBuffer, NewLength);
+                state.EventCmdArgCallback(NewBuffer, NewLength);
             }
         }
         AtrpResetBuffer();
@@ -310,11 +399,11 @@ static int32_t AtrpStateCmdEcho(const uint8_t *buffer, uint32_t len)
 
     if (status & (ATRP_CONSUME_STATUS_FOUND_DELIMITERA | ATRP_CONSUME_STATUS_FOUND_DELIMITERB))
     {
-        if (NULL != ATRP_CMD_ECHO_EVENT)
+        if (NULL != state.EventCmdEchoCallback)
         {
             uint32_t NewLength;
             const uint8_t *NewBuffer = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
-            ATRP_CMD_ECHO_EVENT(NewBuffer, NewLength);
+            state.EventCmdEchoCallback(NewBuffer, NewLength);
         }
         AtrpResetBuffer();
         AtrpSwitchState(AtrpStateRoot);
@@ -332,11 +421,11 @@ static int32_t AtrpStateCmd(const uint8_t *buffer, uint32_t len)
 
     if (status & (ATRP_CONSUME_STATUS_FOUND_DELIMITERA | ATRP_CONSUME_STATUS_FOUND_DELIMITERB))
     {
-        if (NULL != ATRP_CMD_EVENT)
+        if (NULL != state.EventCmdCallback)
         {
             uint32_t NewLength;
             const uint8_t *NewBuffer = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
-            ATRP_CMD_EVENT(NewBuffer, NewLength);
+            state.EventCmdCallback(NewBuffer, NewLength);
         }
         AtrpResetBuffer();
 
@@ -361,6 +450,12 @@ static int32_t AtrpStateResponseCode(const uint8_t *buffer, uint32_t len)
     {
         return ATRP_PARSE_FAILURE_RETVAL;
     }
+    if (NULL == state.EventResponseCodeCallback)
+    {
+        AtrpResetBuffer();
+        AtrpSwitchState(AtrpStateRoot);
+        return result;
+    }
 
     if (status & (ATRP_CONSUME_STATUS_FOUND_DELIMITERA | ATRP_CONSUME_STATUS_FOUND_DELIMITERB))
     {
@@ -368,48 +463,39 @@ static int32_t AtrpStateResponseCode(const uint8_t *buffer, uint32_t len)
         const uint8_t *ResponseCodeName = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
         if (0 == strncmp(AT_RESPONSE_CODE_NAME_ABORTED, (const char *)ResponseCodeName, NewLength))
         {
-            if (NULL != ATRP_RESPONSE_CODE_EVENT)
-                ATRP_RESPONSE_CODE_EVENT(AT_RESPONSE_CODE_ABORTED);
+            state.EventResponseCodeCallback(AT_RESPONSE_CODE_ABORTED);
         }
         else if (0 == strncmp(AT_RESPONSE_CODE_NAME_BUSY, (const char *)ResponseCodeName, NewLength))
         {
-            if (NULL != ATRP_RESPONSE_CODE_EVENT)
-                ATRP_RESPONSE_CODE_EVENT(AT_RESPONSE_CODE_BUSY);
+            state.EventResponseCodeCallback(AT_RESPONSE_CODE_BUSY);
         }
         else if (0 == strncmp(AT_RESPONSE_CODE_NAME_CONNECT, (const char *)ResponseCodeName, NewLength))
         {
-            if (NULL != ATRP_RESPONSE_CODE_EVENT)
-                ATRP_RESPONSE_CODE_EVENT(AT_RESPONSE_CODE_CONNECT);
+            state.EventResponseCodeCallback(AT_RESPONSE_CODE_CONNECT);
         }
         else if (0 == strncmp(AT_RESPONSE_CODE_NAME_ERROR, (const char *)ResponseCodeName, NewLength))
         {
-            if (NULL != ATRP_RESPONSE_CODE_EVENT)
-                ATRP_RESPONSE_CODE_EVENT(AT_RESPONSE_CODE_ERROR);
+            state.EventResponseCodeCallback(AT_RESPONSE_CODE_ERROR);
         }
         else if (0 == strncmp(AT_RESPONSE_CODE_NAME_NO_ANSWER, (const char *)ResponseCodeName, NewLength))
         {
-            if (NULL != ATRP_RESPONSE_CODE_EVENT)
-                ATRP_RESPONSE_CODE_EVENT(AT_RESPONSE_CODE_NO_ANSWER);
+            state.EventResponseCodeCallback(AT_RESPONSE_CODE_NO_ANSWER);
         }
         else if (0 == strncmp(AT_RESPONSE_CODE_NAME_NO_CARRIER, (const char *)ResponseCodeName, NewLength))
         {
-            if (NULL != ATRP_RESPONSE_CODE_EVENT)
-                ATRP_RESPONSE_CODE_EVENT(AT_RESPONSE_CODE_NO_CARRIER);
+            state.EventResponseCodeCallback(AT_RESPONSE_CODE_NO_CARRIER);
         }
         else if (0 == strncmp(AT_RESPONSE_CODE_NAME_NO_DIALTONE, (const char *)ResponseCodeName, NewLength))
         {
-            if (NULL != ATRP_RESPONSE_CODE_EVENT)
-                ATRP_RESPONSE_CODE_EVENT(AT_RESPONSE_CODE_NO_DIALTONE);
+            state.EventResponseCodeCallback(AT_RESPONSE_CODE_NO_DIALTONE);
         }
         else if (0 == strncmp(AT_RESPONSE_CODE_NAME_OK, (const char *)ResponseCodeName, NewLength))
         {
-            if (NULL != ATRP_RESPONSE_CODE_EVENT)
-                ATRP_RESPONSE_CODE_EVENT(AT_RESPONSE_CODE_OK);
+            state.EventResponseCodeCallback(AT_RESPONSE_CODE_OK);
         }
         else if (0 == strncmp(AT_RESPONSE_CODE_NAME_RING, (const char *)ResponseCodeName, NewLength))
         {
-            if (NULL != ATRP_RESPONSE_CODE_EVENT)
-                ATRP_RESPONSE_CODE_EVENT(AT_RESPONSE_CODE_RING);
+            state.EventResponseCodeCallback(AT_RESPONSE_CODE_RING);
         }
         else
         {
@@ -449,8 +535,8 @@ static int32_t AtrpStateMiscContent(const uint8_t *buffer, uint32_t len)
         //FIXME: Find better way of handling non-AT conform responses!
         //uint8_t* NewBuffer = AtrpTrimWhitespace(state.Buffer, state.BufferPosition, &NewLength);
         state.Buffer[state.BufferPosition++] = '\n';
-        if (result > 0 && NULL != ATRP_MISC_EVENT)
-            ATRP_MISC_EVENT(state.Buffer, state.BufferPosition);
+        if (result > 0 && NULL != state.EventMiscCallback)
+            state.EventMiscCallback(state.Buffer, state.BufferPosition);
         AtrpResetBuffer();
         AtrpSwitchState(AtrpStateRoot);
     }
@@ -545,81 +631,4 @@ static int32_t AtrpStateRoot(const uint8_t *buffer, uint32_t len)
     }
 
     return result;
-}
-
-Retcode_T AtResponseParser_Parse(const uint8_t *buffer, uint32_t len)
-{
-    if (!ATRP_IS_INITIALIZED)
-    {
-        return RETCODE(RETCODE_SEVERITY_ERROR, AT_RESPONSE_PARSER_NOT_INITIALIZED);
-    }
-    else if (len < 1)
-    {
-        return RETCODE(RETCODE_SEVERITY_ERROR, AT_RESPONSE_PARSER_INPUT_TOO_SHORT);
-    }
-
-    Retcode_T result = RETCODE_OK;
-
-    while (len > 0)
-    {
-        // call the parser state and check if a state switch happened
-        int32_t ConsumedCharacters = state.StateCallback(buffer, len);
-
-        if (ATRP_PARSE_FAILURE_RETVAL == ConsumedCharacters)
-        {
-            // last state failed, let's move to error state and let the user recover from this
-            AtrpSwitchState(AtrpStateError);
-            result = RETCODE(RETCODE_SEVERITY_ERROR, AT_RESPONSE_PARSER_PARSE_ERROR);
-            break;
-        }
-        else
-        {
-            // maybe we didn't consume all characters. So let's try again
-            assert(ConsumedCharacters <= (int32_t)len); // "Consumed more characters than the buffer held. This should not happen."
-
-            buffer = buffer + ConsumedCharacters;
-            len = len - ConsumedCharacters;
-            result = RETCODE_OK;
-        }
-    }
-
-    return result;
-}
-
-void AtResponseParser_Reset(void)
-{
-    taskENTER_CRITICAL();
-    AtrpResetBuffer();
-    state.StateCallback = AtrpStateRoot;
-    taskEXIT_CRITICAL();
-}
-
-void AtResponseParser_RegisterResponseCodeCallback(AtrpEventWithResponseCodeCallback_T ResponseCodeCallback)
-{
-    state.EventResponseCodeCallback = ResponseCodeCallback;
-}
-
-void AtResponseParser_RegisterErrorCallback(AtrpEventCallback_T ErrorCallback)
-{
-    state.EventErrorCallback = ErrorCallback;
-}
-
-void AtResponseParser_RegisterCmdEchoCallback(AtrpEventWithDataCallback_T CmdEchoCallback)
-{
-    state.EventCmdEchoCallback = CmdEchoCallback;
-}
-
-void AtResponseParser_RegisterCmdCallback(AtrpEventWithDataCallback_T CmdCallback)
-{
-    state.EventCmdCallback = CmdCallback;
-}
-
-void AtResponseParser_RegisterCmdArgCallback(AtrpEventWithDataCallback_T CmdArgCallback)
-{
-    state.EventCmdArgCallback = CmdArgCallback;
-}
-
-void AtResponseParser_RegisterMiscCallback(AtrpEventWithDataCallback_T MiscCallback)
-{
-    state.EventMiscCallback = MiscCallback;
 }
