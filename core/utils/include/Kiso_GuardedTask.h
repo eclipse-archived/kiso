@@ -22,6 +22,58 @@
  *      Guarded Task interface
  *
  * @details
+ *      Guarded task is wrapper of function, which will be executed only
+ *      when it is needed, or 'signaled'. When/if guarded function ends,
+ *      it can be executed, or signaled, again.
+ *      This primitive provides easy mechanism to async transfer ISR execution
+ *      to user code or async execute code in response to some other event.
+ *
+ * @note
+ *      1. When actually function will be executed depends on OS scheduler.
+ *      2. If GuardedTask_Deinitialize() is called immediately after
+ *             GuardedTask_Signal(), there are chances that function will
+ *             not be executed because OS scheduler still didn't decide to
+ *             run it.
+ *      3. If function is suspended by OS scheduler in order to execute another
+ *             OS task and GuardedTask_Deinitialize() is called within it,
+ *             execution of function will not be resumed. Same apply if
+ *             GuardedTask_Deinitialize() is called in ISR context while
+ *             function execution is preepted.
+ *      Responsibility to handle such situations is transfered to user code.
+ *
+ * @code{.c}
+ * #include "Kiso_GuardedTask.h"
+ *
+ * // Guarded task function prototype
+ * void GuardedTask_Function(void);
+ *
+ * // Guarded task function implementation
+ * void GuardedTask_Function(void)
+ * {
+ *     // Do something useful
+ * }
+ *
+ * int main(void)
+ * {
+ *     GuardedTask_T taskHandle = {0};
+ *
+ *     // Initialize the corresponding guarded task
+ *     Retcode_T retcode = GuardedTask_Initialize(&taskHandle, GuardedTask_Function, "OurLovelyTask", 4, 100);
+ *
+ *     if(RETCODE_OK == retcode)
+ *     {
+ *         // Order execution of task function.
+ *         retcode = GuardedTask_Signal(&taskHandle);
+ *         // Or, if called from within ISR handler:
+ *         // retcode = GuardedTask_SignalFromIsr(&taskHandle);
+ *     }
+ *
+ *     if(RETCODE_OK == retcode)
+ *     {
+ *         retcode = GuardedTask_Deinitialize(&taskHandle);
+ *     }
+ * }
+ * @endcode
  *
  * @file
  **/
