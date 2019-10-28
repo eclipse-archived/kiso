@@ -16,9 +16,6 @@ file(GLOB TEST_CODE
    unit/source/Logging/${KISO_OS_LIB}/*.cc
 )
 
-# TODO: Exclude for now
-list(FILTER TEST_CODE EXCLUDE REGEX ".*Logging_unittest.cc$")
-
 include_directories(
    ../source
    ../source/${KISO_OS_LIB}
