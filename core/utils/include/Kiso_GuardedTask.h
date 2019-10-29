@@ -36,9 +36,7 @@
  *             run it.
  *      3. If function is suspended by OS scheduler in order to execute another
  *             OS task and GuardedTask_Deinitialize() is called within it,
- *             execution of function will not be resumed. Same apply if
- *             GuardedTask_Deinitialize() is called in ISR context while
- *             function execution is preepted.
+ *             execution of function will not be resumed. 
  *      Responsibility to handle such situations is transfered to user code.
  *
  * @code{.c}
