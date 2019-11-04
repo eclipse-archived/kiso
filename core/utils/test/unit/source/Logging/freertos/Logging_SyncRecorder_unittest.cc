@@ -53,6 +53,30 @@ extern "C"
     /* End of global scope symbol and fake definitions section */
 }
 
+/* Define pseudo fake snprintf */
+static bool SetCustomerSnprintf = false;
+static int32_t SetCountdownFake = 0; /* After x calls, call the fake snprintf */
+
+static int SnprintfCustomReturn = 0;
+
+int snprintf(char *s, size_t n, const char *format, ...)
+{
+    if (SetCustomerSnprintf == true && SetCountdownFake == 0)
+    {
+        return SnprintfCustomReturn;
+    }
+    else
+    {
+        SetCountdownFake -= 1;
+        int ret;
+        va_list list;
+        va_start(list, format);
+        ret = vsnprintf(s, n, format, list);
+        va_end(list);
+        return ret;
+    }
+}
+
 /* Define a fake appender */
 static Retcode_T AppenderFakeRetcode = RETCODE_OK;
 static const char *AppenderFakeReceivedBuffer = NULL;
@@ -181,6 +205,137 @@ TEST_F(Logging_SyncRecorder, Logging_SyncRecorderWrite_NullPointerFail)
     retcode = callWrite(NULL, LOG_LEVEL_ERROR, 0, 0, 0, 0, NULL, NULL);
 
     EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retcode);
+}
+
+TEST_F(Logging_SyncRecorder, Logging_SyncRecorderWrite_FileNullPointerFail)
+{
+    Retcode_T retcode = RETCODE_OK;
+    uint8_t package = 1;
+    uint8_t module = 2;
+    uint32_t line = 32;
+    const char *fmt = "string %s";
+    char arg[] = "error";
+
+    AppenderFakeRetcode = RETCODE_OK;
+    xTaskGetTickCount_fake.return_val = 10;
+
+    retcode = callWrite(&LogRecordSyncCompactTestInstance, LOG_LEVEL_ERROR, package, module, NULL, line, fmt, arg);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retcode);
+}
+
+TEST_F(Logging_SyncRecorder, Logging_SyncRecorderWrite_VaListNullPointerFail)
+{
+    Retcode_T retcode = RETCODE_OK;
+    uint8_t package = 1;
+    uint8_t module = 2;
+    const char *file = "log.txt";
+    uint32_t line = 32;
+    char arg[] = "error";
+
+    AppenderFakeRetcode = RETCODE_OK;
+    xTaskGetTickCount_fake.return_val = 10;
+
+    retcode = callWrite(&LogRecordSyncCompactTestInstance, LOG_LEVEL_ERROR, package, module, file, line, NULL, arg);
+
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER), retcode);
+}
+
+TEST_F(Logging_SyncRecorder, Logging_SyncRecorderWrite_InputMetaDataEmpty)
+{
+    Retcode_T retcode = RETCODE_OK;
+    uint8_t package = 1;
+    uint8_t module = 2;
+    const char *file = "log.txt";
+    uint32_t line = 32;
+    const char *fmt = "";
+    char arg[] = "";
+
+    AppenderFakeRetcode = RETCODE_OK;
+    xTaskGetTickCount_fake.return_val = 10;
+
+    SetCustomerSnprintf = true;
+    SetCountdownFake = 0;
+    SnprintfCustomReturn = 0;
+
+    retcode = callWrite(&LogRecordSyncCompactTestInstance, LOG_LEVEL_ERROR, package, module, file, line, fmt, arg);
+
+    EXPECT_EQ(RETCODE_OK, retcode);
+    EXPECT_EQ(UINT32_C(0), AppenderFakeReceivedBufferSize);
+}
+
+TEST_F(Logging_SyncRecorder, Logging_SyncRecorderWrite_InputMetaDataOverflow)
+{
+    Retcode_T retcode = RETCODE_OK;
+    uint8_t package = 1;
+    uint8_t module = 2;
+    const char *file = "log.txt";
+    uint32_t line = 32;
+    const char *fmt = "";
+    char arg[] = "";
+
+    AppenderFakeRetcode = RETCODE_OK;
+    xTaskGetTickCount_fake.return_val = 10;
+
+    SetCustomerSnprintf = true;
+    SetCountdownFake = 0;
+    SnprintfCustomReturn = LOG_BUFFER_SIZE;
+
+    retcode = callWrite(&LogRecordSyncCompactTestInstance, LOG_LEVEL_ERROR, package, module, file, line, fmt, arg);
+
+    EXPECT_EQ(RETCODE_OK, retcode);
+    EXPECT_EQ(LOG_BUFFER_SIZE, (uint16_t)(AppenderFakeReceivedBufferSize));
+}
+
+TEST_F(Logging_SyncRecorder, Logging_SyncRecorderWrite_NoPayload)
+{
+    Retcode_T retcode = RETCODE_OK;
+    uint8_t package = 1;
+    uint8_t module = 2;
+    const char *file = "log.txt";
+    uint32_t line = 32;
+    const char *fmt = "";
+    char arg[] = "";
+
+    AppenderFakeRetcode = RETCODE_OK;
+    xTaskGetTickCount_fake.return_val = 10;
+
+    SetCustomerSnprintf = true;
+    SetCountdownFake = 1;
+    SnprintfCustomReturn = 0;
+
+    retcode = callWrite(&LogRecordSyncCompactTestInstance, LOG_LEVEL_ERROR, package, module, file, line, fmt, arg);
+
+    EXPECT_EQ(RETCODE_OK, retcode);
+
+    /* Expected output */
+    printf("%s", AppenderFakeReceivedBuffer);
+    char expectedOutput[] = "10 E 1 (null)\t[log.txt:32]\t";
+    EXPECT_STREQ(expectedOutput, AppenderFakeReceivedBuffer);
+}
+
+TEST_F(Logging_SyncRecorder, Logging_SyncRecorderWrite_PayloadToBig)
+{
+    Retcode_T retcode = RETCODE_OK;
+    uint8_t package = 1;
+    uint8_t module = 2;
+    const char *file = "log.txt";
+    uint32_t line = 32;
+    const char *fmt = "";
+    char arg[] = "";
+
+    AppenderFakeRetcode = RETCODE_OK;
+    xTaskGetTickCount_fake.return_val = 10;
+
+    SetCustomerSnprintf = true;
+    SetCountdownFake = 1;
+    SnprintfCustomReturn = LOG_BUFFER_SIZE;
+
+    retcode = callWrite(&LogRecordSyncCompactTestInstance, LOG_LEVEL_ERROR, package, module, file, line, fmt, arg);
+
+    EXPECT_EQ(RETCODE_OK, retcode);
+    char expectedOutput[] = "10 E 1 (null)\t[log.txt:32]\t";
+    EXPECT_STREQ(expectedOutput, AppenderFakeReceivedBuffer);
 }
 
 TEST_F(Logging_SyncRecorder, Logging_SyncRecorderWrite_AppenderFail)

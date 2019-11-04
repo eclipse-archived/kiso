@@ -144,6 +144,69 @@ TEST_F(Logging, Logging_Initialization_AppenderInitFail)
     EXPECT_EQ(UINT32_C(1), RecorderDeinitFake_fake.call_count);
 }
 
+TEST_F(Logging, Logging_Initialization_AppenderInitNullPointerCoverage)
+{
+    Retcode_T retcode = RETCODE_OK;
+    AppenderInitFake_fake.return_val = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+
+    const LogRecorder_T RecorderNull =
+        {
+            .Init = NULL,
+            .Deinit = NULL,
+            .Write = NULL,
+            .Wakeup = NULL,
+            .Appender = {.Init = NULL, .Write = NULL}};
+    const LogRecorder_T *Fake_RecorderNull = &RecorderNull;
+    retcode = Logging_Init(Fake_RecorderNull, Fake_Appender);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), retcode);
+
+    /* Next test */
+    const LogRecorder_T RecorderNull2 =
+        {
+            .Init = RecorderInitFake,
+            .Deinit = NULL,
+            .Write = NULL,
+            .Wakeup = NULL,
+            .Appender = {.Init = NULL, .Write = NULL}};
+    const LogRecorder_T *Fake_RecorderNull2 = &RecorderNull2;
+    retcode = Logging_Init(Fake_RecorderNull2, Fake_Appender);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), retcode);
+
+    /* Next test */
+    const LogRecorder_T RecorderNull3 =
+        {
+            .Init = RecorderInitFake,
+            .Deinit = RecorderDeinitFake,
+            .Write = NULL,
+            .Wakeup = NULL,
+            .Appender = {.Init = NULL, .Write = NULL}};
+    const LogRecorder_T *Fake_RecorderNull3 = &RecorderNull3;
+    retcode = Logging_Init(Fake_RecorderNull3, Fake_Appender);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), retcode);
+
+    /* Next test */
+    retcode = Logging_Init(Fake_Recorder, NULL);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), retcode);
+
+    /* Next test */
+    const LogAppender_T AppenderNull =
+        {
+            .Init = NULL,
+            .Write = NULL};
+    const LogAppender_T *Fake_AppenderNull = &AppenderNull;
+    retcode = Logging_Init(Fake_Recorder, Fake_AppenderNull);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), retcode);
+
+    /* Next test */
+    const LogAppender_T AppenderNull1 =
+        {
+            .Init = AppenderInitFake,
+            .Write = NULL};
+    const LogAppender_T *Fake_AppenderNull1 = &AppenderNull1;
+    retcode = Logging_Init(Fake_Recorder, Fake_AppenderNull1);
+    EXPECT_EQ(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM), retcode);
+}
+
 /* The following declarations are only here to give an example
  * of input for the next tests.
  */
