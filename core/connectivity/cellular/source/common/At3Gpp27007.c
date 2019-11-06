@@ -360,7 +360,7 @@ static Retcode_T Set_CXREG(const char *fmt, AT_CXREG_N_T n)
     }
     else
     {
-        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_3GPP_27007_SHORT_TIMEOUT);
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_3GPP_27007_SHORT_TIMEOUT);
         if (RETCODE_OK == retcode)
         {
             retcode = Utils_WaitForAndHandleResponseCode(CMD_3GPP_27007_SHORT_TIMEOUT, retcode);
@@ -378,10 +378,10 @@ static Retcode_T Send_Get_CXREG(const char *atcmd, const char *cmd)
     assert(NULL != atcmd);
     assert(NULL != cmd);
 
-    retcode = Engine_SendAtCommandWaitEcho((uint8_t *)atcmd, (uint32_t)strlen(atcmd), CMD_3GPP_27007_SHORT_TIMEOUT);
+    retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)atcmd, (uint32_t)strlen(atcmd), CMD_3GPP_27007_SHORT_TIMEOUT);
     if (RETCODE_OK == retcode)
     {
-        retcode = AtResponseQueue_WaitForNamedCmd(CMD_3GPP_27007_SHORT_TIMEOUT, (uint8_t *)cmd, strlen(cmd)); //LCOV_EXCL_BR_LINE
+        retcode = AtResponseQueue_WaitForNamedCmd(CMD_3GPP_27007_SHORT_TIMEOUT, (const uint8_t *)cmd, strlen(cmd)); //LCOV_EXCL_BR_LINE
     }
 
     return retcode;
@@ -848,7 +848,7 @@ Retcode_T At_Set_CGDCONT(const AT_CGDCONT_Param_T *param)
 
     if (RETCODE_OK == retcode)
     {
-        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_3GPP_27007_SHORT_TIMEOUT);
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_3GPP_27007_SHORT_TIMEOUT);
     }
 
     if (RETCODE_OK == retcode)
@@ -873,7 +873,7 @@ Retcode_T At_Set_CGACT(const AT_CGACT_Param_T *param)
 
     if (RETCODE_OK == retcode)
     {
-        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_3GPP_27007_LONG_TIMEOUT);
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_3GPP_27007_LONG_TIMEOUT);
     }
 
     if (RETCODE_OK == retcode)
@@ -901,14 +901,14 @@ Retcode_T At_Set_CGPADDR(const AT_CGPADDR_Param_T *param, AT_CGPADDR_Resp_T *res
 
     if (RETCODE_OK == retcode)
     {
-        retcode = Engine_SendAtCommandWaitEcho((uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_3GPP_27007_SHORT_TIMEOUT); //LCOV_EXCL_BR_LINE
+        retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)Engine_AtSendBuffer, (uint32_t)len, CMD_3GPP_27007_SHORT_TIMEOUT); //LCOV_EXCL_BR_LINE
     }
 
     if (RETCODE_OK == retcode)
     {
         //LCOV_EXCL_BR_START
         retcode = AtResponseQueue_WaitForNamedCmd(CMD_3GPP_27007_SHORT_TIMEOUT,
-                                                  (uint8_t *)CMD_3GPP_27007_ATCGPADDR,
+                                                  (const uint8_t *)CMD_3GPP_27007_ATCGPADDR,
                                                   (uint32_t)strlen(CMD_3GPP_27007_ATCGPADDR));
         //LCOV_EXCL_BR_STOP
     }
@@ -1034,7 +1034,7 @@ Retcode_T At_Test_AT(void)
     Retcode_T retcode = RETCODE_OK;
     AtResponseQueueEntry_T *e;
 
-    retcode = Engine_SendAtCommand((uint8_t *)CMD_3GPP_27007_SET_AT, strlen(CMD_3GPP_27007_SET_AT));
+    retcode = Engine_SendAtCommand((const uint8_t *)CMD_3GPP_27007_SET_AT, strlen(CMD_3GPP_27007_SET_AT));
     if (RETCODE_OK != retcode)
     {
         return retcode;

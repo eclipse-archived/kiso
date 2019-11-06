@@ -434,7 +434,8 @@ Retcode_T Cellular_PowerOn(const Cellular_PowerUpParameters_T *parameters)
     }
     else
     {
-        return Engine_Dispatch(StartupCellular, CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT, (void *)parameters, sizeof(Cellular_PowerUpParameters_T)); //LCOV_EXL_BR_LINE
+        Cellular_PowerUpParameters_T tempParams = *parameters;
+        return Engine_Dispatch(StartupCellular, CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT, (void *)&tempParams, sizeof(Cellular_PowerUpParameters_T)); //LCOV_EXL_BR_LINE
     }
 }
 
@@ -451,7 +452,8 @@ Retcode_T Cellular_Reset(const Cellular_PowerUpParameters_T *parameters)
     }
     else
     {
-        return Engine_Dispatch(ResetCellular, CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT, (void *)parameters, sizeof(Cellular_PowerUpParameters_T)); //LCOV_EXL_BR_LINE
+        Cellular_PowerUpParameters_T tempParams = *parameters;
+        return Engine_Dispatch(ResetCellular, CELLULAR_POWER_SHORT_ENQUEUE_TIMEOUT, (void *)&tempParams, sizeof(Cellular_PowerUpParameters_T)); //LCOV_EXL_BR_LINE
     }
 }
 

@@ -174,7 +174,7 @@ TEST_F(Utils, TestUtilsStrtolBounds)
 
     for (uint32_t i = 0; i < countof(a); i++)
     {
-        retcode = Utils_StrtolBounds((uint8_t *)a[i].str, strlen(a[i].str), &number,
+        retcode = Utils_StrtolBounds((const uint8_t *)a[i].str, strlen(a[i].str), &number,
                                      a[i].LowerBound, a[i].UpperBound);
         EXPECT_EQ(retcode, a[i].retcode);
         EXPECT_EQ(number, a[i].number);
@@ -201,33 +201,33 @@ TEST_F(Utils, TestUtilsWaitForAndHandleResponseCode)
 TEST_F(Utils, TestUtilsTrimFlukeCharacters)
 {
     const char *TestBuffer = "\0AT+CGMM\r\r\n";
-    uint8_t *result;
+    const uint8_t *result;
     uint32_t NewLength;
 
-    result = Utils_TrimFlukeCharacters((uint8_t *)TestBuffer, 11, &NewLength);
+    result = Utils_TrimFlukeCharacters((const uint8_t *)TestBuffer, 11, &NewLength);
     EXPECT_EQ(10U, NewLength);
-    EXPECT_EQ((uint8_t *)TestBuffer + 1, result);
+    EXPECT_EQ((const uint8_t *)TestBuffer + 1, result);
 
     TestBuffer = "\tAT+CGMM\r\r\n";
-    result = Utils_TrimFlukeCharacters((uint8_t *)TestBuffer, 11, &NewLength);
+    result = Utils_TrimFlukeCharacters((const uint8_t *)TestBuffer, 11, &NewLength);
     EXPECT_EQ(10U, NewLength);
-    EXPECT_EQ((uint8_t *)TestBuffer + 1, result);
+    EXPECT_EQ((const uint8_t *)TestBuffer + 1, result);
     TestBuffer = "\rAT+CGM\tM\r\n";
-    result = Utils_TrimFlukeCharacters((uint8_t *)TestBuffer, 11, &NewLength);
+    result = Utils_TrimFlukeCharacters((const uint8_t *)TestBuffer, 11, &NewLength);
     EXPECT_EQ(11U, NewLength);
-    EXPECT_EQ((uint8_t *)TestBuffer, result);
+    EXPECT_EQ((const uint8_t *)TestBuffer, result);
     TestBuffer = "\0";
-    result = Utils_TrimFlukeCharacters((uint8_t *)TestBuffer, 1, &NewLength);
+    result = Utils_TrimFlukeCharacters((const uint8_t *)TestBuffer, 1, &NewLength);
     EXPECT_EQ(0U, NewLength);
-    EXPECT_EQ((uint8_t *)TestBuffer + 1, result);
+    EXPECT_EQ((const uint8_t *)TestBuffer + 1, result);
     TestBuffer = "\n";
-    result = Utils_TrimFlukeCharacters((uint8_t *)TestBuffer, 1, &NewLength);
+    result = Utils_TrimFlukeCharacters((const uint8_t *)TestBuffer, 1, &NewLength);
     EXPECT_EQ(1U, NewLength);
-    EXPECT_EQ((uint8_t *)TestBuffer, result);
+    EXPECT_EQ((const uint8_t *)TestBuffer, result);
 
     uint8_t TestValue[1];
     TestValue[0] = 0x7F;
-    result = Utils_TrimFlukeCharacters((uint8_t *)TestValue, 1, &NewLength);
+    result = Utils_TrimFlukeCharacters((const uint8_t *)TestValue, 1, &NewLength);
     EXPECT_EQ(0U, NewLength);
-    EXPECT_EQ((uint8_t *)TestValue + 1, result);
+    EXPECT_EQ((const uint8_t *)TestValue + 1, result);
 }
