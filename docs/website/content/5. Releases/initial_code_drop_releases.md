@@ -30,7 +30,6 @@ The initial code drop will contain the following packages
   * Logging (Sync recorder & uart appender)
   * ErrorLogger
   * CRC
-  * TLV
   * X-Protocol
   * Ring Buffer
   * UART Transceiver

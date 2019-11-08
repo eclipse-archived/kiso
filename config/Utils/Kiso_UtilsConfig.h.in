@@ -138,13 +138,6 @@
 // clang-format on
 #endif /* ifdef KISO_FEATURE_TASKMONITOR */
 
-#ifndef KISO_FEATURE_TLV
-/** @brief Enable (1) or disable (0) the Tlv feature. */
-// clang-format off
-#define KISO_FEATURE_TLV (${CFG_KISO_FEATURE_TLV})
-// clang-format on
-#endif
-
 #ifndef KISO_FEATURE_UARTTRANSCEIVER
 /** @brief Enable (1) or disable (0) the UartTransceiver feature. */
 // clang-format off
