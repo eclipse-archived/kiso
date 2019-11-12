@@ -26,7 +26,7 @@
  */
 
 #include "AppModules.h"
-#define KISO_MODULE_ID CGW_APP_MODULE_MAIN
+#define KISO_MODULE_ID APP_MODULE_MAIN
 
 #include "App.h"
 #include "AppConfig.h"
@@ -47,7 +47,7 @@
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
 #undef KISO_MODULE_ID /* Module ID define before including Basics package*/
-#define KISO_MODULE_ID CGW_APP_MODULE_ID_MAIN
+#define KISO_MODULE_ID APP_MODULE_ID_MAIN
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
