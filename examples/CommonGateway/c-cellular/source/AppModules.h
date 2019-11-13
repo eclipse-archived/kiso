@@ -21,8 +21,8 @@
  */
 enum App_ModuleID_E
 {
-    APP_MODULE_MAIN = 1,
-    APP_MODULE_APP
+    APP_MODULE_ID_MAIN = 1,
+    APP_MODULE_ID_APP
     /* Define next module ID here and assign a value to it! */
 };
 
