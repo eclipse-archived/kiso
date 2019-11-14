@@ -23,10 +23,12 @@ if(${CMAKE_CROSSCOMPILING})
    target_link_libraries(application bsp essentials utils ${KISO_OS_LIB} ${KISO_BOARD_LIBS})
 
    add_custom_target(application.bin ALL
-      COMMAND ${CMAKE_OBJCOPY} -O binary -R .usrpg application application.bin
-      COMMENT "Creating flashable binary ${CMAKE_CURRENT_LIST_DIR}/application.bin"
+      COMMAND ${CMAKE_OBJCOPY} -O binary -R .usrpg $<TARGET_FILE:application> ${CMAKE_CURRENT_BINARY_DIR}/application.bin
+      COMMENT "Creating flashable binary ${CMAKE_CURRENT_BINARY_DIR}/application.bin"
    )
    add_dependencies(application.bin application)
+
+   CREATE_FLASH_TARGET_JLINK(application)
 endif()
 
 # Generate/copy app-scope middleware config files from configuration repository

@@ -84,6 +84,8 @@ if(${ENABLE_STATIC_CHECKS})
       message(STATUS "Looking for clang-tidy: ${CLANG_TIDY}")
 endif()
 
+include(cmake/FlashTarget.cmake)
+
 ## Add main application code
 add_subdirectory(examples/${KISO_BOARD_NAME}/${KISO_EXAMPLE})
 
