@@ -14,8 +14,14 @@
 
 cmake_minimum_required(VERSION 3.6)
 
+find_program(WSLPATH NAMES wslpath)
+
 set(JLINK_FOUND FALSE)
-find_program(JLINK_PATH NAMES jlink jlink.exe)
+if(NOT WSLPATH) # Linux or Windows
+    find_program(JLINK_PATH NAMES JLinkExe jlink jlink.exe)
+else() # WSL - find only WIN binaries
+    find_program(JLINK_PATH NAMES jlink jlink.exe)
+endif()
 
 if(NOT JLINK_PATH)
     set(JLINK_FOUND TRUE)
@@ -38,26 +44,45 @@ endif()
 #    cmake --build . --target flash
 #
 function(CREATE_FLASH_TARGET_JLINK ELF_TARGET)
+    set(HEX_TARGET_PATH "${CMAKE_CURRENT_BINARY_DIR}/${ELF_TARGET}.hex")
+
     add_custom_target(${ELF_TARGET}.hex
-        COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:${ELF_TARGET}> ${CMAKE_CURRENT_BINARY_DIR}/${ELF_TARGET}.hex
-        COMMENT "Creating flashable hex ${CMAKE_CURRENT_BINARY_DIR}/${ELF_TARGET}.hex"
+        COMMAND ${CMAKE_OBJCOPY} -O ihex $<TARGET_FILE:${ELF_TARGET}> ${HEX_TARGET_PATH}
+        COMMENT "Creating flashable hex ${HEX_TARGET_PATH}"
     )
     add_dependencies(${ELF_TARGET}.hex ${ELF_TARGET})
 
+    set(SCRIPT_PATH ${CMAKE_CURRENT_BINARY_DIR}/flash.jlink)
+
+    # WSL workaround
+    # WSL does not expose USB devices so native linux jlink binaries can't be used.
+    # Patch the paths with the provided wslpath utility so that WIN jlink can recognize them outside WSL
+    if(WSLPATH)
+        # 'wslpath -w' to be read directly inside jlink
+        execute_process(COMMAND ${WSLPATH} -w ${HEX_TARGET_PATH} OUTPUT_VARIABLE WIN_TARGET_PATH)
+        string(STRIP ${WIN_TARGET_PATH} HEX_TARGET_PATH)
+    endif()
+
     # \todo: This can be exported to file and replaced with configure_file
-    file(WRITE  ${CMAKE_CURRENT_BINARY_DIR}/flash.jlink "exitonerror 1\n")
-    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/flash.jlink "device ${KISO_MCU_DEVICE}\n")
-    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/flash.jlink "if swd\n")
-    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/flash.jlink "speed 4000\n")
-    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/flash.jlink "connect\n")
-    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/flash.jlink "r\n")
-    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/flash.jlink "h\n")
-    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/flash.jlink "loadfile ${CMAKE_CURRENT_BINARY_DIR}/${ELF_TARGET}.hex\n")
-    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/flash.jlink "r\n")
-    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/flash.jlink "qc\n")
+    file(WRITE  ${SCRIPT_PATH} "exitonerror 1\n")
+    file(APPEND ${SCRIPT_PATH} "device ${KISO_MCU_DEVICE}\n")
+    file(APPEND ${SCRIPT_PATH} "if swd\n")
+    file(APPEND ${SCRIPT_PATH} "speed 4000\n")
+    file(APPEND ${SCRIPT_PATH} "connect\n")
+    file(APPEND ${SCRIPT_PATH} "r\n")
+    file(APPEND ${SCRIPT_PATH} "h\n")
+    file(APPEND ${SCRIPT_PATH} "loadfile ${HEX_TARGET_PATH}\n")
+    file(APPEND ${SCRIPT_PATH} "r\n")
+    file(APPEND ${SCRIPT_PATH} "qc\n")
+
+    if(WSLPATH)
+        # 'wslpath -m' so it's not escaped improperly
+        execute_process(COMMAND ${WSLPATH} -m ${SCRIPT_PATH} OUTPUT_VARIABLE WIN_SCRIPT_PATH)
+        string(STRIP ${WIN_SCRIPT_PATH} SCRIPT_PATH)
+    endif()
 
     add_custom_target(flash
-        COMMAND ${JLINK_PATH} -CommanderScript ${CMAKE_CURRENT_BINARY_DIR}/flash.jlink
+        COMMAND ${JLINK_PATH} -CommanderScript ${SCRIPT_PATH}
     )
     add_dependencies(flash ${ELF_TARGET}.hex)
 endfunction(CREATE_FLASH_TARGET_JLINK)
