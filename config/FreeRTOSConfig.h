@@ -114,6 +114,11 @@ extern "C"
 #define INCLUDE_eTaskGetState (0)
 #define INCLUDE_xTimerPendFunctionCall (1)
 
+/* lwip required config */
+#define INCLUDE_xTaskAbortDelay (1)
+/* is 10 a good number to set? */
+#define configNUM_THREAD_LOCAL_STORAGE_POINTERS (10)
+
 /* Default value of CPU clock (RC)*/
 #define configCPU_CLOCK_HZ (SystemCoreClock)
 
