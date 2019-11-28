@@ -13,13 +13,15 @@
 ********************************************************************************/
 
 /**
+ * @file
  * @defgroup    KISO_C_EXAMPLE_BLINKY Blinky LED Example
+ * @ingroup     KISO_EXAMPLES
  * @{
  *
- * @brief Blinky LED example
+ * @brief       Blinky LED example
  *
- * @details Demo application demonstrates how to use the LED API from KISO.
- * @file
+ * @details     
+ * Demo application demonstrates how to use the LED API from KISO.
  **/
 
 #ifndef BLINKY_LED_H_

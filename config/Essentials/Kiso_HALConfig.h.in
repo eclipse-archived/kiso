@@ -13,11 +13,10 @@
 ********************************************************************************/
 
 /**
- * @defgroup HALCONFIG    CommonGateway HAL Configuration file
- * @{
- *
  * @file
- *
+ * @defgroup    HALCONFIG   CommonGateway HAL Configuration
+ * @ingroup     KISO_COMMONGATEWAY
+ * @{
  * @brief Configures which hardware capabilities the board makes available.
  *
  * @details

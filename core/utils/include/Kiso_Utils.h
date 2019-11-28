@@ -13,8 +13,10 @@
 ********************************************************************************/
 
 /**
- *
+ * @file
  * @defgroup UTILS Utils
+ * @ingroup KISO_CORE 
+ 
  * @{
  *
  * @brief
@@ -25,7 +27,7 @@
  *      like Logging (@ref LOGGING), Task Monitoring (@ref TASKMONITOR), CRC checking (@ref CRC), etc.
  *      These modules can be individually enabled or disabled per application via
  *      Kiso_UtilsConfig.cmake in the config directory of the application.
- * @file
+ 
  */
 
 #ifndef KISO_UTILS_H_

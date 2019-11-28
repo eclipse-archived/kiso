@@ -17,6 +17,7 @@
  *
  * @file
  * @defgroup    KISO_ESSENTIALS Essentials
+ * @ingroup KISO_CORE 
  * @{
  *
  * @brief       Provides supported enumerations for Essentials component
