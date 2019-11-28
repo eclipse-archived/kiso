@@ -63,6 +63,7 @@ pipeline
                             echo "run static analysis"
                             sh 'cmake . -Bbuilddir-static -G"Unix Makefiles" -DKISO_BOARD_NAME=CommonGateway -DENABLE_STATIC_CHECKS=1 -DENABLE_ALL_FEATURES=1 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON'
                             sh 'cmake --build builddir-static 2> builddir-static/clang-report.txt'
+                            sh 'if [ ! -s builddir-static/clang-report.txt ]; then  echo "Good, all tests have been passed w/o findings" > builddir-static/clang-report.txt; fi;'
                             sh 'cat builddir-static/clang-report.txt | python ci/thirdparty/clangTidyToJunit/clang-tidy-to-junit.py `pwd` > builddir-static/clang-report.xml'
                         }
                     }
