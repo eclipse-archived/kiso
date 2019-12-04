@@ -24,10 +24,7 @@ The automated testing results can be accessed via [Jenkins dashboard](https://rb
 Please note that (for now) an account is needed.
 
 ## Documentation ##
-* Architecture overview
-  Please take a look at [architecture overview](http://kiso.rempler.de:1313/2.-concepts/overall_architecture/#overall-architecture)
-* Users manual
-  Please take a look at [documentation](http://kiso.rempler.de:1313/)
-* API documentation
-  Please take a look at [doxygen documentation](http://kiso.rempler.de:8080/)
+* Architecture: [architecture overview](http://kiso.rempler.de:1313/2.-concepts/overall_architecture/#overall-architecture)
+* User manual: [documentation](http://kiso.rempler.de:1313/)
+* API documentation: [doxygen documentation](http://kiso.rempler.de:8080/)
 
