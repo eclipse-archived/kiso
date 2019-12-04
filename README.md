@@ -15,28 +15,19 @@ Community support is provided via Mattermost, see Kiso channel https://mattermos
 An Eclipse Foundation Mattermost account is needed.
 
 ## Release notes ##
-The project's release notes inluding known issues can be found at 
+The project's release notes can be found at 
 Please take a look at [release notes](https://github.com/Bosch-AE-SW/cddk-oss/blob/master/RELEASE_NOTES.md)
+This is including the features, e.g., the supported reference HW as well as the known issues.
 
 ## Continuous integration ##
 The automated testing results can be accessed via [Jenkins dashboard](https://rb-jmaas.de.bosch.com/software-campus/view/Kiso-Dashboard/)
 Please note that (for now) an account is needed.
 
 ## Documentation ##
-# Architecture overview #
-Please take a look at [architecture overview](http://kiso.rempler.de:1313/2.-concepts/overall_architecture/#overall-architecture)
-# Users manual #
-Please take a look at [documentation](http://kiso.rempler.de:1313/)
-# API documentation #
-Please take a look at [doxygen documentation](http://kiso.rempler.de:8080/)
+* Architecture overview
+  Please take a look at [architecture overview](http://kiso.rempler.de:1313/2.-concepts/overall_architecture/#overall-architecture)
+* Users manual
+  Please take a look at [documentation](http://kiso.rempler.de:1313/)
+* API documentation
+  Please take a look at [doxygen documentation](http://kiso.rempler.de:8080/)
 
-## Supported hardware ##
-* Bosch CommonGateway (Bosch internally available)
-* Nxxxxx-xxxxxx (publicly available - work in progress)
-* Bosch Xxxxxx (publicly available - work in progress)
-* Lxxxxxxx-xxx (publicly available - work in progress)
-* Bosch NXxxx (publicly available - work in progress)
-* ... more to come
-
-## Bosch ##
-Please take a look at [Bosch internal IT setup](https://github.com/Bosch-AE-SW/cddk-oss/wiki)
