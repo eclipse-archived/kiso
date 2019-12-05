@@ -1,5 +1,5 @@
 ---
-title: "Advance guide"
+title: "Advanced guide"
 description: "How to load features specific to your board"
 weight: 2
 draft: false
