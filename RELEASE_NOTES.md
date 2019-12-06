@@ -30,6 +30,7 @@ See [DISCLAIMER.md](https://github.com/Bosch-AE-SW/cddk-oss/blob/feature/%23355_
     * Ublox SARA R4 (Cat-M1, NB-IoT)
     * DNS
     * HTTP
+    * TCP/UDP Sockets
   * Continuous integration:
     * clang-format (code format check)
     * clang-tidy (static code check)
