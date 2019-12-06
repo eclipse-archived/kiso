@@ -22,7 +22,6 @@ See [DISCLAIMER.md](https://github.com/Bosch-AE-SW/cddk-oss/blob/feature/%23355_
     * Logging (sync recorder & UART appender)
     * ErrorLogger
     * CRC
-    * TLV
     * X-protocol
     * Ring (circular) buffer
     * UART transceiver
