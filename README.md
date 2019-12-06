@@ -4,7 +4,7 @@
 ## Introduction ##
 The Bosch Connected Devices Development Kit (CDDK) has been originally used to develop several industrial and end-user products. Its historical SW roots go back to 2013 where it has been designed from scratch as a software development kit (SDK) for internet of things (IoT) devices. CDDK's core components faciliate a real time operating system approach to target small footprints and low power consumption. It is not limited to a single OS and offers a broad HW support (boards and sensors).
 
-Kiso (Japanse for "basis") is an Eclipse Foundation project that is using the original code base of CDDK. Kiso is transferring the Bosch proprietary licence code piece-by-piece to EPLv2 open source. Kiso's quality goals - understandability, usability, product quality, extensibility and performance - are the key factors that enable a fast prototype and product development. By this, it reduces the time to market together with minimizing technical debts for almost all kinds of IoT "Things".
+Kiso (Japanese for "basis") is an Eclipse Foundation project that is using the original code base of CDDK. Kiso is transferring the Bosch proprietary licence code piece-by-piece to EPLv2 open source. Kiso's quality goals - understandability, usability, product quality, extensibility and performance - are the key factors that enable a fast prototype and product development. By this, it reduces the time to market together with minimizing technical debts for almost all kinds of IoT "Things".
 
 ## Quick start ##
 Please take a look at the [quick start](http://kiso.rempler.de:1313/3.-user-guide/quick_start/) section in the user manual documentation.
