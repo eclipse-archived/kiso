@@ -2,30 +2,21 @@
 ![Kiso logo](./docs/doxygen/Kiso-logo.png)
 
 ## Introduction ##
-Eclipse Kiso was designed from scratch as a software development kit for IoT devices and has already been used and verified on a handful of existing products in the market. Eclipse Kiso's reusability, robustness and portability is a key factor which enables fast development and quick time to market for almost all kinds of IoT "Things" product development.
+The Bosch Connected Devices Development Kit (CDDK) has been originally used to develop several industrial and end-user products. Its historical SW roots go back to 2013 where it has been designed from scratch as a software development kit (SDK) for internet of things (IoT) devices. CDDK's core components faciliate a real time operating system approach to target small footprints and low power consumption. It is not limited to a single OS and offers a broad HW support (boards and sensors).
 
-An overview of what the repository contains and what you can do with it can be found in the doxygen documentation.
-To quickly start working on it, you can go to the next section.
+Kiso (Japanese for "basis") is an Eclipse Foundation project that is using the original code base of CDDK. Kiso is transferring the Bosch proprietary licence code piece-by-piece to EPLv2 open source. Kiso's quality goals - understandability, usability, product quality, extensibility and performance - are the key factors that enable a fast prototype and product development. By this, it reduces the time to market together with minimizing technical debts for almost all kinds of IoT "Things".
 
 ## Quick start ##
-Please take a look at [quick start](http://kiso.rempler.de:1313/3.-user-guide/quick_start/)
+Please take a look at the [quick start](http://kiso.rempler.de:1313/3.-user-guide/quick_start/) section in the user manual documentation.
 
-## Architecture overview ##
-Please take a look at [architecture overview](http://kiso.rempler.de:1313/2.-concepts/overall_architecture/#overall-architecture)
+## Support ##
+Community support is provided via Mattermost, see [Kiso channel](https://mattermost.eclipse.org/eclipse/channels/kiso). An Eclipse Foundation Mattermost account is needed.
 
-## Documentation ##
-Please take a look at [documentation](http://kiso.rempler.de:1313/)
-
-## API documentation ##
-Please take a look at [doxygen documentation](http://kiso.rempler.de:8080/)
-
-## Supported hardware ##
-* Bosch CommonGateway (Bosch internally available)
-* Nxxxxx-xxxxxx (publicly available - work in progress)
-* Bosch Xxxxxx (publicly available - work in progress)
-* Lxxxxxxx-xxx (publicly available - work in progress)
-* Bosch NXxxx (publicly available - work in progress)
-* ... more to come
-
-## Bosch ##
-Please take a look at [Bosch internal IT setup](https://github.com/Bosch-AE-SW/cddk-oss/wiki)
+## Resources ##
+Please note that (for now) some of the following links require additional accounts and/or are limited to Bosch infrastructure access. This is a temporary impediment until Kiso's infrastructure has been moved over to Eclipse Foundation.
+* User manual: [documentation](http://kiso.rempler.de:1313/)
+* Architecture: [architecture overview](http://kiso.rempler.de:1313/2.-concepts/overall_architecture/#overall-architecture)
+* Frequently asked questions: [FAQ](http://kiso.rempler.de:1313/6.%20Frequently%20asked%20questions/)
+* API documentation: [Doxygen documentation](http://kiso.rempler.de:8080/)
+* Release notes (inkl. features, supported reference HW and known issues): [release notes](https://github.com/Bosch-AE-SW/cddk-oss/blob/master/RELEASE_NOTES.md)
+* Continuous integration (automated testing results): [Jenkins dashboard](https://rb-jmaas.de.bosch.com/software-campus/view/Kiso-Dashboard/)
