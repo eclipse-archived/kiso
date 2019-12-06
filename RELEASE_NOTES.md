@@ -27,7 +27,7 @@ See [DISCLAIMER.md](https://github.com/Bosch-AE-SW/cddk-oss/blob/feature/%23355_
     * UART transceiver
     * I2C transceiver
   * SW module: Cellular
-    * Ublox SARA R2 (Cat-M1, NB-IoT)
+    * Ublox SARA R4 (Cat-M1, NB-IoT)
     * DNS
     * HTTP
   * Continuous integration:
