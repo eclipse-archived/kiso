@@ -2,7 +2,7 @@
 2019-10-24: ICD (pre-release)
 
 ## Disclaimer ##
-See [DISCLAIMER.md](https://github.com/Bosch-AE-SW/cddk-oss/blob/feature/%23355_docu_readme_release_notes/DISCLAIMER.md)
+See [DISCLAIMER.md](https://github.com/Bosch-AE-SW/cddk-oss/blob/master/DISCLAIMER.md)
 
 ## Features ##
 * ICD (2019-10-24)
