@@ -18,7 +18,7 @@ pipeline
     }
     triggers // Define how many times the job will be triggered
     {
-        pollSCM('*/5 * * * *') //  If new changes exist, the Pipeline will be re-triggered automatically. Check will be done every 6 minutes
+        pollSCM('*/5 * * * *') //  If new changes exist, the Pipeline will be re-triggered automatically. Check will be done every 5 minutes
     }
 
     stages
@@ -142,6 +142,7 @@ pipeline
                 allowEmptyResults: true,
                 testResults: 'builddir-formatting/clang-format.xml'
             )
+			cleanWs()
         }
         success
         {
