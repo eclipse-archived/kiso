@@ -142,7 +142,6 @@ pipeline
                 allowEmptyResults: true,
                 testResults: 'builddir-formatting/clang-format.xml'
             )
-			cleanWs()
         }
         success
         {
@@ -150,6 +149,7 @@ pipeline
                 artifacts: 'builddir-debug/docs/doxygen/**, builddir-unittests/*_cov/**',
                 fingerprint: true
             )
+	    cleanWs()
         }
         unstable
         {
