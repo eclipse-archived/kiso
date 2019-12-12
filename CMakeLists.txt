@@ -14,7 +14,7 @@ include(kiso_defaults.cmake OPTIONAL)
 ## Should be included as early as possible, before any project specification.
 if (NOT DEFINED CMAKE_TOOLCHAIN_FILE AND NOT ${ENABLE_TESTING})
    # Use full path as it's before project() command
-   include(cmake/toolchain_arm_gcc.cmake)
+   include(cmake/ArmToolchain.cmake)
 endif()
 
 message("------------- KISO CONFIG -------------")
