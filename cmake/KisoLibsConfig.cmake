@@ -12,12 +12,18 @@
 #
 ################################################################################
 
-if(NOT PROJECT_CONFIG_PATH OR NOT EXISTS ${PROJECT_CONFIG_PATH})
-    message(SEND_ERROR "PROJECT_CONFIG_PATH must be set to a valid path, containing configuration headers!")
+if(NOT PROJECT_CONFIG_PATH)
+    message(SEND_ERROR "PROJECT_CONFIG_PATH must be set to a valid path!")
+endif()
+
+get_filename_component(ABS_CONFIG_PATH ${PROJECT_CONFIG_PATH} REALPATH)
+if(NOT EXISTS ${ABS_CONFIG_PATH})
+    message(SEND_ERROR "PROJECT_CONFIG_PATH must be absolute or relative to Kiso root!\n"
+                       "Current value: ${ABS_CONFIG_PATH}")
 endif()
 
 # This variable is internal and managed through this file only
-set(KISO_CONFIG_PATH ${PROJECT_CONFIG_PATH} CACHE PATH "Kiso config headers location")
+set(KISO_CONFIG_PATH ${ABS_CONFIG_PATH} CACHE PATH "Kiso config headers location" FORCE)
 
 ## Create Kiso config header directory for build
 # USER_DIRECTORY is a directory containing user-provided configuration headers for

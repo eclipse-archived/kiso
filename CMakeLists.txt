@@ -2,11 +2,10 @@ cmake_minimum_required(VERSION 3.6)
 
 ## Command line parameter for build variant
 option(ENABLE_TESTING "Configure a build tree for testing instead of normal application mode" OFF)
-option(ENABLE_FORMAT_CHECKS "Run format checks during configuration stage and generate target to fix formatting" ON)
+option(ENABLE_FORMAT_CHECKS "Run format checks during configuration stage and generate target to fix formatting" OFF)
 option(SKIP_FORMAT_REPORTS "Skip generation of format XML reports in build directory" ON)
 option(ENABLE_STATIC_CHECKS "Configure a build tree for static code analysis" OFF)
 option(ENABLE_COVERAGE "Build unit tests with coverage information to use with GCOV and LCOV" ON)
-option(ENABLE_ALL_FEATURES "Configure a build tree in which all optional Kiso features are 'forced-ON'. Useful for static code analysis and test coverage reports. " OFF)
 
 ## Include config file if it exists
 include(kiso_defaults.cmake OPTIONAL)
@@ -14,6 +13,7 @@ include(kiso_defaults.cmake OPTIONAL)
 ## If no external toolchain is specified and we are not building just the unit tests, use the default arm toolchain.
 ## Should be included as early as possible, before any project specification.
 if (NOT DEFINED CMAKE_TOOLCHAIN_FILE AND NOT ${ENABLE_TESTING})
+   # Use full path as it's before project() command
    include(cmake/toolchain_arm_gcc.cmake)
 endif()
 
