@@ -14,7 +14,7 @@ include(kiso_defaults.cmake OPTIONAL)
 ## If no external toolchain is specified and we are not building just the unit tests, use the default arm toolchain.
 ## Should be included as early as possible, before any project specification.
 if (NOT DEFINED CMAKE_TOOLCHAIN_FILE AND NOT ${ENABLE_TESTING})
-   include(toolchain_arm_gcc.cmake)
+   include(cmake/toolchain_arm_gcc.cmake)
 endif()
 
 message("------------- KISO CONFIG -------------")
