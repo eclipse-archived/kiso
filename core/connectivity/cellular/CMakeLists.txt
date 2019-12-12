@@ -1,14 +1,15 @@
 cmake_minimum_required(VERSION 3.6)
 
-project ("Kiso Connectivity" C)
+project ("Kiso Cellular" C)
 
 ## Interface library
 add_library(cellular_int INTERFACE)
 target_include_directories(cellular_int
 INTERFACE
-   cellular/include
+   include
+   ${KISO_CONFIG_PATH}/cellular
 )
-target_link_libraries(cellular_int INTERFACE essentials_int board_config app_config)
+target_link_libraries(cellular_int INTERFACE essentials_int)
 
 ## Enable static code analysis
 #  the checks will be executed as it would be on the desired compile step
@@ -21,16 +22,16 @@ endif()
 if(${CMAKE_CROSSCOMPILING})
 
    file(GLOB CELLULAR_SOURCES
-      cellular/source/common/*.c
-      cellular/source/ublox/*.c
+      source/common/*.c
+      source/ublox/*.c
    )
    add_library(cellular STATIC EXCLUDE_FROM_ALL ${CELLULAR_SOURCES})
    target_include_directories(cellular
    PUBLIC
-      cellular/include
+      include
    PRIVATE
-      cellular/source/protected
-      cellular/source/ublox
+      source/protected
+      source/ublox
    )
    target_link_libraries(cellular cellular_int essentials utils ${KISO_OS_LIB})
 
@@ -38,5 +39,5 @@ endif(${CMAKE_CROSSCOMPILING})
 
 ## Add tests
 if(${CMAKE_TESTING_ENABLED})
-   add_subdirectory(cellular/test)
+   add_subdirectory(test)
 endif()

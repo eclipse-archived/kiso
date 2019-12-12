@@ -67,6 +67,11 @@
 #      make
 #      make my_coverage_target
 #
+# ******************************************************************************
+#
+# Modified by Robert Bosch GmbH.
+#
+# ******************************************************************************
 
 include(CMakeParseArguments)
 
@@ -182,7 +187,7 @@ function(SETUP_TARGET_FOR_COVERAGE_LCOV)
     # Show info where to find the report
     add_custom_command(TARGET ${Coverage_NAME} POST_BUILD
         COMMAND ;
-        COMMENT "Open ${CMAKE_CURRENT_BINARY_DIR}/${Coverage_NAME}/index.html in your browser to view the coverage report."
+        COMMENT "Open ${CMAKE_BINARY_DIR}/${Coverage_NAME}/index.html in your browser to view the coverage report."
     )
 
 endfunction() # SETUP_TARGET_FOR_COVERAGE_LCOV

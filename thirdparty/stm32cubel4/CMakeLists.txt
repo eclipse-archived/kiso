@@ -65,7 +65,7 @@ if(${CMAKE_CROSSCOMPILING})
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_fmc.c
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_sdmmc.c
-      ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_usb.c     
+      ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_ll_usb.c
    )
    # Newer arm-gcc versions have these enabled by default
    include(CheckCCompilerFlag)
@@ -88,8 +88,9 @@ if(${CMAKE_CROSSCOMPILING})
       ${STM32CUBEL4_DIR}/Drivers/CMSIS/Device/ST/STM32L4xx/Include
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Inc
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy
+      ${KISO_CONFIG_PATH}/stm32cubel4
    )
-   target_link_libraries(stm32cubel4 board_config essentials_int)
+   target_link_libraries(stm32cubel4 essentials_int)
 endif(${CMAKE_CROSSCOMPILING})
 
 if(${CMAKE_TESTING_ENABLED})
@@ -102,6 +103,7 @@ if(${CMAKE_TESTING_ENABLED})
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Inc
       ${STM32CUBEL4_DIR}/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy
       test/unit/include
+      ${KISO_CONFIG_PATH}/stm32cubel4
    )
    target_compile_options(stm32cubel4_test_int INTERFACE
       -Wno-int-to-pointer-cast
