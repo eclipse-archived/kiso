@@ -7,7 +7,7 @@ add_library(utils_int INTERFACE)
 target_include_directories(utils_int
 INTERFACE
    include
-   ${KISO_CONFIG_PATH}/utils
+   ${KISO_CONFIG_PATH}/core/utils
 )
 
 ## Enable static code analysis

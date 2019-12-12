@@ -88,7 +88,7 @@ if(${CMAKE_CROSSCOMPILING})
       ${STM32CUBEL4_PATH}/Drivers/CMSIS/Device/ST/STM32L4xx/Include
       ${STM32CUBEL4_PATH}/Drivers/STM32L4xx_HAL_Driver/Inc
       ${STM32CUBEL4_PATH}/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy
-      ${KISO_CONFIG_PATH}/stm32cubel4
+      ${KISO_CONFIG_PATH}/thirdparty/stm32cubel4
    )
    target_link_libraries(stm32cubel4 essentials_int)
 endif(${CMAKE_CROSSCOMPILING})
@@ -103,7 +103,7 @@ if(${CMAKE_TESTING_ENABLED})
       ${STM32CUBEL4_PATH}/Drivers/STM32L4xx_HAL_Driver/Inc
       ${STM32CUBEL4_PATH}/Drivers/STM32L4xx_HAL_Driver/Inc/Legacy
       test/unit/include
-      ${KISO_CONFIG_PATH}/stm32cubel4
+      ${KISO_CONFIG_PATH}/thirdparty/stm32cubel4
    )
    target_compile_options(stm32cubel4_test_int INTERFACE
       -Wno-int-to-pointer-cast

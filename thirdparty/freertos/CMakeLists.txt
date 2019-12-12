@@ -20,7 +20,7 @@ add_library(freertos_int INTERFACE)
 target_include_directories(freertos_int INTERFACE
    ${FREERTOS_PATH}/include
    ${FREERTOS_PORT_PATH}
-   ${KISO_CONFIG_PATH}/freertos
+   ${KISO_CONFIG_PATH}/thirdparty/freertos
 )
 target_link_libraries(freertos_int INTERFACE essentials_int)
 

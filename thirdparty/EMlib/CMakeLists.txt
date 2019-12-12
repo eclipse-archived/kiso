@@ -26,12 +26,13 @@ if(${CMAKE_CROSSCOMPILING})
       ${EMLIB_PATH}/CMSIS/Include
       ${EMLIB_PATH}/Device/SiliconLabs/${KISO_MCU_FAMILY}/include
       ${EMLIB_PATH}/emlib/inc
+      ${KISO_CONFIG_PATH}/thirdparty/emlib
    )
    if(${EMLIB_INCLUDE_USB})
       target_include_directories(emlib PUBLIC ${EMLIB_PATH}/usb/inc)
    endif()
 
-   target_link_libraries(emlib kiso_config)
+   target_link_libraries(emlib)
 endif()
 
 if(${CMAKE_TESTING_ENABLED})
@@ -43,6 +44,6 @@ if(${CMAKE_TESTING_ENABLED})
       ${EMLIB_PATH}/CMSIS/Include
       ${EMLIB_PATH}/Device/SiliconLabs/${KISO_MCU_FAMILY}/include
       ${EMLIB_PATH}/emlib/inc
+      ${KISO_CONFIG_PATH}/thirdparty/emlib
    )
-   target_link_libraries(emlib_test_int INTERFACE kiso_config)
 endif()
