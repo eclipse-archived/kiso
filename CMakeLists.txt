@@ -22,7 +22,7 @@ message("Building Kiso tests:   ${ENABLE_TESTING}")
 message("  ... with coverage:   ${ENABLE_COVERAGE}")
 message("Selected Kiso board:   ${KISO_BOARD_NAME}")
 message("Selected Kiso OS:      ${KISO_OS_LIB}")
-message("Selected Kiso Example: ${KISO_EXAMPLE}")
+message("Kiso Application:      ${KISO_APPLICATION_PATH}")
 message("Project Config Path:   ${PROJECT_CONFIG_PATH}")
 message("------------- KISO CONFIG -------------")
 
@@ -86,8 +86,9 @@ endif()
 
 include(KisoLibsConfig)
 
-## Add main application code
-add_subdirectory(examples/${KISO_BOARD_NAME}/${KISO_EXAMPLE})
+## Add application code
+get_filename_component(KISO_APPLICATION_NAME ${KISO_APPLICATION_PATH} NAME)
+add_subdirectory(${KISO_APPLICATION_PATH} ${CMAKE_CURRENT_BINARY_DIR}/applications/${KISO_APPLICATION_NAME})
 
 ## Add board and core libs
 add_subdirectory(boards)

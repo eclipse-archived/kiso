@@ -34,8 +34,8 @@ if(NOT KISO_OS_LIB)
 endif()
 
 ## Use this application directory to build the application
-if(NOT KISO_EXAMPLE)
-   set(KISO_EXAMPLE c-leds)
+if(NOT KISO_APPLICATION_PATH)
+   set(KISO_APPLICATION_PATH examples/${KISO_BOARD_NAME}/c-leds)
 endif()
 
 ## Directory with configuration headers for packages
