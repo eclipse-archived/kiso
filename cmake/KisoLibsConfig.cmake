@@ -52,7 +52,7 @@ foreach(HEADER ${PRJ_CONF_FILES})
     configure_file(${PROJECT_CONFIG_PATH}/${HEADER} ${DEST} COPYONLY)
 endforeach(HEADER ${PRJ_CONF_FILES})
 
-if(NOT ${CMAKE_TESTING_ENABLED}) # Skip in unit-test build to have predictable environment
+if(NOT CMAKE_TESTING_ENABLED) # Skip in unit-test build to have predictable environment
     # Copy board-specific config files in intermediary directory
     file(GLOB_RECURSE BOARD_CONF_FILES
         LIST_DIRECTORIES false
@@ -95,6 +95,6 @@ if(NOT ${CMAKE_TESTING_ENABLED}) # Skip in unit-test build to have predictable e
                 endif(SUBDIR)
                 configure_file(${APP_CONFIG_PATH}/${HEADER} ${DEST} COPYONLY)
             endforeach(HEADER ${USER_CONF_FILES})
-        endif()
-    endif()
-endif()
+        endif(NOT EXISTS ${ABS_APP_CONFIG_PATH})
+    endif(NOT APP_CONFIG_PATH)
+endif(NOT CMAKE_TESTING_ENABLED)
