@@ -40,5 +40,5 @@ endif()
 
 ## Directory with configuration headers for packages
 if(NOT PROJECT_CONFIG_PATH)
-   set(PROJECT_CONFIG_PATH ${CMAKE_SOURCE_DIR}/config CACHE PATH "Default Kiso config headers location")
+   set(PROJECT_CONFIG_PATH ${CMAKE_SOURCE_DIR}/config)
 endif()
