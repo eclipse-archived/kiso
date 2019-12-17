@@ -24,8 +24,8 @@ endif()
 # set(ARM_TOOLCHAIN_DIR /usr/local/arm-gcc/bin)
 
 ## Board name to compile for
-if(NOT KISO_BOARD_NAME)
-   set(KISO_BOARD_NAME CommonGateway)
+if(NOT KISO_BOARD_PATH)
+   set(KISO_BOARD_PATH boards/CommonGateway)
 endif()
 
 ## OS to use (only option is freertos for now)
@@ -35,7 +35,7 @@ endif()
 
 ## Use this application directory to build the application
 if(NOT KISO_APPLICATION_PATH)
-   set(KISO_APPLICATION_PATH examples/${KISO_BOARD_NAME}/c-leds)
+   set(KISO_APPLICATION_PATH examples/CommonGateway/c-leds)
 endif()
 
 ## Directory with configuration headers for packages

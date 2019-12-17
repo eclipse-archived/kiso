@@ -20,9 +20,9 @@ endif()
 message("------------- KISO CONFIG -------------")
 message("Building Kiso tests:   ${ENABLE_TESTING}")
 message("  ... with coverage:   ${ENABLE_COVERAGE}")
-message("Selected Kiso board:   ${KISO_BOARD_NAME}")
-message("Selected Kiso OS:      ${KISO_OS_LIB}")
-message("Kiso Application:      ${KISO_APPLICATION_PATH}")
+message("Kiso Board Path:       ${KISO_BOARD_PATH}")
+message("Kiso OS:               ${KISO_OS_LIB}")
+message("Kiso Application Path: ${KISO_APPLICATION_PATH}")
 message("Project Config Path:   ${PROJECT_CONFIG_PATH}")
 message("------------- KISO CONFIG -------------")
 
@@ -70,12 +70,17 @@ if(${ENABLE_TESTING})
 endif(${ENABLE_TESTING})
 
 ## Check for valid board and include the configuration
-if(NOT DEFINED KISO_BOARD_NAME)
-   message(SEND_ERROR "KISO_BOARD_NAME is a required parameter! Use cmake <...> -DKISO_BOARD_NAME=... to specify.")
-elseif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/boards/${KISO_BOARD_NAME}) # Use full path - undefined behavior with relative path
-   message(SEND_ERROR "board_config.cmake missing for board ${KISO_BOARD_NAME}")
+if(NOT DEFINED KISO_BOARD_PATH)
+   message(SEND_ERROR "KISO_BOARD_PATH is a required parameter! Use cmake <...> -DKISO_BOARD_PATH=... to specify.")
 else()
-   include(boards/${KISO_BOARD_NAME}/board_config.cmake)
+   get_filename_component(ABS_BOARD_PATH ${KISO_BOARD_PATH} REALPATH)
+   if(NOT EXISTS ${ABS_BOARD_PATH}/board_config.cmake) # Use full path - undefined behavior with relative path
+      message(SEND_ERROR "board_config.cmake missing for board ${KISO_BOARD_PATH}")
+   else()
+      include(${ABS_BOARD_PATH}/board_config.cmake)
+      get_filename_component(KISO_BOARD_NAME ${KISO_BOARD_PATH} NAME)
+      add_subdirectory(${ABS_BOARD_PATH} ${CMAKE_CURRENT_BINARY_DIR}/boards/${KISO_BOARD_NAME})
+   endif()
 endif()
 
 if(${ENABLE_STATIC_CHECKS})
@@ -91,7 +96,7 @@ add_subdirectory(${KISO_APPLICATION_PATH} ${CMAKE_CURRENT_BINARY_DIR}/applicatio
 include(KisoLibsConfig)
 
 ## Add board and core libs
-add_subdirectory(boards)
+#add_subdirectory(boards)
 add_subdirectory(core/essentials)
 add_subdirectory(core/utils)
 add_subdirectory(core/connectivity/cellular)
