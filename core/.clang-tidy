@@ -1,0 +1,18 @@
+---
+Checks: '-*, readability-*, clang-analyzer-*, misc-*'
+
+CheckOptions: 
+ - key:          readability-function-size.LineThreshold
+   value:        '120' 
+ - key:          readability-function-size.BranchThreshold
+   value:        '15' 
+ - key:          readability-function-size.NestingThreshold 
+   value:        '7'
+ - key:          readability-function-size.ParameterThreshold
+   value:        '8'
+ - key:          readability-function-size.StatementThreshold
+   value:        '100'
+ - key:          readability-function-size.VariableThreshold
+   value:        '8'
+ - key:          readability-inconsistent-declaration-parameter-name.Strict
+   value:        '0'
