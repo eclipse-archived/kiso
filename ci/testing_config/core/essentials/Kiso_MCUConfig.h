@@ -14,8 +14,8 @@
 
 /**
  * @file
- * @defgroup    HALCONFIG   CommonGateway HAL Configuration
- * @ingroup     KISO_COMMONGATEWAY
+ * @defgroup    MCUCONFIG   MCU HAL Configuration
+ * @ingroup     KISO_ESSENTIALS
  * @{
  * @brief Configures which hardware capabilities the board makes available.
  *
@@ -34,8 +34,8 @@
  * If a define is missing in this header the feature will be disabled by default.
  */
 
-#ifndef KISO_HALCONFIG_H_
-#define KISO_HALCONFIG_H_
+#ifndef KISO_MCUCONFIG_H_
+#define KISO_MCUCONFIG_H_
 
 // clang-format off
 
@@ -51,18 +51,7 @@
 #define KISO_FEATURE_RNG      1
 #define KISO_FEATURE_MCU_CRC  1
 
-/* BSP Features */
-#define KISO_FEATURE_BSP_LED               1
-#define KISO_FEATURE_BSP_BUTTON            1
-#define KISO_FEATURE_BSP_CELLULAR_SARAR4N4 1
-#define KISO_FEATURE_BSP_GNSS_MAXM8        1
-#define KISO_FEATURE_BSP_BMA280            1
-#define KISO_FEATURE_BSP_BME280            1
-#define KISO_FEATURE_BSP_BLE_CC2640        1
-#define KISO_FEATURE_BSP_MEMORY_W25        1
-#define KISO_FEATURE_BSP_TEST_INTERFACE    1
-
 // clang-format on
 
-#endif /*KISO_HALCONFIG_H_*/
+#endif /* KISO_MCUCONFIG_H_ */
 /**@} */

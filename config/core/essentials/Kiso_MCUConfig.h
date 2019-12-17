@@ -14,7 +14,7 @@
 
 /**
  * @file
- * @defgroup    MCUCONFIG   CommonGateway HAL Configuration
+ * @defgroup    MCUCONFIG   MCU HAL Configuration
  * @ingroup     KISO_ESSENTIALS
  * @{
  * @brief Configures which hardware capabilities the board makes available.
