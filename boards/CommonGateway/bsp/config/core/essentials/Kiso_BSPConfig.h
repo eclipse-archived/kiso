@@ -28,53 +28,16 @@
  * Features are enabled or disabled by defining a particular feature to either
  * 1 or 0 e.g.
  * ```c
- *  #define KISO_FEATURE_I2C    1   // Enable HAL feature I2C
- *  define KISO_FEATURE_SPI    0   // Disable HAL feature SPI
+ *  #define KISO_FEATURE_BSP_LED     1   // Enable BSP feature LED
+ *  #define KISO_FEATURE_BSP_BUTTON  0   // Disable BSP feature Button
  * ```
  * If a define is missing in this header the feature will be disabled by default.
  */
 
-#ifndef KISO_HALCONFIG_H_
-#define KISO_HALCONFIG_H_
+#ifndef KISO_BSPCONFIG_H_
+#define KISO_BSPCONFIG_H_
 
 // clang-format off
-
-/* MCU Features */
-#ifndef KISO_FEATURE_UART
-#define KISO_FEATURE_UART 1
-#endif
-
-#ifndef KISO_FEATURE_I2C
-#define KISO_FEATURE_I2C 1
-#endif
-
-#ifndef KISO_FEATURE_SPI
-#define KISO_FEATURE_SPI 1
-#endif
-
-#ifndef KISO_FEATURE_FLASH
-#define KISO_FEATURE_FLASH 0
-#endif
-
-#ifndef KISO_FEATURE_WATCHDOG
-#define KISO_FEATURE_WATCHDOG 0
-#endif
-
-#ifndef KISO_FEATURE_PWM
-#define KISO_FEATURE_PWM 0
-#endif
-
-#ifndef KISO_FEATURE_SLEEP
-#define KISO_FEATURE_SLEEP 0
-#endif
-
-#ifndef KISO_FEATURE_RNG
-#define KISO_FEATURE_RNG 0
-#endif
-
-#ifndef KISO_FEATURE_MCU_CRC
-#define KISO_FEATURE_MCU_CRC 0
-#endif
 
 /* BSP Features */
 #ifndef KISO_FEATURE_BSP_LED
@@ -115,5 +78,5 @@
 
 // clang-format on
 
-#endif /*KISO_HALCONFIG_H_*/
+#endif /* KISO_BSPCONFIG_H_ */
 /**@} */

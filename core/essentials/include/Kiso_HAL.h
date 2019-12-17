@@ -33,11 +33,17 @@
 #include "Kiso_Essentials.h"
 #include "Kiso_Assert.h"
 
-#ifndef KISO_HALCONFIG_H_
-#include "Kiso_HALConfig.h"
+#ifndef KISO_BSPCONFIG_H_
+#include "Kiso_BSPConfig.h"
+#else
+#error "Don't include Kiso_BSPConfig.h directly instead of Kiso_HAL.h"
+#endif /* KISO_BSPCONFIG_H_ */
+
+#ifndef KISO_MCUCONFIG_H_
+#include "Kiso_MCUConfig.h"
 #else
 #error "Don't include Kiso_HALConfig.h directly instead of Kiso_HAL.h"
-#endif /* KISO_HAL_CONFIG_H_ */
+#endif /* KISO_MCUCONFIG_H_ */
 
 /**
  * @brief       Declares an enumeration for various possible communication interfaces.

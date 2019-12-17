@@ -7,7 +7,7 @@ if (NOT DEFINED APP_APN_NAME)
 endif()
 
 if(${CMAKE_CROSSCOMPILING})
-   USE_CUSTOM_CONFIG(${CMAKE_CURRENT_LIST_DIR}/config)
+   set(APP_CONFIG_PATH ${CMAKE_CURRENT_LIST_DIR}/config PARENT_SCOPE)
 
    add_executable(application
       source/main.c

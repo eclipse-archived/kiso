@@ -84,11 +84,11 @@ if(${ENABLE_STATIC_CHECKS})
       message(STATUS "Looking for clang-tidy: ${CLANG_TIDY}")
 endif()
 
-include(KisoLibsConfig)
-
 ## Add application code
 get_filename_component(KISO_APPLICATION_NAME ${KISO_APPLICATION_PATH} NAME)
 add_subdirectory(${KISO_APPLICATION_PATH} ${CMAKE_CURRENT_BINARY_DIR}/applications/${KISO_APPLICATION_NAME})
+
+include(KisoLibsConfig)
 
 ## Add board and core libs
 add_subdirectory(boards)
