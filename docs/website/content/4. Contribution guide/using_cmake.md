@@ -166,7 +166,7 @@ Examples are small applications that use the Kiso infrastructure (essentials/uti
 Choosing which application to build when configuring CMake is done by the `KISO_EXAMPLE` variable and defaults currently to `c-leds`. Possible values for this variable are all the directory names under the `/examples` subdirectory.
 
 ### Documentation
-The `docs` directory contains a `Doxigen.in` file, which is patched by CMake to supply the proper input and output paths. HTML reference documentation is generated and available to use via the `docs` cmake target.
+The `docs` directory contains a `Doxyfile.in` file, which is patched by CMake to supply the proper input and output paths. HTML reference documentation is generated and available to use via the `docs` cmake target.
 
 ## References
 CMake build generator: [cmake.org](https://cmake.org/cmake/help/latest/manual/cmake.1.html)</br>

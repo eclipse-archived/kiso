@@ -7,8 +7,8 @@ add_library(utils_int INTERFACE)
 target_include_directories(utils_int
 INTERFACE
    include
+   ${KISO_CONFIG_PATH}/utils
 )
-target_link_libraries(utils_int INTERFACE board_config app_config)
 
 ## Enable static code analysis
 #  the checks will be executed as it would be on the desired compile step
@@ -27,7 +27,7 @@ if(${CMAKE_CROSSCOMPILING})
       source/Logging/${KISO_OS_LIB}/*.c
    )
    add_library(utils STATIC ${UTILS_SOURCES})
-   target_link_libraries(utils utils_int essentials ${KISO_OS_LIB})
+   target_link_libraries(utils PUBLIC utils_int essentials ${KISO_OS_LIB})
 endif(${CMAKE_CROSSCOMPILING})
 
 ## Add tests

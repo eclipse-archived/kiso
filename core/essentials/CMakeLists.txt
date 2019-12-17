@@ -11,9 +11,8 @@ INTERFACE
    include/mcu
    include/mcu/${KISO_MCU_FAMILY}
    include/mcu/${KISO_MCU_FAMILY}/${KISO_MCU_SERIES}
+   ${KISO_CONFIG_PATH}/essentials
 )
-target_link_libraries(essentials_int INTERFACE board_config)
-
 
 ## Enable static code analysis
 #  the checks will be executed as it would be on the desired compile step
@@ -32,7 +31,7 @@ if(${CMAKE_CROSSCOMPILING})
       source/mcu/${KISO_MCU_FAMILY}/${KISO_MCU_SERIES}/*.c
    )
    add_library(essentials STATIC ${ESSENTIALS_SOURCES})
-   target_link_libraries(essentials essentials_int bsp ${KISO_BOARD_LIBS})
+   target_link_libraries(essentials essentials_int bsp)
 endif(${CMAKE_CROSSCOMPILING})
 
 

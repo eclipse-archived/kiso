@@ -38,3 +38,7 @@ if(NOT KISO_EXAMPLE)
    set(KISO_EXAMPLE c-leds)
 endif()
 
+## Directory with configuration headers for packages
+if(NOT PROJECT_CONFIG_PATH)
+   set(PROJECT_CONFIG_PATH ${CMAKE_SOURCE_DIR}/config CACHE PATH "Default Kiso config headers location")
+endif()

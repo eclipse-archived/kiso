@@ -16,7 +16,6 @@ cmake_minimum_required(VERSION 3.6)
 
 find_program(WSLPATH NAMES wslpath)
 
-set(JLINK_FOUND FALSE)
 if(NOT WSLPATH) # Linux or Windows
     find_program(JLINK_PATH NAMES JLinkExe jlink jlink.exe)
 else() # WSL - find only WIN binaries
@@ -24,10 +23,9 @@ else() # WSL - find only WIN binaries
 endif()
 
 if(NOT JLINK_PATH)
-    set(JLINK_FOUND TRUE)
     message(STATUS "JLink not found in PATH. \"flash\" target unavailable!")
 else()
-    message(STATUS "JLink found: ${JLINK_PATH}")
+    message(STATUS "JLink found: ${JLINK_PATH}. Use target 'flash' to flash connected device.")
 endif()
 
 # Used to create an intel hex target from a given ELF target
@@ -44,6 +42,10 @@ endif()
 #    cmake --build . --target flash
 #
 function(CREATE_FLASH_TARGET_JLINK ELF_TARGET)
+    if(NOT JLINK_PATH)
+        message(ERROR "JLink not found in path!")
+    endif()
+
     set(HEX_TARGET_PATH "${CMAKE_CURRENT_BINARY_DIR}/${ELF_TARGET}.hex")
 
     add_custom_target(${ELF_TARGET}.hex
@@ -86,3 +88,25 @@ function(CREATE_FLASH_TARGET_JLINK ELF_TARGET)
     )
     add_dependencies(flash ${ELF_TARGET}.hex)
 endfunction(CREATE_FLASH_TARGET_JLINK)
+
+# Used to create a raw binary target from a given ELF target
+# that could later be used to flash the application directly to a memory address
+# Usage:
+#  In CMake:
+#    ```
+#    add_executable(application
+#        source/main.c
+#    )
+#    CREATE_FLASHABLE_BINARY(application)
+#    ```
+#  In console:
+#    cmake --build . --target application.bin
+function(CREATE_FLASHABLE_BINARY ELF_TARGET)
+    set(BIN_TARGET_PATH "${CMAKE_CURRENT_BINARY_DIR}/${ELF_TARGET}.bin")
+
+    add_custom_target(${ELF_TARGET}.bin
+        COMMAND ${CMAKE_OBJCOPY} -O binary -R .usrpg $<TARGET_FILE:${ELF_TARGET}> ${BIN_TARGET_PATH}
+        COMMENT "Creating flashable binary ${BIN_TARGET_PATH}"
+    )
+    add_dependencies(${ELF_TARGET}.bin ${ELF_TARGET})
+endfunction(CREATE_FLASHABLE_BINARY ELF_TARGET)
