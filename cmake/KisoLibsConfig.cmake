@@ -38,8 +38,8 @@ set(KISO_CONFIG_PATH ${CMAKE_BINARY_DIR}/config CACHE INTERNAL "Kiso config head
 # Copy base project config files in intermediary directory
 file(GLOB_RECURSE PRJ_CONF_FILES
     LIST_DIRECTORIES false
-    RELATIVE ${PROJECT_CONFIG_PATH}
-    ${PROJECT_CONFIG_PATH}/*.h
+    RELATIVE ${ABS_PROJECT_CONFIG_PATH}
+    ${ABS_PROJECT_CONFIG_PATH}/*.h
 )
 
 foreach(HEADER ${PRJ_CONF_FILES})
@@ -49,15 +49,15 @@ foreach(HEADER ${PRJ_CONF_FILES})
         set(DEST ${KISO_CONFIG_PATH}/${SUBDIR})
         file(MAKE_DIRECTORY ${DEST})
     endif(SUBDIR)
-    configure_file(${PROJECT_CONFIG_PATH}/${HEADER} ${DEST} COPYONLY)
+    configure_file(${ABS_PROJECT_CONFIG_PATH}/${HEADER} ${DEST} COPYONLY)
 endforeach(HEADER ${PRJ_CONF_FILES})
 
 if(NOT CMAKE_TESTING_ENABLED) # Skip in unit-test build to have predictable environment
     # Copy board-specific config files in intermediary directory
     file(GLOB_RECURSE BOARD_CONF_FILES
         LIST_DIRECTORIES false
-        RELATIVE ${BOARD_CONFIG_PATH}
-        ${BOARD_CONFIG_PATH}/*.h
+        RELATIVE ${ABS_BOARD_CONFIG_PATH}
+        ${ABS_BOARD_CONFIG_PATH}/*.h
     )
 
     foreach(HEADER ${BOARD_CONF_FILES})
@@ -67,7 +67,7 @@ if(NOT CMAKE_TESTING_ENABLED) # Skip in unit-test build to have predictable envi
             set(DEST ${KISO_CONFIG_PATH}/${SUBDIR})
             file(MAKE_DIRECTORY ${DEST})
         endif(SUBDIR)
-        configure_file(${BOARD_CONFIG_PATH}/${HEADER} ${DEST} COPYONLY)
+        configure_file(${ABS_BOARD_CONFIG_PATH}/${HEADER} ${DEST} COPYONLY)
     endforeach(HEADER ${BOARD_CONF_FILES})
 
     # Copy app-specific config files in intermediary directory
@@ -82,8 +82,8 @@ if(NOT CMAKE_TESTING_ENABLED) # Skip in unit-test build to have predictable envi
         else()
             file(GLOB_RECURSE USER_CONF_FILES
                 LIST_DIRECTORIES false
-                RELATIVE ${APP_CONFIG_PATH}
-                ${APP_CONFIG_PATH}/*.h
+                RELATIVE ${ABS_APP_CONFIG_PATH}
+                ${ABS_APP_CONFIG_PATH}/*.h
             )
 
             foreach(HEADER ${USER_CONF_FILES})
@@ -93,7 +93,7 @@ if(NOT CMAKE_TESTING_ENABLED) # Skip in unit-test build to have predictable envi
                     set(DEST ${KISO_CONFIG_PATH}/${SUBDIR})
                     file(MAKE_DIRECTORY ${DEST})
                 endif(SUBDIR)
-                configure_file(${APP_CONFIG_PATH}/${HEADER} ${DEST} COPYONLY)
+                configure_file(${ABS_APP_CONFIG_PATH}/${HEADER} ${DEST} COPYONLY)
             endforeach(HEADER ${USER_CONF_FILES})
         endif(NOT EXISTS ${ABS_APP_CONFIG_PATH})
     endif(NOT APP_CONFIG_PATH)
