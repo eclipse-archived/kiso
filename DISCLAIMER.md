@@ -1,0 +1,7 @@
+Warranty, Limitation of Liability, Responsibilities
+
+Kiso and its documentation is provided “as is” and BOSCH does not grant any warranty that Kiso is error-free or will operate without interruption. Bosch grants no warranty regarding the use of Kiso or the results there-from including but not limited to its correctness, accuracy or reliability. BOSCH does not warrant the merchantability or fitness of Kiso for any particular use. BOSCH therefore excludes to the extent permitted by applicable law all other warranties with respect to Kiso, either express or implied, including but not limited to any infringement of third party rights based on the use of Kiso by the customer.
+
+The Liability of BOSCH is – irrespective of its legal grounds – limited as follows: BOSCH shall be liable without limitation in case of intent and gross negligence or under a guarantee granted by Bosch. Unless expressly set out before the liability of BOSCH is excluded. This includes but is not limited to any liability for any direct, indirect, incidental, consequential or other damage including but not limited to any loss of data.
+
+The Customer shall be responsible for conducting the integration of Kiso taking account of the state of the art in technology and all applicable statutory regulations and provisions. Moreover, the Customer shall be responsible to sufficiently validate and test its Customer Applications containing Kiso and shall make sure that the Customer Applications do not poses any hazards.

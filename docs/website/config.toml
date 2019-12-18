@@ -1,0 +1,75 @@
+baseURL = "/"
+languageCode = "en-us"
+title = "Eclipse Kiso"
+theme = "hugo-material-docs"
+metadataformat = "yaml"
+relativeURLs = true
+Paginate = 4
+PygmentsCodeFences = true
+PygmentsUseClasses = true
+PygmentsStyle = "monokai"
+canonifyurls = true
+
+[blackfriday]
+    smartypants = true
+    fractions = true
+    smartDashes = true
+    plainIDAnchors = true
+    extensions = [ "fencedCode", "backslashLineBreak" ]
+
+[params]
+    # General information
+    description = "The documentation of Eclipse Kiso."
+    copyright = "The Eclipse Kiso Project"
+
+    favicon = ""
+
+    permalink = "#"
+
+    # Custom assets
+    custom_css = [ "css/custom.css" ]
+    custom_js  = []
+
+    # Syntax highlighting theme
+    highlight_css  = ""
+
+    [params.palette]
+        primary = "blue-grey"
+        accent  = "light-blue"
+
+    [params.font]
+        text = "Ubuntu"
+        code = "Ubuntu Mono"
+
+[social]
+    mattermost = "eclipse/channels/kiso"
+    github  = "eclipse/kiso"
+
+[[menu.main]]
+    name = "1. Project overview"
+    weight = 1
+    url = "1. Project Overview/"
+[[menu.main]]
+    name = "2. Concepts"
+    weight = 2
+    url = "2. Concepts/"
+[[menu.main]]
+    name = "3. User guide"
+    weight = 3
+    url = "3. User guide/"
+[[menu.main]]
+    name = "4. Contribution guide"
+    weight = 4
+    url = "4. Contribution guide/"
+[[menu.main]]
+    name = "5. Releases"
+    weight = 5
+    url = "5. Releases/"
+[[menu.main]]
+    name = "6. Reference manual"
+    weight = 6
+    url = "6. Reference manual"
+[[menu.main]]
+    name = "7. Frequently asked questions"
+    weight = 7
+    url = "7. Frequently asked questions/"

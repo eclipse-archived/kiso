@@ -1,0 +1,6 @@
+*.o
+*.a
+/debug
+build
+builddir-*
+.vscode
