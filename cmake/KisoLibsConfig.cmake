@@ -54,6 +54,7 @@ endforeach(HEADER ${PRJ_CONF_FILES})
 
 if(NOT CMAKE_TESTING_ENABLED) # Skip in unit-test build to have predictable environment
     # Copy board-specific config files in intermediary directory
+    message(STATUS "Applying board-specific configuration from ${ABS_BOARD_CONFIG_PATH}.")
     file(GLOB_RECURSE BOARD_CONF_FILES
         LIST_DIRECTORIES false
         RELATIVE ${ABS_BOARD_CONFIG_PATH}
@@ -73,13 +74,14 @@ if(NOT CMAKE_TESTING_ENABLED) # Skip in unit-test build to have predictable envi
     # Copy app-specific config files in intermediary directory
     # APP_CONFIG_PATH is not required - only act if present
     if(NOT APP_CONFIG_PATH)
-        message(STATUS "APP_CONFIG_PATH not set to a valid path!")
+        message(STATUS "APP_CONFIG_PATH not set to a valid path. Not using application-specific configuration.")
     else()
         get_filename_component(ABS_APP_CONFIG_PATH ${APP_CONFIG_PATH} REALPATH)
         if(NOT EXISTS ${ABS_APP_CONFIG_PATH})
             message(SEND_ERROR "APP_CONFIG_PATH must be absolute or relative to Kiso root!\n"
                             "Current value: ${ABS_APP_CONFIG_PATH}")
         else()
+            message(STATUS "Applying application-specific configuration from ${ABS_APP_CONFIG_PATH}.")
             file(GLOB_RECURSE USER_CONF_FILES
                 LIST_DIRECTORIES false
                 RELATIVE ${ABS_APP_CONFIG_PATH}
@@ -98,3 +100,5 @@ if(NOT CMAKE_TESTING_ENABLED) # Skip in unit-test build to have predictable envi
         endif(NOT EXISTS ${ABS_APP_CONFIG_PATH})
     endif(NOT APP_CONFIG_PATH)
 endif(NOT CMAKE_TESTING_ENABLED)
+
+message(STATUS "Configuration headers merged in ${KISO_CONFIG_PATH}.")
