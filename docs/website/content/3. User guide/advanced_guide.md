@@ -13,7 +13,7 @@ menu:
 
 # Advanced guide
 
-In this guide more specific configurations will be shown. 
+In this guide more specific configurations will be shown.
 Example cases:
 
  - Utilize the features of the used board. Peripherals such as I2C, SPI and etc.
@@ -22,14 +22,13 @@ Example cases:
 
 For simplicity, let us use our code with an STM32L4 based board: `CommonGateway`
 
-### Kiso allows configuration through a couple of CMAKE arguments: ###
+### Kiso allows configuration through a few CMAKE arguments: ###
 
  - `ENABLE_TESTING` - Enables Unit testing build (default is `OFF`)
  - `ENABLE_COVERAGE` - Enables Coverage reporting from the Unit tests
- - `ENABLE_ALL_FEATURES` - Enables all platform features (only used for static code analysis and unit-tests; default is `OFF`)
- - `KISO_BOARD_NAME` - Configures which Device will be used with the platform
+ - `KISO_BOARD_PATH` - Configures the path to BSP layer. Might be one of the directories in `<kiso root>/boards` or an absolute external path.
  - `KISO_OS_LIB` - Configures OS library for Kiso
- - `KISO_EXAMPLE` - Configures which application code to compile and link with the platform (Possible values for this variable are all the directory names under the `/examples` subdirectory.)
+ - `KISO_APPLICATION_PATH` - Configures which application code to compile and link with the platform (Possible values for this variable are all the directory names under the `/examples` subdirectory or absolute external path.)
 
 ## Utilize your board ##
 In order to be able to use any Kiso component, you will need to add the basic components: `Essentials` and `Utils`.
@@ -40,11 +39,8 @@ To do so, you need to make sure root **CMakeLists.txt** is including:
 add_subdirectory(core/essentials)
 add_subdirectory(core/utils)
 ```
-Find the line which includes the application:
-```cmake
-add_subdirectory(examples/${KISO_BOARD_NAME}/${KISO_EXAMPLE})
-```
-And make sure it points to your application directory.
+
+Make sure to set `KISO_APPLICATION_PATH` variable to the directory containing your application.
 
 Configure Project name and verify that the used board config is included:
 ```cmake
@@ -76,11 +72,11 @@ The root **CMakeLists.txt** file points to the locations of:
 **Build application**:
 ```bash
 # You can execute these steps from anywhere
-cmake <kiso_root> -Bbuilddir -DKISO_BOARD_NAME=<selected_board>
+cmake <kiso_root> -Bbuilddir -DKISO_BOARD_PATH=<selected_board>
 cmake --build builddir
 # OR equivalent:
 mkdir builddir && cd builddir
-cmake <kiso_root> -DKISO_BOARD_NAME=<selected_board>
+cmake <kiso_root> -DKISO_BOARD_PATH=<selected_board>
 cmake --build .
 ```
 
@@ -97,11 +93,7 @@ add_executable(application
 )
 target_link_libraries(application bsp essentials utils ${KISO_OS_LIB} ${KISO_BOARD_LIBS})
 
-add_custom_target(application.bin
-  COMMAND ${CMAKE_OBJCOPY} -O binary -R .usrpg $<TARGET_FILE:application> ${CMAKE_CURRENT_BINARY_DIR}/application.bin
-  COMMENT "Creating flashable binary ${CMAKE_CURRENT_BINARY_DIR}/application.bin"
-)
-add_dependencies(application.bin application)
+CREATE_BINARY_TARGET(application)
 
 CREATE_FLASH_TARGET_JLINK(application)
 ```
@@ -123,7 +115,7 @@ The script will automatically find the connected device, flash and verify the bi
 In the root **CMakeLists.txt**, you always need to:
 
 - set project name
-- load the board specific information `KISO_BOARD_NAME` set to specific board directory
+- load the board specific information `KISO_BOARD_PATH` set to specific board directory
 - load the 3rd party needed libraries you just have to place them in `/thirdparty` directory
 - load the Kiso components via `add_subdirectory('core/<kiso_component_name>')`
-- load the example you want to use via `add_subdirectory('examples/HelloWorld/<example_folder>')` or `add_subdirectory('examples/<folder_of_supported_board>/<example_folder>')`
+- load the example you want to use via `add_subdirectory(${KISO_APPLICATION_PATH})`
