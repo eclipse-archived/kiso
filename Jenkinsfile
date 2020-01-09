@@ -149,7 +149,7 @@ pipeline
                 artifacts: 'builddir-debug/docs/doxygen/**, builddir-unittests/*_cov/**',
                 fingerprint: true
             )
-	    cleanWs()
+            cleanWs()
         }
         unstable
         {
