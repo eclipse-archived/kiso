@@ -1,14 +1,14 @@
 ---
 title: "v0.1.0"
 description: "First release"
-weight: 1
+weight: 2
 draft: false
 toc: true
 menu:
   main:
-    parent: 5. Releases
+    parent: 7. Releases
     identifier: initial_code_drop_releases
-    weight: 1
+    weight: 2
 ---
 
 ## v0.1.0

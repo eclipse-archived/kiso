@@ -11,7 +11,7 @@ menu:
     weight: 2
 ---
 
-# Advance guide
+# Advanced guide
 
 In this guide more specific configurations will be shown. 
 Example cases:

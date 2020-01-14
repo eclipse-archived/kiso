@@ -146,7 +146,7 @@ pipeline
         success
         {
             archiveArtifacts (
-                artifacts: 'builddir-debug/docs/doxygen/**, builddir-unittests/*_cov/**',
+                artifacts: 'builddir-debug/docs/doxygen/**, builddir-unittests/*_cov/**, docs/website/public/**/*',
                 fingerprint: true
             )
             cleanWs()
