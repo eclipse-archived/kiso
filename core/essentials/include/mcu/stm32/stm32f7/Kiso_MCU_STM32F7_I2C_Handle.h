@@ -15,7 +15,8 @@
 /**
  * @file
  *
- * @brief Declares the I2C handle used by BSP and MCU for STM32 targets
+ * @brief       
+ * Declares the I2C handle used by BSP and MCU for STM32FF7 targets
  *
  */
 
@@ -31,75 +32,52 @@
 #include "stm32f7xx_hal_i2c.h"
 
 /**
- * @brief This data type represents a function pointer which is used between
- * BSP and MCU I2C as a callback whenever an IRQ event/error is to be notified
- * from the BSP to the MCU I2C driver.
- *
- * @param [in] i2c : Handle of the I2C whose IRQ event should be handled.
+ * @brief       Enumerates the driver state machine states.
  */
-typedef void (*MCU_BSPI2C_IRQ_Callback_T)(I2C_T i2c);
-
-/**
- * @brief Declares a function pointer for master receive and transmit functions
- * which has the same signature like:
- *  - HAL_I2C_Master_Transmit_IT
- *  - HAL_I2C_Master_Receive_IT
- *  - HAL_I2C_Master_Transmit_DMA
- *  - HAL_I2C_Master_Receive_DMA
- */
-typedef HAL_StatusTypeDef (*STM_HAL_RxTxFunPtr)(I2C_HandleTypeDef *hi2c,
-                                                uint16_t DevAddress,
-                                                uint8_t *pData,
-                                                uint16_t Size);
-
-/**
- * @brief   Structure which is used as I2C handle.
- *
- * @detail  The handle is usually created by the BSP and fetched by the
- * application layer to use the I2C interface.
- */
-struct MCU_I2C_S
+typedef enum MCU_I2C_State_E
 {
-    /** Context struct of stm32 I2C driver*/
-    I2C_HandleTypeDef hi2c;
-    /** Function pointer of the MCU I2C EV IRQ callback handler which is used
-     * by the BSP to notify MCU about IRQ events. Will be set by MCU I2C upon
-     * initialization. */
-    MCU_BSPI2C_IRQ_Callback_T IRQCallback;
-    /** Function pointer of the MCU I2C Error IRQ callback handler which is
-     * used by the BSP to notify MCU about IRQ error events. Will be set by MCU
-     * I2C upon initialization. */
-    MCU_BSPI2C_IRQ_Callback_T ERRCallback;
-    /** Function pointer of the MCU I2C DMA Rx callback handler which is used
-     * by the BSP to notify MCU about DMA Rx events. Will be set by MCU I2C
-     * upon initialization and if transfer mode is set to DMA.*/
-    MCU_BSPI2C_IRQ_Callback_T DMARxCallback;
-    /** Function pointer of the MCU I2C DMA Tx callback handler which is used
-     * by the BSP to notify MCU about DMA Tx events. Will be set by MCU I2C
-     * upon initialization and if transfer mode is set to DMA.*/
-    MCU_BSPI2C_IRQ_Callback_T DMATxCallback;
-    /** Index of the MCU I2C interface. Set by MCU I2C upon initialization. */
-    uint32_t Index;
-    /** Identifies the transfer mode that is currently configured for this I2C
-     * instance. This value will be set by the BSP upon configuration of the
-     * I2C interface.*/
-    enum KISO_HAL_TransferMode_E TransferMode;
+    I2C_STATE_INIT,
+    I2C_STATE_READY,
+    I2C_STATE_TX,
+    I2C_STATE_RX,
+} MCU_I2C_State_T;
 
-    /** Callback function pointer that has been passed with a call to the
-     * initialize function. It is used to callback the application layer when
-     * needed.*/
-    MCU_I2C_Callback_T AppLayerCallback;
-    /** Function pointer to the vendor library Tx function. Will be set
-     *  upon initialization. */
-    HAL_StatusTypeDef (*TxFunPtr)(I2C_HandleTypeDef *hi2c, uint16_t DevAddress,
-                                  uint8_t *pData, uint16_t Size);
-
-    /** Function pointer to the vendor library Rx function. Will be set upon
-     *  initialization.*/
-    HAL_StatusTypeDef (*RxFunPtr)(I2C_HandleTypeDef *hi2c, uint16_t DevAddress,
-                                  uint8_t *pData, uint16_t Size);
+/**
+ * @brief       Structure used internally for i2c transactions.
+ */
+struct MCU_I2C_Transaction_S
+{
+    uint16_t DevAddress;  /**< Slave address of the I2C device target of the transaction */
+    uint8_t *pDataBuffer; /**< Reference to the data buffer used for the transaction (Read/Write) */
+    uint16_t Size;        /**< Count of bytes to be transmitted or received */
+    bool PrependRegAddr;  /**< If set to true the driver will send the provided RegisterAddr first and then continues the transaction (send or receive) */
+    uint8_t RegisterAddr; /**< The register address to be written */
 };
 
-#endif /* KISO_FEATURE_I2C && KISO_I2C_COUNT */
+/**
+ * @brief       Structure which is used as I2C handle.
+ *
+ * @details     The handle is usually created by the BSP and fetched by the application layer to use the I2C interface.
+ */
+struct MCU_I2C_S; /* forward declaration of the structure */
+struct MCU_I2C_S
+{
+    I2C_HandleTypeDef hi2c;                                   /**< Context struct of stm32 I2C driver*/
+    enum KISO_HAL_TransferMode_E TransferMode;                /**< The transfer mode configured for this I2C instance. This value will be set by the BSP upon configuration of the I2C interface.*/
+    uint32_t DataRate;                                        /**< Data rate in bits per second as configured by the BSP */
+    MCU_I2C_State_T State;                                    /**< Current State of the I2C transceiver */
+    void (*IRQCallback)(I2C_T i2c);                           /**< Reference to the I2C_EV IRQ handler. Will be set by MCU I2C upon initialization.*/
+    void (*ERRCallback)(I2C_T i2c);                           /**< Reference to the I2C_ER IRQ handler. Will be set by MCU I2C upon initialization.*/
+    void (*DMARxCallback)(I2C_T i2c);                         /**< Reference to the DMA Rx IRQ handler. Will be set by MCU I2C upon initialization.*/
+    void (*DMATxCallback)(I2C_T i2c);                         /**< Reference to the DMA Tx IRQ handler. Will be set by MCU I2C upon initialization.*/
+    MCU_I2C_Callback_T AppLayerCallback;                      /**< Reference to the application callback which will be executed for event notification to the upper layers. */
+    Retcode_T (*SendFunPtr)(struct MCU_I2C_S *pi2c);          /**< Reference to the send function. Will be set upon initialization depending on the mode in use. */
+    Retcode_T (*ReceiveFunPtr)(struct MCU_I2C_S *pi2c);       /**< Reference to the receive function. Will be set upon initialization depending on the mode in use. */
+    Retcode_T (*ReadRegisterFunPtr)(struct MCU_I2C_S *pi2c);  /**< Reference to the read register function. Will be set upon initialization depending on the mode in use. */
+    Retcode_T (*WriteRegisterFunPtr)(struct MCU_I2C_S *pi2c); /**< Reference to the write register function. Will be set upon initialization depending on the mode in use. */
+    Retcode_T (*CancelFunPtr)(struct MCU_I2C_S *pi2c);        /**< Reference to the cancel function. Will be set upon initialization.*/
+    struct MCU_I2C_Transaction_S Transaction;                 /**< Current transaction parameters */
+};
 
+#endif /* KISO_FEATURE_I2C */
 #endif /* KISO_MCU_STM32F7_I2C_HANDLE_H_ */

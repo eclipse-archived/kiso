@@ -108,6 +108,7 @@ if(${CMAKE_CROSSCOMPILING})
    target_compile_options(stm32cubef7 PRIVATE
       -Wno-unused-parameter
       -Wno-int-to-pointer-cast
+      -Wno-unused-const-variable
    )
    target_include_directories(stm32cubef7
    PUBLIC
@@ -116,8 +117,9 @@ if(${CMAKE_CROSSCOMPILING})
       ${STM32CUBEF7_DIR}/Drivers/CMSIS/Device/ST/STM32F7xx/Include
       ${STM32CUBEF7_DIR}/Drivers/STM32F7xx_HAL_Driver/Inc
       ${STM32CUBEF7_DIR}/Drivers/STM32F7xx_HAL_Driver/Inc/Legacy
+      ${KISO_CONFIG_PATH}/stm32cubef7
    )
-   target_link_libraries(stm32cubef7 board_config essentials_int)
+   target_link_libraries(stm32cubef7 essentials_int)
 endif(${CMAKE_CROSSCOMPILING})
 
 if(${CMAKE_TESTING_ENABLED})
