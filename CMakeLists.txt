@@ -78,7 +78,6 @@ else()
       message(SEND_ERROR "board_config.cmake missing for board ${KISO_BOARD_PATH}")
    else()
       include(${ABS_BOARD_PATH}/board_config.cmake)
-      get_filename_component(KISO_BOARD_NAME ${KISO_BOARD_PATH} NAME)
       add_subdirectory(${ABS_BOARD_PATH} ${CMAKE_CURRENT_BINARY_DIR}/boards/${KISO_BOARD_NAME})
    endif()
 endif()
@@ -90,7 +89,6 @@ if(${ENABLE_STATIC_CHECKS})
 endif()
 
 ## Add application code
-get_filename_component(KISO_APPLICATION_NAME ${KISO_APPLICATION_PATH} NAME)
 add_subdirectory(${KISO_APPLICATION_PATH} ${CMAKE_CURRENT_BINARY_DIR}/applications/${KISO_APPLICATION_NAME})
 
 include(KisoLibsConfig)
