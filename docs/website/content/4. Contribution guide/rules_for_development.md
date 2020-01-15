@@ -17,7 +17,7 @@ To ensure quality, all contributors need to follow certain set of rules while wo
 
 ## Our coding guidelines
 
-Like most open source projects, Kiso has its own coding guidelines. This topic is subjective and nobody can find a coding style that suites for every developer, so let’s agree on disagree and please following Kiso coding convention when you write Kiso code.[C Code Guidelines] (../c_coding_guidelines)
+Like most open source projects, Kiso has its own coding guidelines. This topic is subjective and nobody can find a coding style that suites for every developer, so let’s agree on disagree, and please follow Kiso coding conventions when you write Kiso code.[C Code Guidelines] (../c_coding_guidelines)
 ## Our Definition of Done 
 
 For each Kiso source code contribution, Kiso's DoD needs to be fulfilled. [DoD](../dod)
