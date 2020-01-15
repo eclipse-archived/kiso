@@ -16,7 +16,6 @@ Eclipse Kiso was designed from scratch as a software development kit for IoT dev
 - **If you want to start building your first firmware with Kiso, go directly to the [quick start]({{< ref "quick_start.md" >}})**
 - If you want to understand the overall architecture principles, you should take a look at the [overall architecture]({{< ref "overall_architecture.md" >}})
 - If you want to know what are the features we want to add into Kiso in the future, please take a look at the [roadmap]({{< ref "roadmap.md" >}})
-- If you want to have a look at what we have today, I would recommend you to look at the [releases]({{< ref "initial_code_drop_releases.md" >}})
 
 ## Advanced
 - **If you want to start contributing to Kiso, go to the [contributor guidelines]({{< ref "first_contribution.md" >}}).**

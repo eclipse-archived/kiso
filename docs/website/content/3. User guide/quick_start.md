@@ -14,7 +14,7 @@ menu:
 # Quick start
 
 ## First steps with Windows 10 ##
-If your using a Windows PC it is recommended to use the Microsoft Windows subsystem for Linux. Alternatively, you can also use, e.g., Cygwin to provide functionality similar to a Linux distribution on Windows. All the below listed commands are of course also valid if you are directly using a Linux PC. \
+If you're using a Windows PC it is recommended to use the Microsoft Windows subsystem for Linux. Alternatively, you can also use, e.g., Cygwin to provide functionality similar to a Linux distribution on Windows. All the below listed commands are of course also valid if you are directly using a Linux PC. \
 
 ### Step 1: Windows Subsystem Linux (WSL) ###
 * Installation guide: https://docs.microsoft.com/en-us/windows/wsl/install-win10
@@ -64,16 +64,16 @@ Start the Windows app Ubuntu and use the following bash commands to install the 
   Installation guide: https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line
 
 ### Step 4: Clone and compile ###
-After installing the basic tooling from previous step you can now clone and compile Kiso's default example. \
+After installing the basic tools from previous step, you can now clone and compile Kiso's default example. \
 
 * Clone Kiso repo \
   ```bash
-  git clone https://github.com/Bosch-AE-SW/cddk-oss.git
+  git clone https://github.com/eclipse/kiso.git
   ```
 
 * First default compile \
   ```bash
-  cd cddk-oss
+  cd kiso
   cmake . -Bbuild
   cmake --build build
   ```
