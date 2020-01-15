@@ -56,7 +56,7 @@ base project configuration. The function takes only one argument - path to the a
 It should also follow the same directory structure as the project's configuration directory.
 When specific application configuration is used, CMake will create an interim directory that contains all configuration headers from the project
 default configuration combined and overriden by the application-specific headers. You will see status messages in the CMake configuration step
-and any subsequent changes to these files will trigger automatically the configuration step from CMake to propagate the differences:
+and any subsequent changes to these files will automatically trigger the configuration step from CMake to propagate the differences:
 
 ```txt
 ------------- KISO CONFIG -------------
