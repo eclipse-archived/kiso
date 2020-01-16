@@ -64,7 +64,7 @@ canonifyurls = true
 [[menu.main]]
     name = "5. Reference manual"
     weight = 5
-    url = "5. Reference manual"
+    url = "http://kiso.rempler.de:8080/"
 [[menu.main]]
     name = "6. Frequently asked questions"
     weight = 6
