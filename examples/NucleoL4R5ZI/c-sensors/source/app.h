@@ -35,7 +35,7 @@
 
 /*---------------------- FUNCTION DECLARATIONS ----------------------------------------------------------------------*/
 
-void appInitSystem(void * CmdProcessorHandle, uint32_t param2);
+void appInitSystem(void *CmdProcessorHandle, uint32_t param2);
 
 /*---------------------- GLOBAL VARIABLES DECLARATION ---------------------------------------------------------------*/
 

@@ -68,8 +68,8 @@ void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress)
     volatile uint32_t KISO_UNUSED_FUNC(r2);
     volatile uint32_t KISO_UNUSED_FUNC(r3);
     volatile uint32_t KISO_UNUSED_FUNC(r12);
-    volatile uint32_t KISO_UNUSED_FUNC(lr); /* link register */
-    volatile uint32_t KISO_UNUSED_FUNC(pc); /* program counter */
+    volatile uint32_t KISO_UNUSED_FUNC(lr);  /* link register */
+    volatile uint32_t KISO_UNUSED_FUNC(pc);  /* program counter */
     volatile uint32_t KISO_UNUSED_FUNC(psr); /* program status register */
 
     r0 = pulFaultStackAddress[0];
@@ -84,7 +84,6 @@ void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress)
     /* when the following line is hit, the variables contain the register values */
     for (;;)
         ;
-
 }
 
 /** Usage Fault exception handler */
@@ -112,21 +111,18 @@ __attribute__((weak, noreturn)) void MemManage_Handler(void)
 #ifndef UNIT_TESTING
 __attribute__((naked, noreturn)) void HardFault_Handler(void)
 {
-    __asm volatile
-    (
-            " tst lr, #4                                                \n"
-            " ite eq                                                    \n"
-            " mrseq r0, msp                                             \n"
-            " mrsne r0, psp                                             \n"
-            " ldr r1, [r0, #24]                                         \n"
-            " ldr r2, handler2_address_const                            \n"
-            " bx r2                                                     \n"
-            " handler2_address_const: .word prvGetRegistersFromStack    \n"
-    );
+    __asm volatile(
+        " tst lr, #4                                                \n"
+        " ite eq                                                    \n"
+        " mrseq r0, msp                                             \n"
+        " mrsne r0, psp                                             \n"
+        " ldr r1, [r0, #24]                                         \n"
+        " ldr r2, handler2_address_const                            \n"
+        " bx r2                                                     \n"
+        " handler2_address_const: .word prvGetRegistersFromStack    \n");
 }
 #else
-void HardFault_Handler(void)
-{};
+void HardFault_Handler(void){};
 #endif
 
 /** ************************************************************************* */

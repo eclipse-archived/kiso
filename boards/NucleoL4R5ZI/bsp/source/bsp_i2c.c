@@ -38,18 +38,18 @@ void I2C1_ER_IRQHandler(void);
  * Variable storing I2C control block for the sensors.
  */
 struct MCU_I2C_S sensorsI2CStruct =
-        {
-                .TransferMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
-                .hi2c.Instance = I2C1,
-                .hi2c.Init.Timing = 0x10b0153d, // 400kHz; 200ns rise time 50ns fall time
-                .hi2c.Init.OwnAddress1 = 0,
-                .hi2c.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT,
-                .hi2c.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED,
-                .hi2c.Init.OwnAddress2 = 0,
-                .hi2c.Init.OwnAddress2Masks = I2C_OA2_NOMASK,
-                .hi2c.Init.GeneralCallMode = I2C_GENERALCALL_DISABLED,
-                .hi2c.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED,
-        };
+    {
+        .TransferMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
+        .hi2c.Instance = I2C1,
+        .hi2c.Init.Timing = 0x10b0153d, // 400kHz; 200ns rise time 50ns fall time
+        .hi2c.Init.OwnAddress1 = 0,
+        .hi2c.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT,
+        .hi2c.Init.DualAddressMode = I2C_DUALADDRESS_DISABLED,
+        .hi2c.Init.OwnAddress2 = 0,
+        .hi2c.Init.OwnAddress2Masks = I2C_OA2_NOMASK,
+        .hi2c.Init.GeneralCallMode = I2C_GENERALCALL_DISABLED,
+        .hi2c.Init.NoStretchMode = I2C_NOSTRETCH_DISABLED,
+};
 
 uint8_t I2C1ConnectedState = 0;
 uint8_t I2C1EnabledState = 0;
@@ -64,12 +64,12 @@ Retcode_T I2C_Connect(enum BSP_I2C_Devices id)
 {
     if (0 == I2C1ConnectedState)
     {
-        GPIO_InitTypeDef BSP_GPIOInitStruct = { 0 };
+        GPIO_InitTypeDef BSP_GPIOInitStruct = {0};
 
         GPIO_OpenClockGate(GPIO_PORT_B, PINB_SENS_SCL | PINB_SENS_SDA);
         BSP_GPIOInitStruct.Pin = PINB_SENS_SCL | PINB_SENS_SDA;
-        BSP_GPIOInitStruct.Mode = GPIO_MODE_AF_PP;	//GPIO_MODE_AF_OD;
-        BSP_GPIOInitStruct.Pull = GPIO_PULLUP; //GPIO_NOPULL;
+        BSP_GPIOInitStruct.Mode = GPIO_MODE_AF_PP; //GPIO_MODE_AF_OD;
+        BSP_GPIOInitStruct.Pull = GPIO_PULLUP;     //GPIO_NOPULL;
         BSP_GPIOInitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
         BSP_GPIOInitStruct.Alternate = GPIO_AF4_I2C1;
         HAL_GPIO_Init(GPIOB, &BSP_GPIOInitStruct);
@@ -100,11 +100,11 @@ Retcode_T I2C_Enable(enum BSP_I2C_Devices id)
         }
         if (HAL_OK != HAL_I2CEx_ConfigAnalogFilter(&sensorsI2CStruct.hi2c, I2C_ANALOGFILTER_ENABLE))
         {
-        	 retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_BSP_I2C_INIT_FAILED);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_BSP_I2C_INIT_FAILED);
         }
         if (HAL_OK != HAL_I2CEx_ConfigDigitalFilter(&sensorsI2CStruct.hi2c, 0))
         {
-        	 retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_BSP_I2C_INIT_FAILED);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_BSP_I2C_INIT_FAILED);
         }
         if (RETCODE_OK == retcode)
         {
@@ -167,7 +167,7 @@ void I2C1_EV_IRQHandler(void)
 {
     if (NULL != sensorsI2CStruct.IRQCallback)
     {
-        sensorsI2CStruct.IRQCallback((I2C_T) &sensorsI2CStruct);
+        sensorsI2CStruct.IRQCallback((I2C_T)&sensorsI2CStruct);
     }
 }
 
@@ -179,7 +179,7 @@ void I2C1_ER_IRQHandler(void)
     {
         if (NULL != sensorsI2CStruct.ERRCallback)
         {
-            sensorsI2CStruct.ERRCallback((I2C_T) &sensorsI2CStruct);
+            sensorsI2CStruct.ERRCallback((I2C_T)&sensorsI2CStruct);
         }
     }
 }

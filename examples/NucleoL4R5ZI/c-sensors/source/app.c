@@ -24,7 +24,6 @@
  *
  **/
 
-
 #include "AppInfo.h"
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID APP_MODULE_ID_APP
@@ -45,7 +44,7 @@
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
-static void Sensors_init(void* param1, uint32_t param2);
+static void Sensors_init(void *param1, uint32_t param2);
 
 /*---------------------- VARIABLES DECLARATIONS ---------------------------------------------------------------------*/
 
@@ -53,23 +52,23 @@ static void Sensors_init(void* param1, uint32_t param2);
 CmdProcessor_T *AppCmdProcessor;
 
 /*---------------------- LOCAL FUNCTIONS IMPLEMENTATION -------------------------------------------------------------*/
-static void Sensors_init(void* param1, uint32_t param2)
+static void Sensors_init(void *param1, uint32_t param2)
 {
-	KISO_UNUSED(param1);
-	KISO_UNUSED(param2);
+    KISO_UNUSED(param1);
+    KISO_UNUSED(param2);
 
-	Retcode_T returnVal = RETCODE_OK;
+    Retcode_T returnVal = RETCODE_OK;
 
-	returnVal = AccelSensor_init();
+    returnVal = AccelSensor_init();
 
-	if (RETCODE_OK == returnVal)
-	{
-		returnVal = EnvSensor_init();
-	}
-	if (RETCODE_OK != returnVal)
-	{
-		Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE));
-	}
+    if (RETCODE_OK == returnVal)
+    {
+        returnVal = EnvSensor_init();
+    }
+    if (RETCODE_OK != returnVal)
+    {
+        Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE));
+    }
 }
 
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
@@ -78,21 +77,21 @@ static void Sensors_init(void* param1, uint32_t param2)
  * @brief This is a template function where the user can write his custom application.
  *
  */
-void appInitSystem(void * CmdProcessorHandle, uint32_t param2)
+void appInitSystem(void *CmdProcessorHandle, uint32_t param2)
 {
-	KISO_UNUSED(param2);
+    KISO_UNUSED(param2);
 
-	Retcode_T returnVal = RETCODE_OK;
+    Retcode_T returnVal = RETCODE_OK;
 
     if (CmdProcessorHandle == NULL)
     {
         printf("Command processor handle is null \n\r");
         assert(false);
     }
-    AppCmdProcessor = (CmdProcessor_T *) CmdProcessorHandle;
+    AppCmdProcessor = (CmdProcessor_T *)CmdProcessorHandle;
 
     if (RETCODE_OK == returnVal)
     {
-        CmdProcessor_Enqueue((CmdProcessor_T*)AppCmdProcessor,Sensors_init,(void *)AppCmdProcessor,0);
+        CmdProcessor_Enqueue((CmdProcessor_T *)AppCmdProcessor, Sensors_init, (void *)AppCmdProcessor, 0);
     }
 }

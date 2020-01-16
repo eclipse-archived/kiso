@@ -65,10 +65,10 @@ HWHandle_T spihandle;
 
 /*---------------------- LOCAL FUNCTIONS IMPLEMENTATION -------------------------------------------------------------*/
 
-static s8 bma280_Write( u8 addr, u8 reg, u8 *data, u8 len)
+static s8 bma280_Write(u8 addr, u8 reg, u8 *data, u8 len)
 {
-	KISO_UNUSED(addr);
-	KISO_UNUSED(reg);
+    KISO_UNUSED(addr);
+    KISO_UNUSED(reg);
 
     Retcode_T retcode = MCU_SPI_Send(spihandle, data, len);
     if (RETCODE_OK == retcode)
@@ -81,12 +81,12 @@ static s8 bma280_Write( u8 addr, u8 reg, u8 *data, u8 len)
     }
 }
 
-static s8 bma280_Read( u8 addr, u8 reg, u8 *data, u8 len)
+static s8 bma280_Read(u8 addr, u8 reg, u8 *data, u8 len)
 {
-	KISO_UNUSED(addr);
-	KISO_UNUSED(reg);
+    KISO_UNUSED(addr);
+    KISO_UNUSED(reg);
 
-	Retcode_T retcode = MCU_SPI_Receive(spihandle, data, len);
+    Retcode_T retcode = MCU_SPI_Receive(spihandle, data, len);
     if (RETCODE_OK == retcode)
     {
         return SUCCESS;
@@ -99,8 +99,8 @@ static s8 bma280_Read( u8 addr, u8 reg, u8 *data, u8 len)
 
 static void spicallback(SPI_T spi, struct MCU_SPI_Event_S event)
 {
-	KISO_UNUSED(spi);
-	KISO_UNUSED(event);
+    KISO_UNUSED(spi);
+    KISO_UNUSED(event);
 }
 
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
@@ -110,22 +110,22 @@ Retcode_T AccelSensor_init(void)
     Retcode_T retcode = RETCODE_OK;
 
     retcode = BSP_BMA280_Connect(SPI_DEVICE_BMA280_ID);
-    if(RETCODE_OK == retcode)
+    if (RETCODE_OK == retcode)
     {
-    	retcode = BSP_BMA280_Enable(SPI_DEVICE_BMA280_ID);
+        retcode = BSP_BMA280_Enable(SPI_DEVICE_BMA280_ID);
     }
-    if(RETCODE_OK == retcode)
-	{
-    	spihandle = BSP_BMA280_GetHandle(SPI_DEVICE_BMA280_ID);
+    if (RETCODE_OK == retcode)
+    {
+        spihandle = BSP_BMA280_GetHandle(SPI_DEVICE_BMA280_ID);
         retcode = MCU_SPI_Initialize(spihandle, spicallback);
-	}
-    if(RETCODE_OK == retcode)
-   	{
-		if (SUCCESS != bma2x2_init(&bma280Struct))
-		{
-			retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_APP_BMA280_INIT_FAILED);
-		}
-   	}
+    }
+    if (RETCODE_OK == retcode)
+    {
+        if (SUCCESS != bma2x2_init(&bma280Struct))
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_APP_BMA280_INIT_FAILED);
+        }
+    }
 
     return retcode;
 }
@@ -133,4 +133,3 @@ Retcode_T AccelSensor_init(void)
 /**@} */
 
 /** ************************************************************************* */
-

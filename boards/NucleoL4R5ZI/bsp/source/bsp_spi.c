@@ -38,11 +38,11 @@ void SPIx_IRQHandler(void);
  * Variable storing SPI control block for the sensors.
  */
 struct MCU_SPI_S nucleoSpiStruct =
-{
-	.TransferMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
-	/* SPI Config */
-	.hspi.Instance = SPIx,
-	/* SPI baudrate is set to 9 MHz maximum (APB1/SPI_BaudRatePrescaler = 72/8 = 9 MHz)
+    {
+        .TransferMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
+        /* SPI Config */
+        .hspi.Instance = SPIx,
+        /* SPI baudrate is set to 9 MHz maximum (APB1/SPI_BaudRatePrescaler = 72/8 = 9 MHz)
 			  to verify these constraints:
 				 - ST7735 LCD SPI interface max baudrate is 15MHz for write and 6.66MHz for read
 				   Since the provided driver doesn't use read capability from LCD, only constraint
@@ -50,19 +50,19 @@ struct MCU_SPI_S nucleoSpiStruct =
 				 - SD card SPI interface max baudrate is 25MHz for write/read
 				 - PCLK2 max frequency is 72 MHz
 	 */
-	.hspi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2,
-	.hspi.Init.Direction         = SPI_DIRECTION_2LINES,
-	.hspi.Init.CLKPhase          = SPI_PHASE_1EDGE,
-	.hspi.Init.CLKPolarity       = SPI_POLARITY_LOW,
-	.hspi.Init.CRCCalculation    = SPI_CRCCALCULATION_DISABLE,
-	.hspi.Init.CRCPolynomial     = 7,
-	.hspi.Init.CRCLength         = SPI_CRC_LENGTH_DATASIZE,
-	.hspi.Init.DataSize          = SPI_DATASIZE_8BIT,
-	.hspi.Init.FirstBit          = SPI_FIRSTBIT_MSB,
-	.hspi.Init.NSS               = SPI_NSS_SOFT,
-	.hspi.Init.NSSPMode          = SPI_NSS_PULSE_ENABLE,
-	.hspi.Init.TIMode            = SPI_TIMODE_DISABLE,
-	.hspi.Init.Mode              = SPI_MODE_MASTER,
+        .hspi.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2,
+        .hspi.Init.Direction = SPI_DIRECTION_2LINES,
+        .hspi.Init.CLKPhase = SPI_PHASE_1EDGE,
+        .hspi.Init.CLKPolarity = SPI_POLARITY_LOW,
+        .hspi.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE,
+        .hspi.Init.CRCPolynomial = 7,
+        .hspi.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE,
+        .hspi.Init.DataSize = SPI_DATASIZE_8BIT,
+        .hspi.Init.FirstBit = SPI_FIRSTBIT_MSB,
+        .hspi.Init.NSS = SPI_NSS_SOFT,
+        .hspi.Init.NSSPMode = SPI_NSS_PULSE_ENABLE,
+        .hspi.Init.TIMode = SPI_TIMODE_DISABLE,
+        .hspi.Init.Mode = SPI_MODE_MASTER,
 };
 
 uint8_t spiConnectedState = 0;
@@ -76,7 +76,7 @@ uint8_t spiEnabledState = 0;
  */
 Retcode_T SPI_Connect(enum BSP_SPI_Devices id)
 {
-    GPIO_InitTypeDef  GPIO_InitStruct = { 0 };
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
 
     /*** Configure the GPIOs ***/
     if (0 == spiConnectedState)
@@ -94,10 +94,10 @@ Retcode_T SPI_Connect(enum BSP_SPI_Devices id)
         /*##### -2- Configure peripheral GPIO #####*/
         /* SPI GPIO pin configuration  */
         GPIO_OpenClockGate(SPIx_SCK_PORT_SELECT, SPIx_SCK_PIN | SPIx_MISO_PIN | SPIx_MOSI_PIN);
-        GPIO_InitStruct.Pin       = SPIx_SCK_PIN | SPIx_MISO_PIN | SPIx_MOSI_PIN;
-        GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-        GPIO_InitStruct.Pull      = GPIO_NOPULL;
-        GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct.Pin = SPIx_SCK_PIN | SPIx_MISO_PIN | SPIx_MOSI_PIN;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
         GPIO_InitStruct.Alternate = SPIx_SCK_AF;
         HAL_GPIO_Init(SPIx_SCK_GPIO_PORT, &GPIO_InitStruct);
 
@@ -130,7 +130,7 @@ Retcode_T SPI_Enable(enum BSP_SPI_Devices id)
         /* Configure the SPI resource */
         if (HAL_OK != HAL_SPI_Init(&nucleoSpiStruct.hspi))
         {
-             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_BSP_SPI_INIT_FAILED);
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_BSP_SPI_INIT_FAILED);
         }
     }
     spiEnabledState |= 1 << id;
@@ -197,9 +197,8 @@ Retcode_T SPI_Disconnect(enum BSP_SPI_Devices id)
  */
 HWHandle_T BSP_TestInterface_GetSPIHandle(void)
 {
-    return (HWHandle_T) &nucleoSpiStruct;
+    return (HWHandle_T)&nucleoSpiStruct;
 }
-
 
 /*---------------------- LOCAL FUNCTIONS IMPLEMENTATION -------------------------------------------------------------*/
 
@@ -210,7 +209,7 @@ void SPIx_IRQHandler(void)
 {
     if (NULL != nucleoSpiStruct.IRQCallback)
     {
-        nucleoSpiStruct.IRQCallback((SPI_T) &nucleoSpiStruct);
+        nucleoSpiStruct.IRQCallback((SPI_T)&nucleoSpiStruct);
     }
 }
 

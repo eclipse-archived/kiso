@@ -26,36 +26,36 @@
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID MODULE_BSP_API_TEST_IF
 
-#define TESTIF_UART_INT_PRIORITY              UINT32_C(10)
-#define TESTIF_UART_SUBPRIORITY               UINT32_C(1)
+#define TESTIF_UART_INT_PRIORITY UINT32_C(10)
+#define TESTIF_UART_SUBPRIORITY UINT32_C(1)
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
-Retcode_T BSP_TestInterface_Control(uint32_t command, void* arg);
+Retcode_T BSP_TestInterface_Control(uint32_t command, void *arg);
 void USART3_IRQHandler(void);
 
 /*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/
 
-static uint8_t bspState = (uint8_t) BSP_STATE_INIT; /**< BSP State of the cellular module */
+static uint8_t bspState = (uint8_t)BSP_STATE_INIT; /**< BSP State of the cellular module */
 
 /**
  * Static structure storing the UART handle for Test Interface
  */
 static struct MCU_UART_S testIf_UARTStruct =
-{
-	.TxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
-	.RxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
-	.Datarate = 115200U,
-	.huart.Instance = USART3,
-	.huart.Init.BaudRate = 115200U,
-	.huart.Init.WordLength = UART_WORDLENGTH_8B,
-	.huart.Init.StopBits = UART_STOPBITS_1,
-	.huart.Init.Parity = UART_PARITY_NONE,
-	.huart.Init.Mode = UART_MODE_TX_RX,
-	.huart.Init.HwFlowCtl = UART_HWCONTROL_NONE,
-	.huart.Init.OverSampling = UART_OVERSAMPLING_16,
-	.huart.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE,
-	.huart.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT,
+    {
+        .TxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
+        .RxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
+        .Datarate = 115200U,
+        .huart.Instance = USART3,
+        .huart.Init.BaudRate = 115200U,
+        .huart.Init.WordLength = UART_WORDLENGTH_8B,
+        .huart.Init.StopBits = UART_STOPBITS_1,
+        .huart.Init.Parity = UART_PARITY_NONE,
+        .huart.Init.Mode = UART_MODE_TX_RX,
+        .huart.Init.HwFlowCtl = UART_HWCONTROL_NONE,
+        .huart.Init.OverSampling = UART_OVERSAMPLING_16,
+        .huart.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE,
+        .huart.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT,
 };
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
 
@@ -68,30 +68,30 @@ Retcode_T BSP_TestInterface_Connect(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_CONNECTED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_CONNECTED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
     if (RETCODE_OK == retcode)
     {
         /* IOSV bit MUST be set to access GPIO port G[2:15] */
-		__HAL_RCC_PWR_CLK_ENABLE();
-		__HAL_RCC_LPTIM1_CLK_ENABLE();
+        __HAL_RCC_PWR_CLK_ENABLE();
+        __HAL_RCC_LPTIM1_CLK_ENABLE();
 
-		GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+        GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-		/* UART RX/TX GPIO pin configuration  */
+        /* UART RX/TX GPIO pin configuration  */
         GPIO_OpenClockGate(GPIO_PORT_D, PIND_USART3_TX | PIND_USART3_RX);
 
-		GPIO_InitStruct.Pin       = PIND_USART3_TX | PIND_USART3_RX;
-		GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-		GPIO_InitStruct.Pull      = GPIO_NOPULL;
-		GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_VERY_HIGH;
-		GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
+        GPIO_InitStruct.Pin = PIND_USART3_TX | PIND_USART3_RX;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+        GPIO_InitStruct.Pull = GPIO_NOPULL;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+        GPIO_InitStruct.Alternate = GPIO_AF7_USART3;
 
-		HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+        HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-        bspState = (uint8_t) BSP_STATE_CONNECTED;
+        bspState = (uint8_t)BSP_STATE_CONNECTED;
     }
     return retcode;
 }
@@ -105,7 +105,7 @@ Retcode_T BSP_TestInterface_Enable(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_ENABLED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_ENABLED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -114,7 +114,7 @@ Retcode_T BSP_TestInterface_Enable(void)
         __HAL_RCC_USART3_CLK_ENABLE();
         __HAL_RCC_USART3_FORCE_RESET();
         __HAL_RCC_USART3_RELEASE_RESET();
-		__GPIOD_CLK_ENABLE();
+        __GPIOD_CLK_ENABLE();
         /* Configure the UART resource */
         if (HAL_OK != HAL_UART_Init(&testIf_UARTStruct.huart))
         {
@@ -123,11 +123,11 @@ Retcode_T BSP_TestInterface_Enable(void)
     }
     if (RETCODE_OK == retcode)
     {
-    	NVIC_ClearPendingIRQ(USART3_IRQn);
-		HAL_NVIC_SetPriority(USART3_IRQn, TESTIF_UART_INT_PRIORITY, TESTIF_UART_SUBPRIORITY);
-		HAL_NVIC_EnableIRQ(USART3_IRQn);
+        NVIC_ClearPendingIRQ(USART3_IRQn);
+        HAL_NVIC_SetPriority(USART3_IRQn, TESTIF_UART_INT_PRIORITY, TESTIF_UART_SUBPRIORITY);
+        HAL_NVIC_EnableIRQ(USART3_IRQn);
 
-        bspState = (uint8_t) BSP_STATE_ENABLED;
+        bspState = (uint8_t)BSP_STATE_ENABLED;
     }
     return retcode;
 }
@@ -141,7 +141,7 @@ Retcode_T BSP_TestInterface_Disable(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    if (!(bspState & (uint8_t) BSP_STATE_TO_DISABLED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_DISABLED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -159,8 +159,8 @@ Retcode_T BSP_TestInterface_Disable(void)
     }
     if (RETCODE_OK == retcode)
     {
-    	__USART3_CLK_DISABLE();
-        bspState = (uint8_t) BSP_STATE_DISABLED;
+        __USART3_CLK_DISABLE();
+        bspState = (uint8_t)BSP_STATE_DISABLED;
     }
     return retcode;
 }
@@ -173,7 +173,7 @@ Retcode_T BSP_TestInterface_Disable(void)
 Retcode_T BSP_TestInterface_Disconnect(void)
 {
     Retcode_T retcode = RETCODE_OK;
-    if (!(bspState & (uint8_t) BSP_STATE_TO_DISCONNECTED))
+    if (!(bspState & (uint8_t)BSP_STATE_TO_DISCONNECTED))
     {
         retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
     }
@@ -184,7 +184,7 @@ Retcode_T BSP_TestInterface_Disconnect(void)
     }
     if (RETCODE_OK == retcode)
     {
-        bspState = (uint8_t) BSP_STATE_DISCONNECTED;
+        bspState = (uint8_t)BSP_STATE_DISCONNECTED;
     }
     return retcode;
 }
@@ -195,14 +195,14 @@ Retcode_T BSP_TestInterface_Disconnect(void)
  */
 HWHandle_T BSP_TestInterface_GetUARTHandle(void)
 {
-    return (HWHandle_T) &testIf_UARTStruct;
+    return (HWHandle_T)&testIf_UARTStruct;
 }
 
 /**
  * See API interface for function documentation
  * @retval RETCODE_NOT_SUPPORTED.
  */
-Retcode_T BSP_TestInterface_Control(uint32_t command, void* arg)
+Retcode_T BSP_TestInterface_Control(uint32_t command, void *arg)
 {
     KISO_UNUSED(command);
     KISO_UNUSED(arg);
@@ -218,7 +218,7 @@ void USART3_IRQHandler(void)
 {
     if (testIf_UARTStruct.IrqCallback)
     {
-        testIf_UARTStruct.IrqCallback((UART_T) &testIf_UARTStruct);
+        testIf_UARTStruct.IrqCallback((UART_T)&testIf_UARTStruct);
     }
 }
 #endif /* KISO_FEATURE_BSP_TEST_INTERFACE */

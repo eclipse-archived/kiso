@@ -32,7 +32,7 @@
 #include "BSP_NucleoL4R5ZI.h"
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
 
-#undef KISO_MODULE_ID  /* Module ID define before including Basics package*/
+#undef KISO_MODULE_ID /* Module ID define before including Basics package*/
 #define KISO_MODULE_ID APP_MODULE_ID_MAIN
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
@@ -41,7 +41,7 @@ Retcode_T systemStartup(void);
 
 void ErrorHandler(Retcode_T error, bool isfromIsr);
 
-void assertIndicationMapping(const unsigned long line, const unsigned char * const file);
+void assertIndicationMapping(const unsigned long line, const unsigned char *const file);
 
 static void SysTickPreCallback(void);
 
@@ -71,7 +71,7 @@ int main(void)
     {
         printf("System Startup success");
         returnValue =
-                CmdProcessor_Initialize(&MainCmdProcessor, (char *) "MainCmdProcessor", TASK_PRIO_MAIN_CMD_PROCESSOR, TASK_STACK_SIZE_MAIN_CMD_PROCESSOR, TASK_Q_LEN_MAIN_CMD_PROCESSOR);
+            CmdProcessor_Initialize(&MainCmdProcessor, (char *)"MainCmdProcessor", TASK_PRIO_MAIN_CMD_PROCESSOR, TASK_STACK_SIZE_MAIN_CMD_PROCESSOR, TASK_Q_LEN_MAIN_CMD_PROCESSOR);
     }
     if (RETCODE_OK == returnValue)
     {
@@ -102,16 +102,15 @@ void ErrorHandler(Retcode_T error, bool isfromIsr)
         Retcode_Severity_T SeverityCode = Retcode_GetSeverity(error);
 
         if (RETCODE_SEVERITY_FATAL == SeverityCode)
-            printf("Fatal error from package %u , Error code: %u and module ID is :%u \r\n",(unsigned int) PackageID ,(unsigned int) ErrorCode, (unsigned int) ModuleID);
+            printf("Fatal error from package %u , Error code: %u and module ID is :%u \r\n", (unsigned int)PackageID, (unsigned int)ErrorCode, (unsigned int)ModuleID);
 
         if (RETCODE_SEVERITY_ERROR == SeverityCode)
-            printf("Severe error from package %u , Error code: %u and module ID is :%u \r\n",(unsigned int) PackageID , (unsigned int) ErrorCode, (unsigned int) ModuleID);
+            printf("Severe error from package %u , Error code: %u and module ID is :%u \r\n", (unsigned int)PackageID, (unsigned int)ErrorCode, (unsigned int)ModuleID);
     }
     else
     {
         BSP_LED_Switch(NUCLEOL4R5ZI_LED_RED_ID, NUCLEOL4R5ZI_LED_COMMAND_ON);
     }
-
 }
 
 #ifndef NDEBUG /* valid only for debug builds */
@@ -123,22 +122,22 @@ void ErrorHandler(Retcode_T error, bool isfromIsr)
  *
  */
 
-void assertIndicationMapping(const unsigned long line, const unsigned char * const file)
+void assertIndicationMapping(const unsigned long line, const unsigned char *const file)
 {
     /* Switch on the LEDs */
     Retcode_T retcode = RETCODE_OK;
 
     if (RETCODE_OK == retcode)
     {
-        retcode = BSP_LED_Switch(NUCLEOL4R5ZI_LED_BLUE_ID,NUCLEOL4R5ZI_LED_COMMAND_ON);
+        retcode = BSP_LED_Switch(NUCLEOL4R5ZI_LED_BLUE_ID, NUCLEOL4R5ZI_LED_COMMAND_ON);
     }
     if (RETCODE_OK == retcode)
     {
-         retcode = BSP_LED_Switch(NUCLEOL4R5ZI_LED_RED_ID,NUCLEOL4R5ZI_LED_COMMAND_ON);
+        retcode = BSP_LED_Switch(NUCLEOL4R5ZI_LED_RED_ID, NUCLEOL4R5ZI_LED_COMMAND_ON);
     }
     if (RETCODE_OK == retcode)
     {
-         retcode = BSP_LED_Switch(NUCLEOL4R5ZI_LED_GREEN_ID,NUCLEOL4R5ZI_LED_COMMAND_ON);
+        retcode = BSP_LED_Switch(NUCLEOL4R5ZI_LED_GREEN_ID, NUCLEOL4R5ZI_LED_COMMAND_ON);
     }
     printf("asserted at Filename %s , line no  %ld \n\r", file, line);
 
@@ -153,7 +152,7 @@ Retcode_T systemStartup(void)
 {
     Retcode_T returnValue = RETCODE_OK;
     uint32_t param1 = 0;
-    void* param2 = NULL;
+    void *param2 = NULL;
 
     /* Initialize the callbacks for the system tick */
     BSP_Board_OSTickInitialize(SysTickPreCallback, NULL);
@@ -203,10 +202,11 @@ static void SysTickPreCallback(void)
 static StaticTask_t xIdleTaskTCBBuffer;
 static StackType_t xIdleStack[IDLE_TASK_SIZE];
 
-void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize) {
-  *ppxIdleTaskTCBBuffer = &xIdleTaskTCBBuffer;
-  *ppxIdleTaskStackBuffer = &xIdleStack[0];
-  *pulIdleTaskStackSize = IDLE_TASK_SIZE;
+void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize)
+{
+    *ppxIdleTaskTCBBuffer = &xIdleTaskTCBBuffer;
+    *ppxIdleTaskStackBuffer = &xIdleStack[0];
+    *pulIdleTaskStackSize = IDLE_TASK_SIZE;
 }
 #endif
 
@@ -218,9 +218,10 @@ static StackType_t xTimerStack[configTIMER_TASK_STACK_DEPTH];
    following callback function - which enables the application to optionally
    provide the memory that will be used by the timer task as the task's stack
    and TCB. */
-void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize) {
-  *ppxTimerTaskTCBBuffer = &xTimerTaskTCBBuffer;
-  *ppxTimerTaskStackBuffer = &xTimerStack[0];
-  *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
+void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize)
+{
+    *ppxTimerTaskTCBBuffer = &xTimerTaskTCBBuffer;
+    *ppxTimerTaskStackBuffer = &xTimerStack[0];
+    *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 #endif

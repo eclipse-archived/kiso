@@ -34,63 +34,60 @@
 /* ************************************************************************** */
 /* LED SETTINGS ************************************************************* */
 /* ************************************************************************** */
-#define PINB_LED_R                      GPIO_PIN_14
-#define PINB_LED_B                      GPIO_PIN_7
-#define PINC_LED_G                      GPIO_PIN_7
+#define PINB_LED_R GPIO_PIN_14
+#define PINB_LED_B GPIO_PIN_7
+#define PINC_LED_G GPIO_PIN_7
 
-#define PORTB_PIN_LED_ALL               (PINB_LED_R | PINB_LED_B)
-#define PORTC_PIN_LED_ALL               (PINC_LED_G)
+#define PORTB_PIN_LED_ALL (PINB_LED_R | PINB_LED_B)
+#define PORTC_PIN_LED_ALL (PINC_LED_G)
 
 /* ************************************************************************** */
 /* LPUART SETTINGS ************************************************************/
 /* ************************************************************************** */
-#define PIND_USART3_TX                  GPIO_PIN_8
-#define PIND_USART3_RX                  GPIO_PIN_9
-
+#define PIND_USART3_TX GPIO_PIN_8
+#define PIND_USART3_RX GPIO_PIN_9
 
 /* ************************************************************************** */
 /* I2C SETTINGS ************************************************************* */
 /* ************************************************************************** */
-#define PINB_SENS_SCL                   GPIO_PIN_8
-#define PINB_SENS_SDA                   GPIO_PIN_9
-
+#define PINB_SENS_SCL GPIO_PIN_8
+#define PINB_SENS_SDA GPIO_PIN_9
 
 /* ************************************************************************** */
 /* SPI SETTINGS ***************************************************************/
 /* ************************************************************************** */
 
-#define SPIx                             SPI1
+#define SPIx SPI1
 
 /* Definition for SPIx clock resources */
-#define SPIx_CLK_ENABLE()                __HAL_RCC_SPI1_CLK_ENABLE()
-#define SPIx_CLK_DISABLE()               __HAL_RCC_SPI1_CLK_DISABLE()
-#define SPIx_FORCE_RESET()               __HAL_RCC_SPI1_FORCE_RESET()
-#define SPIx_RELEASE_RESET()             __HAL_RCC_SPI1_RELEASE_RESET()
+#define SPIx_CLK_ENABLE() __HAL_RCC_SPI1_CLK_ENABLE()
+#define SPIx_CLK_DISABLE() __HAL_RCC_SPI1_CLK_DISABLE()
+#define SPIx_FORCE_RESET() __HAL_RCC_SPI1_FORCE_RESET()
+#define SPIx_RELEASE_RESET() __HAL_RCC_SPI1_RELEASE_RESET()
 
 /* Definition for SPIx's NVIC */
-#define SPIx_IRQn                        SPI1_IRQn
-#define SPIx_IRQHandler                  SPI1_IRQHandler
+#define SPIx_IRQn SPI1_IRQn
+#define SPIx_IRQHandler SPI1_IRQHandler
 
 /* Definition for SPIx Pins */
 /* SCK GPIO pin configuration*/
-#define SPIx_SCK_PIN                     GPIO_PIN_5
-#define SPIx_SCK_GPIO_PORT               GPIOA
-#define SPIx_SCK_PORT_SELECT             GPIO_PORT_A
-#define SPIx_SCK_AF                      GPIO_AF5_SPI1
-#define SPIx_SCK_GPIO_CLK_ENABLE()       __HAL_RCC_GPIOA_CLK_ENABLE()
+#define SPIx_SCK_PIN GPIO_PIN_5
+#define SPIx_SCK_GPIO_PORT GPIOA
+#define SPIx_SCK_PORT_SELECT GPIO_PORT_A
+#define SPIx_SCK_AF GPIO_AF5_SPI1
+#define SPIx_SCK_GPIO_CLK_ENABLE() __HAL_RCC_GPIOA_CLK_ENABLE()
 
 /* MISO pin configuration*/
-#define SPIx_MISO_PIN                    GPIO_PIN_6
+#define SPIx_MISO_PIN GPIO_PIN_6
 
 /* MOSI pin configuration*/
-#define SPIx_MOSI_PIN                    GPIO_PIN_7
+#define SPIx_MOSI_PIN GPIO_PIN_7
 
 /* CS pin configuration*/
-#define SPIx_CS_PIN                    GPIO_PIN_14
-#define SPIx_CS_GPIO_PORT              GPIOD
-#define SPIx_CS_PORT_SELECT            GPIO_PORT_D
-#define SPIx_CS_GPIO_CLK_ENABLE()      __HAL_RCC_GPIOD_CLK_ENABLE()
-
+#define SPIx_CS_PIN GPIO_PIN_14
+#define SPIx_CS_GPIO_PORT GPIOD
+#define SPIx_CS_PORT_SELECT GPIO_PORT_D
+#define SPIx_CS_GPIO_CLK_ENABLE() __HAL_RCC_GPIOD_CLK_ENABLE()
 
 /*---------------------- EXPORTED TYPES ------------------------------------------------------------------------------*/
 /**

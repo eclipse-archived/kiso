@@ -61,7 +61,7 @@ void I2CCallback(I2C_T i2c, struct MCU_I2C_Event_S event);
 struct bme280_dev bme280Struct = {
     .read = bme280_Read,
     .write = bme280_Write,
-	.delay_ms = BSP_Board_Delay,
+    .delay_ms = BSP_Board_Delay,
     .intf = BME280_I2C_INTF,
     .dev_id = NUCLEOL4R5ZI_BME280_I2CADDRESS,
 };
@@ -113,25 +113,25 @@ Retcode_T EnvSensor_init(void)
         BSP_BME280_Enable(I2C_DEVICE_BME280_ID);
     }
     if (RETCODE_OK == retcode)
-	{
-    	i2cHandle = BSP_BME280_GetHandle(I2C_DEVICE_BME280_ID);
+    {
+        i2cHandle = BSP_BME280_GetHandle(I2C_DEVICE_BME280_ID);
 
-		if (NULL == i2cHandle)
-		{
-			retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_APP_I2C_HANDLE_DOES_NOT_EXIST);
-		}
-	}
+        if (NULL == i2cHandle)
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_APP_I2C_HANDLE_DOES_NOT_EXIST);
+        }
+    }
     if (RETCODE_OK == retcode)
     {
         if (RETCODE_OK == retcode)
-    	{
-    		retcode = MCU_I2C_Initialize(i2cHandle, I2CCallback);
-    	}
+        {
+            retcode = MCU_I2C_Initialize(i2cHandle, I2CCallback);
+        }
         if (RETCODE_OK == retcode)
         {
-        	retcode = I2CTransceiver_Init(&i2cTransceiverStruct, i2cHandle);
+            retcode = I2CTransceiver_Init(&i2cTransceiverStruct, i2cHandle);
         }
-	}
+    }
     if (RETCODE_OK == retcode)
     {
         bme280Struct.settings = (struct bme280_settings){
@@ -160,4 +160,3 @@ Retcode_T EnvSensor_init(void)
 /**@} */
 
 /** ************************************************************************* */
-

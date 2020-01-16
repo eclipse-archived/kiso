@@ -21,10 +21,9 @@
 #ifndef APPINFO_H_
 #define APPINFO_H_
 
-
-#define TASK_PRIO_MAIN_CMD_PROCESSOR                (UINT32_C(1))
-#define TASK_STACK_SIZE_MAIN_CMD_PROCESSOR          (UINT16_C(700))
-#define TASK_Q_LEN_MAIN_CMD_PROCESSOR                (UINT32_C(10))
+#define TASK_PRIO_MAIN_CMD_PROCESSOR (UINT32_C(1))
+#define TASK_STACK_SIZE_MAIN_CMD_PROCESSOR (UINT16_C(700))
+#define TASK_Q_LEN_MAIN_CMD_PROCESSOR (UINT32_C(10))
 
 /**
  * @brief KISO_APP_MODULE_ID for Application C module of XDK
@@ -36,7 +35,7 @@ enum App_ModuleID_E
 {
     APP_MODULE_ID_MAIN,
     APP_MODULE_ID_UART,
-/* Define next module ID here and assign a value to it! */
+    /* Define next module ID here and assign a value to it! */
 };
 
 #endif /* APPINFO_H_ */

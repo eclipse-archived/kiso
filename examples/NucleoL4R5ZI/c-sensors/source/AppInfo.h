@@ -21,10 +21,9 @@
 #ifndef APPINFO_H_
 #define APPINFO_H_
 
-
-#define TASK_PRIO_MAIN_CMD_PROCESSOR                (UINT32_C(1))
-#define TASK_STACK_SIZE_MAIN_CMD_PROCESSOR          (UINT16_C(700))
-#define TASK_Q_LEN_MAIN_CMD_PROCESSOR                (UINT32_C(10))
+#define TASK_PRIO_MAIN_CMD_PROCESSOR (UINT32_C(1))
+#define TASK_STACK_SIZE_MAIN_CMD_PROCESSOR (UINT16_C(700))
+#define TASK_Q_LEN_MAIN_CMD_PROCESSOR (UINT32_C(10))
 
 #include "Kiso_Retcode.h"
 
@@ -38,11 +37,11 @@ enum App_ModuleID_E
 {
     APP_MODULE_ID_MAIN,
     APP_MODULE_ID_BLINKY_LED,
-	APP_MODULE_ID_UART,
-	APP_MODULE_ID_ACCEL_SENSOR,
-	APP_MODULE_ID_ENV_SENSOR,
-	APP_MODULE_ID_APP
-/* Define next module ID here and assign a value to it! */
+    APP_MODULE_ID_UART,
+    APP_MODULE_ID_ACCEL_SENSOR,
+    APP_MODULE_ID_ENV_SENSOR,
+    APP_MODULE_ID_APP
+    /* Define next module ID here and assign a value to it! */
 };
 
 /**

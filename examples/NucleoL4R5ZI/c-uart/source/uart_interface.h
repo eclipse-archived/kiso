@@ -33,7 +33,6 @@
  * @param[in] param2  Currently not used will be used in future
  *
  */
-void appInitSystem(void * CmdProcessorHandle, uint32_t param2);
+void appInitSystem(void *CmdProcessorHandle, uint32_t param2);
 
 #endif /* UART_INTERFACE_H_ */
-
