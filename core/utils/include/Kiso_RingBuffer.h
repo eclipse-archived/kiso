@@ -19,19 +19,48 @@
  * @{
  *
  * @brief
- *      Ring Buffer Interface
+ *      Ring Buffer Interface provides APIs for the creation and handling of a RingBuffer object.
  *
  * @details
- *      This module represents optimized for speed circular buffer implementation,
- *      intended to be used as transport for data between ISR and user code.
- *      Read and Write functions may handle data only partially, depending of fill-level
- *      of the buffer, so corresponding calls may need to be retried.
+ *      This API  provides means for creating and handling 8 bit ring buffer objects 
+ *      typically used in communication stacks.
+ *      an example of usage is explained in the code snippet below.
  *
- * @note
- *      For optimization purposes, error handling is minimized and responsibility
- *      for parameter correctness is transfered to user code. Also some code constructions
- *      may not follow expected patterns.
  *
+ * @code
+   #include Kiso_RingBuffer.h
+   #include "string.h"
+
+   RingBuffer_T ringBuffer;
+   uint8_t yourBuffer[yourBufferSize];
+
+   void yourInitFunction(void)
+   {  
+     ....
+      RingBuffer_Initialize(&ringBuffer, yourBuffer, yourBufferSize);
+      ...
+    }
+  
+   void yourFunctionReadingTheRingBuffer(void)
+   {
+      uint8_t readBuffer[SIZE];
+      ...
+      // it makes sense to protect the read operation with a critical section 
+      length = RingBuffer_Read(&ringBuffer, readBuffer, SIZE);
+      ...
+  return;
+  }
+
+  void yourFunctionWritingToTheRingBuffer(void)
+  {
+    ...
+    //it makes sense to protect the write operation with a critical section
+    if (characterCount == RingBuffer_Write(&ringBuffer, "TEST", strlen("TEST")))
+    ...
+    return;
+  }
+ 
+  @endcode
  * @file
  **/
 

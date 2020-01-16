@@ -60,10 +60,13 @@
 
 /**
 * @{
-* @defgroup KISO_EXAMPLES Examples
-* @defgroup KISO_BOARDS Supported Hardware
 * @defgroup KISO_CORE Core
+* @defgroup KISO_BOARDS Supported Hardware
+* @defgroup KISO_EXAMPLES Examples
 * @defgroup KISO_CONNECTIVITY Connectivity
 * @ingroup KISO_CORE
+* @{
+ *
+ * @brief       Provides APIs for different connectivity technologies and their implementations for specific hardware modules.
 * @}
 */

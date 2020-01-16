@@ -19,14 +19,14 @@
  * @{
  *
  * @brief
- *      Guarded Task interface
+ *      Guarded Task creates a task which waits for a given signal before executing an attached function once.
  *
  * @details
  *      Guarded task is wrapper of function, which will be executed only
  *      when it is needed, or 'signaled'. When/if guarded function ends,
  *      it can be executed, or signaled, again.
- *      This primitive provides easy mechanism to async transfer ISR execution
- *      to user code or async execute code in response to some other event.
+ *      This API provides easy mechanism to differ event handling and
+ *      execute them in user context (for example, differing interrupt processing).
  *
  * @note
  *      1. When actually function will be executed depends on OS scheduler.

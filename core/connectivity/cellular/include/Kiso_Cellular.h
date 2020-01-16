@@ -93,6 +93,7 @@
 
 /**
  * @defgroup CELLULAR Cellular
+ * @ingroup KISO_CONNECTIVITY
  * @{
  *
  * @brief This module is used to initialize, connect, disconnect, uninitialize and get modem status.
