@@ -50,7 +50,6 @@ void SysTick_Handler(void);
 
 void Error_Handler(void);
 
-
 /*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/
 
 static bool initDone = false; /**< board initialization status */
@@ -71,7 +70,7 @@ static BSP_Systick_Callback_T postTickHandler = NULL; /**< function to be execut
  * @retval RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_TIME_INIT_FAILED) in case time-stamp init failed
  * @retval RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_TIME_INIT_FAILED) in case time-stamp starting failed
  */
-Retcode_T BSP_Board_Initialize(uint32_t param1, void* param2)
+Retcode_T BSP_Board_Initialize(uint32_t param1, void *param2)
 {
     KISO_UNUSED(param1);
     KISO_UNUSED(param2);
@@ -92,10 +91,10 @@ Retcode_T BSP_Board_Initialize(uint32_t param1, void* param2)
     {
         retcode = Board_SysTickInit();
     }
-	if (RETCODE_OK == retcode)
-	{
-		retcode = Board_OscillatorsInit();
-	}
+    if (RETCODE_OK == retcode)
+    {
+        retcode = Board_OscillatorsInit();
+    }
     if (RETCODE_OK == retcode)
     {
         retcode = Board_AMBAClockInit();
@@ -132,7 +131,6 @@ void BSP_Board_DelayUs(uint32_t delayInUs)
     {
     }
 }
-
 
 /**
  * See API interface for function documentation
@@ -180,15 +178,15 @@ Retcode_T Board_InterruptsInit(void)
 Retcode_T Board_CacheInit(void)
 {
 #if (INSTRUCTION_CACHE_ENABLE == 0)
-   __HAL_FLASH_INSTRUCTION_CACHE_DISABLE();
+    __HAL_FLASH_INSTRUCTION_CACHE_DISABLE();
 #endif /* INSTRUCTION_CACHE_ENABLE */
 
 #if (DATA_CACHE_ENABLE == 0)
-   __HAL_FLASH_DATA_CACHE_DISABLE();
+    __HAL_FLASH_DATA_CACHE_DISABLE();
 #endif /* DATA_CACHE_ENABLE */
 
 #if (PREFETCH_ENABLE != 0)
-  __HAL_FLASH_PREFETCH_BUFFER_ENABLE();
+    __HAL_FLASH_PREFETCH_BUFFER_ENABLE();
 #endif /* PREFETCH_ENABLE */
 
     return RETCODE_OK;
@@ -204,7 +202,7 @@ Retcode_T Board_PowerInit(void)
 {
     Retcode_T retcode = RETCODE_OK;
 
-   /* MSP_Initialization */
+    /* MSP_Initialization */
     __HAL_RCC_SYSCFG_CLK_ENABLE();
     __HAL_RCC_PWR_CLK_ENABLE();
     if (HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1) != HAL_OK)
@@ -226,34 +224,33 @@ Retcode_T Board_OscillatorsInit(void)
 {
     Retcode_T retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_BOARD_OSCILLATORS_INIT_FAILED);
 
-  /* Enable MSI oscillator and configure the PLL to reach the max system frequency (120 MHz)
+    /* Enable MSI oscillator and configure the PLL to reach the max system frequency (120 MHz)
   when using MSI oscillator as PLL clock source. */
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     HAL_PWR_EnableBkUpAccess();
     __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
 
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE | RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_HSI
-          | RCC_OSCILLATORTYPE_MSI;
-  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
-  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;
-  RCC_OscInitStruct.MSIState = RCC_MSI_ON;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.MSICalibrationValue = RCC_MSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6; /* 4MHz */
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_MSI;
-  RCC_OscInitStruct.PLL.PLLM = 1;
-  RCC_OscInitStruct.PLL.PLLN = 60;
-  RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV7;
-  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) == HAL_OK)
-  {
-	  /* Enable MSI in PLL mode */
-	  HAL_RCCEx_EnableMSIPLLMode();
-	  retcode = RETCODE_OK;
-  }
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE | RCC_OSCILLATORTYPE_LSI | RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_MSI;
+    RCC_OscInitStruct.LSEState = RCC_LSE_ON;
+    RCC_OscInitStruct.LSIState = RCC_LSI_OFF;
+    RCC_OscInitStruct.MSIState = RCC_MSI_ON;
+    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+    RCC_OscInitStruct.MSICalibrationValue = RCC_MSICALIBRATION_DEFAULT;
+    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+    RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6; /* 4MHz */
+    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_MSI;
+    RCC_OscInitStruct.PLL.PLLM = 1;
+    RCC_OscInitStruct.PLL.PLLN = 60;
+    RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
+    RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
+    RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV7;
+    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) == HAL_OK)
+    {
+        /* Enable MSI in PLL mode */
+        HAL_RCCEx_EnableMSIPLLMode();
+        retcode = RETCODE_OK;
+    }
     return retcode;
 }
 
@@ -265,7 +262,7 @@ Retcode_T Board_OscillatorsInit(void)
 Retcode_T Board_AMBAClockInit(void)
 {
     Retcode_T retcode = RETCODE_OK;
-    RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
+    RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
     /* To avoid undershoot due to maximum frequency, select PLL as system clock source */
     /* with AHB prescaler divider 2 as first step */
@@ -274,7 +271,7 @@ Retcode_T Board_AMBAClockInit(void)
     RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV2;
     RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
     RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-    if(HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
+    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
     {
         retcode = RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_BSP_BOARD_AMBA_CLOCK_INIT_FAILED);
     }
@@ -289,10 +286,8 @@ Retcode_T Board_AMBAClockInit(void)
 Retcode_T Board_PeripheralsClockInit(void)
 {
     Retcode_T retcode = RETCODE_OK;
-    RCC_PeriphCLKInitTypeDef PeriphClkInit = { 0 };
-    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_USART1 | RCC_PERIPHCLK_USART2
-            | RCC_PERIPHCLK_USART3 | RCC_PERIPHCLK_UART4 | RCC_PERIPHCLK_I2C1 | RCC_PERIPHCLK_ADC
-            | RCC_PERIPHCLK_LPTIM1 | RCC_PERIPHCLK_USB | RCC_PERIPHCLK_LPUART1;
+    RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
+    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC | RCC_PERIPHCLK_USART1 | RCC_PERIPHCLK_USART2 | RCC_PERIPHCLK_USART3 | RCC_PERIPHCLK_UART4 | RCC_PERIPHCLK_I2C1 | RCC_PERIPHCLK_ADC | RCC_PERIPHCLK_LPTIM1 | RCC_PERIPHCLK_USB | RCC_PERIPHCLK_LPUART1;
     PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
     PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
     PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
@@ -333,7 +328,8 @@ Retcode_T Board_SysTickInit(void)
 
 void Error_Handler(void)
 {
-    for(;;);
+    for (;;)
+        ;
 }
 
 /**

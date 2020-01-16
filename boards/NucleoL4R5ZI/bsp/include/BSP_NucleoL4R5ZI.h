@@ -12,7 +12,6 @@
 *
 ********************************************************************************/
 
-
 /**
  * @ingroup     BSP_NUCLEOL4R5ZI
  * @defgroup    BSP_NUCLEOL4R5ZI  NUCLEOL4R5ZI BSP
@@ -40,9 +39,9 @@ enum BSP_NUCLEOL4R5ZI_Modules_E
     MODULE_BSP_API_BOARD,
     MODULE_BSP_API_LED,
     MODULE_BSP_I2C,
-	MODULE_BSP_SPI,
-	MODULE_BSP_LPUART,
-	MODULE_BSP_TIME,
+    MODULE_BSP_SPI,
+    MODULE_BSP_LPUART,
+    MODULE_BSP_TIME,
     MODULE_BSP_API_TEST_IF,
     MODULE_BSP_API_BMA280,
     MODULE_BSP_API_BME280,
@@ -75,21 +74,22 @@ enum BSP_NUCLEOL4R5ZI_Retcodes_E
     RETCODE_BSP_USBD_INTERFACE_REGISTER_FAILED,
 };
 
-enum BSP_SPI_Devices{
-	SPI_DEVICE_BMA280_ID = 1,
+enum BSP_SPI_Devices
+{
+    SPI_DEVICE_BMA280_ID = 1,
 };
 
-enum BSP_I2C_Devices{
-	I2C_DEVICE_BME280_ID = 1,
+enum BSP_I2C_Devices
+{
+    I2C_DEVICE_BME280_ID = 1,
 };
-
 
 /**
  * @enum        I2C addresses of available BMA280 sensors
  */
 enum NUCLEOL4R5ZI_BME280I2CAddress_E
 {
-	NUCLEOL4R5ZI_BME280_I2CADDRESS = 0x77, /**< Id of onboard BME280 sensor */
+    NUCLEOL4R5ZI_BME280_I2CADDRESS = 0x77, /**< Id of onboard BME280 sensor */
 };
 
 /**
@@ -97,10 +97,10 @@ enum NUCLEOL4R5ZI_BME280I2CAddress_E
  */
 enum NUCLEOL4R5ZI_LED_Ids_E
 {
-    NUCLEOL4R5ZI_LED_ALL = 0, /**< Id to address All LEDs */
-    NUCLEOL4R5ZI_LED_RED_ID, /**< Id to address Red LED */
+    NUCLEOL4R5ZI_LED_ALL = 0,  /**< Id to address All LEDs */
+    NUCLEOL4R5ZI_LED_RED_ID,   /**< Id to address Red LED */
     NUCLEOL4R5ZI_LED_GREEN_ID, /**< Id to address Green LED */
-    NUCLEOL4R5ZI_LED_BLUE_ID, /**< Id to address Blue LED */
+    NUCLEOL4R5ZI_LED_BLUE_ID,  /**< Id to address Blue LED */
 };
 
 /**
@@ -108,12 +108,10 @@ enum NUCLEOL4R5ZI_LED_Ids_E
  */
 enum NUCLEOL4R5ZI_LED_Commands_E
 {
-    NUCLEOL4R5ZI_LED_COMMAND_OFF, //!< NUCLEOL4R5ZI_LED_COMMAND_OFF
-    NUCLEOL4R5ZI_LED_COMMAND_ON, //!< NUCLEOL4R5ZI_LED_COMMAND_ON
+    NUCLEOL4R5ZI_LED_COMMAND_OFF,    //!< NUCLEOL4R5ZI_LED_COMMAND_OFF
+    NUCLEOL4R5ZI_LED_COMMAND_ON,     //!< NUCLEOL4R5ZI_LED_COMMAND_ON
     NUCLEOL4R5ZI_LED_COMMAND_TOGGLE, //!< NUCLEOL4R5ZI_LED_COMMAND_TOGGLE
 };
-
-
 
 /**
  * @enum        Enumeration of BSP states
@@ -124,13 +122,13 @@ enum NUCLEOL4R5ZI_LED_Commands_E
  */
 enum BSP_State_Transition_E
 {
-    BSP_STATE_TO_RESET = 0x01 << 0, /**< The device can transit to reset state */
-    BSP_STATE_TO_INIT = 0x01 << 1, /**< The device can transit to initialized state */
-    BSP_STATE_TO_CONNECTED = 0x01 << 2, /**< The device can transit to connected state */
-    BSP_STATE_TO_ENABLED = 0x01 << 3, /**< The device can transit to enabled state */
-    BSP_STATE_TO_DISABLED = 0x01 << 4, /**< The device can transit to disabled state */
+    BSP_STATE_TO_RESET = 0x01 << 0,        /**< The device can transit to reset state */
+    BSP_STATE_TO_INIT = 0x01 << 1,         /**< The device can transit to initialized state */
+    BSP_STATE_TO_CONNECTED = 0x01 << 2,    /**< The device can transit to connected state */
+    BSP_STATE_TO_ENABLED = 0x01 << 3,      /**< The device can transit to enabled state */
+    BSP_STATE_TO_DISABLED = 0x01 << 4,     /**< The device can transit to disabled state */
     BSP_STATE_TO_DISCONNECTED = 0x01 << 5, /**< The device can transit to disconnected state */
-    BSP_STATE_TO_ERROR = 0x01 << 6, /**< The device can transit to error state */
+    BSP_STATE_TO_ERROR = 0x01 << 6,        /**< The device can transit to error state */
 };
 
 enum BSP_State_E
@@ -138,9 +136,9 @@ enum BSP_State_E
     BSP_STATE_RESET = 0x00,
     BSP_STATE_INIT = BSP_STATE_TO_CONNECTED,
     BSP_STATE_CONNECTED = BSP_STATE_TO_ENABLED | BSP_STATE_TO_DISCONNECTED | BSP_STATE_TO_ERROR, /**< The device is connected*/
-    BSP_STATE_ENABLED = BSP_STATE_TO_DISABLED | BSP_STATE_TO_ERROR, /**< The device is enabled */
-    BSP_STATE_DISABLED = BSP_STATE_TO_ENABLED | BSP_STATE_TO_DISCONNECTED | BSP_STATE_TO_ERROR,/**< The device is at disabled state */
-    BSP_STATE_DISCONNECTED = BSP_STATE_TO_CONNECTED | BSP_STATE_TO_ERROR, /**< The device is at disconnected state */
+    BSP_STATE_ENABLED = BSP_STATE_TO_DISABLED | BSP_STATE_TO_ERROR,                              /**< The device is enabled */
+    BSP_STATE_DISABLED = BSP_STATE_TO_ENABLED | BSP_STATE_TO_DISCONNECTED | BSP_STATE_TO_ERROR,  /**< The device is at disabled state */
+    BSP_STATE_DISCONNECTED = BSP_STATE_TO_CONNECTED | BSP_STATE_TO_ERROR,                        /**< The device is at disconnected state */
     BSP_STATE_ERROR = 0xFF,
 };
 
@@ -148,12 +146,12 @@ enum BSP_State_E
  * @def BSP_BOARD_DEFAULT_PARAM1
  * Default param1 for BSP_Board_Initialize()
  */
-#define BSP_BOARD_DEFAULT_PARAM1       UINT32_C(0)
+#define BSP_BOARD_DEFAULT_PARAM1 UINT32_C(0)
 /**
  * @def BSP_BOARD_DEFAULT_PARAM2
  * Default param2 for BSP_Board_Initialize()
  */
-#define BSP_BOARD_DEFAULT_PARAM2       NULL
+#define BSP_BOARD_DEFAULT_PARAM2 NULL
 
 #endif /* BSP_NUCLEOL4R5ZI_H_ */
 

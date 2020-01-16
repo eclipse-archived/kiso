@@ -32,7 +32,7 @@ static Retcode_T LED_Toggle(uint32_t id);
 
 /*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/
 
-static uint8_t bspState = (uint8_t) BSP_STATE_INIT; /**< BSP state of the LEDs */
+static uint8_t bspState = (uint8_t)BSP_STATE_INIT; /**< BSP state of the LEDs */
 
 /*---------------------- EXPOSED FUNCTIONS IMPLEMENTATION -----------------------------------------------------------*/
 
@@ -43,29 +43,29 @@ static uint8_t bspState = (uint8_t) BSP_STATE_INIT; /**< BSP state of the LEDs *
  */
 Retcode_T BSP_LED_Connect(void)
 {
-	GPIO_InitTypeDef GPIO_Init;
-	Retcode_T retcode = RETCODE_OK;
-	if (!(bspState & (uint8_t) BSP_STATE_TO_CONNECTED))
-	{
-		retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
-	}
-	if (RETCODE_OK == retcode)
-	{
-		GPIO_OpenClockGate(GPIO_PORT_B, PORTB_PIN_LED_ALL);
-		GPIO_Init.Pin = PORTB_PIN_LED_ALL;
-		GPIO_Init.Mode = GPIO_MODE_OUTPUT_PP;
-		GPIO_Init.Pull = GPIO_NOPULL;
-		GPIO_Init.Speed = GPIO_SPEED_FREQ_LOW;
-		HAL_GPIO_Init(GPIOB, &GPIO_Init);
+    GPIO_InitTypeDef GPIO_Init;
+    Retcode_T retcode = RETCODE_OK;
+    if (!(bspState & (uint8_t)BSP_STATE_TO_CONNECTED))
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
+    }
+    if (RETCODE_OK == retcode)
+    {
+        GPIO_OpenClockGate(GPIO_PORT_B, PORTB_PIN_LED_ALL);
+        GPIO_Init.Pin = PORTB_PIN_LED_ALL;
+        GPIO_Init.Mode = GPIO_MODE_OUTPUT_PP;
+        GPIO_Init.Pull = GPIO_NOPULL;
+        GPIO_Init.Speed = GPIO_SPEED_FREQ_LOW;
+        HAL_GPIO_Init(GPIOB, &GPIO_Init);
 
-		GPIO_OpenClockGate(GPIO_PORT_C, PORTC_PIN_LED_ALL);
-		GPIO_Init.Pin = PORTC_PIN_LED_ALL;
-		HAL_GPIO_Init(GPIOC, &GPIO_Init);
+        GPIO_OpenClockGate(GPIO_PORT_C, PORTC_PIN_LED_ALL);
+        GPIO_Init.Pin = PORTC_PIN_LED_ALL;
+        HAL_GPIO_Init(GPIOC, &GPIO_Init);
 
-		bspState = (uint8_t) BSP_STATE_CONNECTED;
-	}
+        bspState = (uint8_t)BSP_STATE_CONNECTED;
+    }
 
-	return retcode;
+    return retcode;
 }
 
 /**
@@ -75,20 +75,20 @@ Retcode_T BSP_LED_Connect(void)
  */
 Retcode_T BSP_LED_Enable(uint32_t id)
 {
-	KISO_UNUSED(id);
-	Retcode_T retcode = RETCODE_OK;
-	if (!(bspState & (uint8_t) BSP_STATE_TO_ENABLED))
-	{
-		retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
-	}
-	if (RETCODE_OK == retcode)
-	{
-		HAL_GPIO_WritePin(GPIOB, PORTB_PIN_LED_ALL, GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(GPIOC, PORTC_PIN_LED_ALL, GPIO_PIN_RESET);
+    KISO_UNUSED(id);
+    Retcode_T retcode = RETCODE_OK;
+    if (!(bspState & (uint8_t)BSP_STATE_TO_ENABLED))
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
+    }
+    if (RETCODE_OK == retcode)
+    {
+        HAL_GPIO_WritePin(GPIOB, PORTB_PIN_LED_ALL, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOC, PORTC_PIN_LED_ALL, GPIO_PIN_RESET);
 
-		bspState = (uint8_t) BSP_STATE_ENABLED;
-	}
-	return retcode;
+        bspState = (uint8_t)BSP_STATE_ENABLED;
+    }
+    return retcode;
 }
 
 /**
@@ -98,21 +98,21 @@ Retcode_T BSP_LED_Enable(uint32_t id)
  */
 Retcode_T BSP_LED_Disable(uint32_t id)
 {
-	KISO_UNUSED(id);
-	Retcode_T retcode = RETCODE_OK;
-	if (!(bspState & (uint8_t) BSP_STATE_TO_DISABLED))
-	{
-		retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
-	}
-	if (RETCODE_OK == retcode)
-	{
-		retcode = LED_Off(NUCLEOL4R5ZI_LED_ALL);
-	}
-	if (RETCODE_OK == retcode)
-	{
-		bspState = (uint8_t) BSP_STATE_DISABLED;
-	}
-	return retcode;
+    KISO_UNUSED(id);
+    Retcode_T retcode = RETCODE_OK;
+    if (!(bspState & (uint8_t)BSP_STATE_TO_DISABLED))
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
+    }
+    if (RETCODE_OK == retcode)
+    {
+        retcode = LED_Off(NUCLEOL4R5ZI_LED_ALL);
+    }
+    if (RETCODE_OK == retcode)
+    {
+        bspState = (uint8_t)BSP_STATE_DISABLED;
+    }
+    return retcode;
 }
 
 /**
@@ -122,21 +122,21 @@ Retcode_T BSP_LED_Disable(uint32_t id)
  */
 Retcode_T BSP_LED_Disconnect(void)
 {
-	Retcode_T retcode = RETCODE_OK;
+    Retcode_T retcode = RETCODE_OK;
 
-	if (!(bspState & (uint8_t) BSP_STATE_TO_DISCONNECTED))
-	{
-		retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
-	}
-	if (RETCODE_OK == retcode)
-	{
-		HAL_GPIO_DeInit(GPIOB, PORTB_PIN_LED_ALL);
-		HAL_GPIO_DeInit(GPIOC, PORTC_PIN_LED_ALL);
-		GPIO_CloseClockGate(GPIO_PORT_B, PORTB_PIN_LED_ALL);
-		GPIO_CloseClockGate(GPIO_PORT_C, PORTC_PIN_LED_ALL);
-		bspState = (uint8_t) BSP_STATE_DISCONNECTED;
-	}
-	return retcode;
+    if (!(bspState & (uint8_t)BSP_STATE_TO_DISCONNECTED))
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
+    }
+    if (RETCODE_OK == retcode)
+    {
+        HAL_GPIO_DeInit(GPIOB, PORTB_PIN_LED_ALL);
+        HAL_GPIO_DeInit(GPIOC, PORTC_PIN_LED_ALL);
+        GPIO_CloseClockGate(GPIO_PORT_B, PORTB_PIN_LED_ALL);
+        GPIO_CloseClockGate(GPIO_PORT_C, PORTC_PIN_LED_ALL);
+        bspState = (uint8_t)BSP_STATE_DISCONNECTED;
+    }
+    return retcode;
 }
 
 /**
@@ -147,30 +147,30 @@ Retcode_T BSP_LED_Disconnect(void)
  */
 Retcode_T BSP_LED_Switch(uint32_t id, uint32_t command)
 {
-	Retcode_T retcode = RETCODE_OK;
-	if ((uint8_t) BSP_STATE_ENABLED != bspState)
-	{
-		retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
-	}
-	if (RETCODE_OK == retcode)
-	{
-		switch (command)
-		{
-		case NUCLEOL4R5ZI_LED_COMMAND_OFF:
-			retcode = LED_Off(id);
-			break;
-		case NUCLEOL4R5ZI_LED_COMMAND_ON:
-			retcode = LED_On(id);
-			break;
-		case NUCLEOL4R5ZI_LED_COMMAND_TOGGLE:
-			retcode = LED_Toggle(id);
-			break;
-		default:
-			retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-			break;
-		}
-	}
-	return retcode;
+    Retcode_T retcode = RETCODE_OK;
+    if ((uint8_t)BSP_STATE_ENABLED != bspState)
+    {
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INCONSISTENT_STATE);
+    }
+    if (RETCODE_OK == retcode)
+    {
+        switch (command)
+        {
+        case NUCLEOL4R5ZI_LED_COMMAND_OFF:
+            retcode = LED_Off(id);
+            break;
+        case NUCLEOL4R5ZI_LED_COMMAND_ON:
+            retcode = LED_On(id);
+            break;
+        case NUCLEOL4R5ZI_LED_COMMAND_TOGGLE:
+            retcode = LED_Toggle(id);
+            break;
+        default:
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+            break;
+        }
+    }
+    return retcode;
 }
 
 /*---------------------- LOCAL FUNCTIONS IMPLEMENTATION -------------------------------------------------------------*/
@@ -183,27 +183,27 @@ Retcode_T BSP_LED_Switch(uint32_t id, uint32_t command)
  */
 static Retcode_T LED_Off(uint32_t id)
 {
-	Retcode_T retcode = RETCODE_OK;
-	switch (id)
-	{
-	case NUCLEOL4R5ZI_LED_ALL:
-		HAL_GPIO_WritePin(GPIOB, PORTB_PIN_LED_ALL, GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(GPIOC, PORTC_PIN_LED_ALL, GPIO_PIN_RESET);
-		break;
-	case NUCLEOL4R5ZI_LED_RED_ID:
-		HAL_GPIO_WritePin(GPIOB, PINB_LED_R, GPIO_PIN_RESET);
-		break;
-	case NUCLEOL4R5ZI_LED_GREEN_ID:
-		HAL_GPIO_WritePin(GPIOC, PINC_LED_G, GPIO_PIN_RESET);
-		break;
-	case NUCLEOL4R5ZI_LED_BLUE_ID:
-		HAL_GPIO_WritePin(GPIOB, PINB_LED_B, GPIO_PIN_RESET);
-		break;
-	default:
-		retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-		break;
-	}
-	return retcode;
+    Retcode_T retcode = RETCODE_OK;
+    switch (id)
+    {
+    case NUCLEOL4R5ZI_LED_ALL:
+        HAL_GPIO_WritePin(GPIOB, PORTB_PIN_LED_ALL, GPIO_PIN_RESET);
+        HAL_GPIO_WritePin(GPIOC, PORTC_PIN_LED_ALL, GPIO_PIN_RESET);
+        break;
+    case NUCLEOL4R5ZI_LED_RED_ID:
+        HAL_GPIO_WritePin(GPIOB, PINB_LED_R, GPIO_PIN_RESET);
+        break;
+    case NUCLEOL4R5ZI_LED_GREEN_ID:
+        HAL_GPIO_WritePin(GPIOC, PINC_LED_G, GPIO_PIN_RESET);
+        break;
+    case NUCLEOL4R5ZI_LED_BLUE_ID:
+        HAL_GPIO_WritePin(GPIOB, PINB_LED_B, GPIO_PIN_RESET);
+        break;
+    default:
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+        break;
+    }
+    return retcode;
 }
 
 /**
@@ -214,27 +214,27 @@ static Retcode_T LED_Off(uint32_t id)
  */
 static Retcode_T LED_On(uint32_t id)
 {
-	Retcode_T retcode = RETCODE_OK;
-	switch (id)
-	{
-	case NUCLEOL4R5ZI_LED_ALL:
-		HAL_GPIO_WritePin(GPIOB, PORTB_PIN_LED_ALL, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(GPIOC, PORTC_PIN_LED_ALL, GPIO_PIN_SET);
-		break;
-	case NUCLEOL4R5ZI_LED_RED_ID:
-		HAL_GPIO_WritePin(GPIOB, PINB_LED_R, GPIO_PIN_SET);
-		break;
-	case NUCLEOL4R5ZI_LED_GREEN_ID:
-		HAL_GPIO_WritePin(GPIOC, PINC_LED_G, GPIO_PIN_SET);
-		break;
-	case NUCLEOL4R5ZI_LED_BLUE_ID:
-		HAL_GPIO_WritePin(GPIOB, PINB_LED_B, GPIO_PIN_SET);
-		break;
-	default:
-		retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-		break;
-	}
-	return retcode;
+    Retcode_T retcode = RETCODE_OK;
+    switch (id)
+    {
+    case NUCLEOL4R5ZI_LED_ALL:
+        HAL_GPIO_WritePin(GPIOB, PORTB_PIN_LED_ALL, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(GPIOC, PORTC_PIN_LED_ALL, GPIO_PIN_SET);
+        break;
+    case NUCLEOL4R5ZI_LED_RED_ID:
+        HAL_GPIO_WritePin(GPIOB, PINB_LED_R, GPIO_PIN_SET);
+        break;
+    case NUCLEOL4R5ZI_LED_GREEN_ID:
+        HAL_GPIO_WritePin(GPIOC, PINC_LED_G, GPIO_PIN_SET);
+        break;
+    case NUCLEOL4R5ZI_LED_BLUE_ID:
+        HAL_GPIO_WritePin(GPIOB, PINB_LED_B, GPIO_PIN_SET);
+        break;
+    default:
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+        break;
+    }
+    return retcode;
 }
 
 /**
@@ -245,27 +245,27 @@ static Retcode_T LED_On(uint32_t id)
  */
 static Retcode_T LED_Toggle(uint32_t id)
 {
-	Retcode_T retcode = RETCODE_OK;
-	switch (id)
-	{
-	case NUCLEOL4R5ZI_LED_ALL:
-		HAL_GPIO_TogglePin(GPIOB, PORTB_PIN_LED_ALL);
-		HAL_GPIO_TogglePin(GPIOC, PORTC_PIN_LED_ALL);
-		break;
-	case NUCLEOL4R5ZI_LED_RED_ID:
-		HAL_GPIO_TogglePin(GPIOB, PINB_LED_R);
-		break;
-	case NUCLEOL4R5ZI_LED_GREEN_ID:
-		HAL_GPIO_TogglePin(GPIOC, PINC_LED_G);
-		break;
-	case NUCLEOL4R5ZI_LED_BLUE_ID:
-		HAL_GPIO_TogglePin(GPIOB, PINB_LED_B);
-		break;
-	default:
-		retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
-		break;
-	}
-	return retcode;
+    Retcode_T retcode = RETCODE_OK;
+    switch (id)
+    {
+    case NUCLEOL4R5ZI_LED_ALL:
+        HAL_GPIO_TogglePin(GPIOB, PORTB_PIN_LED_ALL);
+        HAL_GPIO_TogglePin(GPIOC, PORTC_PIN_LED_ALL);
+        break;
+    case NUCLEOL4R5ZI_LED_RED_ID:
+        HAL_GPIO_TogglePin(GPIOB, PINB_LED_R);
+        break;
+    case NUCLEOL4R5ZI_LED_GREEN_ID:
+        HAL_GPIO_TogglePin(GPIOC, PINC_LED_G);
+        break;
+    case NUCLEOL4R5ZI_LED_BLUE_ID:
+        HAL_GPIO_TogglePin(GPIOB, PINB_LED_B);
+        break;
+    default:
+        retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_INVALID_PARAM);
+        break;
+    }
+    return retcode;
 }
 
 #endif /* KISO_FEATURE_BSP_LED */
