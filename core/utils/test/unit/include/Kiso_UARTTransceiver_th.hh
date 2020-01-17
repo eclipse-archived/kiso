@@ -43,9 +43,10 @@ FAKE_VALUE_FUNC(Retcode_T, UARTTransceiver_Start, UARTTransceiver_T *, UARTTrans
 FAKE_VALUE_FUNC(Retcode_T, UARTTransceiver_StartInAsyncMode, UARTTransceiver_T *, UARTTransceiver_EndofFrameCheckFunc_T, UARTransceiver_Callback_T)
 FAKE_VALUE_FUNC(Retcode_T, UARTTransceiver_Suspend, UARTTransceiver_T *)
 FAKE_VALUE_FUNC(Retcode_T, UARTTransceiver_Resume, UARTTransceiver_T *)
-FAKE_VALUE_FUNC(Retcode_T, UARTTransceiver_Stop UARTTransceiver_T *)
+FAKE_VALUE_FUNC(Retcode_T, UARTTransceiver_Stop, UARTTransceiver_T *)
 FAKE_VALUE_FUNC(Retcode_T, UARTTransceiver_ReadData, UARTTransceiver_T *, uint8_t *, uint32_t, uint32_t *, uint32_t)
-FAKE_VALUE_FUNC(Retcode_T, UARTTransceiver_WriteData, UARTTransceiver_T *, uint8_t *, uint32_t, uint32_t)
+FAKE_VALUE_FUNC(Retcode_T, UARTTransceiver_WriteData, UARTTransceiver_T *, const uint8_t *, uint32_t, uint32_t)
+FAKE_VOID_FUNC(UARTTransceiver_LoopCallback, UARTTransceiver_T *, struct MCU_UART_Event_S)
 
 #endif /* KISO_UARTTransceiver_TH_HH_ */
 

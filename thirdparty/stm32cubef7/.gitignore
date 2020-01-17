@@ -1,0 +1,79 @@
+# Folders
+**/build/*
+**/exe/*
+**/lst/*
+**/_test/*
+**/debug/*
+**/release/*
+
+# Path Files
+**/*.path_file
+**/*.rootpath
+
+# Documentation Files
+**/doxygen/*.chm
+**/doxygen/doxygenDump.txt
+**/doxygen/doxygenWarning.log
+**/doxygen/html
+
+# Coverage Files
+**/coverage.info
+**/coverage/*
+**/lcov.err
+
+# Object files
+*.o
+
+# Python Files
+*.pyc
+*.xml
+.idea/*
+
+# Google Test Files
+*.gcda
+*.gcno
+
+# Libraries
+
+# Lint Files
+*.lob
+
+# Temp Files
+*.tmp
+
+# Shared objects
+*.so
+*.so.*
+
+# Listings
+*.lst
+*.map
+
+# Executables
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+*.bin
+
+# Dependency Files
+*.d
+
+# JLink Files
+*.jlink
+
+# iSystem Files
+*.slo
+*.trd
+*.xjrf
+*.xqrf
+*.log
+
+# idea files
+*.name
+*.iml
+*.txt
+
+# list file
+*.list

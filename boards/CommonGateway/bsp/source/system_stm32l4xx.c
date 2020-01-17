@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file    system_stm32l4xx.c
-  * @author  MCD Application Team
-  * @brief   CMSIS Cortex-M4 Device Peripheral Access Layer System Source File
+  * file    system_stm32l4xx.c
+  * author  MCD Application Team
+  * brief   CMSIS Cortex-M4 Device Peripheral Access Layer System Source File
   *
   *   This file provides two functions and one global variable to be called from
   *   user application:
@@ -64,7 +64,7 @@
   *-----------------------------------------------------------------------------
   *=============================================================================
   ******************************************************************************
-  * @attention
+  * attention
   *
   * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
   *
@@ -93,18 +93,6 @@
   ******************************************************************************
   */
 
-/** @addtogroup CMSIS
-  * @{
-  */
-
-/** @addtogroup stm32l4xx_system
-  * @{
-  */
-
-/** @addtogroup STM32L4xx_System_Private_Includes
-  * @{
-  */
-
 #include "stm32l4xx.h"
 
 #if !defined(HSE_VALUE)
@@ -119,44 +107,17 @@
 #define HSI_VALUE 16000000U /*!< Value of the Internal oscillator in Hz*/
 #endif                      /* HSI_VALUE */
 
-/**
-  * @}
-  */
-
-/** @addtogroup STM32L4xx_System_Private_TypesDefinitions
-  * @{
-  */
-
-/**
-  * @}
-  */
-
-/** @addtogroup STM32L4xx_System_Private_Defines
-  * @{
-  */
-
 /************************* Miscellaneous Configuration ************************/
 /*!< Uncomment the following line if you need to relocate your vector Table in
      Internal SRAM. */
 /* #define VECT_TAB_SRAM */
-#define VECT_TAB_OFFSET (APPLICATION_ENTRY_ADDRESS - FLASH_BASE) /*!< Vector Table base offset field. \
+#define VECT_TAB_OFFSET (APPLICATION_ENTRY_ADDRESS - FLASH_BASE) /*!< Vector Table base offset field. \ \
                                   This value must be a multiple of 0x200. */
                                                                  /******************************************************************************/
                                                                  /**
   * @}
   */
 
-/** @addtogroup STM32L4xx_System_Private_Macros
-  * @{
-  */
-
-/**
-  * @}
-  */
-
-/** @addtogroup STM32L4xx_System_Private_Variables
-  * @{
-  */
 /* The SystemCoreClock variable is updated in three ways:
       1) by calling CMSIS function SystemCoreClockUpdate()
       2) by calling HAL API function HAL_RCC_GetHCLKFreq()
@@ -171,21 +132,6 @@ const uint8_t AHBPrescTable[16] = {0U, 0U, 0U, 0U, 0U, 0U, 0U, 0U, 1U, 2U, 3U, 4
 const uint8_t APBPrescTable[8] = {0U, 0U, 0U, 0U, 1U, 2U, 3U, 4U};
 const uint32_t MSIRangeTable[12] = {100000U, 200000U, 400000U, 800000U, 1000000U, 2000000U,
                                     4000000U, 8000000U, 16000000U, 24000000U, 32000000U, 48000000U};
-/**
-  * @}
-  */
-
-/** @addtogroup STM32L4xx_System_Private_FunctionPrototypes
-  * @{
-  */
-
-/**
-  * @}
-  */
-
-/** @addtogroup STM32L4xx_System_Private_Functions
-  * @{
-  */
 
 /**
   * @brief  Setup the microcontroller system.

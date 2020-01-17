@@ -18,7 +18,7 @@ pipeline
     }
     triggers // Define how many times the job will be triggered
     {
-        pollSCM('*/5 * * * *') //  If new changes exist, the Pipeline will be re-triggered automatically. Check will be done every 6 minutes
+        pollSCM('*/5 * * * *') //  If new changes exist, the Pipeline will be re-triggered automatically. Check will be done every 5 minutes
     }
 
     stages
@@ -63,6 +63,7 @@ pipeline
                             echo "run static analysis"
                             sh 'cmake . -Bbuilddir-static -G"Unix Makefiles" -DKISO_BOARD_NAME=CommonGateway -DENABLE_STATIC_CHECKS=1 -DENABLE_ALL_FEATURES=1 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON'
                             sh 'cmake --build builddir-static 2> builddir-static/clang-report.txt'
+                            sh 'if [ ! -s builddir-static/clang-report.txt ]; then  echo "Good, all tests have been passed w/o findings" > builddir-static/clang-report.txt; fi;'
                             sh 'cat builddir-static/clang-report.txt | python ci/thirdparty/clangTidyToJunit/clang-tidy-to-junit.py `pwd` > builddir-static/clang-report.xml'
                         }
                     }
@@ -145,9 +146,10 @@ pipeline
         success
         {
             archiveArtifacts (
-                artifacts: 'builddir-debug/docs/doxygen/**, builddir-unittests/*_cov/**',
+                artifacts: 'builddir-debug/docs/doxygen/**, builddir-unittests/*_cov/**, docs/website/public/**/*',
                 fingerprint: true
             )
+            cleanWs()
         }
         unstable
         {

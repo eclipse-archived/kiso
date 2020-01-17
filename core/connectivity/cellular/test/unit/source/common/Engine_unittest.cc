@@ -556,7 +556,7 @@ protected:
 TEST_F(TS_Engine_NotifyNewState, NewState_Success)
 {
     Cellular_State_T expState = CELLULAR_STATE_POWERON;
-    const char *expParam = "Hello World!";
+    char expParam[] = "Hello World!";
 
     Engine_NotifyNewState(expState, (void *)expParam, strlen(expParam));
 
@@ -571,7 +571,7 @@ TEST_F(TS_Engine_NotifyNewState, NewState_Success)
 TEST_F(TS_Engine_NotifyNewState, SameState_Success)
 {
     Cellular_State_T expState = CELLULAR_STATE_POWERON;
-    const char *expParam = "Hello World!";
+    char expParam[] = "Hello World!";
     State = expState;
 
     Engine_NotifyNewState(expState, (void *)expParam, strlen(expParam));
@@ -605,7 +605,7 @@ TEST_F(TS_Engine_Dispatch, Success)
 {
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
     uint32_t expTimeout = rand();
-    const char *expParam = "Hello World!";
+    char expParam[] = "Hello World!";
 
     rc = Engine_Dispatch(TS_Engine_Dispatch_DummyCallback, expTimeout, (void *)expParam, strlen(expParam));
 
@@ -619,7 +619,7 @@ TEST_F(TS_Engine_Dispatch, InvalidFunc_Failure)
 {
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
     uint32_t expTimeout = rand();
-    const char *expParam = "Hello World!";
+    char expParam[] = "Hello World!";
 
     rc = Engine_Dispatch(NULL, expTimeout, (void *)expParam, strlen(expParam));
 
@@ -633,7 +633,7 @@ TEST_F(TS_Engine_Dispatch, LockNotInit_Failure)
 {
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
     uint32_t expTimeout = rand();
-    const char *expParam = "Hello World!";
+    char expParam[] = "Hello World!";
 
     CellularDriver_RequestLock = NULL;
 
@@ -649,7 +649,7 @@ TEST_F(TS_Engine_Dispatch, LockTimeout_Failure)
 {
     Retcode_T rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
     uint32_t expTimeout = rand();
-    const char *expParam = "Hello World!";
+    char expParam[] = "Hello World!";
 
     xSemaphoreTake_fake.return_val = pdFAIL;
 

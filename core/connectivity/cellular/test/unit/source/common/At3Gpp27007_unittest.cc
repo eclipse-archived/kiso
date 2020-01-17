@@ -85,7 +85,7 @@ TEST_F(TS_At_HandleUrc_CREG, StatPass)
     Retcode_T retcode = RETCODE_OK;
     const char *cmd = "+CREG: 1\r\n";
 
-    (void)AtResponseParser_Parse((uint8_t *)cmd, strlen(cmd));
+    (void)AtResponseParser_Parse((const uint8_t *)cmd, strlen(cmd));
 
     retcode = At_HandleUrc_CREG();
 
@@ -98,7 +98,7 @@ TEST_F(TS_At_HandleUrc_CREG, StatLacCiPass)
     Retcode_T retcode = RETCODE_OK;
     const char *cmd = "+CREG: 1,\"4E54\",\"44A5\"\r\n";
 
-    (void)AtResponseParser_Parse((uint8_t *)cmd, strlen(cmd));
+    (void)AtResponseParser_Parse((const uint8_t *)cmd, strlen(cmd));
 
     retcode = At_HandleUrc_CREG();
 
@@ -111,7 +111,7 @@ TEST_F(TS_At_HandleUrc_CREG, StatLacCiAcTPass)
     Retcode_T retcode = RETCODE_OK;
     const char *cmd = "+CREG: 1,\"4E54\",\"44A5\",2\r\n";
 
-    (void)AtResponseParser_Parse((uint8_t *)cmd, strlen(cmd));
+    (void)AtResponseParser_Parse((const uint8_t *)cmd, strlen(cmd));
 
     retcode = At_HandleUrc_CREG();
 
@@ -135,7 +135,7 @@ TEST_F(TS_At_HandleUrc_CGREG, StatPass)
     Retcode_T retcode = RETCODE_OK;
     const char *cmd = "+CGREG: 1\r\n";
 
-    (void)AtResponseParser_Parse((uint8_t *)cmd, strlen(cmd));
+    (void)AtResponseParser_Parse((const uint8_t *)cmd, strlen(cmd));
 
     retcode = At_HandleUrc_CGREG();
 
@@ -148,7 +148,7 @@ TEST_F(TS_At_HandleUrc_CGREG, StatLacCiPass)
     Retcode_T retcode = RETCODE_OK;
     const char *cmd = "+CGREG: 1,\"4E54\",\"44A5\"\r\n";
 
-    (void)AtResponseParser_Parse((uint8_t *)cmd, strlen(cmd));
+    (void)AtResponseParser_Parse((const uint8_t *)cmd, strlen(cmd));
 
     retcode = At_HandleUrc_CGREG();
 
@@ -161,7 +161,7 @@ TEST_F(TS_At_HandleUrc_CGREG, StatLacCiAcTRacPass)
     Retcode_T retcode = RETCODE_OK;
     const char *cmd = "+CGREG: 1,\"4E54\",\"44A5\",2,\"FB\"\r\n";
 
-    (void)AtResponseParser_Parse((uint8_t *)cmd, strlen(cmd));
+    (void)AtResponseParser_Parse((const uint8_t *)cmd, strlen(cmd));
 
     retcode = At_HandleUrc_CGREG();
 
@@ -185,7 +185,7 @@ TEST_F(TS_At_HandleUrc_CEREG, StatPass)
     Retcode_T retcode = RETCODE_OK;
     const char *cmd = "+CEREG: 1\r\n";
 
-    (void)AtResponseParser_Parse((uint8_t *)cmd, strlen(cmd));
+    (void)AtResponseParser_Parse((const uint8_t *)cmd, strlen(cmd));
 
     retcode = At_HandleUrc_CEREG();
 
@@ -198,7 +198,7 @@ TEST_F(TS_At_HandleUrc_CEREG, StatTacCiAcTPass)
     Retcode_T retcode = RETCODE_OK;
     const char *cmd = "+CEREG: 1,\"3a9b\",\"0000c33d\",7\r\n";
 
-    (void)AtResponseParser_Parse((uint8_t *)cmd, strlen(cmd));
+    (void)AtResponseParser_Parse((const uint8_t *)cmd, strlen(cmd));
 
     retcode = At_HandleUrc_CEREG();
 
@@ -1320,9 +1320,9 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_Normal_Pass)
 {
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
+    const char *addrStr = "192.168.2.100";
 
-    retcode = ExtractCgpaddrAddress((uint8_t *)"192.168.2.100", strlen("192.168.2.100"),
-                                    &addr);
+    retcode = ExtractCgpaddrAddress((const uint8_t *)addrStr, strlen(addrStr), &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(192, addr.Address.IPv4[3]);
@@ -1336,9 +1336,9 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_LeadingZeros_Pass)
 {
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
+    const char *addrStr = "192.168.002.100";
 
-    retcode = ExtractCgpaddrAddress((uint8_t *)"192.168.002.100", strlen("192.168.002.100"),
-                                    &addr);
+    retcode = ExtractCgpaddrAddress((const uint8_t *)addrStr, strlen(addrStr), &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(192, addr.Address.IPv4[3]);
@@ -1352,9 +1352,9 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv6_Normal_Pass)
 {
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
+    const char *addrStr = "254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55";
 
-    retcode = ExtractCgpaddrAddress((uint8_t *)"254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55", strlen("254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55"),
-                                    &addr);
+    retcode = ExtractCgpaddrAddress((const uint8_t *)addrStr, strlen(addrStr), &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(254, addr.Address.IPv6[15]);
@@ -1380,9 +1380,9 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv6_LeadingZeros_Pass)
 {
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
+    const char *addrStr = "254.128.1.02.003.4.005.6.7.8.9.10.11.12.19.55";
 
-    retcode = ExtractCgpaddrAddress((uint8_t *)"254.128.1.02.003.4.005.6.7.8.9.10.11.12.19.55", strlen("254.128.1.02.003.4.005.6.7.8.9.10.11.12.19.55"),
-                                    &addr);
+    retcode = ExtractCgpaddrAddress((const uint8_t *)addrStr, strlen(addrStr), &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(254, addr.Address.IPv6[15]);
@@ -1408,9 +1408,9 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_Quotes_Pass)
 {
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
+    const char *addrStr = "\"192.168.2.100\"";
 
-    retcode = ExtractCgpaddrAddress((uint8_t *)"\"192.168.2.100\"", strlen("\"192.168.2.100\""),
-                                    &addr);
+    retcode = ExtractCgpaddrAddress((const uint8_t *)addrStr, strlen(addrStr), &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(192, addr.Address.IPv4[3]);
@@ -1424,9 +1424,9 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv6_Quotes_Pass)
 {
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
+    const char *addrStr = "\"254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55\"";
 
-    retcode = ExtractCgpaddrAddress((uint8_t *)"\"254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55\"", strlen("\"254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55\""),
-                                    &addr);
+    retcode = ExtractCgpaddrAddress((const uint8_t *)addrStr, strlen(addrStr), &addr);
 
     EXPECT_EQ(RETCODE_OK, retcode);
     EXPECT_EQ(254, addr.Address.IPv6[15]);
@@ -1452,8 +1452,9 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_InvalidOctet1_Fail)
 {
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
+    const char *addrStr = "300.168.2.100";
 
-    retcode = ExtractCgpaddrAddress((uint8_t *)"300.168.2.100", strlen("300.168.2.100"), &addr);
+    retcode = ExtractCgpaddrAddress((const uint8_t *)addrStr, strlen(addrStr), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1462,8 +1463,9 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv6_InvalidOctet1_Fail)
 {
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
+    const char *addrStr = "300.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55";
 
-    retcode = ExtractCgpaddrAddress((uint8_t *)"300.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55", strlen("300.128.1.2.3.4.5.6.7.8.9.10.11.12.19.55"), &addr);
+    retcode = ExtractCgpaddrAddress((const uint8_t *)addrStr, strlen(addrStr), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1472,8 +1474,9 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_InvalidOctet2_Fail)
 {
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
+    const char *addrStr = "200.1680.2.100";
 
-    retcode = ExtractCgpaddrAddress((uint8_t *)"200.1680.2.100", strlen("200.1680.2.100"), &addr);
+    retcode = ExtractCgpaddrAddress((const uint8_t *)addrStr, strlen(addrStr), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1482,8 +1485,9 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv6_InvalidOctet2_Fail)
 {
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
+    const char *addrStr = "254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.1055";
 
-    retcode = ExtractCgpaddrAddress((uint8_t *)"254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.1055", strlen("254.128.1.2.3.4.5.6.7.8.9.10.11.12.19.1055"), &addr);
+    retcode = ExtractCgpaddrAddress((const uint8_t *)addrStr, strlen(addrStr), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1492,8 +1496,9 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_MissingOctet_Fail)
 {
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
+    const char *addrStr = "100.168.2";
 
-    retcode = ExtractCgpaddrAddress((uint8_t *)"100.168.2", strlen("100.168.2"), &addr);
+    retcode = ExtractCgpaddrAddress((const uint8_t *)addrStr, strlen(addrStr), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1512,8 +1517,9 @@ TEST_F(TS_ExtractCgpaddrAddress, ZeroLen_Fail)
 {
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
+    const char *addrStr = "200.1680.2.100";
 
-    retcode = ExtractCgpaddrAddress((uint8_t *)"200.1680.2.100", 0, &addr);
+    retcode = ExtractCgpaddrAddress((const uint8_t *)addrStr, 0, &addr);
 
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
 }
@@ -1522,8 +1528,9 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_LeadingZero_Fail)
 {
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
+    const char *addrStr = "20.0016.2.100";
 
-    retcode = ExtractCgpaddrAddress((uint8_t *)"20.0016.2.100", strlen("200.0016.2.100"), &addr);
+    retcode = ExtractCgpaddrAddress((const uint8_t *)addrStr, strlen(addrStr), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1532,8 +1539,9 @@ TEST_F(TS_ExtractCgpaddrAddress, BuffTooLong_Fail)
 {
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
+    const char *addrStr = "192.168.2.100";
 
-    retcode = ExtractCgpaddrAddress((uint8_t *)"192.168.2.100", AT_3GPP_27007_MAX_IP_STR_LENGTH + 1, &addr);
+    retcode = ExtractCgpaddrAddress((const uint8_t *)addrStr, AT_3GPP_27007_MAX_IP_STR_LENGTH + 1, &addr);
 
     EXPECT_EQ(RETCODE_INVALID_PARAM, Retcode_GetCode(retcode));
 }
@@ -1542,8 +1550,9 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_InvalidChar1_Fail)
 {
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
+    const char *addrStr = "192.+.2.100";
 
-    retcode = ExtractCgpaddrAddress((uint8_t *)"192.+.2.100", strlen("192.+.2.100"), &addr);
+    retcode = ExtractCgpaddrAddress((const uint8_t *)addrStr, strlen(addrStr), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }
@@ -1552,8 +1561,9 @@ TEST_F(TS_ExtractCgpaddrAddress, IPv4_InvalidChar2_Fail)
 {
     Retcode_T retcode;
     AT_CGPADDR_Address_T addr;
+    const char *addrStr = "192.a.2.100";
 
-    retcode = ExtractCgpaddrAddress((uint8_t *)"192.a.2.100", strlen("192.a.2.100"), &addr);
+    retcode = ExtractCgpaddrAddress((const uint8_t *)addrStr, strlen(addrStr), &addr);
 
     EXPECT_EQ(RETCODE_FAILURE, Retcode_GetCode(retcode));
 }

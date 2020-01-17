@@ -190,10 +190,10 @@ Retcode_T Utils_WaitForAndHandleResponseCode(uint32_t timeout, Retcode_T retcode
     return retcode;
 }
 
-uint8_t *Utils_TrimFlukeCharacters(uint8_t *buffer, uint32_t BufferLength, uint32_t *NewBufferLength)
+const uint8_t *Utils_TrimFlukeCharacters(const uint8_t *buffer, uint32_t BufferLength, uint32_t *NewBufferLength)
 {
     uint32_t ResultBufferLength = BufferLength;
-    uint8_t *ResultBuffer = buffer;
+    const uint8_t *ResultBuffer = buffer;
 
     while (ResultBufferLength > 0 && ((*ResultBuffer) < AT_SPACE_CHARACTER || (*ResultBuffer) > AT_TILDE_CHARACTER) && (AT_DEFAULT_S4_CHARACTER != (*ResultBuffer) && AT_DEFAULT_S3_CHARACTER != (*ResultBuffer)))
     {

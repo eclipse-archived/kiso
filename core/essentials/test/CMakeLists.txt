@@ -19,8 +19,31 @@ file(GLOB TEST_CODE
 
 # this is a workaround of not treat int-to-pointer-caster as an error
 # essential unit test might rethink about a better way to do this
-add_compile_options(
-		-Wno-error=int-to-pointer-cast)
+add_compile_options(-Wno-error=int-to-pointer-cast)
+
+if(${ENABLE_ALL_FEATURES})
+   # TODO: Enable watchdog feature once unit-tests are compilable
+   add_compile_options(
+      -DKISO_FEATURE_UART=1
+      -DKISO_FEATURE_I2C=1
+      -DKISO_FEATURE_SPI=1
+      -DKISO_FEATURE_FLASH=1
+      -DKISO_FEATURE_WATCHDOG=0
+      -DKISO_FEATURE_PWM=1
+      -DKISO_FEATURE_SLEEP=1
+      -DKISO_FEATURE_RNG=1
+      -DKISO_FEATURE_MCU_CRC=1
+      -DKISO_FEATURE_BSP_LED=1
+      -DKISO_FEATURE_BSP_BUTTON=1
+      -DKISO_FEATURE_BSP_CELLULAR_SARAR4N4=1
+      -DKISO_FEATURE_BSP_GNSS_MAXM8=1
+      -DKISO_FEATURE_BSP_BMA280=1
+      -DKISO_FEATURE_BSP_BME280=1
+      -DKISO_FEATURE_BSP_BLE_CC2640=1
+      -DKISO_FEATURE_BSP_MEMORY_W25=1
+      -DKISO_FEATURE_BSP_TEST_INTERFACE=1
+   )
+endif()
 
 # TODO: Enable later - not working for now
 # Unknown

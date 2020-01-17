@@ -13,7 +13,9 @@
 **********************************************************************************************************************/
 
 /**
+ * @file
  * @defgroup    KISO_C_EXAMPLE_SENSORS Sensors Example
+ * @ingroup     KISO_EXAMPLES
  * @{
  *
  * @brief       Demo application featuring basic usage of sensors.
@@ -21,14 +23,9 @@
  * @details     Demonstrates usage of Kiso APIs for working with accelerometer and environment sensors 
  *              in CommonGateway board.
  * 
- * @file
-
- */
-
+/*---------------------- INCLUDED HEADERS ---------------------------------------------------------------------------*/
 #ifndef SENSORS_COMMON_H_
 #define SENSORS_COMMON_H_
-
-/*---------------------- INCLUDED HEADERS ---------------------------------------------------------------------------*/
 
 #include "Kiso_Basics.h"
 

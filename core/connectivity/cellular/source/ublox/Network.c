@@ -112,7 +112,8 @@ Retcode_T Cellular_RegisterOnNetwork(const Cellular_NetworkParameters_T *network
     }
     else
     {
-        return Engine_Dispatch(RegisterOnNetwork, CELLULAR_NETWORK_SHORT_ENQUEUE_TIMEOUT, (void *)networkParameters, sizeof(Cellular_NetworkParameters_T)); //LCOV_EXCL_BR_LINE
+        Cellular_NetworkParameters_T tempParams = *networkParameters;
+        return Engine_Dispatch(RegisterOnNetwork, CELLULAR_NETWORK_SHORT_ENQUEUE_TIMEOUT, (void *)&tempParams, sizeof(Cellular_NetworkParameters_T)); //LCOV_EXCL_BR_LINE
     }
 }
 

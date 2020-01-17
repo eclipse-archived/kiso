@@ -26,7 +26,7 @@ The Kiso project consists of subprojects, all managed by the `CMakeLists.txt` fi
 - `docs`</br>
     Documentation
 
-In addition to the CMakeLists.txt files, there are a few `.cmake` configuration files defining different part of required configuration and variables for building.
+In addition to the CMakeLists.txt files, there are a few `.cmake` configuration files defining different parts of required configuration and variables for building.
 
 Let's take a look at the basic content of the root `CMakeLists.txt` line by line:
 
@@ -56,7 +56,7 @@ add_subdirectory(docs)
 ```
 
 ## Build Variants
-CMake could be configured to either generate build directory for unittests or target libraries and binaries.
+CMake could be configured to either generate build directory for unit tests or target libraries and binaries.
 Both configuration variants only include in the build what's needed for a specific board.</br>
 Switching between build modes is provided by the `ENABLE_TESTING` variable that can be provided to CMake externally or defaults to `OFF`, meaning a normal application build.
 Where applicable, each subproject should respect this variable and define the proper libraries, dependencies and build flags for the chosen build variant.
@@ -102,7 +102,7 @@ It is recommended that the user uses separate directories if they need to compil
 Build for testing is configured by providing the `ENABLE_TESTING=ON` flag again either externally or within the configuration file. Possible values that CMake recognizes are `ON`, `1` and `TRUE` for enabling the option, `OFF`, `FALSE` and `0` for disabling it.
 
 In this case the toolchain file is not used and CMake finds the default compiler for the Host automagically.
-In case the compiler it's trying to use is not the one you expect, you can either modify your PATH to only have the proper one or better - define the environment variable `CC` (also possible in config).
+In case what the compiler is trying to use is not the one you expect, you can either modify your PATH to only have the proper one, or better - define the environment variable `CC` (also possible in config).
 CMake respects the `CC` variable and also uses the adjacent CXX compiler with all their proper paths and tools.
 
 ## Board Configuration
@@ -166,7 +166,7 @@ Examples are small applications that use the Kiso infrastructure (essentials/uti
 Choosing which application to build when configuring CMake is done by the `KISO_EXAMPLE` variable and defaults currently to `c-leds`. Possible values for this variable are all the directory names under the `/examples` subdirectory.
 
 ### Documentation
-The `docs` directory contains a `Doxigen.in` file, which is patched by CMake to supply the proper input and output paths. HTML reference documentation is generated and available to use via the `docs` cmake target.
+The `docs` directory contains a `Doxyfile.in` file, which is patched by CMake to supply the proper input and output paths. HTML reference documentation is generated and available to use via the `docs` cmake target.
 
 ## References
 CMake build generator: [cmake.org](https://cmake.org/cmake/help/latest/manual/cmake.1.html)</br>

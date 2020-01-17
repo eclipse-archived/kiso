@@ -64,6 +64,16 @@ enum Retcode_BSP_Button_E
 };
 
 /**
+ * Enumeration used to report the button logic state (pressed or released).
+ */
+enum BSP_ButtonStatus_E
+{
+    BSP_BUTTON_RELEASED = 0, /**< Button is released */
+    BSP_BUTTON_PRESSED = 1,  /**< Button is pressed */
+    BSP_BUTTON_ERROR = 2,    /**< invalid parameter passed or button not enabled*/
+};
+
+/**
  * @brief:      Type definition for the button callback
  *
  * @details:    The application should pass a function pointer of the same signature (**void function(uint32_t)**) to the

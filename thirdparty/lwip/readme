@@ -1,0 +1,7 @@
+source of origin
+
+lwip 2.1.2:
+http://git.savannah.gnu.org/cgit/lwip.git
+
+lwip OS abstraction from freertos, for now it is meant to be only for freertos:
+https://github.com/aws/amazon-freertos/tree/master/libraries/abstractions/lwip_osal

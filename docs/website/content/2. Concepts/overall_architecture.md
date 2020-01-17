@@ -13,7 +13,7 @@ menu:
 
 # Overall architecture
 ## The challenge
-Kiso was build to answer the challenges that comes with the development of the IoT market. Please check the [history]({{< ref "history.md" >}}) to learn about the challenges. It was built with a strong focus on constraints IoT devices. Its key features are:
+Kiso was built to answer the challenges that comes with the development of the IoT market. It was built with a strong focus on the constraints that IoT devices have. Its key features are:
 
 - Battery management
 - Small memory footprint

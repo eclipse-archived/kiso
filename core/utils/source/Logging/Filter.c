@@ -79,6 +79,12 @@ LogFilterId_T LogFilter_Add(LogLevel_T level, uint8_t package, uint8_t module)
         }
     }
 
+    /* When no place was found, set the id to the maximum (as error) */
+    if (i >= LOG_FILTER_ID_INVALID)
+    {
+        i = UINT32_MAX;
+    }
+
     return i;
 }
 
