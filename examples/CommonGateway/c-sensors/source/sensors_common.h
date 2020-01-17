@@ -22,7 +22,7 @@
  *
  * @details     Demonstrates usage of Kiso APIs for working with accelerometer and environment sensors 
  *              in CommonGateway board.
- * 
+ */ 
 /*---------------------- INCLUDED HEADERS ---------------------------------------------------------------------------*/
 #ifndef SENSORS_COMMON_H_
 #define SENSORS_COMMON_H_
