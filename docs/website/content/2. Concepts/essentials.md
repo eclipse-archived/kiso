@@ -45,7 +45,7 @@ Besides MCU and BSP, Essentials also contains:
 An embedded product contains one or more MCUs in a board populated with one or more peripherals. There are two major guiding principles for the creation of KISO's HAL:
 
 1. Have a trivial interface for each peripheral which describes its integration into the board,
-2. Separate peripheral related configurations (e.g. baudrate, clock speed, data fotmat) from the common MCU resources usage (e.g sending a buffer of bytes over uart).
+2. Separate peripheral related configurations (e.g. baudrate, clock speed, data format) from the common MCU resources usage (e.g sending a buffer of bytes over uart).
 
 One more guideline related to the application development is that only MCU and BSP may provide low level abstractions i.e. no dependency from the application to vendor libraries as depicted in the picture1.
 
@@ -1065,5 +1065,4 @@ IntDisable() Disables this interrupt and de-assigns the application callback.
         return retcode;
     }
 ~~~~
-## Create a MCU abstraction
-TBD
+

@@ -71,11 +71,29 @@
  *  footer Copyright (C) 2019 Robert Bosch GmbH.
  *
  *  @enduml
+ * 
+ *  @code 
+ * 
+ *  Retcode_T rc = Cellular_Initialize(HandleStateChanged);
+    if (RETCODE_OK != rc)
+    {
+        LOG_FATAL("Error during cellular initialization: %x", rc);
+        return rc;
+    }
+    // implement a state change handler, e.g. store the st
+    static void HandleStateChanged(Cellular_State_T oldState, Cellular_State_T newState, void *param, uint32_t len)
+    {         
+        // this is an example, the callular state machine is not part of the cellular package today     
+       CommandProcessor_Enqueue(CellularStateMachine_RunFunction, newState, NULL);
+    }
+    @see enum Cellular_State_E
+ *  @endcode
  *
  */
 
 /**
  * @defgroup CELLULAR Cellular
+ * @ingroup KISO_CONNECTIVITY
  * @{
  *
  * @brief This module is used to initialize, connect, disconnect, uninitialize and get modem status.

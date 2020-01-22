@@ -138,21 +138,21 @@ static Retcode_T HandleMiscellaneousUrc(void)
     Retcode_T result = RETCODE(RETCODE_SEVERITY_INFO, RETCODE_CELLULAR_URC_NOT_PRESENT);
     Retcode_T retcode;
 
-    retcode = AtResponseQueue_WaitForNamedCmd(0, (uint8_t *)"PACSP0", strlen("PACSP0"));
+    retcode = AtResponseQueue_WaitForNamedCmd(0, (const uint8_t *)"PACSP0", strlen("PACSP0"));
     if (RETCODE_OK == retcode)
     {
         LOG_DEBUG("URC for PACSP0"); //LCOV_EXCL_BR_LINE
         result = RETCODE_OK;
     }
 
-    retcode = AtResponseQueue_WaitForNamedCmd(0, (uint8_t *)"PACSP1", strlen("PACSP1"));
+    retcode = AtResponseQueue_WaitForNamedCmd(0, (const uint8_t *)"PACSP1", strlen("PACSP1"));
     if (RETCODE_OK == retcode)
     {
         LOG_DEBUG("URC for PACSP1"); //LCOV_EXCL_BR_LINE
         result = RETCODE_OK;
     }
 
-    retcode = AtResponseQueue_WaitForNamedCmd(0, (uint8_t *)"UMWI", strlen("UMWI"));
+    retcode = AtResponseQueue_WaitForNamedCmd(0, (const uint8_t *)"UMWI", strlen("UMWI"));
     if (RETCODE_OK == retcode)
     {
         LOG_DEBUG("URC for UMWI"); //LCOV_EXCL_BR_LINE

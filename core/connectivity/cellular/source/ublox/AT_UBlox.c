@@ -376,7 +376,7 @@ Retcode_T At_Get_UMNOPROF(AT_UMNOPROF_Mno_T *mno)
     uint8_t *buffer = NULL;
     uint32_t bufferLen = 0;
     //LCOV_EXCL_BR_START
-    retcode = Engine_SendAtCommandWaitEcho((uint8_t *)CMD_UBLOX_GET_ATUMNOPROF,
+    retcode = Engine_SendAtCommandWaitEcho((const uint8_t *)CMD_UBLOX_GET_ATUMNOPROF,
                                            (uint32_t)strlen(CMD_UBLOX_GET_ATUMNOPROF), CMD_UBLOX_SHORT_TIMEOUT); //LCOV_EXCL_BR_STOP
 
     if (RETCODE_OK == retcode)

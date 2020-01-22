@@ -9,7 +9,7 @@ option(ENABLE_COVERAGE "Build unit tests with coverage information to use with G
 option(ENABLE_ALL_FEATURES "Configure a build tree in which all optional Kiso features are 'forced-ON'. Useful for static code analysis and test coverage reports. " OFF)
 
 ## Include config file if it exists
-include(default_config.cmake OPTIONAL)
+include(kiso_defaults.cmake OPTIONAL)
 
 ## If no external toolchain is specified and we are not building just the unit tests, use the default arm toolchain.
 ## Should be included as early as possible, before any project specification.
@@ -23,11 +23,13 @@ message("  ... with coverage:   ${ENABLE_COVERAGE}")
 message("Selected Kiso board:   ${KISO_BOARD_NAME}")
 message("Selected Kiso OS:      ${KISO_OS_LIB}")
 message("Selected Kiso Example: ${KISO_EXAMPLE}")
+message("Project Config Path:   ${PROJECT_CONFIG_PATH}")
 message("------------- KISO CONFIG -------------")
 
 project (Kiso C)
 
 ## Set basic project compile options
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_EXTENSIONS false)
 set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
@@ -35,13 +37,11 @@ add_compile_options(-Werror -Wall -Wextra -Wdouble-promotion
                     -Wformat=2 -Winit-self -Wunused -Wunused-const-variable -Wnull-dereference
                     -Wuninitialized -fstrict-overflow -Wstrict-overflow=4 -Wshadow -Wcast-qual)
 
-set(KISO_CENTRAL_CONFIG_DIR ${CMAKE_CURRENT_LIST_DIR}/config)
-
 ## Run format checks during configure stage
 if(${ENABLE_FORMAT_CHECKS})
-   include(cmake/CodeFormatting.cmake)
+   include(CodeFormatting)
    list(APPEND FOLDERS
-      core thirdparty examples boards config docs)
+      core thirdparty examples boards config)
    list(APPEND FILETYPES
       *.c *.cc *.cpp *.cxx *.c++
       *.h *.hh *.hpp *.hxx *.h++)
@@ -59,7 +59,7 @@ if(${ENABLE_TESTING})
 
    enable_testing()
    if(${ENABLE_COVERAGE})
-      include(cmake/CodeCoverage.cmake)
+      include(CodeCoverage)
 
       APPEND_COVERAGE_COMPILER_FLAGS() # From CodeCoverage module
       # Do not include coverage information for system headers and thirdparty libs
@@ -84,6 +84,8 @@ if(${ENABLE_STATIC_CHECKS})
       message(STATUS "Looking for clang-tidy: ${CLANG_TIDY}")
 endif()
 
+include(KisoLibsConfig)
+
 ## Add main application code
 add_subdirectory(examples/${KISO_BOARD_NAME}/${KISO_EXAMPLE})
 
@@ -91,7 +93,7 @@ add_subdirectory(examples/${KISO_BOARD_NAME}/${KISO_EXAMPLE})
 add_subdirectory(boards)
 add_subdirectory(core/essentials)
 add_subdirectory(core/utils)
-add_subdirectory(core/connectivity)
+add_subdirectory(core/connectivity/cellular)
 
 ## Add thirdparty libs
 add_subdirectory(thirdparty)

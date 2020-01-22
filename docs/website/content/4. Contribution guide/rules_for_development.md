@@ -17,26 +17,27 @@ To ensure quality, all contributors need to follow certain set of rules while wo
 
 ## Our coding guidelines
 
-Like most open source projects, Kiso has its own coding guidelines. This topic is subjective and nobody can find a coding style that suites for every developer, so let’s agree on disagree and please following Kiso coding convention when you write Kiso code. (link tbd)
-## Our Definition of Done
+Like most open source projects, Kiso has its own coding guidelines. This topic is subjective and nobody can find a coding style that suites for every developer, so let’s agree on disagree, and please follow Kiso coding conventions when you write Kiso code.[C Code Guidelines] (../c_coding_guidelines)
+## Our Definition of Done 
 
-For each Kiso source code contribution, Kiso's DoD needs to be fulfilled. (link tbd)
+For each Kiso source code contribution, Kiso's DoD needs to be fulfilled. [DoD](../dod)
 ## Individual module principles
 
 Except general requirements descripted above, some modules have their own development guides which needs to be followed to ensure quality and consistency.
 ## Our quality goals
 
-It is important for you to have them in mind. Design discussions (for new modules or the extension of old modules ) will be driven by the quality goals.
+It is important for you to have them in mind. Design discussions (for new modules or the extension of old modules) will be driven by the quality goals.
 
-| Rank | Quality goals       | Description                                                                                  |
-| :--- | :------------------ | :------------------------------------------------------------------------------------------- |
-| 1    | **Simplicity**      | Easy to understand how Kiso is built and how to contribute to it                             |
-| 2    | **Robustness**      | No crash in case of stress or unexpected conditions, full transparency in case of errors     |
-| 3    | **Usability**       | Easy to integrate and easy to use in a project, low entry barrier                            |
-| 4    | **Maintainability** | Ability to increase the feature-set and ability to fix bugs in a short amount of time        |
-| 5    | **Modularity**      | Ability to encapsulate features in modules and to select which module to use in the project  |
-| 6    | **Extensibility**   | The modules are build in a way that adding new features is straightforward                   |
-| 7    | **Portability**     | Kiso support applications to be portable to other hardware                                   |
-| 8    | **Performance**     | Modules are designed to run in a very resource constrained environment (energy, memory, CPU) |
-| 9    | **Configurability** | Each module can be configured for specific application purposes                              |
+| Rank | Quality goals         | Sub-attribute       | Description                                                                                  |
+| :--- | :-------------------- | :------------------ | :------------------------------------------------------------------------------------------- |
+| 1    | **Understandability** | **Simplicity**      | Easy to understand how Kiso is built and how to contribute to it                             |
+| 2    | **Usability**         | **Configurability** | Each module can be configured for specific application purposes                              |
+|      |                       | **Portability**     | Kiso support applications to be portable to other hardware                                   |
+| 3    | **Product quality**   | **Testability**     | Degree to which an artifact can be tested                                                    |
+|      |                       | **Maintainability** | Ability to increase the feature-set and ability to fix bugs in a short amount of time        |
+|      |                       | **Robustness**      | No crash in case of stress or unexpected conditions, full transparency in case of errors     |
+| 4    | **Extensibility**     | **-**               | The modules are build in a way that adding new features is straightforward                   |
+|      |                       | **Scalability**     | Ability to increase the number of work within a system                                       |
+| 5    | **Performance**       |  **-**              | Modules are designed to run in a very resource constrained environment (energy, memory, CPU) |
+
 

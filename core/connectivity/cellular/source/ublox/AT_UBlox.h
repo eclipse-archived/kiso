@@ -262,14 +262,23 @@ typedef struct AT_URAT_Param_S AT_URAT_Param_T;
  */
 enum AT_UMNOPROF_Mno_E
 {
-    AT_UMNOPROF_MNO_DEFAULT = 0,  //!<   SW default (MNO not set, may hinder registration)
-    AT_UMNOPROF_MNO_SIM = 1,      //!<       Select SIM ICCID
-    AT_UMNOPROF_MNO_ATT = 2,      //!<       Select AT&T
-    AT_UMNOPROF_MNO_VERIZON = 3,  //!<   Select Verizon
-    AT_UMNOPROF_MNO_TELSTRA = 4,  //!<   Select Telstra
-    AT_UMNOPROF_MNO_TMO = 5,      //!<       Select T-Mobile (US)
-    AT_UMNOPROF_MNO_CT = 6,       //!<        China Telecom
-    AT_UMNOPROF_MNO_INVALID = 255 //!<  Invalid <MNO> value, used to signal that parameter not present
+    AT_UMNOPROF_MNO_DEFAULT = 0,     //!<   SW default (MNO not set, may hinder registration)
+    AT_UMNOPROF_MNO_SIM = 1,         //!<   Select SIM ICCID
+    AT_UMNOPROF_MNO_ATT = 2,         //!<   Select AT&T
+    AT_UMNOPROF_MNO_VERIZON = 3,     //!<   Select Verizon
+    AT_UMNOPROF_MNO_TELSTRA = 4,     //!<   Select Telstra
+    AT_UMNOPROF_MNO_TMO = 5,         //!<   Select T-Mobile (US)
+    AT_UMNOPROF_MNO_CT = 6,          //!<   Select China Telecom
+    AT_UMNOPROF_MNO_SPRINT = 8,      //!<   Select Sprint
+    AT_UMNOPROF_MNO_VODSFONE = 19,   //!<   Select Vodafone
+    AT_UMNOPROF_MNO_NTTDOCOMO = 20,  //!<   Select NTT DoCoMo
+    AT_UMNOPROF_MNO_TELUS = 21,      //!<   Select Telus
+    AT_UMNOPROF_MNO_SOFTBANK = 28,   //!<   Select SoftBank
+    AT_UMNOPROF_MNO_TELEKOM = 31,    //!<   Select Deutsche Telekom
+    AT_UMNOPROF_MNO_USCELLULAR = 32, //!<   Select US Cellular
+    AT_UMNOPROF_MNO_SKT = 39,        //!<   Select <SKT
+    AT_UMNOPROF_MNO_EUROPE = 100,    //!<   Select Standard Europe
+    AT_UMNOPROF_MNO_INVALID = 255    //!<   Invalid <MNO> value, used to signal that parameter not present
 };
 typedef enum AT_UMNOPROF_Mno_E AT_UMNOPROF_Mno_T;
 

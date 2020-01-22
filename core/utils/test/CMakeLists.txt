@@ -16,15 +16,33 @@ file(GLOB TEST_CODE
    unit/source/Logging/${KISO_OS_LIB}/*.cc
 )
 
-# TODO: Exclude for now
-list(FILTER TEST_CODE EXCLUDE REGEX ".*Logging_unittest.cc$")
-
 include_directories(
    ../source
    ../source/${KISO_OS_LIB}
    ../source/Logging
    ../source/Logging/${KISO_OS_LIB}
 )
+
+if(${ENABLE_ALL_FEATURES})
+   add_compile_options(
+      -DKISO_FEATURE_CMDLINEDEBUGGER=1
+      -DKISO_FEATURE_CMDPROCESSOR=1
+      -DKISO_FEATURE_CRC=1
+      -DKISO_FEATURE_EVENTHUB=1
+      -DKISO_FEATURE_GUARDEDTASK=1
+      -DKISO_FEATURE_ERRORLOGGER=1
+      -DKISO_FEATURE_LOGGING=1
+      -DKISO_FEATURE_RINGBUFFER=1
+      -DKISO_FEATURE_SLEEPCONTROL=1
+      -DKISO_FEATURE_TASKMONITOR=1
+      -DKISO_TASKMONITOR_MAX_TASKS=10
+      -DKISO_FEATURE_UARTTRANSCEIVER=1
+      -DKISO_FEATURE_I2CTRANSCEIVER=1
+      -DKISO_FEATURE_XPROTOCOL=1
+      -DKISO_FEATURE_PIPEANDFILTER=1
+   )
+endif()
+
 link_libraries(utils_test_int gtest ${KISO_OS_LIB}_test_int essentials_test_int)
 foreach(lib ${KISO_BOARD_LIBS})
    link_libraries(${lib}_test_int)

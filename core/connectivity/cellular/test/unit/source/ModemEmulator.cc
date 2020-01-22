@@ -111,7 +111,7 @@ Retcode_T Custom_Engine_SendAtCommand(const uint8_t *buffer, uint32_t bufferLeng
     {
         /* Echo */
         TEST_PRINTF("Echo: %.*s", bufferLength, buffer);
-        (void)AtResponseParser_Parse((uint8_t *)buffer, bufferLength);
+        (void)AtResponseParser_Parse((const uint8_t *)buffer, bufferLength);
     }
 
     if (NULL != CurrentAnswer)
@@ -119,7 +119,7 @@ Retcode_T Custom_Engine_SendAtCommand(const uint8_t *buffer, uint32_t bufferLeng
         if (0 == strncmp(CurrentAnswer->Trigger, (const char *)buffer, bufferLength))
         {
             TEST_PRINTF("Answer: %s", CurrentAnswer->Answer);
-            (void)AtResponseParser_Parse((uint8_t *)CurrentAnswer->Answer, strlen(CurrentAnswer->Answer));
+            (void)AtResponseParser_Parse((const uint8_t *)CurrentAnswer->Answer, strlen(CurrentAnswer->Answer));
         }
         CurrentAnswer = CurrentAnswer->_Next;
     }

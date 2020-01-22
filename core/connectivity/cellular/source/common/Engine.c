@@ -166,7 +166,7 @@ static void AtResponseParser_TaskLoop(void)
 {
 
     uint32_t bytesRead, flukeFreeBytesRead;
-    uint8_t *flukeRxReadBuffer;
+    const uint8_t *flukeRxReadBuffer;
     uint8_t rxReadBuffer[CELLULAR_RX_READ_BUFFER_SIZE];
 
     // wait for the RX IRQ to wake us up
@@ -377,7 +377,7 @@ Retcode_T Engine_SendAtCommand(const uint8_t *buffer, uint32_t bufferLength)
     /* ensure the semaphore is NOT signaled as we begin to send */
     (void)xSemaphoreTake(CellularDriver_TxWakeupHandle, 0); //LCOV_EXCL_BR_LINE
 
-    ret = MCU_UART_Send(CellularSerialDevice, (uint8_t *)buffer, bufferLength); //LCOV_EXCL_BR_LINE
+    ret = MCU_UART_Send(CellularSerialDevice, (const uint8_t *)buffer, bufferLength); //LCOV_EXCL_BR_LINE
     if (RETCODE_OK != ret)
     {
         return ret;
