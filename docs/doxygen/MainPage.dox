@@ -1,6 +1,6 @@
 /**
  * @{
- * @mainpage   Kiso Documentation
+ * @mainpage   Documentation Home
  * @copyright  Robert Bosch GmbH
  * @brief      Kiso API Documentation
  *             \image html Kiso-logo.png
@@ -50,7 +50,23 @@
  * * `thirdparty` libraries need to be build with the specific configurations of Kiso.
  * * The BSP library needs to be build with the specific configuration of Kiso.
  * * All the `core` libraries need to be build with the configuration of Kiso.
- * * The Application needs dependencies to all the previous build libraries to be buildable.
+ * * The Application needs dependencies to all the previous build libraries to be buildable. 
  *
- * @}
+ * 
+ @}
+*/
+
+/* GROUPS DEFINITION */
+
+/**
+* @{
+* @defgroup KISO_CORE Core
+* @defgroup KISO_BOARDS Supported Hardware
+* @defgroup KISO_EXAMPLES Examples
+* @defgroup KISO_CONNECTIVITY Connectivity
+* @ingroup KISO_CORE
+* @{
+ *
+ * @brief       Provides APIs for different connectivity technologies and their implementations for specific hardware modules.
+* @}
 */

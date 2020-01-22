@@ -117,6 +117,6 @@ Retcode_T Utils_WaitForAndHandleResponseCode(uint32_t timeout, Retcode_T retcode
  *
  * @return The start of the "fluke free" buffer
  */
-uint8_t *Utils_TrimFlukeCharacters(uint8_t *buffer, uint32_t bufferLength, uint32_t *newBufferLength);
+const uint8_t *Utils_TrimFlukeCharacters(const uint8_t *buffer, uint32_t bufferLength, uint32_t *newBufferLength);
 
 #endif /* ATUTILS_H_ */

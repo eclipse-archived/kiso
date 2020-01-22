@@ -1,3 +1,3 @@
 - Hugo: https://github.com/gohugoio/hugo/releases
 - git clone https://github.com/digitalcraftsman/hugo-material-docs.git themes/hugo-material-docs
-- hugo server
+- hugo (serve)

@@ -27,7 +27,7 @@ if(${CMAKE_CROSSCOMPILING})
       ${BST_DIR}/BMP280_driver
       ${BST_DIR}/BNO055_driver
    )
-   target_compile_options(bstlib PRIVATE 
+   target_compile_options(bstlib PRIVATE
        -Wno-error
        -Wno-pointer-compare
        -Wno-misleading-indentation

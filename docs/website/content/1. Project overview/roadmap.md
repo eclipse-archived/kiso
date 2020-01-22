@@ -10,3 +10,24 @@ menu:
     identifier: roadmap
     weight: 2
 ---
+
+# Roadmap
+
+Kiso packages:
+
+* Drivers
+* LoRa
+* Wifi
+* FOTA
+* Integration test framework
+
+Kiso boards:
+
+* stm32l4 nucleo board
+* XDK
+
+Kiso OS:
+
+* zephyr
+
+

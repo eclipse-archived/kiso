@@ -17,7 +17,7 @@
  * @brief Enumerates specific application return codes to BE used for return value composition according to RETCODE
  * specifications.
  */
-enum CGW_App_Retcode_E
+enum App_Retcode_E
 {
     RETCODE_APP_ERROR = RETCODE_FIRST_CUSTOM_CODE,
 };
