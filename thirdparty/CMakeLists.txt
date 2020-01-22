@@ -8,6 +8,10 @@ foreach(lib ${KISO_BOARD_LIBS})
    add_subdirectory(${lib})
 endforeach(lib ${KISO_BOARD_LIBS})
 
+foreach(lib ${KISO_APP_LIBS})
+   add_subdirectory(${lib})
+endforeach(lib ${KISO_APP_LIBS})
+
 # Add testing lib if needed
 if(${CMAKE_TESTING_ENABLED})
    add_subdirectory(Gtest)
