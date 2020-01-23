@@ -7,14 +7,14 @@ add_library(utils_int INTERFACE)
 target_include_directories(utils_int
 INTERFACE
    include
+   ${KISO_CONFIG_PATH}/utils
 )
-target_link_libraries(utils_int INTERFACE board_config app_config)
 
 ## Enable static code analysis
 #  the checks will be executed as it would be on the desired compile step
 if(${ENABLE_STATIC_CHECKS})
-   set(CMAKE_C_CLANG_TIDY   ${CLANG_TIDY} --extra-arg=--target=arm-none-eabi --extra-arg=--sysroot=${CMAKE_SYSROOT} -checks=-*,readability-*,clang-analyzer-*,-clang-analyzer-cplusplus*)
-   set(CMAKE_CXX_CLANG_TIDY ${CLANG_TIDY} --extra-arg=--target=arm-none-eabi --extra-arg=--sysroot=${CMAKE_SYSROOT} -checks=-*,readability-*,clang-analyzer-*,-clang-analyzer-cplusplus*)
+   set(CMAKE_C_CLANG_TIDY   ${CLANG_TIDY} --extra-arg=--target=arm-none-eabi --extra-arg=--sysroot=${CMAKE_SYSROOT})
+   set(CMAKE_CXX_CLANG_TIDY ${CLANG_TIDY} --extra-arg=--target=arm-none-eabi --extra-arg=--sysroot=${CMAKE_SYSROOT})
 endif()
 
 ## Define static library to be compiled
@@ -27,7 +27,7 @@ if(${CMAKE_CROSSCOMPILING})
       source/Logging/${KISO_OS_LIB}/*.c
    )
    add_library(utils STATIC ${UTILS_SOURCES})
-   target_link_libraries(utils utils_int essentials ${KISO_OS_LIB})
+   target_link_libraries(utils PUBLIC utils_int essentials ${KISO_OS_LIB})
 endif(${CMAKE_CROSSCOMPILING})
 
 ## Add tests

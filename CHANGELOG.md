@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 * Add build-possibilities with CMake/Makefiles
 
 ### Changed
-* Improved documentation
+* Improved doxygen documentation
 
 
 

@@ -48,7 +48,7 @@ TEST_F(TS_SmokeTest, EchoReceivePass)
 
     Retcode_T retcode = RETCODE_OK;
 
-    retcode = AtResponseParser_Parse((uint8_t *)data, strlen(data));
+    retcode = AtResponseParser_Parse((const uint8_t *)data, strlen(data));
     EXPECT_EQ(RETCODE_OK, retcode);
 
     retcode = AtResponseQueue_WaitForNamedCmd(0U, (const uint8_t *)cmd, strlen(cmd));

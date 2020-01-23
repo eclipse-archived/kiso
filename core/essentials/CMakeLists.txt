@@ -11,16 +11,15 @@ INTERFACE
    include/mcu
    include/mcu/${KISO_MCU_FAMILY}
    include/mcu/${KISO_MCU_FAMILY}/${KISO_MCU_SERIES}
+   ${KISO_CONFIG_PATH}/essentials
 )
-target_link_libraries(essentials_int INTERFACE board_config)
-
 
 ## Enable static code analysis
-#  the checks will be executed as it would be on the desired compile step
+# The checks will be executed as it would be on the desired compile step
 if(${ENABLE_STATIC_CHECKS})
-   # '-extra-arg=-Wno-unknown-warning-option' because clang-tidy doesn't recognize "-Wdiscarded-qualifiers"
-   set(CMAKE_C_CLANG_TIDY   ${CLANG_TIDY} --extra-arg=--target=arm-none-eabi --extra-arg=--sysroot=${CMAKE_SYSROOT} -extra-arg=-Wno-unknown-warning-option -checks=-*,readability-*,clang-analyzer-*,-clang-analyzer-cplusplus*)
-   set(CMAKE_CXX_CLANG_TIDY ${CLANG_TIDY} --extra-arg=--target=arm-none-eabi --extra-arg=--sysroot=${CMAKE_SYSROOT} -extra-arg=-Wno-unknown-warning-option -checks=-*,readability-*,clang-analyzer-*,-clang-analyzer-cplusplus*)
+#'-extra-arg=-Wno-unknown-warning-option' because clang - tidy doesn't recognize "-Wdiscarded-qualifiers"
+   set(CMAKE_C_CLANG_TIDY   ${CLANG_TIDY} --extra-arg=--target=arm-none-eabi --extra-arg=--sysroot=${CMAKE_SYSROOT} -extra-arg=-Wno-unknown-warning-option)
+   set(CMAKE_CXX_CLANG_TIDY ${CLANG_TIDY} --extra-arg=--target=arm-none-eabi --extra-arg=--sysroot=${CMAKE_SYSROOT} -extra-arg=-Wno-unknown-warning-option)
 endif()
 
 ## Define static library to be compiled
@@ -32,7 +31,7 @@ if(${CMAKE_CROSSCOMPILING})
       source/mcu/${KISO_MCU_FAMILY}/${KISO_MCU_SERIES}/*.c
    )
    add_library(essentials STATIC ${ESSENTIALS_SOURCES})
-   target_link_libraries(essentials essentials_int bsp ${KISO_BOARD_LIBS})
+   target_link_libraries(essentials essentials_int bsp)
 endif(${CMAKE_CROSSCOMPILING})
 
 

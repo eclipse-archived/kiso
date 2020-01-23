@@ -33,7 +33,7 @@
 #include "Kiso_Essentials.h"
 #include "Kiso_Assert.h"
 
-#ifndef KISO_HAL_CONFIG_H_
+#ifndef KISO_HALCONFIG_H_
 #include "Kiso_HALConfig.h"
 #else
 #error "Don't include Kiso_HALConfig.h directly instead of Kiso_HAL.h"

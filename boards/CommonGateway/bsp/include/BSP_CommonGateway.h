@@ -13,7 +13,11 @@
 ********************************************************************************/
 
 /**
- * @defgroup    BSP_COMMONGATEWAY  Common Gateway BSP
+ * @file
+ * @defgroup    KISO_COMMONGATEWAY  Common Gateway Board
+ * @ingroup     KISO_BOARDS
+ * @defgroup    COMMONGATEWAY_BSP   Board Support Package
+ * @ingroup     KISO_COMMONGATEWAY
  * @{
  * @brief       Common Gateway Board Support Package
  *
@@ -21,7 +25,6 @@
  *
  * @warning     **maxm8** and **w25q64** were not tested. No Drivers were also implemented.
  *
- * @file
  */
 
 #ifndef BSP_COMMONGATEWAY_H_

@@ -17,12 +17,12 @@
  * @brief Enumerates application modules which are reporting error codes according to RETCODE specification.
  * @info  usage:
  *      #undef KISO_APP_MODULE_ID
- *      #define KISO_APP_MODULE_ID CGW_APP_MODULE_ID_xxx
+ *      #define KISO_APP_MODULE_ID APP_MODULE_ID_xxx
  */
-enum CGW_App_ModuleID_E
+enum App_ModuleID_E
 {
-    CGW_APP_MODULE_MAIN = 1,
-    CGW_APP_MODULE_APP
+    APP_MODULE_ID_MAIN = 1,
+    APP_MODULE_ID_APP
     /* Define next module ID here and assign a value to it! */
 };
 

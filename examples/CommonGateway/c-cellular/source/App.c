@@ -10,7 +10,7 @@
  *     Robert Bosch GmbH - initial contribution
  */
 #include "AppModules.h"
-#define KISO_MODULE_ID CGW_APP_MODULE_APP
+#define KISO_MODULE_ID APP_MODULE_ID_APP
 
 #include "App.h"
 #include "AppConfig.h"
