@@ -51,7 +51,7 @@ spec:
         dir('www') {
             sshagent(['git.eclipse.org-bot-ssh']) {
                 sh '''
-                    git clone ssh://genie.${PROJECT_NAME}@git.eclipse.org:29418/www.eclipse.org/${PROJECT_NAME}.git .
+                    git clone git@github.com:eclipse/${PROJECT_NAME}.git .
                     git checkout ${BRANCH_NAME}
                 '''
             }
@@ -59,25 +59,13 @@ spec:
       }
     }
     stage('Build website (master) with Hugo') {
-      when {
-        branch 'master'
-      }
+      //when {
+      //  branch 'master'
+      //}
       steps {
         container('hugo') {
             dir('hugo') {
                 sh 'hugo -b https://www.eclipse.org/${PROJECT_NAME}/'
-            }
-        }
-      }
-    }
-    stage('Build website (staging) with Hugo') {
-      when {
-        branch 'staging'
-      }
-      steps {
-        container('hugo') {
-            dir('hugo') {
-                sh 'hugo -b https://staging.eclipse.org/${PROJECT_NAME}/'
             }
         }
       }
