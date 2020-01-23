@@ -51,7 +51,7 @@ spec:
         dir('www') {
             sshagent(['git.eclipse.org-bot-ssh']) {
                 sh '''
-                    git clone git@github.com:eclipse/${PROJECT_NAME}.git .
+                    git clone ssh://genie.${PROJECT_NAME}@git.eclipse.org:29418/www.eclipse.org/${PROJECT_NAME}.git .
                     git checkout ${BRANCH_NAME}
                 '''
             }
@@ -71,12 +71,12 @@ spec:
       }
     }
     stage('Push to $env.BRANCH_NAME branch') {
-      when {
-        anyOf {
-          branch "master"
-          branch "staging"
-        }
-      }
+      //when {
+      //  anyOf {
+      //    branch "master"
+      //    branch "staging"
+      //  }
+      //}
       steps {
         sh 'rm -rf www/* && cp -Rvf hugo/public/* www/'
         dir('www') {
