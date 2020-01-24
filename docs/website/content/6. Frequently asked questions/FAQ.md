@@ -1,11 +1,6 @@
 ---
 title: "FAQ"
-draft: false
-menu:
-  main:
-    parent: 6. Frequently asked questions
-    identifier: FAQ
-    weight: 6
+weight: 1
 ---
 
 # Frequently Asked Questions

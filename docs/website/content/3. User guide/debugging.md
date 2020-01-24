@@ -1,15 +1,8 @@
 ---
 title: "using VS-Code Cortex-Debug for debugging with Jlink on WSL."
-description: ""
 weight: 2
-draft: false
-toc: true
-menu:
-  main:
-    parent: 3. User guide
-    identifier: debugging
-    weight: 2
 ---
+
 This guide shows how to debug a kiso application within WSL.
 
 ## Prerequisites:

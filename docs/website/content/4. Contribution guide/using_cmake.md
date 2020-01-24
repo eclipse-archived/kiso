@@ -1,14 +1,6 @@
 ---
 title: "Using CMake"
-description: "Guide to the project's CMake structure, variables and patterns"
-weight: 1
-draft: false
-toc: true
-menu:
-  main:
-    parent: 4. Contribution guide
-    identifier: using_cmake
-    weight: 6
+weight: 6
 ---
 
 # How is CMake Organized

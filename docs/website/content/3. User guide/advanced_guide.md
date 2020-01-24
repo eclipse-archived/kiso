@@ -1,17 +1,7 @@
 ---
 title: "Advanced guide"
-description: "How to load features specific to your board"
 weight: 2
-draft: false
-toc: true
-menu:
-  main:
-    parent: 3. User guide
-    identifier: advanced_guide
-    weight: 2
 ---
-
-# Advanced guide
 
 In this guide more specific configurations will be shown. 
 Example cases:
