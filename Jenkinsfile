@@ -7,7 +7,7 @@ pipeline
             label 'RT-Z0KHU'
             image 'eclipse/kiso-build-env:v0.0.1'
             registryUrl 'https://hub.docker.com/'
-            registryCredentialsId ''
+            registryCredentialsId 'hub_docker'
         }
     }
     options
