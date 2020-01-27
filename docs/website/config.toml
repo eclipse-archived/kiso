@@ -9,7 +9,7 @@ themeVariant = "kiso"
 [outputs]
 home = [ "HTML", "RSS", "JSON"]
 [[menu.shortcuts]]
-name = "<i class='fas fa-book'></i>Reference maual"
+name = "<i class='fas fa-book'></i>Reference manual"
 url = "http://kiso.rempler.de:8080/"
 weight = 9
 [[menu.shortcuts]]
