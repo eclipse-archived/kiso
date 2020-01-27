@@ -1,24 +1,20 @@
 pipeline
 {
-    agent // Define the agent to use
+    agent
     {
-        docker
+        kubernetes
         {
-            label 'RT-Z0KHU'
-            image 'rb-dtr.de.bosch.com/software-campus/kiso-toolchain:v0.4.3'
-            registryUrl 'https://rb-dtr.de.bosch.com'
-            registryCredentialsId 'docker-registry'
+            containerTemplate
+            {
+                name 'kiso-build-env'
+                image 'eclipse/kiso-build-env:v0.0.1'
+                ttyEnabled true
+                resourceRequestCpu '2'
+                resourceLimitCpu '2'
+                resourceRequestMemory '8Gi'
+                resourceLimitMemory '8Gi'
+            }
         }
-    }
-    options
-    {
-        timeout(time: 60, unit: 'MINUTES') // Define a timeout of 60 minutes
-                timestamps() // Use a timestamp notation
-                disableConcurrentBuilds() // We don't want to have concurrent build issues here
-    }
-    triggers // Define how many times the job will be triggered
-    {
-        pollSCM('*/5 * * * *') //  If new changes exist, the Pipeline will be re-triggered automatically. Check will be done every 5 minutes
     }
 
     stages
@@ -48,8 +44,8 @@ pipeline
                             echo "enforce formatting rules"
                             sh 'cmake . -Bbuilddir-formatting -G"Ninja" -DENABLE_FORMAT_CHECKS=1 -DSKIP_FORMAT_REPORTS=0'
                             script {
-                                def reports = findFiles(glob: 'builddir-formatting/**/*_format.xml')
-                                sh "python3 ci/clang-format-to-junit.py ${reports.join(' ')} -o builddir-formatting/clang-format.xml -p builddir-formatting -s _format.xml"
+                                def reports = sh(script: "find builddir-formatting/ -name *_format.xml | tr '\n' ' '",  returnStdout: true)
+                                sh "python3 ci/clang-format-to-junit.py ${reports} -o builddir-formatting/clang-format.xml -p builddir-formatting -s _format.xml"
                             }
                         }
                     }
@@ -170,7 +166,7 @@ pipeline
 def notifyFailed()
 {
     emailext (subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is failing",
-                body: "Please go to ${env.BUILD_URL}, check it out AND fix it...",
+                body: "Oups, something went wrong with ${env.BUILD_URL}... We are looking forward for your fix!",
                 recipientProviders: [[$class: 'CulpritsRecipientProvider'],
                                     [$class: 'DevelopersRecipientProvider'],
                                     [$class: 'RequesterRecipientProvider']])
@@ -179,7 +175,7 @@ def notifyFailed()
 def notifyAbort()
 {
     emailext (subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) was aborted",
-                body: "Please go to ${env.BUILD_URL}, check what happened.",
+                body: "Oups, something went wrong with ${env.BUILD_URL}... We are looking forward for your fix!",
                 recipientProviders: [[$class: 'CulpritsRecipientProvider'],
                                     [$class: 'DevelopersRecipientProvider'],
                                     [$class: 'RequesterRecipientProvider']])

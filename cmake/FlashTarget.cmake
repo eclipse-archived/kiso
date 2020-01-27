@@ -43,7 +43,7 @@ endif()
 #
 function(CREATE_FLASH_TARGET_JLINK ELF_TARGET)
     if(NOT JLINK_PATH)
-        message(ERROR "JLink not found in path!")
+        message(ERROR " JLink not found in path!")
     endif()
 
     set(HEX_TARGET_PATH "${CMAKE_CURRENT_BINARY_DIR}/${ELF_TARGET}.hex")
