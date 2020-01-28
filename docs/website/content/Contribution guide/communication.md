@@ -1,14 +1,6 @@
 ---
 title: "Communication Channel"
-description: "How to communicate with Kiso team"
-weight: 6
-draft: false
-toc: true
-menu:
-  main:
-    parent: 4. Contribution guide
-    identifier: communication_channel
-    weight: 8
+weight: 10
 ---
 
 # How can I communicate with the Kiso team?

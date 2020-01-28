@@ -1,17 +1,8 @@
 ---
-title: "Cellular"
-description: "A cellular modem driver for Kiso"
+title: "Cellular Developer's Guide"
 weight: 2
-draft: false
-toc: true
-menu:
-  main:
-    parent: 2. Concepts
-    identifier: cellular
-    weight: 2
 ---
 
-# Cellular Developer's Guide
 ## Status
 | Modem         | Hardware Support   | SocketService | HttpService | DnsService   |
 |---------------|--------------------|---------------|-------------|--------------|

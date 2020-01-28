@@ -1,16 +1,6 @@
 ---
-
 title: "DoD"
-description: "Definition of Done"
-weight: 1
-draft: false
-toc: true
-menu:
-  main:
-    parent: 4. Contribution guide
-    identifier: dod 
-
-    weight: 7 
+weight: 8
 ---
 
 # Definition of Done

@@ -1,14 +1,6 @@
 ---
 title: "First contribution"
-description: "guide for the first contribution"
-weight: 1
-draft: false
-toc: true
-menu:
-  main:
-    parent: 4. Contribution guide
-    identifier: how_can_i_do_my_first_contribution
-    weight: 3
+weight: 2
 ---
 
 # How can I do my first contribution?
@@ -25,7 +17,3 @@ Then it is about source code itself. After getting to know the whole picture, yo
 
 ## Tools and environment setup
 For an easy jump start of setting up environment and tools, you can find enough information in [Quick start]({{< ref "quick_start.md" >}}).
-
-## Find a good topic to work on
-
-For sure, you want to start with something you have interests in (eg. writing a BSP for a new board). Please take a look at our [roadmap]({{< ref "roadmap.md" >}}) to see if your topic already exists in it. If not, please contact and talk to us, we will support you in defining and documenting what you would like to do.

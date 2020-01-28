@@ -1,12 +1,13 @@
 ---
-title: "FAQ"
-draft: false
-menu:
-  main:
-    parent: 6. Frequently asked questions
-    identifier: FAQ
-    weight: 6
+
+title: Frequently asked questions
+weight: 5
+pre: "<b>5. </b>"
+chapter: true
 ---
+
+### Chapter 5
+
 
 # Frequently Asked Questions
 
@@ -15,7 +16,7 @@ menu:
 
 Actually, the XDK is a Kiso reference HW. Kiso and the XDK share the same SW basis, i.e., the Bosch Connected Devices Development Kit (**CDDK**). But, XDK and Kiso have different targeted users in mind. The XDK is a complete IoT development bundle consisting of HW, SW, IDE, community and support. Whereas Kiso is a pure SW SDK that supports multiple different reference HW.
 
-The repo, code structure and build system are basically incompatible, e.g., Kiso is only having a single repo (see [Kiso's quality goals]({{< ref "rules_for_development.md" >}}#our-quality-goals)) in contrast to the multi-repo of XDK. The latter is necessary to compile and package the proprietary licence code SW modules as libraries. Also, the XDK examples are solely tailored for the XDK110 HW and it's extension boards.
+The repo, code structure and build system are basically incompatible, e.g., Kiso is only having a single repo  (see [Kiso's quality goals]({{< ref "rules_for_development.md" >}}#our-quality-goals)) in contrast to the multi-repo of XDK. The latter is necessary to compile and package the proprietary licence code SW modules as libraries. Also, the XDK examples are solely tailored for the XDK110 HW and it's extension boards.
 
 Anyway, we're continuously working on extending the Kiso reference HW basis. Thus, we expect to also include the XDK with a EPLv2 BSP, drivers and examples here in Kiso, soonTM.
 

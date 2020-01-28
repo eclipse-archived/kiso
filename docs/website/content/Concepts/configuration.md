@@ -1,17 +1,8 @@
 ---
 title: "Configuration"
-description: "How are libraries configured"
 weight: 2
-draft: false
-toc: true
-menu:
-  main:
-    parent: 2. Concepts
-    identifier: configuration
-    weight: 2
----
 
-# Kiso configuration
+---
 
 Kiso consists mainly of four major parts - core libraries, BSP layer, third party libraries and application code.
 The framework and external libraries need to be configured for a specific application via configuration headers. For ease of use,
