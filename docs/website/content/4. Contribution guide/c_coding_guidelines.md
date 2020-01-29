@@ -1,14 +1,6 @@
 ---
 title: "C Coding Guidelines"
-description: "This document attempts to explain the basic styles and patterns."
-weight: 1
-draft: false
-toc: true
-menu:
-  main:
-    parent: 4. Contribution guide
-    identifier: c_coding_guidelines
-    weight: 5
+weight: 3
 ---
 
 # What are the guidelines I need to follow?

@@ -1,17 +1,7 @@
 ---
 title: "Quick start"
-description: "How to start using kiso"
 weight: 1
-draft: false
-toc: true
-menu:
-  main:
-    parent: 3. User guide
-    identifier: quick_start
-    weight: 1
 ---
-
-# Quick start
 
 ## First steps with Windows 10 ##
 If you're using a Windows PC it is recommended to use the Microsoft Windows subsystem for Linux. Alternatively, you can also use, e.g., Cygwin to provide functionality similar to a Linux distribution on Windows. All the below listed commands are of course also valid if you are directly using a Linux PC. \

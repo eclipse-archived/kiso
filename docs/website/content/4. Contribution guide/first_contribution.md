@@ -1,14 +1,6 @@
 ---
 title: "First contribution"
-description: "guide for the first contribution"
-weight: 1
-draft: false
-toc: true
-menu:
-  main:
-    parent: 4. Contribution guide
-    identifier: how_can_i_do_my_first_contribution
-    weight: 3
+weight: 2
 ---
 
 # How can I do my first contribution?

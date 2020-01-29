@@ -1,14 +1,6 @@
 ---
 title: "Bug report"
-description: "how to report bugs"
-weight: 6
-draft: false
-toc: true
-menu:
-  main:
-    parent: 4. Contribution guide
-    identifier: bug_report
-    weight: 8
+weight: 9
 ---
 
 # How can I create bug-report?
