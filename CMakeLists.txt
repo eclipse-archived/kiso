@@ -2,11 +2,10 @@ cmake_minimum_required(VERSION 3.6)
 
 ## Command line parameter for build variant
 option(ENABLE_TESTING "Configure a build tree for testing instead of normal application mode" OFF)
-option(ENABLE_FORMAT_CHECKS "Run format checks during configuration stage and generate target to fix formatting" ON)
+option(ENABLE_FORMAT_CHECKS "Run format checks during configuration stage and generate target to fix formatting" OFF)
 option(SKIP_FORMAT_REPORTS "Skip generation of format XML reports in build directory" ON)
 option(ENABLE_STATIC_CHECKS "Configure a build tree for static code analysis" OFF)
 option(ENABLE_COVERAGE "Build unit tests with coverage information to use with GCOV and LCOV" ON)
-option(ENABLE_ALL_FEATURES "Configure a build tree in which all optional Kiso features are 'forced-ON'. Useful for static code analysis and test coverage reports. " OFF)
 
 ## Include config file if it exists
 include(kiso_defaults.cmake OPTIONAL)
@@ -14,15 +13,16 @@ include(kiso_defaults.cmake OPTIONAL)
 ## If no external toolchain is specified and we are not building just the unit tests, use the default arm toolchain.
 ## Should be included as early as possible, before any project specification.
 if (NOT DEFINED CMAKE_TOOLCHAIN_FILE AND NOT ${ENABLE_TESTING})
-   include(toolchain_arm_gcc.cmake)
+   # Use full path as it's before project() command
+   include(cmake/ArmToolchain.cmake)
 endif()
 
 message("------------- KISO CONFIG -------------")
 message("Building Kiso tests:   ${ENABLE_TESTING}")
 message("  ... with coverage:   ${ENABLE_COVERAGE}")
-message("Selected Kiso board:   ${KISO_BOARD_NAME}")
-message("Selected Kiso OS:      ${KISO_OS_LIB}")
-message("Selected Kiso Example: ${KISO_EXAMPLE}")
+message("Kiso Board Path:       ${KISO_BOARD_PATH}")
+message("Kiso OS:               ${KISO_OS_LIB}")
+message("Kiso Application Path: ${KISO_APPLICATION_PATH}")
 message("Project Config Path:   ${PROJECT_CONFIG_PATH}")
 message("------------- KISO CONFIG -------------")
 
@@ -70,12 +70,16 @@ if(${ENABLE_TESTING})
 endif(${ENABLE_TESTING})
 
 ## Check for valid board and include the configuration
-if(NOT DEFINED KISO_BOARD_NAME)
-   message(SEND_ERROR "KISO_BOARD_NAME is a required parameter! Use cmake <...> -DKISO_BOARD_NAME=... to specify.")
-elseif(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/boards/${KISO_BOARD_NAME}) # Use full path - undefined behavior with relative path
-   message(SEND_ERROR "board_config.cmake missing for board ${KISO_BOARD_NAME}")
+if(NOT DEFINED KISO_BOARD_PATH)
+   message(SEND_ERROR "KISO_BOARD_PATH is a required parameter! Use cmake <...> -DKISO_BOARD_PATH=... to specify.")
 else()
-   include(boards/${KISO_BOARD_NAME}/board_config.cmake)
+   get_filename_component(ABS_BOARD_PATH ${KISO_BOARD_PATH} REALPATH)
+   if(NOT EXISTS ${ABS_BOARD_PATH}/board_config.cmake) # Use full path - undefined behavior with relative path
+      message(SEND_ERROR "board_config.cmake missing for board ${KISO_BOARD_PATH}")
+   else()
+      include(${ABS_BOARD_PATH}/board_config.cmake)
+      add_subdirectory(${ABS_BOARD_PATH} ${CMAKE_CURRENT_BINARY_DIR}/boards/${KISO_BOARD_NAME})
+   endif()
 endif()
 
 if(${ENABLE_STATIC_CHECKS})
@@ -84,13 +88,13 @@ if(${ENABLE_STATIC_CHECKS})
       message(STATUS "Looking for clang-tidy: ${CLANG_TIDY}")
 endif()
 
+## Add application code
+add_subdirectory(${KISO_APPLICATION_PATH} ${CMAKE_CURRENT_BINARY_DIR}/applications/${KISO_APPLICATION_NAME})
+
 include(KisoLibsConfig)
 
-## Add main application code
-add_subdirectory(examples/${KISO_BOARD_NAME}/${KISO_EXAMPLE})
-
 ## Add board and core libs
-add_subdirectory(boards)
+#add_subdirectory(boards)
 add_subdirectory(core/essentials)
 add_subdirectory(core/utils)
 add_subdirectory(core/connectivity/cellular)

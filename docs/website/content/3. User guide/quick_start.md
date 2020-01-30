@@ -86,22 +86,16 @@ After installing the basic tools from previous step, you can now clone and compi
 
 ## Build HelloWorld with your supported hardware (CMake build) ##
 
-**Modify root CMakeLists.txt**:
-
-Find the line which includes the application:
-```cmake
-add_subdirectory(examples/${KISO_BOARD_NAME}/c-leds)
-```
-And make sure it points to your application directory.
+Make sure to set `KISO_APPLICATION_PATH` variable to the directory containing your application.
 
 **Build**:
 ```bash
 # You can execute these steps from anywhere
-cmake <kiso_root> -Bbuilddir -DKISO_BOARD_NAME=<selected_board>
+cmake <kiso_root> -Bbuilddir -DKISO_BOARD_PATH=<selected_board>
 cmake --build builddir
 # OR equivalent:
 mkdir builddir && cd builddir
-cmake <kiso_root> -DKISO_BOARD_NAME=<selected_board>
+cmake <kiso_root> -DKISO_BOARD_PATH=<selected_board>
 cmake --build .
 ```
 Currently the tested CMake generators are "Ninja" and "Unix Makefiles". For UNIX-like host systems, GNU Make is the default and the option can be omitted, while for Windows CMake defaults to "Visual Studio", so make sure to specify a generator explicitly.
@@ -131,7 +125,7 @@ cmake <kiso_root> -G"Unix Makefiles" <...>
 
 **Additional notes**:
 
-- `KISO_BOARD_NAME` is a CMake variable that instructs for what board you are building. It's value is the same as the directory name, containing your boards configuration under the boards subdirectory.
+- `KISO_BOARD_PATH` is a CMake variable that instructs where the directory containing board options and BSP code is located. Could be one of the directories in `<kiso root>/boards` or external absolute path.
 
 - We have `toolchain_arm_gcc.cmake` file that finds the ARM toolchain from your PATH and uses it.
 
@@ -149,7 +143,7 @@ cmake <kiso_root> -G"Unix Makefiles" <...>
   ```
 By default this will use your native compiler from your PATH instead of the ARM toolchain. Unit tests are executed on the Host machine:
 ```bash
-cmake <kiso_root> -B build_tests -DKISO_BOARD_NAME=CommonGateway -DENABLE_TESTING=1 # Generate for testing
+cmake <kiso_root> -B build_tests -DKISO_BOARD_PATH=boards/CommonGateway -DENABLE_TESTING=1 # Generate for testing
 cmake --build build_tests # Build unit tests
 cd build_tests && ctest # Execute tests
 ```

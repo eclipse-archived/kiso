@@ -7,7 +7,7 @@ add_library(cellular_int INTERFACE)
 target_include_directories(cellular_int
 INTERFACE
    include
-   ${KISO_CONFIG_PATH}/cellular
+   ${KISO_CONFIG_PATH}/core/connectivity/cellular
 )
 target_link_libraries(cellular_int INTERFACE essentials_int)
 
