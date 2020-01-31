@@ -32,5 +32,4 @@ void App_InitSystem(void *param, uint32_t len);
 
 /**
  * @}
- *}
- 
+ */
