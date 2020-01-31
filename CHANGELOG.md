@@ -1,7 +1,7 @@
 # Changelog
 Milestone (4-week cycle) progress with closed issues and merged pull-requests. The first number indicates the issue id followed by the issue title.
 
-## [02.20] - 202-02-14
+## [02.20] - 2020-02-14
 * tbd.
 
 Please note that from here on the Kiso private Bosch AE software repo has been transferred to the public Eclipse Foundation hosted repo. Thus, the issue id urls have changed from https://github.com/Bosch-AE-SW/cddk-oss/issues/xxx to https://github.com/eclipse/kiso/issues/xxx.
