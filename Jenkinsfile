@@ -71,7 +71,7 @@ pipeline
                         script
                         {
                             echo "run unit-tests"
-                            sh 'cmake . -Bbuilddir-unittests -G"Ninja" -DENABLE_TESTING=1 -DPROJECT_CONFIG_PATH=ci/testing_config'
+                            sh 'cmake . -Bbuilddir-unittests -G"Ninja" -DENABLE_TESTING=1 -DPROJECT_CONFIG_PATH=ci/testing_config -DKISO_STATIC_CONFIG=1'
                             sh 'cmake --build builddir-unittests'
                             sh 'cd builddir-unittests && ctest -T test -V --no-compress-output' // Produce test results xml
                             sh 'cmake --build builddir-unittests --target coverage -- -j1' // Produce coverage output (single-threaded because of ninja)

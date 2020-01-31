@@ -52,7 +52,8 @@ foreach(HEADER ${PRJ_CONF_FILES})
     configure_file(${ABS_PROJECT_CONFIG_PATH}/${HEADER} ${DEST} COPYONLY)
 endforeach(HEADER ${PRJ_CONF_FILES})
 
-if(NOT CMAKE_TESTING_ENABLED) # Skip in unit-test build to have predictable environment
+# Skip board and app configs to have predictable environment - to be used by CI
+if(NOT KISO_STATIC_CONFIG)
     # Copy board-specific config files in intermediary directory
     message(STATUS "Applying board-specific configuration from ${ABS_BOARD_CONFIG_PATH}.")
     file(GLOB_RECURSE BOARD_CONF_FILES
@@ -99,6 +100,6 @@ if(NOT CMAKE_TESTING_ENABLED) # Skip in unit-test build to have predictable envi
             endforeach(HEADER ${USER_CONF_FILES})
         endif(NOT EXISTS ${ABS_APP_CONFIG_PATH})
     endif(NOT APP_CONFIG_PATH)
-endif(NOT CMAKE_TESTING_ENABLED)
+endif(NOT KISO_STATIC_CONFIG)
 
 message(STATUS "Configuration headers merged in ${KISO_CONFIG_PATH}.")
