@@ -85,10 +85,6 @@ void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer, StackT
 #endif
 #endif
 
-KISO_UNUSED_FUNC(static void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress));
-
-KISO_UNUSED_FUNC(void HardFault_Handler(void) __attribute__((naked)));
-
 /*---------------------- VARIABLES DECLARATIONS ---------------------------------------------------------------------*/
 
 static CmdProcessor_T MainCmdProcessor;
@@ -268,3 +264,12 @@ static Retcode_T Delay(uint32_t delay)
     vTaskDelay(delay);
     return RETCODE_OK;
 }
+
+#if (configCHECK_FOR_STACK_OVERFLOW > 0)
+void vApplicationStackOverflowHook(TaskHandle_t xTask, signed char *pcTaskName)
+{
+    KISO_UNUSED(xTask);
+    KISO_UNUSED(pcTaskName);
+    assert(0);
+}
+#endif
