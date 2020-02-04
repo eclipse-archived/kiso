@@ -16,7 +16,7 @@ Community support is provided via Mattermost, see [Kiso channel](https://matterm
 Please note that (for now) some of the following links require additional accounts and/or are limited to Bosch infrastructure access. This is a temporary impediment until Kiso's infrastructure has been moved over to Eclipse Foundation.
 * User manual: [documentation](http://kiso.rempler.de:1313/)
 * Architecture: [architecture overview](http://kiso.rempler.de:1313/2.-concepts/overall_architecture/#overall-architecture)
-* Frequently asked questions: [FAQ](http://kiso.rempler.de:1313/6.%20Frequently%20asked%20questions/)
+* Frequently asked questions: [FAQ](http://kiso.rempler.de:1313/6.-frequently-asked-questions/faq/)
 * API documentation: [Doxygen documentation](http://kiso.rempler.de:8080/)
-* Release notes (inkl. features, supported reference HW and known issues): [release notes](https://github.com/Bosch-AE-SW/cddk-oss/blob/master/RELEASE_NOTES.md)
+* Release notes (inkl. features, supported reference HW and known issues): [release notes](https://github.com/eclipse/kiso/blob/master/RELEASE_NOTES.md)
 * Continuous integration (automated testing results): [Jenkins dashboard](https://rb-jmaas.de.bosch.com/software-campus/view/Kiso-Dashboard/)
