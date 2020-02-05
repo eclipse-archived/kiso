@@ -131,7 +131,6 @@
 #include "Kiso_Basics.h"
 #include "Kiso_Retcode.h"
 #include "Kiso_HAL.h"
-#include "Kiso_HALConfig.h"
 #include "Kiso_RingBuffer.h"
 
 #if KISO_FEATURE_UART || KISO_FEATURE_LEUART

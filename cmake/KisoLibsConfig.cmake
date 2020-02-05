@@ -12,65 +12,94 @@
 #
 ################################################################################
 
-if(NOT PROJECT_CONFIG_PATH OR NOT EXISTS ${PROJECT_CONFIG_PATH})
-    message(SEND_ERROR "PROJECT_CONFIG_PATH must be set to a valid path, containing configuration headers!")
+if(NOT PROJECT_CONFIG_PATH)
+    message(SEND_ERROR "PROJECT_CONFIG_PATH must be set to a valid path!")
+endif()
+
+get_filename_component(ABS_PROJECT_CONFIG_PATH ${PROJECT_CONFIG_PATH} REALPATH)
+if(NOT EXISTS ${ABS_PROJECT_CONFIG_PATH})
+    message(SEND_ERROR "PROJECT_CONFIG_PATH must be absolute or relative to Kiso root!\n"
+                       "Current value: ${ABS_PROJECT_CONFIG_PATH}")
+endif()
+
+if(NOT BOARD_CONFIG_PATH)
+    message(SEND_ERROR "BOARD_CONFIG_PATH must be set to a valid path!")
+endif()
+
+get_filename_component(ABS_BOARD_CONFIG_PATH ${BOARD_CONFIG_PATH} REALPATH)
+if(NOT EXISTS ${ABS_BOARD_CONFIG_PATH})
+    message(SEND_ERROR "BOARD_CONFIG_PATH must be absolute or relative to Kiso root!\n"
+                       "Current value: ${ABS_BOARD_CONFIG_PATH}")
 endif()
 
 # This variable is internal and managed through this file only
-set(KISO_CONFIG_PATH ${PROJECT_CONFIG_PATH} CACHE PATH "Kiso config headers location")
+set(KISO_CONFIG_PATH ${CMAKE_BINARY_DIR}/config CACHE INTERNAL "Kiso config headers location")
 
-## Create Kiso config header directory for build
-# USER_DIRECTORY is a directory containing user-provided configuration headers for
-# Kiso libraries in the same structure as the root config directory
-# Missing required headers will be copied over from root config directory
-# /todo: Currently supports only one subdir level - allow recursion
-function(USE_CUSTOM_CONFIG USER_DIRECTORY)
-    if(NOT USER_DIRECTORY OR NOT EXISTS ${USER_DIRECTORY})
-        message(SEND_ERROR "User config directory not found: ${USER_DIRECTORY}")
-    endif()
-    message(STATUS "Using custom application configuration from ${USER_DIRECTORY}")
+# Copy base project config files in intermediary directory
+file(GLOB_RECURSE PRJ_CONF_FILES
+    LIST_DIRECTORIES false
+    RELATIVE ${ABS_PROJECT_CONFIG_PATH}
+    ${ABS_PROJECT_CONFIG_PATH}/*.h
+)
 
-    set(INT_CONFIG_PATH ${CMAKE_CURRENT_BINARY_DIR}/config)
+foreach(HEADER ${PRJ_CONF_FILES})
+    set(DEST ${KISO_CONFIG_PATH})
+    get_filename_component(SUBDIR ${HEADER} DIRECTORY)
+    if(SUBDIR)
+        set(DEST ${KISO_CONFIG_PATH}/${SUBDIR})
+        file(MAKE_DIRECTORY ${DEST})
+    endif(SUBDIR)
+    configure_file(${ABS_PROJECT_CONFIG_PATH}/${HEADER} ${DEST} COPYONLY)
+endforeach(HEADER ${PRJ_CONF_FILES})
 
-    # List all files in application config directory and add them to final config directory
-    file(GLOB_RECURSE USER_CONF_FILES
+# Skip board and app configs to have predictable environment - to be used by CI
+if(NOT KISO_STATIC_CONFIG)
+    # Copy board-specific config files in intermediary directory
+    message(STATUS "Applying board-specific configuration from ${ABS_BOARD_CONFIG_PATH}.")
+    file(GLOB_RECURSE BOARD_CONF_FILES
         LIST_DIRECTORIES false
-        RELATIVE ${USER_DIRECTORY}
-        ${USER_DIRECTORY}/*.h
+        RELATIVE ${ABS_BOARD_CONFIG_PATH}
+        ${ABS_BOARD_CONFIG_PATH}/*.h
     )
 
-    foreach(HEADER ${USER_CONF_FILES})
-        set(DEST ${INT_CONFIG_PATH})
+    foreach(HEADER ${BOARD_CONF_FILES})
+        set(DEST ${KISO_CONFIG_PATH})
         get_filename_component(SUBDIR ${HEADER} DIRECTORY)
         if(SUBDIR)
-            set(DEST ${INT_CONFIG_PATH}/${SUBDIR})
+            set(DEST ${KISO_CONFIG_PATH}/${SUBDIR})
             file(MAKE_DIRECTORY ${DEST})
         endif(SUBDIR)
-        configure_file(${USER_DIRECTORY}/${HEADER} ${DEST} COPYONLY)
-    endforeach(HEADER ${USER_CONF_FILES})
+        configure_file(${ABS_BOARD_CONFIG_PATH}/${HEADER} ${DEST} COPYONLY)
+    endforeach(HEADER ${BOARD_CONF_FILES})
 
-    # List all files in Kiso config directory and add them to final config directory
-    # in case the user hasn't provided one already
-    file(GLOB_RECURSE ALL_CONF_FILES
-        LIST_DIRECTORIES false
-        RELATIVE ${PROJECT_CONFIG_PATH}
-        ${PROJECT_CONFIG_PATH}/*.h
-    )
+    # Copy app-specific config files in intermediary directory
+    # APP_CONFIG_PATH is not required - only act if present
+    if(NOT APP_CONFIG_PATH)
+        message(STATUS "APP_CONFIG_PATH not set to a valid path. Not using application-specific configuration.")
+    else()
+        get_filename_component(ABS_APP_CONFIG_PATH ${APP_CONFIG_PATH} REALPATH)
+        if(NOT EXISTS ${ABS_APP_CONFIG_PATH})
+            message(SEND_ERROR "APP_CONFIG_PATH must be absolute or relative to Kiso root!\n"
+                            "Current value: ${ABS_APP_CONFIG_PATH}")
+        else()
+            message(STATUS "Applying application-specific configuration from ${ABS_APP_CONFIG_PATH}.")
+            file(GLOB_RECURSE USER_CONF_FILES
+                LIST_DIRECTORIES false
+                RELATIVE ${ABS_APP_CONFIG_PATH}
+                ${ABS_APP_CONFIG_PATH}/*.h
+            )
 
-    foreach(HEADER ${ALL_CONF_FILES})
-        if(NOT EXISTS ${INT_CONFIG_PATH}/${HEADER})
-            set(DEST ${INT_CONFIG_PATH})
-            get_filename_component(SUBDIR ${HEADER} DIRECTORY)
-            if(SUBDIR)
-                set(DEST ${INT_CONFIG_PATH}/${SUBDIR})
-                file(MAKE_DIRECTORY ${DEST})
-            endif(SUBDIR)
-            configure_file(${PROJECT_CONFIG_PATH}/${HEADER} ${DEST} COPYONLY)
-        endif()
-    endforeach(HEADER ${USER_CONF_FILES})
+            foreach(HEADER ${USER_CONF_FILES})
+                set(DEST ${KISO_CONFIG_PATH})
+                get_filename_component(SUBDIR ${HEADER} DIRECTORY)
+                if(SUBDIR)
+                    set(DEST ${KISO_CONFIG_PATH}/${SUBDIR})
+                    file(MAKE_DIRECTORY ${DEST})
+                endif(SUBDIR)
+                configure_file(${ABS_APP_CONFIG_PATH}/${HEADER} ${DEST} COPYONLY)
+            endforeach(HEADER ${USER_CONF_FILES})
+        endif(NOT EXISTS ${ABS_APP_CONFIG_PATH})
+    endif(NOT APP_CONFIG_PATH)
+endif(NOT KISO_STATIC_CONFIG)
 
-    # Enforce usage of the combined headers directory
-    set(KISO_CONFIG_PATH ${INT_CONFIG_PATH} CACHE PATH "Kiso config headers location" FORCE)
-
-    message(STATUS "Intermediate config path: ${KISO_CONFIG_PATH}")
-endfunction(USE_CUSTOM_CONFIG USER_DIRECTORY)
+message(STATUS "Configuration headers merged in ${KISO_CONFIG_PATH}.")

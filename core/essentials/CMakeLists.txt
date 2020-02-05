@@ -11,7 +11,7 @@ INTERFACE
    include/mcu
    include/mcu/${KISO_MCU_FAMILY}
    include/mcu/${KISO_MCU_FAMILY}/${KISO_MCU_SERIES}
-   ${KISO_CONFIG_PATH}/essentials
+   ${KISO_CONFIG_PATH}/core/essentials
 )
 
 ## Enable static code analysis
