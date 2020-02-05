@@ -1,17 +1,8 @@
 ---
 title: "Overall architecture"
-description: "Overall architecture"
 weight: 1
-draft: false
-toc: true
-menu:
-  main:
-    parent: 2. Concepts
-    identifier: overall_architecture
-    weight: 1
 ---
 
-# Overall architecture
 ## The challenge
 Kiso was built to answer the challenges that comes with the development of the IoT market. It was built with a strong focus on the constraints that IoT devices have. Its key features are:
 
@@ -43,9 +34,8 @@ We also need to consider [our quality goals]({{< ref "rules_for_development.md" 
 ## The component's expected design
 ### Base pattern (for all)
 ![component_base_pattern-kiso-error](/images/component_base_pattern.png)
-{{< note title="" >}}
+**note**:
 Each component, besides their outside dependencies, are free to choose its architecture based on its owns needs.
-{{< /note >}}
 
 ### Base components (Essentials, Utils)
 ![base_layer_component-kiso-error](/images/base_layer_component.png)

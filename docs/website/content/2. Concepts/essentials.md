@@ -1,17 +1,7 @@
 ---
-title: "Essentials"
-description: "the corner stone of Kiso"
+title: "Essentials Developer's Guide"
 weight: 2
-draft: false
-toc: true
-menu:
-  main:
-    parent: 2. Concepts
-    identifier: essentials
-    weight: 2
 ---
-
-# Essentials Developer's Guide
 
 ## Introduction
 
