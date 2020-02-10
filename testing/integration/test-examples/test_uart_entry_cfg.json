@@ -1,0 +1,22 @@
+{
+    "auxiliary_list":[
+        {
+            "auxiliary_name":"DUT",
+            "auxiliary_type":"example_test_auxiliary",
+            "auxiliary_cfg":{},
+
+            "channel_type":"cc_uart",
+            "channel_cfg":{
+                "serialPort":"COM3"
+            }
+
+        }
+    ],
+    "test_suite_list":[
+        {
+            "suite_dir":"testing/integration/test-examples/test_suite_1",
+            "test_filter_pattern":"*.py",
+            "test_suite_id":1
+        }
+    ]
+}
