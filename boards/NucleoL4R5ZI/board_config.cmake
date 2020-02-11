@@ -19,6 +19,7 @@ endif()
 ## Libs configuration
 # Additional thirdparty libraries for the board
 set(KISO_BOARD_LIBS stm32cubel4)
+set(BOARD_CONFIG_PATH ${CMAKE_CURRENT_LIST_DIR}/bsp/config)
 
 ## Board definitions
 # Compile definitions for all subprojects after this call
