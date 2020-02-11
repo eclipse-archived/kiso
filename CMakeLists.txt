@@ -99,6 +99,9 @@ add_subdirectory(core/essentials)
 add_subdirectory(core/utils)
 add_subdirectory(core/connectivity/cellular)
 
+# Add Integration testing library
+add_subdirectory(core/testing)
+
 ## Add thirdparty libs
 add_subdirectory(thirdparty)
 
