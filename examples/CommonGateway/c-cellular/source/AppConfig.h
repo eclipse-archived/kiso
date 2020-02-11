@@ -33,8 +33,9 @@
 #define APP_NUMBER_OF_RETRIES (UINT32_C(3))
 #define APP_SIM_PIN (NULL)
 #define APP_RAT (CELLULAR_RAT_LTE_CAT_M1)
-// #define APP_APN_NAME ("${APP_APN_NAME}")
 // clang-format on
+
+#define APP_APN_NAME ("your.apn.goes.here")              /* this needs to be replaced with your APN */
 #define APP_APN_AUTHMETHOD (CELLULAR_APNAUTHMETHOD_NONE) /* Currently the only supported option */
 #define APP_APN_USER (NULL)                              /* Currently the only supported option */
 #define APP_APN_PASSWORD (NULL)                          /* Currently the only supported option */
@@ -61,5 +62,4 @@
 #define APP_TCP_TEST_PORT (UINT16_C(7))
 #define APP_TCP_TEST_DATA ("HELLO WORLD!")
 // clang-format on
-
 #endif
