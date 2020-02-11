@@ -1,16 +1,16 @@
-/**********************************************************************************************************************
- * Copyright (c) 2010#2019 Robert Bosch GmbH
+/*******************************************************************************
+ * Copyright (c) 2010-2020 Robert Bosch GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl#2.0.
+ * http://www.eclipse.org/legal/epl-2.0.
  *
- * SPDX#License#Identifier: EPL#2.0
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Robert Bosch GmbH # initial contribution
+ *    Robert Bosch GmbH - initial contribution
  *
- **********************************************************************************************************************/
+ ******************************************************************************/
 
 /**
  * @file
@@ -18,40 +18,32 @@
  * @brief
  *      Implements test cases for uart comminication verification
  */
-/*###################### INCLUDED HEADERS ############################################################################*/
+#include "TestSuiteUart.h"
+#include "Kiso_Basics.h"
 #include "Kiso_Testing.h"
 #include "Kiso_CmdProcessor.h"
 #include "Kiso_MCU_UART.h"
 #include "Kiso_BSP_GenericUart.h"
-#include "TestSuiteUART.h"
-#include <stdlib.h>
 #include "FreeRTOS.h"
 #include "semphr.h"
-/*###################### MACROS DEFINITION ###########################################################################*/
+
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID 0
 
-#define UART_BUFFER_LEN 5
+#define UART_BUFFER_LEN (5)
 #define DATA_TRANSFER_TIMEOUT_MS UINT32_C(1000)
 #define UART_DEVICE UINT32_C(1)
+#define MSG_BUFFER_SIZE (32)
 
-/*###################### LOCAL_TYPES DEFINITION ######################################################################*/
 enum TestSuiteUart_TestCases_E
 {
     TEST_CASE_FUNCTIONAL_TEST_ID = 1
 };
-/*###################### LOCAL FUNCTIONS DECLARATION #################################################################*/
 
 static Retcode_T TestCase_FctTest_Setup(CCMsg_T *ccmsg);
 static void TestCase_FctTest_Run(CCMsg_T *ccmsg);
 static Retcode_T TestCase_FctTest_Teardown(CCMsg_T *ccmsg);
 static void UartISRCallback(UART_T uart, struct MCU_UART_Event_S event);
-
-/*###################### VARIABLES DECLARATION #######################################################################*/
-
-/*###################### EXPOSED FUNCTIONS IMPLEMENTATION ############################################################*/
-
-/*###################### LOCAL FUNCTIONS IMPLEMENTATION ##############################################################*/
 
 static UART_T UartHdl = 0;
 static xSemaphoreHandle UartLock = 0;
@@ -64,14 +56,14 @@ Retcode_T TestSuiteUart_Initialize(uint8_t sId)
 
     if (RETCODE_OK == retcode)
     {
-        retcode = Tests_RegisterTestCase(sId, TEST_CASE_FUNCTIONAL_TEST_ID, TestCase_FctTest_Setup, TestCase_FctTest_Run, TestCase_FctTest_TearDown);
+        retcode = Tests_RegisterTestCase(sId, TEST_CASE_FUNCTIONAL_TEST_ID, TestCase_FctTest_Setup, TestCase_FctTest_Run, TestCase_FctTest_Teardown);
     }
     return retcode;
 }
 
 /**
- * @brief           Performs the setup operation of the functional test of uart in interrupt mode 
- * @details         This function initializes the uart interface in interrupt mode and creates the necessary 
+ * @brief           Performs the setup operation of the functional test of uart in interrupt mode
+ * @details         This function initializes the uart interface in interrupt mode and creates the necessary
  *                  synchronisation ressources.
  */
 static Retcode_T TestCase_FctTest_Setup(CCMsg_T *ccmsg)
@@ -132,7 +124,7 @@ static Retcode_T TestCase_FctTest_Teardown(CCMsg_T *ccmsg)
 }
 
 /**
- * This Test will put the uart receiver into receive mode and send data via the transmitter the data will be 
+ * This Test will put the uart receiver into receive mode and send data via the transmitter the data will be
  * looped back to the receiver at hardware level (e.g. wiring TX line to RX line)
  * the test will succede if the transmit operation succeeded and if the received data matches the transmitted data
  */
@@ -143,7 +135,7 @@ static void TestCase_FctTest_Run(CCMsg_T *ccmsg)
     Retcode_T retcode;
     uint8_t dataOut[UART_BUFFER_LEN];
     uint8_t dataIn[UART_BUFFER_LEN] = {0};
-    char msg[30] = "SUCCESS";
+    char msg[MSG_BUFFER_SIZE] = "SUCCESS";
 
     for (uint8_t i = 0; i < UART_BUFFER_LEN; i++)
     {

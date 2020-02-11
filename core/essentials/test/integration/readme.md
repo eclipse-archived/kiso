@@ -1,7 +1,7 @@
-# Integration Test Framework
+# Integration Tests: Essentials
 
-It is composed by the following packages:
-* Test-scheduler: Called in the continious integration. Define where the tests should be run.
-* Test-coordinator: Coordiante the build and execution of the tests.
-* Test-auxiliaries: List of elements that supports more complex tests (example: communication tests between a cloud service and a device)
-* Test-executor: Software that will be flashed on the device under test.
+This is the integration test package for Essentials. It contains integration test suites for:
+
+* UART - testing sending and receiving data over standard UART.
+
+Check `TestEntry.c` to see which integration test suites are loaded.
