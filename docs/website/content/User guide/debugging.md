@@ -1,5 +1,5 @@
 ---
-title: "using VS-Code Cortex-Debug for debugging with Jlink on WSL."
+title: "Debugging"
 weight: 2
 ---
 
