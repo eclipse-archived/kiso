@@ -23,7 +23,6 @@ Please Tell us about your experience building a custom application or migrating 
 
 **Understandability** is **Kiso**'s top quality goal. **Kiso** aims to lower the entry barrier for embedded IoT developers therefore it has been a concern how to ease the usage from the toolchain environment preparation untill the running of the built application. The provided documentation should make all those steps clear and accurate.
 
-
 Please tell us about your experience regarding the consistency of the user guides: <a style="font: 15px Helvetica bold, sans-serif; color: #54CCA3; text-decoration: none;" href=https://eclipse-kiso.limequery.com/984494?lang=en> Understandability Questionnaire </a>
 
 ------
