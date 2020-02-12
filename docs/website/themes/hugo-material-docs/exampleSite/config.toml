@@ -61,6 +61,11 @@ googleAnalytics = ""
 	weight = 20
 
 [[menu.main]]
+	name   = "Roadmap"
+	url    = "roadmap/"
+	weight = 30
+
+[[menu.main]]
 	name   = "License"
 	url    = "license/"
 	weight = 40
