@@ -1,5 +1,5 @@
 ---
-title: Concept
+title: User guide
 weight: 2
 pre: "<b>2. </b>"
 chapter: true
@@ -7,5 +7,5 @@ chapter: true
 
 ### Chapter 2
 
-# Concept
+# User guide
 {{% children  %}}
