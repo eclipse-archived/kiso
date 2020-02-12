@@ -26,8 +26,7 @@ https://eclipse-bosch-kiso.limequery.com/316975?lang=en> Usability Questionnaire
 
 
 Please tell us about your experience regarding the consistency of the user guides: <a style="font: 15px Helvetica bold, sans-serif; color: #54CCA3; text-decoration: none;" 
-href=https://eclipse-bosch-kiso.limequery.com/984494?lang=en
-> Understandability Questionnaire </a>
+href=https://eclipse-bosch-kiso.limequery.com/984494?lang=en> Understandability Questionnaire </a>
 
 ------
 **Note:** more questionnaires will be added whenever there is an available update, So be sure to check the page to answer them, and give us feedback.  
