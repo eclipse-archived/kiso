@@ -10,7 +10,7 @@ weight: 1
 
 **Usability** is one of the core assets of **Kiso**'s design. As soon as there is a BSP/MCU layer for the targeted hardware the matter of creating custom tailored applications should be handy based on the provided examples, the migration from one hardware to another (given BSP/MCU) should be also doable by only changing configuration parameters.
 
-And it is the second quality goal with two sub-attribute which are:
+And it is the second quality goal with two sub-attributes which are:
 
 - **(Configurability)**  each module can be configred for specific application purposes.
 
