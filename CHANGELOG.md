@@ -2,7 +2,33 @@
 Milestone (4-week cycle) progress with closed issues and merged pull-requests. The first number indicates the issue id followed by the issue title.
 
 ## [02.20] - 2020-02-14
-* tbd.
+* 106 added bsp generic headers  
+* 103 Remove APP_APN_NAME option from CMake command line  
+* 101 Remove CMake config option for APN in cellular app  
+* 98 Broken links fixed  
+* 92 Cellular app is not building   
+* 91 Update Hugo documentation  
+* 80 Feature/#77 automated branch creation 1  
+* 78 Create main.yml  
+* 77 Automated branch creation  
+* 76 Add Kiso contributors to NOTICE.md  
+* 73 Updated changelog with new milestone content  
+* 72 Upload the latest cddk-oss code to public repo  
+* 68 [PR] add testing library to cddk core  
+* 67  [PR] add generic uart spi i2c device interfaces  
+* 66 [PR] Feature/#444 insert content into changelog.md  
+* 65 Insert content into CHANGELOG.md  
+* 64 [PR] BSP Implementation for Nucleo L4 Board - Local  
+* 61 [PR] Enable Kiso to be build as 3rd party library  
+* 59 [PR] BSP Implementation for Nucleo L4 Board  
+* 58 [PR] Feature/#193 python ci framework core  
+* 51 [PR] Ethernet socket interface  
+* 46 Jenkins Dashboard Plugin SonarCube  
+* 45 [PR] Feature/#370 create base bsp for lpc55s69 evk  
+* 42 [PR] Align xxx_MODULE_ID_yyy usage.  
+* 31 Enable Kiso to be build as 3rd party library  
+* 24 Move docker image to Eclipse Foundation public registry  
+* 17 Define integration test framework  
 
 Please note that from here on the Kiso private Bosch AE software repo has been transferred to the public Eclipse Foundation hosted repo. Thus, the issue id urls have changed from https://github.com/Bosch-AE-SW/cddk-oss/issues/xxx to https://github.com/eclipse/kiso/issues/xxx.
 
