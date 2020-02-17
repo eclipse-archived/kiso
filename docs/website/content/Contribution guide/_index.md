@@ -1,11 +1,11 @@
 ---
 title: Contribution guide
 weight: 4
-pre: "<b>4. </b>"
+pre: "<b>3. </b>"
 chapter: true
 ---
 
-### Chapter 4
+### Chapter 3
 
 # Contribution guide
 {{% children  %}}
