@@ -1,23 +1,17 @@
 ---
 title: "Configuration"
-description: "How are libraries configured"
 weight: 2
-draft: false
-toc: true
-menu:
-  main:
-    parent: 2. Concepts
-    identifier: configuration
-    weight: 2
----
 
-# Kiso configuration
+---
 
 Kiso consists mainly of four major parts - core libraries, BSP layer, third party libraries and application code.
 The framework and external libraries need to be configured for a specific application via configuration headers. For ease of use,
-we have separated all configuration headers in a single location, allowing for easy swapping between different configurations,
-backup and external accessibility. Kiso also provides a mechanism for a project building multiple applications that have configuration
-differences between them to be handled easily in the build system.
+we have separated the configuration headers in three levels, allowing for easy swapping between different configurations,
+backup and external accessibility. The top level is project-specific configuration directory. You can override this default location using
+the `PROJECT_CONFIG_PATH` CMake variable. After that a board-specific configuration is applied - the is the second level. For the board you are using, the board support package provides
+additional configuration overrides that are automatically applied on top of the project default configurations. BSPs provide the `BOARD_CONFIG_PATH` variable -
+a directory with the same structure as described bellow. Finally the third level is the application-specific configuration.
+Applications have the option to also provide a directory with configuration overrides via the variable `APP_CONFIG_PATH`. Take a look at the c-sensors example to see it in action.
 
 ## Configuration directory structure
 
@@ -29,27 +23,28 @@ The configuration headers for a library are always contained within it's own sub
 external configuration directory is used.
 
 - `${PROJECT_CONFIG_PATH}`
-    - essentials
-        - Kiso_HALConfig.h
-    - utils
-        - Kiso_UtilsConfig.h
-    - freertos
-        - FreeRTOSConfig.h
-    - cellular
-        - Kiso_CellularConfig.h
+    - core
+        - essentials
+            - Kiso_BSPConfig.h
+            - Kiso_MCUConfig.h
+        - utils
+            - Kiso_UtilsConfig.h
+        - cellular
+            - Kiso_CellularConfig.h
+    - thirdparty
+        - freertos
+            - FreeRTOSConfig.h
+        - stm32cubel4
+            - ...
     - ...
         - ...
 
-## Board-specific configuration
+## Merged configuration
 
-TODO - after [#307](https://github.com/Bosch-AE-SW/cddk-oss/issues/307) there will be changes here and in general section.
-
-## Application configuration
-
-The mechanism to specify additional custom configuration per application is available as a CMake function - `USE_CUSTOM_CONFIG(PATH)`.
-This function can be used in an application's CMake file to override any configuration headers from the default project configuration path -
-PROJECT_CONFIG_PATH. With this function you can instruct CMake that you have a directory with application-specific headers that differ from the
-base project configuration. The function takes only one argument - path to the application configuration directory.
+During CMake's 'configure' step, all configuration headers are merged in the build directory and provided to the libraries that need them.
+The base configuration is taken from `PROJECT_CONFIG_PATH`, overridden by the contents of `BOARD_CONFIG_PATH` - the board-specific headers
+and optionally if the application has additional overrides, they are taken from `APP_CONFIG_PATH`.
+The merged result is determined by CMake and normally the user shouldn't need to bother with it. Yet it's location is revealed by CMake just in case.
 
 ![kisoConfig-error](/images/kisoConfig.png)
 
@@ -61,13 +56,14 @@ and any subsequent changes to these files will automatically trigger the configu
 ```txt
 ------------- KISO CONFIG -------------
 ...
-Project Config Path:   /MyProject/kiso_config
+Project Config Path:   /opt/my_project/kiso_config
 ------------- KISO CONFIG -------------
 -- The C compiler identification is GNU 7.3.1
 -- Check for working C compiler: /usr/bin/arm-none-eabi-gcc
 ...
--- Using custom application configuration from /MyProject/application1/app_config
--- Intermediate config path: /MyProject/builddir/application1/config
+-- Applying board-specific configuration from /opt/kiso/boards/CommonGateway/bsp/config.
+-- Applying application-specific configuration from /opt/kiso/examples/CommonGateway/c-sensors/config.
+-- Configuration headers merged in /opt/kiso/builddir/config.
 ...
 -- Configuring done
 -- Generating done
@@ -82,5 +78,3 @@ eventually add your own.
 
 If you don't need specific application configuration, this is all you'll have to do to start with Kiso. Moreover, you can use the default
 configuration that Kiso uses and ommit the variable entirely.
-Another option would be to have only application-specific configuration with the default Kiso configuration as the base for your project.
-In that case, you can only use the `USE_CUSTOM_CONFIG` CMake function in you application's build definitions.

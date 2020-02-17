@@ -1,14 +1,6 @@
 ---
 title: "Using CMake"
-description: "Guide to the project's CMake structure, variables and patterns"
-weight: 1
-draft: false
-toc: true
-menu:
-  main:
-    parent: 4. Contribution guide
-    identifier: using_cmake
-    weight: 6
+weight: 6
 ---
 
 # How is CMake Organized
@@ -33,15 +25,15 @@ Let's take a look at the basic content of the root `CMakeLists.txt` line by line
 ```cmake
 option(ENABLE_TESTING "Configure a build tree for testing instead of normal application mode" OFF)
 
-include(default_config.cmake OPTIONAL)
+include(kiso_defaults.cmake OPTIONAL)
 
 if (NOT DEFINED CMAKE_TOOLCHAIN_FILE AND NOT ${ENABLE_TESTING})
-   include(toolchain_arm_gcc.cmake)
+   include(cmake/ArmToolchain.cmake)
 endif()
 
 project (Kiso C)
 
-include(boards/${KISO_BOARD_NAME}/board_config.cmake)
+include(${KISO_BOARD_PATH}/board_config.cmake)
 
 add_subdirectory(boards)
 add_subdirectory(core/essentials)
@@ -50,7 +42,7 @@ add_subdirectory(core/connectivity)
 
 add_subdirectory(thirdparty)
 
-add_subdirectory(examples/${KISO_BOARD_NAME}/${KISO_EXAMPLE})
+add_subdirectory(${KISO_APPLICATION_PATH})
 
 add_subdirectory(docs)
 ```
@@ -65,7 +57,7 @@ Where applicable, each subproject should respect this variable and define the pr
 For easier configuration and avoidance of extremely long cmake commands, the project has a default configuration providing all the necessary variables.
 Users could modify the config or provide multiples so it's easy to swap them quickly.
 
-The default configuration is provided by the `default_config.cmake` file and should contain at least the minimum set of required variables for CMake configuration so that a simple
+The default configuration is provided by the `kiso_defaults.cmake` file and should contain at least the minimum set of required variables for CMake configuration so that a simple
 ```bash
 cmake <project_root>
 ```
@@ -78,7 +70,7 @@ a toolchain file must be provided before the first `project()` call in any CMake
 ```bash
 cmake <project_root> -DCMAKE_TOOLCHAIN_FILE=PATH:/path/to/toolchain.cmake
 ```
-or internally by using the project's included `toolchain_arm_gcc.cmake`.
+or internally by using the project's included `cmake/ArmToolchain.cmake`.
 
 The included toolchain configuration makes sure to find the ARM compiler from the user's PATH and configure CMake for proper cross-compilation.
 Some of the required configuration includes the following:
@@ -93,7 +85,7 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 set(CMAKE_SYSROOT ${ARM_TOOLCHAIN_DIR}/../arm-none-eabi)
 ```
 
-The default toolchain file searches for ARM toolchain with prefix `arm-none-eabi-`. This prefix can be modified by overriding `ARM_TOOLCHAIN_PREFIX` either externally, in the `default_config.cmake` or directly by providing your own toolchain file.
+The default toolchain file searches for ARM toolchain with prefix `arm-none-eabi-`. This prefix can be modified by overriding `ARM_TOOLCHAIN_PREFIX` either externally, in the `kiso_defaults.cmake` or directly by providing your own toolchain file.
 
 ## Building Unit Tests
 Building and running the unit tests happens on the Host machine, so we are not cross-compiling.
@@ -129,8 +121,8 @@ This file also defines the following variables:
 ## Libraries
 
 ### Boards
-For now all boards have a common `CMakeLists.txt` file, which defines two libraries - `bsp` and `kiso_config`. The BSP lib contains specific API implementations of the components supported by the board,
-while kiso_config is a special interface library that bundles together all of the user configuration headers for the other libraries (freertos, HAL config, etc).
+Each board has it's own `CMakeLists.txt` file, which should define a library, called `bsp`. The BSP lib contains specific API implementations of the components supported by the board. It implements the
+interfaces from `essentials/include/bsp`.
 
 ### Core
 Each of the libraries in Core has it's own `CMakeLists.txt` file which handles interface libraries, static library and includes the specific unit tests.
@@ -163,7 +155,7 @@ In addition to the `CMakeLists.txt`, each library's subdirectory also contains:
 ### Examples
 Examples are small applications that use the Kiso infrastructure (essentials/utils), BSP and MCU interfaces and show a basic concept for working with the APIs. They are used to demonstrate how the devices on the board are interfaced with, how to setup peripherals, how to read sensor values, etc. Their `CMakeLists.txt` is very simple and almost identical for all example applications. This is the only CMake file that defines building actual executables - one that can be used with a debugger and one that can be directly flashed to the target board.
 
-Choosing which application to build when configuring CMake is done by the `KISO_EXAMPLE` variable and defaults currently to `c-leds`. Possible values for this variable are all the directory names under the `/examples` subdirectory.
+Choosing which application to build when configuring CMake is done by the `KISO_APPLICATION_PATH` variable and defaults currently to `examples/CommonGateway/c-leds`. Possible values for this variable are all the directory names under the `/examples` subdirectory.
 
 ### Documentation
 The `docs` directory contains a `Doxyfile.in` file, which is patched by CMake to supply the proper input and output paths. HTML reference documentation is generated and available to use via the `docs` cmake target.

@@ -1,14 +1,6 @@
 ---
 title: "Principles for development"
-description: "Different rules that needs to be taken care of"
-weight: 6
-draft: false
-toc: true
-menu:
-  main:
-    parent: 4. Contribution guide
-    identifier: what_are_the_rules_i_need_to_take_care_of_when_i_contribute
-    weight: 6
+weight: 4
 ---
 
 # What are the rules I need to take care of when I contribute?

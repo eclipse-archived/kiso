@@ -1,71 +1,26 @@
 baseURL = "/"
-languageCode = "en-us"
-title = "Eclipse Kiso"
-theme = "hugo-material-docs"
-metadataformat = "yaml"
 relativeURLs = true
-Paginate = 4
-PygmentsCodeFences = true
-PygmentsUseClasses = true
-PygmentsStyle = "monokai"
-canonifyurls = true
-
-[blackfriday]
-    smartypants = true
-    fractions = true
-    smartDashes = true
-    plainIDAnchors = true
-    extensions = [ "fencedCode", "backslashLineBreak" ]
+uglyURLs = true
+languageCode = "en-us"
+title = "Kiso Website"
+theme = "learn"
 
 [params]
-    # General information
-    description = "The documentation of Eclipse Kiso."
-    copyright = "The Eclipse Kiso Project"
+themeVariant = "kiso"
 
-    favicon = ""
+[outputs]
+home = [ "HTML", "RSS", "JSON"]
+[[menu.shortcuts]]
+name = "<i class='fas fa-book'></i>Reference manual"
+url = "http://kiso.rempler.de:8080/"
+weight = 9
+[[menu.shortcuts]]
+name = "<i class='fab fa-fw fa-github'></i> GitHub"
+identifier = "ds"
+url = "https://github.com/eclipse/kiso"
+weight = 10
 
-    permalink = "#"
-
-    # Custom assets
-    custom_css = [ "css/custom.css" ]
-    custom_js  = []
-
-    # Syntax highlighting theme
-    highlight_css  = ""
-
-    [params.palette]
-        primary = "blue-grey"
-        accent  = "light-blue"
-
-    [params.font]
-        text = "Ubuntu"
-        code = "Ubuntu Mono"
-
-[social]
-    mattermost = "eclipse/channels/kiso"
-    github  = "eclipse/kiso"
-
-[[menu.main]]
-    name = "1. Project overview"
-    weight = 1
-    url = "1. Project Overview/"
-[[menu.main]]
-    name = "2. Concepts"
-    weight = 2
-    url = "2. Concepts/"
-[[menu.main]]
-    name = "3. User guide"
-    weight = 3
-    url = "3. User guide/"
-[[menu.main]]
-    name = "4. Contribution guide"
-    weight = 4
-    url = "4. Contribution guide/"
-[[menu.main]]
-    name = "5. Reference manual"
-    weight = 5
-    url = "http://kiso.rempler.de:8080/"
-[[menu.main]]
-    name = "6. Frequently asked questions"
-    weight = 6
-    url = "6. Frequently asked questions/"
+[[menu.shortcuts]]
+name = "<i class='fab fa-rocketchat'></i> Mattermost"
+url = "https://mattermost.eclipse.org/eclipse/channels/kiso"
+weight = 11

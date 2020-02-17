@@ -2,18 +2,18 @@ cmake_minimum_required(VERSION 3.6)
 
 project ("EMlib" C)
 
-set(EMLIB_DIR 3rd-party/EMlib)
+set(EMLIB_PATH 3rd-party/EMlib)
 
 if(${CMAKE_CROSSCOMPILING})
    file(GLOB EMLIB_SOURCES
-      ${EMLIB_DIR}/emlib/src/*.c
-      ${EMLIB_DIR}/Device/SiliconLabs/${KISO_MCU_FAMILY}/source/*.c
+      ${EMLIB_PATH}/emlib/src/*.c
+      ${EMLIB_PATH}/Device/SiliconLabs/${KISO_MCU_FAMILY}/source/*.c
    )
 
    # Defined in board_config.cmake
    if(${EMLIB_INCLUDE_USB})
       file(GLOB EMLIB_USB_SOURCES
-         ${EMLIB_DIR}/usb/src/*.c
+         ${EMLIB_PATH}/usb/src/*.c
       )
    endif()
 
@@ -23,15 +23,16 @@ if(${CMAKE_CROSSCOMPILING})
    )
    target_include_directories(emlib
    PUBLIC
-      ${EMLIB_DIR}/CMSIS/Include
-      ${EMLIB_DIR}/Device/SiliconLabs/${KISO_MCU_FAMILY}/include
-      ${EMLIB_DIR}/emlib/inc
+      ${EMLIB_PATH}/CMSIS/Include
+      ${EMLIB_PATH}/Device/SiliconLabs/${KISO_MCU_FAMILY}/include
+      ${EMLIB_PATH}/emlib/inc
+      ${KISO_CONFIG_PATH}/thirdparty/emlib
    )
    if(${EMLIB_INCLUDE_USB})
-      target_include_directories(emlib PUBLIC ${EMLIB_DIR}/usb/inc)
+      target_include_directories(emlib PUBLIC ${EMLIB_PATH}/usb/inc)
    endif()
 
-   target_link_libraries(emlib kiso_config)
+   target_link_libraries(emlib)
 endif()
 
 if(${CMAKE_TESTING_ENABLED})
@@ -40,9 +41,9 @@ if(${CMAKE_TESTING_ENABLED})
    target_include_directories(emlib_test_int
    INTERFACE
       test/unit/include
-      ${EMLIB_DIR}/CMSIS/Include
-      ${EMLIB_DIR}/Device/SiliconLabs/${KISO_MCU_FAMILY}/include
-      ${EMLIB_DIR}/emlib/inc
+      ${EMLIB_PATH}/CMSIS/Include
+      ${EMLIB_PATH}/Device/SiliconLabs/${KISO_MCU_FAMILY}/include
+      ${EMLIB_PATH}/emlib/inc
+      ${KISO_CONFIG_PATH}/thirdparty/emlib
    )
-   target_link_libraries(emlib_test_int INTERFACE kiso_config)
 endif()

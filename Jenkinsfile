@@ -1,24 +1,20 @@
 pipeline
 {
-    agent // Define the agent to use
+    agent
     {
-        docker
+        kubernetes
         {
-            label 'RT-Z0KHU'
-            image 'rb-dtr.de.bosch.com/software-campus/kiso-toolchain:v0.4.3'
-            registryUrl 'https://rb-dtr.de.bosch.com'
-            registryCredentialsId 'docker-registry'
+            containerTemplate
+            {
+                name 'kiso-build-env'
+                image 'eclipse/kiso-build-env:v0.0.1'
+                ttyEnabled true
+                resourceRequestCpu '2'
+                resourceLimitCpu '2'
+                resourceRequestMemory '8Gi'
+                resourceLimitMemory '8Gi'
+            }
         }
-    }
-    options
-    {
-        timeout(time: 60, unit: 'MINUTES') // Define a timeout of 60 minutes
-                timestamps() // Use a timestamp notation
-                disableConcurrentBuilds() // We don't want to have concurrent build issues here
-    }
-    triggers // Define how many times the job will be triggered
-    {
-        pollSCM('*/5 * * * *') //  If new changes exist, the Pipeline will be re-triggered automatically. Check will be done every 5 minutes
     }
 
     stages
@@ -48,8 +44,8 @@ pipeline
                             echo "enforce formatting rules"
                             sh 'cmake . -Bbuilddir-formatting -G"Ninja" -DENABLE_FORMAT_CHECKS=1 -DSKIP_FORMAT_REPORTS=0'
                             script {
-                                def reports = findFiles(glob: 'builddir-formatting/**/*_format.xml')
-                                sh "python3 ci/clang-format-to-junit.py ${reports.join(' ')} -o builddir-formatting/clang-format.xml -p builddir-formatting -s _format.xml"
+                                def reports = sh(script: "find builddir-formatting/ -name *_format.xml | tr '\n' ' '",  returnStdout: true)
+                                sh "python3 ci/clang-format-to-junit.py ${reports} -o builddir-formatting/clang-format.xml -p builddir-formatting -s _format.xml"
                             }
                         }
                     }
@@ -61,9 +57,9 @@ pipeline
                         script
                         {
                             echo "run static analysis"
-                            sh 'cmake . -Bbuilddir-static -G"Unix Makefiles" -DKISO_BOARD_NAME=CommonGateway -DENABLE_STATIC_CHECKS=1 -DENABLE_ALL_FEATURES=1 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON'
+                            sh 'cmake . -Bbuilddir-static -G"Unix Makefiles" -DPROJECT_CONFIG_PATH=ci/testing_config -DENABLE_STATIC_CHECKS=1 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON'
                             sh 'cmake --build builddir-static 2> builddir-static/clang-report.txt'
-                            sh 'if [ ! -s builddir-static/clang-report.txt ]; then  echo "Good, all tests have been passed w/o findings" > builddir-static/clang-report.txt; fi;'
+                            sh 'if [ ! -s builddir-static/clang-report.txt ]; then echo "Good, all tests have been passed w/o findings" > builddir-static/clang-report.txt; fi;'
                             sh 'cat builddir-static/clang-report.txt | python ci/thirdparty/clangTidyToJunit/clang-tidy-to-junit.py `pwd` > builddir-static/clang-report.xml'
                         }
                     }
@@ -75,7 +71,7 @@ pipeline
                         script
                         {
                             echo "run unit-tests"
-                            sh 'cmake . -Bbuilddir-unittests -G"Ninja" -DENABLE_TESTING=1 -DENABLE_ALL_FEATURES=1'
+                            sh 'cmake . -Bbuilddir-unittests -G"Ninja" -DENABLE_TESTING=1 -DPROJECT_CONFIG_PATH=ci/testing_config -DKISO_STATIC_CONFIG=1'
                             sh 'cmake --build builddir-unittests'
                             sh 'cd builddir-unittests && ctest -T test -V --no-compress-output' // Produce test results xml
                             sh 'cmake --build builddir-unittests --target coverage -- -j1' // Produce coverage output (single-threaded because of ninja)
@@ -170,7 +166,7 @@ pipeline
 def notifyFailed()
 {
     emailext (subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) is failing",
-                body: "Please go to ${env.BUILD_URL}, check it out AND fix it...",
+                body: "Oups, something went wrong with ${env.BUILD_URL}... We are looking forward for your fix!",
                 recipientProviders: [[$class: 'CulpritsRecipientProvider'],
                                     [$class: 'DevelopersRecipientProvider'],
                                     [$class: 'RequesterRecipientProvider']])
@@ -179,7 +175,7 @@ def notifyFailed()
 def notifyAbort()
 {
     emailext (subject: "Job '${env.JOB_NAME}' (${env.BUILD_NUMBER}) was aborted",
-                body: "Please go to ${env.BUILD_URL}, check what happened.",
+                body: "Oups, something went wrong with ${env.BUILD_URL}... We are looking forward for your fix!",
                 recipientProviders: [[$class: 'CulpritsRecipientProvider'],
                                     [$class: 'DevelopersRecipientProvider'],
                                     [$class: 'RequesterRecipientProvider']])

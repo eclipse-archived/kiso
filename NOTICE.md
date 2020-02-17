@@ -11,6 +11,20 @@ The project maintains the following source code repositories:
 
  * https://github.com/eclipse/kiso
 
+## Contributors
+
+Thanks goes to these wonderful people (sorted by last name):
+
+ * Lars Beseke
+ * Michael Bierkandt
+ * Martin Clement
+ * Sebastian Fischer
+ * Mohamed Ali Khalifi
+ * Hans-Uwe Rempler
+ * Yong Shen
+ * Thorsten Udelhoven
+ * Simon Wegendt
+
 ## Copyright
 
 Except third-party content specified below, copyright of all content belongs to
