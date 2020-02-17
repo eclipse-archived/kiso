@@ -1,0 +1,19 @@
+name: ForkSync
+
+on:
+  schedule:
+  - cron: '*/30 * * * *'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Fork Sync
+      uses: TG908/fork-sync@v1.1.4
+      with:
+        # Owner of the forked repository
+        owner: eclipse
+        # Token for the github API
+        github_token: ${{ secrets.FORKSYNC_TOKEN }}
