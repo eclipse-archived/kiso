@@ -1,7 +1,11 @@
 ---
-title: "FAQ"
-weight: 1
+title: Frequently asked questions
+weight: 4
+pre: "<b>4. </b>"
+chapter: true
 ---
+
+### Chapter 4
 
 # Frequently Asked Questions
 
