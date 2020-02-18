@@ -1,8 +1,6 @@
 # Kiso #
 ![Kiso logo](./docs/doxygen/Kiso-logo.png)
 
-## Preface ##
-This is a fork from the Eclipse/KISO porject for contribution towards a wallet development.
 ## Introduction ##
 The Bosch Connected Devices Development Kit (CDDK) has been originally used to develop several industrial and end-user products. Its historical SW roots go back to 2013 where it has been designed from scratch as a software development kit (SDK) for internet of things (IoT) devices. CDDK's core components faciliate a real time operating system approach to target small footprints and low power consumption. It is not limited to a single OS and offers a broad HW support (boards and sensors).
 
