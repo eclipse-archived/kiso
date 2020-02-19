@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     cppcheck \
     g++ \
     gcc \
-    gcc-arm-non-eabi \
+    gcc-arm-none-eabi \
     hugo \
     lcov \
     libgtest-dev \
