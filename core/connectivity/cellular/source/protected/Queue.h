@@ -14,7 +14,7 @@
 /*----------------------------------------------------------------------------*/
 
 /**
- * @ingroup CELLULAR
+ * @ingroup KISO_CELLULAR
  *
  * @defgroup QUEUE Queue
  * @{

@@ -7,32 +7,21 @@ WORKDIR /kiso-project
 # Define environment variable
 ENV NAME kiso-container
 
-# Update package management
-RUN apt-get update
-
-# Install python and pip
-RUN apt-get install -y python3
-
-# Get cmake & ninja
-RUN apt-get install -y cmake ninja-build
-
-# Get latest static analysis tools
-RUN apt-get install -y clang-format clang-tidy cppcheck
-
-# Get latest gtest
-RUN apt-get install -y libgtest-dev
-
-# Get latest coverage report generator
-RUN apt-get install -y lcov
-
-# Get doxygen
-RUN apt-get install -y doxygen graphviz
-
-# Get the compilers
-RUN apt-get install -y gcc-arm-none-eabi gcc g++
-
-# Get xmllint
-RUN apt-get install -y libxml2-utils
-
-# Get Hugo for website verification
-RUN apt-get install -y hugo
+# Update package management and install necessary packages
+RUN apt-get update && apt-get install -y \
+    clang-format \
+    clang-tidy \
+    cmake \
+    cppcheck \
+    doxygen \
+    g++ \
+    gcc \
+    gcc-arm-none-eabi \
+    graphviz \
+    hugo \
+    lcov \
+    libgtest-dev \
+    libxml2-utils \
+    ninja-build \
+    plantuml \
+    python3

@@ -2300,7 +2300,7 @@ DIAFILE_DIRS           =
 # will not generate output for the diagram.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
-PLANTUML_JAR_PATH      =
+PLANTUML_JAR_PATH      = /usr/share/plantuml/plantuml.jar
 
 # The DOT_GRAPH_MAX_NODES tag can be used to set the maximum number of nodes
 # that will be shown in the graph. If the number of nodes in a graph becomes

@@ -13,6 +13,7 @@
 ********************************************************************************/
 
 /**
+ * @ingroup KISO_CELLULAR
  * @file
  * @brief Small utility header that contains the module IDs used by Cellular.
  */

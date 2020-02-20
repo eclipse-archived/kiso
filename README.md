@@ -7,7 +7,7 @@ The Bosch Connected Devices Development Kit (CDDK) has been originally used to d
 Kiso (Japanese for "basis") is an Eclipse Foundation project that is using the original code base of CDDK. Kiso is transferring the Bosch proprietary licence code piece-by-piece to EPLv2 open source. Kiso's quality goals - understandability, usability, product quality, extensibility and performance - are the key factors that enable a fast prototype and product development. By this, it reduces the time to market together with minimizing technical debts for almost all kinds of IoT "Things".
 
 ## Quick start ##
-Please take a look at the [quick start](http://kiso.rempler.de:1313/3.-user-guide/quick_start/) section in the user manual documentation.
+Please take a look at the [quick start](http://kiso.rempler.de:1313/3.-user-guide/quick_start.html) section in the user manual documentation.
 
 ## Support ##
 Community support is provided via Mattermost, see [Kiso channel](https://mattermost.eclipse.org/eclipse/channels/kiso). An Eclipse Foundation Mattermost account is needed.
@@ -15,8 +15,9 @@ Community support is provided via Mattermost, see [Kiso channel](https://matterm
 ## Resources ##
 Please note that (for now) some of the following links require additional accounts and/or are limited to Bosch infrastructure access. This is a temporary impediment until Kiso's infrastructure has been moved over to Eclipse Foundation.
 * User manual: [documentation](http://kiso.rempler.de:1313/)
-* Architecture: [architecture overview](http://kiso.rempler.de:1313/2.-concepts/overall_architecture/#overall-architecture)
-* Frequently asked questions: [FAQ](http://kiso.rempler.de:1313/6.-frequently-asked-questions/faq/)
+* Architecture: [architecture overview](http://kiso.rempler.de:1313/2.-concepts/overall_architecture.html)
+* Frequently asked questions: [FAQ](http://kiso.rempler.de:1313/5.-frequently-asked-questions/faq.html)
 * API documentation: [Doxygen documentation](http://kiso.rempler.de:8080/)
 * Release notes (inkl. features, supported reference HW and known issues): [release notes](https://github.com/eclipse/kiso/blob/master/RELEASE_NOTES.md)
-* Continuous integration (automated testing results): [Jenkins dashboard](https://rb-jmaas.de.bosch.com/software-campus/view/Kiso-Dashboard/)
+* Continuous integration (automated testing results): [Jenkins dashboard](https://ci.eclipse.org/kiso)
+* Eclipse Foundation project page: [Eclipse Kiso](https://projects.eclipse.org/projects/iot.kiso)

@@ -13,8 +13,13 @@
 ********************************************************************************/
 
 /**
- * @file
- * @brief Cellular base API header.
+ * @ingroup KISO_CONNECTIVITY
+ * @defgroup KISO_CELLULAR Cellular
+ * @{
+ *
+ * @brief Management interface for AT-communications-based Cellular modems.
+ *
+ * @image html Cellular-overview.png
  *
  * @details Offers APIs to control power and networking functions of a cellular
  * modem via AT-commands. The primary purpose of this function-set is to
@@ -29,7 +34,7 @@
  * Regarding the driver state-machine please refer to the state-diagram below.
  * Please also mind, that certain API functions have blocking behavior, in which
  * cases it may be optional to handle the @b on-state-changed callback.
- *  @startuml
+ * @startuml
  *
  *  [*] --> Power_Off : <i>Initialize()</i>
  *
@@ -70,35 +75,24 @@
  *
  *  footer Copyright (C) 2019 Robert Bosch GmbH.
  *
- *  @enduml
- * 
- *  @code 
- * 
+ * @enduml
+ *
+ * @code
  *  Retcode_T rc = Cellular_Initialize(HandleStateChanged);
-    if (RETCODE_OK != rc)
-    {
-        LOG_FATAL("Error during cellular initialization: %x", rc);
-        return rc;
-    }
-    // implement a state change handler, e.g. store the st
-    static void HandleStateChanged(Cellular_State_T oldState, Cellular_State_T newState, void *param, uint32_t len)
-    {         
-        // this is an example, the callular state machine is not part of the cellular package today     
-       CommandProcessor_Enqueue(CellularStateMachine_RunFunction, newState, NULL);
-    }
-    @see enum Cellular_State_E
- *  @endcode
+ *  if (RETCODE_OK != rc)
+ *  {
+ *      LOG_FATAL("Error during cellular initialization: %x", rc);
+ *      return rc;
+ *  }
+ *  // implement a state change handler, e.g. store the st
+ *  static void HandleStateChanged(Cellular_State_T oldState, Cellular_State_T newState, void *param, uint32_t len)
+ *  {
+ *     // this is an example, the callular state machine is not part of the cellular package today
+ *     CommandProcessor_Enqueue(CellularStateMachine_RunFunction, newState, NULL);
+ *  }
+ * @endcode
  *
- */
-
-/**
- * @defgroup CELLULAR Cellular
- * @ingroup KISO_CONNECTIVITY
- * @{
- *
- * @brief This module is used to initialize, connect, disconnect, uninitialize and get modem status.
- *        \image html Cellular-overview.png
- *
+ * @file
  */
 #ifndef KISO_CELLULAR_H_
 #define KISO_CELLULAR_H_
@@ -503,7 +497,7 @@ Retcode_T Cellular_ConfigureDataContext(uint32_t cid, const Cellular_DataContext
  *
  * @param[in] cid
  * The Context-Id of the data-context to activate.
- * (usually 0 .. #CELLULAR_CONFIG_MAX_DATA_CTX)
+ * (usually 0 .. #CELLULAR_DATACTX_COUNT)
  *
  * @param[out] ctx
  * Will be pointed to the activated data-context.
@@ -521,7 +515,7 @@ Retcode_T Cellular_ActivateDataContext(uint32_t cid, const Cellular_DataContext_
  *
  * @param[in] cid
  * The Context-Id of the data-context to activate.
- * (usually 0 .. #CELLULAR_CONFIG_MAX_DATA_CTX)
+ * (usually 0 .. #CELLULAR_DATACTX_COUNT)
  *
  * @return A #Retcode_T indicating the result of the procedure.
  */
