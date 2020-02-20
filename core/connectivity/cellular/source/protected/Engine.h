@@ -13,7 +13,10 @@
 ********************************************************************************/
 
 /**
- * @file
+ * @ingroup KISO_CELLULAR
+ *
+ * @defgroup ENGINE Engine
+ * @{
  *
  * @brief The engine of the Cellular driver.
  *
@@ -30,6 +33,8 @@
  * AtResponseParser-module and results are stored into the AtResponse-queue.
  * From there they may be consumed by various modules inside the
  * Cellular-driver.
+ *
+ * @file
  */
 
 #ifndef ENGINE_H_
@@ -106,7 +111,7 @@ void Engine_NotifyNewState(Cellular_State_T newState, void *param, uint32_t len)
  * @param[in] buffer
  * The command to send.
  *
- * @param[in] BufferLength
+ * @param[in] bufferLength
  * The length of the command to send.
  *
  * @return A #Retcode_T indicating the result of the procedure.
@@ -118,6 +123,9 @@ Retcode_T Engine_SendAtCommand(const uint8_t *buffer, uint32_t bufferLength);
  *
  * @param[in] str
  * The command to send as C-string.
+ *
+ * @param[in] bufferLength
+ * The length of the command to send.
  *
  * @param[in] timeout
  * The time to wait for a command echo in milliseconds.
@@ -180,3 +188,5 @@ void Engine_EchoModeEnabled(bool echoMode);
 extern char Engine_AtSendBuffer[CELLULAR_AT_SEND_BUFFER_SIZE];
 
 #endif /* ENGINE_H_ */
+
+/** @} */
