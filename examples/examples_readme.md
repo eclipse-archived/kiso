@@ -1,5 +1,5 @@
 
-# Example Project: Nucleo L4R5ZI
+# Example Project: <Title>
 
 ##Disclaimer
 1. *The sample contents under various sections in this blueprint might seem to be utter non-sense. I apologize fro that. The aim was to make it crystal clear what these sections could contain as contents.*
