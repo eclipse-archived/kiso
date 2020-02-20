@@ -14,7 +14,7 @@
 
 /**
  * @ingroup KISO_CELLULAR
- * @defgroup CELLULARSOCKETSERVICE Socket Service
+ * @defgroup KISO_CELLULAR_SOCKETS Sockets
  * @{
  * @brief Cellular Socket Data Service API.
  *
@@ -33,7 +33,7 @@
  * how (packet-)data is routed through the cellular network and what quality of
  * service (QoS) is associated with it. One could imagine having two or more
  * data-contexts, one with high QoS for VoIP and a second - lower QoS - context
- * for SMS or TCIP/IP communication.
+ * for SMS or TCP/IP communication.
  *
  * As some modems implement their own TCP/IP-stack on the modem two types of
  * data-context are to be known: INTERNAL and EXTERNAL. A INTERNAL data-context

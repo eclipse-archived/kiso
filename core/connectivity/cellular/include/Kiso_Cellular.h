@@ -17,9 +17,78 @@
  * @defgroup KISO_CELLULAR Cellular
  * @{
  *
- * @brief Management interface for AT-communications-based Cellular modems.
+ * @brief High level connectivity driver for AT-communications-based cellular
+ * modems.
  *
- * @image html Cellular-overview.png
+ * @startuml
+ *  package "Cellular" {
+ *      () "Cellular Modem Management API" as cellular_core_if
+ *      [Modem Management] as core
+ *      () "Cellular Sockets API" as cellular_socket_if
+ *      [Socket Service] as socket_service
+ *      () "Cellular DNS API" as cellular_dns_if
+ *      [DNS] as dns_service
+ *      () "Cellular HTTP API" as cellular_http_if
+ *      [HTTP] as http_service
+ *      node "Variants" as variants {
+ *          [u-blox SARA R4/N4 variant] as ublox_sara_r4n4_variant
+ *          [other variant] as other_variant
+ *      }
+ *      node "Common" as common {
+ *          [Hardware] as hardware
+ *          [Engine] as engine
+ *          [Misc. Utilities] as utils
+ *      }
+ *  }
+ *  package "Essentials" {
+ *      () "MCU API" as mcu_if
+ *      [MCU] as mcu
+ *      () "BSP API" as bsp_if
+ *      [BSP] as bsp
+ *  }
+ *
+ *  cellular_core_if -down- core
+ *  cellular_socket_if -down- socket_service
+ *  cellular_dns_if -down- dns_service
+ *  cellular_http_if -down- http_service
+ *
+ *  core <|.down. variants
+ *  socket_service <|.down. variants
+ *  dns_service <|.down. variants
+ *  http_service <|.down. variants
+ *
+ *  variants -down- common
+ *
+ *  engine -right- hardware
+ *  engine -left- utils
+ *  hardware -down-> bsp_if
+ *  engine -down-> mcu_if
+ *
+ *  mcu_if -down- mcu
+ *  bsp_if -down- bsp
+ *
+ * @enduml
+ *
+ * @defgroup KISO_CELLULAR_VARIANTS Variants
+ * @{
+ * @brief Supported variants implementing the Cellular API
+ *
+ * @defgroup KISO_CELLULAR_VARIANT_UBLOX u-blox
+ * @{
+ * @brief Variant implementation for u-blox
+ * @}
+ * @}
+ * @defgroup KISO_CELLULAR_COMMON Common
+ * @{
+ * @brief Common modules shared accross variants and acting as the drivers
+ * backbone.
+ * @}
+ *
+ * @defgroup KISO_CELLULAR_CORE Modem Management
+ * @{
+ *
+ * @brief Management interface to change power state and radio mode of cellular
+ * modems.
  *
  * @details Offers APIs to control power and networking functions of a cellular
  * modem via AT-commands. The primary purpose of this function-set is to
@@ -31,36 +100,38 @@
  * user may proceed to utilize the data-service-oriented APIs found in the
  * Cellular public API.
  *
+ * @section KISO_CELLULAR_STATEMACHINE State Machine
+ *
  * Regarding the driver state-machine please refer to the state-diagram below.
  * Please also mind, that certain API functions have blocking behavior, in which
  * cases it may be optional to handle the @b on-state-changed callback.
  * @startuml
  *
- *  [*] --> Power_Off : <i>Initialize()</i>
+ *  [*] --> Power_Off : Initialize
  *
- *  Power_Off --> Power_On : <i>PowerOn()</i>
+ *  Power_Off -> Power_On : Power on
  *
- *  Power_On --> Registering : <i>RegisterOnNetwork()</i>
- *  Registering --> Registered : [On network registration complete]
- *  Registered --> Registering : [On network registration lost]
- *  Registered --> Power_On : <i>DeregisterFromNetwork()</i>
- *  Registering --> Power_On : <i>DeregisterFromNetwork()</i>
+ *  Power_On --> Registering : Call for registration network
+ *  Registering -> Registered : Registration complete
+ *  Registered -> Registering : Registration lost
+ *  Registered --> Power_On : Call for deregistration from network
+ *  Registering --> Power_On : Call for deregistration from network
  *
- *  Registered --> DataActive : <i>ActivateDataContext()</i>
- *  DataActive --> Registered : <i>DeactivateDataContext()</i>
- *  DataActive --> Registering : [On network registration lost]
- *  DataActive --> Registered : [On data-context closed by network]
+ *  Registered -> DataActive : Call for data-context activation
+ *  DataActive -> Registered : Call for data-context deactivation
+ *  DataActive -> Registering : Registration lost
+ *  DataActive -> Registered : Data-Context closed by network
  *
- *  Power_On --> Power_Off : <i>PowerOff()</i>
+ *  Power_On -> Power_Off : Power down
  *
- *  Power_Off --> [*] : <i>Deinitialize()</i>
+ *  Power_Off --> [*] : Deinitialize
  *
  *  note top of DataActive
  *  TCP/UDP, DNS, etc. data-services may be used now. Continue to monitor the state
  *  callbacks to get notified about network changes.
  *  end note
  *
- *  note right of DataActive
+ *  note bottom of DataActive
  *  If the modem for whatever reason loses the data-context (<u>DataActive</u> state), a
  *  client is expected to call <i>ActivateDataContext()</i> again, to initiate the process
  *  of obtaining a new data-context. The modem may buffer short desyncs on-chip as
@@ -158,12 +229,12 @@ typedef struct Cellular_PowerUpParameters_S Cellular_PowerUpParameters_T;
  */
 enum Cellular_RadioAccessTechnology_E
 {
-    CELLULAR_RAT_DEFAULT = 0x00,    //!<       Use what's available/supported by SIM
-    CELLULAR_RAT_GSM = 0x01,        //!<           GSM/GPRS/eGPRS
-    CELLULAR_RAT_UMTS = 0x02,       //!<          UMTS
-    CELLULAR_RAT_LTE = 0x04,        //!<           LTE
-    CELLULAR_RAT_LTE_CAT_M1 = 0x08, //!<    LTE Cat. M1
-    CELLULAR_RAT_LTE_CAT_NB1 = 0x10 //!<    LTE Cat. Narrow-Band IoT
+    CELLULAR_RAT_DEFAULT = 0x00,    //!< Use what's available/supported by SIM
+    CELLULAR_RAT_GSM = 0x01,        //!< GSM/GPRS/eGPRS
+    CELLULAR_RAT_UMTS = 0x02,       //!< UMTS
+    CELLULAR_RAT_LTE = 0x04,        //!< LTE
+    CELLULAR_RAT_LTE_CAT_M1 = 0x08, //!< LTE Cat. M1
+    CELLULAR_RAT_LTE_CAT_NB1 = 0x10 //!< LTE Cat. Narrow-Band IoT
 };
 typedef enum Cellular_RadioAccessTechnology_E Cellular_RadioAccessTechnology_T;
 
@@ -330,13 +401,13 @@ typedef struct Cellular_DataContext_S Cellular_DataContext_T;
  */
 enum Cellular_State_E
 {
-    CELLULAR_STATE_POWEROFF,    //!<       Modem powered off
-    CELLULAR_STATE_POWERON,     //!<        Modem powered on and idling (no radio communication)
-    CELLULAR_STATE_REGISTERING, //!<    Modem in the process of registering on a network
-    CELLULAR_STATE_REGISTERED,  //!<     Modem registered on network
-    CELLULAR_STATE_DATAACTIVE,  //!<     Modem obtained data-context and may use data-services like TCP/IP
+    CELLULAR_STATE_POWEROFF,    //!< Modem powered off
+    CELLULAR_STATE_POWERON,     //!< Modem powered on and idling (no radio communication)
+    CELLULAR_STATE_REGISTERING, //!< Modem in the process of registering on a network
+    CELLULAR_STATE_REGISTERED,  //!< Modem registered on network
+    CELLULAR_STATE_DATAACTIVE,  //!< Modem obtained data-context and may use data-services like TCP/IP
 
-    CELLULAR_STATE_MAX //!<             Placeholder for iterating
+    CELLULAR_STATE_MAX //!< Placeholder for iterating
 };
 typedef enum Cellular_State_E Cellular_State_T;
 
@@ -563,4 +634,5 @@ Cellular_State_T Cellular_GetState(void);
 
 #endif /* KISO_CELLULAR_H_ */
 
-/**@}*/
+/** @}*/
+/** @}*/

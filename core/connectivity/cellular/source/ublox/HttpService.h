@@ -13,6 +13,7 @@
 ********************************************************************************/
 
 /**
+ * @ingroup KISO_CELLULAR_VARIANT_UBLOX
  * @file
  * @brief Internal header for managing the u-blox http-service.
  */

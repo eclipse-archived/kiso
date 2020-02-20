@@ -13,6 +13,7 @@
 ********************************************************************************/
 
 /**
+ * @ingroup KISO_CELLULAR_VARIANT_UBLOX
  * @file
  * @brief Internal u-blox header containing variant specific calls.
  */

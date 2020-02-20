@@ -14,7 +14,7 @@
 
 /**
  * @ingroup KISO_CELLULAR
- * @defgroup CELLULARDNSSERVICE DNS Service
+ * @defgroup KISO_CELLULAR_DNS DNS
  * @{
  * @brief Cellular Domain Name Lookup Service API.
  *
