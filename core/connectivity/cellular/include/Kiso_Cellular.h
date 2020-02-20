@@ -148,18 +148,107 @@
  *
  * @enduml
  *
- * @code
+ * @section KISO_CELLULAR_USAGE Usage
+ *
+ * Start by initializing Cellular and register a state-handler:
+ *
+ * @code{.c}
  *  Retcode_T rc = Cellular_Initialize(HandleStateChanged);
  *  if (RETCODE_OK != rc)
  *  {
  *      LOG_FATAL("Error during cellular initialization: %x", rc);
  *      return rc;
  *  }
- *  // implement a state change handler, e.g. store the st
- *  static void HandleStateChanged(Cellular_State_T oldState, Cellular_State_T newState, void *param, uint32_t len)
+ *  // Implement a state change handler, e.g. store the state signal some semaphore.
+ *  static void HandleStateChanged(Cellular_State_T oldState,
+ *                                 Cellular_State_T newState,
+ *                                 void *param, uint32_t len)
  *  {
- *     // this is an example, the callular state machine is not part of the cellular package today
- *     CommandProcessor_Enqueue(CellularStateMachine_RunFunction, newState, NULL);
+ *      CurrentCellularState = newState;
+ *      (void)xSemaphoreGive(CellularStateChangedSignal);
+ *  }
+ * @endcode
+ *
+ * Next, power on the hardware to start talking with the modem:
+ *
+ * @code{.c}
+ *  assert(CurrentCellularState == CELLULAR_STATE_POWEROFF); // In this snippet we assume modem is powered off.
+ *
+ *  Cellular_PowerUpParameters_T powerUpParams;
+ *  powerUpParams.SimPin = "1234"; // If your SIM card requires a PIN, set it here.
+ *  Retcode_T rc = Cellular_PowerOn(&powerUpParams);
+ *  if (RETCODE_OK != rc)
+ *  {
+ *      LOG_FATAL("Error during cellular power-on: %x", rc);
+ *      return rc;
+ *  }
+ * @endcode
+ *
+ * The power-up sequence is blocking, still you'll additionally receive a
+ * state-changed-callback which you may choose ignore. Once powered up, the
+ * modem will be kept in a non-registered state. This allows us to configure a
+ * so called PSD (Packet-Switched-Data) context. For certain AcT (Access
+ * Technology) we @b must do this @b before registering to the network (namely
+ * LTE and NB-IoT). These AcT are inherently packet-based and therefore activate
+ * make use of a "default-context" to establish network communication. Older
+ * AcTs allow you to register to the network without a preconfigured
+ * data-context.
+ *
+ * Configuring a data-context for NB-IoT and initiating network registration may
+ * look like this:
+ *
+ * @code{.c}
+ *  assert(CurrentCellularState == CELLULAR_STATE_POWERON); // In this snippet we assume modem is powered on.
+ *
+ *  Cellular_DataContextParameters_T ctxParam;
+ *  ctxParam.Type = CELLULAR_DATACONTEXTTYPE_INTERNAL;
+ *  ctxParam.ApnSettings.ApnName = APP_APN_NAME; // These settings depend on your network operator and SIM card
+ *  ctxParam.ApnSettings.AuthMethod = APP_APN_AUTHMETHOD;
+ *  ctxParam.ApnSettings.Username = APP_APN_USER;
+ *  ctxParam.ApnSettings.Password = APP_APN_PASSWORD;
+ *  Retcode_T rc = Cellular_ConfigureDataContext(0, &ctxParam); // cid=0 being the default-context in this case.
+ *  if (RETCODE_OK != rc)
+ *  {
+ *      LOG_FATAL("Error while configuring data-context: %x", rc);
+ *      return rc;
+ *  }
+ *
+ *  Cellular_NetworkParameters_T networkParams;
+ *  networkParams.AcT = CELLULAR_RAT_DEFAULT; // This obviously depends on your use-case.
+ *  networkParams.FallbackAcT = CELLULAR_RAT_DEFAULT;
+ *  Retcode_T rc = Cellular_RegisterOnNetwork(&networkParams);
+ *  if (RETCODE_OK != rc)
+ *  {
+ *      LOG_FATAL("Error during cellular registration initiation: %x", rc);
+ *      return rc;
+ *  }
+ * @endcode
+ *
+ * After that, the modem is instructed to automatically connect with an
+ * available network. This may take some seconds to minutes depending on signal
+ * strength and selected AcT. Because of that, this process happens
+ * asynchronously in the background and you'll receive a state-changed-callback
+ * once the modem was able to register to a network.
+ *
+ * If you were using LTE or NB-IoT as your AcT, the default-context will be
+ * implicitly activated and may now be used for TCP/IP communication. On older
+ * AcTs you will have to configure and activate the data-context after
+ * registration. It's safe to call #Cellular_ActivateDataContext() on an already
+ * active context (like the default-context in LTE/NB-IoT). The action will
+ * simply be ignored by the modem, but it allows us to implement the same
+ * control flow for newer AcTs as for older ones.
+ *
+ * @note Currently #CELLULAR_STATE_DATAACTIVE is only set when explicitly calling
+ * #Cellular_ActivateDataContext(), even if context was implicitly activated.
+ *
+ * @code
+ *  assert(CurrentCellularState == CELLULAR_STATE_REGISTERED); // In this snippet we assume modem is registered.
+ *  const Cellular_DataContext_T *dataContext;
+ *  Retcode_T rc = Cellular_ActivateDataContext(0, &DataContext);
+ *  if (RETCODE_OK != rc)
+ *  {
+ *      LOG_FATAL("Error while activating data-context: %x", rc);
+ *      return rc;
  *  }
  * @endcode
  *
