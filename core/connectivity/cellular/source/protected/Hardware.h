@@ -13,9 +13,13 @@
 ********************************************************************************/
 
 /**
- * @file 
+ * @ingroup KISO_CELLULAR_COMMON
+ *
+ * @defgroup HARDWARE Hardware
+ * @{
  *
  * @brief Adapter layer to manage BSP variant management and UART communication.
+ * @file
  */
 #ifndef HARDWARE_H_
 #define HARDWARE_H_
@@ -77,3 +81,5 @@ Retcode_T Hardware_GetCommunicationChannel(UART_T *uartHandle);
 Retcode_T Hardware_Deinitialize(void);
 
 #endif /* HARDWARE_H_ */
+
+/** @} */

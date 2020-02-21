@@ -13,9 +13,11 @@ RUN apt-get update && apt-get install -y \
     clang-tidy \
     cmake \
     cppcheck \
+    doxygen \
     g++ \
     gcc \
-    gcc-arm-non-eabi \
+    gcc-arm-none-eabi \
+    graphviz \
     hugo \
     lcov \
     libgtest-dev \

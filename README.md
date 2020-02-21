@@ -1,4 +1,4 @@
-# Kiso #
+# Kiso [![Build Status Badge](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fci.eclipse.org%2Fkiso%2Fjob%2Fkiso_github%2Fjob%2Fmaster%2F)](https://ci.eclipse.org/kiso/job/kiso_github/job/master/) [![License Badge](https://img.shields.io/github/license/eclipse/kiso)](https://www.eclipse.org/legal/epl-2.0/) #
 ![Kiso logo](./docs/doxygen/Kiso-logo.png)
 
 ## Table of Contents ##
@@ -43,8 +43,9 @@ Community support is provided via Mattermost, see [Kiso channel](https://matterm
 ## Resources ##
 Please note that (for now) some of the following links require additional accounts and/or are limited to Bosch infrastructure access. This is a temporary impediment until Kiso's infrastructure has been moved over to Eclipse Foundation.
 * User manual: [documentation](http://kiso.rempler.de:1313/)
-* Architecture: [architecture overview](http://kiso.rempler.de:1313/2.-concepts/overall_architecture/#overall-architecture)
-* Frequently asked questions: [FAQ](http://kiso.rempler.de:1313/6.-frequently-asked-questions/faq/)
+* Architecture: [architecture overview](http://kiso.rempler.de:1313/2.-concepts/overall_architecture.html)
+* Frequently asked questions: [FAQ](http://kiso.rempler.de:1313/5.-frequently-asked-questions/faq.html)
 * API documentation: [Doxygen documentation](http://kiso.rempler.de:8080/)
 * Release notes (inkl. features, supported reference HW and known issues): [release notes](https://github.com/eclipse/kiso/blob/master/RELEASE_NOTES.md)
-* Continuous integration (automated testing results): [Jenkins dashboard](https://rb-jmaas.de.bosch.com/software-campus/view/Kiso-Dashboard/)
+* Continuous integration (automated testing results): [Jenkins dashboard](https://ci.eclipse.org/kiso)
+* Eclipse Foundation project page: [Eclipse Kiso](https://projects.eclipse.org/projects/iot.kiso)
