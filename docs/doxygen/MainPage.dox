@@ -33,7 +33,7 @@
  * * **core** contains the different Kiso components. The following modules are today existing:
  *     * **essentials** contains the hardware abstraction from the board and MCU. It also contains "essentials" modules such as error-handling. See \ref KISO_ESSENTIALS
  *     * **utils** contains RTOS abstractions modules, but also logging, circular-buffers, etc... See \ref UTILS
- *     * **connectivity/cellular** contains the driver that allows us to communicate with u-blox SARA via CAT-M1 or NB-IoT. See \ref CELLULAR
+ *     * **connectivity/cellular** contains the driver that allows us to communicate with u-blox SARA via CAT-M1 or NB-IoT. See \ref KISO_CELLULAR
  * * **ci** contains the continuous-integration elements such as docker-files and integration-test settings.
  * * **cmake** contains *.cmake scripts, reffered by the main CMakeLists.txt file during building.
  * * **config** contains configuration headers for the Kiso modules and thirdparty libraries.
@@ -50,9 +50,9 @@
  * * `thirdparty` libraries need to be build with the specific configurations of Kiso.
  * * The BSP library needs to be build with the specific configuration of Kiso.
  * * All the `core` libraries need to be build with the configuration of Kiso.
- * * The Application needs dependencies to all the previous build libraries to be buildable. 
+ * * The Application needs dependencies to all the previous build libraries to be buildable.
  *
- * 
+ *
  @}
 */
 

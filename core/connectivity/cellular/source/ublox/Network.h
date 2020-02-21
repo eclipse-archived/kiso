@@ -13,7 +13,7 @@
 ********************************************************************************/
 
 /**
- *
+ * @ingroup KISO_CELLULAR_VARIANT_UBLOX
  * @file
  *
  * @brief Provides functionality for the modem interaction with the network
@@ -21,10 +21,9 @@
  * @details Provides functionality for the modem interaction with the network by providing functions that register, configure, queries,
  * deregister the modem form the network and so on
  *
- * @see
- * Refs:
- * * Ref 2: u-blox-ATCommands_Manual_(UBX-13002752).pdf
- **/
+ * Reference:
+ *  - Ref 2: u-blox-ATCommands_Manual_(UBX-13002752).pdf
+ */
 
 #ifndef UBLOX_NETWORK_H
 #define UBLOX_NETWORK_H

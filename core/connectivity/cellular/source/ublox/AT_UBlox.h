@@ -13,14 +13,11 @@
 ********************************************************************************/
 
 /**
- * @ingroup KISO_CELLULAR
- *
- * @defgroup AT_UBLOX u-blox AT Commands
- * @{
+ * @ingroup KISO_CELLULAR_VARIANT_UBLOX
+ * @file
  * @brief AT commands specific to u-blox. Refer to u-blox datasheet for more
  * details.
  *
- * @file
  */
 #ifndef AT_UBLOX_H_
 #define AT_UBLOX_H_
@@ -1077,5 +1074,3 @@ Retcode_T At_HandleUrc_UUSOCL(void);
 Retcode_T At_HandleUrc_UUHTTPCR(void);
 
 #endif /* AT_UBLOX_H_ */
-
-/** @} */

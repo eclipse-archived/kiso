@@ -13,15 +13,18 @@
 ********************************************************************************/
 
 /**
- * @file
- *
+ * @ingroup KISO_CELLULAR_COMMON
+ * @defgroup ATUTILS Utils
+ * @{
  * @brief Defines utility functions shared within the driver
  *
  * @details Enables such functionality as:
  * converting string to long,
  * converting hex to binary and vice versa,
  * trim fluke characters,
- * handling of normal and AT response codes,
+ * handling of normal and AT response codes.
+ *
+ * @file
  */
 
 #ifndef ATUTILS_H_
@@ -125,3 +128,5 @@ Retcode_T Utils_WaitForAndHandleResponseCode(uint32_t timeout, Retcode_T retcode
 const uint8_t *Utils_TrimFlukeCharacters(const uint8_t *buffer, uint32_t bufferLength, uint32_t *newBufferLength);
 
 #endif /* ATUTILS_H_ */
+
+/** @} */

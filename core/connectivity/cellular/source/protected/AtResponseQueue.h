@@ -13,7 +13,9 @@
 ********************************************************************************/
 
 /**
- * @file
+ * @ingroup KISO_CELLULAR_COMMON
+ * @defgroup ATRESPONSEQUEUE AT Response Queue
+ * @{
  *
  * @brief Defines the interface for the AT response queue.
  *
@@ -51,6 +53,8 @@
  * DidWait = AtResponseQueue_WaitForNamedResponse(DEFAULT_TIMEOUT, AT_RESPONSE_CODE_OK);
  * if(DidWait != RETCODE_OK) FAIL;
  * @endcode
+ *
+ * @file
  */
 
 #ifndef AT_RESPONSE_QUEUE_H_
@@ -454,3 +458,5 @@ uint32_t AtResponseQueue_GetEventMask(void);
 void AtResponseQueue_Clear(void);
 
 #endif /* AT_RESPONSE_QUEUE_H_ */
+
+/** @} */
