@@ -1,6 +1,13 @@
 # Kiso #
 ![Kiso logo](./docs/doxygen/Kiso-logo.png)
 
+## Table of Contents ##
+* [Introduction](#introduction)
+* [Scope](#scope)
+* [Quick Start](#quick-start)
+* [Support](#support)
+* [Resources](#resources)
+
 ## Introduction ##
 The Bosch Connected Devices Development Kit (CDDK) has been originally used to develop several industrial and end-user products. Its historical SW roots go back to 2013 where it has been designed from scratch as a software development kit (SDK) for internet of things (IoT) devices. CDDK's core components faciliate a real time operating system approach to target small footprints and low power consumption. It is not limited to a single OS and offers a broad HW support (boards and sensors).
 
@@ -27,7 +34,7 @@ This story is in review and will be published soon<sup>TM</sup>.
 ### Meet Aditya, the MEMS engineer ###
 This story is in review and will be published soon<sup>TM</sup>.
 
-## Quick start ##
+## Quick Start ##
 Please take a look at the [quick start](http://kiso.rempler.de:1313/3.-user-guide/quick_start/) section in the user manual documentation.
 
 ## Support ##
