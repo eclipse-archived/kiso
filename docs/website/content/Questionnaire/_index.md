@@ -7,7 +7,7 @@ chapter: true
 
 ### Chapter 5
 
-# Questionnairs
+# Questionnaires
 
  These anonymous questionnaires give us the chance collect informations helping the contributors community to improve the user experience ..
 
