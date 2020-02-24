@@ -6,6 +6,9 @@ The Bosch Connected Devices Development Kit (CDDK) has been originally used to d
 
 Kiso (Japanese for "basis") is an Eclipse Foundation project that is using the original code base of CDDK. Kiso is transferring the Bosch proprietary licence code piece-by-piece to EPLv2 open source. Kiso's quality goals - understandability, usability, product quality, extensibility and performance - are the key factors that enable a fast prototype and product development. By this, it reduces the time to market together with minimizing technical debts for almost all kinds of IoT "Things".
 
+## Scope ##
+To learn what Kiso is and how it can help you, please have a look at our [scope](http://kiso.rempler.de:1313/1.-project-overview/scope.html) page.
+
 ## Quick start ##
 Please take a look at the [quick start](http://kiso.rempler.de:1313/3.-user-guide/quick_start.html) section in the user manual documentation.
 

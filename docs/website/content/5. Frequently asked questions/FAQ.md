@@ -3,8 +3,11 @@ title: "FAQ"
 weight: 1
 ---
 
-# Frequently Asked Questions
+## Frequently Asked Questions
 
+**Who is Kiso for?**
+
+We have a page on that. Please have a look at [Kiso's Scope]({{< ref "../1. Project overview/scope.md" >}}).
 
 **Why is the Bosch Cross Domain Development Kit (XDK aka. XDK110) not a Kiso reference HW?**
 
@@ -16,6 +19,6 @@ Anyway, we're continuously working on extending the Kiso reference HW basis. Thu
 
 ------
 We're still collecting more frequently asked questions.
-Please feel free to contact us via Mattermost and update us about your questions. (see  [Kiso Channel]({{< ref "communication.md" >}})). 
+Please feel free to contact us via Mattermost and update us about your questions. (see  [Kiso Channel]({{< ref "communication.md" >}})).
 
 **NOTE:**   An eclipse foundation Mattermost account is needed.
