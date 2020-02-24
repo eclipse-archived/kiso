@@ -13,8 +13,8 @@
 ********************************************************************************/
 
 /**
- * @ingroup KISO_CELLULAR
- * @defgroup AT3GPP27007 AT 3GPP TS 27.007 Commands
+ * @ingroup KISO_CELLULAR_COMMON
+ * @defgroup AT3GPP27007 3GPP TS 27.007 AT Commands
  * @{
  * @brief AT commands as specified by 3GPP TS 27.007 V15.4.0 (2018-12).
  * @file
