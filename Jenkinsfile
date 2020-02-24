@@ -7,7 +7,7 @@ pipeline
             containerTemplate
             {
                 name 'kiso-build-env'
-                image 'eclipse/kiso-build-env:v0.0.1'
+                image 'eclipse/kiso-build-env:latest'
                 ttyEnabled true
                 resourceRequestCpu '2'
                 resourceLimitCpu '2'
@@ -21,9 +21,9 @@ pipeline
     {
         stage('Build Software')
         {
-            steps // Define the steps of a stage
+            steps
             {
-                script // Run build
+                script
                 {
                     echo "Build the application"
                     sh 'cmake . -Bbuilddir-debug -G"Ninja"'
@@ -41,7 +41,7 @@ pipeline
                     {
                         script
                         {
-                            echo "enforce formatting rules"
+                            echo "Enforce formatting rules"
                             sh 'cmake . -Bbuilddir-formatting -G"Ninja" -DENABLE_FORMAT_CHECKS=1 -DSKIP_FORMAT_REPORTS=0'
                             script {
                                 def reports = sh(script: "find builddir-formatting/ -name *_format.xml | tr '\n' ' '",  returnStdout: true)
@@ -56,7 +56,7 @@ pipeline
                     {
                         script
                         {
-                            echo "run static analysis"
+                            echo "Run static analysis"
                             sh 'cmake . -Bbuilddir-static -G"Unix Makefiles" -DPROJECT_CONFIG_PATH=ci/testing_config -DENABLE_STATIC_CHECKS=1 -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON'
                             sh 'cmake --build builddir-static 2> builddir-static/clang-report.txt'
                             sh 'if [ ! -s builddir-static/clang-report.txt ]; then echo "Good, all tests have been passed w/o findings" > builddir-static/clang-report.txt; fi;'
@@ -70,7 +70,7 @@ pipeline
                     {
                         script
                         {
-                            echo "run unit-tests"
+                            echo "Run unit-tests"
                             sh 'cmake . -Bbuilddir-unittests -G"Ninja" -DENABLE_TESTING=1 -DPROJECT_CONFIG_PATH=ci/testing_config -DKISO_STATIC_CONFIG=1'
                             sh 'cmake --build builddir-unittests'
                             sh 'cd builddir-unittests && ctest -T test -V --no-compress-output' // Produce test results xml
@@ -84,7 +84,7 @@ pipeline
                     {
                         script
                         {
-                            echo "run integration-tests placeholder"
+                            echo "Run integration-tests placeholder"
                         }
                     }
                 }
@@ -94,7 +94,7 @@ pipeline
                     {
                         script
                         {
-                            echo "Generate Doxygen"
+                            echo "Generate doxygen documentation"
                             sh 'cmake --build builddir-debug --target docs'
                         }
                     }
@@ -105,7 +105,7 @@ pipeline
                     {
                         script
                         {
-                            echo "Generate Hugo Website"
+                            echo "Generate Hugo website"
                             sh 'hugo -s docs/website'
                         }
                     }
@@ -114,7 +114,7 @@ pipeline
         } // stage('Run DoD')
     } // stages
 
-    post // Called at very end of the script to notify developer and github about the result of the build
+    post
     {
         always
         {
