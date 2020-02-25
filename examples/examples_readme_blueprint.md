@@ -1,8 +1,8 @@
 
 # Example Project: <Title>
 
-##Disclaimer
-1. *The sample contents under various sections in this blueprint might seem to be utter non-sense. I apologize fro that. The aim was to make it crystal clear what these sections could contain as contents.*
+## Disclaimer
+1. *The sample contents under various sections in this blueprint might seem to be utter non-sense and should be ignored. The aim was to make it crystal clear what these sections could contain as contents.*
 
 2. *Add/remove sections which you believe are missing/redundant as per the concerned example.*
 
@@ -15,7 +15,7 @@ e.g.(for c-leds) This examples demonstrates the usage of BSP API/functions to op
 
 ## Brief:
 A paragraph that sheds more light on the goal already stated.
-e.g.() In this example, we use the KISO abstractions at the BSP layer(<link to location in user manual where BSP layer is explained>) to seamlessly switch on/off the leds. This demonstrates how a developer can access board-resources in a hardware-agnostic fashion.
+e.g.() In this example, we use the Kiso abstractions at the BSP layer(<link to location in user manual where BSP layer is explained>) to seamlessly switch on/off the leds. This demonstrates how a developer can access board-resources in a hardware-agnostic fashion.
 
 ### Components Required:
 List the components that have been used in this example preferably with pics for HW components.
@@ -36,9 +36,9 @@ For certain examples, perceived to be complex, a figurative projection of the ex
 *This section is optional as for very basic examples this might be a bit too much effort.*
 
 ## (*Optional*)Code Walkthrough
-This section is inspired by this [project] (https://github.com/eclipse/iceoryx/tree/master/iceoryx_examples/icedelivery). It describes some peculiarities in the code structure of the application like includes, datatypes(structs and what not), some key processing steps, some important condition checks etc.
+This section is inspired by this [project](https://github.com/eclipse/iceoryx/tree/master/iceoryx_examples/icedelivery). It describes some peculiarities in the code structure of the application like includes, datatypes(structs and what not), some key processing steps, some important condition checks etc.
 
-*Experienced developers on KISO are requested to evaluate what they want to emphasize here from the implementation.* 
+*Experienced developers of KISO are requested to evaluate what they want to emphasize here from the implementation.* 
 
 ## Expected Output
 
