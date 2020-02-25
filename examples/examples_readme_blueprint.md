@@ -38,7 +38,7 @@ For certain examples, perceived to be complex, a figurative projection of the ex
 ## (*Optional*)Code Walkthrough
 This section is inspired by this [project](https://github.com/eclipse/iceoryx/tree/master/iceoryx_examples/icedelivery). It describes some peculiarities in the code structure of the application like includes, datatypes(structs and what not), some key processing steps, some important condition checks etc.
 
-*Experienced developers of KISO are requested to evaluate what they want to emphasize here from the implementation.* 
+*Experienced developers of Kiso are requested to evaluate what they want to emphasize here from the implementation.* 
 
 ## Expected Output
 
