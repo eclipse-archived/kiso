@@ -19,24 +19,24 @@ The following directory tree shows the current status of the examples folder on 
 ### Common Gateway
 
 #### Cellular
-<Link>
+[ReadMe](./CommonGateway/c-cellular/readme.md)
 
 #### c-leds
-<Link>
+[ReadMe](./CommonGateway/c-leds/readme.md)
 
 #### c-sensors
-<Link>
+[ReadMe](./CommonGateway/c-sensors/readme.md)
 
 #### tests
-<Link>
+[ReadMe](./CommonGateway/tests/readme.md)
 
 ### NucleoF767
 
 #### c-leds
-<Link>
+[ReadMe](./NucleoF767/c-leds/readme.md)
 
 ### XDK110
 
 #### c-leds
-<Link>
+[ReadMe](./XDK110/c-leds/readme.md)
 
