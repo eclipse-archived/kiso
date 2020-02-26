@@ -14,7 +14,7 @@
 
 /**
  * @ingroup KISO_CELLULAR
- * @defgroup CELLULARHTTPSERVICE HTTP Service
+ * @defgroup KISO_CELLULAR_HTTP HTTP
  * @{
  * @brief Cellular Hyper Text Transfer Service API.
  *
