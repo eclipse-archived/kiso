@@ -10,7 +10,7 @@ Example projects are provided out of the box with Kiso so as to enable developer
 2. Under these development board named directories, various examples will be made available in respectively named directories.
 3. Each such example directory shall have an example read me which would entail various details as per the example readme [template](./examples_readme_blueprint.md) provided.
 
-The following directory tree shows the current status of the examples folder on 25.02.2020 at 09:10 CET. Similar structure will be mainatained if further examples are added.
+The following directory tree shows the current status of the examples folder on 25.02.2020 at 09:10 CET. Similar structure will be mainatained if and when further examples are added.
 
 
 ```tree
