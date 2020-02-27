@@ -34,11 +34,9 @@ examples
 │       ├───config
 │       │   └───utils
 │       └───source
-├───ReadmeImages
 └───XDK110
     └───c-leds
 ```
-
 
 ## Example Readme Links
 
