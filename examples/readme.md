@@ -12,7 +12,33 @@ Example projects are provided out of the box with Kiso so as to enable developer
 
 The following directory tree shows the current status of the examples folder on 25.02.2020 at 09:10 CET. Similar structure will be mainatained if further examples are added.
 
-![examples directory structure](./ReadmeImages/DirStructure.JPG)
+
+```tree
+examples
+├───CommonGateway
+│   ├───c-cellular
+│   │   ├───config
+│   │   │   └───core
+│   │   │       └───utils
+│   │   └───source
+│   ├───c-leds
+│   │   └───source
+│   ├───c-sensors
+│   │   ├───config
+│   │   │   └───core
+│   │   │       └───utils
+│   │   └───source
+│   └───tests
+├───NucleoF767
+│   └───c-leds
+│       ├───config
+│       │   └───utils
+│       └───source
+├───ReadmeImages
+└───XDK110
+    └───c-leds
+```
+
 
 ## Example Readme Links
 
