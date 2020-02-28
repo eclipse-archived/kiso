@@ -8,7 +8,7 @@ chapter: true
 
 **Who is Kiso for?**
 
-We have a page on that. Please have a look at [Kiso's Scope]({{< ref "../1. Project overview/scope.md" >}}).
+We have a page on that. Please have a look at [Kiso's Scope]({{< ref "../Project overview/scope.md" >}}).
 
 **Why is the Bosch Cross Domain Development Kit (XDK aka. XDK110) not a Kiso reference HW?**
 

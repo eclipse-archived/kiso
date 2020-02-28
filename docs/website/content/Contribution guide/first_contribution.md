@@ -7,7 +7,8 @@ weight: 2
 
 ### Prerequisite
 
-Please, before you start writing code, have a look at the personas described in [Kiso's Scope]({{< ref "../1. Project overview/scope.md" >}}).
+Please, before you start writing code, have a look at the personas described in [Kiso's Scope]({{< ref "../Project overview/scope.md" >}}).
+
 They describe who Kiso is targeted for, and should taken into account in your Design & Development process.
 
 Make sure you have done the things in [‘What should I do before I get started?’](../prerequisite). Without accounts, you cannot have access rights to do certain operations. And ECA and DCO are important from a legal point of view, for both contributors and the project. Therefore you need to get them ready before going forward.
