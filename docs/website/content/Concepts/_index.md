@@ -1,11 +1,8 @@
 ---
 title: Concept
-weight: 2
-pre: "<b>2. </b>"
+weight: 20
 chapter: true
 ---
-
-### Chapter 2
 
 # Concept
 {{% children  %}}

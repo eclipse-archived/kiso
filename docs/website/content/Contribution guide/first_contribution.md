@@ -26,4 +26,4 @@ For an easy jump start of setting up environment and tools, you can find enough 
 
 ### Find a good topic to work on
 
-For sure, you want to start with something you have interests in (eg. writing a BSP for a new board). Please take a look at our [roadmap]({{< ref "roadmap.md" >}}) to see if your topic already exists in it. If not, please contact and talk to us, we will support you in defining and documenting what you would like to do.
+For sure, you want to start with something you have interests in (eg. writing a BSP for a new board).Please contact and talk to us, we will support you in defining and documenting what you would like to do.

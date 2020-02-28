@@ -1,11 +1,8 @@
 ---
 title: User guide
-weight: 3
-pre: "<b>3. </b>"
+weight: 30
 chapter: true
 ---
-
-### Chapter 3
 
 # User guide
 {{% children  %}}
