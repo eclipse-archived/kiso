@@ -1,13 +1,14 @@
 ---
-title: "FAQ"
-weight: 1
+title: Frequently asked questions
+weight: 50
+chapter: true
 ---
 
 ## Frequently Asked Questions
 
 **Who is Kiso for?**
 
-We have a page on that. Please have a look at [Kiso's Scope]({{< ref "../1. Project overview/scope.md" >}}).
+We have a page on that. Please have a look at [Kiso's Scope]({{< ref "../Project overview/scope.md" >}}).
 
 **Why is the Bosch Cross Domain Development Kit (XDK aka. XDK110) not a Kiso reference HW?**
 
