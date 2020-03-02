@@ -13,13 +13,17 @@
 ********************************************************************************/
 
 /**
- * @file
+ * @ingroup KISO_CELLULAR
+ * @defgroup KISO_CELLULAR_DNS DNS
+ * @{
  * @brief Cellular Domain Name Lookup Service API.
  *
  * @details If the Cellular modem offers an internal DNS-lookup mechanism, this
  * data service will map a unified interface to this stack. In case the selected
  * Cellular variant does not provide an DNS-lookup capabilities, this API may
  * return a #Retcode_T indicating #RETCODE_NOT_SUPPORTED.
+ *
+ * @file
  */
 #ifndef KISO_CELLULARDNSSERVICE_H_
 #define KISO_CELLULARDNSSERVICE_H_
@@ -50,3 +54,5 @@ Retcode_T CellularDns_ResolveDomain(
     Cellular_IpAddress_T *result);
 
 #endif /* KISO_CELLULARDNSSERVICE_H_ */
+
+/** @} */

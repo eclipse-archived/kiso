@@ -13,9 +13,9 @@
 ********************************************************************************/
 
 /**
- *
- * @file
- *
+ * @ingroup KISO_CELLULAR_COMMON
+ * @defgroup ATRESPONSEPARSER AT Response Parser
+ * @{
  * @brief Defines the interface for the AT Response Parser.
  *
  * @details This parser consumes the following grammar:
@@ -32,6 +32,7 @@
  * * cmd := '+' CMD_NAME ((':' WS* arg*) | '\n') ;
  * * arg := '\"'? ARG_VALUE '\"'? ARG_EOL ;
  *
+ * @file
  */
 
 #ifndef AT_RESPONSE_PARSER_H_
@@ -218,3 +219,5 @@ void AtResponseParser_Reset(void);
 Retcode_T AtResponseParser_Parse(const uint8_t *buffer, uint32_t len);
 
 #endif /* AT_RESPONSE_PARSER_H_ */
+
+/** @} */

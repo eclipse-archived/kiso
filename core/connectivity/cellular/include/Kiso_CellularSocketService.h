@@ -13,7 +13,9 @@
 ********************************************************************************/
 
 /**
- * @file
+ * @ingroup KISO_CELLULAR
+ * @defgroup KISO_CELLULAR_SOCKETS Sockets
+ * @{
  * @brief Cellular Socket Data Service API.
  *
  * @details If the Cellular modem offers an internal TCP/IP stack, this data
@@ -31,7 +33,7 @@
  * how (packet-)data is routed through the cellular network and what quality of
  * service (QoS) is associated with it. One could imagine having two or more
  * data-contexts, one with high QoS for VoIP and a second - lower QoS - context
- * for SMS or TCIP/IP communication.
+ * for SMS or TCP/IP communication.
  *
  * As some modems implement their own TCP/IP-stack on the modem two types of
  * data-context are to be known: INTERNAL and EXTERNAL. A INTERNAL data-context
@@ -74,6 +76,8 @@
  * must use the APN of the default-EPS-bearer. It appears though that a user may
  * create additional EXTERNAL data-contexts (with differing APNs) if he can
  * provide his own TCP/IP-stack.
+ *
+ * @file
  */
 #ifndef KISO_CELLULARSOCKETSERVICE_H_
 #define KISO_CELLULARSOCKETSERVICE_H_
@@ -250,6 +254,10 @@ Retcode_T CellularSocket_Connect(
  * @param[in] localPort
  * Local port to listen on for incoming connections.
  *
+ * @param[in] onConnectionAccept
+ * Callback to be called once incoming connection is established. The connection
+ * is automatically accepted before invocation of the callback.
+ *
  * @return A #Retcode_T indicating the result of the procedure.
  */
 Retcode_T CellularSocket_Listen(
@@ -344,7 +352,7 @@ Retcode_T CellularSocket_Receive(
     CellularSocket_Handle_T socket,
     uint8_t *buffer,
     uint32_t bufferLength,
-    uint32_t *bytedReceived);
+    uint32_t *bytesReceived);
 
 /**
  * @brief Receive incoming data on the given UDP socket.
@@ -387,7 +395,7 @@ Retcode_T CellularSocket_ReceiveFrom(
     CellularSocket_Handle_T socket,
     uint8_t *buffer,
     uint32_t bufferLength,
-    uint32_t *bytedReceived,
+    uint32_t *bytesReceived,
     Cellular_IpAddress_T *remoteIp,
     uint16_t *remotePort);
 
@@ -420,3 +428,5 @@ Retcode_T CellularSocket_Close(
     CellularSocket_Handle_T socket);
 
 #endif /* KISO_CELLULARSOCKETSERVICE_H_ */
+
+/** @} */

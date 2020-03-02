@@ -13,7 +13,9 @@
 ********************************************************************************/
 
 /**
- * @file 
+ * @ingroup KISO_CELLULAR_COMMON
+ * @defgroup ATURC URC
+ * @{
  *
  * @brief Defines prototypes for various URC handling routines.
  *
@@ -22,6 +24,8 @@
  * modules generally include a reference to the Engine (which implements URC
  * handling), we have to prevent a circular dependency - thus we can't simply
  * include the headers of the other modules in Engine.
+ *
+ * @file
  */
 
 #ifndef ATURC_H_
@@ -45,3 +49,5 @@ typedef Retcode_T (*CellularUrcHandler_T)(void);
 Retcode_T Urc_HandleResponses(void);
 
 #endif /* ATURC_H_ */
+
+/** @} */

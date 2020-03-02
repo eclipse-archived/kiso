@@ -13,15 +13,18 @@
 ********************************************************************************/
 
 /**
- * @file
- *
+ * @ingroup KISO_CELLULAR_COMMON
+ * @defgroup ATUTILS Utils
+ * @{
  * @brief Defines utility functions shared within the driver
  *
  * @details Enables such functionality as:
  * converting string to long,
  * converting hex to binary and vice versa,
  * trim fluke characters,
- * handling of normal and AT response codes,
+ * handling of normal and AT response codes.
+ *
+ * @file
  */
 
 #ifndef ATUTILS_H_
@@ -60,7 +63,7 @@ Retcode_T Utils_ConvertCellularResponseCodeToCellularRetcode(AtResponseCode_T re
  * @brief Parses a string to a signed long number
  *
  * @param[in] buffer        The buffer holding the string to parser
- * @param[in] BufferLength  The length of the buffer
+ * @param[in] bufferLength  The length of the buffer
  * @param[out] number       The parsed number
  *
  * @retval RETCODE_OK               The number was parsed correctly
@@ -76,8 +79,10 @@ Retcode_T Utils_Strtol(const uint8_t *buffer, uint32_t bufferLength, int32_t *nu
  *        is returned.
  *
  * @param[in] buffer        The buffer holding the string to parser
- * @param[in] BufferLength  The length of the buffer
+ * @param[in] bufferLength  The length of the buffer
  * @param[out] number       The parsed number
+ * @param[in] lowerBound    Minimum allowed value
+ * @param[in] upperBound    Maximum allowed value
  *
  * @retval RETCODE_OK               The number was parsed correctly
  * @retval RETCODE_FAILURE          The string did not represent a number
@@ -111,12 +116,17 @@ Retcode_T Utils_WaitForAndHandleResponseCode(uint32_t timeout, Retcode_T retcode
  *        less than 0x20 and greater than 0x7E, except 0x0A and 0x0D (CR, LF).
  *        This function does not modify the buffer content.
  *
- * @param[in] buffer The buffer to trim the chars from
- * @param[in] BufferLength The original length of the buffer
- * @param[out] NewBufferLength The length of the result buffer
+ * @param[in] buffer
+ * The buffer to trim the chars from
+ * @param[in] bufferLength
+ * The original length of the buffer
+ * @param[out] newBufferLength
+ * The length of the result buffer
  *
  * @return The start of the "fluke free" buffer
  */
 const uint8_t *Utils_TrimFlukeCharacters(const uint8_t *buffer, uint32_t bufferLength, uint32_t *newBufferLength);
 
 #endif /* ATUTILS_H_ */
+
+/** @} */

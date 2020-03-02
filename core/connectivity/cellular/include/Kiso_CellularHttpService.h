@@ -12,6 +12,14 @@
 *
 ********************************************************************************/
 
+/**
+ * @ingroup KISO_CELLULAR
+ * @defgroup KISO_CELLULAR_HTTP HTTP
+ * @{
+ * @brief Cellular Hyper Text Transfer Service API.
+ *
+ * @file
+ */
 #ifndef KISO_CELLULARHTTPSERVICE_H_
 #define KISO_CELLULARHTTPSERVICE_H_
 
@@ -97,7 +105,7 @@ Retcode_T CellularHttp_Initialize(CellularHttp_ResultCallback_T callback);
 /**
  * @brief Send Http a request
  *
- * @param[in] parameters for the send request
+ * @param[in] httpRequest Parameters for the send request
   *
  * @return A #Retcode_T indicating the result of the procedure.
  */
@@ -122,3 +130,5 @@ Retcode_T CellularHttp_GetResponse(CellularHttp_Data_T *httpResponse);
 Retcode_T CellularHttp_GetResponseSize(uint32_t *size);
 
 #endif /* KISO_CELLULARHTTPSERVICE_H__ */
+
+/** @} */

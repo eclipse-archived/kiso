@@ -13,7 +13,7 @@
 ********************************************************************************/
 
 /**
- *
+ * @ingroup KISO_CELLULAR_VARIANT_UBLOX
  * @file
  *
  * @brief Provides functionality for the modem interaction with the network
@@ -21,10 +21,9 @@
  * @details Provides functionality for the modem interaction with the network by providing functions that register, configure, queries,
  * deregister the modem form the network and so on
  *
- * @see
- * Refs:
- * * Ref 2: u-blox-ATCommands_Manual_(UBX-13002752).pdf
- **/
+ * Reference:
+ *  - Ref 2: u-blox-ATCommands_Manual_(UBX-13002752).pdf
+ */
 
 #ifndef UBLOX_NETWORK_H
 #define UBLOX_NETWORK_H
@@ -46,7 +45,7 @@
 /**
  * @brief Enumeration for selected radio access technology (ref1: SelectedAcT)
  *
- * @details  <SelectedAcT> Number Indicates the radio access technology and may be:
+ * @details  `<SelectedAcT>` Number Indicates the radio access technology and may be:
  *  * 0: GSM (single mode)
  *  * 1: (factory-programmed value): GSM / UMTS (dual mode)
  *  * 2: UMTS (single mode)
@@ -71,7 +70,7 @@ typedef enum CellularNetwork_SelectedRadioAccessTechnology_E CellularNetwork_Sel
 
 /**
  * @brief Enumeration for preferred radio access technology (Ref 1: PreferredAct)
- * @details  <PreferredAct> Number Indicates the preferred access technology; it is ignored if dual mode or tri mode are not selected.
+ * @details  `<PreferredAct>` Number Indicates the preferred access technology; it is ignored if dual mode or tri mode are not selected.
  *  * 0: GSM
  *  * 2 (default value and factory-programmed value): UTRAN
  *  * 3: LTE
@@ -107,7 +106,7 @@ typedef struct CellularNetwork_RadioAccessTechnology_S CellularNetwork_RadioAcce
 
 /**
  * @brief Enumeration for current GPRS registration status of the MT
- * @details <status> Number Current GPRS registration status and PLMN selection mode of the MT
+ * @details `<status>` Number Current GPRS registration status and PLMN selection mode of the MT
  * * 0: attached, automatic PLMN selection mode
  * * 1: attached, manual PLMN selection mode
  * * 2: detached
@@ -125,7 +124,7 @@ typedef enum CellularNetwork_PsStatus_E CellularNetwork_PsStatus_T;
 
 /**
  * @brief Enumeration for radio access technology
- * @details <AcT> Number Indicates the radio access technology
+ * @details `<AcT>` Number Indicates the radio access technology
  * * 0: GSM
  * * 1: GSM COMPACT
  * * 2: UTRAN (UMTS)
@@ -155,10 +154,10 @@ typedef enum CellularNetwork_Rat_E CellularNetwork_Rat_T;
 
 /**
  * @brief Enumeration for network operator name format
- * @details <format> Number Mandatory parameter if <mode> value is 1, it specifies the format of the network operator name
- * * 0 (default value): long alphanumeric <oper>
- * * 1: short format alphanumeric <oper>
- * * 2: numeric <oper>
+ * @details `<format>` Number Mandatory parameter if `<mode>` value is 1, it specifies the format of the network operator name
+ * * 0 (default value): long alphanumeric `<oper>`
+ * * 1: short format alphanumeric `<oper>`
+ * * 2: numeric `<oper>`
  *
  * @see  Ref 2, p 92, 7.9 PS operator selection +UCGOPS
  */
@@ -173,12 +172,12 @@ typedef enum CellularNetwork_FormatOperatorName_E CellularNetwork_FormatOperator
 
 /**
  * @brief Enumeration for current network operator mode
- * @details <mode> Number Is used to chose whether the network selection is automatically done by the MT or is forced by
- * this command to the operator <oper> given in the format <format>:
- *  * 0 (default value and factory-programmed value): automatic (<oper> field is ignored)
+ * @details `<mode>` Number Is used to chose whether the network selection is automatically done by the MT or is forced by
+ * this command to the operator `<oper>` given in the format `<format>`:
+ *  * 0 (default value and factory-programmed value): automatic (`<oper>` field is ignored)
  *  * 1: manual
  *  * 2: deregister from network
- *  * 3: set only <format>
+ *  * 3: set only `<format>`
  *  * 4: manual/automatic
  *  * 5: extended network search
  *  * 6: extended network search without the tags (e.g. MCC, RxLev will not be printed, see the syntax and the command example)
@@ -203,7 +202,7 @@ typedef enum CellularNetwork_SelectionMode_E CellularNetwork_SelectionMode_T;
 
 /**
  * @brief struct used for operator selection
- * @details +COPS: <mode>[,<format>,<oper>[,<AcT>]]
+ * @details `+COPS: <mode>[,<format>,<oper>[,<AcT>]]`
  *
  * @see Ref 2, p83, ch 7.4 Operator selection +COPS
  */
@@ -222,10 +221,10 @@ typedef struct CellularNetwork_CurrentOperator_S CellularNetwork_CurrentOperator
 
 /**
  * @brief Enumeration for network registration status param 1
- * @details <n> Number
+ * @details `<n>` Number
  *  * 0 (default value and factory-programmed value): network registration URC disabled
- *  * 1: network registration URC +CREG: <stat> enabled
- *  * 2: network registration and location information URC +CREG: <stat>[,<lac>,<ci>[,<AcTStatus>]] enabled
+ *  * 1: network registration URC `+CREG: <stat>` enabled
+ *  * 2: network registration and location information URC `+CREG: <stat>[,<lac>,<ci>[,<AcTStatus>]]` enabled
  *
  * @see  Ref 2, p 94, 7.10 Network registration status +CREG
  */
@@ -240,17 +239,17 @@ typedef enum CellularNetwork_RegistrationInfo_E CellularNetwork_RegistrationInfo
 
 /**
  * @brief Enumeration for network registration status param 1
- * @details <stat> Number
+ * @details `<stat>` Number
  * * 0: not registered, the MT is not currently searching a new operator to register to
  * * 1: registered, home network
  * * 2: not registered, but the MT is currently searching a new operator to register to
  * * 3: registration denied
  * * 4: unknown (e.g. out of GERAN/UTRAN/E-UTRAN coverage)
  * * 5: registered, roaming
- * * 6: registered for "SMS only", home network (applicable only when <AcTStatus> indicates E-UTRAN)
- * * 7: registered for "SMS only", roaming (applicable only when <AcTStatus> indicates E-UTRAN)
- * * 9: registered for "CSFB not preferred", home network (applicable only when <AcTStatus> indicates E-UTRAN)
- * * 10: registered for "CSFB not preferred", roaming (applicable only when <AcTStatus> indicates E-UTRAN)
+ * * 6: registered for "SMS only", home network (applicable only when `<AcTStatus>` indicates E-UTRAN)
+ * * 7: registered for "SMS only", roaming (applicable only when `<AcTStatus>` indicates E-UTRAN)
+ * * 9: registered for "CSFB not preferred", home network (applicable only when `<AcTStatus>` indicates E-UTRAN)
+ * * 10: registered for "CSFB not preferred", roaming (applicable only when `<AcTStatus>` indicates E-UTRAN)
  *
  * @see  Ref 2, p 94, 7.10 Network registration status +CREG
  */
@@ -293,7 +292,7 @@ typedef struct CellularNetwork_RegistrationStatus_S CellularNetwork_Registration
 
 /**
  * @brief Enumeration of network cell environment description mode
- * @details <mode> Number
+ * @details `<mode>` Number
  * * 0 (default value): one shot dump
  * * 1: periodic refreshed dump; the information for up to 32 neighbour cells is available
  * * 2: stop periodic dump
@@ -407,10 +406,10 @@ typedef enum CellularNetwork_Rssi_E CellularNetwork_Rssi_T;
 
 /**
  * @brief Enumeration for network qual
- * @note Lisa-U200: The <qual> parameter is not updated in GPRS and EGPRS packet transfer mode.
+ * @note Lisa-U200: The `<qual>` parameter is not updated in GPRS and EGPRS packet transfer mode.
  *
  * @details
- * <qual>   |    2G RAT CS and GPRS     |   2G RAT EGPRS           |   UMTS RAT              |   LTE RAT
+ * `<qual>` |    2G RAT CS and GPRS     |   2G RAT EGPRS           |   UMTS RAT              |   LTE RAT
  * ---------|---------------------------|--------------------------|-------------------------|-----------------------
  * 0        |    BER < 0.2%             |   28 <= MEAN_BEP <= 31   |   ECN0_LEV >= 44        |   RSRQ_LEV < 5
  * 1        |    0.2% < BER < 0.4%      |   24 <= MEAN_BEP <= 27   |   38 <= ECNO_LEV < 44   |   5 <= RSRQ_LEV < 10
@@ -440,7 +439,7 @@ typedef enum CellularNetwork_Quality_E CellularNetwork_Quality_T;
 
 /**
  * @brief struct used for getting signal quality of 2G/3G
- * @details +CSQ: <rssi>,<qual>
+ * @details `+CSQ: <rssi>,<qual>`
  * @see Ref 2, p80, ch 7.2 Signal quality +CSQ
  */
 struct CellularNetwork_SignalQuality_S
@@ -552,20 +551,21 @@ void CellularNetwork_RegisterUrcCregCallback(CellularNetwork_UrcCregCallback_T C
 
 /**
  * @brief Query cell environment information from modem
- * @details AT+CGED=<n> (Cell environment description)\n
- * * <MCC> Number Mobile Country Code, range 0 - 999 (3 digits). Other values are to be considered invalid / notavailable
- * * <MNC> Number Mobile Network Code, range 0 - 999 (1 to 3 digits). Other values are to be considered invalid / not available
- * * <LAC> Number Location Area Code, range 0h-FFFFh (2 octets)
- * * <CI> Number Cell Identity, range 0h-FFFFh (2 octets)
- * * <BSIC> Number Base Station Identify Code, range 0h-3Fh (6 bits)
- * * <arfcn> Number Absolute Radio Frequency Channel Number, range 0 - 1023
+ * @details `AT+CGED=<n>` (Cell environment description)
+ *
+ * * `<MCC>` Number Mobile Country Code, range 0 - 999 (3 digits). Other values are to be considered invalid / notavailable
+ * * `<MNC>` Number Mobile Network Code, range 0 - 999 (1 to 3 digits). Other values are to be considered invalid / not available
+ * * `<LAC>` Number Location Area Code, range 0h-FFFFh (2 octets)
+ * * `<CI>` Number Cell Identity, range 0h-FFFFh (2 octets)
+ * * `<BSIC>` Number Base Station Identify Code, range 0h-3Fh (6 bits)
+ * * `<arfcn>` Number Absolute Radio Frequency Channel Number, range 0 - 1023
  *
  *          The parameter value also decodes the band indicator bit (DCS or PCS) by means of the
  *          most significant byte (8 means 1900 band) (i.e. if the parameter reports the value 33485, it
  *          corresponds to 0x82CD, in the most significant byte there is the band indicator bit, so the
- *          <arfcn> is 0x2CD (717) and belongs to 1900 band)
+ *          `<arfcn>` is 0x2CD (717) and belongs to 1900 band)
  *
- * @param[out] data, cell information
+ * @param[out] data cell information
  * @return RETCODE_OK The network status was retrieved correctly
  * @return RETCODE_CELLULAR_NOT_RESPONSIVE The modem did not respond to the network status query
  * @see Ref 2, p 106, ch 7.21 Cell environment description +CGED
@@ -574,7 +574,7 @@ Retcode_T CellularNetwork_QueryCellEnvironment(Cellular_CellEnvironmentData_T *d
 
 /**
  * @brief Get the current network registration status from the modem
- * @param[out] Current registration status
+ * @param[out] status Current registration status
  * @return RETCODE_OK The network status was retrieved correctly
  * @return RETCODE_CELLULAR_NOT_RESPONSIVE The modem did not respond to the network status query
  * @return RETCODE_CELLULAR_RESPONSE_UNEXPECTED Command arguments not expected
@@ -585,9 +585,9 @@ Retcode_T CellularNetwork_QueryRegistrationStatus(CellularNetwork_RegistrationSt
  * @brief Configures current network registration method. Affects sending of URCs.
  * @details
  * * CELLULAR_NETWORK_REG_N_DEFAULT: 0 (default value and factory-programmed value): network registration URC disabled
- * * CELLULAR_NETWORK_REG_N_URC:     1: network registration URC +CREG: <stat> enabled
- * * CELLULAR_NETWORK_REG_N_URC_LOC  2: network registration and location information URC +CREG: <stat>[,<lac>,<ci>[,<AcTStatus>]] enabled
- * @param[in] Network registration method (like statsu)
+ * * CELLULAR_NETWORK_REG_N_URC:     1: network registration URC `+CREG: <stat>` enabled
+ * * CELLULAR_NETWORK_REG_N_URC_LOC  2: network registration and location information URC `+CREG: <stat>[,<lac>,<ci>[,<AcTStatus>]]` enabled
+ * @param[in] setting Network registration method (like statsu)
  * @return RETCODE_OK Only if successful
  * @return RETCODE_CELLULAR_NOT_RESPONSIVE The modem did not respond to the network status query
  * @return RETCODE_CELLULAR_RESPONSE_UNEXPECTED Command arguments not expected
@@ -597,27 +597,27 @@ Retcode_T CellularNetwork_ConfigureRegistrationInformation(CellularNetwork_Regis
 
 /**
  * @brief Deregister the module from the network
- * @details AT+COPS=2 (Deregister the module from the network)
+ * @details `AT+COPS=2` (Deregister the module from the network)
  * @return RETCODE_OK only if the network was deregisterred successfully
  */
 Retcode_T CellularNetwork_Deregister(void); //-- AT+COPS=2
 
 /**
  * @brief Enable automatic network selection
- * @details AT+COPS=0 (enable automatic network selection by MT)
- * @return RETCODE_OK only if mode automatic network selecdtion was set successfully
+ * @details `AT+COPS=0` (enable automatic network selection by MT)
+ * @return RETCODE_OK only if mode automatic network selection was set successfully
  */
 Retcode_T CellularNetwork_EnableAutomaticSelection(void); //-- AT+COPS=0
 
 /**
  * @brief Query current network operator
- * @return RETCODE_OK only if mode automatic network selecdtion was set successfully
+ * @return RETCODE_OK only if mode automatic network selection was set successfully
  */
 Retcode_T CellularNetwork_QueryCurrentOperator(CellularNetwork_CurrentOperator_T *NetworkOperator); //-- AT+COPS?
 
 /**
  * @brief set APN for PDP Context (hardcoded intern)
- * @details AT+UPSD= (set networks APN (depending on SIM card, may require also username and password)
+ * @details `AT+UPSD=` (set networks APN (depending on SIM card, may require also username and password)
  * @param[in] APN
  * @param[in] length of APN buffer
  * @return RETCODE_OK only if successful
@@ -626,7 +626,7 @@ Retcode_T CellularNetwork_SetAPN(uint8_t *APN, uint32_t length); //-- AT+UPSD=0,
 
 /**
  * @brief set PDP Context configuration
- * @param[in] Packet switched data configuration profile
+ * @param[in] profile Packet switched data configuration profile
  * @return RETCODE_OK only if successful
  */
 Retcode_T CellularNetwork_SetPsdProfile(Cellular_PsdProfile_T *profile);
@@ -658,10 +658,10 @@ Retcode_T CellularNetwork_VerifyPdpContext(bool *success); //-- AT+UPSND=0,8
 
 /**
  * @brief Sets modem RAT (Radio Access Technology)
- * @details AT+URAT= (select network radio access technology)
+ * @details `AT+URAT=` (select network radio access technology)
  * @note: PRECONDITION: detached from network
- *  Lisa-U200: Issue the AT+COPS=2 AT command to detach the module from the network (Cellular_DeregisterFromNetwork)
- * @param[in] Radio Access Technology (select and prefer)
+ *  Lisa-U200: Issue the `AT+COPS=2` AT command to detach the module from the network (Cellular_DeregisterFromNetwork)
+ * @param[in] rat Radio Access Technology (select and prefer)
  * @return RETCODE_OK The network RAT selection was successful
  * @see Ref 2, p 88, ch 7.5 Radio Access Technology (RAT) selection +URAT
  */
@@ -669,7 +669,7 @@ Retcode_T CellularNetwork_SelectRadioAccessTechnology(CellularNetwork_RadioAcces
 
 /**
  * @brief Gets modem RAT (Radio Access Technology)
- * @param[out] Radio Access Technology (select and prefer)
+ * @param[out] rat Radio Access Technology (select and prefer)
  * @return RETCODE_OK The network RAT query was successful
  */
 Retcode_T CellularNetwork_QueryRadioAccessTechnology(CellularNetwork_RadioAccessTechnology_T *rat); //-- AT+URAT?

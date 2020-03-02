@@ -13,6 +13,7 @@
 ********************************************************************************/
 
 /**
+ * @ingroup KISO_CELLULAR_VARIANT_UBLOX
  * @file
  * @brief u-blox specific utilities.
  */
