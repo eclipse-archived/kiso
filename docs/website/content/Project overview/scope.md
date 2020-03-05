@@ -3,7 +3,7 @@ title: "Scope"
 weight: 10
 ---
 
-Who and how can Kiso help? Let's look at some user personas to answer this.
+####  Who and how can Kiso help? Let's look at some user personas to answer this.
 
 ## Meet Peter, the embedded device developer ##
 
@@ -21,7 +21,7 @@ are basically of no re-use for Peter.
 
 Thus, Peter typically took some RTOS and integrated HW manufacturer drivers when available. If no drivers had been
 available he wrote them by himself. Over the last couple of years he build up a collection of SW modules and drivers.
-All of this SW modules and drivers are specifically designed for a particular use case and device. For a new project he
+All of these SW modules and drivers are specifically designed for a particular use case and device. For a new project he
 copies over parts of his existing SW set. But, most of these SW parts need modifications in order to fit the new device
 and to become compatible to each other again in a new use case setup.
 

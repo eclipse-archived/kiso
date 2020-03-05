@@ -3,7 +3,7 @@ title: "Communication Channel"
 weight: 10
 ---
 
-# How can I communicate with the Kiso team?
+### How can I communicate with the Kiso team?
 
 ## Mattermost
 Mattermost is popular in Eclipse community and therefore all eclipse projects channels are hosted in https://mattermost.eclipse.org

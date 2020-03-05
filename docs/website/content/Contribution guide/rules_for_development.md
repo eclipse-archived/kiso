@@ -3,7 +3,7 @@ title: "Principles for development"
 weight: 4
 ---
 
-# What are the rules I need to take care of when I contribute?
+### What are the rules I need to take care of when I contribute?
 
 To ensure quality, all contributors need to follow certain set of rules while working on Kiso.
 

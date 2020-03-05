@@ -3,7 +3,7 @@ title: "Unit Testing Guide"
 weight: 5
 ---
 
-# How should I write my unit tests?
+### How should I write my unit tests?
 
 ## Where to put mockup headers and unit tests
 Along each package we have a `test` directory for it. Its structure resembles a package by itself with include and source directories.

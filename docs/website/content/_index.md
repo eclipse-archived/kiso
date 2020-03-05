@@ -4,7 +4,7 @@ title: "Eclipse Kiso"
 draft: false
 ---
 
-![Kiso Logo](images/kiso_logo.svg)
+![Kiso Logo](/images/kiso_logo.svg)
 
 # Welcome!
 Eclipse Kiso was designed from scratch as a software development kit for IoT devices and has already been used and verified on a handful of existing products in the market. Eclipse Kiso's reusability, robustness and portability is a key factor which enables fast development and quick time to market for almost all kinds of IoT "things" product development.

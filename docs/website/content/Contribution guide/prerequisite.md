@@ -3,7 +3,7 @@ title: "Prerequisite"
 weight: 1
 ---
 
-# What should I do before I get started?
+### What should I do before I get started?
 
 
 You need to go through few steps to get the ball rolling. But no worries, it is pretty straightforward.

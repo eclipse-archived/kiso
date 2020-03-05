@@ -3,7 +3,7 @@ title: "Using CMake"
 weight: 6
 ---
 
-# How is CMake Organized
+### How is CMake Organized
 
 The Kiso project consists of subprojects, all managed by the `CMakeLists.txt` file from the root directory:
 

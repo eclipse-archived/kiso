@@ -3,7 +3,7 @@ title: "DoD"
 weight: 8
 ---
 
-# Definition of Done
+### Definition of Done
 
 
 ## When is my piece of software "done"?

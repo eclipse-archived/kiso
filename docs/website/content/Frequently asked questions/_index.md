@@ -1,10 +1,7 @@
 ---
 title: Frequently asked questions
 weight: 50
-chapter: true
 ---
-
-## Frequently Asked Questions
 
 **Who is Kiso for?**
 
