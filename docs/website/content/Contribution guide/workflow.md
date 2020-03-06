@@ -3,7 +3,7 @@ title: "Workflow"
 weight: 7
 ---
 
-# How do I get my contribution into Kiso project?
+### How do I get my contribution into Kiso project?
 
 ## Recommended workflow
 There are more than one way to achieve a goal in git world, however here we recommend the typical way of how contributors contribute to an open source project on github.

@@ -3,7 +3,7 @@ title: "C Coding Guidelines"
 weight: 3
 ---
 
-# What are the guidelines I need to follow?
+### What are the guidelines I need to follow?
 
 ### Table of Contents
 

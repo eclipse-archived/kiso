@@ -1,12 +1,10 @@
 ---
-title: Questionary
+title: Questionnaires
 weight: 60
-chapter: true
 ---
 
-# Questionnaires
 
-# These anonymous questionnaires give us the chance collect informations helping the contributors community to improve the user experience ..
+### These anonymous questionnaires give us the chance to collect information, helping the contributors community to improve the user experience.
 
 ##  Usability Questionnaire
 
