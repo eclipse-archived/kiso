@@ -90,7 +90,7 @@ void TestRegistry_Initialize(uint8_t eId, StpFct_T setup, TrDwnFct_T teardown);
  * @note            setup and tear down functions pointers can be null if nothing has to be done.
  * @return          RETCODE_OK if the Test Suite registered successfully.
  * @return          RETCODE_OUT_OF_RESOURCES if Maximum number of Test Suites reached.
- * @return          TEST_RETCODE_TEST_SUITE_ALREADY_REGISTERED if a test suite with this Id has already been registered.
+ * @return          RETCODE_TESTING_SUITE_ALREADY_REGISTERED if a test suite with this Id has already been registered.
  */
 Retcode_T TestRegistry_RegisterTestSuite(uint8_t sId, StpFct_T setup, TrDwnFct_T teardown);
 
@@ -106,7 +106,7 @@ Retcode_T TestRegistry_RegisterTestSuite(uint8_t sId, StpFct_T setup, TrDwnFct_T
  * @return          RETCODE_OK The Test Case registered successfully
  * @return          RETCODE_INVALID_PARAM No Test Suite with the given Id has been found
  * @return          RETCODE_OUT_OF_RESOURCES Maximum number of Test Cases reached
- * @return          TEST_RETCODE_TEST_CASE_ALREADY_REGISTERED A Test Case with this Id has already been registered
+ * @return          RETCODE_TESTING_CASE_ALREADY_REGISTERED A Test Case with this Id has already been registered
  */
 Retcode_T TestRegistry_RegisterTestCase(uint8_t sId, uint8_t cId, StpFct_T setup, RnFct_T run, TrDwnFct_T teardown);
 

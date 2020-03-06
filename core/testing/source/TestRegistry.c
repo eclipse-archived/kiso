@@ -63,7 +63,7 @@ Retcode_T TestRegistry_RegisterTestSuite(uint8_t sId, StpFct_T setup, TrDwnFct_T
     if (NULL != suite)
     {
         /* The test suite with the given ID is already registered */
-        return RETCODE(RETCODE_SEVERITY_WARNING, (uint32_t)TEST_RETCODE_TEST_SUITE_ALREADY_REGISTERED);
+        return RETCODE(RETCODE_SEVERITY_WARNING, (uint32_t)RETCODE_TESTING_SUITE_ALREADY_REGISTERED);
     }
 
     suite = &testEntry.testSuites[testEntry.numTestSuites];
@@ -102,7 +102,7 @@ Retcode_T TestRegistry_RegisterTestCase(uint8_t sId, uint8_t cId, StpFct_T setup
     if (NULL != testCase)
     {
         /* A test case with the given ID is already registered */
-        return RETCODE(RETCODE_SEVERITY_WARNING, (uint32_t)TEST_RETCODE_TEST_CASE_ALREADY_REGISTERED);
+        return RETCODE(RETCODE_SEVERITY_WARNING, (uint32_t)RETCODE_TESTING_CASE_ALREADY_REGISTERED);
     }
 
     testCase = &suite->testCases[suite->numTestCases];

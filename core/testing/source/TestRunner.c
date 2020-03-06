@@ -363,7 +363,7 @@ static void ackTimerCallbackFunction(TimerHandle_t timer)
     else
     {
         testRunner.waitingForAck = false;
-        Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_WARNING, TEST_RETCODE_REPORT_TIMEOUT));
+        Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_TESTING_REPORT_TIMEOUT));
     }
     return;
 }

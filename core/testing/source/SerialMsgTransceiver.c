@@ -173,7 +173,7 @@ void SerialMsgTransceiver_Receive(void)
         {
             if (START == receivedByte)
             {
-                Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_WARNING, TEST_RETCODE_INCOMPLETE_MESSAGE_RECEIVED));
+                Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_TESTING_INCOMPLETE_MESSAGE_RECEIVED));
                 nReceivedByte = 0;
                 (void)memset(receiveBuffer, 0, sizeof(receiveBuffer));
                 msgNOK++;
@@ -246,7 +246,7 @@ void SerialMsgTransceiver_Receive(void)
         }
         else
         {
-            Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_WARNING, TEST_RETCODE_CRC_MISMATCH));
+            Retcode_RaiseError(RETCODE(RETCODE_SEVERITY_WARNING, RETCODE_TESTING_CRC_MISMATCH));
             receivingState = WAITING_FOR_START;
             msgNOK++;
         }

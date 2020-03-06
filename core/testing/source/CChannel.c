@@ -223,7 +223,7 @@ Retcode_T CChannel_GetTlvElement(CCMsg_T *ccmsg, TlvElt_T *tlvElement)
             }
         }
     }
-    return RETCODE(RETCODE_SEVERITY_ERROR, TEST_RETCODE_TLVELEMENT_NOT_FOUND);
+    return RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_TESTING_TLVELEMENT_NOT_FOUND);
 }
 
 Retcode_T CChannel_AddTlvElement(CCMsg_T *ccmsg, TlvElt_T *tlvElement)
