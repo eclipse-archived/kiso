@@ -122,17 +122,17 @@ typedef struct CCMsg_S
 /**
  * @brief           Defines a prototype type for the setup functions of the test suites and test cases.
  */
-typedef Retcode_T (*StpFct_T)(CCMsg_T *ccmsg);
+typedef Retcode_T (*SetupFct_T)(CCMsg_T *ccmsg);
 
 /**
  * @brief           Defines a prototype type for the tear down functions of the test suites and test cases.
  */
-typedef Retcode_T (*TrDwnFct_T)(CCMsg_T *ccmsg);
+typedef Retcode_T (*TearDownFct_T)(CCMsg_T *ccmsg);
 
 /**
  * @brief           Sefines a prototype type for the run functions of the test cases.
  */
-typedef void (*RnFct_T)(CCMsg_T *ccmsg);
+typedef void (*RunFct_T)(CCMsg_T *ccmsg);
 
 /*###################### EXPORTED FUNCTIONS PROTOTYPES ###############################################################*/
 
@@ -142,7 +142,7 @@ typedef void (*RnFct_T)(CCMsg_T *ccmsg);
  * @param[in]       eId Id of the Test Entry
  * @return          RETCODE_OK if initialized successfully error code otherwise
  */
-Retcode_T Tests_Initialize(uint8_t eId, StpFct_T setup, TrDwnFct_T teardown);
+Retcode_T Tests_Initialize(uint8_t eId, SetupFct_T setup, TearDownFct_T teardown);
 
 /**
  * @brief           Registers a Test Suite
@@ -153,7 +153,7 @@ Retcode_T Tests_Initialize(uint8_t eId, StpFct_T setup, TrDwnFct_T teardown);
  * @note            setup and tear down functions pointers can be null if nothing has to be done.
  * @return          RETCODE_OK in case of success, error code otherwise.
  */
-Retcode_T Tests_RegisterTestSuite(uint8_t sId, StpFct_T setup, TrDwnFct_T teardown);
+Retcode_T Tests_RegisterTestSuite(uint8_t sId, SetupFct_T setup, TearDownFct_T teardown);
 
 /**
  * @brief           Registers a Test Case
@@ -166,7 +166,7 @@ Retcode_T Tests_RegisterTestSuite(uint8_t sId, StpFct_T setup, TrDwnFct_T teardo
  * @note            setup and tear down functions pointers can be null if nothing has to be done.
  * @return          RETCODE_OK in case of success, error code otherwise.
  */
-Retcode_T Tests_RegisterTestCase(uint8_t sId, uint8_t cId, StpFct_T setup, RnFct_T run, TrDwnFct_T teardown);
+Retcode_T Tests_RegisterTestCase(uint8_t sId, uint8_t cId, SetupFct_T setup, RunFct_T run, TearDownFct_T teardown);
 
 /**
  * @brief           Sends a result of a test case execution.

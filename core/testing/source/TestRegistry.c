@@ -41,7 +41,7 @@ static TstEnt_T testEntry;
 /*###################### EXPOSED FUNCTIONS IMPLEMENTATION ############################################################*/
 
 /* @see TestRegistry.h for function description */
-void TestRegistry_Initialize(uint8_t eId, StpFct_T setup, TrDwnFct_T teardown)
+void TestRegistry_Initialize(uint8_t eId, SetupFct_T setup, TearDownFct_T teardown)
 {
     (void)memset(&testEntry, 0, sizeof(TstEnt_T));
 
@@ -51,7 +51,7 @@ void TestRegistry_Initialize(uint8_t eId, StpFct_T setup, TrDwnFct_T teardown)
 }
 
 /* @see TestRegistry.h for function description */
-Retcode_T TestRegistry_RegisterTestSuite(uint8_t sId, StpFct_T setup, TrDwnFct_T teardown)
+Retcode_T TestRegistry_RegisterTestSuite(uint8_t sId, SetupFct_T setup, TearDownFct_T teardown)
 {
     if (TEST_MAX_NUMBER_OF_TEST_SUITES <= testEntry.numTestSuites)
     {
@@ -77,7 +77,7 @@ Retcode_T TestRegistry_RegisterTestSuite(uint8_t sId, StpFct_T setup, TrDwnFct_T
 }
 
 /* @see TestRegistry.h for function description */
-Retcode_T TestRegistry_RegisterTestCase(uint8_t sId, uint8_t cId, StpFct_T setup, RnFct_T run, TrDwnFct_T teardown)
+Retcode_T TestRegistry_RegisterTestCase(uint8_t sId, uint8_t cId, SetupFct_T setup, RunFct_T run, TearDownFct_T teardown)
 {
     if (NULL == run)
     {

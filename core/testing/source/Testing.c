@@ -41,20 +41,20 @@
 /*###################### EXPOSED FUNCTIONS IMPLEMENTATION ############################################################*/
 
 /* @see Kiso_Testing.h for function description */
-Retcode_T Tests_Initialize(uint8_t eId, StpFct_T setup, TrDwnFct_T teardown)
+Retcode_T Tests_Initialize(uint8_t eId, SetupFct_T setup, TearDownFct_T teardown)
 {
     TestRegistry_Initialize(eId, setup, teardown);
     return TestRunner_Initialize();
 }
 
 /* @see Kiso_Testing.h for function description */
-Retcode_T Tests_RegisterTestSuite(uint8_t sId, StpFct_T setup, TrDwnFct_T teardown)
+Retcode_T Tests_RegisterTestSuite(uint8_t sId, SetupFct_T setup, TearDownFct_T teardown)
 {
     return TestRegistry_RegisterTestSuite(sId, setup, teardown);
 }
 
 /* @see Kiso_Testing.h for function description */
-Retcode_T Tests_RegisterTestCase(uint8_t sId, uint8_t cId, StpFct_T setup, RnFct_T run, TrDwnFct_T teardown)
+Retcode_T Tests_RegisterTestCase(uint8_t sId, uint8_t cId, SetupFct_T setup, RunFct_T run, TearDownFct_T teardown)
 {
     return TestRegistry_RegisterTestCase(sId, cId, setup, run, teardown);
 }

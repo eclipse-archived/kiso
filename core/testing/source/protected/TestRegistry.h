@@ -43,9 +43,9 @@
 typedef struct TestCase_S
 {
     uint8_t id;
-    StpFct_T setup;
-    RnFct_T run;
-    TrDwnFct_T teardown;
+    SetupFct_T setup;
+    RunFct_T run;
+    TearDownFct_T teardown;
 } TstCse_T, TstCse_T;
 
 /**
@@ -56,8 +56,8 @@ typedef struct TestSuite_S
 {
     uint8_t id;
     uint8_t numTestCases;
-    StpFct_T setup;
-    TrDwnFct_T teardown;
+    SetupFct_T setup;
+    TearDownFct_T teardown;
     TstCse_T testCases[TEST_MAX_NUMBER_OF_TEST_CASES_PER_TEST_SUITE];
 } TstSte_T;
 
@@ -65,8 +65,8 @@ typedef struct TestEntry_S
 {
     uint8_t id;
     uint8_t numTestSuites;
-    StpFct_T setup;
-    TrDwnFct_T teardown;
+    SetupFct_T setup;
+    TearDownFct_T teardown;
     TstSte_T testSuites[TEST_MAX_NUMBER_OF_TEST_SUITES];
 } TstEnt_T, TstEnt_T;
 
@@ -80,7 +80,7 @@ typedef struct TestEntry_S
  * @param[in]       teardown A reference to the tear down function of the Test Entry.
  * @note            setup and tear down functions pointers can be null if nothing has to be done.
  */
-void TestRegistry_Initialize(uint8_t eId, StpFct_T setup, TrDwnFct_T teardown);
+void TestRegistry_Initialize(uint8_t eId, SetupFct_T setup, TearDownFct_T teardown);
 
 /**
  * @brief           Registers a Test Suite
@@ -92,7 +92,7 @@ void TestRegistry_Initialize(uint8_t eId, StpFct_T setup, TrDwnFct_T teardown);
  * @return          RETCODE_OUT_OF_RESOURCES if Maximum number of Test Suites reached.
  * @return          RETCODE_TESTING_SUITE_ALREADY_REGISTERED if a test suite with this Id has already been registered.
  */
-Retcode_T TestRegistry_RegisterTestSuite(uint8_t sId, StpFct_T setup, TrDwnFct_T teardown);
+Retcode_T TestRegistry_RegisterTestSuite(uint8_t sId, SetupFct_T setup, TearDownFct_T teardown);
 
 /**
  * @brief           Registers a Test Case
@@ -108,7 +108,7 @@ Retcode_T TestRegistry_RegisterTestSuite(uint8_t sId, StpFct_T setup, TrDwnFct_T
  * @return          RETCODE_OUT_OF_RESOURCES Maximum number of Test Cases reached
  * @return          RETCODE_TESTING_CASE_ALREADY_REGISTERED A Test Case with this Id has already been registered
  */
-Retcode_T TestRegistry_RegisterTestCase(uint8_t sId, uint8_t cId, StpFct_T setup, RnFct_T run, TrDwnFct_T teardown);
+Retcode_T TestRegistry_RegisterTestCase(uint8_t sId, uint8_t cId, SetupFct_T setup, RunFct_T run, TearDownFct_T teardown);
 
 /**
  * @brief           Looks up for a Test Entry by Id
