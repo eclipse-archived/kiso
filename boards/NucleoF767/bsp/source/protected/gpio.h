@@ -35,6 +35,10 @@
 #define PINB_LED_G GPIO_PIN_0
 #define PINB_LED_B GPIO_PIN_7
 #define PINC_USR_BUTTON GPIO_PIN_13
+#define PIND_USART2_TX GPIO_PIN_5
+#define PIND_USART2_RX GPIO_PIN_6
+#define PIND_USART3_TX GPIO_PIN_8
+#define PIND_USART3_RX GPIO_PIN_9
 
 /*---------------------- EXPORTED TYPES ------------------------------------------------------------------------------*/
 /**
