@@ -1,5 +1,5 @@
 ---
-title: Questionary
+title: Questionnaires
 weight: 60
 chapter: true
 ---
@@ -18,7 +18,7 @@ Usability is the second quality goal with it's two attributes:
 
 - **(Portability)**  Kiso supports applications to be protable to other hardware.
 
-Please Tell us about your experience in building a customised application or migrating to another hardware: <a style="font: 15px Helvetica bold, sans-serif; color: #54CCA3; text-decoration: none;" href=https://www.surveymonkey.com/r/2GBGRSJ> Usability Questionnaire  </a>
+Please Tell us about your experience in building a customised application or migrating to another hardware: <a style="font: 15px Helvetica bold, sans-serif; color: #54CCA3; text-decoration: none;"href=http://kiso.rempler.de:8181/index.php/832785?lang=en> Usability Questionnaire  </a>
 
 
 ## Understandability Questionnaire
@@ -27,7 +27,7 @@ Please Tell us about your experience in building a customised application or mig
 
 
 Please tell us about your experience regarding the consistency of the user guides: <a style="font: 15px Helvetica bold, sans-serif; color: #54CCA3; text-decoration: none;" 
-href=https://www.surveymonkey.com/r/MPV3XS9> Understandability Questionnaire </a>
+href=http://kiso.rempler.de:8181/index.php/735421?lang=en> Understandability Questionnaire </a>
 
 ------
 **Note:** more questionnaires will be added whenever there is an available update, So make sure to check the page to answer them, and give us feedback.  
