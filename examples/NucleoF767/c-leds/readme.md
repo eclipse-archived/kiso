@@ -38,7 +38,7 @@ cmake --build build --target flash
 
 The essence of this example can be seen in the *blink_led* function, which is toggling the LEDs and is re-enqueuing itself into the command processor queue.
 
-```
+```c
 void blink_led(void *param1, uint32_t param2)
 {
     static const enum NucleoF767_LED_Ids_E ledIDs[] = {NUCLEOF767_LED_GREEN_ID, NUCLEOF767_LED_BLUE_ID, NUCLEOF767_LED_RED_ID};
