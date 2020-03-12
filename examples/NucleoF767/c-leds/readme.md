@@ -1,13 +1,6 @@
 
 # Example Project: C-LEDS for Nucleo F767ZI Development Kit
 
-## Disclaimer
-1. *The sample contents under various sections in this blueprint might seem to be utter non-sense and should be ignored. The aim was to make it crystal clear what these sections could contain as contents.*
-
-2. *Add/remove sections which you believe are missing/redundant as per the concerned example.*
-
-3. *Remove this disclaimer. :-)*
-
 ## Goal:
 This example is the hello world example for running Kiso on the Nucleo F767ZI development kit.
 
