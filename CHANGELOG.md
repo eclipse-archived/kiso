@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [Release v0.1.0] - 2020-03-13
 
 ### Added
 
@@ -10,9 +10,9 @@
 * [PlantUML](https://plantuml.com/de/) support for Doxygen documentation.
 * More unit-tests for all packages, improving test-coverage.
 * List of Contributors in `NOTICE.md`.
-* **\[WIP\]** Nucleo-F767 `c-leds` example, showcasing a simple *"hello world"* equivalent with LEDs.
-* **\[WIP\]** Board support for STM Nucleo-F767.
-* **\[WIP\]** STM32CubeF7 integration into Kiso build-environment.
+* Nucleo-F767 `c-leds` example, showcasing a simple *"hello world"* equivalent with LEDs.
+* Board support for STM Nucleo-F767.
+* STM32CubeF7 integration into Kiso build-environment.
 
 ### Changed
 
