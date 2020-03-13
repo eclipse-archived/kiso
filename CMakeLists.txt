@@ -7,7 +7,7 @@ option(SKIP_FORMAT_REPORTS "Skip generation of format XML reports in build direc
 option(ENABLE_STATIC_CHECKS "Configure a build tree for static code analysis" OFF)
 option(ENABLE_COVERAGE "Build unit tests with coverage information to use with GCOV and LCOV" ON)
 option(ENABLE_INTEGRATION_TESTING "Build for integration tests application" OFF)
-option(INTEGRATION_TEST_ENTRY_PATH "Specify which integratin test entry to build default essentials" essentials)
+option(INTEGRATION_TEST_ENTRY_PATH "Specify which integratin test entry to build default essentials" ./core/essentials)
 
 ## Include config file if it exists
 include(kiso_defaults.cmake OPTIONAL)
