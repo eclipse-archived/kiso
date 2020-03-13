@@ -18,7 +18,7 @@
 
 #include "stm32/stm32f7/Kiso_MCU_STM32F7_UART_Handle.h"
 #include "Kiso_HAL_Delay.h"
-#include "BSP_NucleoF767.h.h"
+#include "BSP_NucleoF767.h"
 #include "protected/gpio.h"
 
 /*---------------------- MACROS DEFINITION --------------------------------------------------------------------------*/
