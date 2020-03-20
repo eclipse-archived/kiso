@@ -10,6 +10,8 @@ Developed and put through its paces by AE or – more specifically – Bosch Con
 
 Kiso can be customized, and its functions can also be standardized for use with entire product families and generations. It’s quality goals - understandability, usability, product quality, extensibility and performance - are factors that enable a fast prototype and product development. By this, it reduces the time to market together with minimizing technical debts for almost all kinds of IoT "Things".
 
+[Kiso infographic](./docs/website/content/images/Kiso_infographic.png)
+
 ## Scope ##
 To learn what Kiso is and how it can help you, please have a look at our [scope](http://kiso.rempler.de:1313/project-overview/scope.html) page.
 
