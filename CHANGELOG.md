@@ -45,7 +45,7 @@
 ### Changed 
 * improved documentation for module documentation and website
 
-## Known issues 
+### Known issues 
   * STM32F7 example requires manual added STM32F7 cube library to be built
   * No multi-OS support
   * No HW integration tests
