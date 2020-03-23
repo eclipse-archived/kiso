@@ -60,6 +60,11 @@ STM32L4 HAL 1.14.0
 
  * License: BSD-3-Clause
 
+STM32F7 HAL v1.15.0
+
+ * License: BSD-3-Clause
+ * License: Apache License 2.0
+
 Gtest 2.0.0
 
  * License: BSD-3-Clause

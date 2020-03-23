@@ -29,13 +29,13 @@
 #define TESTIF_UART_INT_PRIORITY UINT32_C(10)
 #define TESTIF_UART_SUBPRIORITY UINT32_C(0)
 
-#define PINB_DBG_TX GPIO_PIN_1
-#define PINB_DBG_RX GPIO_PIN_0
+#define PINB_DBG_TX GPIO_PIN_8
+#define PINB_DBG_RX GPIO_PIN_9
 
 /*---------------------- LOCAL FUNCTIONS DECLARATION ----------------------------------------------------------------*/
 
 Retcode_T BSP_TestInterface_Control(uint32_t command, void *arg);
-void UART4_IRQHandler(void);
+void USART3_IRQHandler(void);
 
 /*---------------------- VARIABLES DECLARATION ----------------------------------------------------------------------*/
 
@@ -49,7 +49,7 @@ static struct MCU_UART_S testIf_UARTStruct =
         .TxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
         .RxMode = KISO_HAL_TRANSFER_MODE_INTERRUPT,
         .Datarate = 115200U,
-        .huart.Instance = UART4,
+        .huart.Instance = USART3,
         .huart.Init.BaudRate = 115200U,
         .huart.Init.WordLength = UART_WORDLENGTH_8B,
         .huart.Init.StopBits = UART_STOPBITS_1,
@@ -85,7 +85,7 @@ Retcode_T BSP_TestInterface_Connect(void)
         BSP_GPIOInitStruct.Mode = GPIO_MODE_AF_PP;
         BSP_GPIOInitStruct.Pull = GPIO_NOPULL;
         BSP_GPIOInitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-        BSP_GPIOInitStruct.Alternate = GPIO_AF8_UART4;
+        BSP_GPIOInitStruct.Alternate = GPIO_AF7_USART3;
         HAL_GPIO_Init(GPIOD, &BSP_GPIOInitStruct);
 
         bspState = (uint8_t)BSP_STATE_CONNECTED;
@@ -109,9 +109,9 @@ Retcode_T BSP_TestInterface_Enable(void)
     if (RETCODE_OK == retcode)
     {
         /* Enable the UART clock */
-        __HAL_RCC_UART4_CLK_ENABLE();
-        __HAL_RCC_UART4_FORCE_RESET();
-        __HAL_RCC_UART4_RELEASE_RESET();
+        __HAL_RCC_USART3_CLK_ENABLE();
+        __HAL_RCC_USART3_FORCE_RESET();
+        __HAL_RCC_USART3_RELEASE_RESET();
 
         /* Configure the UART resource */
         if (HAL_OK != HAL_UART_Init(&testIf_UARTStruct.huart))
@@ -121,8 +121,8 @@ Retcode_T BSP_TestInterface_Enable(void)
     }
     if (RETCODE_OK == retcode)
     {
-        HAL_NVIC_SetPriority(UART4_IRQn, TESTIF_UART_INT_PRIORITY, TESTIF_UART_SUBPRIORITY);
-        HAL_NVIC_EnableIRQ(UART4_IRQn);
+        HAL_NVIC_SetPriority(USART3_IRQn, TESTIF_UART_INT_PRIORITY, TESTIF_UART_SUBPRIORITY);
+        HAL_NVIC_EnableIRQ(USART3_IRQn);
 
         bspState = (uint8_t)BSP_STATE_ENABLED;
     }
@@ -145,7 +145,7 @@ Retcode_T BSP_TestInterface_Disable(void)
     if (RETCODE_OK == retcode)
     {
         /* Disable interrupts and deactivate UART peripheral */
-        HAL_NVIC_DisableIRQ(UART4_IRQn);
+        HAL_NVIC_DisableIRQ(USART3_IRQn);
         if (HAL_OK != HAL_UART_DeInit(&testIf_UARTStruct.huart))
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_BSP_UART_DEINIT_FAILED);
@@ -153,7 +153,7 @@ Retcode_T BSP_TestInterface_Disable(void)
     }
     if (RETCODE_OK == retcode)
     {
-        __HAL_RCC_UART4_CLK_DISABLE();
+        __HAL_RCC_USART3_CLK_DISABLE();
         bspState = (uint8_t)BSP_STATE_DISABLED;
     }
     return retcode;
@@ -208,7 +208,7 @@ Retcode_T BSP_TestInterface_Control(uint32_t command, void *arg)
 /**
  * Interrupt Service Routine handling USART1 IRQ. Forwards call to MCU Layer for handling.
  */
-void UART4_IRQHandler(void)
+void USART3_IRQHandler(void)
 {
     if (testIf_UARTStruct.IrqCallback)
     {
