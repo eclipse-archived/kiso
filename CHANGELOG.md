@@ -77,7 +77,7 @@
 * **\[WIP\]** MbedTLS code.
 * **\[WIP\]** EMLib build-script for Kiso.
 
- ## Known issues 
+### Known issues 
   * No multi-OS support
   * No HW integration tests
   * Limited Cellular (SW Module) documentation
