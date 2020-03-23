@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [Release v0.1.0] - 2020-03-13
 
 ### Added
 
@@ -10,9 +10,8 @@
 * [PlantUML](https://plantuml.com/de/) support for Doxygen documentation.
 * More unit-tests for all packages, improving test-coverage.
 * List of Contributors in `NOTICE.md`.
-* **\[WIP\]** Nucleo-F767 `c-leds` example, showcasing a simple *"hello world"* equivalent with LEDs.
-* **\[WIP\]** Board support for STM Nucleo-F767.
-* **\[WIP\]** STM32CubeF7 integration into Kiso build-environment.
+* Nucleo-F767 `c-leds` example, showcasing a simple *"hello world"* equivalent with LEDs.
+* STM32CubeF7 integration into Kiso build-environment.
 
 ### Changed
 
@@ -29,6 +28,31 @@
 
 * Module `Logging_AsyncRecorder` from Utils, please use `Logging_SyncRecorder` for the time being.
 * Module `TLV` from Utils.
+
+### Known issues  
+  * No multi-OS support
+  * No automated HW integration tests  
+  * Limited static code check (no complexity metrics)
+
+
+## [Initial code drop(update) (ICD_UPDATE)] - 2020-01-22
+
+### Added
+* Board support for STM Nucleo-F767
+* More unit-tests for all packages, improving test-coverage
+
+
+### Changed 
+* improved documentation for module documentation and website
+
+### Known issues 
+  * STM32F7 example requires manual added STM32F7 cube library to be built
+  * No multi-OS support
+  * No HW integration tests
+  * Limited configuration documentation  
+  * Limited static code check (no complexity metrics)
+
+
 
 ## [Initial code drop (ICD)] - 2019-12-18
 
@@ -52,5 +76,14 @@
 * **\[WIP\]** EFM32 BSP based on Bosch XDK.
 * **\[WIP\]** MbedTLS code.
 * **\[WIP\]** EMLib build-script for Kiso.
+
+### Known issues 
+  * No multi-OS support
+  * No HW integration tests
+  * Limited Cellular (SW Module) documentation
+  * Limited configuration documentation
+  * Limited code snipped documentation
+  * Limited static code check (no complexity metrics)
+
 
 \* \[WIP\] = **W**ork **I**n **P**rogress, incomplete features not to be considered *done* in this release.
