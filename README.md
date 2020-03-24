@@ -1,6 +1,6 @@
 # Kiso [![Build Status Badge](https://img.shields.io/jenkins/build?jobUrl=https%3A%2F%2Fci.eclipse.org%2Fkiso%2Fjob%2Fkiso_github%2Fjob%2Fmaster%2F)](https://ci.eclipse.org/kiso/job/kiso_github/job/master/) [![License Badge](https://img.shields.io/github/license/eclipse/kiso)](https://www.eclipse.org/legal/epl-2.0/) #
 ![Kiso logo](./docs/doxygen/Kiso-logo.png)
-
+ 
 ## Introduction ##
 Kiso (Japanese for "basis") is an Eclipse Foundation software development kit (SDK) for internet of things (IoT) devices. It’s historical SW roots go back to 2013.
 
