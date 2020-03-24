@@ -1,3 +1,3 @@
 - Hugo: https://github.com/gohugoio/hugo/releases
 - git clone https://github.com/matcornic/hugo-theme-learn.git themes/learn
-- hugo (serve)
+- hugo (serve) 
