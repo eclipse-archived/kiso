@@ -62,7 +62,7 @@ function(CREATE_FLASH_TARGET_JLINK ELF_TARGET)
     if(WSLPATH)
         # 'wslpath -w' to be read directly inside jlink
         execute_process(COMMAND ${WSLPATH} -w ${HEX_TARGET_PATH} OUTPUT_VARIABLE WIN_TARGET_PATH)
-        string(STRIP ${WIN_TARGET_PATH} HEX_TARGET_PATH)
+        string(STRIP "${WIN_TARGET_PATH}" HEX_TARGET_PATH)
     endif()
 
     # \todo: This can be exported to file and replaced with configure_file
@@ -80,7 +80,7 @@ function(CREATE_FLASH_TARGET_JLINK ELF_TARGET)
     if(WSLPATH)
         # 'wslpath -m' so it's not escaped improperly
         execute_process(COMMAND ${WSLPATH} -m ${SCRIPT_PATH} OUTPUT_VARIABLE WIN_SCRIPT_PATH)
-        string(STRIP ${WIN_SCRIPT_PATH} SCRIPT_PATH)
+        string(STRIP "${WIN_SCRIPT_PATH}" SCRIPT_PATH)
     endif()
 
     add_custom_target(flash
