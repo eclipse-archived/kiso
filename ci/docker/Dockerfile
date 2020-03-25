@@ -14,9 +14,10 @@ RUN apt-get update && apt-get install -y \
     cmake \
     cppcheck \
     doxygen \
-    g++ \
+    g++ \    
     gcc \
     gcc-arm-none-eabi \
+    git \
     graphviz \
     hugo \
     lcov \
