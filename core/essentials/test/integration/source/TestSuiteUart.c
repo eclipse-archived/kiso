@@ -64,7 +64,7 @@ Retcode_T TestSuiteUart_Initialize(uint8_t sId)
 
     if (RETCODE_OK == retcode)
     {
-        retcode = Tests_RegisterTestCase(sId, TEST_CASE_FUNCTIONAL_TEST_ID, TestCase_FctTest_Setup, TestCase_FctTest_Run, TestCase_FctTest_Setup);
+        retcode = Tests_RegisterTestCase(sId, TEST_CASE_FUNCTIONAL_TEST_ID, TestCase_FctTest_Setup, TestCase_FctTest_Run, TestCase_FctTest_TearDown);
     }
     return retcode;
 }
