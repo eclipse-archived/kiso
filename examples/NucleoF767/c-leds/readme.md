@@ -11,7 +11,7 @@ The example will cycle through all three LEDs (red, green and blue). It will als
 ### Components Required:
 
 #### Software Components
-Please refer to the getting started [quick start](http://http://kiso.rempler.de:1313/user-guide/quick_start.html) guide for Eclipse Kiso. 
+Please refer to the getting started [quick start](http://kiso.rempler.de:1313/user-guide/quick_start.html) guide for Eclipse Kiso. 
 
 #### Hardware Components
 You will need a STM NucleoF767ZI board. The board needs the J-Link debugger firmware flashed, to be easily flashed using Kiso's build target.
