@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     g++ \
     gcc \
     gcc-arm-none-eabi \
+    git \
     graphviz \
     hugo \
     lcov \
