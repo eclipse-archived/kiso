@@ -6,7 +6,7 @@ chapter: true
 
 # Questionnaires
 
-<h3> These anonymous questionnaires give us the chance collect informations helping the contributors community to improve the user experience.</h3>
+<h3> These anonymous questionnaires give us the chance to collect information helping the contributors community to improve the user experience.</h3>
 
 ------
 
