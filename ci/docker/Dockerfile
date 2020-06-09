@@ -25,4 +25,5 @@ RUN apt-get update && apt-get install -y \
     libxml2-utils \
     ninja-build \
     plantuml \
-    python3
+    python3 \
+    pipenv
