@@ -27,3 +27,6 @@ RUN apt-get update && apt-get install -y \
     plantuml \
     python3 \
     pipenv
+
+ENV WORKON_HOME /kiso-project/.venvs
+RUN chgrp -R 0 /kiso-project && chmod -R g=u /kiso-project
