@@ -13,7 +13,7 @@ The example will flash the blue LED. It will also show how to enable the logging
 Please refer to the getting started [quick start](http://kiso.rempler.de:1313/user-guide/quick_start.html) guide for Eclipse Kiso. 
 
 #### Hardware Components
-You will need CommonGateway board.If you want to flash, you need an external debugger,please refer to the vendors reference manual.
+You will need the Bosch CommonGateway board. If you want to flash it, you also need an external debugger, e.g., SEGGER J-Link. Please refer to the vendors reference manual.
 
 
 ##  Initial Setup
