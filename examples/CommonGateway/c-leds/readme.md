@@ -27,7 +27,7 @@ cmake --build build
 ```
 Now as you have built the project you should have an application binary ready to flash.
 For you own convenience you can use the cmake build system also to flash the binary with the external debugger.
-```
+```sh
 cmake --build build --target flash
 ```
 
