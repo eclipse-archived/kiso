@@ -28,5 +28,5 @@ Please note that (for now) some of the following links may require additional ac
 * Frequently asked questions: [FAQ](http://kiso.rempler.de:1313/frequently-asked-questions.html)
 * API documentation: [Doxygen documentation](http://kiso.rempler.de:8080/)
 * Changelog (incl. features, supported reference HW and known issues): [changelog](https://github.com/eclipse/kiso/blob/master/CHANGELOG.md)
-* Continuous integration (automated testing results): [Jenkins dashboard](https://ci.eclipse.org/kiso)
+* Continuous integration (automated testing results): [Jenkins dashboard](https://ci.eclipse.org/kiso/view/Kiso-Dashboard/)
 * Eclipse Foundation project page: [Eclipse Kiso](https://projects.eclipse.org/projects/iot.kiso)
