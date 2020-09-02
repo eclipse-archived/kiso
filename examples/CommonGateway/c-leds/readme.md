@@ -53,8 +53,8 @@ Once you have flashed the example you should see the blue onboard LED.
 If you have your device connected to the serial port you will see the output of the Kiso logging module as below.
 ```text
 0 D 0 MainCmdProcessor   [kiso/examples/CommonGateway/c-leds/source/blinky_led.c:55]        Logging was started successfully
-```
 500 D 0 MainCmdProcessor   [kiso/examples/CommonGateway/c-leds/source/blinky_led.c:86]        Led switch
+```
 ## Troubleshooting
 
 If you don't find a conclusion using the [documentation](http://kiso.rempler.de:1313), please message us on [mattermost](mattermost.eclipse.org/eclipse/channels/kiso).
