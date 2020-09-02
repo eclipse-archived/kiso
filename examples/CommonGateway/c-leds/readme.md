@@ -20,7 +20,7 @@ You will need the Bosch CommonGateway board. If you want to flash it, you also n
 Configure the project to be compiled for the CommonGateway Board which is located in boards/CommonGateway
 
 ## Execution Flow
-```
+```sh
 cd kiso
 cmake . -Bbuild -DKISO_BOARD_NAME=CommonGateway
 cmake --build build
