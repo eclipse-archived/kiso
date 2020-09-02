@@ -51,7 +51,7 @@ void blink_led(void *param1, uint32_t param2)
 
 Once you have flashed the example you should see the blue onboard LED. 
 If you have your device connected to the serial port you will see the output of the Kiso logging module as below.
-```
+```text
 0 D 0 MainCmdProcessor   [kiso/examples/CommonGateway/c-leds/source/blinky_led.c:55]        Logging was started successfully
 ```
 500 D 0 MainCmdProcessor   [kiso/examples/CommonGateway/c-leds/source/blinky_led.c:86]        Led switch
