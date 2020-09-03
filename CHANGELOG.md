@@ -5,8 +5,8 @@
 ### Added
 
 * CMake target for flashing binaries flash onto target hardware.
-* Support for building user-defined apps located outside the Kiso repository, using [`KISO_APPLICATION_PATH`](http://kiso.rempler.de:1313/3.-user-guide/advanced_guide.html#building-a-custom-application).
-* Support for building user-defined boards located outside the Kiso repository, using [`KISO_BOARD_PATH`](http://kiso.rempler.de:1313/3.-user-guide/advanced_guide.html#building-a-custom-board).
+* Support for building user-defined apps located outside the Kiso repository, using [`KISO_APPLICATION_PATH`](http://docs.eclipsekiso.de:1313/3.-user-guide/advanced_guide.html#building-a-custom-application).
+* Support for building user-defined boards located outside the Kiso repository, using [`KISO_BOARD_PATH`](http://docs.eclipsekiso.de:1313/3.-user-guide/advanced_guide.html#building-a-custom-board).
 * [PlantUML](https://plantuml.com/de/) support for Doxygen documentation.
 * More unit-tests for all packages, improving test-coverage.
 * List of Contributors in `NOTICE.md`.

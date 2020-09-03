@@ -13,20 +13,20 @@ Kiso can be customized, and its functions can also be standardized for use with 
 ![Kiso infographic](./docs/website/content/images/Kiso_infographic.png)
 
 ## Scope ##
-To learn what Kiso is and how it can help you, please have a look at our [scope](http://kiso.rempler.de:1313/project-overview/scope.html) page.
+To learn what Kiso is and how it can help you, please have a look at our [scope](http://docs.eclipsekiso.de:1313/project-overview/scope.html) page.
 
 ## Quick start ##
-Please take a look at the [quick start](http://kiso.rempler.de:1313/user-guide/quick_start.html) section in the user manual documentation.
+Please take a look at the [quick start](http://docs.eclipsekiso.de:1313/user-guide/quick_start.html) section in the user manual documentation.
 
 ## Support ##
 Community support is provided via Mattermost, see [Kiso channel](https://mattermost.eclipse.org/eclipse/channels/kiso). An Eclipse Foundation Mattermost account is needed.
 
 ## Resources ##
 Please note that (for now) some of the following links may require additional accounts and/or are limited to Bosch infrastructure access. This is a temporary impediment until Kiso's infrastructure has been moved over to Eclipse Foundation.
-* User manual: [documentation](http://kiso.rempler.de:1313/)
-* Architecture: [architecture overview](http://kiso.rempler.de:1313/concepts/overall_architecture.html)
-* Frequently asked questions: [FAQ](http://kiso.rempler.de:1313/frequently-asked-questions.html)
-* API documentation: [Doxygen documentation](http://kiso.rempler.de:8080/)
+* User manual: [documentation](http://docs.eclipsekiso.de:1313/)
+* Architecture: [architecture overview](http://docs.eclipsekiso.de:1313/concepts/overall_architecture.html)
+* Frequently asked questions: [FAQ](http://docs.eclipsekiso.de:1313/frequently-asked-questions.html)
+* API documentation: [Doxygen documentation](http://docs.eclipsekiso.de:8080/)
 * Changelog (incl. features, supported reference HW and known issues): [changelog](https://github.com/eclipse/kiso/blob/master/CHANGELOG.md)
 * Continuous integration (automated testing results): [Jenkins dashboard](https://ci.eclipse.org/kiso/view/Kiso-Dashboard/)
 * Eclipse Foundation project page: [Eclipse Kiso](https://projects.eclipse.org/projects/iot.kiso)
