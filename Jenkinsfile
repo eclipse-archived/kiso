@@ -8,6 +8,7 @@ pipeline
             {
                 name 'kiso-build-env'
                 image 'eclipse/kiso-build-env:v0.0.6'
+                alwaysPullImage 'true'
                 ttyEnabled true
                 resourceRequestCpu '2'
                 resourceLimitCpu '2'
