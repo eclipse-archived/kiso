@@ -26,7 +26,9 @@ RUN apt-get update && apt-get install -y \
     ninja-build \
     plantuml \
     python3 \
-    pipenv
+    python3-pip
+
+RUN python3 -m pip install pipenv
 
 ENV WORKON_HOME /kiso-project/.venvs
 ENV PIPENV_CACHE_DIR /kiso-project/.cache
