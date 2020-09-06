@@ -16,6 +16,7 @@ The project maintains the following source code repositories:
 Thanks goes to these wonderful people (sorted by last name):
 
  * Leen Bader
+ * Andreas Baulig
  * Lars Beseke
  * Michael Bierkandt
  * Martin Clement
