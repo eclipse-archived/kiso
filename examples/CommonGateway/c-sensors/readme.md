@@ -115,7 +115,9 @@ Reading acceleration data from `SensorAccelerometer_Read()`, one can directly ac
 
 ## Expected Output
 
-Specify what the user should obtain as an output of the execution the example. e.g. terminal output screenshots, pictures(flashing LEDs) etc.
+During normal operation the green LED should toggle for each app loop cycle every 5 seconds. If an error occurred anywhere within the app loop iteration, the red LED will be set ON and the green LED set to OFF. The app loop cycle continues, and may recover, toggling the green LED, while keeping the red LED on.
+
+At the same time, with each app loop, data is read from the sensors. This data can be viewed via the debug UART port, provided a appropriate host is connected.
 
 ## Troubleshooting
 
