@@ -25,4 +25,11 @@ RUN apt-get update && apt-get install -y \
     libxml2-utils \
     ninja-build \
     plantuml \
-    python3
+    python3 \
+    python3-pip
+
+RUN python3 -m pip install pipenv
+
+ENV WORKON_HOME /kiso-project/.venvs
+ENV PIPENV_CACHE_DIR /kiso-project/.cache
+RUN chgrp -R 0 /kiso-project && chmod -R g=u /kiso-project
