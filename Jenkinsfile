@@ -130,6 +130,10 @@ pipeline
                 artifacts: 'builddir-formatting/**/*_format.xml',
                 fingerprint: true
             )
+            archiveArtifacts (
+                artifacts: 'core/.clang-tidy',
+                fingerprint: true
+            )
             junit (
                 allowEmptyResults: true,
                 testResults: 'builddir-static/clang-report.xml'
