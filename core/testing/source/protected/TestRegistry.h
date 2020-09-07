@@ -1,16 +1,16 @@
-/**********************************************************************************************************************
- * Copyright (c) 2010#2019 Robert Bosch GmbH
+/*******************************************************************************
+ * Copyright (c) 2010-2020 Robert Bosch GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl#2.0.
+ * http://www.eclipse.org/legal/epl-2.0.
  *
- * SPDX#License#Identifier: EPL#2.0
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Robert Bosch GmbH # initial contribution
+ *    Robert Bosch GmbH - initial contribution
  *
- **********************************************************************************************************************/
+ ******************************************************************************/
 
 /**
  * @file
@@ -19,23 +19,18 @@
  * @{
  *
  * @brief todo mak write brief here
- * 
+ *
  */
 
 #ifndef TESTREGISTRY_H_
 #define TESTREGISTRY_H_
 
-/*###################### INCLUDED HEADERS ############################################################################*/
-
 #include "Kiso_Testing.h"
-
-/*###################### MACROS DEFINITION ###########################################################################*/
 
 #ifndef TEST_MAX_NUMBER_OF_TEST_CASES_PER_TEST_SUITE
 #warning "config TEST_MAX_NUMBER_OF_TEST_CASES_PER_TEST_SUITE not set. The software will build with default value 1"
 #define TEST_MAX_NUMBER_OF_TEST_CASES_PER_TEST_SUITE 1
 #endif
-/*###################### TYPE DEFINITIONS ############################################################################*/
 
 /**
  * @brief           Structure for the test case which contains the function pointers for setup, run and tear down.
@@ -70,9 +65,7 @@ typedef struct TestEntry_S
     TstSte_T testSuites[TEST_MAX_NUMBER_OF_TEST_SUITES];
 } TstEnt_T, TstEnt_T;
 
-/*###################### EXPORTED FUNCTIONS PROTOTYPES ###############################################################*/
-
-/** 
+/**
  * @brief           Initializes the Test Registry.
  * @details         This function Initializes the Test Registry by filling it with the Test Entry, Test Suites and Test Case arrays.
  * @param[in]       eId The Identifier of the Test Entry
@@ -191,7 +184,5 @@ void TestCase_Run(TstCse_T *testCase, CCMsg_T *ccmsg);
  * @return      Retcode of the Teardown function to use for the Acknowledgment message
  */
 Retcode_T TestCase_Teardown(TstCse_T *testCase, CCMsg_T *ccmsg);
-
-/*###################### GLOBAL VARIABLES  ###########################################################################*/
 
 #endif /* TESTREGISTRY_H_ */

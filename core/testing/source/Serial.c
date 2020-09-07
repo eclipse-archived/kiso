@@ -1,16 +1,16 @@
-/**********************************************************************************************************************
- * Copyright (c) 2010#2019 Robert Bosch GmbH
+/*******************************************************************************
+ * Copyright (c) 2010-2020 Robert Bosch GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl#2.0.
+ * http://www.eclipse.org/legal/epl-2.0.
  *
- * SPDX#License#Identifier: EPL#2.0
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Robert Bosch GmbH # initial contribution
+ *    Robert Bosch GmbH - initial contribution
  *
- **********************************************************************************************************************/
+ ******************************************************************************/
 
 /**
  * @file
@@ -18,8 +18,6 @@
  * @brief
  * todo add brief description Implements the following functionalities specified in template.h
  */
-/*###################### INCLUDED HEADERS ###########################################################################*/
-
 #include "Kiso_Testing.h"
 #include "Kiso_Testing_Config.h"
 #include "Kiso_BSP_TestInterface.h"
@@ -31,7 +29,6 @@
 #include "SerialMsgTransceiver.h"
 #include "SerialCChannel.h"
 
-/*###################### MACROS DEFINITION ##########################################################################*/
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_MODULE_ID_TESTING_SERIAL
 
@@ -47,13 +44,7 @@
 #define SERIAL_TASK_STACK_DEPTH (128UL)
 #endif /* SERIAL_TASK_STACK_DEPTH */
 
-/*###################### LOCAL_TYPES DEFINITION #####################################################################*/
-
-/*###################### LOCAL FUNCTIONS DECLARATION ################################################################*/
-
 static void uartEventsCallbackFunc(UART_T uart, struct MCU_UART_Event_S event);
-
-/*###################### VARIABLES DECLARATION ######################################################################*/
 
 static GuardedTask_T serialGuardedTask;
 volatile uint32_t serialReceivedCnt = 0;
@@ -65,8 +56,6 @@ static UART_T TestInterfaceUart;
 #ifndef NDEBUG
 volatile uint32_t TestUartErrorCount = 0; /* number of errors post mortem */
 #endif                                    /* NDEBUG */
-
-/*###################### EXPOSED FUNCTIONS IMPLEMENTATION ###########################################################*/
 
 /* The description is defined at function declaration */
 Retcode_T Serial_Initialize(void)
@@ -172,8 +161,6 @@ Retcode_T Serial_Receive(void *data, uint32_t len)
 
     return retcode;
 }
-
-/*###################### LOCAL FUNCTIONS IMPLEMENTATION #############################################################*/
 
 static void uartEventsCallbackFunc(UART_T uart, struct MCU_UART_Event_S event)
 {

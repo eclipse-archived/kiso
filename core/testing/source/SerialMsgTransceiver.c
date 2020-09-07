@@ -70,34 +70,34 @@ Retcode_T SerialMsgTransceiver_Send(uint8_t *message, uint8_t length)
 
     sendBuffer[j++] = START;
 
-    if (((crc >> CHAR_BIT) & 0xFF) == START)
+    if (((crc >> CHAR_BIT) & CRC_BYTE_MASK) == START)
     {
         sendBuffer[j++] = ESC;
         sendBuffer[j++] = ESC_START;
     }
-    else if (((crc >> CHAR_BIT) & 0xFF) == ESC)
+    else if (((crc >> CHAR_BIT) & CRC_BYTE_MASK) == ESC)
     {
         sendBuffer[j++] = ESC;
         sendBuffer[j++] = ESC_ESC;
     }
     else
     {
-        sendBuffer[j++] = (crc >> CHAR_BIT) & 0xFF;
+        sendBuffer[j++] = (crc >> CHAR_BIT) & CRC_BYTE_MASK;
     }
 
-    if ((crc & 0xFF) == START)
+    if ((crc & CRC_BYTE_MASK) == START)
     {
         sendBuffer[j++] = ESC;
         sendBuffer[j++] = ESC_START;
     }
-    else if ((crc & 0xFF & 0xFF) == ESC)
+    else if ((crc & CRC_BYTE_MASK) == ESC)
     {
         sendBuffer[j++] = ESC;
         sendBuffer[j++] = ESC_ESC;
     }
     else
     {
-        sendBuffer[j++] = crc & 0xFF;
+        sendBuffer[j++] = crc & CRC_BYTE_MASK;
     }
 
     for (uint32_t i = 0; i < length; i++)
@@ -123,8 +123,8 @@ Retcode_T SerialMsgTransceiver_Send(uint8_t *message, uint8_t length)
     return (ReturnValue);
 }
 
-//@todo dei9bue: verify total length, limited to 256! what to do if exceeded?
-/* The description is defined at function declaration */
+/** @todo Verify total length, limited to 256! what to do if exceeded?
+  * The description is defined at function declaration */
 void SerialMsgTransceiver_Receive(void)
 {
     static uint8_t receivingState = WAITING_FOR_START;
