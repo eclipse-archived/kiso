@@ -25,7 +25,7 @@ No special teardown
 
 1. Get device handle of BSP initialized generic UART
     * UART must be configured in loopback mode, echoing any data sent out
-2. Allocate OS signal semaphore used as signal from IRQ
+2. Allocate OS signal semaphores used as signal from IRQ
 3. Connect the generic UART BSP
 4. Initialize UART MCU with UART handle
 5. Enable generic UART BSP
@@ -43,4 +43,4 @@ No special teardown
 1. Deinitialize UART MCU, deactivating IRQs
 2. Disable generic UART BSP
 3. Disconnect generic UART BSP
-4. Free OS signal semaphore
+4. Free OS signal semaphores

@@ -31,7 +31,7 @@
 #define KISO_MODULE_ID 0
 
 #define UART_BUFFER_LEN (5)
-#define DATA_TRANSFER_TIMEOUT_MS UINT32_C(1000)
+#define DATA_TRANSFER_TIMEOUT_MS UINT32_C(200)
 #define UART_DEVICE UINT32_C(1)
 #define MSG_BUFFER_SIZE (32)
 
@@ -46,7 +46,8 @@ static Retcode_T TestCase_FctTest_Teardown(CCMsg_T *ccmsg);
 static void UartISRCallback(UART_T uart, struct MCU_UART_Event_S event);
 
 static UART_T UartHdl = 0;
-static xSemaphoreHandle UartLock = 0;
+static xSemaphoreHandle TxSignal = 0;
+static xSemaphoreHandle RxSignal = 0;
 
 Retcode_T TestSuiteUart_Initialize(uint8_t sId)
 {
@@ -78,8 +79,16 @@ static Retcode_T TestCase_FctTest_Setup(CCMsg_T *ccmsg)
     }
     if (RETCODE_OK == retcode)
     {
-        UartLock = xSemaphoreCreateBinary();
-        if (NULL == UartLock)
+        TxSignal = xSemaphoreCreateBinary();
+        if (NULL == TxSignal)
+        {
+            return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_SEMAPHORE_ERROR);
+        }
+    }
+    if (RETCODE_OK == retcode)
+    {
+        RxSignal = xSemaphoreCreateBinary();
+        if (NULL == RxSignal)
         {
             return RETCODE(RETCODE_SEVERITY_FATAL, RETCODE_SEMAPHORE_ERROR);
         }
@@ -118,7 +127,11 @@ static Retcode_T TestCase_FctTest_Teardown(CCMsg_T *ccmsg)
     }
     if (RETCODE_OK == retcode)
     {
-        vSemaphoreDelete(UartLock);
+        vSemaphoreDelete(TxSignal);
+    }
+    if (RETCODE_OK == retcode)
+    {
+        vSemaphoreDelete(RxSignal);
     }
     return retcode;
 }
@@ -150,21 +163,45 @@ static void TestCase_FctTest_Run(CCMsg_T *ccmsg)
     }
     if (RETCODE_OK == retcode)
     {
-        if (pdTRUE != xSemaphoreTake(UartLock, DATA_TRANSFER_TIMEOUT_MS))
+        if (pdTRUE != xSemaphoreTake(TxSignal, DATA_TRANSFER_TIMEOUT_MS))
         {
             retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_SEMAPHORE_ERROR);
             strcpy(msg, "FAIL");
         }
     }
+
     if (RETCODE_OK == retcode)
     {
-        for (uint8_t i = 0; i < UART_BUFFER_LEN; i++)
+        if (pdTRUE == xSemaphoreTake(RxSignal, DATA_TRANSFER_TIMEOUT_MS))
         {
-            if (dataIn[i] != dataOut[i])
+            uint8_t tries = 1;
+            // we received something... now wait till we receive EVERYTHING.
+            while (pdTRUE == xSemaphoreTake(RxSignal, DATA_TRANSFER_TIMEOUT_MS))
             {
-                retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNEXPECTED_BEHAVIOR);
-                strcpy(msg, "FAIL");
+                /* Semaphore should signal at most UART_BUFFER_LEN times (also
+                 * counting the first semaphore signal above) */
+                tries++;
+                if (tries > UART_BUFFER_LEN)
+                {
+                    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNEXPECTED_BEHAVIOR);
+                    strcpy(msg, "FAIL");
+                    break;
+                }
             }
+
+            for (uint8_t i = 0; RETCODE_OK == retcode && i < UART_BUFFER_LEN; i++)
+            {
+                if (dataIn[i] != dataOut[i])
+                {
+                    retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_UNEXPECTED_BEHAVIOR);
+                    strcpy(msg, "FAIL");
+                }
+            }
+        }
+        else
+        {
+            retcode = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_SEMAPHORE_ERROR);
+            strcpy(msg, "FAIL");
         }
     }
     Tests_SendReport(Retcode_GetCode(retcode), msg);
@@ -177,14 +214,13 @@ static void UartISRCallback(UART_T uart, struct MCU_UART_Event_S event)
 
     if (UINT8_C(1) == event.TxComplete)
     {
-
         if (RETCODE_OK == Rc)
         {
             BaseType_t higherPriorityTaskWoken = pdFALSE;
 
-            if (NULL != UartLock)
+            if (NULL != TxSignal)
             {
-                if (pdTRUE == xSemaphoreGiveFromISR(UartLock, &higherPriorityTaskWoken))
+                if (pdTRUE == xSemaphoreGiveFromISR(TxSignal, &higherPriorityTaskWoken))
                 {
                     portYIELD_FROM_ISR(higherPriorityTaskWoken);
                 }
@@ -202,14 +238,13 @@ static void UartISRCallback(UART_T uart, struct MCU_UART_Event_S event)
 
     if (UINT8_C(1) == event.RxComplete)
     {
-
         if (RETCODE_OK == Rc)
         {
             BaseType_t higherPriorityTaskWoken = pdFALSE;
 
-            if (NULL != UartLock)
+            if (NULL != RxSignal)
             {
-                if (pdTRUE == xSemaphoreGiveFromISR(UartLock, &higherPriorityTaskWoken))
+                if (pdTRUE == xSemaphoreGiveFromISR(RxSignal, &higherPriorityTaskWoken))
                 {
                     portYIELD_FROM_ISR(higherPriorityTaskWoken);
                 }
