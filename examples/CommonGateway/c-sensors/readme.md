@@ -99,9 +99,19 @@ void appPeriodicTest(void *CmdProcessorHandle, uint32_t param2)
     // [...]
 }
 ```
-This code through in two main functions to get the output.
-The first one is for the Enviroment Sensor, which go through two functions called [SensorEnvironment_Init](https://github.com/eclipse/kiso/blob/master/examples/CommonGateway/c-sensors/source/env_sensor.c#L58) and [SensorEnvironment_Read](https://github.com/eclipse/kiso/blob/master/examples/CommonGateway/c-sensors/source/env_sensor.c#L110) as you can see that these two functions give the measurements continuously for the (temperature, pressure and humidity).
-The second one is for Accelerometer Sensor, which go through two functions called [SensorAccelerometer_Init](https://github.com/eclipse/kiso/blob/master/examples/CommonGateway/c-sensors/source/accel_sensor.c#L48) and [SensorAccelerometer_Read](https://github.com/eclipse/kiso/blob/master/examples/CommonGateway/c-sensors/source/accel_sensor.c#L76) as you can see that these two functions give the dimensions (x,y,z).
+The app is structured in three modules:
+
+* the main app logic
+* environment sensor and
+* acceleration sensor logic.
+
+With the main app logic being at top of the hierarchy.
+
+Each module has to be initialized first, before it can be used. The app logic initializes vital system components such as the sensor BSP components, as well as the I2C communication bus they are sit on. Finally each sensor module initializes the `bma2x2.h` and `bme280.h` library modules respectively.
+
+Once initialization is complete, the main application loop is entered. This is done using the main command processor, created in `main()`. For each iteration of the app loop, `appPeriodicTest()` is enqueued at the end of the last iteration. This is repeated endlessly.
+
+Reading acceleration data from `SensorAccelerometer_Read()`, one can directly access the x, y and z components as provided by the sensor. Environmental data however, need some static temperature correction first. This compensation can be changed via the `DEFAULT_TEMPERATURE_OFFSET` constant, with the measured temperature offset at a known temperature.
 
 ## Expected Output
 
