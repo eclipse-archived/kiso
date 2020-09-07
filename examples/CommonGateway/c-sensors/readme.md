@@ -29,7 +29,7 @@ cmake --build build --target flash
 ```
 
 ## Code Walkthrough
-The essence of this example can be seen in the appPeriodicTest function, which is taking the data from  SensorEnvironment_Read and make some calculations to give the output understandable and take the data from the SensorAccelerometer_Read and show dimensions and if everything goes correct, the green led will flash. Otherwise the red led will flash .
+The main program loop can be seen in `appPeriodicTest()`. It takes data from  `SensorEnvironment_Read()` and `SensorAccelerometer_Read()`, performs some conversions and corrections based on static calibration and finally presents the data via debug log. If everything went OK, the green LED will flash. In case of any errors the red LED will flash.
 
 ```c
 void appPeriodicTest(void *CmdProcessorHandle, uint32_t param2)
