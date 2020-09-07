@@ -119,4 +119,4 @@ Specify what the user should obtain as an output of the execution the example. e
 
 ## Troubleshooting
 
-If you don't find a conclusion using the [documentation](http://docs.eclipsekiso.de:1313/), please message us on [mattermost](mattermost.eclipse.org/eclipse/channels/kiso).
+If you don't find a conclusion using the [documentation](http://docs.eclipsekiso.de:1313/), please message us on [mattermost](https://mattermost.eclipse.org/eclipse/channels/kiso).
