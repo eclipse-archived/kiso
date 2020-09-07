@@ -85,7 +85,9 @@ pipeline
                     {
                         script
                         {
-                            echo "run integration-tests placeholder"
+                            echo "build integration-tests"
+                            sh 'cmake . -Bbuilddir-integration -G"Ninja" -DENABLE_INTEGRATION_TESTING=1 -DKISO_INTEGRATION_TEST_NAME="core/essentials" -DKISO_BOARD_NAME="NucleoF767"'
+                            sh 'cmake --build builddir-integration'
                         }
                     }
                 }
