@@ -61,6 +61,7 @@ pipeline
                             sh 'cmake --build builddir-static 2> builddir-static/clang-report.txt'
                             sh 'if [ ! -s builddir-static/clang-report.txt ]; then echo "Good, all tests have been passed w/o findings" > builddir-static/clang-report.txt; fi;'
                             sh 'cat builddir-static/clang-report.txt | python ci/thirdparty/clangTidyToJunit/clang-tidy-to-junit.py `pwd` > builddir-static/clang-report.xml'
+                            sh 'cp core/.clang-tidy builddir-static/clang-tidy-config.yaml' // export clang-tidy config with '.yaml' ending, so it can be displayed on Jenkins Dashboard
                         }
                     }
                 }
@@ -131,7 +132,7 @@ pipeline
                 fingerprint: true
             )
             archiveArtifacts (
-                artifacts: 'core/.clang-tidy',
+                artifacts: 'builddir-static/clang-tidy-config.yaml',
                 fingerprint: true
             )
             junit (
