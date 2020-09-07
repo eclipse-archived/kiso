@@ -14,7 +14,7 @@ Please refer to the getting started [quick start](http://docs.eclipsekiso.de:131
 #### Hardware Components
 You will need CommonGateway Board. 
 ## Initial Setup
-Configure the project to be compiled for the CommonGateway Board which is located in [boards/CommonGateway](https://github.com/eclipse/kiso/tree/master/boards/CommonGateway) .
+Configure the project to be compiled for the CommonGateway Board which is located in [boards/CommonGateway](https://github.com/eclipse/kiso/tree/master/boards/CommonGateway). To do this, add the respective `KISO_BOARD_NAME` setting to `cmake` during workspace configuration, as shown in Section [Execution Flow](#Execution-Flow)
 
 ## Execution Flow
 ```
