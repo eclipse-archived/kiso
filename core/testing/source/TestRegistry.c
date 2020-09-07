@@ -1,44 +1,32 @@
-/**********************************************************************************************************************
- * Copyright (c) 2010#2019 Robert Bosch GmbH
+/*******************************************************************************
+ * Copyright (c) 2010-2020 Robert Bosch GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl#2.0.
+ * http://www.eclipse.org/legal/epl-2.0.
  *
- * SPDX#License#Identifier: EPL#2.0
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Robert Bosch GmbH # initial contribution
+ *    Robert Bosch GmbH - initial contribution
  *
- **********************************************************************************************************************/
+ ******************************************************************************/
 
 /**
  * @file
  *
  * @brief
  */
-/*###################### INCLUDED HEADERS ############################################################################*/
-
 #include "Kiso_Testing.h"
 #include "TestRegistry.h"
-
-/*###################### MACROS DEFINITION ###########################################################################*/
 
 #undef KISO_MODULE_ID
 #define KISO_MODULE_ID KISO_MODULE_ID_TESTING_TESTREGISTRY
 
-/*###################### LOCAL_TYPES DEFINITION ######################################################################*/
-
-/*###################### LOCAL FUNCTIONS DECLARATION #################################################################*/
-
 static TstSte_T *lookupTestSuite(uint8_t sId);
 static TstCse_T *lookupTestCase(TstSte_T *testSuite, uint8_t cId);
 
-/*###################### VARIABLES DECLARATION #######################################################################*/
-
 static TstEnt_T testEntry;
-
-/*###################### EXPOSED FUNCTIONS IMPLEMENTATION ############################################################*/
 
 /* @see TestRegistry.h for function description */
 void TestRegistry_Initialize(uint8_t eId, SetupFct_T setup, TearDownFct_T teardown)
@@ -168,7 +156,7 @@ Retcode_T TestEntry_Setup(TstEnt_T *theTestEntry, CCMsg_T *ccmsg)
         return (retcode);
     }
 
-    /* If test section setup pointer are null, it means that there is nothing to be done and that we can just send an 
+    /* If test section setup pointer are null, it means that there is nothing to be done and that we can just send an
     Acknowledgement with status OK.*/
     if (NULL != theTestEntry->setup)
     {
@@ -212,7 +200,7 @@ Retcode_T TestSuite_Setup(TstSte_T *testSuite, CCMsg_T *ccmsg)
         retcode = RETCODE(RETCODE_SEVERITY_WARNING, (uint32_t)RETCODE_NULL_POINTER);
         return (retcode);
     }
-    /* If test suite setup pointer are null, it means that there is nothing to be done and that we can just send an 
+    /* If test suite setup pointer are null, it means that there is nothing to be done and that we can just send an
     Acknowledgement with status OK.*/
     if (NULL != testSuite->setup)
     {
@@ -232,7 +220,7 @@ Retcode_T TestSuite_Teardown(TstSte_T *testSuite, CCMsg_T *ccmsg)
         retcode = RETCODE(RETCODE_SEVERITY_WARNING, (uint32_t)RETCODE_NULL_POINTER);
         return (retcode);
     }
-    /* If test suite teardown pointer are null, it means that there is nothing to be done and that we can just send an 
+    /* If test suite teardown pointer are null, it means that there is nothing to be done and that we can just send an
     Acknowledgement with status OK.*/
     if (NULL != testSuite->teardown)
     {
@@ -297,8 +285,6 @@ Retcode_T TestCase_Teardown(TstCse_T *testCase, CCMsg_T *ccmsg)
 
     return retcode;
 }
-
-/*###################### LOCAL FUNCTIONS IMPLEMENTATION ##############################################################*/
 
 /**
  * @brief finds a test suite by suite Id in the test suites registry.

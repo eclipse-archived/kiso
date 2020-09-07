@@ -1,16 +1,16 @@
-/**********************************************************************************************************************
- * Copyright (c) 2010#2019 Robert Bosch GmbH
+/*******************************************************************************
+ * Copyright (c) 2010-2020 Robert Bosch GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl#2.0.
+ * http://www.eclipse.org/legal/epl-2.0.
  *
- * SPDX#License#Identifier: EPL#2.0
+ * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Robert Bosch GmbH # initial contribution
+ *    Robert Bosch GmbH - initial contribution
  *
- **********************************************************************************************************************/
+ ******************************************************************************/
 
 /**
  * @file
@@ -19,22 +19,14 @@
  * @{
  *
  * @brief       Serial Communication Channel Interface
- * @details     This header provides APIs to control uart communication line if this one is used as a communication 
+ * @details     This header provides APIs to control uart communication line if this one is used as a communication
  *              channel between the Test executor and the test controller.
  */
 
 #ifndef SERIALCCHANNEL_H_
 #define SERIALCCHANNEL_H_
 
-/*###################### INCLUDED HEADERS ############################################################################*/
-
 #include "Kiso_Retcode.h"
-
-/*###################### MACROS DEFINITION ###########################################################################*/
-
-/*###################### TYPE DEFINITIONS ############################################################################*/
-
-/*###################### EXPORTED FUNCTIONS PROTOTYPES ###############################################################*/
 
 /**
  * @brief           Initializes the serial interface
@@ -69,8 +61,6 @@ Retcode_T Serial_Receive(void *data, uint32_t len);
  * @return          RETCODE_OK if Send successful error code otherwise
  */
 Retcode_T Serial_Send(void *data, uint32_t len);
-
-/*###################### GLOBAL VARIABLES  ###########################################################################*/
 
 extern volatile uint32_t serialReceivedCnt;
 

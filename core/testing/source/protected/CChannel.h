@@ -157,6 +157,4 @@ void CChannel_ReceiveEventHandler(uint8_t *buffer, uint8_t length);
  */
 Retcode_T CChannel_AddTlvElement(CCMsg_T *ccmsg, TlvElt_T *tlvElement);
 
-/*###################### GLOBAL VARIABLES  ###########################################################################*/
-
 #endif /* KISO_CCHANNEL_H_ */
