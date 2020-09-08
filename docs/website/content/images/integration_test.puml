@@ -1,0 +1,35 @@
+@startuml
+
+title Integration Test Framework
+
+package "Test App" {
+    component "Test Executor" as testexecutor
+    package "Kiso Package (e.g. Essentials) or User App" {
+        component "Test Entriy" as testentry
+        component "Test Suite 1" as testsuite1
+        component "Test Suite 2" as testsuite2
+        component "Test Suite ..." as testsuitecont
+        component "Test Case 1.1" as testcase11
+        component "Test Case 1.2" as testcase12
+        component "Test Case 2.1" as testcase21
+        component "Test Case 2.2" as testcase22
+        component "Test Case 2.3" as testcase23
+        component "Test Case ..." as testcasecont
+    }
+}
+
+testexecutor -> testentry : links with
+
+testentry --> testsuite1 : contains
+testentry --> testsuite2 : contains
+testentry --> testsuitecont : contains
+testsuite1 --> testcase11 : contains
+testsuite1 --> testcase12 : contains
+testsuite2 --> testcase21 : contains
+testsuite2 --> testcase22 : contains
+testsuite2 --> testcase23 : contains
+testsuitecont --> testcasecont : contains
+
+footer © Robert Bosch GmbH 2010-2020 | Licensed under EPL-2.0
+
+@enduml
