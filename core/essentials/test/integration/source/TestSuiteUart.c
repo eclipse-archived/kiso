@@ -53,7 +53,7 @@ Retcode_T TestSuiteUart_Initialize(uint8_t sId)
 {
     Retcode_T retcode = RETCODE_OK;
 
-    retcode = Tests_RegisterTestSuite(sId, TestCase_FctTest_Setup, TestCase_FctTest_Teardown);
+    retcode = Tests_RegisterTestSuite(sId, NULL, NULL);
 
     if (RETCODE_OK == retcode)
     {
@@ -115,6 +115,10 @@ static Retcode_T TestCase_FctTest_Teardown(CCMsg_T *ccmsg)
 {
     KISO_UNUSED(ccmsg);
     Retcode_T retcode;
+    uint8_t dummy[0];
+
+    /* cancel receive */
+    (void)MCU_UART_Receive(UartHdl, dummy, 0);
 
     retcode = MCU_UART_Deinitialize(UartHdl);
     if (RETCODE_OK == retcode)
