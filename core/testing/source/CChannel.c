@@ -108,6 +108,7 @@ void CChannel_PrepareAck(CCMsg_T *ccmsg)
 
 Retcode_T CChannel_SendAck(uint8_t result)
 {
+    ackMessage.header.messageType = result == 0 ? 0 : 1;
     ackMessage.header.errorCode = result;
 
     assert(ackMessage.header.messageInfo == CCMSG_CREATE_TYPE(CCHANNEL_MSG_TYPE_ACK));
@@ -127,7 +128,7 @@ void CChannel_PrepareReport(CCMsg_T *ccmsg)
 
     (void)memcpy(&reportMessage, ccmsg, CCHANNEL_HEADER_LENGTH);
 
-    reportMessage.header.messageType = CCHANNEL_REPORT_TYPE;
+    reportMessage.header.messageType = 0;
     reportMessage.header.messageInfo = CCMSG_CREATE_TYPE(CCHANNEL_MSG_TYPE_REPORT);
     reportMessage.header.payloadLength = 0;
 }
@@ -137,6 +138,7 @@ Retcode_T CChannel_SendReport(uint8_t result, char *reason)
     Retcode_T retcode = RETCODE_OK;
 
     reportMessage.header.errorCode = result;
+    reportMessage.header.messageType = result == 0 ? 0 : 1;
 
     assert(reportMessage.header.payloadLength == 0);
 
