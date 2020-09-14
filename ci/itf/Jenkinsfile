@@ -1,0 +1,29 @@
+pipeline
+{
+    /* NOTE: don't use agent declaration in both global and stage scope:
+     * https://issues.jenkins-ci.org/browse/JENKINS-63449
+     * Follow-up once above issue resolved. */
+    agent none
+    stages
+    {
+        stage('Run Integration Tests')
+        {
+            agent
+            {
+                dockerfile
+                {
+                    dir 'ci/docker/development'
+                }
+            }
+            steps
+            {
+                script
+                {
+                    echo "build integration-tests"
+                    sh 'cmake . -Bbuilddir-integration -G"Ninja" -DENABLE_INTEGRATION_TESTING=1 -DKISO_INTEGRATION_TEST_ENTRY_PATH="core/essentials/test/integration" -DKISO_BOARD_NAME="NucleoF767"'
+                    sh 'cmake --build builddir-integration'
+                }
+            }
+        } // stage('Run Integration Tests')
+    } // stages
+} // pipeline
