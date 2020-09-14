@@ -109,6 +109,7 @@ pipeline
                         script
                         {
                             echo "Generate Hugo Website"
+                            sh 'rm -rf docs/website/themes/learn/'
                             sh 'git clone --depth 1 --branch 2.5.0 https://github.com/matcornic/hugo-theme-learn.git docs/website/themes/learn/'
                             sh 'hugo -s docs/website'
                         }
