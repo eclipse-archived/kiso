@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     clang-tidy \
     cmake \
     cppcheck \
+    curl \
     doxygen \
     g++ \
     gcc \
@@ -22,6 +23,7 @@ RUN apt-get update && apt-get install -y \
     hugo \
     lcov \
     libgtest-dev \
+    libncurses5 \
     libxml2-utils \
     ninja-build \
     plantuml \
@@ -29,3 +31,9 @@ RUN apt-get update && apt-get install -y \
     python3-pip
 
 RUN python3 -m pip install pipenv
+
+RUN JLINK_ARCH=`([ $(uname -m) = 'x86_64' ] && echo 'x86_64') || ([ $(uname -m) = 'armv7l' ] && echo 'arm')` \
+    && TEMP_DEB="$(mktemp)" \
+    && curl -X POST -F 'accept_license_agreement=accepted' "https://www.segger.com/downloads/jlink/JLink_Linux_${JLINK_ARCH}.deb" -o "$TEMP_DEB" \
+    && dpkg -i "$TEMP_DEB" \
+    && rm -f "$TEMP_DEB"
