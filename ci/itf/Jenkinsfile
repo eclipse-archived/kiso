@@ -13,7 +13,13 @@ pipeline
                 dockerfile
                 {
                     dir 'ci/docker/development'
+                    args '--device /dev/ttyACM0'
                 }
+            }
+            environment
+            {
+                WORKON_HOME = "/tmp/.venvs"
+                PIPENV_CACHE_DIR = "/tmp/.cache"
             }
             steps
             {
@@ -22,6 +28,15 @@ pipeline
                     echo "build integration-tests"
                     sh 'cmake . -Bbuilddir-integration -G"Ninja" -DENABLE_INTEGRATION_TESTING=1 -DKISO_INTEGRATION_TEST_ENTRY_PATH="core/essentials/test/integration" -DKISO_BOARD_NAME="NucleoF767"'
                     sh 'cmake --build builddir-integration'
+
+                    sh 'rm -rf ci/itf/kiso-testing'
+                    sh 'git clone --depth 1 --branch prototype/integrate-kiso-demo https://github.com/ChiefGokhlayehBosch/kiso-testing.git ci/itf/kiso-testing'
+                    dir('ci/itf/kiso-testing')
+                    {
+                        sh 'pipenv --python 3'
+                        sh 'pipenv install'
+                        sh 'pipenv run python -m pykiso -c ./examples/demo/demo.yaml'
+                    }
                 }
             }
         } // stage('Run Integration Tests')
