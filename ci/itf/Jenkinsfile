@@ -10,10 +10,9 @@ pipeline
         {
             agent
             {
-                dockerfile
+                node
                 {
-                    dir 'ci/docker/development'
-                    args '--device /dev/ttyACM0'
+                    label 'kiso/itf/dut/nucleof767 && kiso/itf/connector/uart && (kiso/itf/connector/jlink-via-remote || kiso/itf/connector/jlink-via-local)'
                 }
             }
             environment
@@ -26,8 +25,9 @@ pipeline
                 script
                 {
                     echo "build integration-tests"
-                    sh 'cmake . -Bbuilddir-integration -G"Ninja" -DENABLE_INTEGRATION_TESTING=1 -DKISO_INTEGRATION_TEST_ENTRY_PATH="core/essentials/test/integration" -DKISO_BOARD_NAME="NucleoF767"'
-                    sh 'cmake --build builddir-integration'
+                    echo "${env.JLINK_REMOTE}"
+                    sh "cmake . -Bbuilddir-integration -G'Ninja' -DENABLE_INTEGRATION_TESTING=1 -DKISO_INTEGRATION_TEST_ENTRY_PATH='core/essentials/test/integration' -DKISO_BOARD_NAME='NucleoF767' -DJLINK_REMOTE=\"${env.JLINK_REMOTE}\""
+                    sh 'cmake --build builddir-integration --target flash'
 
                     sh 'rm -rf ci/itf/kiso-testing'
                     sh 'git clone --depth 1 --branch prototype/integrate-kiso-demo https://github.com/ChiefGokhlayehBosch/kiso-testing.git ci/itf/kiso-testing'
