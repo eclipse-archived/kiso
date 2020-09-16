@@ -67,6 +67,9 @@ function(CREATE_FLASH_TARGET_JLINK ELF_TARGET)
 
     # \todo: This can be exported to file and replaced with configure_file
     file(WRITE  ${SCRIPT_PATH} "exitonerror 1\n")
+    if(JLINK_REMOTE)
+        file(APPEND ${SCRIPT_PATH} "ip ${JLINK_REMOTE}\n")
+    endif()
     file(APPEND ${SCRIPT_PATH} "device ${KISO_MCU_DEVICE}\n")
     file(APPEND ${SCRIPT_PATH} "if swd\n")
     file(APPEND ${SCRIPT_PATH} "speed 4000\n")
