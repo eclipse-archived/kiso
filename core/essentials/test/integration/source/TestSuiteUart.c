@@ -214,11 +214,11 @@ static void TestCase_FctTest_Run(CCMsg_T *ccmsg)
 static void UartISRCallback(UART_T uart, struct MCU_UART_Event_S event)
 {
     KISO_UNUSED(uart);
-    Retcode_T Rc = RETCODE_OK;
+    Retcode_T rc = RETCODE_OK;
 
-    if (UINT8_C(1) == event.TxComplete)
+    if (event.TxComplete)
     {
-        if (RETCODE_OK == Rc)
+        if (RETCODE_OK == rc)
         {
             BaseType_t higherPriorityTaskWoken = pdFALSE;
 
@@ -235,14 +235,14 @@ static void UartISRCallback(UART_T uart, struct MCU_UART_Event_S event)
             }
             else
             {
-                Rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
+                rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
             }
         }
     }
 
-    if (UINT8_C(1) == event.RxComplete)
+    if (event.RxComplete)
     {
-        if (RETCODE_OK == Rc)
+        if (RETCODE_OK == rc)
         {
             BaseType_t higherPriorityTaskWoken = pdFALSE;
 
@@ -259,18 +259,18 @@ static void UartISRCallback(UART_T uart, struct MCU_UART_Event_S event)
             }
             else
             {
-                Rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
+                rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_NULL_POINTER);
             }
         }
     }
 
-    if (UINT8_C(1) == event.TxError)
+    if (event.TxError || event.RxError)
     {
-        Rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
+        rc = RETCODE(RETCODE_SEVERITY_ERROR, RETCODE_FAILURE);
     }
 
-    if (RETCODE_OK != Rc)
+    if (RETCODE_OK != rc)
     {
-        Retcode_RaiseErrorFromIsr(Rc);
+        Retcode_RaiseErrorFromIsr(rc);
     }
 }
