@@ -1,0 +1,29 @@
+@startuml
+
+title Integration Testing - Example Setup
+
+node "Nucleo-F767" {
+    component "Test App" as testapp
+}
+
+node "Raspberry Pi 3" {
+    component "Jenkins Master" as jenkins_master
+    component "Jenkins Agent" as jenkins_agent
+}
+
+node "GitHub" {
+    component "<your-fork>/kiso" as fork
+}
+
+actor "Developer" as dev
+
+dev --up--> fork : "(1) push commit"
+jenkins_master --left--> fork : "(2) poll latest commit"
+jenkins_master --left--> fork : "(6) notify build status"
+jenkins_master -down-> jenkins_agent : "(3) spawn"
+jenkins_master <-down- jenkins_agent : "(5) report test result"
+jenkins_agent <-down-> testapp : "(4) interact"
+
+footer © Robert Bosch GmbH 2010-2020 | Licensed under EPL-2.0
+
+@enduml
