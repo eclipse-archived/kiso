@@ -23,7 +23,7 @@ RUN curl --create-dirs -fsSLo /usr/share/jenkins/agent.jar https://repo.jenkins-
     && chmod 755 /usr/share/jenkins \
     && chmod 644 /usr/share/jenkins/agent.jar \
     && ln -sf /usr/share/jenkins/agent.jar /usr/share/jenkins/slave.jar
-RUN JLINK_ARCH=`([ $(uname -m) = 'x86_64' ] && echo 'x86_64') || ([ $(uname -m) = 'armv7l' ] && echo 'arm')` \
+RUN JLINK_ARCH=`([ $(uname -m) = 'x86_64' ] && echo 'x86_64') || ([ $(uname -m) = 'armv7l' ] && echo 'arm') || ([ $(uname -m) = 'aarch64' ] && echo 'arm64')` \
     && TEMP_DEB="$(mktemp)" \
     && curl -X POST -F 'accept_license_agreement=accepted' "https://www.segger.com/downloads/jlink/JLink_Linux_${JLINK_ARCH}.deb" -o "$TEMP_DEB" \
     && dpkg -i "$TEMP_DEB" \
