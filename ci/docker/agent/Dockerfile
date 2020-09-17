@@ -1,4 +1,4 @@
-FROM eclipse/kiso-build-env:v0.0.7
+FROM eclipse/kiso-build-env:v0.0.8
 
 LABEL Description="Eclipse Kiso Jenkins Agent container, used to execute hardware integation tests"
 
