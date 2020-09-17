@@ -4,3 +4,4 @@
 build
 builddir-*
 .vscode
+__pycache__/

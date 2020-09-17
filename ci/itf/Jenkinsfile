@@ -35,7 +35,7 @@ pipeline
                     {
                         sh 'pipenv --python 3'
                         sh 'pipenv install'
-                        sh 'pipenv run python -m pykiso -c ./examples/demo/demo.yaml'
+                        sh 'pipenv run python -m pykiso -c ../../../core/essentials/test/integration'
                     }
                 }
             }
