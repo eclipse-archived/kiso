@@ -24,7 +24,7 @@ No special teardown
 ##### Setup
 
 1. Get device handle of BSP initialized generic UART
-    * UART must be configured in loopback mode, echoing any data sent out
+    * UART must be physically connected in loopback mode, i.e. jumper wire between UART Tx <-> Rx.
 2. Allocate OS signal semaphores used as signal from IRQ
 3. Connect the generic UART BSP
 4. Initialize UART MCU with UART handle
