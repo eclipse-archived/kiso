@@ -5,7 +5,8 @@
 These `Dockerfile`s are the source of truth for the docker image used in our continuous integration. This means, modifying it will affect all builds.
 
 * `development` contains the description for the `eclipse/kiso-build-env` image used by developers and CI/CD alike, to build and unit-test Kiso packages.
-* `agent` contains the description for the `eclipse/kiso-agent` image used by CI/CD for integration-testing. It adds a Jenkins agent to `eclipse/kiso-build-env`.
+* `agent` contains the description for the `eclipse/kiso-integration-test-agent` image used by CI/CD for integration-testing. It adds a Jenkins agent to `eclipse/kiso-build-env`. Building it requires a build argument to indicate whether or not to install JLink. Use `docker build ... --build-arg ACCEPT_JLINK_TERMS_OF_USE='accepted'` if you have read and accepted the SEGGER's Terms of Use for this software. Alternatively, set `ACCEPT_JLINK_TERMS_OF_USE='not accepted'` to skip JLink installation. \
+**NOTE: The image must not be re-distributed, if built with JLink enabled! This option is intended for your local setup only.**
 
 ## Installation of docker
 
