@@ -72,7 +72,6 @@ if(NOT KISO_STATIC_CONFIG)
         configure_file(${ABS_BOARD_CONFIG_PATH}/${HEADER} ${DEST} COPYONLY)
     endforeach(HEADER ${BOARD_CONF_FILES})
 
-    # Copy app-specific config files in intermediary directory
     # APP_CONFIG_PATH is not required - only act if present
     if(NOT APP_CONFIG_PATH)
         message(STATUS "APP_CONFIG_PATH not set to a valid path. Not using application-specific configuration.")
@@ -99,7 +98,7 @@ if(NOT KISO_STATIC_CONFIG)
                 configure_file(${ABS_APP_CONFIG_PATH}/${HEADER} ${DEST} COPYONLY)
             endforeach(HEADER ${USER_CONF_FILES})
         endif(NOT EXISTS ${ABS_APP_CONFIG_PATH})
-    endif(NOT APP_CONFIG_PATH)
+    endif(NOT APP_CONFIG _PATH)
 endif(NOT KISO_STATIC_CONFIG)
 
 message(STATUS "Configuration headers merged in ${KISO_CONFIG_PATH}.")
