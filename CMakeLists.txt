@@ -6,6 +6,7 @@ option(ENABLE_FORMAT_CHECKS "Run format checks during configuration stage and ge
 option(SKIP_FORMAT_REPORTS "Skip generation of format XML reports in build directory" ON)
 option(ENABLE_STATIC_CHECKS "Configure a build tree for static code analysis" OFF)
 option(ENABLE_COVERAGE "Build unit tests with coverage information to use with GCOV and LCOV" ON)
+option(ENABLE_INTEGRATION_TESTING "Build for integration tests application" OFF)
 
 ## Include config file if it exists
 include(kiso_defaults.cmake OPTIONAL)
@@ -17,14 +18,16 @@ if (NOT DEFINED CMAKE_TOOLCHAIN_FILE AND NOT ${ENABLE_TESTING})
    include(cmake/ArmToolchain.cmake)
 endif()
 
-message("------------- KISO CONFIG -------------")
-message("Building Kiso tests:   ${ENABLE_TESTING}")
-message("  ... with coverage:   ${ENABLE_COVERAGE}")
-message("Kiso Board Path:       ${KISO_BOARD_PATH}")
-message("Kiso OS:               ${KISO_OS_LIB}")
-message("Kiso Application Path: ${KISO_APPLICATION_PATH}")
-message("Project Config Path:   ${PROJECT_CONFIG_PATH}")
-message("------------- KISO CONFIG -------------")
+message("---------------------------------- KISO CONFIG ----------------------------------")
+message("Building Kiso tests:                ${ENABLE_TESTING}")
+message("  ... with coverage:                ${ENABLE_COVERAGE}")
+message("Building Kiso integration tests:    ${ENABLE_INTEGRATION_TESTING}")
+message("  ... with entry in:                ${KISO_INTEGRATION_TEST_ENTRY_PATH}")
+message("Kiso Board Path:                    ${KISO_BOARD_PATH}")
+message("Kiso OS:                            ${KISO_OS_LIB}")
+message("Kiso Application Path:              ${KISO_APPLICATION_PATH}")
+message("Project Config Path:                ${PROJECT_CONFIG_PATH}")
+message("---------------------------------- KISO CONFIG ----------------------------------")
 
 project (Kiso C)
 
@@ -89,7 +92,12 @@ if(${ENABLE_STATIC_CHECKS})
 endif()
 
 ## Add application code
-add_subdirectory(${KISO_APPLICATION_PATH} ${CMAKE_CURRENT_BINARY_DIR}/applications/${KISO_APPLICATION_NAME})
+if(${ENABLE_INTEGRATION_TESTING})
+   add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/testing/integration/test-executor)
+   add_subdirectory(${KISO_INTEGRATION_TEST_ENTRY_PATH})
+else(${ENABLE_INTEGRATION_TESTING})
+   add_subdirectory(${KISO_APPLICATION_PATH} ${CMAKE_CURRENT_BINARY_DIR}/applications/${KISO_APPLICATION_NAME})
+endif(${ENABLE_INTEGRATION_TESTING})
 
 include(KisoLibsConfig)
 
@@ -98,6 +106,9 @@ include(KisoLibsConfig)
 add_subdirectory(core/essentials)
 add_subdirectory(core/utils)
 add_subdirectory(core/connectivity/cellular)
+if(${ENABLE_INTEGRATION_TESTING})
+   add_subdirectory(core/testing)
+endif(${ENABLE_INTEGRATION_TESTING})
 
 ## Add thirdparty libs
 add_subdirectory(thirdparty)

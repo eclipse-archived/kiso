@@ -1,0 +1,43 @@
+pipeline
+{
+    /* NOTE: don't use agent declaration in both global and stage scope:
+     * https://issues.jenkins-ci.org/browse/JENKINS-63449
+     * Follow-up once above issue resolved. */
+    agent none
+    stages
+    {
+        stage('Run Integration Tests')
+        {
+            agent
+            {
+                node
+                {
+                    label 'kiso/itf/dut/nucleof767 && kiso/itf/connector/uart && (kiso/itf/connector/jlink-via-remote || kiso/itf/connector/jlink-via-local)'
+                }
+            }
+            environment
+            {
+                WORKON_HOME = "/tmp/.venvs"
+                PIPENV_CACHE_DIR = "/tmp/.cache"
+            }
+            steps
+            {
+                script
+                {
+                    echo "build integration-tests"
+                    sh "cmake . -Bbuilddir-integration -G'Ninja' -DENABLE_INTEGRATION_TESTING=1 -DKISO_INTEGRATION_TEST_ENTRY_PATH='core/essentials/test/integration' -DKISO_BOARD_NAME='NucleoF767' -DJLINK_REMOTE=\"${env.JLINK_REMOTE}\""
+                    sh 'cmake --build builddir-integration --target flash'
+
+                    sh 'rm -rf testing/integration/test-coordinator/kiso-testing'
+                    sh 'git clone --depth 1 --branch prototype/integrate-kiso-demo https://github.com/ChiefGokhlayehBosch/kiso-testing.git testing/integration/test-coordinator/kiso-testing'
+                    dir('testing/integration/test-coordinator/kiso-testing')
+                    {
+                        sh 'pipenv --python 3'
+                        sh 'pipenv install'
+                        sh 'pipenv run python -m pykiso -c ../../../../core/essentials/test/integration/coordinator/test_config.yaml'
+                    }
+                }
+            }
+        } // stage('Run Integration Tests')
+    } // stages
+} // pipeline

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="486px" preserveAspectRatio="none" style="width:610px;height:486px;" version="1.1" viewBox="0 0 610 486" width="610px" zoomAndPan="magnify"><defs><filter height="300%" id="f1clrdq0t9vxb" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><text fill="#000000" font-family="sans-serif" font-size="18" lengthAdjust="spacingAndGlyphs" textLength="321" x="146.5" y="16.708">Integration Testing - Example Setup</text><!--MD5=[9b3923d5d9342ccb966509b24c562a93]
+cluster Nucleo-F767--><polygon fill="#FFFFFF" filter="url(#f1clrdq0t9vxb)" points="304,373.4531,314,363.4531,479,363.4531,479,429.4531,469,439.4531,304,439.4531,304,373.4531" style="stroke: #000000; stroke-width: 1.5;"/><line style="stroke: #000000; stroke-width: 1.5;" x1="469" x2="478" y1="373.4531" y2="364.4531"/><line style="stroke: #000000; stroke-width: 1.5;" x1="304" x2="469" y1="373.4531" y2="373.4531"/><line style="stroke: #000000; stroke-width: 1.5;" x1="469" x2="469" y1="373.4531" y2="439.4531"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="99" x="338" y="389.4482">Nucleo-F767</text><!--MD5=[59fce214b9c385d2b242f537edf64f7c]
+cluster Raspberry Pi 3--><polygon fill="#FFFFFF" filter="url(#f1clrdq0t9vxb)" points="271,46.9531,281,36.9531,588,36.9531,588,293.9531,578,303.9531,271,303.9531,271,46.9531" style="stroke: #000000; stroke-width: 1.5;"/><line style="stroke: #000000; stroke-width: 1.5;" x1="578" x2="587" y1="46.9531" y2="37.9531"/><line style="stroke: #000000; stroke-width: 1.5;" x1="271" x2="578" y1="46.9531" y2="46.9531"/><line style="stroke: #000000; stroke-width: 1.5;" x1="578" x2="578" y1="46.9531" y2="303.9531"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="115" x="368" y="62.9482">Raspberry Pi 3</text><!--MD5=[52bd4819656a6938484a4a042299c7b0]
+cluster GitHub--><polygon fill="#FFFFFF" filter="url(#f1clrdq0t9vxb)" points="14,46.9531,24,36.9531,168,36.9531,168,102.9531,158,112.9531,14,112.9531,14,46.9531" style="stroke: #000000; stroke-width: 1.5;"/><line style="stroke: #000000; stroke-width: 1.5;" x1="158" x2="167" y1="46.9531" y2="37.9531"/><line style="stroke: #000000; stroke-width: 1.5;" x1="14" x2="158" y1="46.9531" y2="46.9531"/><line style="stroke: #000000; stroke-width: 1.5;" x1="158" x2="158" y1="46.9531" y2="112.9531"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="53" x="60.5" y="62.9482">GitHub</text><!--MD5=[f85200dae2e335a95218d97032c698c3]
+entity testapp--><rect fill="#FEFECE" filter="url(#f1clrdq0t9vxb)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="82" x="351" y="395.4531"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="346" y="400.4531"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="346" y="421.75"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="62" x="361" y="418.4482">Test App</text><!--MD5=[edb225e4c6a40128ed83528a1c019249]
+entity jenkins_master--><rect fill="#FEFECE" filter="url(#f1clrdq0t9vxb)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="120" x="334" y="68.9531"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="329" y="73.9531"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="329" y="95.25"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="100" x="344" y="91.9482">Jenkins Master</text><!--MD5=[d96730a79323326fb476487c3c483f2e]
+entity jenkins_agent--><rect fill="#FEFECE" filter="url(#f1clrdq0t9vxb)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="114" x="335" y="259.9531"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="330" y="264.9531"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="330" y="286.25"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="94" x="345" y="282.9482">Jenkins Agent</text><!--MD5=[c5e146c39214bba6159f1c1311e55a48]
+entity fork--><rect fill="#FEFECE" filter="url(#f1clrdq0t9vxb)" height="36.2969" style="stroke: #A80036; stroke-width: 1.5;" width="138" x="22" y="68.9531"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="17" y="73.9531"/><rect fill="#FEFECE" height="5" style="stroke: #A80036; stroke-width: 1.5;" width="10" x="17" y="95.25"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="118" x="32" y="91.9482">&lt;your-fork&gt;/kiso</text><!--MD5=[3d99d59a27ec55cd9b0b1490801f78bc]
+entity dev--><ellipse cx="91" cy="382.4531" fill="#FEFECE" filter="url(#f1clrdq0t9vxb)" rx="8" ry="8" style="stroke: #A80036; stroke-width: 1.5;"/><path d="M91,390.4531 L91,417.4531 M78,398.4531 L104,398.4531 M91,417.4531 L78,432.4531 M91,417.4531 L104,432.4531 " fill="none" filter="url(#f1clrdq0t9vxb)" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="71" x="55.5" y="450.9482">Developer</text><!--MD5=[f9a5d11cce815dc37a3bcf6166b8a13c]
+reverse link fork to dev--><path d="M91,110.0135 C91,164.8693 91,303.7061 91,372.9256 " fill="none" id="fork&lt;-dev" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="91,104.9722,87,113.9722,91,109.9722,95,113.9722,91,104.9722" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="106" x="92" y="226.02">(1) push commit</text><!--MD5=[5e813244ed45d6f480e5243c741c2be3]
+reverse link fork to jenkins_master--><path d="M165.4149,86.9531 C217.2438,86.9531 285.4805,86.9531 333.8681,86.9531 " fill="none" id="fork&lt;-jenkins_master" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="160.1345,86.9531,169.1345,90.9531,165.1345,86.9531,169.1345,82.9531,160.1345,86.9531" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="137" x="178.5" y="80.02">(2) poll latest commit</text><!--MD5=[5e813244ed45d6f480e5243c741c2be3]
+reverse link fork to jenkins_master--><path d="M164.9653,105.0741 C169.5274,105.814 174.0651,106.4527 178.5,106.9531 C239.005,113.7799 255.0842,114.5284 315.5,106.9531 C321.5005,106.2007 327.6999,105.1368 333.8622,103.8873 " fill="none" id="fork&lt;-jenkins_master-1" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="160.0091,104.2333,168.2133,109.6823,164.9387,105.0696,169.5513,101.795,160.0091,104.2333" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="135" x="179.5" y="103.02">(6) notify build status</text><!--MD5=[bb100cc731f1706b77349c37201d7a6e]
+link jenkins_master to jenkins_agent--><path d="M377.2019,105.0907 C364.4955,120.126 348.0693,142.7268 341,165.9531 C331.1023,198.4721 353.2047,233.8295 371.3555,255.9375 " fill="none" id="jenkins_master-&gt;jenkins_agent" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="374.6901,259.9077,371.9646,250.4435,371.4743,256.0791,365.8387,255.5888,374.6901,259.9077" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="62" x="342" y="179.02">(3) spawn</text><!--MD5=[b2cd1d87a4aea50d4c29660d9c81bff5]
+reverse link jenkins_master to jenkins_agent--><path d="M399.5823,110.1008 C403.065,125.7614 407.214,146.9724 409,165.9531 C412.1322,199.2402 403.6078,237.7075 397.527,259.7962 " fill="none" id="jenkins_master&lt;-jenkins_agent" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="398.4311,105.0139,396.5164,114.6749,399.5348,109.8906,404.3191,112.909,398.4311,105.0139" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="130" x="410" y="179.02">(5) report test result</text><!--MD5=[1575e73583e82ebf081fdaf5deecac37]
+link jenkins_agent to testapp--><path d="M392,301.3137 C392,326.1178 392,365.1006 392,389.9564 " fill="none" id="jenkins_agent-testapp" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="392,395.0357,396,386.0357,392,390.0357,388,386.0357,392,395.0357" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="392,296.2272,388,305.2272,392,301.2272,396,305.2272,392,296.2272" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="71" x="393" y="339.02">(4) interact</text><text fill="#888888" font-family="sans-serif" font-size="10" lengthAdjust="spacingAndGlyphs" textLength="292" x="161" y="473.2354">© Robert Bosch GmbH 2010-2020 | Licensed under EPL-2.0</text><!--MD5=[0d531cde3772db45e62e4d51a6002a30]
+@startuml
+
+title Integration Testing - Example Setup
+
+node "Nucleo-F767" {
+    component "Test App" as testapp
+}
+
+node "Raspberry Pi 3" {
+    component "Jenkins Master" as jenkins_master
+    component "Jenkins Agent" as jenkins_agent
+}
+
+node "GitHub" {
+    component "<your-fork>/kiso" as fork
+}
+
+actor "Developer" as dev
+
+dev - -up- -> fork : "(1) push commit"
+jenkins_master - -left- -> fork : "(2) poll latest commit"
+jenkins_master - -left- -> fork : "(6) notify build status"
+jenkins_master -down-> jenkins_agent : "(3) spawn"
+jenkins_master <-down- jenkins_agent : "(5) report test result"
+jenkins_agent <-down-> testapp : "(4) interact"
+
+footer © Robert Bosch GmbH 2010-2020 | Licensed under EPL-2.0
+
+@enduml
+
+PlantUML version 1.2020.10(Sun May 17 09:35:57 UTC 2020)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Java Version: 11.0.8+10-post-Debian-1deb10u1
+Operating System: Linux
+Default Encoding: ANSI_X3.4-1968
+Language: en
+Country: US
+--></g></svg>

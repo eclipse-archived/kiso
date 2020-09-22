@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
     hugo \
     lcov \
     libgtest-dev \
+    libncurses5 \
     libxml2-utils \
     ninja-build \
     plantuml \

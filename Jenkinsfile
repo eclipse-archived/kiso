@@ -7,7 +7,7 @@ pipeline
             containerTemplate
             {
                 name 'kiso-build-env'
-                image 'eclipse/kiso-build-env:v0.0.7'
+                image 'eclipse/kiso-build-env:v0.0.8'
                 ttyEnabled true
                 resourceRequestCpu '2'
                 resourceLimitCpu '2'
@@ -85,7 +85,9 @@ pipeline
                     {
                         script
                         {
-                            echo "run integration-tests placeholder"
+                            echo "build integration-tests"
+                            sh 'cmake . -Bbuilddir-integration -G"Ninja" -DENABLE_INTEGRATION_TESTING=1 -DKISO_INTEGRATION_TEST_ENTRY_PATH="core/essentials/test/integration" -DKISO_BOARD_NAME="NucleoF767"'
+                            sh 'cmake --build builddir-integration'
                         }
                     }
                 }
@@ -107,6 +109,7 @@ pipeline
                         script
                         {
                             echo "Generate Hugo Website"
+                            sh 'rm -rf docs/website/themes/learn/'
                             sh 'git clone --depth 1 --branch 2.5.0 https://github.com/matcornic/hugo-theme-learn.git docs/website/themes/learn/'
                             sh 'hugo -s docs/website'
                         }

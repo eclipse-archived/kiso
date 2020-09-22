@@ -4,3 +4,5 @@
 build
 builddir-*
 .vscode
+__pycache__/
+testing/integration/test-coordinator/kiso-testing/

@@ -1,0 +1,16 @@
+auxiliaries:
+  dut:
+    connectors:
+      com: uart
+    type: pykiso.lib.auxiliaries.communication_auxiliary:CommunicationAuxiliary
+connectors:
+  uart:
+    config:
+      serialPort: /dev/ttyACM0
+      baudrate: 115200
+    type: pykiso.lib.connectors.cc_uart:CCUart
+test_suite_list:
+  - suite_dir: uart_test_suite
+    test_filter_pattern: "*.py"
+    test_suite_id: 1
+    test_entry_id: 1
